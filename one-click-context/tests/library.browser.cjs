@@ -48,3 +48,9 @@ test('UI import, filter, byte-exact download, consent and cross-tab clear',async
  page.once('dialog',d=>d.accept());await page.locator('#persist').click();await page.reload();assert.equal(await page.locator('.item').count(),1);
  const second=await context.newPage();await second.goto(base+'/library.html');assert.equal(await second.locator('.item').count(),1);await page.locator('#clear').click();await second.waitForFunction(()=>document.querySelectorAll('.item').length===0);assert.equal(await second.evaluate(()=>localStorage.getItem('occ-library-v1')),null);await second.close();
 });
+test('JSON collection restore preserves dates, rejects tampering and never persists implicitly',async()=>{
+ const record={id:'old',name:'restored',source:'chat fixture',createdAt:'2026-08-01T12:00:00.000Z',status:'PARTIAL',warnings:['unknown limit'],text:'Привет\r\n',sha256:require('node:crypto').createHash('sha256').update('Привет\r\n').digest('hex')};
+ const upload=async r=>page.locator('#backup').setInputFiles({name:'collection.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify({version:1,records:[r]}))});
+ await upload(record);await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Восстановлено документов: 1'));assert.match(await page.locator('#list').textContent(),/2026-08-01/);assert.equal(await page.evaluate(()=>localStorage.getItem('occ-library-v1')),null);
+ await upload({...record,text:'changed'});await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('SHA-256'));assert.equal(await page.locator('#list .item').count(),1);await page.locator('#clear').click();
+});

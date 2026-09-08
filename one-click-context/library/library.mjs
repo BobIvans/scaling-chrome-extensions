@@ -1,6 +1,7 @@
 import {convert,aggregate,encode,digest,MAX_BYTES,safeName} from './convert.mjs';
+import {attachAgent} from './agent.mjs';
 const $=id=>document.getElementById(id), KEY='occ-library-v1', EPOCH='occ-library-epoch';
-let records=[], selected=new Set(), generation=0, busy=false;
+let records=[], selected=new Set(), generation=0, busy=false, agent=null;
 const channel=new BroadcastChannel('occ-library');
 let epoch=localStorage.getItem(EPOCH)||'0';
 function notice(text){$('status').textContent=text;}
@@ -30,12 +31,14 @@ async function add(results,source,token=epoch){
  validate([...records,...additions]);records.push(...additions);for(const r of additions)if(r.text)selected.add(r.id);render();return additions.length;
 }
 $('import').onclick=()=>$('files').click();
+$('restore').onclick=()=>$('backup').click();
+$('backup').onchange=async()=>{const token=epoch;try{const file=$('backup').files[0];if(!file)return;if(file.size>MAX_BYTES)throw Error('Копия превышает 2 200 000 байт.');const data=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(await file.arrayBuffer()));if(data.version!==1)throw Error('Неподдерживаемая версия копии.');validate(data.records);const restored=[];for(const r of data.records){const sha256=await digest(encode(r.text));if(r.sha256&&r.sha256!==sha256)throw Error('SHA-256 текста не совпадает: '+r.name);restored.push({...r,original:undefined,id:crypto.randomUUID(),sha256});}if(token!==epoch)throw Error('Библиотека удалена; восстановление отменено.');validate([...records,...restored]);records.push(...restored);for(const r of restored)if(r.text)selected.add(r.id);render();notice('Восстановлено документов: '+restored.length+'. Даты и источники сохранены. Постоянного сохранения ещё нет.');}catch(e){notice('Копия не добавлена: '+e.message);}finally{$('backup').value='';}};
 $('files').onchange=async()=>{if(busy)return;busy=true;const token=epoch,files=[...$('files').files];let added=0;const errors=[];
  try{if(files.length>30)throw Error('Выберите не более 30 файлов за один импорт.');for(const file of files){try{notice('Обработка: '+file.name);if(file.size>MAX_BYTES)throw Error('Файл превышает 2 200 000 байт.');const results=await convert(file.name,new Uint8Array(await file.arrayBuffer()));if(epoch!==token)throw Error('Импорт отменён удалением библиотеки.');added+=await add(results,'Локальный файл');}catch(e){errors.push(safeName(file.name)+': '+e.message);}}notice(`Добавлено: ${added}. Постоянная копия ещё не обновлена.`+(errors.length?'\n'+errors.join('\n'):''));}
  catch(e){notice(e.message);}finally{busy=false;$('files').value='';}};
 $('capture').onclick=async()=>{try{if(!globalThis.chrome?.runtime?.id)throw Error('Снимки доступны в установленном расширении. На сайте импортируйте файлы.');const token=epoch;const state=await chrome.runtime.sendMessage({target:'library',type:'getCapture'});if(epoch!==token)return;if(!state?.ok||!state.capture)throw Error(state?.error||'Нет доступного снимка.');const c=state.capture;await add([{name:'Снимок '+c.capturedAt,text:c.text,status:c.status,warnings:c.warnings||[],sha256:await digest(encode(c.text)),captureId:c.captureId}],c.source||'Неизвестный источник',token);notice('Снимок добавлен в библиотеку. Постоянное сохранение — отдельной кнопкой.');}catch(e){notice(e.message);}};
 $('persist').onclick=()=>{try{if(epoch!==(localStorage.getItem(EPOCH)||'0'))throw Error('Библиотека удалена в другой вкладке.');validate(records);if(!confirm('Сохранить эти документы в профиле браузера? Приватный текст останется на этом компьютере после перезапуска.'))return;localStorage.setItem(KEY,JSON.stringify({version:1,records}));notice('Библиотека сохранена на этом компьютере.');}catch(e){notice('Не сохранено: '+e.message+' Предыдущая копия не заменена.');}};
-function reset(value){epoch=value;records=[];selected.clear();render();notice('Библиотека очищена. Снимок OCC, скачанные файлы и буфер обмена не удалены.');}
+function reset(value){epoch=value;agent?.clear();records=[];selected.clear();render();notice('Библиотека очищена. Снимок OCC, скачанные файлы и буфер обмена не удалены.');}
 $('clear').onclick=()=>{try{const value=crypto.randomUUID();localStorage.setItem(EPOCH,value);localStorage.removeItem(KEY);reset(value);channel.postMessage({type:'clear',epoch:value});}catch(e){notice('Не удалось удалить: '+e.message);}};
 channel.onmessage=e=>{if(e.data?.type==='clear')reset(e.data.epoch);};
 window.addEventListener('storage',e=>{if(e.key===EPOCH)reset(e.newValue||'0');});
@@ -47,6 +50,7 @@ $('json').onclick=()=>{const chosen=records.filter(r=>selected.has(r.id)).map(({
 $('original').onclick=()=>{const r=records.find(r=>selected.has(r.id));if(r?.original)download(new Uint8Array(r.original),safeName(r.name));};
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved){if(saved.version!==1)throw Error('Версия не поддерживается.');records=validate(saved.records);notice('Открыта библиотека, ранее сохранённая по согласию.');}}catch(e){notice('Сохранённая копия не открыта: '+e.message);}
 render();
+agent=attachAgent({getSelection:()=>aggregate(records.filter(r=>selected.has(r.id))),getEpoch:()=>epoch,addResult:async(text,token)=>add([{name:'Ответ локального агента',text,status:'EXTRACTED',warnings:['Результат AI: требует проверки по источникам.'],sha256:await digest(encode(text))}],'Локальный Codex',token)});
 
 // Optional page-scoped agent interface. No AI service, token or background upload.
 const modelContext=document.modelContext;

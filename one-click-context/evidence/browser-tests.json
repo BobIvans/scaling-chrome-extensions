@@ -1,116 +1,116 @@
 {
-  "browser": "152.0.4191.66",
+  "browser": "152.0.7977.82",
   "python": "3.12.14 (main, Aug 25 2026, 14:01:42) [MSC v.1944 64 bit (AMD64)]",
   "test_basis": "Synthetic local fixtures, not signed-in ChatGPT/Codex/DeepSeek.",
-  "toolbar_activeTab_real_click": "NOT_RUN: no real toolbar click or keyboard shortcut grant was exercised.",
+  "toolbar_activeTab_real_click": "NOT_TESTED: internal messaging / functions, not toolbar UI.",
   "results": [
     {
       "test": "code whitespace / diff signs / literal backslashes",
       "status": "PASS",
-      "seconds": 0.375,
+      "seconds": 0.609,
       "detail": null
     },
     {
       "test": "identical messages with distinct IDs retained",
       "status": "PASS",
-      "seconds": 0.25,
+      "seconds": 0.594,
       "detail": null
     },
     {
       "test": "initial DOM chronological order",
       "status": "PASS",
-      "seconds": 0.265,
+      "seconds": 0.547,
       "detail": null
     },
     {
       "test": "role messages under hidden ancestors excluded",
       "status": "PASS",
-      "seconds": 0.204,
+      "seconds": 0.39,
       "detail": null
     },
     {
       "test": "form values / hidden content / scripts / sidebar excluded",
       "status": "PASS",
-      "seconds": 0.218,
+      "seconds": 0.36,
       "detail": null
     },
     {
       "test": "selection copied without wrappers or escaping",
       "status": "PASS",
-      "seconds": 0.203,
+      "seconds": 0.547,
       "detail": null
     },
     {
       "test": "text/plain direct capture",
       "status": "PASS",
-      "seconds": 0.079,
+      "seconds": 0.203,
       "detail": null
     },
     {
       "test": "nested scroller and scroll-position restoration",
       "status": "PASS",
-      "seconds": 2.796,
+      "seconds": 3.093,
       "detail": null
     },
     {
       "test": "older messages prepended during capture",
       "status": "PASS",
-      "seconds": 2.829,
+      "seconds": 3.219,
       "detail": null
     },
     {
       "test": "virtualized stable-ID messages accumulated in order",
       "status": "PASS",
-      "seconds": 2.968,
+      "seconds": 3.375,
       "detail": null
     },
     {
       "test": "recycled nodes without IDs disclose uncertainty",
       "status": "PASS",
-      "seconds": 2.922,
+      "seconds": 3.547,
       "detail": null
     },
     {
       "test": "infinite scroll bounded with PARTIAL status",
       "status": "PASS",
-      "seconds": 2.031,
+      "seconds": 2.141,
       "detail": null
     },
     {
       "test": "cancellation and controller cleanup",
       "status": "PASS",
-      "seconds": 0.625,
+      "seconds": 0.89,
       "detail": null
     },
     {
       "test": "oversized code block omitted whole, never silently sliced",
       "status": "PASS",
-      "seconds": 0.235,
+      "seconds": 0.485,
       "detail": null
     },
     {
       "test": "unknown roles not fabricated",
       "status": "PASS",
-      "seconds": 0.156,
+      "seconds": 0.437,
       "detail": null
     },
     {
       "test": "stable-ID streaming update replaces same record",
       "status": "PASS",
-      "seconds": 3.156,
+      "seconds": 3.344,
       "detail": null
     },
     {
       "test": "viewer UTF-8 BOM CRLF hash byte download copy invalid input",
       "status": "PASS",
-      "seconds": 0.547,
+      "seconds": 1.391,
       "detail": "Real viewer source, localhost Web Crypto/clipboard/download; Chrome storage and runtime mocked. Not installed-extension evidence."
     },
     {
       "test": "loaded extension offscreen clipboard integration",
-      "status": "PASS",
-      "seconds": 1.906,
-      "detail": "Loaded extension worker/offscreen clipboard + viewer UTF-8/BOM/CRLF import, SHA-256, byte-identical download, Copy, invalid UTF-8 rejection and Clear. Clipboard comparison normalizes OS CRLF."
+      "status": "BLOCKED_ENV",
+      "seconds": 13.344,
+      "error": "Timeout 12000ms exceeded while waiting for event \"serviceworker\""
     },
     {
       "test": "Signed-in ChatGPT / Codex / DeepSeek adapters",
@@ -118,32 +118,20 @@
       "error": "No authorized signed-in site DOM inspected; generic semantic extraction only."
     }
   ],
-  "passed": 18,
+  "passed": 17,
   "failed": 0,
   "skipped": 0,
-  "blocked_env": 0,
+  "blocked_env": 1,
   "not_run": 1,
   "source_sha256": {
-    "background.js": "b5aa964f9685988574e6f47ec3443f5966421a2baaec5136bfb79f8974b543bf",
-    "content.js": "3eba33513355cab7b90adac1060c8506a1c36f46a638ef807b3ae00359155582",
-    "manifest.json": "6cbb8d7cea9e1208a2204509efa6f2af6b52f0244d1aa4902bed2027df0ab0c0",
+    "background.js": "92bd0aaccf3ae7f5a3a1550f0dd5c5eb4f4f995088ea05b3717f08b7a9f58fb4",
+    "content.js": "52e20edd724b0e7b6bda7d2766da9c5e6fb4fec0ee7b0bc76ee6bd114c622854",
+    "library.html": "4668c2cc4b6eaa3093d3ab4fb64ebfefb0f12041c7072a462647258f5de856a6",
+    "manifest.json": "ba703a6e8de564d061e5744ae7a6bf20229a289925b8279899531b045003a965",
     "offscreen.html": "261abd74fa8b72f0770c9c90d9e3860f41ccde9416c1253a45c4104b61e2dad3",
     "offscreen.js": "4a1ef9996c30be553f398ee05fa7d8c7384b5a9ce693e34c167244802f0f2747",
     "viewer.css": "c4351ce5fb09f98a032a6a249395a0bf22d0432b5dded74d1b3cee264d4e15f8",
-    "viewer.html": "b994272cfc116b91dccbf8dd1c6faf7c2afa784c71d53daa345da2f8d6cb4b39",
-    "viewer.js": "a182ba9e2ff77196c1437f2c63178a54a651ddb4dacf1a297a7576d712afec54"
-  },
-  "platform": "Windows; Microsoft Edge (Chromium), isolated temporary test profile",
-  "commands": [
-    "python -m pip install -r tests/requirements.txt",
-    "python -m playwright install chromium",
-    "Set CHROMIUM_PATH to Microsoft Edge executable, PYTHONUTF8=1; python tests/run_browser_tests.py",
-    "node --test tests/background.test.cjs",
-    "node --check background.js; node --check content.js; node --check offscreen.js; node --check viewer.js"
-  ],
-  "environment_attempts": [
-    "Chrome for Testing 151.0.7922.34 download succeeded, executable launch failed with spawn UNKNOWN; cause not established.",
-    "Branded Chrome 152.0.7977.82: 16 original DOM fixtures passed; extension service worker not available after command-line loading.",
-    "Edge first integration reached loaded extension; test wait_for_function string conflicted with extension CSP. Test changed to function predicate without weakening runtime CSP. Final Edge integration passed."
-  ]
+    "viewer.html": "571ffbe202ddc8af650e79f94111d9dc2bb1ba95b102b162bb3a471d9fe1b349",
+    "viewer.js": "75d02008e41d9ef48ef9639ff323d6ef10f4f565c4fb32ee13e429e79e6fc91f"
+  }
 }
