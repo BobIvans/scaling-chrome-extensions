@@ -43,5 +43,3 @@ const uiTest={name:'Library UI: import, filter, explicit persistence and cross-t
 tests.push(uiTest);
 
 let passed=0;for(const t of tests){const item=document.createElement('li');try{await t.fn();passed++;item.textContent='PASS '+t.name;}catch(e){item.textContent='FAIL '+t.name+': '+e.message;}document.querySelector('ol').append(item);}document.querySelector('h1').textContent=`${passed}/${tests.length} browser converter tests passed`;
-
-
