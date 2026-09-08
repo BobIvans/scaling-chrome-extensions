@@ -1,0 +1,36 @@
+{
+  "manifest_version": 3,
+  "name": "One Click Context",
+  "version": "0.2.0",
+  "description": "User-triggered, local-only text capture for copying to any AI. Bounded scrolling; honest coverage warnings.",
+  "minimum_chrome_version": "116",
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "clipboardWrite",
+    "offscreen",
+    "storage",
+    "contextMenus"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Copy context (selection first; click again to cancel)"
+  },
+  "options_ui": {
+    "page": "viewer.html",
+    "open_in_tab": true
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Alt+Shift+C"
+      },
+      "description": "Copy context from this tab"
+    }
+  },
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'; frame-src 'none'; base-uri 'none'"
+  }
+}

@@ -1,0 +1,14 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>One Click Context</title><link rel="stylesheet" href="viewer.css"></head>
+<body><main>
+<p class="eyebrow">LOCAL • NO ACCOUNT • NO AI API</p>
+<h1>Context → Clipboard</h1>
+<p>Review captured text, or open a TXT file. Copy once, then paste into your chosen AI yourself.</p>
+<div class="toolbar"><button id="copy" class="primary">Copy all text</button><button id="open">Open TXT / code file</button><button id="save">Download TXT</button><button id="clear">Clear local capture</button></div>
+<input id="file" type="file" hidden accept=".txt,.md,.patch,.diff,.json,.py,.js,.ts,.yaml,.yml,.log,.csv,.toml">
+<p id="status" role="status">Loading…</p>
+<p id="meta" class="meta"></p>
+<textarea id="text" spellcheck="false" aria-label="Context text"></textarea>
+<p class="note">Captured pages are best-effort, not a guaranteed full history. Visible chats can contain secrets. Nothing is sent to an AI automatically. Session storage is temporary; your system clipboard and downloaded files are not cleared by closing this page.</p>
+<p class="note">Copy / import uses the original decoded string until you edit it. The textarea display can normalize line endings. Original file download retains the bytes until editing. Clipboard line endings can depend on the operating system.</p>
+</main><script src="viewer.js"></script></body></html>
