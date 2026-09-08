@@ -49,6 +49,7 @@ $('download').onclick=()=>download(encode($('preview').value),'context_collectio
 $('json').onclick=()=>{const chosen=records.filter(r=>selected.has(r.id)).map(({original,...r})=>r);download(encode(JSON.stringify({version:1,records:chosen},null,2)),'context_collection.json');};
 $('original').onclick=()=>{const r=records.find(r=>selected.has(r.id));if(r?.original)download(new Uint8Array(r.original),safeName(r.name));};
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved){if(saved.version!==1)throw Error('Версия не поддерживается.');records=validate(saved.records);notice('Открыта библиотека, ранее сохранённая по согласию.');}}catch(e){notice('Сохранённая копия не открыта: '+e.message);}
+if(!globalThis.chrome?.runtime?.id){$('capture').disabled=true;$('capture').title='Снимки доступны в установленном расширении.';const home=document.querySelector('header a');home.href='/';home.textContent='Collect Data / Библиотека';}
 render();
 agent=attachAgent({getSelection:()=>aggregate(records.filter(r=>selected.has(r.id))),getEpoch:()=>epoch,addResult:async(text,token)=>add([{name:'Ответ локального агента',text,status:'EXTRACTED',warnings:['Результат AI: требует проверки по источникам.'],sha256:await digest(encode(text))}],'Локальный Codex',token)});
 
