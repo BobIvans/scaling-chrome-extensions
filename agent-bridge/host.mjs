@@ -13,15 +13,27 @@ export class JobHost{
  async handle(m){
   if(this.closed)throw Error('CLOSED');
   if(!m||typeof m!=='object'||typeof m.type!=='string')throw Error('SCHEMA');
-  if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false};
+  if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false,supportedModes:this.config.allowBuild===true?['analyze','build']:['analyze']};
   if(m.type==='list')return {jobs:[...this.jobs.values()].map(j=>this.summary(j))};
   if(m.type==='begin'){
+   if(m.mode==='build'&&this.config.allowBuild!==true)throw Error('BUILD_UNAVAILABLE: local sandbox write access has not been verified');
    if(this.jobs.size>=5)throw Error('JOB_LIMIT: delete a finished job first');
    if(typeof m.instruction!=='string'||!m.instruction.trim()||Buffer.byteLength(m.instruction)>16000||!Number.isSafeInteger(m.bytes)||m.bytes<0||m.bytes>MAX_BYTES||!/^[a-f0-9]{64}$/.test(m.sha256)||!['analyze','build'].includes(m.mode))throw Error('SCHEMA');
    const id=randomUUID();await fs.mkdir(this.config.dataRoot,{recursive:true});const directory=await fs.mkdtemp(path.join(this.config.dataRoot,'occ-job-'));
    const job={id,directory,instruction:m.instruction,mode:m.mode,expected:m.bytes,sha256:m.sha256,chunks:[],received:0,state:'RECEIVING',createdAt:new Date().toISOString(),result:null};this.jobs.set(id,job);return {job:this.summary(job)};
   }
   const j=this.jobs.get(m.jobId);if(!j)throw Error('JOB_NOT_FOUND');
+  if(m.type==='artifacts'){
+   if(j.state!=='COMPLETE')throw Error('RESULT_NOT_READY');
+   if(!j.artifacts){const files=new Map();let total=0,visited=0;const root=await fs.realpath(j.directory);
+    const scan=async(dir,depth)=>{for(const entry of await fs.readdir(dir,{withFileTypes:true})){if(++visited>100)throw Error('ARTIFACT_COUNT_LIMIT');if(entry.name.startsWith('.')||entry.name==='input.txt'||entry.name==='result.txt')continue;const target=path.join(dir,entry.name);const stat=await fs.lstat(target);if(stat.isSymbolicLink()||!(await fs.realpath(target)).startsWith(root+path.sep))throw Error('ARTIFACT_PATH_BOUNDARY');if(stat.isDirectory()){if(depth>=2)throw Error('ARTIFACT_DEPTH_LIMIT');await scan(target,depth+1);}else if(stat.isFile()){if(files.size>=20||stat.size>MAX_BYTES||total+stat.size>MAX_BYTES)throw Error('ARTIFACT_SIZE_LIMIT');const bytes=await fs.readFile(target);if(bytes.length!==stat.size)throw Error('ARTIFACT_CHANGED');total+=bytes.length;const id=randomUUID();files.set(id,{id,name:path.relative(root,target).split(path.sep).join('/'),bytes,sha256:hash(bytes)});}}};
+    await scan(root,0);j.artifacts=files;
+   }
+   return {artifacts:[...j.artifacts.values()].map(({bytes,...a})=>({...a,bytes:bytes.length}))};
+  }
+  if(m.type==='artifact'){
+   if(j.state!=='COMPLETE')throw Error('RESULT_NOT_READY');const a=j.artifacts?.get(m.artifactId);if(!a)throw Error('ARTIFACT_NOT_FOUND');if(!Number.isSafeInteger(m.offset)||m.offset<0||m.offset>a.bytes.length)throw Error('OFFSET');return {base64:a.bytes.subarray(m.offset,m.offset+CHUNK).toString('base64'),bytes:a.bytes.length,sha256:a.sha256,offset:m.offset};
+  }
   if(m.type==='append'){
    if(j.state!=='RECEIVING'||m.offset!==j.received||typeof m.base64!=='string'||!/^([A-Za-z0-9+/]{4})*([A-Za-z0-9+/]{2}==|[A-Za-z0-9+/]{3}=)?$/.test(m.base64))throw Error('CHUNK_ORDER');
    const b=Buffer.from(m.base64,'base64');if(!b.length||b.length>CHUNK||j.received+b.length>j.expected)throw Error('CHUNK_LIMIT');j.chunks.push(b);j.received+=b.length;return {received:j.received};

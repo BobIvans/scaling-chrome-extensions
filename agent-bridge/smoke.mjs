@@ -4,6 +4,7 @@ import path from 'node:path';
 import {createHash,randomUUID} from 'node:crypto';
 import {decoder,encodeFrame} from './host.mjs';
 const directory=path.resolve(process.argv[2]);const live=process.argv.includes('--live');
+const artifact=process.argv.includes('--artifact');
 const extensionId=process.env.OCC_TEST_EXTENSION_ID||'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa';if(!/^[a-p]{32}$/.test(extensionId))throw Error('Invalid extension ID');
 const child=spawn(path.join(directory,'occ-native-host.exe'),[`chrome-extension://${extensionId}/`],{windowsHide:true,shell:false,stdio:['pipe','pipe','pipe']});
 const pending=new Map();let ended=false;
@@ -12,8 +13,9 @@ child.on('close',code=>{ended=true;for(const p of pending.values()){clearTimeout
 const request=(type,args={})=>new Promise((resolve,reject)=>{if(ended)return reject(Error('Host ended'));const requestId=randomUUID(),timer=setTimeout(()=>reject(Error('Native response timeout')),20000);pending.set(requestId,{resolve,reject,timer});child.stdin.write(encodeFrame({requestId,type,...args}));});
 try{
  const hello=await request('hello');if(hello.version!==1)throw Error('version');console.log('PASS native executable framing and exact-origin handshake');
- if(live){const text=Buffer.from('Synthetic integration fixture. No private browser data.');const {job}=await request('begin',{instruction:'Return exactly OCC_AGENT_SMOKE_OK. Do not use any tools.',mode:'analyze',bytes:text.length,sha256:createHash('sha256').update(text).digest('hex')});await request('append',{jobId:job.id,offset:0,base64:text.toString('base64')});await request('run',{jobId:job.id});let complete=false;
+ if(live){const text=Buffer.from('Synthetic integration fixture. No private browser data.');const {job}=await request('begin',{instruction:artifact?'Create report.txt in the current job directory containing exactly OCC_FILE_OK with no newline. Do not read any other files. Your final response must be exactly OCC_AGENT_SMOKE_OK.':'Return exactly OCC_AGENT_SMOKE_OK. Do not use any tools.',mode:artifact?'build':'analyze',bytes:text.length,sha256:createHash('sha256').update(text).digest('hex')});await request('append',{jobId:job.id,offset:0,base64:text.toString('base64')});await request('run',{jobId:job.id});let complete=false;
   for(let i=0;i<90;i++){const {jobs}=await request('list');const j=jobs.find(x=>x.id===job.id);if(j.state==='FAILED')throw Error(j.error);if(j.state==='COMPLETE'){const r=await request('result',{jobId:job.id,offset:0});const answer=Buffer.from(r.base64,'base64').toString('utf8');if(answer.trim()!=='OCC_AGENT_SMOKE_OK')throw Error('Unexpected response');complete=true;console.log('PASS real Codex ChatGPT-auth synthetic job and returned TXT');break;}await new Promise(r=>setTimeout(r,2000));}
+  if(complete&&artifact){const {artifacts}=await request('artifacts',{jobId:job.id});const file=artifacts.find(a=>a.name==='report.txt');if(!file)throw Error('Expected generated file missing');const r=await request('artifact',{jobId:job.id,artifactId:file.id,offset:0});if(Buffer.from(r.base64,'base64').toString()!=='OCC_FILE_OK')throw Error('Generated file differs');console.log('PASS real Codex-created artifact bytes returned by native host');}
   await request('discard',{jobId:job.id});if(!complete)throw Error('Live test timeout');console.log('PASS explicit job discard');
  }
 }finally{child.stdin.end();setTimeout(()=>child.kill(),5000).unref();}

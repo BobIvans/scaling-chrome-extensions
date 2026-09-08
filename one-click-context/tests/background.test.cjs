@@ -171,7 +171,7 @@ test('untrusted sender cannot use privileged viewer routes', async () => {
 });
 test('manifest is MV3 with narrow scope and explicitly optional native messaging', () => {
   const m=JSON.parse(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8'));
-  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.5.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
+  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.5.1'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
   for(const p of ['cookies','history','clipboardRead','debugger','all_urls']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
   assert.deepEqual(m.optional_permissions,['nativeMessaging']);assert.equal(m.optional_host_permissions,undefined);assert(!m.permissions.includes('nativeMessaging'));
 });
