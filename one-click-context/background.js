@@ -6,6 +6,8 @@ const LOCAL_CAPTURE = 'savedCapture';
 let active = null;
 let creatingOffscreen = null;
 let copyQueue = Promise.resolve();
+let storageQueue = Promise.resolve();
+function mutateStorage(fn) { const pending=storageQueue.catch(()=>{}).then(fn); storageQueue=pending; return pending; }
 const downloads = new Map();
 const viewerURL = () => chrome.runtime.getURL('viewer.html');
 const utf8 = text => new TextEncoder().encode(text);
@@ -110,10 +112,10 @@ async function run(tab, scroll = true) {
     return;
   }
   const token = crypto.randomUUID();
-  const counters = await nextRevision();
-  const job = active = {tabId: tab.id, token, documentId: null, cancelled: false, committing: false, ...counters};
+  const job = active = {tabId: tab.id, token, documentId: null, cancelled: false, committing: false};
   let injected = false;
   try {
+    Object.assign(job, await mutateStorage(nextRevision));
     // Deliberately retain the last accepted capture while this independent operation runs.
     await chrome.storage.session.set({lastError: '', jobStatus: 'CAPTURING'});
     const url = tab.url || '';
@@ -130,7 +132,11 @@ async function run(tab, scroll = true) {
     const capture = {...result, schemaVersion: SNAPSHOT_VERSION, captureId: crypto.randomUUID(), revision: job.revision,
       capturedAt: new Date().toISOString(), sourceTabId: tab.id, sourceDocumentId: job.documentId || ''};
     if (!validSnapshot(capture)) throw new Error('Capture plus metadata exceeds the 2,200,000-byte storage bound. Previous capture retained.');
-    await chrome.storage.session.set({capture, jobStatus: capture.status, lastError: ''});
+    await mutateStorage(async () => {
+      const current=await chrome.storage.session.get('clearEpoch');
+      if(job.cancelled || active!==job || (current.clearEpoch||0)!==job.clearEpoch)throw new Error('Capture cancelled. Clipboard unchanged.');
+      await chrome.storage.session.set({capture, jobStatus: capture.status, lastError: ''});
+    });
     try {
       await copyText(capture.text, job);
       await badge(tab.id, capture.status === 'PARTIAL' ? 'PART' : capture.status === 'BEST_EFFORT' ? 'DOM' : 'OK', `${capture.status}; ${utf8(capture.text).byteLength} UTF-8 bytes.`);
@@ -153,6 +159,7 @@ chrome.runtime.onInstalled.addListener(() => {
   void chrome.storage.local.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
   chrome.contextMenus.removeAll(() => {
     chrome.contextMenus.create({id: 'viewer', title: 'Просмотр последнего снимка', contexts: ['action']});
+    chrome.contextMenus.create({id: 'library', title: 'Библиотека документов по датам', contexts: ['action']});
     chrome.contextMenus.create({id: 'download', title: 'Скачать последний собранный текст', contexts: ['action']});
     chrome.contextMenus.create({id: 'loaded', title: 'Собрать загруженный текст без прокрутки', contexts: ['action']});
   });
@@ -160,6 +167,7 @@ chrome.runtime.onInstalled.addListener(() => {
 void chrome.storage.local.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
 chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'viewer') void openViewer();
+  if (info.menuItemId === 'library') void chrome.tabs.create({url: chrome.runtime.getURL('library.html')});
   if (info.menuItemId === 'loaded') void run(tab, false);
   if (info.menuItemId === 'download') void getCapture().then(found => {
     if (!found) throw new Error('Нет доступного снимка для скачивания.');
@@ -178,6 +186,12 @@ chrome.downloads.onChanged.addListener(delta => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
+  // A separate read-only route for our library. It never accepts arbitrary text or changes captures.
+  if (message?.target === 'library') {
+    if (sender.id !== chrome.runtime.id || sender.tab || sender.url !== chrome.runtime.getURL('library.html') || message.type !== 'getCapture') return false;
+    getCapture().then(found => respond({ok: true, capture: found?.capture || null}), error => respond({ok:false,error:error.message}));
+    return true;
+  }
   if (message?.target !== 'worker' || sender.id !== chrome.runtime.id) return false;
   if (message.type === 'progress' && sender.tab?.id === active?.tabId && message.operationToken === active.token) {
     active.documentId ||= sender.documentId || ''; void badge(sender.tab.id, String(message.blocks).slice(0, 4)); respond({ok: true}); return false;
@@ -187,7 +201,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   }
   if (message.type === 'downloadCapture') {
     // Content scripts may request only their own exact snapshot, never arbitrary text or the latest capture.
-    if (!sender.tab || message.userGesture !== true) return false;
+    if (!sender.tab || message.userGesture !== true || typeof message.captureId !== 'string' || !message.captureId || !Number.isSafeInteger(message.revision)) return false;
     getCapture(message.captureId, message.revision).then(found => {
       if (!found) throw new Error('Этот снимок больше недоступен; более новый результат не будет подставлен.');
       const c = found.capture;
@@ -196,7 +210,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     }).then(id => respond({ok: true, downloadId: id}), error => respond({ok: false, error: error.message})); return true;
   }
   if (message.type === 'openCapture') {
-    if (!sender.tab || message.userGesture !== true) return false;
+    if (!sender.tab || message.userGesture !== true || typeof message.captureId !== 'string' || !message.captureId || !Number.isSafeInteger(message.revision)) return false;
     getCapture(message.captureId, message.revision).then(found => {
       if (!found || found.capture.sourceTabId !== sender.tab.id || (found.capture.sourceDocumentId && found.capture.sourceDocumentId !== (sender.documentId || ''))) throw new Error('Этот снимок больше недоступен.');
       return openViewer();
@@ -218,7 +232,7 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
     }).then(id => respond({ok: true, downloadId: id}), error => respond({ok: false, error: error.message})); return true;
   }
   if (message.type === 'persist') {
-    (async () => {
+    mutateStorage(async () => {
       const state = await chrome.storage.session.get('clearEpoch');
       if ((state.clearEpoch || 0) !== message.clearEpoch) throw new Error('Данные были удалены в другой вкладке; сохранение отменено.');
       const found = await getCapture(message.captureId, message.revision);
@@ -227,16 +241,16 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
       const verify = (await chrome.storage.local.get(LOCAL_CAPTURE))[LOCAL_CAPTURE];
       if (!validSnapshot(verify) || verify.captureId !== found.capture.captureId) throw new Error('Chrome не подтвердил сохранение.');
       return verify;
-    })().then(saved => respond({ok: true, saved}), error => respond({ok: false, error: error.message})); return true;
+    }).then(saved => respond({ok: true, saved}), error => respond({ok: false, error: error.message})); return true;
   }
   if (message.type === 'clear') {
-    (async () => {
+    mutateStorage(async () => {
       if (active && !active.committing) { active.cancelled = true; void chrome.scripting.executeScript({target: {tabId: active.tabId}, func: () => globalThis.__occCancel?.()}).catch(() => {}); }
       const current = (await chrome.storage.session.get('clearEpoch')).clearEpoch || 0;
       await chrome.storage.session.clear(); await chrome.storage.session.set({clearEpoch: current + 1});
       await chrome.storage.local.remove(LOCAL_CAPTURE);
       return current + 1;
-    })().then(clearEpoch => respond({ok: true, clearEpoch}), error => respond({ok: false, error: error.message})); return true;
+    }).then(clearEpoch => respond({ok: true, clearEpoch}), error => respond({ok: false, error: error.message})); return true;
   }
   return false;
 });

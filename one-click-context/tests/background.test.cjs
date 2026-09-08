@@ -21,10 +21,11 @@ function area(seed = {}) {
     for (const item of Array.isArray(key) ? key : [key]) delete data[item];
   }, clear: async () => { for (const key of Object.keys(data)) delete data[key]; }, setAccessLevel: async () => {}};
 }
-function harness({capture, injectionError, clipboardError, beforeOffscreen, beforeInjection, session, local, downloadError, localSetError} = {}) {
+function harness({capture, injectionError, clipboardError, beforeOffscreen, beforeInjection, beforeLocalSet, session, local, downloadError, localSetError} = {}) {
   const writes = [], opened = [], downloadCalls = [], notifications = [], handlers = {};
   const sessionArea = area(session || {capture: snapshot()}); const localArea = area(local);
   if (localSetError) localArea.set = async () => { throw new Error(localSetError); };
+  if(beforeLocalSet){const original=localArea.set;localArea.set=async values=>{await beforeLocalSet();return original(values);};}
   let injections = 0, uuid = 10;
   const chrome = {
     action: {onClicked: {addListener: fn => handlers.action = fn}, setBadgeText: async () => {}, setTitle: async () => {}},
@@ -54,6 +55,31 @@ function harness({capture, injectionError, clipboardError, beforeOffscreen, befo
     get injections() { return injections; }};
 }
 function decodeDownload(spec) { return Buffer.from(spec.url.split(',')[1], 'base64'); }
+
+test('simultaneous captures reserve one operation before asynchronous revision allocation',async()=>{
+ const h=harness({capture:{text:'one',status:'BEST_EFFORT',warnings:[]}});
+ await Promise.all([h.run('https://example.org/a',1),h.run('https://example.org/b',2)]);
+ assert.equal(h.writes.length,1);assert.equal(h.session.capture.sourceTabId,1);
+});
+test('clear queued during a delayed persist removes the completed write',async()=>{
+ let release,entered;const started=new Promise(r=>entered=r);const gate=new Promise(r=>release=r);
+ const h=harness({beforeLocalSet:async()=>{entered();await gate;}});
+ const pending=h.message({target:'worker',type:'persist',captureId:id(1),revision:1,clearEpoch:0});await started;
+ const clear=h.message({target:'worker',type:'clear'});release();await pending;await clear;
+ assert.equal(h.local.savedCapture,undefined);assert.equal(h.session.capture,undefined);
+});
+test('notification routes require an explicit snapshot identity',async()=>{
+ const h=harness();for(const type of ['downloadCapture','openCapture'])assert.equal((await h.message({target:'worker',type,userGesture:true},{id:'test-id',tab:{id:1},documentId:'doc-1',url:'https://example.org'})).ignored,true);
+ assert.equal(h.downloadCalls.length,0);
+});
+
+test('library route exposes only accepted capture to the exact trusted library page', async () => {
+ const h=harness(); const req={target:'library',type:'getCapture'};
+ assert.equal((await h.message(req,{id:'test-id',url:'chrome-extension://test-id/library.html'})).capture.text,'old');
+ for(const sender of [{id:'other',url:'chrome-extension://test-id/library.html'},{id:'test-id',url:'https://example.org'},{id:'test-id',url:'chrome-extension://test-id/library.html',tab:{id:1}}]) assert.equal((await h.message(req,sender)).ignored,true);
+ assert.equal((await h.message({target:'library',type:'clear'},{id:'test-id',url:'chrome-extension://test-id/library.html'})).ignored,true);
+ assert.equal(h.session.capture.text,'old');assert.equal(h.writes.length,0);
+});
 
 test('successful capture retains exact UTF-8 and writes clipboard once', async () => {
   const text = 'Кириллица 😀\n  code\\path\r\n_under_\n+plus\n-minus'; const h = harness({capture:{text,status:'BEST_EFFORT',warnings:[],count:1}});
@@ -145,7 +171,7 @@ test('untrusted sender cannot use privileged viewer routes', async () => {
 });
 test('manifest is MV3 with narrow scope and downloads only added permission', () => {
   const m=JSON.parse(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8'));
-  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.3.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
+  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.4.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
   for(const p of ['cookies','history','clipboardRead','debugger','all_urls']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
 });
 test('export implementation has no capture, clipboard, DOM, scroll, or network side effect', () => {
