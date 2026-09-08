@@ -97,28 +97,48 @@
     host.style.cssText = 'position:fixed!important;right:18px!important;top:18px!important;z-index:2147483647!important';
     const shadow = host.attachShadow({mode: 'open'});
     const style = document.createElement('style');
-    style.textContent = ':host{all:initial}section{font:14px/1.45 system-ui;color:#edf5ff;background:#152a42;border:1px solid #88a9cd;border-radius:12px;padding:14px 17px;max-width:350px;box-shadow:0 5px 25px #0004}button{font:inherit;margin:10px 0 0;padding:5px 12px;cursor:pointer}';
+    style.textContent = ':host{all:initial}section{font:14px/1.45 system-ui;color:#edf5ff;background:#152a42;border:1px solid #88a9cd;border-radius:12px;padding:14px 17px;max-width:390px;box-shadow:0 5px 25px #0004}.actions{display:flex;gap:7px;flex-wrap:wrap}button{font:inherit;margin:10px 0 0;padding:5px 12px;cursor:pointer}';
     const section = document.createElement('section');
     const text = document.createElement('div'); text.textContent = 'Capturing text locally…';
     const button = document.createElement('button'); button.textContent = 'Cancel (Esc)'; button.onclick = cancel;
-    section.append(text, button); shadow.append(style, section); document.documentElement.append(host);
-    return {host, text, button};
+    const actions = document.createElement('div'); actions.className = 'actions'; actions.append(button);
+    section.append(text, actions); shadow.append(style, section); document.documentElement.append(host);
+    return {host, text, button, actions};
   }
-  function notify(text) {
+  function notify(message) {
     const old = document.querySelector('[data-occ-ignore="banner"]');
-    let ui;
-    if (old?.shadowRoot) {
-      old.shadowRoot.querySelector('div').textContent = text;
-      const b = old.shadowRoot.querySelector('button'); b.textContent = 'Dismiss'; b.onclick = () => old.remove();
-    } else {
-      ui = createUI(() => ui.host.remove()); ui.text.textContent = text; ui.button.textContent = 'Dismiss';
+    const ui = old?.shadowRoot ? {host: old, text: old.shadowRoot.querySelector('section>div'),
+      actions: old.shadowRoot.querySelector('.actions')} : createUI(() => {});
+    ui.actions ||= ui.host.shadowRoot.querySelector('.actions');
+    ui.actions.replaceChildren();
+    ui.text.textContent = typeof message === 'string' ? message : message.text;
+    function button(label, action) {
+      const b = document.createElement('button'); b.textContent = label;
+      b.addEventListener('click', async event => {
+        if (!event.isTrusted || b.disabled) return;
+        b.disabled = true;
+        try { await action(); } finally { b.disabled = false; }
+      });
+      ui.actions.append(b);
     }
+    if (message?.kind === 'capture') {
+      const request = type => async () => {
+        const result = await chrome.runtime.sendMessage({target: 'worker', type, captureId: message.captureId,
+          revision: message.revision, userGesture: true});
+        if (!result?.ok) ui.text.textContent = result?.error || 'Действие не выполнено.';
+        else if (type === 'downloadCapture') ui.text.textContent += ' Загрузка начата; итог подтвердит Chrome.';
+      };
+      button('Скачать TXT', request('downloadCapture'));
+      button('Просмотр', request('openCapture'));
+    }
+    button('Закрыть', async () => ui.host.remove());
   }
   globalThis.__occNotify = notify;
   globalThis.__occCancel = () => globalThis.__occController?.abort();
   globalThis.__occCapture = async (options = {}) => {
     if (globalThis.__occController) throw new Error('Capture already running in this tab.');
     const opt = {scroll: true, maxMs: 20000, maxSteps: 160, settleMs: 240, maxBytes: 2000000, ...options};
+    try { await chrome.runtime.sendMessage({target: 'worker', type: 'captureContext', operationToken: opt.operationToken}); } catch {}
     const encoder = new TextEncoder();
     const selected = window.getSelection()?.toString() || '';
     const active = document.activeElement;
@@ -209,7 +229,7 @@
       ui.text.textContent = `Capturing locally: ${order.length} blocks; ${Math.round(totalBytes / 1024)} KiB. ${direction < 0 ? 'Looking for older content…' : 'Reading downward…'}`;
       if (performance.now() - lastProgress > 1200) {
         lastProgress = performance.now();
-        try { const pending = chrome.runtime.sendMessage({target: 'worker', type: 'progress', blocks: order.length}); pending?.catch?.(() => {}); } catch {}
+        try { const pending = chrome.runtime.sendMessage({target: 'worker', type: 'progress', blocks: order.length, operationToken: opt.operationToken}); pending?.catch?.(() => {}); } catch {}
       }
       return `${order.length}/${totalBytes}/${root.scrollHeight}/${root.scrollTop}`;
     }
