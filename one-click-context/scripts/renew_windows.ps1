@@ -4,13 +4,14 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repo = 'BobIvans/scaling-chrome-extensions'
-$commit = '38540e6712e8d74354d134abd856f6c43a5b91e7'
+$commit = 'b3d87072195e2ba98ab8348cc6ffb5d384167df8'
 $base = "https://raw.githubusercontent.com/$repo/$commit/one-click-context"
-$expectedVersion = '0.7.0'
+$expectedVersion = '0.8.1'
 
 $files = @(
   'manifest.json',
   'background.js',
+  'artifact-inventory.js',
   'capture-regions.js',
   'content.js',
   'offscreen.html',
@@ -22,6 +23,7 @@ $files = @(
   'library/agent.mjs',
   'library/convert.mjs',
   'library/library.mjs',
+  'library/workspace.mjs',
   'library/library.css',
   'library/README_RU.md',
   'vendor/fflate.mjs',
@@ -120,6 +122,8 @@ try {
   Write-Host "3. Confirm version $expectedVersion."
   Write-Host "4. Reload the ChatGPT/DeepSeek/web page tabs you want to capture."
   Write-Host "5. Right-click the OCC icon to test Chat / Document / Chat + Document modes."
+  Write-Host "6. Open Library and test Project / Session / savedAt/capturedAt filters and backup/restore preview."
+  Write-Host "7. On a ChatGPT artifact page, verify the 0.8 artifact inventory remains visible and deterministic."
   Write-Host ""
   Write-Host "If anything breaks, close Chrome, restore the backup folder contents to $Target, then reload the extension." -ForegroundColor Yellow
 } catch {
