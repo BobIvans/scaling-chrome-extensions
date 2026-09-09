@@ -27,6 +27,21 @@ function partialReason(capture) {
   if (capture.status !== 'PARTIAL') return capture.status === 'BEST_EFFORT' ? 'BEST_EFFORT не гарантирует полноту истории.' : '';
   return capture.warnings.find(w => /time|step|size|unsupported|bound|структур/i.test(w)) || 'Причина ограничения не записана и неизвестна.';
 }
+const artifactMethod = {
+  USER_DOWNLOAD_IMPORT: 'скачать и импортировать по явному действию', FRAME_ACCESS_OR_EXPORT: 'открыть или экспортировать отдельно',
+  USER_EXPAND_THEN_RECAPTURE: 'развернуть вручную и повторить сбор', SCREENSHOT_OR_OCR: 'снимок видимой области; OCR не включён',
+  TRANSCRIPT_OR_USER_EXPORT: 'получить транскрипт или экспорт', OBSERVE_VISIBLE_DOM_OR_EXPORT_ORIGINAL: 'видимый DOM или исходный экспорт'
+};
+function showArtifacts(inventory) {
+  const list = $('artifacts'); list.replaceChildren();
+  const items = inventory?.items || [];
+  for (const item of items) {
+    const row = document.createElement('li');
+    row.textContent = `${item.kind}: ${item.label} — ${item.state}; ${artifactMethod[item.method] || item.method}${item.source ? `; ${item.source}` : ''}`;
+    list.append(row);
+  }
+  $('inventory').hidden = !items.length;
+}
 async function load() {
   const current = operation;
   const state = await chrome.runtime.sendMessage({target: 'worker', type: 'getState'});
@@ -38,8 +53,10 @@ async function load() {
     const place = state.session ? 'Временный исходный снимок (session)' : 'Сохранённый по согласию снимок (local)';
     $('status').textContent = `${place}. ${selectedCapture.status}. ${partialReason(selectedCapture)} ${state.lastError || ''}`.trim();
     $('persist').disabled = false;
+    showArtifacts(selectedCapture.artifacts);
     await updateMeta(`Исходный снимок ${selectedCapture.captureId}`);
   } else {
+    showArtifacts(null);
     $('status').textContent = state.lastError || 'Снимка нет. Соберите страницу или откройте UTF-8 файл.';
     $('save').disabled = true; $('persist').disabled = true;
   }
@@ -65,6 +82,7 @@ $('open').onclick = () => $('file').click();
 $('file').onchange = async () => {
   const file = $('file').files[0]; if (!file) return;
   const current = ++operation; setText(''); originalBytes = null; selectedCapture = null; edited = false; revision++;
+  showArtifacts(null);
   try {
     if (file.size > MAX_BYTES) throw new Error('Файл превышает предел 2 200 000 байт; усечение не выполнялось.');
     const bytes = new Uint8Array(await file.arrayBuffer()); if (current !== operation) return;
@@ -111,6 +129,7 @@ $('clear').onclick = async () => {
   const result = await chrome.runtime.sendMessage({target: 'worker', type: 'clear'});
   if (!result?.ok) { $('status').textContent = `Не удалено: ${result?.error}`; return; }
   clearEpoch = result.clearEpoch; setText(''); originalBytes = null; selectedCapture = null; edited = false; revision++;
+  showArtifacts(null);
   $('meta').textContent = ''; $('save').disabled = true; $('persist').disabled = true;
   $('status').textContent = 'Временный и сохранённый текст удалены. Уже скачанные файлы и системный буфер обмена не удалены.';
 };

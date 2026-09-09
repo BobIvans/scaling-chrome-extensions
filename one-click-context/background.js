@@ -15,11 +15,22 @@ const utf8 = text => new TextEncoder().encode(text);
 function validStatus(value) {
   return ['SELECTION', 'RAW_TEXT', 'BEST_EFFORT', 'PARTIAL'].includes(value);
 }
+function validArtifacts(value) {
+  const kinds = new Set(['file-link', 'embedded-document', 'collapsed-content', 'canvas', 'image', 'audio', 'video', 'editor']);
+  const states = new Set(['AVAILABLE', 'NOT_READ', 'TEXT_NOT_READ', 'VISIBLE_PART_ONLY']);
+  const methods = new Set(['USER_DOWNLOAD_IMPORT', 'FRAME_ACCESS_OR_EXPORT', 'USER_EXPAND_THEN_RECAPTURE',
+    'SCREENSHOT_OR_OCR', 'TRANSCRIPT_OR_USER_EXPORT', 'OBSERVE_VISIBLE_DOM_OR_EXPORT_ORIGINAL']);
+  return value?.schemaVersion === 1 && typeof value.limited === 'boolean' && Array.isArray(value.items) &&
+    value.items.length <= 100 && value.items.every((item, index) => item && item.id === `artifact-${index + 1}` &&
+      kinds.has(item.kind) && states.has(item.state) && methods.has(item.method) &&
+      typeof item.label === 'string' && item.label.length <= 160 && typeof item.source === 'string' && item.source.length <= 160);
+}
 function validSnapshot(value) {
   if (!value || value.schemaVersion !== SNAPSHOT_VERSION || typeof value.captureId !== 'string' ||
       !Number.isSafeInteger(value.revision) || value.revision < 1 || typeof value.text !== 'string' ||
       !value.text || !validStatus(value.status) || !Array.isArray(value.warnings) ||
-      value.warnings.some(item => typeof item !== 'string') || typeof value.capturedAt !== 'string') return false;
+      value.warnings.some(item => typeof item !== 'string') || typeof value.capturedAt !== 'string' ||
+      (value.artifacts !== undefined && !validArtifacts(value.artifacts))) return false;
   try {
     // The bound applies to the complete versioned record, not merely its text field.
     return utf8(value.text).byteLength <= MAX_BYTES && utf8(JSON.stringify(value)).byteLength <= MAX_BYTES &&
@@ -62,6 +73,9 @@ async function downloadRecent() {
     capturedAt: new Date().toISOString(),
     status: captures.some(c => c.status === 'PARTIAL') ? 'PARTIAL' : 'BEST_EFFORT',
     warnings: ['Агрегат снимков; полнота исходных страниц не гарантируется.'], text});
+}
+function safeScreenshotFilename(capture) {
+  return safeFilename(capture).replace(/\.txt$/, '_VISIBLE.png');
 }
 
 async function offscreen() {
@@ -114,6 +128,17 @@ async function downloadCapture(capture, tabId = null) {
   downloads.set(id, {tabId, captureId: capture.captureId});
   return id;
 }
+async function downloadVisibleScreenshot(capture, sender) {
+  if (!validSnapshot(capture)) throw new Error('Снимок отсутствует, пуст или повреждён.');
+  const tab = await chrome.tabs.get(sender.tab.id);
+  if (!tab?.active || tab.windowId !== sender.tab.windowId) throw new Error('Для снимка экрана исходная вкладка должна быть активна.');
+  const url = await chrome.tabs.captureVisibleTab(sender.tab.windowId, {format: 'png'});
+  if (typeof url !== 'string' || !url.startsWith('data:image/png')) throw new Error('Chrome не вернул снимок видимой области.');
+  const id = await chrome.downloads.download({url, filename: safeScreenshotFilename(capture), conflictAction: 'uniquify', saveAs: false});
+  if (!Number.isInteger(id)) throw new Error('Chrome не подтвердил начало загрузки снимка.');
+  downloads.set(id, {tabId: sender.tab.id, captureId: capture.captureId});
+  return id;
+}
 
 async function run(tab, scroll = true, sourceMode = 'auto') {
   if (typeof tab?.id !== 'number') return;
@@ -135,7 +160,7 @@ async function run(tab, scroll = true, sourceMode = 'auto') {
     const url = tab.url || '';
     if (!/^(https?:|file:)/i.test(url) || /^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/i.test(url)) throw new Error('This Chrome-protected page cannot be captured.');
     await badge(tab.id, '…', 'Capturing locally. Click again or press Escape to cancel.');
-    await chrome.scripting.executeScript({target: {tabId: tab.id}, files: ['capture-regions.js', 'content.js']}); injected = true;
+    await chrome.scripting.executeScript({target: {tabId: tab.id}, files: ['artifact-inventory.js', 'capture-regions.js', 'content.js']}); injected = true;
     if (job.cancelled) throw new Error('Capture cancelled before scanning. Clipboard unchanged.');
     const results = await chrome.scripting.executeScript({target: {tabId: tab.id}, func: opts => globalThis.__occCapture(opts), args: [{scroll, sourceMode, operationToken: token}]});
     const result = results?.[0]?.result;
@@ -236,6 +261,15 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
       const c = found.capture;
       if (c.sourceTabId !== sender.tab.id || (c.sourceDocumentId && c.sourceDocumentId !== (sender.documentId || ''))) throw new Error('Снимок принадлежит другой вкладке или документу.');
       return downloadCapture(c, sender.tab.id);
+    }).then(id => respond({ok: true, downloadId: id}), error => respond({ok: false, error: error.message})); return true;
+  }
+  if (message.type === 'captureScreenshot') {
+    if (!sender.tab || message.userGesture !== true || typeof message.captureId !== 'string' || !message.captureId || !Number.isSafeInteger(message.revision)) return false;
+    getCapture(message.captureId, message.revision).then(found => {
+      if (!found) throw new Error('Этот снимок больше недоступен; снимок другой вкладки сделан не будет.');
+      const c = found.capture;
+      if (c.sourceTabId !== sender.tab.id || (c.sourceDocumentId && c.sourceDocumentId !== (sender.documentId || ''))) throw new Error('Снимок принадлежит другой вкладке или документу.');
+      return downloadVisibleScreenshot(c, sender);
     }).then(id => respond({ok: true, downloadId: id}), error => respond({ok: false, error: error.message})); return true;
   }
   if (message.type === 'openCapture') {

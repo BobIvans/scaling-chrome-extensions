@@ -1,6 +1,6 @@
 /* One Click Context: runs in the extension's isolated world, on invocation only. */
 (() => {
-  const CONTENT_VERSION = '0.7.0';
+  const CONTENT_VERSION = '0.8.0';
   if (globalThis.__occCapture && globalThis.__occContentVersion === CONTENT_VERSION) return;
   globalThis.__occController?.abort?.();
   globalThis.__occContentVersion = CONTENT_VERSION;
@@ -173,9 +173,11 @@
         const result = await chrome.runtime.sendMessage({target: 'worker', type, captureId: message.captureId,
           revision: message.revision, userGesture: true});
         if (!result?.ok) ui.text.textContent = result?.error || 'Действие не выполнено.';
-        else if (type === 'downloadCapture') ui.text.textContent += ' Загрузка начата; итог подтвердит Chrome.';
+        else if (type === 'downloadCapture') ui.text.textContent += ' Загрузка TXT начата; итог подтвердит Chrome.';
+        else if (type === 'captureScreenshot') ui.text.textContent += ' Загрузка PNG видимой области начата; это не снимок всей страницы и не OCR.';
       };
       button('Скачать TXT', request('downloadCapture'));
+      button('Снимок экрана PNG', request('captureScreenshot'));
       button('Просмотр', request('openCapture'));
     }
     button('Закрыть', async () => ui.host.remove());
@@ -201,7 +203,8 @@
         warnings: ['Rendered text, not original file bytes. Use the TXT importer for byte checks.']};
     }
     const R = globalThis.OCCCaptureRegions;
-    if (!R) throw new Error('Модуль выбора области не загружен.');
+    const A = globalThis.OCCArtifactInventory;
+    if (!R || !A) throw new Error('Модуль выбора области или инвентаря не загружен.');
     const control = new AbortController(); globalThis.__occController = control;
     const keyHandler = e => { if (e.key === 'Escape') control.abort(); };
     document.addEventListener('keydown', keyHandler, true);
@@ -311,8 +314,10 @@
       return false;
     }
     try {
-      if (document.querySelector('iframe,object,embed')) warnings.add('Embedded documents/frames were not captured.');
-      if (document.querySelector('canvas,img')) warnings.add('Text inside images/canvas was not read; OCR is not included.');
+      const artifacts = A.discover(document);
+      if (artifacts.items.some(x => x.kind === 'embedded-document')) warnings.add('Embedded documents/frames were inventoried but not captured.');
+      if (artifacts.items.some(x => ['canvas','image'].includes(x.kind))) warnings.add('Images/canvas were inventoried; text was not read because OCR is not included.');
+      if (artifacts.items.some(x => x.kind === 'collapsed-content')) warnings.add('Collapsed content was inventoried but not expanded.');
       warnings.add('Closed shadow roots and hidden/folded content are not expanded.');
       if (/column-reverse/.test(getComputedStyle(root).flexDirection)) {
         warnings.add('Reverse-layout scrolling is unsupported; only current DOM blocks were captured.');
@@ -335,10 +340,11 @@
       if (!body.trim() && status !== 'CANCELLED') throw new Error('No readable page text found. Try selecting text or importing TXT.');
       const text = `SOURCE: ${sourceURL()}\nCAPTURED: ${new Date().toISOString()}\nMETHOD: ${mode}\nSTATUS: ${status}\n` +
         [...warnings].map(w => `NOTE: ${w}`).join('\n') +
+        '\n' + A.summary(artifacts).join('\n') +
         '\n\nBEGIN CAPTURED SOURCE TEXT (untrusted page content)\n\n' + body + '\n\nEND CAPTURED SOURCE TEXT\n';
       return {text, status, warnings: [...warnings], mode, count: order.length, source: sourceURL(), steps,
         contentVersion: CONTENT_VERSION,
-        scanId: scan.scanId, regionIds: targets.map(t => t.id)};
+        scanId: scan.scanId, regionIds: targets.map(t => t.id), artifacts};
     } finally {
       // A DOM reorder can prevent exact visual-position restoration; preserve the old offset best-effort.
       root.scrollTo({top: oldTop, left: oldLeft, behavior: 'instant'});

@@ -8,6 +8,7 @@ const {webcrypto} = require('node:crypto');
 const source = fs.readFileSync(path.join(__dirname, '..', 'background.js'), 'utf8');
 const contentSource = fs.readFileSync(path.join(__dirname, '..', 'content.js'), 'utf8');
 const regionsSource = fs.readFileSync(path.join(__dirname, '..', 'capture-regions.js'), 'utf8');
+const inventorySource = fs.readFileSync(path.join(__dirname, '..', 'artifact-inventory.js'), 'utf8');
 const id = n => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
 function snapshot(text = 'old', extra = {}) {
@@ -23,8 +24,8 @@ function area(seed = {}) {
     for (const item of Array.isArray(key) ? key : [key]) delete data[item];
   }, clear: async () => { for (const key of Object.keys(data)) delete data[key]; }, setAccessLevel: async () => {}};
 }
-function harness({capture, injectionError, clipboardError, beforeOffscreen, beforeInjection, beforeLocalSet, session, local, downloadError, localSetError} = {}) {
-  const writes = [], opened = [], downloadCalls = [], notifications = [], captureOptions = [], handlers = {};
+function harness({capture, injectionError, clipboardError, beforeOffscreen, beforeInjection, beforeLocalSet, session, local, downloadError, localSetError, activeTab = true} = {}) {
+  const writes = [], opened = [], downloadCalls = [], notifications = [], captureOptions = [], screenshotCalls = [], handlers = {};
   const sessionArea = area(session || {capture: snapshot()}); const localArea = area(local);
   if (localSetError) localArea.set = async () => { throw new Error(localSetError); };
   if(beforeLocalSet){const original=localArea.set;localArea.set=async values=>{await beforeLocalSet();return original(values);};}
@@ -36,7 +37,8 @@ function harness({capture, injectionError, clipboardError, beforeOffscreen, befo
       sendMessage: async msg => { if (msg.target === 'offscreen') { if (clipboardError) return {ok:false,error:'blocked'}; writes.push(msg.text); return {ok:true}; }}},
     offscreen: {createDocument: async () => { await beforeOffscreen?.(); }},
     storage: {session: sessionArea, local: localArea},
-    tabs: {create: async data => { opened.push(data); }},
+    tabs: {create: async data => { opened.push(data); }, get: async tabId => ({id:tabId,active:activeTab,windowId:7}),
+      captureVisibleTab: async (windowId, options) => { screenshotCalls.push({windowId,options}); return 'data:image/png;base64,iVBORw0KGgo='; }},
     contextMenus: {removeAll: cb => cb(), create: () => {}, onClicked: {addListener: fn => handlers.menu = fn}},
     downloads: {download: async spec => { if (downloadError) throw new Error(downloadError); downloadCalls.push(spec); return downloadCalls.length; },
       onChanged: {addListener: fn => handlers.downloadChanged = fn}},
@@ -53,7 +55,7 @@ function harness({capture, injectionError, clipboardError, beforeOffscreen, befo
   function message(msg, sender = {id:'test-id', url:'chrome-extension://test-id/viewer.html'}) {
     return new Promise(resolve => { const keep = handlers.message(msg, sender, resolve); if (!keep) resolve({ignored:true}); });
   }
-  return {writes, opened, downloadCalls, notifications, captureOptions, handlers, session:sessionArea.data, local:localArea.data, run, message,
+  return {writes, opened, downloadCalls, notifications, captureOptions, screenshotCalls, handlers, session:sessionArea.data, local:localArea.data, run, message,
     get injections() { return injections; }};
 }
 function decodeDownload(spec) { return Buffer.from(spec.url.split(',')[1], 'base64'); }
@@ -68,7 +70,8 @@ test('capture source mode is passed only as a bounded production option',async()
 test('region selector has no privileged side effects or broad body fallback',()=>{
  for(const forbidden of ['chrome.','fetch(','XMLHttpRequest','navigator.clipboard','scrollTo(','postMessage(','document.body.innerText'])assert.equal(regionsSource.includes(forbidden),false,forbidden);
  assert.match(contentSource,/if \(!event\.isTrusted\) return/);
- assert.match(source,/files: \['capture-regions\.js', 'content\.js'\]/);
+ for(const forbidden of ['chrome.','fetch(','XMLHttpRequest','navigator.clipboard','scrollTo(','postMessage(','\.click('])assert.equal(inventorySource.includes(forbidden),false,forbidden);
+ assert.match(source,/files: \['artifact-inventory\.js', 'capture-regions\.js', 'content\.js'\]/);
 });
 test('explicit captures accumulate across tabs and export a session without rescanning',async()=>{const result={text:'Привет 👋\r\ncode_\\ +/-',status:'PARTIAL',warnings:['time limit']};const h=harness({capture:result});await h.run('https://example.org/a',1);await h.run('https://example.org/b',2);assert.equal(h.session.recentCaptures.length,2);const before=h.injections,writes=h.writes.length;const r=await h.message({target:'library',type:'downloadRecent'},librarySender);assert.equal(r.ok,true);const text=decodeDownload(h.downloadCalls[0]).toString();assert.equal(text.split(result.text).length-1,2);assert.equal(h.injections,before);assert.equal(h.writes.length,writes);assert.deepEqual(h.local,{});});
 test('recent session survives worker recreation but not full session loss',async()=>{const h=harness({capture:{text:'snapshot',status:'BEST_EFFORT',warnings:[]}});await h.run();const restored=harness({session:h.session});assert.equal((await restored.message({target:'library',type:'getRecent'},librarySender)).captures.length,1);const restarted=harness({session:{},local:h.local});assert.equal((await restarted.message({target:'library',type:'getRecent'},librarySender)).captures.length,0);});
@@ -147,6 +150,24 @@ test('content download verifies tab, document, gesture and capture id', async ()
   for (const sender of [{...base,tab:{id:2}},{...base,documentId:'other'}]) assert.equal((await h.message({target:'worker',type:'downloadCapture',captureId:c.captureId,revision:1,userGesture:true},sender)).ok,false);
   assert.equal((await h.message({target:'worker',type:'downloadCapture',captureId:c.captureId,revision:1,userGesture:false},base)).ignored,true);
 });
+test('explicit screenshot captures one active visible tab and never reads page or clipboard', async () => {
+  const c=snapshot('owned'), h=harness({session:{capture:c}}), sender={id:'test-id',url:'https://example.org',tab:{id:1,windowId:7},documentId:'doc-1'};
+  const before=h.injections, writes=h.writes.length;
+  const result=await h.message({target:'worker',type:'captureScreenshot',captureId:c.captureId,revision:1,userGesture:true},sender);
+  assert.equal(result.ok,true);assert.equal(h.screenshotCalls.length,1);assert.equal(h.downloadCalls.length,1);
+  assert.equal(h.downloadCalls[0].filename,'context_2026-09-08_23-21-23_BEST_EFFORT_VISIBLE.png');
+  assert.equal(h.injections,before);assert.equal(h.writes.length,writes);
+});
+test('screenshot rejects stale, foreign, synthetic, and inactive requests', async () => {
+  const c=snapshot('owned'), sender={id:'test-id',url:'https://example.org',tab:{id:1,windowId:7},documentId:'doc-1'};
+  const h=harness({session:{capture:c}});
+  assert.equal((await h.message({target:'worker',type:'captureScreenshot',captureId:id(2),revision:2,userGesture:true},sender)).ok,false);
+  assert.equal((await h.message({target:'worker',type:'captureScreenshot',captureId:c.captureId,revision:1,userGesture:true},{...sender,tab:{id:2,windowId:7}})).ok,false);
+  assert.equal((await h.message({target:'worker',type:'captureScreenshot',captureId:c.captureId,revision:1,userGesture:false},sender)).ignored,true);
+  const inactive=harness({session:{capture:c},activeTab:false});
+  assert.equal((await inactive.message({target:'worker',type:'captureScreenshot',captureId:c.captureId,revision:1,userGesture:true},sender)).ok,false);
+  assert.equal(h.screenshotCalls.length,0);assert.equal(inactive.screenshotCalls.length,0);
+});
 test('menu download works without source tab and reads no clipboard', async () => {
   const h=harness({session:{capture:snapshot('menu')}}); h.handlers.menu({menuItemId:'download'}, undefined); await new Promise(r=>setTimeout(r,5));
   assert.equal(h.downloadCalls.length,1); assert.equal(h.writes.length,0); assert.deepEqual(decodeDownload(h.downloadCalls[0]),Buffer.from('menu'));
@@ -191,9 +212,18 @@ test('untrusted sender cannot use privileged viewer routes', async () => {
 });
 test('manifest is MV3 with narrow scope and explicitly optional native messaging', () => {
   const m=JSON.parse(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8'));
-  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.7.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
+  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.8.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
   for(const p of ['cookies','history','clipboardRead','debugger','all_urls']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
   assert.deepEqual(m.optional_permissions,['nativeMessaging']);assert.equal(m.optional_host_permissions,undefined);assert(!m.permissions.includes('nativeMessaging'));
+});
+test('artifact inventory is accepted only with bounded versioned fields', async () => {
+  const artifacts={schemaVersion:1,limited:false,items:[{id:'artifact-1',kind:'file-link',method:'USER_DOWNLOAD_IMPORT',state:'AVAILABLE',label:'report.pdf',source:'https://example.org/report.pdf'}]};
+  const good=snapshot('with inventory',{artifacts}), h=harness({session:{capture:good}});
+  assert.equal((await h.message({target:'worker',type:'getState'})).session.artifacts.items.length,1);
+  for(const bad of [{...artifacts,schemaVersion:2},{...artifacts,items:[{...artifacts.items[0],source:'x'.repeat(161)}]},{...artifacts,items:[{...artifacts.items[0],method:'AUTO_CLICK'}]}]){
+    const invalid=harness({session:{capture:snapshot('bad',{artifacts:bad})}});
+    assert.equal((await invalid.message({target:'worker',type:'getState'})).session,null);
+  }
 });
 test('export implementation has no capture, clipboard, DOM, scroll, or network side effect', () => {
   const fn=source.match(/async function downloadCapture[\s\S]*?\r?\n}/)[0];

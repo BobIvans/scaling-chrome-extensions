@@ -6,7 +6,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 BROWSER=os.environ.get('CHROMIUM_PATH')
-SCRIPT=(ROOT/'capture-regions.js').read_text(encoding='utf-8')+'\n'+(ROOT/'content.js').read_text(encoding='utf-8'); RESULTS=[]
+SCRIPT=(ROOT/'artifact-inventory.js').read_text(encoding='utf-8')+'\n'+(ROOT/'capture-regions.js').read_text(encoding='utf-8')+'\n'+(ROOT/'content.js').read_text(encoding='utf-8'); RESULTS=[]
 class Handler(http.server.BaseHTTPRequestHandler):
  def do_GET(self):
   body=b'<!doctype html><title>Local fixture</title><body></body>'; mime='text/html'
@@ -77,6 +77,14 @@ with sync_playwright() as p:
   fixture('<main><nav><p>NAV</p></nav><div data-message-id="m1" data-message-author-role="assistant"><p>CHAT</p></div><aside id="artifact"><pre>NESTED DOCUMENT</pre></aside></main>')
   r=capture(sourceMode='chat+document');require('CHAT' in r['text']);require('NESTED DOCUMENT' in r['text']);require('NAV' not in r['text']);require(r['text'].count('NESTED DOCUMENT')==1,r)
  check('nested document is a separate nonduplicated source part',nested_document)
+ def artifact_inventory():
+  fixture('<main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p></div></main><a download href="https://files.example/report.pdf?token=SECRET#page=2">Report</a><details><summary>Show attachment</summary><p>HIDDEN ATTACHMENT BODY</p></details><iframe title="Embedded doc" src="https://frame.example/doc?id=SECRET"></iframe><canvas aria-label="Price chart"></canvas><video title="Call recording"></video>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))");page.get_by_role('button',name='Чат 1').click();r=page.evaluate('pendingCapture');items=r['artifacts']['items'];kinds={x['kind'] for x in items}
+  require({'file-link','collapsed-content','embedded-document','canvas','video'}.issubset(kinds),items)
+  report=next(x for x in items if x['kind']=='file-link');require(report['source']=='https://files.example/report.pdf',report)
+  require('SECRET' not in json.dumps(items),items);require('HIDDEN ATTACHMENT BODY' not in r['text'],r['text'])
+  require('discovery is not content acquisition' in r['text'],r['text'])
+ check('artifact inventory reports access points without opening or reading them',artifact_inventory)
  def embedded_frame():
   fixture('<main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p></div></main><iframe style="width:500px;height:300px" srcdoc="<pre>FRAME SECRET</pre>"></iframe>')
   page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))");page.get_by_role('button',name='Чат 1').click();r=page.evaluate('pendingCapture');require('VISIBLE CHAT' in r['text']);require('FRAME SECRET' not in r['text']);require('EMBEDDED_CONTENT_NOT_READ' in r['warnings'],r)

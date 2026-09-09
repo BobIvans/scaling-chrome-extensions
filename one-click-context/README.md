@@ -1,6 +1,8 @@
-# One Click Context 0.7.0 — локальное Chrome-расширение
+# One Click Context 0.8.0 — локальное Chrome-расширение
 
-Версия 0.7.0 разделяет найденные сообщения переписки и открытый документ.
+Версия 0.8.0 разделяет найденные сообщения переписки и открытый документ, а также
+показывает детерминированный инвентарь видимых вложений, frames, медиа, свёрнутых
+блоков и редакторов.
 Обычный клик использует ограниченный автоматический выбор, а меню значка предлагает
 режимы «чат», «документ» и «чат + документ». Неоднозначный выбор требует настоящего
 пользовательского клика по конкретной области.
@@ -27,7 +29,8 @@ manually with Ctrl+V. Alt+Shift+C invokes the action when Chrome grants that sho
 customize it at chrome://extensions/shortcuts if another app uses it.
 
 A second action click or Escape cancels a running scan without copying it.
-После сбора уведомление позволяет скачать ровно этот снимок, открыть просмотрщик
+После сбора уведомление позволяет скачать ровно этот снимок, отдельно сохранить
+PNG только видимой области, открыть просмотрщик
 или закрыть уведомление. Меню значка позволяет скачать последний доступный снимок,
 в том числе после закрытия исходной вкладки. Right-click также открывает local
 viewer. The Options page does the same. Import a local UTF-8 TXT, MD, PATCH, DIFF,
@@ -46,6 +49,9 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
   расширение не читает и не изменяет посторонние загрузки.
 - No persistent host permissions, <all_urls>, cookies, history, debugger, clipboardRead,
   remote JavaScript, analytics or HTTP client calls.
+- artifact-inventory.js только обнаруживает видимые точки доступа и удаляет
+  query/hash из сохранённых URL. Он не нажимает элементы и не объявляет содержимое
+  вложения прочитанным.
 - content.js reads DOM text and preserves code whitespace, backslashes and diff signs.
   It uses role attributes when supplied by the DOM and otherwise generic main content.
 - background.js dispatches user actions; offscreen.js writes to the clipboard and
