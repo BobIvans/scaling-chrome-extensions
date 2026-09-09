@@ -1,0 +1,37 @@
+OCC 1.0 / CLOUD HERMES RENEWAL
+
+Branch: renewal/occ-1.0-agent-relay
+Base: occ-library
+
+DELIVERED
+- Full rendered page -> TXT collector for long/virtualized pages.
+- Side-panel Agent Relay.
+- Universal provider adapter: OpenAI-compatible Chat, Responses, Anthropic, Gemini.
+- Safe local browser relay over explicitly granted HTTP(S) tabs.
+- Sensitive-field blocking: password/OTP/payment-card/recovery/seed/private-key controls.
+- Local approval gate for financial/destructive/public/account actions.
+- Official Hermes browser-extension controller client using session registration + short-lived WSS ticket.
+- Remote Hermes /v1/runs start/status/stop integration.
+- Serverless Hermes Cloud Run deployment template using official nousresearch/hermes-agent image.
+- Supabase JWT broker source plus deployed occ-hermes-broker Edge Function.
+- Tests for provider parsing, remote HTTPS policy and Hermes capability boundary.
+- Chrome-ready packager updated for new files.
+
+ARCHITECTURE
+PERSONAL MODE: remote Hermes reasoning + local Chrome execution. Existing signed-in tabs work without exporting raw cookies/password-manager data.
+CLOUD MODE: remote Hermes + separate isolated cloud browser for 24/7 unattended public/research automation. Do not clone the personal Chrome profile into cloud.
+
+SUPABASE STATUS
+The occ-hermes-broker function is ACTIVE with JWT verification. It is intentionally fail-closed until these server secrets are configured:
+- HERMES_GATEWAY_URL
+- HERMES_API_SERVER_KEY
+- OCC_EXTENSION_ORIGIN
+
+NOT YET QUALIFIED
+- real installed-Chrome browser fixture;
+- actual remote Hermes WSS round-trip on deployed Cloud Run;
+- reconnect after Cloud Run WebSocket timeout;
+- Chrome Web Store review/package;
+- Repo Relay coding loop (ZIP/GitHub snapshot -> patch -> CI -> failure capsule -> next LLM iteration).
+
+DO NOT MERGE UNTIL LIVE QUALIFICATION PASSES.
