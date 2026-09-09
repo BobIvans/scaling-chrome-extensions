@@ -54,6 +54,15 @@ test('JSON collection restore preserves dates, rejects tampering and never persi
  page.once('dialog',d=>d.accept());await upload(record);await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('Восстановлено новых документов: 1'));assert.match(await page.locator('#list').textContent(),/2026-08-01/);assert.equal(await page.evaluate(()=>localStorage.getItem('occ-library-v1')),null);
  await upload({...record,text:'changed'});await page.waitForFunction(()=>document.querySelector('#status').textContent.includes('SHA-256'));assert.equal(await page.locator('#list .item').count(),1);await page.locator('#clear').click();
 });
+test('bundle UI reads the v2 workspace model and downloads exact UTF-8 part bytes',async()=>{
+ const p=await context.newPage();await p.goto(base+'/library/bundle.html');
+ const text='a'.repeat(15999)+'🙂tail';
+ await p.evaluate(({text})=>localStorage.setItem('occ-library-v1',JSON.stringify({version:2,records:[{id:'bundle-v2',name:'chat.txt',text,source:'ChatGPT',status:'BEST_EFFORT',warnings:[],project:'Research',session:'day-1',savedAt:'2026-09-09T01:00:00.000Z',createdAt:'2026-09-09T01:00:00.000Z',capturedAt:'2026-09-09T00:55:00.000Z'}]})),{text});
+ await p.reload();assert.equal(await p.locator('.item').count(),1);await p.locator('#all').check();await p.locator('#limit').fill('16002');await p.locator('#build').click();
+ await p.waitForFunction(()=>document.querySelector('#status').textContent.includes('Собрано'));
+ assert.match(await p.locator('#preview').inputValue(),/Проект: Research/);assert.match(await p.locator('#preview').inputValue(),/Сессия: day-1/);
+ const expected=Buffer.from(await p.locator('#preview').inputValue(),'utf8');const event=p.waitForEvent('download');await p.locator('#download').click();assert.deepEqual(fs.readFileSync(await(await event).path()),expected);await p.evaluate(()=>localStorage.removeItem('occ-library-v1'));await p.close();
+});
 test('real browser agent file download with mocked native API rejects synthetic connect',async()=>{
  const p=await context.newPage();const bytes=Buffer.from([0,255,128,65]);const sha=require('node:crypto').createHash('sha256').update(bytes).digest('hex');
  await p.addInitScript(({sha,base64})=>{globalThis.nativeCalls=[];window.chrome={runtime:{id:'fixture',connectNative(){let receive;return {onMessage:{addListener:f=>receive=f},onDisconnect:{addListener(){}},disconnect(){},postMessage(m){nativeCalls.push(m.type);const replies={hello:{version:1,supportedModes:globalThis.fixtureBuild?['analyze','build']:['analyze']},list:{jobs:[{id:'job',createdAt:'2026-09-09T00:00:00Z',mode:'build',state:'COMPLETE'}]},artifacts:{artifacts:[{id:'file',name:'report.zip',bytes:4,sha256:sha}]},artifact:{offset:0,bytes:4,sha256:sha,base64}};queueMicrotask(()=>receive({requestId:m.requestId,ok:true,...replies[m.type]}));}};}},permissions:{request:async()=>true}};},{sha,base64:bytes.toString('base64')});

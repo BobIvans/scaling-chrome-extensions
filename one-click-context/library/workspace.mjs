@@ -1,3 +1,5 @@
+import {encode,MAX_BYTES} from './convert.mjs';
+
 const MAX_NAME = 180;
 const MAX_QUERY = 4096;
 const STATUS = new Set(['ORIGINAL','EXTRACTED','EMPTY','UNSUPPORTED','SELECTION','RAW_TEXT','PARTIAL','BEST_EFFORT']);
@@ -51,6 +53,17 @@ export function facets(records) {
     projects: [...new Set(records.map(r=>r.project).filter(Boolean))].sort(),
     sessions: [...new Set(records.map(r=>r.session).filter(Boolean))].sort()
   };
+}
+
+export function aggregateWorkspace(records) {
+  const sorted=[...records].sort((a,b)=>(a.savedAt||a.createdAt).localeCompare(b.savedAt||b.createdAt)||a.id.localeCompare(b.id));
+  const out=sorted.map(r=>{
+    const savedAt=r.savedAt||r.createdAt;
+    const captured=r.capturedAt?`\nДата снимка/источника: ${r.capturedAt}`:'';
+    return `===== ${r.name} | ${savedAt} | ${r.status} =====\nПроект: ${r.project||'Inbox'}\nСессия: ${r.session||'(не задана)'}\nИсточник: ${r.source}${captured}\n${r.warnings.join('\n')}\n\n${r.text}`;
+  }).join('\n\n');
+  if(encode(out).length>MAX_BYTES)throw Error('Общий TXT превышает 2 200 000 байт. Выберите меньше документов.');
+  return out;
 }
 
 export function restorePlan(existing, incoming) {

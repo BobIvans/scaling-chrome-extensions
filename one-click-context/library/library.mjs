@@ -1,6 +1,6 @@
 import {convert,encode,digest,MAX_BYTES,safeName} from './convert.mjs';
 import {attachAgent} from './agent.mjs';
-import {normalizedRecord,filterRecords,facets,restorePlan,applyRestorePlan,text as cleanText} from './workspace.mjs';
+import {normalizedRecord,filterRecords,facets,restorePlan,applyRestorePlan,aggregateWorkspace,text as cleanText} from './workspace.mjs';
 
 const $=id=>document.getElementById(id);
 const KEY='occ-library-v1', EPOCH='occ-library-epoch', DEFAULTS='occ-workspace-defaults-v1';
@@ -29,16 +29,6 @@ function validate(items, defaults=currentDefaults()){
 function visibleRecords(){
   return filterRecords(records,{query:$('search').value,project:$('project-filter').value,session:$('session-filter').value,
     from:$('date-from').value,to:$('date-to').value,dateField:$('date-field').value});
-}
-
-function aggregateWorkspace(chosen){
-  const sorted=[...chosen].sort((a,b)=>a.savedAt.localeCompare(b.savedAt)||a.id.localeCompare(b.id));
-  const out=sorted.map(r=>{
-    const captured=r.capturedAt?`\nДата снимка/источника: ${r.capturedAt}`:'';
-    return `===== ${r.name} | ${r.savedAt} | ${r.status} =====\nПроект: ${r.project||'Inbox'}\nСессия: ${r.session||'(не задана)'}\nИсточник: ${r.source}${captured}\n${r.warnings.join('\n')}\n\n${r.text}`;
-  }).join('\n\n');
-  if(encode(out).length>MAX_BYTES)throw Error('Общий TXT превышает 2 200 000 байт. Выберите меньше документов.');
-  return out;
 }
 
 function updateFacets(){
