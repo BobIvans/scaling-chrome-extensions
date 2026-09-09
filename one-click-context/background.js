@@ -49,6 +49,20 @@ async function getCapture(captureId, revision) {
   if (validSnapshot(saved) && (!captureId || (saved.captureId === captureId && saved.revision === revision))) return {capture: saved, location: 'local'};
   return null;
 }
+function validRecent(value){return Array.isArray(value)&&value.length<=50&&value.every(validSnapshot)&&new Set(value.map(c=>c.captureId)).size===value.length&&utf8(JSON.stringify(value)).length<=MAX_BYTES;}
+async function getRecent(){const {recentCaptures}=await chrome.storage.session.get('recentCaptures');if(recentCaptures===undefined)return [];if(!validRecent(recentCaptures))throw new Error('Память сессии повреждена или превышает лимит.');return recentCaptures;}
+async function downloadRecent() {
+  const captures = await getRecent();
+  if (!captures.length) throw new Error('В текущей сессии ещё нет собранных страниц.');
+  // This is an explicitly labelled collection, not the byte-exact single-snapshot export.
+  const text = captures.map((c, i) =>
+    `===== ${i + 1} · ${c.capturedAt} · ${c.source || 'Источник не указан'} =====\nSTATUS: ${c.status}\n${limitation(c)}\n${c.warnings.join('\n')}\n${c.text}`
+  ).join('\n\n');
+  return downloadCapture({schemaVersion: 1, captureId: crypto.randomUUID(), revision: 1,
+    capturedAt: new Date().toISOString(),
+    status: captures.some(c => c.status === 'PARTIAL') ? 'PARTIAL' : 'BEST_EFFORT',
+    warnings: ['Агрегат снимков; полнота исходных страниц не гарантируется.'], text});
+}
 
 async function offscreen() {
   const url = chrome.runtime.getURL('offscreen.html');
@@ -79,10 +93,10 @@ async function notify(tabId, message) {
 }
 async function openViewer() { await chrome.tabs.create({url: viewerURL()}); }
 async function nextRevision() {
-  const data = await chrome.storage.session.get(['revisionCounter', 'clearEpoch']);
+  const data = await chrome.storage.session.get(['revisionCounter', 'clearEpoch','recentEpoch']);
   const revision = Number.isSafeInteger(data.revisionCounter) ? data.revisionCounter + 1 : 1;
   await chrome.storage.session.set({revisionCounter: revision});
-  return {revision, clearEpoch: data.clearEpoch || 0};
+  return {revision, clearEpoch: data.clearEpoch || 0,recentEpoch:data.recentEpoch||0};
 }
 function limitation(capture) {
   if (capture.status !== 'PARTIAL') return capture.status === 'BEST_EFFORT' ? 'BEST_EFFORT не гарантирует полную историю.' : '';
@@ -136,6 +150,8 @@ async function run(tab, scroll = true) {
       const current=await chrome.storage.session.get('clearEpoch');
       if(job.cancelled || active!==job || (current.clearEpoch||0)!==job.clearEpoch)throw new Error('Capture cancelled. Clipboard unchanged.');
       await chrome.storage.session.set({capture, jobStatus: capture.status, lastError: ''});
+      const epoch=(await chrome.storage.session.get('recentEpoch')).recentEpoch||0;
+      if(epoch===job.recentEpoch){try{const recent=await getRecent(),next=[...recent,capture];if(!validRecent(next))throw new Error('Память сессии заполнена: максимум 50 снимков / 2 200 000 байт. Скачайте и очистите её.');await chrome.storage.session.set({recentCaptures:next,recentWarning:''});}catch(error){await chrome.storage.session.set({recentWarning:error.message});}}
     });
     try {
       await copyText(capture.text, job);
@@ -144,7 +160,8 @@ async function run(tab, scroll = true) {
       await chrome.storage.session.set({lastError: `Clipboard was blocked: ${error.message}. Download remains available.`});
       await badge(tab.id, 'COPY', 'Text captured. Clipboard blocked; Download remains available.');
     }
-    await notify(tab.id, {kind: 'capture', text: `${utf8(capture.text).byteLength.toLocaleString()} UTF-8 байт. ${limitation(capture)}`,
+    const recentWarning=(await chrome.storage.session.get('recentWarning')).recentWarning||'';
+    await notify(tab.id, {kind: 'capture', text: `${utf8(capture.text).byteLength.toLocaleString()} UTF-8 байт. ${limitation(capture)} ${recentWarning}`,
       captureId: capture.captureId, revision: capture.revision});
   } catch (error) {
     await chrome.storage.session.set({lastError: error.message || String(error), jobStatus: job.cancelled ? 'CANCELLED' : 'ERROR'});
@@ -161,6 +178,7 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({id: 'viewer', title: 'Просмотр последнего снимка', contexts: ['action']});
     chrome.contextMenus.create({id: 'library', title: 'Библиотека документов по датам', contexts: ['action']});
     chrome.contextMenus.create({id: 'download', title: 'Скачать последний собранный текст', contexts: ['action']});
+    chrome.contextMenus.create({id:'recent-download',title:'Скачать все снимки текущей сессии TXT',contexts:['action']});
     chrome.contextMenus.create({id: 'loaded', title: 'Собрать загруженный текст без прокрутки', contexts: ['action']});
   });
 });
@@ -169,6 +187,7 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'viewer') void openViewer();
   if (info.menuItemId === 'library') void chrome.tabs.create({url: chrome.runtime.getURL('library.html')});
   if (info.menuItemId === 'loaded') void run(tab, false);
+  if(info.menuItemId==='recent-download')void downloadRecent().catch(error=>{void chrome.tabs.create({url:`${viewerURL()}?downloadError=${encodeURIComponent(error.message)}`});});
   if (info.menuItemId === 'download') void getCapture().then(found => {
     if (!found) throw new Error('Нет доступного снимка для скачивания.');
     return downloadCapture(found.capture);
@@ -186,9 +205,13 @@ chrome.downloads.onChanged.addListener(delta => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
-  // A separate read-only route for our library. It never accepts arbitrary text or changes captures.
+  // Exact library page only: capture reads and bounded recent-session commands; no arbitrary payloads.
   if (message?.target === 'library') {
-    if (sender.id !== chrome.runtime.id || sender.tab || sender.url !== chrome.runtime.getURL('library.html') || message.type !== 'getCapture') return false;
+    if (sender.id !== chrome.runtime.id || sender.tab || sender.url !== chrome.runtime.getURL('library.html')) return false;
+    if(message.type==='getRecent'){getRecent().then(captures=>respond({ok:true,captures}),error=>respond({ok:false,error:error.message}));return true;}
+    if(message.type==='downloadRecent'){downloadRecent().then(downloadId=>respond({ok:true,downloadId}),error=>respond({ok:false,error:error.message}));return true;}
+    if(message.type==='clearRecent'){mutateStorage(async()=>{const epoch=(await chrome.storage.session.get('recentEpoch')).recentEpoch||0;await chrome.storage.session.set({recentCaptures:[],recentEpoch:epoch+1,recentWarning:''});}).then(()=>respond({ok:true}),error=>respond({ok:false,error:error.message}));return true;}
+    if(message.type!=='getCapture')return false;
     getCapture().then(found => respond({ok: true, capture: found?.capture || null}), error => respond({ok:false,error:error.message}));
     return true;
   }

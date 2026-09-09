@@ -55,6 +55,12 @@ function harness({capture, injectionError, clipboardError, beforeOffscreen, befo
     get injections() { return injections; }};
 }
 function decodeDownload(spec) { return Buffer.from(spec.url.split(',')[1], 'base64'); }
+const librarySender={id:'test-id',url:'chrome-extension://test-id/library.html'};
+test('explicit captures accumulate across tabs and export a session without rescanning',async()=>{const result={text:'Привет 👋\r\ncode_\\ +/-',status:'PARTIAL',warnings:['time limit']};const h=harness({capture:result});await h.run('https://example.org/a',1);await h.run('https://example.org/b',2);assert.equal(h.session.recentCaptures.length,2);const before=h.injections,writes=h.writes.length;const r=await h.message({target:'library',type:'downloadRecent'},librarySender);assert.equal(r.ok,true);const text=decodeDownload(h.downloadCalls[0]).toString();assert.equal(text.split(result.text).length-1,2);assert.equal(h.injections,before);assert.equal(h.writes.length,writes);assert.deepEqual(h.local,{});});
+test('recent session survives worker recreation but not full session loss',async()=>{const h=harness({capture:{text:'snapshot',status:'BEST_EFFORT',warnings:[]}});await h.run();const restored=harness({session:h.session});assert.equal((await restored.message({target:'library',type:'getRecent'},librarySender)).captures.length,1);const restarted=harness({session:{},local:h.local});assert.equal((await restarted.message({target:'library',type:'getRecent'},librarySender)).captures.length,0);});
+test('full recent memory retains old entries and still accepts latest capture',async()=>{const previous=Array.from({length:50},(_,i)=>snapshot('old',{captureId:id(i+100)}));const h=harness({session:{recentCaptures:previous},capture:{text:'new',status:'BEST_EFFORT',warnings:[]}});await h.run();assert.equal(h.session.capture.text,'new');assert.equal(h.session.recentCaptures.length,50);assert.match(h.session.recentWarning,/заполнена/);assert.ok(h.notifications.some(n=>n.text.includes('заполнена')));});
+test('clear recent memory defeats late operation without deleting last snapshot',async()=>{let release,entered;const gate=new Promise(r=>release=r),start=new Promise(r=>entered=r);const h=harness({capture:{text:'new',status:'BEST_EFFORT',warnings:[]},beforeInjection:async()=>{entered();await gate;}});const pending=h.run();await start;await h.message({target:'library',type:'clearRecent'},librarySender);release();await pending;assert.equal(h.session.recentCaptures.length,0);assert.equal(h.session.capture.text,'new');});
+test('content scripts cannot read clear or export other session captures',async()=>{const h=harness();for(const type of ['getRecent','clearRecent','downloadRecent']){const r=await h.message({target:'library',type},{id:'test-id',url:'https://example.org',tab:{id:1}});assert.equal(r.ignored,true);}assert.equal(h.downloadCalls.length,0);});
 
 test('simultaneous captures reserve one operation before asynchronous revision allocation',async()=>{
  const h=harness({capture:{text:'one',status:'BEST_EFFORT',warnings:[]}});
@@ -171,12 +177,24 @@ test('untrusted sender cannot use privileged viewer routes', async () => {
 });
 test('manifest is MV3 with narrow scope and explicitly optional native messaging', () => {
   const m=JSON.parse(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8'));
-  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.5.2'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
+  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.6.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
   for(const p of ['cookies','history','clipboardRead','debugger','all_urls']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
   assert.deepEqual(m.optional_permissions,['nativeMessaging']);assert.equal(m.optional_host_permissions,undefined);assert(!m.permissions.includes('nativeMessaging'));
 });
 test('export implementation has no capture, clipboard, DOM, scroll, or network side effect', () => {
-  const fn=source.slice(source.indexOf('async function downloadCapture'),source.indexOf('\n}\n\nasync function run'));
+  const fn=source.match(/async function downloadCapture[\s\S]*?\r?\n}/)[0];
   for(const forbidden of ['__occCapture','copyText(','clipboard','executeScript','fetch(','XMLHttpRequest','scroll']) assert(!fn.includes(forbidden),forbidden);
   assert(fn.includes('capture.text'));
+});
+
+test('recent memory rejects corrupt and oversized records and empty export',async()=>{
+ for(const recentCaptures of [[{text:'invalid'}],[snapshot('x'.repeat(2200000))]]){
+  const h=harness({session:{recentCaptures}});
+  assert.equal((await h.message({target:'library',type:'getRecent'},librarySender)).ok,false);
+  assert.equal((await h.message({target:'library',type:'downloadRecent'},librarySender)).ok,false);
+  assert.equal(h.downloadCalls.length,0);
+ }
+ const h=harness({session:{}});
+ assert.equal((await h.message({target:'library',type:'downloadRecent'},librarySender)).ok,false);
+ assert.equal(h.downloadCalls.length,0);
 });
