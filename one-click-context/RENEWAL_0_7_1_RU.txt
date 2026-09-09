@@ -1,0 +1,66 @@
+ONE CLICK CONTEXT 0.7.1 — RENEWAL CHECKPOINT
+Дата: 2026-09-09
+База: branch occ-library, manifest 0.7.0. Renewal branch: renewal/occ-0.7.1-workspace.
+
+ЧТО ИЗМЕНЕНО В ЭТОМ RENEWAL
+1. Рабочая версия поднята 0.7.0 -> 0.7.1 без отката main/codex старых версий.
+2. Библиотека получила текущие Project + Session для новых импортов/снимков.
+3. Фильтры: project, session, search, date range; отдельно savedAt и capturedAt.
+4. Aggregate TXT подписывает project/session/source/savedAt/capturedAt/status.
+5. Старые local library records v1 мигрируются при чтении в metadata v2.
+6. Полный text-only backup всей библиотеки отдельной кнопкой.
+7. Restore сохраняет исходные record IDs, отделяет adds/duplicates/conflicts, не делает silent overwrite; конфликт блокирует запись.
+8. Добавлены pure helpers library/workspace.mjs и unit tests.
+9. Локально проверено: node --check нового library.mjs; workspace tests 4 PASS / 0 FAIL.
+
+ЧТО УЖЕ БЫЛО В OCC-LIBRARY 0.7.0 И СОХРАНЕНО
+- PANE region selector: chat/document/chat+document, no body fallback, iframe detection, editor warnings.
+- Снимки, download, временная recent-session память.
+- DOCX/PPTX/XLSX/text-PDF/ZIP parser path.
+- Native Messaging Codex bridge: analyze/build job modes, result/artifact bytes + hashes.
+- Chrome-ready packaging scripts и INSTALL_RU.
+
+ЧТО ЕЩЁ НЕ ЗАКРЫТО И ПОЧЕМУ
+P0 / следующий безопасный storage PR:
+- Перенести persistent library из одного localStorage JSON (100 records / 2.2 MB) в один IndexedDB owner.
+- Blob/original store с quota/refcounts/tombstones.
+- Transactional backup restore plan hash + revision/CAS, two independent connections tests.
+
+P1 / capture + adapters:
+- Реальная installed-Chrome acceptance на авторизованном ChatGPT layout для PANE-01..12.
+- Stable ChatGPT/DeepSeek message/date/attachment adapters и virtualized history diagnostics.
+- Explicit selected-tabs queue with tab/document/origin grant lifecycle.
+- Selected attachment fetch with redirect/MIME/size/expiry handling; no arbitrary URL proxy.
+
+P1 / formats:
+- UTF-16 BOM text path, SRT/VTT parser integration.
+- OCR opt-in for scanned PDF/images; ASR/media only as separately approved adapter.
+- Legacy DOC/PPT/XLS helper or explicit unsupported status.
+- Stronger ZIP encrypted/ZIP64/symlink/ratio/depth evidence.
+
+P1 / jobs:
+- Durable production job owner integrated with IndexedDB: lease/generation/idempotency/recovery/cancel/reconciliation.
+- Schedules with durable occurrenceId reservation; no promise of 24/7 while PC is off.
+
+P1 / Codex:
+- Installed Windows native-host end-to-end: Hub -> Codex -> output file -> download -> delete job.
+- Large native framing/backpressure/reconnect qualification against installed host and actual Codex protocol.
+
+P2 / optional external integrations:
+- OpenClaw/MCP/other AI providers with explicit auth/scopes/budget.
+- Delivery channels with preview/recipient/one-shot approval/receipt/reconciliation.
+- Supabase Auth/sync code can be prepared, but SQL/RLS/Storage deployment stays BLOCKED_CONSENT until separately approved and tested with two users.
+- Web3 remains read-only research; no signer/trading executor in this extension.
+
+P2 / product:
+- Teams/roles/quotas/billing/observability and public SaaS readiness after storage/auth isolation.
+
+VERIFY BEFORE MERGE
+node --test one-click-context/tests/workspace.test.mjs
+node --check one-click-context/library/library.mjs
+Run existing repo unit/browser/native suites from occ-library without weakening assertions.
+Then load unpacked extension from a copy, preserve existing extension data/ID, test:
+chat only; right document; chat+document; stale notification; restart; library v1 migration; project/session/date filters; backup duplicates/conflicts; Codex connect/run/artifact/delete.
+
+IMPORTANT
+This branch is a source renewal and is not claimed installed into ~\Downloads\ONE_CLICK_CONTEXT_CHROME_READY. That Windows folder was not accessible from this environment. Do not overwrite it blindly: backup its actual manifest/data/native-host binding first and compare its version/build to this branch.
