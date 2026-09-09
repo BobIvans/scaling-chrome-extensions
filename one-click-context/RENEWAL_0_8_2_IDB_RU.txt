@@ -1,0 +1,66 @@
+ONE CLICK CONTEXT 0.8.2 — INDEXEDDB / DURABLE LIBRARY RENEWAL
+Дата: 2026-09-09
+База: renewal/occ-0.8.1-workspace поверх occ-library 0.8.0.
+Ветка: renewal/occ-0.8.2-idb.
+
+ЧТО ИЗМЕНЕНО
+1. manifest 0.8.1 -> 0.8.2.
+2. Добавлен единый IndexedDB owner: library/idb-store.mjs.
+3. Durable store разделён на records + meta revision, без второго параллельного application runtime.
+4. replaceLibrary использует expectedRevision CAS внутри одной readwrite transaction.
+5. Две вкладки/соединения не могут молча перезаписать одну revision: stale writer получает LIBRARY_REVISION_CONFLICT.
+6. Restore сохраняет IDs, сначала строит adds/duplicates/conflicts, затем bind confirmation к SHA-256 plan hash + expectedRevision.
+7. Restore commit выполняется атомарно; stale plan/changed revision/conflict не пишет частичный результат.
+8. Clear — отдельная revisioned transaction; late/stale writer не может вернуть старое состояние без конфликта.
+9. Первая загрузка мигрирует legacy localStorage v1/v2 только если IndexedDB действительно пустая; после успешного commit legacy JSON удаляется.
+10. UI library.mjs реально переведён на IndexedDB для Save / Restore / Clear / startup. Это не contract-only модуль.
+11. Import/capture остаются рабочей копией до явной кнопки «Сохранить», сохраняя прежнюю privacy semantics. UI показывает dirty state.
+12. Ограничение 2.2 MB осталось на отдельный документ и aggregate TXT, но больше не является лимитом всей durable library.
+13. Текущий верхний защитный предел — 5000 records; реальная браузерная quota остаётся внешним ограничением и ошибка commit не заменяет прошлую revision.
+14. JSON backup text-only допускает до 64 MiB; большие коллекции должны экспортироваться частями/проектами.
+15. Cross-tab BroadcastChannel: сохранённая revision перечитывается автоматически только если локальная вкладка clean; dirty вкладка не теряет изменения молча.
+16. Windows renew script pin-нут на source commit fdd5b74e0fcabaa4da18084bb4aad337c8aebf35 и добавляет idb-store.mjs, сохраняя artifact-inventory 0.8.
+
+ТЕСТОВЫЙ КОД
+- tests/idb-store.browser.mjs: реальный IndexedDB, две независимые connections, competing writers, plan-hash rejection, restore, conflict rollback, stale revision, clear, close/reopen persistence.
+- tests/idb_store_browser.py: Chromium runner; fixture использует настоящий browser IndexedDB, не общий JS mutex.
+
+ВАЖНО ПРО EVIDENCE
+В этой ChatGPT execution environment GitHub доступен через connector, но обычный container не имеет DNS-доступа к github.com. Поэтому новый Chromium test runner здесь НЕ запускался после записи ветки.
+Это значит: code path IMPLEMENTED_UNVERIFIED / browser qualification NOT_RUN, а не PASS.
+Перед merge обязательно выполнить:
+  CHROMIUM_PATH=/usr/bin/chromium python one-click-context/tests/idb_store_browser.py
+и существующие suites 0.8/0.8.1.
+
+ОБЯЗАТЕЛЬНАЯ ACCEPTANCE ПЕРЕД MERGE
+A. IDB browser runner PASS, два connections реально distinct.
+B. Existing unit/browser/native suites без ослабления assertions.
+C. Установленная копия Chrome: открыть старую library -> migration -> Save -> restart Chrome -> records retained.
+D. Две вкладки Library: A save revision N+1, B stale save должен fail, а не overwrite.
+E. Restore duplicates/conflicts/changed plan hash/stale revision: ни одного partial commit.
+F. Quota/transaction abort: предыдущая durable revision остаётся читаемой.
+G. Clear + late/stale tab: удалённые records не resurrect.
+H. 0.8 artifact inventory, PANE selector, capture, download и Codex bridge не регрессировали.
+
+ЧТО ЕЩЁ ОСТАЛОСЬ ПО STORAGE
+- Вынести original binary bytes в отдельный Blob store с content hash/refcounts/quota/GC вместо массивов внутри record.
+- Добавить tombstones/version history, если нужен sync/restore старых backup без resurrection.
+- Добавить index stores для очень больших library searches после измерения, не заранее.
+- Проверить quota behavior на реальном пользовательском Chrome и backup roundtrip больших коллекций.
+
+СЛЕДУЮЩИЙ ПРИОРИТЕТ ПОСЛЕ STORAGE QUALIFICATION
+1. Live ChatGPT/DeepSeek adapters: stable message IDs, dates, virtualized history diagnostics.
+2. Selected tabs + tab/document/origin grant lifecycle.
+3. Selected attachments fetch/parse with redirect/MIME/size/expiry checks.
+4. Durable job engine integrated with the same IndexedDB authority, lease/generation/reconciliation.
+5. Installed Codex E2E and native framing/backpressure/reconnect.
+6. UTF-16/SRT/VTT, OCR/ASR optional adapters.
+7. External channels/OpenClaw/MCP/Supabase only with explicit permissions; SQL remains BLOCKED_CONSENT.
+
+НЕ ИЗМЕНЕНО
+- Supabase SQL/RLS/Storage не применялись.
+- Облачная sync не включалась.
+- Cookies/auth tokens не читаются и не экспортируются.
+- Trading/signing/wallet actions не добавлялись.
+- Installed folder ~\Downloads\ONE_CLICK_CONTEXT_CHROME_READY из этой среды не изменялась.
+- PR/ветки не merge автоматически.
