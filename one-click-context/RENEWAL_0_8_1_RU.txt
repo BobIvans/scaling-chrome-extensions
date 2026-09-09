@@ -1,0 +1,67 @@
+ONE CLICK CONTEXT 0.8.1 — RENEWAL CHECKPOINT
+Дата: 2026-09-09
+База: актуальная ветка occ-library, manifest 0.8.0.
+Renewal branch: renewal/occ-0.8.1-workspace.
+
+ЧТО ИЗМЕНЕНО В ЭТОМ RENEWAL
+1. Сохранён весь 0.8 artifact-inventory/runtime и версия поднята 0.8.0 -> 0.8.1.
+2. Библиотека получила текущие Project + Session для новых импортов/снимков.
+3. Фильтры: project, session, search, date range; отдельно savedAt и capturedAt.
+4. Aggregate TXT подписывает project/session/source/savedAt/capturedAt/status.
+5. Старые local library records v1 нормализуются в metadata v2 при чтении.
+6. Полный text-only backup всей библиотеки отдельной кнопкой.
+7. Restore сохраняет record IDs, отделяет adds/duplicates/conflicts и не делает silent overwrite; конфликт блокирует запись.
+8. Добавлены library/workspace.mjs и unit tests.
+9. Windows renewal script обновлён на pinned 0.8.1 runtime и включает artifact-inventory.js + workspace.mjs.
+10. Локально проверено на подготовленном исходнике: node --check library.mjs; workspace tests 4 PASS / 0 FAIL. Это не installed-Chrome acceptance.
+
+ЧТО УЖЕ ЕСТЬ В 0.8 И СОХРАНЕНО
+- Capture snapshot, Copy/Download/viewer/recent session.
+- PANE region selector: Chat / Document / Chat+Document, no body fallback, iframe/editor warnings.
+- Deterministic artifact inventory и visible artifact screenshots/metadata path 0.8.
+- DOCX/PPTX/XLSX/text-PDF/ZIP conversion path с ограничениями.
+- Native Messaging Codex bridge: analyze/build jobs, result/artifact bytes + SHA-256.
+- Chrome-ready packaging/INSTALL_RU.
+
+ЧТО ЕЩЁ НУЖНО ЗАВЕРШИТЬ
+P0 STORAGE
+- Перенести persistent library из localStorage (100 records / 2.2 MB) в один IndexedDB owner.
+- Original/blob store с quota/refcounts/tombstones.
+- Transactional restore plan hash + revision/CAS и two-independent-connection tests.
+
+P0 INSTALLED ACCEPTANCE
+- Проверить реальную папку ~\Downloads\ONE_CLICK_CONTEXT_CHROME_READY перед update: manifest, extension ID, backup, local data/native host binding.
+- После renewal: existing extension card -> Reload; НЕ удалять расширение.
+- Проверить Chat / Document / Chat+Document, 0.8 artifact inventory, stale toast, restart, Project/Session/date filters, backup duplicate/conflict, Codex job/artifact/delete.
+
+P1 ADAPTERS / ATTACHMENTS
+- Live ChatGPT/DeepSeek adapters: stable IDs/roles/dates, virtualization diagnostics.
+- Explicit selected-tabs queue с tab/document/origin grants and cancellation.
+- Selected attachment fetch с redirect/MIME/size/expiry bounds; opaque/site-managed fallback; no arbitrary URL proxy.
+
+P1 FORMATS
+- UTF-16 BOM, SRT/VTT.
+- OCR opt-in for scans/images; ASR/media as separately approved capability.
+- Legacy DOC/PPT/XLS helper or explicit unsupported state.
+- More ZIP edge evidence: encrypted/ZIP64/symlink/ratio/depth.
+
+P1 JOBS / CODEX
+- Durable IndexedDB job owner: lease/generation/idempotency/recovery/cancel/reconciliation.
+- Schedules with durable occurrence reservation.
+- Installed native-host E2E and large framing/backpressure/reconnect qualification.
+
+P2 EXTERNAL
+- OpenClaw/MCP/other AI adapters with explicit auth/scopes/budget.
+- Delivery channels with preview/recipient/approval/receipt/reconciliation.
+- Supabase stays local-first/BLOCKED_CONSENT for SQL/RLS/Storage until separately approved and tested with two users.
+- Web3 remains read-only research; no signer/trading executor.
+- Teams/roles/quotas/billing/observability/public SaaS after storage/auth isolation.
+
+VERIFY BEFORE MERGE
+node --test one-click-context/tests/workspace.test.mjs
+node --check one-click-context/library/library.mjs
+Run existing 0.8 unit/browser/native tests without weakening assertions.
+Run Chrome installed acceptance separately; fixture/mock is not installed evidence.
+
+WINDOWS RENEWAL
+Use one-click-context/scripts/renew_windows.ps1 only after checking the actual Loaded from folder. The script backs up the folder first, requires explicit YES, downloads the pinned 0.8.1 runtime, verifies manifest version, copies only known runtime files, and restores backup on error. It does not remove the extension, read cookies/profile, change native-host registration, or press Reload automatically.
