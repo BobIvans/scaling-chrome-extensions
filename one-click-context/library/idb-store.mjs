@@ -9,6 +9,13 @@ function req(request){return new Promise((resolve,reject)=>{request.onsuccess=()
 function done(tx){return new Promise((resolve,reject)=>{tx.oncomplete=()=>resolve();tx.onabort=()=>reject(tx.error||new Error('IDB_ABORT'));tx.onerror=()=>{};});}
 function checkedRevision(value){if(!Number.isSafeInteger(value)||value<0)fail('INVALID_LIBRARY_REVISION');return value;}
 function checkedRecords(records){if(!Array.isArray(records))fail('INVALID_LIBRARY_RECORDS');const ids=new Set();for(const r of records){if(!r||typeof r!=='object'||typeof r.id!=='string'||!r.id||ids.has(r.id))fail('INVALID_LIBRARY_RECORD');ids.add(r.id);}return records;}
+function canonical(value){if(value===null||typeof value==='boolean'||typeof value==='string')return JSON.stringify(value);if(typeof value==='number'){if(!Number.isSafeInteger(value))fail('INVALID_CANONICAL_NUMBER');return JSON.stringify(value);}if(Array.isArray(value))return '['+value.map(canonical).join(',')+']';if(value&&typeof value==='object')return '{'+Object.keys(value).sort().map(k=>JSON.stringify(k)+':'+canonical(value[k])).join(',')+'}';fail('INVALID_CANONICAL_VALUE');}
+async function sha256(text){const b=new TextEncoder().encode(text);return [...new Uint8Array(await crypto.subtle.digest('SHA-256',b))].map(x=>x.toString(16).padStart(2,'0')).join('');}
+
+export async function restorePlanHash(expectedRevision,plan){
+  checkedRevision(expectedRevision);if(!plan||!Array.isArray(plan.adds)||!Array.isArray(plan.duplicates)||!Array.isArray(plan.conflicts))fail('INVALID_RESTORE_PLAN');
+  return sha256(canonical({expectedRevision,adds:plan.adds,duplicates:plan.duplicates,conflicts:plan.conflicts}));
+}
 
 export function openLibraryDB(indexedDB=globalThis.indexedDB){
   if(!indexedDB?.open) return Promise.reject(Object.assign(new Error('INDEXEDDB_UNAVAILABLE'),{code:'INDEXEDDB_UNAVAILABLE'}));
@@ -46,10 +53,10 @@ export async function replaceLibrary(db,expectedRevision,records,{updatedAt=new 
   await done(tx);return result;
 }
 
-export async function mergeRestore(db,expectedRevision,plan,{updatedAt=new Date().toISOString()}={}){
+export async function mergeRestore(db,expectedRevision,plan,approvedPlanHash,{updatedAt=new Date().toISOString()}={}){
   checkedRevision(expectedRevision);
-  if(!plan||!Array.isArray(plan.adds)||!Array.isArray(plan.conflicts)||plan.conflicts.length)fail('RESTORE_CONFLICT');
-  checkedRecords(plan.adds);
+  if(!plan||!Array.isArray(plan.adds)||!Array.isArray(plan.duplicates)||!Array.isArray(plan.conflicts)||plan.conflicts.length)fail('RESTORE_CONFLICT');
+  checkedRecords(plan.adds);if(approvedPlanHash!==await restorePlanHash(expectedRevision,plan))fail('RESTORE_NOT_APPROVED_OR_CHANGED');
   const tx=db.transaction([RECORDS,META],'readwrite'), recordsStore=tx.objectStore(RECORDS), metaStore=tx.objectStore(META);
   let result;
   try{
