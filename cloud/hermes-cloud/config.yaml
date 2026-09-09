@@ -1,0 +1,19 @@
+browser:
+  extension_control:
+    enabled: true
+  command_timeout: 45
+  record_sessions: false
+
+gateway:
+  api_server:
+    enabled: true
+    host: 0.0.0.0
+    port: 8080
+    max_concurrent_runs: 4
+
+tool_loop_guardrails:
+  non_interactive_hard_stop_enabled: true
+
+# Configure model/provider in a private deployment profile or environment-backed config.
+# Hermes supports built-in providers plus provider: custom for OpenAI-compatible routers.
+# Never commit real provider keys or the Hermes API_SERVER_KEY.
