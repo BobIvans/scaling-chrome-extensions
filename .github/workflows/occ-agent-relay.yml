@@ -1,0 +1,59 @@
+name: OCC Agent Relay
+
+on:
+  pull_request:
+    paths:
+      - 'one-click-context/**'
+      - 'cloud/hermes-cloud/**'
+      - 'supabase/functions/occ-hermes-broker/**'
+      - '.github/workflows/occ-agent-relay.yml'
+  push:
+    branches:
+      - 'renewal/occ-1.0-agent-relay'
+    paths:
+      - 'one-click-context/**'
+      - 'cloud/hermes-cloud/**'
+      - 'supabase/functions/occ-hermes-broker/**'
+      - '.github/workflows/occ-agent-relay.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  verify-extension:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: JavaScript syntax
+        working-directory: one-click-context
+        run: |
+          node --check agent-console.mjs
+          node --check hermes-controller.mjs
+          node --check agent-core.mjs
+          node --check browser-relay.js
+          node --check full-page-capture.js
+          node --check background.js
+          node --check content.js
+      - name: Focused Agent Relay tests
+        working-directory: one-click-context
+        run: node --test tests/agent-core.test.mjs tests/hermes-controller.test.mjs
+      - name: Existing OCC background tests
+        working-directory: one-click-context
+        run: node --test tests/background.test.cjs
+      - name: Build Chrome-ready package
+        working-directory: one-click-context
+        run: python scripts/package_chrome_ready.py "$RUNNER_TEMP/occ-dist"
+      - name: Upload Chrome-ready package
+        uses: actions/upload-artifact@v4
+        with:
+          name: occ-agent-relay-chrome-ready
+          path: ${{ runner.temp }}/occ-dist/*.zip
+          if-no-files-found: error
+          retention-days: 7

@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "One Click Context",
-  "version": "0.9.0",
-  "description": "Local chat/document capture, artifact inventory, project/session memory, verified backup/restore, bundle splitting and optional Codex handoff.",
+  "version": "1.0.0",
+  "description": "Local context capture plus optional Hermes/API browser-agent relay for explicitly authorized tabs.",
   "minimum_chrome_version": "116",
   "permissions": [
     "activeTab",
@@ -11,12 +11,23 @@
     "offscreen",
     "storage",
     "contextMenus",
-    "downloads"
+    "downloads",
+    "sidePanel"
+  ],
+  "optional_permissions": [
+    "nativeMessaging",
+    "tabs"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
   ],
   "background": {
     "service_worker": "background.js"
   },
-  "optional_permissions": ["nativeMessaging"],
+  "side_panel": {
+    "default_path": "agent-console.html"
+  },
   "action": {
     "default_title": "Copy context (selection first; click again to cancel)"
   },
@@ -33,6 +44,6 @@
     }
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src 'none'; frame-src 'none'; base-uri 'none'"
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; frame-src 'none'; base-uri 'none'"
   }
 }
