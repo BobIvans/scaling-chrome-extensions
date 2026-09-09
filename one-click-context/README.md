@@ -1,4 +1,9 @@
-# One Click Context 0.3.0 — локальное Chrome-расширение
+# One Click Context 0.7.0 — локальное Chrome-расширение
+
+Версия 0.7.0 разделяет найденные сообщения переписки и открытый документ.
+Обычный клик использует ограниченный автоматический выбор, а меню значка предлагает
+режимы «чат», «документ» и «чат + документ». Неоднозначный выбор требует настоящего
+пользовательского клика по конкретной области.
 
 A separate utility, not a change to studious-pancake or PR #471.
 No account, backend, AI model, build step, automatic paste, or automatic Send.

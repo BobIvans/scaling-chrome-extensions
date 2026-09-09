@@ -6,6 +6,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const {webcrypto} = require('node:crypto');
 const source = fs.readFileSync(path.join(__dirname, '..', 'background.js'), 'utf8');
+const contentSource = fs.readFileSync(path.join(__dirname, '..', 'content.js'), 'utf8');
+const regionsSource = fs.readFileSync(path.join(__dirname, '..', 'capture-regions.js'), 'utf8');
 const id = n => `00000000-0000-4000-8000-${String(n).padStart(12, '0')}`;
 
 function snapshot(text = 'old', extra = {}) {
@@ -22,7 +24,7 @@ function area(seed = {}) {
   }, clear: async () => { for (const key of Object.keys(data)) delete data[key]; }, setAccessLevel: async () => {}};
 }
 function harness({capture, injectionError, clipboardError, beforeOffscreen, beforeInjection, beforeLocalSet, session, local, downloadError, localSetError} = {}) {
-  const writes = [], opened = [], downloadCalls = [], notifications = [], handlers = {};
+  const writes = [], opened = [], downloadCalls = [], notifications = [], captureOptions = [], handlers = {};
   const sessionArea = area(session || {capture: snapshot()}); const localArea = area(local);
   if (localSetError) localArea.set = async () => { throw new Error(localSetError); };
   if(beforeLocalSet){const original=localArea.set;localArea.set=async values=>{await beforeLocalSet();return original(values);};}
@@ -40,22 +42,34 @@ function harness({capture, injectionError, clipboardError, beforeOffscreen, befo
       onChanged: {addListener: fn => handlers.downloadChanged = fn}},
     scripting: {executeScript: async spec => {
       injections++; if (spec.files) await beforeInjection?.(); if (injectionError) throw new Error(injectionError);
-      if (spec.func?.toString().includes('__occCapture')) return [{result: capture}];
+      if (spec.func?.toString().includes('__occCapture')) { captureOptions.push(structuredClone(spec.args[0])); return [{result: capture}]; }
       if (spec.args?.[0]?.kind) notifications.push(spec.args[0]); return [];
     }}
   };
   const crypto = {subtle: webcrypto.subtle, randomUUID: () => id(uuid++)};
   const context = vm.createContext({chrome, TextEncoder, console, crypto, btoa: s => Buffer.from(s, 'binary').toString('base64'), setTimeout});
   vm.runInContext(source, context);
-  function run(url = 'https://example.org/chat', tabId = 1) { return vm.runInContext(`run({id:${tabId},url:${JSON.stringify(url)}})`, context); }
+  function run(url = 'https://example.org/chat', tabId = 1, sourceMode = 'auto') { return vm.runInContext(`run({id:${tabId},url:${JSON.stringify(url)}},true,${JSON.stringify(sourceMode)})`, context); }
   function message(msg, sender = {id:'test-id', url:'chrome-extension://test-id/viewer.html'}) {
     return new Promise(resolve => { const keep = handlers.message(msg, sender, resolve); if (!keep) resolve({ignored:true}); });
   }
-  return {writes, opened, downloadCalls, notifications, handlers, session:sessionArea.data, local:localArea.data, run, message,
+  return {writes, opened, downloadCalls, notifications, captureOptions, handlers, session:sessionArea.data, local:localArea.data, run, message,
     get injections() { return injections; }};
 }
 function decodeDownload(spec) { return Buffer.from(spec.url.split(',')[1], 'base64'); }
 const librarySender={id:'test-id',url:'chrome-extension://test-id/library.html'};
+
+test('capture source mode is passed only as a bounded production option',async()=>{
+ const h=harness({capture:{text:'fixture',status:'BEST_EFFORT',warnings:[]}});
+ for(const mode of ['auto','chat','document','chat+document'])await h.run('https://example.org',1,mode);
+ assert.deepEqual(h.captureOptions.map(x=>x.sourceMode),['auto','chat','document','chat+document']);
+ assert.ok(h.captureOptions.every(x=>Object.keys(x).sort().join(',')==='operationToken,scroll,sourceMode'));
+});
+test('region selector has no privileged side effects or broad body fallback',()=>{
+ for(const forbidden of ['chrome.','fetch(','XMLHttpRequest','navigator.clipboard','scrollTo(','postMessage(','document.body.innerText'])assert.equal(regionsSource.includes(forbidden),false,forbidden);
+ assert.match(contentSource,/if \(!event\.isTrusted\) return/);
+ assert.match(source,/files: \['capture-regions\.js', 'content\.js'\]/);
+});
 test('explicit captures accumulate across tabs and export a session without rescanning',async()=>{const result={text:'Привет 👋\r\ncode_\\ +/-',status:'PARTIAL',warnings:['time limit']};const h=harness({capture:result});await h.run('https://example.org/a',1);await h.run('https://example.org/b',2);assert.equal(h.session.recentCaptures.length,2);const before=h.injections,writes=h.writes.length;const r=await h.message({target:'library',type:'downloadRecent'},librarySender);assert.equal(r.ok,true);const text=decodeDownload(h.downloadCalls[0]).toString();assert.equal(text.split(result.text).length-1,2);assert.equal(h.injections,before);assert.equal(h.writes.length,writes);assert.deepEqual(h.local,{});});
 test('recent session survives worker recreation but not full session loss',async()=>{const h=harness({capture:{text:'snapshot',status:'BEST_EFFORT',warnings:[]}});await h.run();const restored=harness({session:h.session});assert.equal((await restored.message({target:'library',type:'getRecent'},librarySender)).captures.length,1);const restarted=harness({session:{},local:h.local});assert.equal((await restarted.message({target:'library',type:'getRecent'},librarySender)).captures.length,0);});
 test('full recent memory retains old entries and still accepts latest capture',async()=>{const previous=Array.from({length:50},(_,i)=>snapshot('old',{captureId:id(i+100)}));const h=harness({session:{recentCaptures:previous},capture:{text:'new',status:'BEST_EFFORT',warnings:[]}});await h.run();assert.equal(h.session.capture.text,'new');assert.equal(h.session.recentCaptures.length,50);assert.match(h.session.recentWarning,/заполнена/);assert.ok(h.notifications.some(n=>n.text.includes('заполнена')));});
@@ -177,7 +191,7 @@ test('untrusted sender cannot use privileged viewer routes', async () => {
 });
 test('manifest is MV3 with narrow scope and explicitly optional native messaging', () => {
   const m=JSON.parse(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8'));
-  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.6.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
+  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.7.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
   for(const p of ['cookies','history','clipboardRead','debugger','all_urls']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
   assert.deepEqual(m.optional_permissions,['nativeMessaging']);assert.equal(m.optional_host_permissions,undefined);assert(!m.permissions.includes('nativeMessaging'));
 });

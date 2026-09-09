@@ -6,7 +6,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 BROWSER=os.environ.get('CHROMIUM_PATH')
-SCRIPT=(ROOT/'content.js').read_text(encoding='utf-8'); RESULTS=[]
+SCRIPT=(ROOT/'capture-regions.js').read_text(encoding='utf-8')+'\n'+(ROOT/'content.js').read_text(encoding='utf-8'); RESULTS=[]
 class Handler(http.server.BaseHTTPRequestHandler):
  def do_GET(self):
   body=b'<!doctype html><title>Local fixture</title><body></body>'; mime='text/html'
@@ -50,6 +50,56 @@ with sync_playwright() as p:
  def controls():
   fixture('<nav><p>SIDEBAR_SECRET</p></nav><main><p>Visible text</p><input value="INPUT_SECRET"><textarea>TEXTAREA_SECRET</textarea><p hidden>HIDDEN_SECRET</p><script>const secret="SCRIPT_SECRET";</script><p aria-hidden="true">ARIA_SECRET</p><button>BUTTON_SECRET</button></main>');r=capture();require('Visible text' in r['text']);require('_SECRET' not in r['text'],r['text'])
  check('form values / hidden content / scripts / sidebar excluded',controls)
+ def right_document():
+  fixture('<nav><p>NAV_SECRET</p></nav><main><div data-message-id="m1" data-message-author-role="user"><p>CHAT QUESTION</p></div></main><aside id="artifact"><button>Share</button><pre>RIGHT DOCUMENT\n+ code_\\path</pre></aside>')
+  r=capture();require('RIGHT DOCUMENT' in r['text'],r);require('CHAT QUESTION' not in r['text'],r);require('NAV_SECRET' not in r['text'],r);require('Share' not in r['text'],r);require(r['mode']=='document',r)
+ check('auto prioritizes one open document over chat and navigation',right_document)
+ def explicit_regions():
+  fixture('<nav><p>NAV_SECRET</p></nav><main><div data-message-id="m1" data-message-author-role="user"><p>CHAT QUESTION</p></div></main><aside id="artifact"><pre>RIGHT DOCUMENT</pre></aside>')
+  chat=capture(sourceMode='chat');require('CHAT QUESTION' in chat['text']);require('RIGHT DOCUMENT' not in chat['text']);both=capture(sourceMode='chat+document');require('CHAT QUESTION' in both['text']);require('RIGHT DOCUMENT' in both['text']);require('SOURCE PART: CHAT' in both['text']);require('SOURCE PART: DOCUMENT' in both['text']);require('NAV_SECRET' not in both['text'])
+ check('explicit chat and chat plus document stay separate',explicit_regions)
+ def document_missing():
+  fixture('<main><div data-message-id="m1" data-message-author-role="user"><p>CHAT ONLY</p></div></main>')
+  try:capture(sourceMode='document')
+  except Exception as e:require('Открытый документ не найден' in str(e),str(e));return
+  raise AssertionError('chat silently substituted for missing document')
+ check('missing document never falls back to chat',document_missing)
+ def ambiguous_regions():
+  fixture('<main><div data-message-id="m1" data-message-author-role="user"><p>CHAT</p></div></main><aside id="one"><pre>DOC ONE</pre></aside><div role="dialog" id="two"><pre>DOC TWO</pre></div>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))")
+  page.evaluate("document.querySelector('[data-occ-ignore=banner]').shadowRoot.querySelector('button').click()")
+  page.wait_for_timeout(60);require(page.evaluate('globalThis.__occController!==null'),'synthetic click selected a region')
+  page.get_by_role('button',name='Документ 2').click()
+  r=page.evaluate('pendingCapture');require('DOC ONE' in r['text'] or 'DOC TWO' in r['text'],r);require(not ('DOC ONE' in r['text'] and 'DOC TWO' in r['text']),r)
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false,sourceMode:'chat+document'}))");page.get_by_role('button',name='Документ 2').click();r=page.evaluate('pendingCapture');require('CHAT' in r['text']);require('DOC TWO' in r['text']);require('DOC ONE' not in r['text'])
+ check('multiple documents require a trusted explicit choice',ambiguous_regions)
+ def nested_document():
+  fixture('<main><nav><p>NAV</p></nav><div data-message-id="m1" data-message-author-role="assistant"><p>CHAT</p></div><aside id="artifact"><pre>NESTED DOCUMENT</pre></aside></main>')
+  r=capture(sourceMode='chat+document');require('CHAT' in r['text']);require('NESTED DOCUMENT' in r['text']);require('NAV' not in r['text']);require(r['text'].count('NESTED DOCUMENT')==1,r)
+ check('nested document is a separate nonduplicated source part',nested_document)
+ def embedded_frame():
+  fixture('<main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p></div></main><iframe style="width:500px;height:300px" srcdoc="<pre>FRAME SECRET</pre>"></iframe>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))");page.get_by_role('button',name='Чат 1').click();r=page.evaluate('pendingCapture');require('VISIBLE CHAT' in r['text']);require('FRAME SECRET' not in r['text']);require('EMBEDDED_CONTENT_NOT_READ' in r['warnings'],r)
+  try:capture(sourceMode='document')
+  except Exception as e:require('frame' in str(e),str(e));return
+  raise AssertionError('frame reported as a read document')
+ check('iframe is detected but not read or treated as permission',embedded_frame)
+ def editor_warning():
+  fixture('<section class="monaco-editor"><pre>VISIBLE EDITOR LINES</pre></section>');r=capture();require('VISIBLE EDITOR LINES' in r['text']);require('EDITOR_DOM_MAY_BE_VIRTUALIZED' in r['warnings'],r);require(r['status']=='BEST_EFFORT',r)
+ check('virtual editor DOM discloses unknown coverage',editor_warning)
+ def stale_choice():
+  fixture('<aside id="one"><pre>DOC ONE</pre></aside><div role="dialog" id="two"><pre>DOC TWO</pre></div>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}).then(x=>({ok:true,x}),e=>({ok:false,error:e.message})))");page.evaluate("document.querySelector('#one').remove()");page.get_by_role('button',name='Документ 1').click();r=page.evaluate('pendingCapture');require(not r['ok'],r);require('заменена' in r['error'],r)
+ check('detached selected region is rejected before reading',stale_choice)
+ def no_body_fallback():
+  fixture('<div><span>UNKNOWN BODY</span><input value="SECRET"></div>')
+  try:capture()
+  except Exception as e:require('область' in str(e),str(e));return
+  raise AssertionError('unknown body was captured')
+ check('unknown layout has no document body fallback',no_body_fallback)
+ def open_shadow():
+  fixture('<section id="host"></section>');page.evaluate("document.querySelector('#host').attachShadow({mode:'open'}).innerHTML='<div role=\"document\"><pre>SHADOW DOCUMENT</pre></div>'");r=capture();require('SHADOW DOCUMENT' in r['text'],r)
+ check('open shadow document is available without claiming closed roots',open_shadow)
  def selection():
   fixture('<main><pre id="pick">  + literal\\_value\n  Привет 👋</pre><p>Not selected</p></main>');page.evaluate("const r=document.createRange();r.selectNodeContents(document.querySelector('#pick'));getSelection().removeAllRanges();getSelection().addRange(r)");r=capture();require(r['status']=='SELECTION');require(r['text']=='  + literal\\_value\n  Привет 👋',repr(r['text']))
  check('selection copied without wrappers or escaping',selection)
@@ -81,7 +131,7 @@ with sync_playwright() as p:
   fixture('<main><div style="height:200px;overflow:auto">'+''.join(f'<p style="height:100px">row {i}</p>' for i in range(30))+'</div></main>');r=page.evaluate('''async()=>{const task=__occCapture({scroll:true,settleMs:40});setTimeout(()=>__occCancel(),70);return task}''');require(r['status']=='CANCELLED',r);require(page.evaluate('globalThis.__occController===null'))
  check('cancellation and controller cleanup',cancel)
  def size():
-  fixture('<main><p>Short</p><pre><code>'+('a'*12000)+'</code></pre></main>');r=capture(maxBytes=1000);require(r['status']=='PARTIAL',r);require('Short' in r['text']);require('a'*100 not in r['text'])
+  fixture('<main><p data-message-id="short" data-message-author-role="user">Short</p><div data-message-id="large" data-message-author-role="assistant"><pre><code>'+('a'*12000)+'</code></pre></div></main>');r=capture(maxBytes=1000);require(r['status']=='PARTIAL',r);require('Short' in r['text']);require('a'*100 not in r['text'])
  check('oversized code block omitted whole, never silently sliced',size)
  def role():
   fixture('<main><p data-message-id="1" data-message-author-role="alien">Not an assistant</p></main>');r=capture();require('[TEXT 1]' in r['text'],r);require('[ASSISTANT' not in r['text'])

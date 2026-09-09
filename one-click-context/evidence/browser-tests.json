@@ -7,109 +7,169 @@
     {
       "test": "code whitespace / diff signs / literal backslashes",
       "status": "PASS",
-      "seconds": 0.609,
+      "seconds": 0.562,
       "detail": null
     },
     {
       "test": "identical messages with distinct IDs retained",
       "status": "PASS",
-      "seconds": 0.594,
+      "seconds": 0.485,
       "detail": null
     },
     {
       "test": "initial DOM chronological order",
       "status": "PASS",
-      "seconds": 0.547,
+      "seconds": 0.515,
       "detail": null
     },
     {
       "test": "role messages under hidden ancestors excluded",
       "status": "PASS",
-      "seconds": 0.39,
+      "seconds": 0.719,
       "detail": null
     },
     {
       "test": "form values / hidden content / scripts / sidebar excluded",
       "status": "PASS",
-      "seconds": 0.36,
+      "seconds": 0.563,
       "detail": null
     },
     {
-      "test": "selection copied without wrappers or escaping",
+      "test": "auto prioritizes one open document over chat and navigation",
       "status": "PASS",
-      "seconds": 0.547,
+      "seconds": 0.64,
       "detail": null
     },
     {
-      "test": "text/plain direct capture",
+      "test": "explicit chat and chat plus document stay separate",
       "status": "PASS",
-      "seconds": 0.203,
+      "seconds": 0.516,
       "detail": null
     },
     {
-      "test": "nested scroller and scroll-position restoration",
+      "test": "missing document never falls back to chat",
       "status": "PASS",
-      "seconds": 3.093,
+      "seconds": 0.5,
       "detail": null
     },
     {
-      "test": "older messages prepended during capture",
+      "test": "multiple documents require a trusted explicit choice",
       "status": "PASS",
-      "seconds": 3.219,
+      "seconds": 0.703,
       "detail": null
     },
     {
-      "test": "virtualized stable-ID messages accumulated in order",
+      "test": "nested document is a separate nonduplicated source part",
       "status": "PASS",
-      "seconds": 3.375,
+      "seconds": 0.422,
       "detail": null
     },
     {
-      "test": "recycled nodes without IDs disclose uncertainty",
+      "test": "iframe is detected but not read or treated as permission",
       "status": "PASS",
-      "seconds": 3.547,
+      "seconds": 0.531,
       "detail": null
     },
     {
-      "test": "infinite scroll bounded with PARTIAL status",
+      "test": "virtual editor DOM discloses unknown coverage",
       "status": "PASS",
-      "seconds": 2.141,
+      "seconds": 0.453,
       "detail": null
     },
     {
-      "test": "cancellation and controller cleanup",
+      "test": "detached selected region is rejected before reading",
       "status": "PASS",
-      "seconds": 0.89,
+      "seconds": 0.532,
       "detail": null
     },
     {
-      "test": "oversized code block omitted whole, never silently sliced",
+      "test": "unknown layout has no document body fallback",
       "status": "PASS",
-      "seconds": 0.485,
+      "seconds": 0.453,
       "detail": null
     },
     {
-      "test": "unknown roles not fabricated",
+      "test": "open shadow document is available without claiming closed roots",
       "status": "PASS",
       "seconds": 0.437,
       "detail": null
     },
     {
+      "test": "selection copied without wrappers or escaping",
+      "status": "PASS",
+      "seconds": 0.485,
+      "detail": null
+    },
+    {
+      "test": "text/plain direct capture",
+      "status": "PASS",
+      "seconds": 0.156,
+      "detail": null
+    },
+    {
+      "test": "nested scroller and scroll-position restoration",
+      "status": "PASS",
+      "seconds": 2.984,
+      "detail": null
+    },
+    {
+      "test": "older messages prepended during capture",
+      "status": "PASS",
+      "seconds": 3.063,
+      "detail": null
+    },
+    {
+      "test": "virtualized stable-ID messages accumulated in order",
+      "status": "PASS",
+      "seconds": 3.234,
+      "detail": null
+    },
+    {
+      "test": "recycled nodes without IDs disclose uncertainty",
+      "status": "PASS",
+      "seconds": 3.281,
+      "detail": null
+    },
+    {
+      "test": "infinite scroll bounded with PARTIAL status",
+      "status": "PASS",
+      "seconds": 1.875,
+      "detail": null
+    },
+    {
+      "test": "cancellation and controller cleanup",
+      "status": "PASS",
+      "seconds": 0.86,
+      "detail": null
+    },
+    {
+      "test": "oversized code block omitted whole, never silently sliced",
+      "status": "PASS",
+      "seconds": 0.484,
+      "detail": null
+    },
+    {
+      "test": "unknown roles not fabricated",
+      "status": "PASS",
+      "seconds": 0.484,
+      "detail": null
+    },
+    {
       "test": "stable-ID streaming update replaces same record",
       "status": "PASS",
-      "seconds": 3.344,
+      "seconds": 3.454,
       "detail": null
     },
     {
       "test": "viewer UTF-8 BOM CRLF hash byte download copy invalid input",
       "status": "PASS",
-      "seconds": 1.391,
+      "seconds": 0.843,
       "detail": "Real viewer source, localhost Web Crypto/clipboard/download; Chrome storage and runtime mocked. Not installed-extension evidence."
     },
     {
       "test": "loaded extension offscreen clipboard integration",
       "status": "BLOCKED_ENV",
-      "seconds": 13.344,
+      "seconds": 13.656,
       "error": "Timeout 12000ms exceeded while waiting for event \"serviceworker\""
     },
     {
@@ -118,16 +178,17 @@
       "error": "No authorized signed-in site DOM inspected; generic semantic extraction only."
     }
   ],
-  "passed": 17,
+  "passed": 27,
   "failed": 0,
   "skipped": 0,
   "blocked_env": 1,
   "not_run": 1,
   "source_sha256": {
-    "background.js": "92bd0aaccf3ae7f5a3a1550f0dd5c5eb4f4f995088ea05b3717f08b7a9f58fb4",
-    "content.js": "52e20edd724b0e7b6bda7d2766da9c5e6fb4fec0ee7b0bc76ee6bd114c622854",
-    "library.html": "4668c2cc4b6eaa3093d3ab4fb64ebfefb0f12041c7072a462647258f5de856a6",
-    "manifest.json": "ba703a6e8de564d061e5744ae7a6bf20229a289925b8279899531b045003a965",
+    "background.js": "fb0e81040429047f723caee754c58d49dec650322d83645f6c202c479294aa41",
+    "capture-regions.js": "871ffb94c80f49c08a3a35958a9d25a6a705936c7c0e5ed7afd0b5b3f8d7cee1",
+    "content.js": "3d78b3aebe69e7e7dc17fbe01727c6f2240359f5ba1c7bb1fa04de244fdad09b",
+    "library.html": "682565fe4e7d1a50c934e5335cbaa1cbd3c937451d1394f80ac004830dd1715c",
+    "manifest.json": "c9c332d086bfe4bfeb5641b4da35a9370c63c44d8c971f86a50929bcf1b0339a",
     "offscreen.html": "261abd74fa8b72f0770c9c90d9e3860f41ccde9416c1253a45c4104b61e2dad3",
     "offscreen.js": "4a1ef9996c30be553f398ee05fa7d8c7384b5a9ce693e34c167244802f0f2747",
     "viewer.css": "c4351ce5fb09f98a032a6a249395a0bf22d0432b5dded74d1b3cee264d4e15f8",

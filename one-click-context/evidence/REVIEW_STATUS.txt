@@ -1,35 +1,26 @@
-ONE CLICK CONTEXT 0.2.0 — validation 2026-09-08
+ONE CLICK CONTEXT 0.7.0 — validation 2026-09-09
 
-18 browser test groups PASS; 0 FAIL; 0 BLOCKED in final Edge run.
-11 Node orchestration tests PASS, with mocked Chrome APIs.
-Four JavaScript syntax checks PASS.
+27 browser test groups PASS; 0 FAIL; 1 BLOCKED_ENV; 1 NOT_RUN.
+The production region selector and content capture ran in Google Chrome 152 on
+local synthetic DOM. New cases cover navigation + chat + right document, explicit
+chat/document/combined modes, multiple-document choice, synthetic-click rejection,
+nested documents, iframe non-reading, editor coverage warning, stale selection,
+open shadow DOM, and the absence of a broad body fallback.
 
-Browser: Microsoft Edge 152.0.4191.66, Chromium engine, Windows, headless.
-Fixtures: local synthetic HTML; actual content.js and viewer.js source.
-Loaded extension integration: real MV3 service worker and offscreen clipboard.
-Viewer integration: strict UTF-8 / Russian / English / emoji / BOM / CRLF / patch,
-SHA-256, exact original-byte download, Copy, invalid UTF-8 rejection, Clear.
-Clipboard text comparison normalizes CRLF; it is NOT a byte transport claim.
-Test-only clipboard-read permission was granted to the isolated browser profile;
-the distributed manifest does not request clipboardRead.
+32 background orchestration/security tests PASS with mocked Chrome APIs.
+21 native host/client tests PASS with mocked Codex process boundaries.
+17 production converter/library UI tests PASS in real Chrome; extension and native
+APIs are mocked in that suite. JavaScript syntax and git diff checks PASS.
 
-NOT RUN: physical toolbar invocation and activeTab grant; real shortcut;
-signed-in ChatGPT / Codex / DeepSeek. No site-specific adapters are claimed.
-Generic semantic DOM extraction is implemented; site qualification remains open.
-Chunk copying and last-assistant copying are deferred as requested for later.
+BLOCKED_ENV: Chrome did not expose the loaded-extension service worker to Playwright,
+so the real offscreen clipboard integration was not repeated for 0.7.0. The same
+check passed in the earlier environment recorded by 0.2.0 evidence, but historical
+success is not reported as a current PASS.
 
-Fixes over supplied starter:
-- Initial DOM batches now preserve chronological order instead of reversing.
-- Role-marked nodes under hidden ancestors / navigation are excluded.
-- Second click during injection/offscreen preparation cancels before clipboard.
-- ERROR/unknown result states cannot reach automatic clipboard writes.
-- A superseded file import cannot overwrite a newer import/clear.
-- Browser tests are portable to Windows UTF-8; extension CSP stays strict.
+NOT_RUN: signed-in ChatGPT/Codex/DeepSeek DOM and a physical toolbar/context-menu
+click in the user's normal profile. The tests do not claim site-specific adapters,
+complete virtual-editor contents, frame access, original document bytes, or hidden
+server history. Manual installed-extension acceptance is still required.
 
-Provenance: all 12 embedded starter files matched supplied byte lengths and SHA-256
-after normalizing transport CRLF to the original LF. Current runtime hashes are
-in browser-tests.json. Historical attachment reports are replaced by current results.
-
-Earlier attempts and exact commands are recorded in browser-tests.json.
-No personal handoff data is distributed. No trading repository was changed.
-No universal history completeness, OCR, or live account compatibility is claimed.
+No new host permission, clipboardRead, debugger, cookies, history, all_urls,
+network request, Supabase write, AI call, or trading action was added.

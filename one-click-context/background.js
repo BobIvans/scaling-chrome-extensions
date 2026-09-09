@@ -115,7 +115,7 @@ async function downloadCapture(capture, tabId = null) {
   return id;
 }
 
-async function run(tab, scroll = true) {
+async function run(tab, scroll = true, sourceMode = 'auto') {
   if (typeof tab?.id !== 'number') return;
   if (active) {
     if (active.tabId === tab.id) {
@@ -135,9 +135,9 @@ async function run(tab, scroll = true) {
     const url = tab.url || '';
     if (!/^(https?:|file:)/i.test(url) || /^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/i.test(url)) throw new Error('This Chrome-protected page cannot be captured.');
     await badge(tab.id, '…', 'Capturing locally. Click again or press Escape to cancel.');
-    await chrome.scripting.executeScript({target: {tabId: tab.id}, files: ['content.js']}); injected = true;
+    await chrome.scripting.executeScript({target: {tabId: tab.id}, files: ['capture-regions.js', 'content.js']}); injected = true;
     if (job.cancelled) throw new Error('Capture cancelled before scanning. Clipboard unchanged.');
-    const results = await chrome.scripting.executeScript({target: {tabId: tab.id}, func: opts => globalThis.__occCapture(opts), args: [{scroll, operationToken: token}]});
+    const results = await chrome.scripting.executeScript({target: {tabId: tab.id}, func: opts => globalThis.__occCapture(opts), args: [{scroll, sourceMode, operationToken: token}]});
     const result = results?.[0]?.result;
     if (result?.status === 'CANCELLED') { job.cancelled = true; throw new Error('Capture cancelled. Clipboard unchanged.'); }
     if (!result || !validStatus(result.status) || typeof result.text !== 'string' || !result.text || utf8(result.text).byteLength > MAX_BYTES) throw new Error('No valid non-empty capture returned. Clipboard was not changed.');
@@ -179,6 +179,9 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({id: 'library', title: 'Библиотека документов по датам', contexts: ['action']});
     chrome.contextMenus.create({id: 'download', title: 'Скачать последний собранный текст', contexts: ['action']});
     chrome.contextMenus.create({id:'recent-download',title:'Скачать все снимки текущей сессии TXT',contexts:['action']});
+    chrome.contextMenus.create({id: 'capture-chat', title: 'Собрать только переписку', contexts: ['action']});
+    chrome.contextMenus.create({id: 'capture-document', title: 'Собрать открытый документ', contexts: ['action']});
+    chrome.contextMenus.create({id: 'capture-both', title: 'Собрать переписку + документ', contexts: ['action']});
     chrome.contextMenus.create({id: 'loaded', title: 'Собрать загруженный текст без прокрутки', contexts: ['action']});
   });
 });
@@ -187,6 +190,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'viewer') void openViewer();
   if (info.menuItemId === 'library') void chrome.tabs.create({url: chrome.runtime.getURL('library.html')});
   if (info.menuItemId === 'loaded') void run(tab, false);
+  if (info.menuItemId === 'capture-chat') void run(tab, true, 'chat');
+  if (info.menuItemId === 'capture-document') void run(tab, true, 'document');
+  if (info.menuItemId === 'capture-both') void run(tab, true, 'chat+document');
   if(info.menuItemId==='recent-download')void downloadRecent().catch(error=>{void chrome.tabs.create({url:`${viewerURL()}?downloadError=${encodeURIComponent(error.message)}`});});
   if (info.menuItemId === 'download') void getCapture().then(found => {
     if (!found) throw new Error('Нет доступного снимка для скачивания.');

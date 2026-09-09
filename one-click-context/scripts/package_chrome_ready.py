@@ -5,7 +5,7 @@ output=pathlib.Path(sys.argv[1]).resolve() if len(sys.argv)>1 else extension.par
 version=json.loads((extension/'manifest.json').read_text(encoding='utf-8-sig'))['version']
 output.mkdir(parents=True,exist_ok=True)
 archive=output/f'ONE_CLICK_CONTEXT_CHROME_READY_{version}.zip'
-files=['manifest.json','background.js','content.js','offscreen.html','offscreen.js','viewer.html','viewer.js','viewer.css','library.html','README.md','INSTALL_RU.txt']
+files=['manifest.json','background.js','capture-regions.js','content.js','offscreen.html','offscreen.js','viewer.html','viewer.js','viewer.css','library.html','README.md','INSTALL_RU.txt']
 for folder in ['library','vendor']:
  files.extend(str(f.relative_to(extension)).replace('\\','/') for f in (extension/folder).rglob('*') if f.is_file())
 with zipfile.ZipFile(archive,'w',zipfile.ZIP_DEFLATED) as z:
