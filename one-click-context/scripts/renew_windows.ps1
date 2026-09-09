@@ -4,9 +4,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repo = 'BobIvans/scaling-chrome-extensions'
-$commit = 'b3d87072195e2ba98ab8348cc6ffb5d384167df8'
+$commit = 'fdd5b74e0fcabaa4da18084bb4aad337c8aebf35'
 $base = "https://raw.githubusercontent.com/$repo/$commit/one-click-context"
-$expectedVersion = '0.8.1'
+$expectedVersion = '0.8.2'
 
 $files = @(
   'manifest.json',
@@ -24,6 +24,7 @@ $files = @(
   'library/convert.mjs',
   'library/library.mjs',
   'library/workspace.mjs',
+  'library/idb-store.mjs',
   'library/library.css',
   'library/README_RU.md',
   'vendor/fflate.mjs',
@@ -122,8 +123,10 @@ try {
   Write-Host "3. Confirm version $expectedVersion."
   Write-Host "4. Reload the ChatGPT/DeepSeek/web page tabs you want to capture."
   Write-Host "5. Right-click the OCC icon to test Chat / Document / Chat + Document modes."
-  Write-Host "6. Open Library and test Project / Session / savedAt/capturedAt filters and backup/restore preview."
-  Write-Host "7. On a ChatGPT artifact page, verify the 0.8 artifact inventory remains visible and deterministic."
+  Write-Host "6. Open Library. Confirm the status says IndexedDB and test Project / Session / date filters."
+  Write-Host "7. Save, reload Chrome, reopen Library and confirm the same durable records return."
+  Write-Host "8. Test JSON restore duplicate/conflict handling before using a valuable backup."
+  Write-Host "9. On a ChatGPT artifact page, verify the 0.8 artifact inventory remains visible and deterministic."
   Write-Host ""
   Write-Host "If anything breaks, close Chrome, restore the backup folder contents to $Target, then reload the extension." -ForegroundColor Yellow
 } catch {
