@@ -1,10 +1,10 @@
-ONE CLICK CONTEXT 0.8.1 — RENEWAL CHECKPOINT
+ONE CLICK CONTEXT 0.9.0 — ОБЪЕДИНЁННЫЙ RENEWAL CHECKPOINT
 Дата: 2026-09-09
-Итоговая ветка: occ-library, manifest 0.8.1.
-Функции ветки renewal/occ-0.8.1-workspace объединены с backup/restore и artifact acquisition plan из occ-library.
+Итоговая ветка: occ-library, manifest 0.9.0.
+Функции renewal 0.8.1 объединены с backup/restore, artifact acquisition plan и context bundle splitter из occ-library.
 
 ЧТО ИЗМЕНЕНО В ЭТОМ RENEWAL
-1. Сохранён весь 0.8 artifact-inventory/runtime и версия поднята 0.8.0 -> 0.8.1.
+1. Сохранён весь 0.8 artifact-inventory/runtime; объединённая версия выпущена как 0.9.0 без понижения remote 0.9.0.
 2. Библиотека получила текущие Project + Session для новых импортов/снимков.
 3. Фильтры: project, session, search, date range; отдельно savedAt и capturedAt.
 4. Aggregate TXT подписывает project/session/source/savedAt/capturedAt/status.
@@ -12,8 +12,9 @@ ONE CLICK CONTEXT 0.8.1 — RENEWAL CHECKPOINT
 6. Полный backup всей библиотеки вынесен на отдельную страницу; исходные байты включаются только явным флажком.
 7. Restore сохраняет record IDs, project/session metadata, проверяет SHA-256 всего payload, отделяет adds/duplicates/conflicts и не делает silent overwrite; конфликт блокирует запись.
 8. Добавлены library/workspace.mjs и unit tests.
-9. Windows renewal script обновлён на pinned объединённый 0.8.1 runtime и включает artifact inventory, workspace и backup/restore.
-10. Локально проверено: orchestration/unit 47 PASS / 0 FAIL; production Library UI/converters в Google Chrome 17 PASS / 0 FAIL; synthetic capture fixtures 28 PASS / 0 FAIL. Loaded-extension offscreen test остаётся BLOCKED_ENV, signed-in adapters — NOT_RUN.
+9. Windows renewal script обновлён на pinned объединённый 0.9.0 runtime и включает artifact inventory, workspace, backup/restore и bundle splitter.
+10. Локально проверено: orchestration/unit 51 PASS / 0 FAIL; production Library UI/converters в Google Chrome 18 PASS / 0 FAIL; synthetic capture fixtures 28 PASS / 0 FAIL. Loaded-extension offscreen test остаётся BLOCKED_ENV, signed-in adapters — NOT_RUN.
+11. Большой сохранённый контекст локально разбивается на последовательные TXT-части; граница не разрывает UTF-16 surrogate pair, а manifest содержит SHA-256 частей и целого текста.
 
 ЧТО УЖЕ ЕСТЬ В 0.8 И СОХРАНЕНО
 - Capture snapshot, Copy/Download/viewer/recent session.
@@ -64,4 +65,4 @@ Run existing 0.8 unit/browser/native tests without weakening assertions.
 Run Chrome installed acceptance separately; fixture/mock is not installed evidence.
 
 WINDOWS RENEWAL
-Use one-click-context/scripts/renew_windows.ps1 only after checking the actual Loaded from folder. The script backs up the folder first, requires explicit YES, downloads the pinned 0.8.1 runtime, verifies manifest version, copies only known runtime files, and restores backup on error. It does not remove the extension, read cookies/profile, change native-host registration, or press Reload automatically.
+Use one-click-context/scripts/renew_windows.ps1 only after checking the actual Loaded from folder. The script backs up the folder first, requires explicit YES, downloads the pinned 0.9.0 runtime, verifies manifest version, copies only known runtime files, and restores backup on error. It does not remove the extension, read cookies/profile, change native-host registration, or press Reload automatically.

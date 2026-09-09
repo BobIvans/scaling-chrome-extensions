@@ -4,9 +4,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repo = 'BobIvans/scaling-chrome-extensions'
-$commit = '7209ebea9197e183cc7937b4c6a53e7a2a912f85'
+$commit = 'cfb73dcee583b2f8e46d0f41c8cc0610e77b2f4e'
 $base = "https://raw.githubusercontent.com/$repo/$commit/one-click-context"
-$expectedVersion = '0.8.1'
+$expectedVersion = '0.9.0'
 
 $files = @(
   'manifest.json',
@@ -24,6 +24,9 @@ $files = @(
   'library/backup-core.mjs',
   'library/backup.html',
   'library/backup.mjs',
+  'library/bundle-core.mjs',
+  'library/bundle.html',
+  'library/bundle.mjs',
   'library/convert.mjs',
   'library/library.mjs',
   'library/workspace.mjs',
