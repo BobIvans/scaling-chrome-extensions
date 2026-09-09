@@ -4,9 +4,9 @@ param(
 
 $ErrorActionPreference = 'Stop'
 $repo = 'BobIvans/scaling-chrome-extensions'
-$commit = '9e2ccd77a0a96a703867f8a5790e5f5b16c1cc6e'
+$commit = '92311c5e6a116bae1af93df8f8cd9c9105ccdd72'
 $base = "https://raw.githubusercontent.com/$repo/$commit/one-click-context"
-$expectedVersion = '0.8.3'
+$expectedVersion = '0.8.4'
 
 $files = @(
   'manifest.json',
@@ -123,10 +123,10 @@ try {
   Write-Host "3. Confirm version $expectedVersion."
   Write-Host "4. Reload the ChatGPT/DeepSeek/web page tabs you want to capture."
   Write-Host "5. Right-click the OCC icon to test Chat / Document / Chat + Document modes."
-  Write-Host "6. Open Library and save two identical text files; after reopen confirm one shared original Blob is reported."
-  Write-Host "7. Remove one copy and save: original must remain. Remove the last copy and save: Blob must be GC'd."
-  Write-Host "8. Try restoring an old backup for a deleted ID: restore must refuse tombstone resurrection."
-  Write-Host "9. Verify Project / Session / date filters and 0.8 artifact inventory still work."
+  Write-Host "6. On ChatGPT inspect a chat with repeated messages, known time elements and a file card; inventory must not click anything."
+  Write-Host "7. On DeepSeek inspect a visible conversation; missing IDs/dates must remain explicitly unknown rather than invented."
+  Write-Host "8. Confirm signed file-link query/hash data is not present in the source inventory."
+  Write-Host "9. Recheck IndexedDB original Blob dedup/GC/tombstone behavior from 0.8.3."
   Write-Host ""
   Write-Host "If anything breaks, close Chrome, restore the backup folder contents to $Target, then reload the extension." -ForegroundColor Yellow
 } catch {
