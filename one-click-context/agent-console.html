@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>OCC Agent Relay</title>
+<link rel="stylesheet" href="agent-console.css">
+</head>
+<body>
+<main>
+  <header>
+    <h1>OCC Agent Relay</h1>
+    <p>Hermes Lite + любой API + управление явно разрешёнными вкладками Chrome.</p>
+  </header>
+
+  <section>
+    <h2>1. Доступ к Chrome</h2>
+    <div class="row">
+      <button id="grant-current">Разрешить текущий сайт</button>
+      <button id="grant-all">Разрешить все HTTP(S) сайты</button>
+      <button id="refresh-tab">Обновить вкладки</button>
+    </div>
+    <label>Целевая вкладка
+      <select id="tab-picker"><option value="">Активная вкладка</option></select>
+    </label>
+    <div id="tab-state" class="status">Доступ не проверен.</div>
+    <p class="hint">Пароли, OTP, recovery/seed/private-key поля блокируются. Cookies и сохранённые пароли не экспортируются.</p>
+  </section>
+
+  <section>
+    <h2>2. Полная страница → TXT</h2>
+    <div class="row">
+      <button id="full-capture">Собрать всю отрисованную страницу</button>
+      <button id="copy-capture" disabled>Копировать TXT</button>
+      <button id="download-capture" disabled>Скачать TXT</button>
+    </div>
+    <div id="capture-state" class="status">Нет полного снимка.</div>
+  </section>
+
+  <section>
+    <h2>3. AI provider / Hermes</h2>
+    <div class="row"><button id="preset-hermes">Hermes local :8642</button></div>
+    <div class="subpanel">
+      <h3>Official Hermes Remote Browser</h3>
+      <p class="hint">Reasoning, memory, research, delegation and scheduled runs stay on the Hermes gateway. This Chrome executes only the official browser-extension control allowlist.</p>
+      <label>Hermes Session ID <span class="hint">(auto-created if empty)</span>
+        <input id="hermes-session" spellcheck="false" placeholder="optional existing session id">
+      </label>
+      <div class="row">
+        <button id="hermes-connect">Connect browser controller</button>
+        <button id="hermes-disconnect" disabled>Disconnect</button>
+        <button id="hermes-run">Run goal in remote Hermes</button>
+        <button id="hermes-stop-run" disabled>Stop remote run</button>
+      </div>
+      <div id="hermes-state" class="status">Remote Hermes is not connected.</div>
+    </div>
+    <label>Протокол
+      <select id="protocol">
+        <option value="openai-chat">OpenAI Chat Completions / совместимый</option>
+        <option value="openai-responses">OpenAI Responses / совместимый</option>
+        <option value="anthropic">Anthropic Messages</option>
+        <option value="gemini">Gemini generateContent</option>
+      </select>
+    </label>
+    <label>Endpoint
+      <input id="endpoint" type="url" spellcheck="false" placeholder="https://provider.example/v1">
+    </label>
+    <label>Model
+      <input id="model" spellcheck="false" placeholder="model-name">
+    </label>
+    <label>Авторизация
+      <select id="auth">
+        <option value="bearer">Authorization: Bearer</option>
+        <option value="x-api-key">x-api-key</option>
+        <option value="x-goog-api-key">x-goog-api-key</option>
+        <option value="none">Без ключа</option>
+      </select>
+    </label>
+    <label>API key <span class="hint">(только в памяти этой панели; не сохраняется)</span>
+      <input id="api-key" type="password" autocomplete="off" spellcheck="false">
+    </label>
+    <label>Дополнительные headers JSON
+      <textarea id="extra-headers" rows="3" spellcheck="false" placeholder='{"X-Custom":"value"}'></textarea>
+    </label>
+    <div class="row">
+      <button id="test-provider">Проверить API</button>
+      <button id="save-provider">Сохранить настройки без ключа</button>
+    </div>
+    <div id="provider-state" class="status">Provider не проверен.</div>
+  </section>
+
+  <section>
+    <h2>4. Browser agent</h2>
+    <label>Задача
+      <textarea id="goal" rows="5" placeholder="Например: открой документацию проекта, найди раздел API и собери основные endpoint."></textarea>
+    </label>
+    <div class="row">
+      <button id="snapshot">Снимок вкладки</button>
+      <button id="analyze">Исследовать текущую страницу</button>
+      <button id="step">1 шаг агента</button>
+      <button id="auto">Авто до 20 шагов</button>
+      <button id="stop" disabled>Стоп</button>
+    </div>
+    <div id="agent-state" class="status">Агент не запущен.</div>
+    <div id="approval" hidden>
+      <strong>Нужно подтверждение:</strong>
+      <pre id="pending-action"></pre>
+      <div class="row"><button id="approve">Выполнить</button><button id="reject">Отклонить</button></div>
+    </div>
+    <details>
+      <summary>Последний browser snapshot</summary>
+      <pre id="snapshot-view"></pre>
+    </details>
+    <details open>
+      <summary>Ответ / журнал</summary>
+      <pre id="output"></pre>
+    </details>
+  </section>
+</main>
+<script type="module" src="agent-console.mjs"></script>
+</body>
+</html>
