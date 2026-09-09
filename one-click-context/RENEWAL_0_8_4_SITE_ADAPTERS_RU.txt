@@ -1,0 +1,57 @@
+ONE CLICK CONTEXT 0.8.4 — CHATGPT / DEEPSEEK READ-ONLY SITE ADAPTERS
+Дата: 2026-09-09
+Base: renewal/occ-0.8.3-blobs (stacked after PR #5).
+Branch: renewal/occ-0.8.4-site-adapters.
+
+ЧТО РЕАЛЬНО ДОБАВЛЕНО
+1. artifact-inventory.js остаётся уже загружаемым production script; новый adapter layer не требует дополнительных host permissions.
+2. siteProfile различает chatgpt.com, chat.deepseek.com и generic BEST_EFFORT.
+3. observeMessages читает только текущий видимый DOM и никогда не утверждает, что получил server-side/unloaded history.
+4. ChatGPT/DeepSeek records используют только наблюдаемый data-message-id/data-turn-id; отсутствующий ID остаётся null.
+5. Роль берётся только из явных data-message-author-role/data-message-role/data-role; иначе unknown.
+6. Дата берётся только из time[datetime] с реально парсируемым timestamp; invalid/yesterday остаётся messageAt=null + UNPARSED_MESSAGE_TIME.
+7. Одинаковый текст разных message IDs сохраняется как разные records.
+8. Hidden/aria-hidden/inert/display:none/visibility:hidden элементы исключаются.
+9. Adapter возвращает BEST_EFFORT + UNLOADED_HISTORY_NOT_OBSERVED; maturity LIVE_DOM_REQUIRES_SMOKE означает необходимость реальной acceptance, а не claim live selectors stable forever.
+10. artifact inventory дополнен site-managed file cards/buttons: data-file-id или видимая file-extension label.
+11. Opaque card без URL получает file-link / USER_DOWNLOAD_IMPORT / NOT_READ. Никакого click, download, fetch или guess URL.
+12. HTTPS file links продолжают сохранять только origin+pathname; query/hash (signed token) не входит в inventory.
+13. Ordinary controls (Delete/Share/etc.) не становятся файлами без file signal.
+14. Manifest 0.8.3 -> 0.8.4; Windows renewal pin обновлён.
+
+ЧТО НЕ ПРИТВОРЯЕТСЯ РЕАЛИЗОВАННЫМ
+- observeMessages пока является отдельной диагностической/read-only функцией уже загружаемого inventory layer; основной capture продолжает свой проверенный PANE/scroll path.
+- Автоматический attachment fetch НЕ добавлен. File-card inventory сообщает, что пользователь может скачать/импортировать или следующий approved adapter должен получить bytes.
+- Невидимая серверная история ChatGPT/DeepSeek не читается.
+- Closed shadow roots/private React stores/cookies/auth tokens не читаются.
+- Никаких blind-click expand/download всех controls.
+
+CHROMIUM QUALIFICATION CODE
+Добавлен tests/site_adapters_browser.py:
+A. ChatGPT: stable IDs, roles, valid <time>, hidden exclusion.
+B. Repeated same text with different IDs retained.
+C. DeepSeek: unparseable time stays unknown, missing stable ID disclosed.
+D. Opaque data-file-id and file-labelled buttons inventoried without click; signed query/hash stripped.
+E. Unknown site stays GENERIC_BEST_EFFORT.
+
+EVIDENCE STATUS
+Как предыдущие новые browser runners в этой цепочке, этот test в текущей ChatGPT environment НЕ запускался после GitHub write. Статус: IMPLEMENTED_UNVERIFIED / NOT_RUN.
+Перед merge выполнить:
+  CHROMIUM_PATH=/usr/bin/chromium python one-click-context/tests/site_adapters_browser.py
+а также existing tests/run_browser_tests.py и все storage/native suites.
+
+ОБЯЗАТЕЛЬНАЯ LIVE ACCEPTANCE
+1. Реально авторизованный ChatGPT chat: DOM inventory не должен содержать menu/composer/hidden controls; stable IDs/roles/time проверить на текущей разметке.
+2. Реальный DeepSeek: то же; если селекторы отличаются, обновить profile fixture, не fallback к fabricated chronology.
+3. Виртуализированная история: прокрутка должна продолжать использовать bounded capture; adapter не объявляет unseen messages полученными.
+4. Реальный file attachment: inventory показывает filename/state; discovery != downloaded bytes.
+5. Expired/private card: fallback user download/import, не cookie scraping.
+6. Query/hash/auth data отсутствуют в capture inventory/logs.
+7. 0.8.3 IDB/blob/tombstone и 0.8 artifact/PANE/Codex regression tests остаются зелёными.
+
+СЛЕДУЮЩИЙ ШАГ
+- Selected attachment fetch: explicit artifact selection + ephemeral live handle + sender/tab/document/origin grant + redirect/MIME/magic/size/time bounds; никакого arbitrary URL proxy.
+- Затем selected-tabs queue и durable jobs.
+
+НЕ ДЕЛАЛОСЬ
+Cloud sync, Supabase SQL, external send, cookies/auth export, CAPTCHA/paywall bypass, trading/signing, auto merge, изменение установленной Windows папки.
