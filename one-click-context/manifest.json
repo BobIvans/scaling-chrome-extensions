@@ -14,8 +14,14 @@
     "downloads",
     "sidePanel"
   ],
-  "optional_permissions": ["nativeMessaging", "tabs"],
-  "optional_host_permissions": ["https://*/*", "http://*/*"],
+  "optional_permissions": [
+    "nativeMessaging",
+    "tabs"
+  ],
+  "optional_host_permissions": [
+    "https://*/*",
+    "http://*/*"
+  ],
   "background": {
     "service_worker": "background.js"
   },
@@ -38,6 +44,6 @@
     }
   },
   "content_security_policy": {
-    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https: http:; frame-src 'none'; base-uri 'none'"
+    "extension_pages": "script-src 'self'; object-src 'none'; connect-src https: wss: http://127.0.0.1:* http://localhost:* ws://127.0.0.1:* ws://localhost:*; frame-src 'none'; base-uri 'none'"
   }
 }
