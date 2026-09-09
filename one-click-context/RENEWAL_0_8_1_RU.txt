@@ -1,7 +1,7 @@
 ONE CLICK CONTEXT 0.8.1 — RENEWAL CHECKPOINT
 Дата: 2026-09-09
-База: актуальная ветка occ-library, manifest 0.8.0.
-Renewal branch: renewal/occ-0.8.1-workspace.
+Итоговая ветка: occ-library, manifest 0.8.1.
+Функции ветки renewal/occ-0.8.1-workspace объединены с backup/restore и artifact acquisition plan из occ-library.
 
 ЧТО ИЗМЕНЕНО В ЭТОМ RENEWAL
 1. Сохранён весь 0.8 artifact-inventory/runtime и версия поднята 0.8.0 -> 0.8.1.
@@ -9,11 +9,11 @@ Renewal branch: renewal/occ-0.8.1-workspace.
 3. Фильтры: project, session, search, date range; отдельно savedAt и capturedAt.
 4. Aggregate TXT подписывает project/session/source/savedAt/capturedAt/status.
 5. Старые local library records v1 нормализуются в metadata v2 при чтении.
-6. Полный text-only backup всей библиотеки отдельной кнопкой.
-7. Restore сохраняет record IDs, отделяет adds/duplicates/conflicts и не делает silent overwrite; конфликт блокирует запись.
+6. Полный backup всей библиотеки вынесен на отдельную страницу; исходные байты включаются только явным флажком.
+7. Restore сохраняет record IDs, project/session metadata, проверяет SHA-256 всего payload, отделяет adds/duplicates/conflicts и не делает silent overwrite; конфликт блокирует запись.
 8. Добавлены library/workspace.mjs и unit tests.
-9. Windows renewal script обновлён на pinned 0.8.1 runtime и включает artifact-inventory.js + workspace.mjs.
-10. Локально проверено на подготовленном исходнике: node --check library.mjs; workspace tests 4 PASS / 0 FAIL. Это не installed-Chrome acceptance.
+9. Windows renewal script обновлён на pinned объединённый 0.8.1 runtime и включает artifact inventory, workspace и backup/restore.
+10. Локально проверено: orchestration/unit 47 PASS / 0 FAIL; production Library UI/converters в Google Chrome 17 PASS / 0 FAIL; synthetic capture fixtures 28 PASS / 0 FAIL. Loaded-extension offscreen test остаётся BLOCKED_ENV, signed-in adapters — NOT_RUN.
 
 ЧТО УЖЕ ЕСТЬ В 0.8 И СОХРАНЕНО
 - Capture snapshot, Copy/Download/viewer/recent session.
