@@ -44,8 +44,22 @@ test('backup without originals omits raw bytes',async()=>{
  assert.equal('original' in backup.records[0],false);
 });
 
-test('persistent serializer preserves version 1 compatibility',async()=>{
+test('persistent serializer writes the project/session-aware version 2 model',async()=>{
  const rec={...record(),sha256:await sha256(record().text)};
- const parsed=JSON.parse(serializePersistentLibrary([rec]));
- assert.equal(parsed.version,1);assert.equal(parsed.records[0].id,'r1');
+ const normalized=(await planRestore([],await makeBackup([rec]))).merged;
+ const parsed=JSON.parse(serializePersistentLibrary(normalized));
+ assert.equal(parsed.version,2);assert.equal(parsed.records[0].id,'r1');assert.equal(parsed.records[0].project,'Inbox');assert.equal(parsed.records[0].session,'');
+});
+
+test('tampered project/session metadata is rejected by the backup payload hash',async()=>{
+ const backup=await makeBackup([record({project:'Research',session:'day-1'})]);
+ backup.records[0].session='day-2';
+ await assert.rejects(()=>planRestore([],backup),/резервной копии/);
+});
+
+test('backup preserves project/session and treats metadata drift as an ID conflict',async()=>{
+ const current=[{...record({project:'Research',session:'day-1'}),sha256:await sha256(record().text)}];
+ const backup=await makeBackup([{...current[0],session:'day-2'}]);
+ const plan=await planRestore(current,backup);
+ assert.equal(plan.ok,false);assert.equal(plan.conflicts.length,1);
 });

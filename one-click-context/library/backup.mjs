@@ -2,7 +2,7 @@ import {makeBackup,planRestore,serializePersistentLibrary,sha256} from './backup
 const $=id=>document.getElementById(id),KEY='occ-library-v1';
 let pending=null;
 function notice(text){$('status').textContent=text;}
-function readCurrent(){const raw=localStorage.getItem(KEY);if(!raw)return [];const data=JSON.parse(raw);if(data?.version!==1||!Array.isArray(data.records))throw Error('Сохранённая библиотека имеет неподдерживаемый формат.');return data.records;}
+function readCurrent(){const raw=localStorage.getItem(KEY);if(!raw)return [];const data=JSON.parse(raw);if(![1,2].includes(data?.version)||!Array.isArray(data.records))throw Error('Сохранённая библиотека имеет неподдерживаемый формат.');return data.records;}
 function downloadText(text,name){const url=URL.createObjectURL(new Blob([text],{type:'application/json;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);notice('Скачивание запрошено. Завершение проверьте в Chrome.');}
 $('export').onclick=async()=>{try{const current=readCurrent();if(!current.length)throw Error('Сохранённая библиотека пуста.');const backup=await makeBackup(current,{includeOriginals:$('originals').checked});const text=JSON.stringify(backup,null,2);downloadText(text,'occ_library_backup_'+new Date().toISOString().replace(/[:.]/g,'-')+'.json');$('report').value=`Записей: ${backup.records.length}\nИсходные байты: ${backup.includeOriginals?'включены':'не включены'}\nSHA-256 payload: ${backup.payloadSha256}`;}catch(e){notice('Экспорт не выполнен: '+e.message);}};
 $('choose').onclick=()=>$('file').click();

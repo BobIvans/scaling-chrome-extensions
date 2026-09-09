@@ -20,19 +20,21 @@ async function normalizeRecord(record,{includeOriginals=true}={}){
   const required=['id','name','text','source','status','createdAt'];
   for(const key of required)if(typeof record[key]!=='string'||!record[key])fail('Неверное поле '+key+'.');
   if(!STATUSES.has(record.status))fail('Неподдерживаемый status: '+record.status);
-  if(!validDate(record.createdAt))fail('Некорректная дата: '+record.name);
+  const savedAt=record.savedAt||record.createdAt;
+  if(!validDate(savedAt))fail('Некорректная дата: '+record.name);
+  if(record.capturedAt!=null&&!validDate(record.capturedAt))fail('Некорректная дата источника: '+record.name);
   if(!Array.isArray(record.warnings)||record.warnings.some(w=>typeof w!=='string'))fail('Некорректные warnings: '+record.name);
   if(bytesOf(record.text)>MAX_LIBRARY_BYTES)fail('Текст записи превышает лимит: '+record.name);
   if(record.original!=null&&!safeByteArray(record.original))fail('Повреждены исходные байты: '+record.name);
   const actual=await sha256(record.text);
   if(record.sha256&&record.sha256!==actual)fail('SHA-256 текста не совпадает: '+record.name);
-  const out={...clone(record),sha256:actual};
+  const out={...clone(record),project:typeof record.project==='string'&&record.project.trim()?record.project.trim().slice(0,180):'Inbox',session:typeof record.session==='string'?record.session.trim().slice(0,180):'',savedAt:new Date(savedAt).toISOString(),createdAt:new Date(savedAt).toISOString(),capturedAt:record.capturedAt==null?null:new Date(record.capturedAt).toISOString(),sha256:actual};
   if(!includeOriginals)delete out.original;
   return out;
 }
 function validateLibrarySize(records){
   if(records.length>MAX_RECORDS)fail('После восстановления будет более 100 документов.');
-  const serialized=JSON.stringify({version:1,records});
+  const serialized=JSON.stringify({version:2,records});
   const bytes=bytesOf(serialized);
   if(bytes>MAX_LIBRARY_BYTES)fail('После восстановления библиотека превысит 2 200 000 байт.');
   return bytes;
@@ -48,6 +50,8 @@ export async function makeBackup(records,{includeOriginals=false}={}){
 export async function parseBackup(value){
   const data=typeof value==='string'?JSON.parse(value):clone(value);
   if(!data||data.kind!==BACKUP_KIND||data.version!==BACKUP_VERSION||!Array.isArray(data.records))fail('Неподдерживаемый формат резервной копии.');
+  const {payloadSha256,...payload}=data;
+  if(typeof payloadSha256!=='string'||payloadSha256!==await sha256(JSON.stringify(payload)))fail('SHA-256 резервной копии не совпадает.');
   if(data.records.length>MAX_RECORDS)fail('В копии более 100 документов.');
   const normalized=[];
   for(const record of data.records)normalized.push(await normalizeRecord(record,{includeOriginals:true}));
@@ -63,7 +67,8 @@ export async function planRestore(current,backup){
   for(const record of parsed.records){
     const existing=byId.get(record.id);
     if(!existing){additions.push(record);byId.set(record.id,record);continue;}
-    if(existing.sha256===record.sha256&&existing.name===record.name&&existing.source===record.source&&existing.status===record.status&&existing.createdAt===record.createdAt){skipped.push(record);continue;}
+    const withoutOriginal=value=>{const copy={...value};delete copy.original;return copy;};
+    if(JSON.stringify(withoutOriginal(existing))===JSON.stringify(withoutOriginal(record))){skipped.push(record);continue;}
     conflicts.push({id:record.id,current:{name:existing.name,sha256:existing.sha256},incoming:{name:record.name,sha256:record.sha256}});
   }
   if(conflicts.length)return {ok:false,additions,skipped,conflicts,merged:null,serializedBytes:null};
@@ -73,6 +78,6 @@ export async function planRestore(current,backup){
 }
 export function serializePersistentLibrary(records){
   validateLibrarySize(records);
-  return JSON.stringify({version:1,records});
+  return JSON.stringify({version:2,records});
 }
 export {BACKUP_KIND,BACKUP_VERSION,MAX_LIBRARY_BYTES,MAX_RECORDS,sha256};
