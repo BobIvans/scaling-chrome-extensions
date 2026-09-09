@@ -16,14 +16,18 @@ function validStatus(value) {
   return ['SELECTION', 'RAW_TEXT', 'BEST_EFFORT', 'PARTIAL'].includes(value);
 }
 function validArtifacts(value) {
-  const kinds = new Set(['file-link', 'embedded-document', 'collapsed-content', 'canvas', 'image', 'audio', 'video', 'editor']);
-  const states = new Set(['AVAILABLE', 'NOT_READ', 'TEXT_NOT_READ', 'VISIBLE_PART_ONLY']);
+  const kinds = new Set(['file-link', 'file-control', 'copy-control', 'feed-link', 'structured-data', 'embedded-document', 'collapsed-content', 'long-text-control', 'canvas', 'image', 'audio', 'video', 'editor']);
+  const states = new Set(['AVAILABLE', 'NOT_READ', 'TEXT_NOT_READ', 'VISIBLE_PART_ONLY', 'CONTROL_NOT_USED', 'METADATA_ONLY']);
   const methods = new Set(['USER_DOWNLOAD_IMPORT', 'FRAME_ACCESS_OR_EXPORT', 'USER_EXPAND_THEN_RECAPTURE',
-    'SCREENSHOT_OR_OCR', 'TRANSCRIPT_OR_USER_EXPORT', 'OBSERVE_VISIBLE_DOM_OR_EXPORT_ORIGINAL']);
-  return value?.schemaVersion === 1 && typeof value.limited === 'boolean' && Array.isArray(value.items) &&
+    'SCREENSHOT_OR_OCR', 'TRANSCRIPT_OR_USER_EXPORT', 'OBSERVE_VISIBLE_DOM_OR_EXPORT_ORIGINAL', 'USER_OPEN_OR_DOWNLOAD',
+    'OBSERVE_DOM_FIRST', 'CONNECT_READ_ONLY_FEED', 'READ_STRUCTURED_METADATA']);
+  const decisions = new Set(['OBSERVE_ONLY', 'IMPORT_FEED', 'INCLUDE_STRUCTURED_RECORD', 'IMPORT_ORIGINAL', 'OPEN_OR_DOWNLOAD_ORIGINAL',
+    'USE_OBSERVED_TEXT', 'OPEN_OR_EXPORT_SEPARATELY', 'EXPAND_AND_RECAPTURE', 'CAPTURE_VISIBLE_SCREEN', 'EXPORT_TRANSCRIPT_OR_MEDIA', 'EXPORT_ORIGINAL_TEXT']);
+  return [1, 2].includes(value?.schemaVersion) && typeof value.limited === 'boolean' && Array.isArray(value.items) &&
     value.items.length <= 100 && value.items.every((item, index) => item && item.id === `artifact-${index + 1}` &&
       kinds.has(item.kind) && states.has(item.state) && methods.has(item.method) &&
-      typeof item.label === 'string' && item.label.length <= 160 && typeof item.source === 'string' && item.source.length <= 160);
+      typeof item.label === 'string' && item.label.length <= 160 && typeof item.source === 'string' && item.source.length <= 160 &&
+      (value.schemaVersion === 1 || (decisions.has(item.decision) && typeof item.reason === 'string' && item.reason.length <= 160 && typeof item.requiresUser === 'boolean')));
 }
 function validSnapshot(value) {
   if (!value || value.schemaVersion !== SNAPSHOT_VERSION || typeof value.captureId !== 'string' ||

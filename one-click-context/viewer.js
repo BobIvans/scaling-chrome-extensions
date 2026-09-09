@@ -37,7 +37,7 @@ function showArtifacts(inventory) {
   const items = inventory?.items || [];
   for (const item of items) {
     const row = document.createElement('li');
-    row.textContent = `${item.kind}: ${item.label} — ${item.state}; ${artifactMethod[item.method] || item.method}${item.source ? `; ${item.source}` : ''}`;
+    row.textContent = `${item.kind}: ${item.label} — ${item.state}; ${artifactMethod[item.method] || item.method}; решение: ${item.decision || 'OBSERVE_ONLY'}${item.reason ? `; ${item.reason}` : ''}${item.source ? `; ${item.source}` : ''}`;
     list.append(row);
   }
   $('inventory').hidden = !items.length;

@@ -212,15 +212,17 @@ test('untrusted sender cannot use privileged viewer routes', async () => {
 });
 test('manifest is MV3 with narrow scope and explicitly optional native messaging', () => {
   const m=JSON.parse(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8'));
-  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.8.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
+  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.8.1'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
   for(const p of ['cookies','history','clipboardRead','debugger','all_urls']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
   assert.deepEqual(m.optional_permissions,['nativeMessaging']);assert.equal(m.optional_host_permissions,undefined);assert(!m.permissions.includes('nativeMessaging'));
 });
 test('artifact inventory is accepted only with bounded versioned fields', async () => {
-  const artifacts={schemaVersion:1,limited:false,items:[{id:'artifact-1',kind:'file-link',method:'USER_DOWNLOAD_IMPORT',state:'AVAILABLE',label:'report.pdf',source:'https://example.org/report.pdf'}]};
+  const artifacts={schemaVersion:2,limited:false,items:[{id:'artifact-1',kind:'file-link',method:'USER_DOWNLOAD_IMPORT',state:'AVAILABLE',label:'report.pdf',source:'https://example.org/report.pdf',decision:'IMPORT_ORIGINAL',reason:'Exact bytes',requiresUser:true}]};
   const good=snapshot('with inventory',{artifacts}), h=harness({session:{capture:good}});
   assert.equal((await h.message({target:'worker',type:'getState'})).session.artifacts.items.length,1);
-  for(const bad of [{...artifacts,schemaVersion:2},{...artifacts,items:[{...artifacts.items[0],source:'x'.repeat(161)}]},{...artifacts,items:[{...artifacts.items[0],method:'AUTO_CLICK'}]}]){
+  const legacy={schemaVersion:1,limited:false,items:[{id:'artifact-1',kind:'file-link',method:'USER_DOWNLOAD_IMPORT',state:'AVAILABLE',label:'old.txt',source:''}]};
+  assert((await harness({session:{capture:snapshot('legacy',{artifacts:legacy})}}).message({target:'worker',type:'getState'})).session);
+  for(const bad of [{...artifacts,schemaVersion:3},{...artifacts,items:[{...artifacts.items[0],source:'x'.repeat(161)}]},{...artifacts,items:[{...artifacts.items[0],method:'AUTO_CLICK'}]},{...artifacts,items:[{...artifacts.items[0],decision:'AUTO_CLICK'}]}]){
     const invalid=harness({session:{capture:snapshot('bad',{artifacts:bad})}});
     assert.equal((await invalid.message({target:'worker',type:'getState'})).session,null);
   }

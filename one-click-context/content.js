@@ -1,6 +1,6 @@
 /* One Click Context: runs in the extension's isolated world, on invocation only. */
 (() => {
-  const CONTENT_VERSION = '0.8.0';
+  const CONTENT_VERSION = '0.8.1';
   if (globalThis.__occCapture && globalThis.__occContentVersion === CONTENT_VERSION) return;
   globalThis.__occController?.abort?.();
   globalThis.__occContentVersion = CONTENT_VERSION;

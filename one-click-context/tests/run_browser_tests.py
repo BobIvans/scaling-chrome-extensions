@@ -78,12 +78,12 @@ with sync_playwright() as p:
   r=capture(sourceMode='chat+document');require('CHAT' in r['text']);require('NESTED DOCUMENT' in r['text']);require('NAV' not in r['text']);require(r['text'].count('NESTED DOCUMENT')==1,r)
  check('nested document is a separate nonduplicated source part',nested_document)
  def artifact_inventory():
-  fixture('<main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p></div></main><a download href="https://files.example/report.pdf?token=SECRET#page=2">Report</a><details><summary>Show attachment</summary><p>HIDDEN ATTACHMENT BODY</p></details><iframe title="Embedded doc" src="https://frame.example/doc?id=SECRET"></iframe><canvas aria-label="Price chart"></canvas><video title="Call recording"></video>')
+  fixture('<link rel="alternate" type="application/rss+xml" title="News feed" href="https://feed.example/rss?token=SECRET"><script type="application/ld+json">{"@type":"Dataset","secret":"NOT_STORED"}</script><main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p><pre>VISIBLE CODE</pre><button>Copy</button></div></main><a download href="https://files.example/report.pdf?token=SECRET#page=2">Report</a><button>analysis.pptx</button><button>Open full text</button><details><summary>Show attachment</summary><p>HIDDEN ATTACHMENT BODY</p></details><iframe title="Embedded doc" src="https://frame.example/doc?id=SECRET"></iframe><canvas aria-label="Price chart"></canvas><video title="Call recording"></video>')
   page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))");page.get_by_role('button',name='Чат 1').click();r=page.evaluate('pendingCapture');items=r['artifacts']['items'];kinds={x['kind'] for x in items}
-  require({'file-link','collapsed-content','embedded-document','canvas','video'}.issubset(kinds),items)
+  require(r['artifacts']['schemaVersion']==2,r['artifacts']);require({'feed-link','structured-data','file-link','file-control','copy-control','long-text-control','collapsed-content','embedded-document','canvas','video'}.issubset(kinds),items)
   report=next(x for x in items if x['kind']=='file-link');require(report['source']=='https://files.example/report.pdf',report)
-  require('SECRET' not in json.dumps(items),items);require('HIDDEN ATTACHMENT BODY' not in r['text'],r['text'])
-  require('discovery is not content acquisition' in r['text'],r['text'])
+  require('SECRET' not in json.dumps(items) and 'NOT_STORED' not in json.dumps(items),items);require('HIDDEN ATTACHMENT BODY' not in r['text'],r['text'])
+  require(all('decision' in x and 'requiresUser' in x for x in items),items);require('discovery is not content acquisition' in r['text'],r['text'])
  check('artifact inventory reports access points without opening or reading them',artifact_inventory)
  def embedded_frame():
   fixture('<main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p></div></main><iframe style="width:500px;height:300px" srcdoc="<pre>FRAME SECRET</pre>"></iframe>')
