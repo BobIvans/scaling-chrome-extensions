@@ -1,0 +1,70 @@
+ONE CLICK CONTEXT 0.8.3 — ORIGINAL BLOB STORE / TOMBSTONES
+Дата: 2026-09-09
+Base: renewal/occ-0.8.2-idb (stacked after PR #4).
+Branch: renewal/occ-0.8.3-blobs.
+
+РЕАЛЬНЫЕ ИЗМЕНЕНИЯ
+1. IndexedDB schema v2: records + meta + blobs + tombstones.
+2. Original bytes больше не должны жить массивом внутри durable record после Save.
+3. Save вычисляет SHA-256 original bytes, проверяет inputSha256 (если был), пишет record.originalRef={sha256,bytes}.
+4. Blob store content-addressed: одинаковые bytes разных records используют один blob.
+5. Refcounts рассчитываются из текущего полного record set при каждом атомарном Save.
+6. Blob без ссылок удаляется в той же transaction после последней ссылки.
+7. Legacy IndexedDB v1 records с inline original bytes читаются; при следующем Save мигрируют в blobs без второго DB owner.
+8. Library UI умеет скачать original как inline legacy bytes, так и через originalRef; bytes повторно сверяются по size + SHA-256 перед выдачей.
+9. JSON backup остаётся text-only: original bytes и unusable local originalRef наружу не экспортируются; сохраняется только informational originalSha256/originalBytes metadata.
+10. Restore из text-only backup не создаёт фиктивную ссылку на отсутствующий local blob.
+11. Удаление record при Save записывает minimal tombstone {id, deletedAt, revision}; text/source/body там нет.
+12. Clear удаляет records + original blobs, но сохраняет tombstone IDs, чтобы старый backup не мог молча resurrect удалённое.
+13. Restore/Save tombstoned ID fail closed: RESTORE_TOMBSTONED_ID / TOMBSTONED_RECORD_ID. Explicit revive flow пока отсутствует.
+14. storageStats показывает records/blobs/blobBytes/tombstones/revision для диагностики без чтения document bodies.
+15. Manifest 0.8.2 -> 0.8.3; Windows renewal pin обновлён.
+
+РАСШИРЕННАЯ BROWSER QUALIFICATION
+`tests/idb-store.browser.mjs` теперь содержит 15 проверок:
+- два независимых IDB connections;
+- CAS race one-winner;
+- restore plan hash;
+- conflict rollback;
+- stale revision;
+- два records с одинаковыми original bytes -> один blob;
+- readOriginal exact byte roundtrip;
+- удалить одну ссылку -> blob остаётся;
+- удалить последнюю -> blob GC;
+- tombstones создаются;
+- old backup restore tombstoned ID -> reject;
+- clear + close/reopen durable state.
+
+EVIDENCE STATUS
+Как и для 0.8.2, Chromium runner из текущей среды не запускался: container не имеет DNS доступа к github.com, а GitHub changes делались через connector.
+Статус нового кода: IMPLEMENTED_UNVERIFIED / browser tests NOT_RUN.
+Не превращать это в PASS до реального запуска:
+  CHROMIUM_PATH=/usr/bin/chromium python one-click-context/tests/idb_store_browser.py
+
+ОБЯЗАТЕЛЬНО ПЕРЕД MERGE
+A. Прогнать 15 IDB scenarios в Chromium.
+B. Existing 0.8/0.8.1/0.8.2 unit/browser/native suites.
+C. Реальный Chrome upgrade 0.8.2 -> 0.8.3 без потери records.
+D. TXT file import -> Save -> restart -> Download original exact bytes/hash.
+E. Два одинаковых originals -> один blob; ref deletion/GC.
+F. Restore старого backup после delete/clear не resurrect ID.
+G. Quota abort сохраняет предыдущую revision + blob consistency.
+H. Проверить, что tombstones не содержат text/source/private payload.
+I. Проверить PANE/artifact inventory/session TXT/Codex bridge без регрессии.
+
+ЧТО ЕЩЁ НУЖНО В STORAGE ПОСЛЕ 0.8.3
+- Explicit tombstone retention/forget policy и privacy UI. Сейчас tombstones минимальны, но бессрочная retention не должна быть неявным production решением.
+- Version history/superseded records, если это действительно нужно UX; не копировать все версии бесконечно.
+- Индексы для больших библиотек только после измерения; текущий filter остаётся in-memory view до доказанной необходимости.
+- Quota estimates и user-visible storage diagnostics через navigator.storage.estimate() (read-only).
+- Большой backup chunking/streaming вместо 64 MiB single JSON при реальной потребности.
+
+СЛЕДУЮЩИЙ ENGINEERING PRIORITY
+1. Live ChatGPT/DeepSeek message adapter qualification.
+2. Selected tabs + permission/grant lifecycle.
+3. Selected attachment discovery/fetch/parse.
+4. Durable jobs owner на этом же IndexedDB authority.
+5. Codex installed E2E/framing/reconnect.
+
+НЕ ДЕЛАЛОСЬ
+Supabase SQL, sync, cloud upload, cookies/auth export, arbitrary browser mirror, trading/signing, auto merge и изменение локальной папки пользователя.
