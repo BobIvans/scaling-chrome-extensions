@@ -1,0 +1,20 @@
+ONE CLICK CONTEXT 0.8.0 — backup/restore increment
+Date: 2026-09-09
+
+Implemented in GitHub branch occ-library:
+- library/backup-core.mjs: versioned backup schema, SHA-256 verification, preserved IDs/dates/source/status, conflict detection, size limits.
+- library/backup.html + backup.mjs: export persisted library, optional original bytes, dry-run restore plan, explicit apply step.
+- library.html: visible link to structured backup/restore.
+- tests/backup.test.mjs: integrity, same-record replay, conflict blocking, tamper rejection, optional originals, legacy persistent format compatibility.
+- manifest: version 0.8.0.
+
+Verification performed outside GitHub checkout on the exact new backup-core/test logic:
+node --test tests/backup.test.mjs
+6 PASS / 0 FAIL / 0 SKIP.
+
+Boundary:
+- This is not a real installed-extension acceptance test.
+- Restore only targets the existing persistent library format version 1 and keeps its 100-record / 2.2 MB constraints.
+- Conflicting ID blocks the entire restore; no silent overwrite.
+- Backup export reads only the library explicitly persisted by the user. Unsaved in-memory changes must be saved first.
+- No Supabase, AI, network, cookies, trading, or new host permissions were added.
