@@ -1,0 +1,1 @@
+window.addEventListener('error',e=>{document.querySelector('h1').textContent='ERROR '+e.message;});window.addEventListener('unhandledrejection',e=>{document.querySelector('h1').textContent='ERROR '+e.reason;});

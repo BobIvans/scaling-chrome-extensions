@@ -1,4 +1,18 @@
-# One Click Context — local Chrome extension starter
+# One Click Context 0.9.0 — локальное Chrome-расширение
+
+Версия 0.9.0 разделяет найденные сообщения переписки и открытый документ, а также
+показывает детерминированный инвентарь видимых вложений, frames, медиа, свёрнутых
+блоков и редакторов.
+Для каждой точки доступа сохраняется детерминированное решение: использовать уже
+наблюдённый DOM, импортировать оригинал, развернуть и повторить сбор, сделать PNG,
+получить транскрипт либо подключить read-only feed. Никакое решение не нажимается
+автоматически.
+Обычный клик использует ограниченный автоматический выбор, а меню значка предлагает
+режимы «чат», «документ» и «чат + документ». Неоднозначный выбор требует настоящего
+пользовательского клика по конкретной области.
+Сохранённая библиотека поддерживает Project/Session и диапазоны дат. Большой выбранный
+контекст можно локально разбить на последовательные TXT-части с SHA-256 без обращения
+к LLM или сети.
 
 A separate utility, not a change to studious-pancake or PR #471.
 No account, backend, AI model, build step, automatic paste, or automatic Send.
@@ -22,7 +36,10 @@ manually with Ctrl+V. Alt+Shift+C invokes the action when Chrome grants that sho
 customize it at chrome://extensions/shortcuts if another app uses it.
 
 A second action click or Escape cancels a running scan without copying it.
-Right-click the action -> Preview / copy last capture / open TXT opens the local
+После сбора уведомление позволяет скачать ровно этот снимок, отдельно сохранить
+PNG только видимой области, открыть просмотрщик
+или закрыть уведомление. Меню значка позволяет скачать последний доступный снимок,
+в том числе после закрытия исходной вкладки. Right-click также открывает local
 viewer. The Options page does the same. Import a local UTF-8 TXT, MD, PATCH, DIFF,
 JSON or code file there; no blanket file-system access is required for selection
 through the file picker. A rendered file URL may need Chrome's separate file-URL
@@ -34,9 +51,14 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
 
 ## Scope and implementation
 
-- Manifest V3, activeTab, scripting, clipboardWrite, offscreen, storage, contextMenus.
+- Manifest V3, activeTab, scripting, clipboardWrite, offscreen, storage, contextMenus,
+  downloads. Downloads используется только для выбранного пользователем снимка;
+  расширение не читает и не изменяет посторонние загрузки.
 - No persistent host permissions, <all_urls>, cookies, history, debugger, clipboardRead,
   remote JavaScript, analytics or HTTP client calls.
+- artifact-inventory.js только обнаруживает видимые точки доступа и удаляет
+  query/hash из сохранённых URL. Он не нажимает элементы и не объявляет содержимое
+  вложения прочитанным.
 - content.js reads DOM text and preserves code whitespace, backslashes and diff signs.
   It uses role attributes when supplied by the DOM and otherwise generic main content.
 - background.js dispatches user actions; offscreen.js writes to the clipboard and
@@ -44,8 +66,10 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
 - viewer.html imports UTF-8 text with strict decoding and displays original-byte
   SHA-256 where Web Crypto is available. Original-byte download is preserved until
   editing. Clipboard line endings can be normalized by the OS/browser.
-- Temporary captures use chrome.storage.session. Clear removes extension-session
-  data, NOT the system clipboard or downloaded files.
+- Temporary captures use chrome.storage.session. Ошибка/отмена нового сбора не
+  уничтожает последний принятый снимок. Единственная постоянная local-копия
+  создаётся только явной кнопкой и после предупреждения. Clear removes both copies,
+  NOT the system clipboard or downloaded files.
 
 Default traversal limits: 20,000 ms, 160 steps, approximately 2 MB of captured
 content. These are checked between DOM samples, not a preemptive hard CPU deadline.
@@ -75,6 +99,14 @@ load more data over the network. Visible chats can contain passwords or API keys
 excluding form fields is NOT secret detection. Review before sharing elsewhere.
 
 ## Tests and actual evidence
+
+Build a Chrome-ready ZIP (generated archives are deliberately not tracked by Git):
+
+    ./one-click-context/scripts/package_chrome_ready.sh
+
+The verified package is written to `dist/` with `manifest.json` and
+`INSTALL_RU.txt` directly at the ZIP root. Pass another output directory as the
+first argument when the artifact must live outside the repository.
 
 Run JavaScript syntax checks and orchestration unit tests:
 

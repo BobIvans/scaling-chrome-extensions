@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "One Click Context",
-  "version": "0.2.0",
-  "description": "User-triggered, local-only text capture for copying to any AI. Bounded scrolling; honest coverage warnings.",
+  "version": "0.9.0",
+  "description": "Local chat/document capture, artifact inventory, project/session memory, verified backup/restore, bundle splitting and optional Codex handoff.",
   "minimum_chrome_version": "116",
   "permissions": [
     "activeTab",
@@ -10,11 +10,13 @@
     "clipboardWrite",
     "offscreen",
     "storage",
-    "contextMenus"
+    "contextMenus",
+    "downloads"
   ],
   "background": {
     "service_worker": "background.js"
   },
+  "optional_permissions": ["nativeMessaging"],
   "action": {
     "default_title": "Copy context (selection first; click again to cancel)"
   },

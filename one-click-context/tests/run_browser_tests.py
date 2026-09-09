@@ -6,7 +6,7 @@ from pathlib import Path
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 BROWSER=os.environ.get('CHROMIUM_PATH')
-SCRIPT=(ROOT/'content.js').read_text(encoding='utf-8'); RESULTS=[]
+SCRIPT=(ROOT/'artifact-inventory.js').read_text(encoding='utf-8')+'\n'+(ROOT/'capture-regions.js').read_text(encoding='utf-8')+'\n'+(ROOT/'content.js').read_text(encoding='utf-8'); RESULTS=[]
 class Handler(http.server.BaseHTTPRequestHandler):
  def do_GET(self):
   body=b'<!doctype html><title>Local fixture</title><body></body>'; mime='text/html'
@@ -50,6 +50,64 @@ with sync_playwright() as p:
  def controls():
   fixture('<nav><p>SIDEBAR_SECRET</p></nav><main><p>Visible text</p><input value="INPUT_SECRET"><textarea>TEXTAREA_SECRET</textarea><p hidden>HIDDEN_SECRET</p><script>const secret="SCRIPT_SECRET";</script><p aria-hidden="true">ARIA_SECRET</p><button>BUTTON_SECRET</button></main>');r=capture();require('Visible text' in r['text']);require('_SECRET' not in r['text'],r['text'])
  check('form values / hidden content / scripts / sidebar excluded',controls)
+ def right_document():
+  fixture('<nav><p>NAV_SECRET</p></nav><main><div data-message-id="m1" data-message-author-role="user"><p>CHAT QUESTION</p></div></main><aside id="artifact"><button>Share</button><pre>RIGHT DOCUMENT\n+ code_\\path</pre></aside>')
+  r=capture();require('RIGHT DOCUMENT' in r['text'],r);require('CHAT QUESTION' not in r['text'],r);require('NAV_SECRET' not in r['text'],r);require('Share' not in r['text'],r);require(r['mode']=='document',r)
+ check('auto prioritizes one open document over chat and navigation',right_document)
+ def explicit_regions():
+  fixture('<nav><p>NAV_SECRET</p></nav><main><div data-message-id="m1" data-message-author-role="user"><p>CHAT QUESTION</p></div></main><aside id="artifact"><pre>RIGHT DOCUMENT</pre></aside>')
+  chat=capture(sourceMode='chat');require('CHAT QUESTION' in chat['text']);require('RIGHT DOCUMENT' not in chat['text']);both=capture(sourceMode='chat+document');require('CHAT QUESTION' in both['text']);require('RIGHT DOCUMENT' in both['text']);require('SOURCE PART: CHAT' in both['text']);require('SOURCE PART: DOCUMENT' in both['text']);require('NAV_SECRET' not in both['text'])
+ check('explicit chat and chat plus document stay separate',explicit_regions)
+ def document_missing():
+  fixture('<main><div data-message-id="m1" data-message-author-role="user"><p>CHAT ONLY</p></div></main>')
+  try:capture(sourceMode='document')
+  except Exception as e:require('Открытый документ не найден' in str(e),str(e));return
+  raise AssertionError('chat silently substituted for missing document')
+ check('missing document never falls back to chat',document_missing)
+ def ambiguous_regions():
+  fixture('<main><div data-message-id="m1" data-message-author-role="user"><p>CHAT</p></div></main><aside id="one"><pre>DOC ONE</pre></aside><div role="dialog" id="two"><pre>DOC TWO</pre></div>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))")
+  page.evaluate("document.querySelector('[data-occ-ignore=banner]').shadowRoot.querySelector('button').click()")
+  page.wait_for_timeout(60);require(page.evaluate('globalThis.__occController!==null'),'synthetic click selected a region')
+  page.get_by_role('button',name='Документ 2').click()
+  r=page.evaluate('pendingCapture');require('DOC ONE' in r['text'] or 'DOC TWO' in r['text'],r);require(not ('DOC ONE' in r['text'] and 'DOC TWO' in r['text']),r)
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false,sourceMode:'chat+document'}))");page.get_by_role('button',name='Документ 2').click();r=page.evaluate('pendingCapture');require('CHAT' in r['text']);require('DOC TWO' in r['text']);require('DOC ONE' not in r['text'])
+ check('multiple documents require a trusted explicit choice',ambiguous_regions)
+ def nested_document():
+  fixture('<main><nav><p>NAV</p></nav><div data-message-id="m1" data-message-author-role="assistant"><p>CHAT</p></div><aside id="artifact"><pre>NESTED DOCUMENT</pre></aside></main>')
+  r=capture(sourceMode='chat+document');require('CHAT' in r['text']);require('NESTED DOCUMENT' in r['text']);require('NAV' not in r['text']);require(r['text'].count('NESTED DOCUMENT')==1,r)
+ check('nested document is a separate nonduplicated source part',nested_document)
+ def artifact_inventory():
+  fixture('<link rel="alternate" type="application/rss+xml" title="News feed" href="https://feed.example/rss?token=SECRET"><script type="application/ld+json">{"@type":"Dataset","secret":"NOT_STORED"}</script><main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p><pre>VISIBLE CODE</pre><button>Copy</button></div></main><a download href="https://files.example/report.pdf?token=SECRET#page=2">Report</a><button>analysis.pptx</button><button>Open full text</button><details><summary>Show attachment</summary><p>HIDDEN ATTACHMENT BODY</p></details><iframe title="Embedded doc" src="https://frame.example/doc?id=SECRET"></iframe><canvas aria-label="Price chart"></canvas><video title="Call recording"></video>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))");page.get_by_role('button',name='Чат 1').click();r=page.evaluate('pendingCapture');items=r['artifacts']['items'];kinds={x['kind'] for x in items}
+  require(r['artifacts']['schemaVersion']==2,r['artifacts']);require({'feed-link','structured-data','file-link','file-control','copy-control','long-text-control','collapsed-content','embedded-document','canvas','video'}.issubset(kinds),items)
+  report=next(x for x in items if x['kind']=='file-link');require(report['source']=='https://files.example/report.pdf',report)
+  require('SECRET' not in json.dumps(items) and 'NOT_STORED' not in json.dumps(items),items);require('HIDDEN ATTACHMENT BODY' not in r['text'],r['text'])
+  require(all('decision' in x and 'requiresUser' in x for x in items),items);require('discovery is not content acquisition' in r['text'],r['text'])
+ check('artifact inventory reports access points without opening or reading them',artifact_inventory)
+ def embedded_frame():
+  fixture('<main><div data-message-id="m1" data-message-author-role="assistant"><p>VISIBLE CHAT</p></div></main><iframe style="width:500px;height:300px" srcdoc="<pre>FRAME SECRET</pre>"></iframe>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}))");page.get_by_role('button',name='Чат 1').click();r=page.evaluate('pendingCapture');require('VISIBLE CHAT' in r['text']);require('FRAME SECRET' not in r['text']);require('EMBEDDED_CONTENT_NOT_READ' in r['warnings'],r)
+  try:capture(sourceMode='document')
+  except Exception as e:require('frame' in str(e),str(e));return
+  raise AssertionError('frame reported as a read document')
+ check('iframe is detected but not read or treated as permission',embedded_frame)
+ def editor_warning():
+  fixture('<section class="monaco-editor"><pre>VISIBLE EDITOR LINES</pre></section>');r=capture();require('VISIBLE EDITOR LINES' in r['text']);require('EDITOR_DOM_MAY_BE_VIRTUALIZED' in r['warnings'],r);require(r['status']=='BEST_EFFORT',r)
+ check('virtual editor DOM discloses unknown coverage',editor_warning)
+ def stale_choice():
+  fixture('<aside id="one"><pre>DOC ONE</pre></aside><div role="dialog" id="two"><pre>DOC TWO</pre></div>')
+  page.evaluate("void (globalThis.pendingCapture=__occCapture({scroll:false}).then(x=>({ok:true,x}),e=>({ok:false,error:e.message})))");page.evaluate("document.querySelector('#one').remove()");page.get_by_role('button',name='Документ 1').click();r=page.evaluate('pendingCapture');require(not r['ok'],r);require('заменена' in r['error'],r)
+ check('detached selected region is rejected before reading',stale_choice)
+ def no_body_fallback():
+  fixture('<div><span>UNKNOWN BODY</span><input value="SECRET"></div>')
+  try:capture()
+  except Exception as e:require('область' in str(e),str(e));return
+  raise AssertionError('unknown body was captured')
+ check('unknown layout has no document body fallback',no_body_fallback)
+ def open_shadow():
+  fixture('<section id="host"></section>');page.evaluate("document.querySelector('#host').attachShadow({mode:'open'}).innerHTML='<div role=\"document\"><pre>SHADOW DOCUMENT</pre></div>'");r=capture();require('SHADOW DOCUMENT' in r['text'],r)
+ check('open shadow document is available without claiming closed roots',open_shadow)
  def selection():
   fixture('<main><pre id="pick">  + literal\\_value\n  Привет 👋</pre><p>Not selected</p></main>');page.evaluate("const r=document.createRange();r.selectNodeContents(document.querySelector('#pick'));getSelection().removeAllRanges();getSelection().addRange(r)");r=capture();require(r['status']=='SELECTION');require(r['text']=='  + literal\\_value\n  Привет 👋',repr(r['text']))
  check('selection copied without wrappers or escaping',selection)
@@ -81,7 +139,7 @@ with sync_playwright() as p:
   fixture('<main><div style="height:200px;overflow:auto">'+''.join(f'<p style="height:100px">row {i}</p>' for i in range(30))+'</div></main>');r=page.evaluate('''async()=>{const task=__occCapture({scroll:true,settleMs:40});setTimeout(()=>__occCancel(),70);return task}''');require(r['status']=='CANCELLED',r);require(page.evaluate('globalThis.__occController===null'))
  check('cancellation and controller cleanup',cancel)
  def size():
-  fixture('<main><p>Short</p><pre><code>'+('a'*12000)+'</code></pre></main>');r=capture(maxBytes=1000);require(r['status']=='PARTIAL',r);require('Short' in r['text']);require('a'*100 not in r['text'])
+  fixture('<main><p data-message-id="short" data-message-author-role="user">Short</p><div data-message-id="large" data-message-author-role="assistant"><pre><code>'+('a'*12000)+'</code></pre></div></main>');r=capture(maxBytes=1000);require(r['status']=='PARTIAL',r);require('Short' in r['text']);require('a'*100 not in r['text'])
  check('oversized code block omitted whole, never silently sliced',size)
  def role():
   fixture('<main><p data-message-id="1" data-message-author-role="alien">Not an assistant</p></main>');r=capture();require('[TEXT 1]' in r['text'],r);require('[ASSISTANT' not in r['text'])
@@ -92,20 +150,24 @@ with sync_playwright() as p:
  def viewer_import():
   page.goto(BASE)
   page.set_content((ROOT/'viewer.html').read_text(encoding='utf-8').replace('<script src="viewer.js"></script>',''))
-  page.evaluate("window.chrome={storage:{session:{get:async()=>({})}},runtime:{sendMessage:async()=>({ok:true})}}")
+  page.evaluate("window.chrome={runtime:{sendMessage:async m=>m.type==='getState'?({ok:true,session:null,saved:null,clearEpoch:0}):({ok:true})}}")
   page.add_script_tag(content=(ROOT/'viewer.js').read_text(encoding='utf-8'))
   data=b'\xef\xbb\xbf'+'Привет English 👋\r\n--- a/file\r\n+++ b/file\r\n- old\r\n+    literal\\_value\r\n'.encode()
   page.set_input_files('#file',{'name':'unicode.txt','mimeType':'text/plain','buffer':data})
-  page.wait_for_function("document.querySelector('#status').textContent.startsWith('Opened unicode')")
+  page.wait_for_function("document.querySelector('#status').textContent.startsWith('Открыт unicode')")
   require(page.evaluate('raw')==data.decode('utf-8'))
   page.wait_for_function("document.querySelector('#meta').textContent.includes('SHA-256')")
   require(hashlib.sha256(data).hexdigest() in page.locator('#meta').inner_text())
   with page.expect_download() as download: page.click('#save')
   require(Path(download.value.path()).read_bytes()==data)
-  page.click('#copy');page.wait_for_function("document.querySelector('#status').textContent.startsWith('Copied')")
+  page.click('#copy');page.wait_for_function("document.querySelector('#status').textContent.startsWith('Текст скопирован')")
   require(page.evaluate('navigator.clipboard.readText()').replace('\r\n','\n')==data.decode('utf-8').replace('\r\n','\n'))
+  edited='ИЗМЕНЁННЫЙ текст\n';page.fill('#text',edited)
+  require('ИЗМЕНЁННЫЙ' in page.locator('#meta').inner_text())
+  with page.expect_download() as changed: page.click('#save')
+  require(changed.value.suggested_filename.endswith('_EDITED.txt'));require(Path(changed.value.path()).read_bytes()==edited.encode())
   page.set_input_files('#file',{'name':'bad.txt','mimeType':'text/plain','buffer':b'\xff\xfe\x00'})
-  page.wait_for_function("document.querySelector('#status').textContent.startsWith('File not opened')")
+  page.wait_for_function("document.querySelector('#status').textContent.startsWith('Файл не открыт')")
   require(page.evaluate('raw')=='')
   return 'Real viewer source, localhost Web Crypto/clipboard/download; Chrome storage and runtime mocked. Not installed-extension evidence.'
  check('viewer UTF-8 BOM CRLF hash byte download copy invalid input',viewer_import)
@@ -118,18 +180,21 @@ with sync_playwright() as p:
     sample='Привет 👋\n+    exact\\_patch\n';result=v.evaluate("text=>chrome.runtime.sendMessage({target:'worker',type:'copy',text})",sample);require(result and result.get('ok'),result);require(v.evaluate('navigator.clipboard.readText()').replace('\r\n','\n')==sample);require(not v.evaluate("chrome.runtime.getManifest().permissions.includes('clipboardRead')"));
     data=b'\xef\xbb\xbf'+'Привет English 👋\r\n--- a/file\r\n+++ b/file\r\n- old\r\n+    literal\\_value\r\n'.encode()
     v.set_input_files('#file',{'name':'unicode.txt','mimeType':'text/plain','buffer':data})
-    v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('Opened unicode')")
+    v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('Открыт unicode')")
     require(v.evaluate('raw')==data.decode('utf-8'))
     v.wait_for_function("() => document.querySelector('#meta').textContent.includes('SHA-256')")
     require(hashlib.sha256(data).hexdigest() in v.locator('#meta').inner_text())
     with v.expect_download() as download: v.click('#save')
     require(Path(download.value.path()).read_bytes()==data)
-    v.click('#copy');v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('Copied')")
+    v.click('#copy');v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('Текст скопирован')")
     require(v.evaluate('navigator.clipboard.readText()').replace('\r\n','\n')==data.decode('utf-8').replace('\r\n','\n'))
+    edited='ИЗМЕНЁННЫЙ текст\n';v.fill('#text',edited);require('ИЗМЕНЁННЫЙ' in v.locator('#meta').inner_text())
+    with v.expect_download() as changed: v.click('#save')
+    require(changed.value.suggested_filename.endswith('_EDITED.txt'));require(Path(changed.value.path()).read_bytes()==edited.encode())
     v.set_input_files('#file',{'name':'bad.txt','mimeType':'text/plain','buffer':b'\xff\xfe\x00'})
-    v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('File not opened')")
+    v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('Файл не открыт')")
     require(v.evaluate('raw')=='')
-    v.click('#clear');v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('Local capture cleared')")
+    v.click('#clear');v.wait_for_function("() => document.querySelector('#status').textContent.startsWith('Временный и сохранённый текст удалены')")
     require(v.evaluate('raw')=='')
     return 'Loaded extension worker/offscreen clipboard + viewer UTF-8/BOM/CRLF import, SHA-256, byte-identical download, Copy, invalid UTF-8 rejection and Clear. Clipboard comparison normalizes OS CRLF.'
    finally:ext.close()
