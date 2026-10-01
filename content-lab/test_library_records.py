@@ -1,4 +1,5 @@
 import copy
+from contextlib import closing
 import hashlib
 import json
 from pathlib import Path
@@ -38,7 +39,7 @@ class LibraryRecordTests(unittest.TestCase):
         return mutation
 
     def rows(self, query, values=()):
-        with sqlite3.connect(self.store / "content.sqlite3") as connection:
+        with closing(sqlite3.connect(self.store / "content.sqlite3")) as connection:
             return connection.execute(query, values).fetchall()
 
     def test_versions_use_existing_items_owner_and_preserve_provenance(self):
