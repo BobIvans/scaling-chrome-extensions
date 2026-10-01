@@ -1,0 +1,199 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 26,
+  "job_id": "occ-f26-openai-responses-adapter-20261001T2045Z",
+  "recorded_at_utc": "2026-10-01T20:45:20Z",
+  "state": "DONE",
+  "completion_scope": "Budget-gated backend-only OpenAI Responses adapter with deterministic 200/401/429/cancel fixtures",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f26-openai-responses-adapter",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/28",
+  "pr_number": 28,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f25-atomic-provider-budget",
+  "base_sha": "f8f6908a483c4b624bfab3e1a10e084bc5759906",
+  "head_sha": "a019210001ba421909d6ff6a82068b8b7f948d87",
+  "tested_tree_sha": "3bcdf0784534836fc27d9209278a202084aeb01c",
+  "run_diff_sha256": "b2827be2e0c6317f067b64795db7c4dfa3445258f76fb3cd2539ae19922d343b",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 27,
+    "previous_head_sha": "f8f6908a483c4b624bfab3e1a10e084bc5759906",
+    "previous_exact_head_ci_run": 36916389817,
+    "previous_exact_head_ci": "success",
+    "open_f26_title_matches_before_write": [],
+    "duplicate_f26_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "Native Host removed OpenAI credentials from child environments and F25 owned reservations, but no backend owner implemented the native Responses wire schema or deterministic provider error/cancel handling",
+    "owner_audit": "content-lab/openai_responses_adapter.py is the only new provider transport; provider_budget.py remains the existing SQLite accounting owner and browser/native-host surfaces accept neither a key nor an endpoint"
+  },
+  "official_contract_review": {
+    "verified_at_utc": "2026-10-01T20:30:00Z",
+    "responses_source": "https://developers.openai.com/api/docs/guides/migrate-to-responses",
+    "responses_facts": [
+      "POST /v1/responses",
+      "top-level model/input/instructions",
+      "typed output array and output_text",
+      "Authorization Bearer backend key"
+    ],
+    "errors_source": "https://developers.openai.com/api/docs/guides/error-codes",
+    "errors_facts": [
+      "401 authentication failures are terminal",
+      "429 rate limits may supply Retry-After",
+      "billing, spend and quota errors should not be retried as if transient"
+    ]
+  },
+  "change": {
+    "owner": "content-lab/openai_responses_adapter.py",
+    "profile_schema": "occ.openai-responses-profile.v1",
+    "request_schema": "occ.openai-responses-request.v1",
+    "result_schema": "occ.openai-responses-result.v1",
+    "endpoint": "https://api.openai.com/v1/responses",
+    "endpoint_override_allowed": false,
+    "redirect_allowed": false,
+    "backend_secret_env": "OCC_OPENAI_API_KEY",
+    "secret_read_after_budget_reservation": true,
+    "secret_or_provider_error_text_in_receipt": false,
+    "native_request_fields": [
+      "model",
+      "input",
+      "instructions",
+      "max_output_tokens",
+      "store=false"
+    ],
+    "response_contract": "completed response with exact registered model, typed output_text content and consistent input/output/total token usage",
+    "automatic_retry": false,
+    "reservation_replay_dispatch": false,
+    "success_cost_semantics": "NEEDS_RECONCILIATION because response usage does not state actual monetary charge",
+    "action_authority": false,
+    "browser_or_voice_surface_added": false,
+    "worker_dispatch_added": false
+  },
+  "fixture_coverage": {
+    "success_200": "typed output and usage accepted; cost remains quarantined",
+    "authentication_401": "terminal and zero-settled from provider error receipt",
+    "rate_limit_429": "retryable classification and bounded Retry-After only",
+    "quota_429": "credit/spend/usage exhaustion classified non-retryable",
+    "cancel_before_send": "reservation released",
+    "cancel_after_send": "reservation retained for reconciliation",
+    "malformed_success_or_transport_unknown": "reservation retained for reconciliation",
+    "real_provider_smoke": "NOT_RUN_ZERO_AUTHORIZED_BUDGET"
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 through provider_budget/automation_core.connection",
+    "library": "existing items/content_fts and Chrome library records unchanged",
+    "job_queue": "existing jobs/job_events and Core claim owner unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged and continues stripping OPENAI_API_KEY",
+    "voice_and_browser": "one-click-context UI, voice and router owners unchanged",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_openai_responses_adapter.py' -v && python -m py_compile content-lab/openai_responses_adapter.py && git diff --check",
+      "result": "FAIL",
+      "checks": 0,
+      "exit_code": 1,
+      "phase": "test iteration 1; a test helper shadowed unittest.TestCase.run, so discovery stopped before adapter execution; helper was renamed"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_openai_responses_adapter.py' -v && python -m py_compile content-lab/openai_responses_adapter.py && git diff --check",
+      "result": "PASS",
+      "checks": 8,
+      "exit_code": 0,
+      "phase": "test iteration 2 before generic transport/malformed JSON quarantine hardening"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_openai_responses_adapter.py' -v",
+      "result": "PASS",
+      "checks": 9,
+      "exit_code": 0,
+      "phase": "test iteration 3"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 118,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "python -m py_compile content-lab/openai_responses_adapter.py content-lab/provider_budget.py && python -m json.tool docs/automation/functions-wave33.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0,
+      "phase": "final static validation in iteration 3"
+    }
+  ],
+  "final_local_regression_checks": 248,
+  "focused_checks_overlap_warning": "The 9 focused adapter checks are included in the 118 Python checks and are not added to 248.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "a019210001ba421909d6ff6a82068b8b7f948d87",
+    "run": {
+      "id": 36923706547,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36923706547"
+    },
+    "checks": [
+      {
+        "id": 110575714178,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36923706547/job/110575714178"
+      },
+      {
+        "id": 110575714632,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36923706547/job/110575714632"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "test_iterations": 3,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "real_provider_api_calls": 0,
+    "real_provider_credentials_read": 0,
+    "model_inference_calls": 0,
+    "fake_transport_invocations": 9,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F26 remains a draft PR and is not merged or deployed.",
+    "Current runtime policy still requires money_budget=0, so no real provider call is authorized.",
+    "The adapter is not connected to browser, voice, Laya or the durable worker.",
+    "Injected fixtures do not prove account access, current model entitlement, pricing, quota, latency or provider behavior.",
+    "A successful Responses payload reports token usage but not actual monetary charge, so the reservation remains NEEDS_RECONCILIATION.",
+    "The stdlib HTTPS transport checks cancellation before send and between bounded reads; connection establishment remains bounded by timeout rather than instant cancellation.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 27,
+  "next_job": "Audit existing Hugging Face/provider owners, then implement at most one fixed endpoint/model registry adapter whose quota exhaustion stops without silent paid fallback; use only local fixtures while provider budget remains zero."
+}
