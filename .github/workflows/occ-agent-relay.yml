@@ -47,6 +47,9 @@ jobs:
       - name: Existing OCC background tests
         working-directory: one-click-context
         run: node --test tests/background.test.cjs
+      - name: Offline Telegram import and ASR adapter contract
+        working-directory: one-click-context
+        run: python -m unittest discover -s tests -p test_telegram_export_ingest.py -v
       - name: Build Chrome-ready package
         working-directory: one-click-context
         run: python scripts/package_chrome_ready.py "$RUNNER_TEMP/occ-dist"
