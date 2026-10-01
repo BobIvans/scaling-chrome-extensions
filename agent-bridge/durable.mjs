@@ -1,14 +1,15 @@
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 
-export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel']);
+export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record']);
 export const DURABLE_INPUT_BYTES=16000,DURABLE_OUTPUT_BYTES=192000,DURABLE_TIMEOUT_MS=10000;
 const fields={
  'durable.search':['namespace','query','limit'],
  'durable.context':['namespace','ids','maxBytes'],
  'durable.enqueue':['template','taskKey'],
  'durable.get':['jobId'],
- 'durable.cancel':['jobId']
+ 'durable.cancel':['jobId'],
+ 'durable.record':['mutation']
 };
 export function durableEnvironment(source=process.env){
  const env={PYTHONUTF8:'1',PYTHONIOENCODING:'utf-8'};

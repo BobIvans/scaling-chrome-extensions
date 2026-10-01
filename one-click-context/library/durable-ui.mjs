@@ -1,5 +1,5 @@
 // A view over the existing Native Host/SQLite owners, never a second queue.
-const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel']);
+const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record']);
 const NAME=/^[A-Za-z0-9_.:-]{1,100}$/, JOB=/^[0-9a-f]{32}$/, ITEM=/^[0-9a-f]{64}$/;
 const TERMINAL=new Set(['SUCCEEDED','FAILED','CANCELLED','BLOCKED']);
 const STATES=new Set(['QUEUED','RUNNING','RETRY_READY','WAITING_CI','NEEDS_RECONCILIATION',...TERMINAL]);

@@ -165,3 +165,6 @@ ASR/Laya inference, установленный Windows Chrome, browser relay, п
 Native durable tests дополнительно запускают настоящий Python subprocess через
 production `JobHost`, проверяют restart/replay, cancel, namespace/template scope,
 stale IDs, отказ передачи путей/argv, полные byte limits и завершение транспорта.
+F-18 fixtures также проверяют version/parent CAS для выбранной Chrome-записи,
+exact replay, stale edit, tombstone без text и сохранение provenance в том же
+`content.sqlite3`; автоматический background sync не выполняется.
