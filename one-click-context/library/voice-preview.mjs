@@ -13,11 +13,11 @@ export function boundedTranscript(value){
 }
 
 export class VoiceRecorder{
- constructor({mediaDevices,MediaRecorderCtor,onState=()=>{},setTimer=setTimeout,clearTimer=clearTimeout,maxMs=MAX_RECORDING_MS,maxBytes=MAX_AUDIO_BYTES}={}){
+ constructor({mediaDevices,MediaRecorderCtor,onState=()=>{},setTimer=setTimeout,clearTimer=clearTimeout,now=()=>new Date().toISOString(),maxMs=MAX_RECORDING_MS,maxBytes=MAX_AUDIO_BYTES}={}){
   this.mediaDevices=mediaDevices;this.MediaRecorderCtor=MediaRecorderCtor;this.onState=onState;
-  this.setTimer=setTimer;this.clearTimer=clearTimer;this.maxMs=maxMs;this.maxBytes=maxBytes;
+  this.setTimer=setTimer;this.clearTimer=clearTimer;this.now=now;this.maxMs=maxMs;this.maxBytes=maxBytes;
   this.state='IDLE';this.reason=null;this.recorder=null;this.stream=null;this.timer=null;
-  this.holding=false;this.epoch=0;this.chunks=[];this.bytes=0;this.recording=null;
+  this.holding=false;this.epoch=0;this.chunks=[];this.bytes=0;this.recording=null;this.receipt=null;
  }
  capability(){
   if(!this.mediaDevices||typeof this.mediaDevices.getUserMedia!=='function')return 'UNSUPPORTED_MEDIA_DEVICES';
@@ -25,7 +25,7 @@ export class VoiceRecorder{
   if(typeof this.MediaRecorderCtor.isTypeSupported!=='function'||!AUDIO_TYPES.some(t=>this.MediaRecorderCtor.isTypeSupported(t)))return 'UNSUPPORTED_AUDIO_FORMAT';
   return 'READY';
  }
- snapshot(){return {state:this.state,reason:this.reason,holding:this.holding,recording:this.recording};}
+ snapshot(){return {state:this.state,reason:this.reason,holding:this.holding,recording:this.recording,receipt:this.receipt};}
  emit(state,reason=null){this.state=state;this.reason=reason;this.onState(this.snapshot());}
  stopTracks(){for(const track of this.stream?.getTracks?.()||[])try{track.stop();}catch{}this.stream=null;}
  async press(){
@@ -67,10 +67,18 @@ export class VoiceRecorder{
   const blob=new Blob(this.chunks,{type:mimeType});this.recording={blob,bytes:blob.size,mimeType,stopReason:reason};
   this.chunks=[];this.bytes=0;this.recorder=null;this.emit(blob.size?'RECORDED':'EMPTY_RECORDING',reason);
  }
+ cancel(trigger='UI'){
+  if(!['UI','KEYBOARD'].includes(trigger))throw error('CANCEL_TRIGGER_INVALID');
+  this.epoch++;this.holding=false;this.clearTimer(this.timer);this.timer=null;
+  if(this.recorder?.state==='recording')try{this.recorder.stop();}catch{}
+  this.stopTracks();this.recorder=null;this.chunks=[];this.bytes=0;this.recording=null;
+  this.receipt={schema:'occ.voice-cancel-receipt.v1',scope:'LOCAL_VOICE_PREVIEW',state:'CANCELLED',terminal:true,trigger,at:this.now(),audio_retained:false,transcript_retained:false,action_dispatched:false};
+  this.emit('CANCELLED',trigger);return this.receipt;
+ }
  clear(){
   this.epoch++;this.holding=false;this.clearTimer(this.timer);this.timer=null;
   if(this.recorder?.state==='recording')try{this.recorder.stop();}catch{}
-  this.stopTracks();this.recorder=null;this.chunks=[];this.bytes=0;this.recording=null;this.emit('IDLE');
+  this.stopTracks();this.recorder=null;this.chunks=[];this.bytes=0;this.recording=null;this.receipt=null;this.emit('IDLE');
  }
 }
 
@@ -81,15 +89,16 @@ const messages={
  UNSUPPORTED_MEDIA_DEVICES:'На этом устройстве API микрофона недоступен.',UNSUPPORTED_MEDIA_RECORDER:'На этом устройстве MediaRecorder недоступен.',
  UNSUPPORTED_AUDIO_FORMAT:'Нет поддерживаемого локального WebM/Opus формата.',PERMISSION_DENIED:'Доступ к микрофону не разрешён.',
  MICROPHONE_ERROR:'Микрофон не открылся.',NO_AUDIO_TRACK:'Устройство не вернуло аудиодорожку.',RECORDER_ERROR:'Ошибка локальной записи.',
- AUDIO_LIMIT:'Запись превышает лимит 16 MiB и отброшена.',EMPTY_RECORDING:'Пустая запись отброшена.'
+ AUDIO_LIMIT:'Запись превышает лимит 16 MiB и отброшена.',EMPTY_RECORDING:'Пустая запись отброшена.',
+ CANCELLED:'Voice-сессия отменена независимо от распознавания; audio и транскрипт отброшены.'
 };
 
 export function attachVoicePreview({document:doc=globalThis.document,window:win=globalThis.window,mediaDevices=globalThis.navigator?.mediaDevices,MediaRecorderCtor=globalThis.MediaRecorder,urlAPI=globalThis.URL}={}){
  const $=id=>doc.getElementById(id),hold=$('voice-hold');if(!hold)return null;
- const status=$('voice-status'),audio=$('voice-audio'),download=$('voice-download'),clear=$('voice-clear'),transcript=$('voice-transcript'),meta=$('voice-transcript-meta');
+ const status=$('voice-status'),audio=$('voice-audio'),download=$('voice-download'),clear=$('voice-clear'),cancel=$('voice-cancel'),cancelReceipt=$('voice-cancel-receipt'),transcript=$('voice-transcript'),meta=$('voice-transcript-meta');
  let objectURL=null;
  const revoke=()=>{if(objectURL){urlAPI.revokeObjectURL(objectURL);objectURL=null;}audio.removeAttribute?.('src');audio.hidden=true;download.disabled=true;};
- const render=s=>{if(['IDLE','REQUESTING'].includes(s.state)&&!s.recording)revoke();status.textContent=messages[s.state]||s.state;hold.setAttribute?.('aria-pressed',String(s.state==='RECORDING'));hold.textContent=s.state==='RECORDING'?'Отпустите, чтобы остановить':'Удерживайте для записи';if(s.state==='RECORDED'&&s.recording){revoke();objectURL=urlAPI.createObjectURL(s.recording.blob);audio.src=objectURL;audio.hidden=false;download.disabled=false;status.textContent+=` ${s.recording.bytes} байт; ${s.recording.stopReason}.`;}};
+ const render=s=>{if(['IDLE','REQUESTING','CANCELLED'].includes(s.state)&&!s.recording)revoke();status.textContent=messages[s.state]||s.state;hold.setAttribute?.('aria-pressed',String(s.state==='RECORDING'));hold.textContent=s.state==='RECORDING'?'Отпустите, чтобы остановить':'Удерживайте для записи';cancelReceipt.textContent=s.receipt?JSON.stringify(s.receipt,null,2):'';cancelReceipt.hidden=!s.receipt;if(s.state==='RECORDED'&&s.recording){revoke();objectURL=urlAPI.createObjectURL(s.recording.blob);audio.src=objectURL;audio.hidden=false;download.disabled=false;status.textContent+=` ${s.recording.bytes} байт; ${s.recording.stopReason}.`;}};
  const recorder=new VoiceRecorder({mediaDevices,MediaRecorderCtor,onState:render});
  const capability=recorder.capability();if(capability!=='READY'){hold.disabled=true;render({state:capability});}else render(recorder.snapshot());
  const press=event=>{if(!event.isTrusted||event.repeat)return;event.preventDefault?.();if(Number.isInteger(event.pointerId))hold.setPointerCapture?.(event.pointerId);void recorder.press().catch(()=>{});};
@@ -99,8 +108,11 @@ export function attachVoicePreview({document:doc=globalThis.document,window:win=
  transcript.oninput=()=>{try{const value=boundedTranscript(transcript.value);meta.textContent=`${value.state} · ${value.bytes} / ${MAX_TRANSCRIPT_BYTES} байт UTF-8`;transcript.setAttribute?.('aria-invalid','false');}catch(e){meta.textContent=e.code==='TRANSCRIPT_LIMIT'?'Транскрипт превышает 16 000 байт UTF-8.':'Транскрипт содержит неподдерживаемые данные.';transcript.setAttribute?.('aria-invalid','true');}};
  download.onclick=event=>{if(!event.isTrusted||!recorder.recording||!objectURL)return;const link=doc.createElement('a');link.href=objectURL;link.download=`occ_voice_${new Date().toISOString().replace(/[:.]/g,'-')}.webm`;link.click();status.textContent='Скачивание локальной записи запрошено; завершение проверьте в Chrome.';};
  clear.onclick=event=>{if(!event.isTrusted)return;recorder.clear();revoke();transcript.value='';transcript.oninput();};
+ const cancelSession=trigger=>{const receipt=recorder.cancel(trigger);revoke();transcript.value='';transcript.oninput();return receipt;};
+ cancel.onclick=event=>{if(!event.isTrusted)return;event.preventDefault?.();cancelSession('UI');};
+ doc.addEventListener?.('keydown',event=>{if(!event.isTrusted||event.repeat||event.key!=='Escape')return;event.preventDefault?.();cancelSession('KEYBOARD');});
  const dispose=()=>{recorder.clear();revoke();};win?.addEventListener?.('pagehide',dispose,{once:true});
  win?.addEventListener?.('blur',()=>recorder.release('FOCUS_LOST'));
  doc.addEventListener?.('visibilitychange',()=>{if(doc.hidden)recorder.release('PAGE_HIDDEN');});
- transcript.oninput();return {recorder,dispose};
+ transcript.oninput();return {recorder,cancel:cancelSession,dispose};
 }
