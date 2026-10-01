@@ -47,6 +47,17 @@ class IngestTests(unittest.TestCase):
         result = self.run_export({"chats": {"list": [chat(chat_id=1), chat(chat_id=2)]}})
         self.assertEqual(len({r["source_id"] for r in result}), 2)
 
+    def test_authorship_reply_and_forward_provenance(self):
+        data = chat()
+        data["name"] = "Synthetic notes"
+        data["messages"][0].update({"from": "Author", "from_id": "user123",
+                                     "reply_to_message_id": 5, "forwarded_from": "Source"})
+        record = self.run_export(data)[0]
+        self.assertEqual(record["author"], {"name": "Author", "id": "user123"})
+        self.assertEqual(record["reply_to_message_id"], 5)
+        self.assertEqual(record["forwarded_from"], "Source")
+        self.assertEqual(record["conversation_title"], "Synthetic notes")
+
     def test_duplicate_record_is_deduplicated(self):
         data = chat()
         data["messages"] *= 2
