@@ -8,11 +8,13 @@ import hashlib
 from html import unescape
 from html.parser import HTMLParser
 import json
+import os
 from pathlib import Path
 import re
 import sqlite3
 import sys
 import time
+import tempfile
 from typing import Any
 
 SCHEMA = "occ.content-lab.item.v1"
@@ -268,6 +270,8 @@ def transcribe_file(
 def _database(store: Path) -> sqlite3.Connection:
     store.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(store / "content.sqlite3", timeout=10)
+    connection.execute("PRAGMA journal_mode=WAL")
+    connection.execute("PRAGMA busy_timeout=10000")
     connection.execute(
         "CREATE TABLE IF NOT EXISTS items(id TEXT PRIMARY KEY, payload TEXT NOT NULL)"
     )
@@ -277,27 +281,48 @@ def _database(store: Path) -> sqlite3.Connection:
     return connection
 
 
-def save_item(store: Path, item: dict) -> dict:
+def _insert_item(connection: sqlite3.Connection, item: dict) -> tuple[int, str]:
+    """Shared transaction primitive for ingestion and durable synchronization."""
     raw = json.dumps(item, ensure_ascii=False, sort_keys=True, allow_nan=False)
+    inserted = connection.execute(
+        "INSERT OR IGNORE INTO items VALUES (?, ?)", (item["id"], raw)
+    ).rowcount
+    if inserted:
+        connection.execute(
+            "INSERT INTO content_fts VALUES (?, ?)", (item["id"], item["text"])
+        )
+    stored = connection.execute(
+        "SELECT payload FROM items WHERE id=?", (item["id"],)
+    ).fetchone()[0]
+    return inserted, stored
+
+
+def _write_receipt(store: Path, item_id: str, stored: str) -> Path:
+    items_dir = store / "items"
+    items_dir.mkdir(exist_ok=True)
+    target = items_dir / f"{item_id}.json"
+    with tempfile.NamedTemporaryFile(
+        mode="w", encoding="utf-8", dir=items_dir, delete=False
+    ) as handle:
+        temporary = Path(handle.name)
+        handle.write(stored + "\n")
+        handle.flush()
+        os.fsync(handle.fileno())
+    try:
+        os.replace(temporary, target)
+    finally:
+        temporary.unlink(missing_ok=True)
+    return target
+
+
+def save_item(store: Path, item: dict) -> dict:
     connection = _database(store)
     try:
         with connection:
-            inserted = connection.execute(
-                "INSERT OR IGNORE INTO items VALUES (?, ?)", (item["id"], raw)
-            ).rowcount
-            if inserted:
-                connection.execute(
-                    "INSERT INTO content_fts VALUES (?, ?)", (item["id"], item["text"])
-                )
-            stored = connection.execute(
-                "SELECT payload FROM items WHERE id=?", (item["id"],)
-            ).fetchone()[0]
+            inserted, stored = _insert_item(connection, item)
     finally:
         connection.close()
-    items_dir = store / "items"
-    items_dir.mkdir(exist_ok=True)
-    target = items_dir / f"{item['id']}.json"
-    target.write_text(stored + "\n", encoding="utf-8")
+    target = _write_receipt(store, item["id"], stored)
     return {
         "state": "imported" if inserted else "deduplicated",
         "id": item["id"],

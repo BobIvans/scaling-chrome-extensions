@@ -1,0 +1,26 @@
+{
+  "schema": "occ.automation-policy.v1",
+  "max_parallel": 1,
+  "money_budget": 0,
+  "sources": {
+    "exports": {"namespace": "occ", "root": "/absolute/path/selected-exports", "max_files": 100, "max_bytes": 25000000}
+  },
+  "repos": {
+    "occ": {
+      "root": "/absolute/path/clean-repository",
+      "base_sha": "0000000000000000000000000000000000000000",
+      "allowed_paths": ["content-lab"],
+      "patches": {
+        "first": {"file": "/absolute/path/reviewed-first.diff", "sha256": "REPLACE_WITH_PATCH_SHA256"},
+        "corrected": {"file": "/absolute/path/reviewed-corrected.diff", "sha256": "REPLACE_WITH_PATCH_SHA256"}
+      },
+      "tests": [["python", "-B", "-m", "unittest", "discover", "-s", "content-lab", "-p", "test_*.py"]],
+      "timeout_seconds": 60,
+      "retry_delay_seconds": 5,
+      "ci": {
+        "snapshot_file": "/absolute/path/operator-ci.json",
+        "required_checks": ["core (ubuntu-latest)", "core (windows-latest)"]
+      }
+    }
+  }
+}
