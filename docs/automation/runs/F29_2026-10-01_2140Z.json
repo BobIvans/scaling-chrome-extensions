@@ -1,0 +1,157 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 29,
+  "job_id": "occ-f29-browser-action-contract-20261001T2140Z",
+  "recorded_at_utc": "2026-10-01T21:40:10Z",
+  "state": "DONE",
+  "completion_scope": "Ephemeral fail-closed browser action plan bound to an exact tab, document, origin and trusted gesture without Chrome transport dispatch",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f29-browser-action-contract",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/31",
+  "pr_number": 31,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f28-openshell-profile",
+  "base_sha": "3b85a4a6efcdd7d560aa356a52699dd67566a33b",
+  "head_sha": "591135f1028539a08533c1f6d6eebdf9ef7bfb91",
+  "tested_tree_sha": "0aedfc694caeafc9723f2e16093867e81999f9a5",
+  "run_diff_sha256": "a8aa4a9f8d7d7ff40859ddf730f1c6245869f55bedb7f928fa5063e19805668a",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 30,
+    "previous_head_sha": "3b85a4a6efcdd7d560aa356a52699dd67566a33b",
+    "previous_exact_head_ci_run": 36927973691,
+    "previous_exact_head_ci": "success",
+    "open_f29_title_matches_before_write": [],
+    "duplicate_f29_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "Existing capture routes guard individual effects, but no unified one-use contract bound a registered action to exact tab, document and origin before transport",
+    "owner_audit": "background.js remains the capture and Chrome effect owner; the new module owns only an in-memory pre-transport plan and creates no alternate queue or persistent store"
+  },
+  "official_contract_review": {
+    "verified_at_utc": "2026-10-01T21:25:00Z",
+    "active_tab_source": "https://developer.chrome.com/docs/extensions/develop/concepts/activeTab",
+    "message_sender_source": "https://developer.chrome.com/docs/extensions/reference/api/runtime#type-MessageSender",
+    "scripting_source": "https://developer.chrome.com/docs/extensions/reference/api/scripting",
+    "security_source": "https://developer.chrome.com/docs/extensions/develop/security-privacy/stay-secure",
+    "verified_facts": [
+      "activeTab is temporary access granted by an explicit user gesture and is revoked on cross-origin navigation or tab close",
+      "MessageSender supplies tab, documentId and origin for source validation",
+      "scripting targets an exact tab and requires activeTab or host permission",
+      "messages from content scripts require validation because their sender context is less trusted"
+    ]
+  },
+  "change": {
+    "owner": "one-click-context/library/browser-action-contract.mjs",
+    "grant_schema": "occ.browser-action-grant.v1",
+    "plan_schema": "occ.browser-action-plan.v1",
+    "cancel_receipt_schema": "occ.browser-action-cancel-receipt.v1",
+    "registered_actions": [
+      "CAPTURE_LOADED",
+      "CAPTURE_CHAT",
+      "CAPTURE_DOCUMENT",
+      "CAPTURE_CHAT_AND_DOCUMENT",
+      "CAPTURE_VISIBLE_SCREENSHOT"
+    ],
+    "target_binding": [
+      "tab_id",
+      "document_id",
+      "canonical_http_or_https_origin"
+    ],
+    "trusted_gesture_required": true,
+    "maximum_grant_milliseconds": 30000,
+    "one_plan_per_grant": true,
+    "source_content_authority": "DATA_ONLY",
+    "terminal_cancel": true,
+    "transport_qualified": false,
+    "dispatch_allowed": false,
+    "persistent_state_added": false
+  },
+  "fixture_coverage": {
+    "exact_target_and_registered_handler": "accepted without dispatch",
+    "synthetic_gesture": "denied for grant and cancel",
+    "noncanonical_or_non_http_origin": "denied",
+    "hostile_command_selector_script_url_text_or_argv": "denied",
+    "plan_action_target_handler_or_options_override": "denied",
+    "second_request_on_same_grant": "denied while exact replay is idempotent",
+    "trusted_cancel": "terminal and blocks plan",
+    "expired_or_restart_lost_grant": "denied",
+    "production_browser_network_or_dynamic_code_surface": "absent"
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 owner unchanged",
+    "library": "existing items/content_fts and Chrome records unchanged",
+    "job_queue": "existing jobs/job_events and Core claim owner unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged",
+    "browser_effects": "background.js remains the only existing Chrome capture effect owner and was not changed",
+    "voice_laya": "advisory-only owners unchanged",
+    "provider_budget": "hard cap remains zero",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "node --test one-click-context/tests/browser-action-contract.test.mjs",
+      "result": "PASS",
+      "checks": 10,
+      "exit_code": 0,
+      "phase": "test iteration 1"
+    },
+    {
+      "command": "python3 -m unittest discover -s content-lab -p 'test_*.py' -v && node --test agent-bridge/*.test.mjs && node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 275,
+      "exit_code": 0,
+      "phase": "test iteration 2 on exact implementation tree"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS",
+      "checks": 1,
+      "exit_code": 0,
+      "phase": "static diff validation"
+    }
+  ],
+  "ci": {
+    "workflow": "Deterministic OCC core",
+    "run_id": 36930052629,
+    "run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36930052629",
+    "exact_head_sha": "591135f1028539a08533c1f6d6eebdf9ef7bfb91",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "core (ubuntu-latest)",
+        "job_id": 110596814188,
+        "conclusion": "success"
+      },
+      {
+        "name": "core (windows-latest)",
+        "job_id": 110596814583,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "effects": {
+    "chrome_api_invoked": false,
+    "browser_action_dispatched": false,
+    "installed_extension_or_transport_started": false,
+    "ui_wiring_changed": false,
+    "network_or_native_host_invoked": false,
+    "credential_read": false,
+    "real_provider_api_calls": 0,
+    "real_spend": 0,
+    "merge_or_deploy": false,
+    "signup_or_purchase": false,
+    "blockchain_sign_or_send": false
+  },
+  "limits": [
+    "This is a pre-transport contract, not installed-browser qualification or UI wiring.",
+    "The in-memory registry intentionally loses grants on extension restart.",
+    "F-30 must independently verify installed Chrome handshake, reconnect, revoke and exact package hash.",
+    "No arbitrary click, navigation, selector, script or page-provided command is registered.",
+    "No related CAND item is automatically closed."
+  ],
+  "next_function_number": 30,
+  "next_job": "Re-audit installed-browser transport owners and qualify handshake, reconnect, revoke and exact package hash without expanding the registered F-29 action set."
+}
