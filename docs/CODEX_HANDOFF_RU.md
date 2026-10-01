@@ -5,18 +5,25 @@
 
 ## Текущая точка
 
+F-17 реализована в draft PR [#19](https://github.com/BobIvans/scaling-chrome-extensions/pull/19),
+stacked на #18. Code head `1082ab5a992f286cadd7929cdce678b4f20cd765`:
+191 локальная проверка, exact-head CI Linux/Windows PASS.
+Receipt: `docs/automation/runs/F17_2026-10-01_1047Z.json`.
+Parser выбранного local `conversations.json` создаёт стабильные message revisions
+в существующем Content Lab SQLite; повтор/reorder не дублируется, edit двигает
+один head, удалённое становится missing. Реальный пользовательский export не читался.
+Дальнейшая точка: F-18 — версия схемы Chrome ↔ SQLite после owner/duplicate аудита.
+Номер функции не является номером GitHub PR. #19 не merged.
+
+Предыдущая точка:
+
 F-16 реализована в draft PR [#18](https://github.com/BobIvans/scaling-chrome-extensions/pull/18),
 stacked на #16. Code head `2823c7788a76fb1c45e63b189f205a1272b560c1`:
 182 локальные проверки, exact-head CI Linux/Windows PASS.
 Receipt: `docs/automation/runs/F16_2026-10-01_0952Z.json`.
-Read-only transport получает exact-head GitHub Actions check runs для repository,
-зарегистрированного в policy, и атомарно обновляет существующий snapshot owner.
-Missing/revoked credential и bounded transport failures очищают stale green.
-Core сохраняет release-state authority. Реальный authenticated credential smoke не выполнялся.
-Дальнейшая точка: F-17 — parser выбранного ChatGPT export после owner/duplicate аудита.
-Номер функции не является номером GitHub PR. #18 не merged.
+Core сохраняет release-state authority; реальный authenticated credential smoke не выполнялся.
 
-Предыдущая точка:
+Более ранняя точка:
 
 F-14 реализована в draft PR [#15](https://github.com/BobIvans/scaling-chrome-extensions/pull/15),
 stacked на #14. Code head `561d7f30bb95541d2404f011201f948cb846c8cf`:
@@ -47,8 +54,8 @@ F-13 — typed Native Host bridge к этому owner: поиск/контекс
 Его фактический PR/head и GitHub CI фиксируются отдельным receipt после публикации.
 Наличие adapter не доказывает установку в Windows Chrome.
 
-**Следующий номер для продолжения: 17.** F-16 CI transport покрыт draft #18.
-Перед F-17 проверь актуальные head/receipts и существующий Content Lab parser/SQLite owner.
+**Следующий номер для продолжения: 18.** F-17 export parser покрыт draft #19.
+Перед F-18 проверь актуальные head/receipts и Chrome/SQLite record/tombstone owners.
 
 ## Система номеров
 
@@ -70,7 +77,7 @@ Wave пересекается с каталогом: **2000 + 33 не означ
 1. Получи актуальные head/base/default SHA, открытые PR и точные CI checks.
    Прочитай `AGENTS.md`, если он появился, и действующий owner до правок.
 2. Сверь последние receipts и overlapping PR. Выбери один подтверждённый gap
-   из wave по dependencies; после проверки F-16 receipt начни с F-17. При изменении head повтори аудит.
+   из wave по dependencies; после проверки F-17 receipt начни с F-18. При изменении head повтори аудит.
 3. Один repo writer. Отдельная ветка/worktree от выбранного чистого SHA;
    подготовь минимальный diff, сохраняющий существующие публичные контракты.
 4. Запусти относящиеся к изменению meaningful regression/fault tests.

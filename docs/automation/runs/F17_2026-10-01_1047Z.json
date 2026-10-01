@@ -1,0 +1,144 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 17,
+  "job_id": "occ-f17-chatgpt-export-20261001T1047Z",
+  "recorded_at_utc": "2026-10-01T10:47:35Z",
+  "state": "DONE",
+  "completion_scope": "F17 parser for an explicitly selected local ChatGPT conversations.json into stable message revisions in the existing Content Lab SQLite owner; synthetic fixtures only",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f17-chatgpt-export-parser",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/19",
+  "pr_number": 19,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f16-authenticated-ci-transport",
+  "pr_base_sha": "5ea514c268512590be0ba4f48ab306d34cdd457a",
+  "run_base_sha": "5ea514c268512590be0ba4f48ab306d34cdd457a",
+  "head_sha": "1082ab5a992f286cadd7929cdce678b4f20cd765",
+  "tested_tree_sha": "1c53959f7efffb1ae388aa407155183399db4573",
+  "run_diff_sha256": "8334abdd2ffdb38a08c9dd28672b03dd63c6f35872359f119a7d9de88dba4a6f",
+  "head_semantics": "head_sha is the exact F17 code commit tested locally and by CI. The later containing receipt/handoff commit requires its own exact-head CI.",
+  "preflight": {
+    "f16_pr": 18,
+    "f16_head": "5ea514c268512590be0ba4f48ab306d34cdd457a",
+    "f16_exact_head_ci": "PASS",
+    "f16_ci_run": 36845703817,
+    "open_f17_parser_prs_before_write": 0,
+    "open_pr_17_overlap": "NONE; PR 17 changes only Laya catalogue compiler files and is based on F15",
+    "duplicate_f17_parser_prs_created": 0,
+    "agents_files_present": false,
+    "prior_f17_receipt_present": false,
+    "active_previous_repo_writer": false
+  },
+  "owner_preservation": {
+    "text_and_index": "content-lab/content_lab.py::_database items/content_fts",
+    "current_and_history": "existing sync_heads/sync_versions in content.sqlite3",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "new_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_chatgpt_export.py' -v",
+      "result": "PASS",
+      "checks": 9,
+      "phase": "focused; included in final Python discovery"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 89,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 34,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 68,
+      "exit_code": 0
+    },
+    {
+      "command": "python -m py_compile content-lab/content_lab.py content-lab/test_chatgpt_export.py",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_regression_checks": 191,
+  "focused_parser_checks": 9,
+  "checks_overlap_warning": "Focused parser tests are included in the 89 Python checks; do not add them to 191.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "1082ab5a992f286cadd7929cdce678b4f20cd765",
+    "runs": [
+      {
+        "id": 36851216341,
+        "head_sha": "1082ab5a992f286cadd7929cdce678b4f20cd765",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36851216341"
+      }
+    ],
+    "checks": [
+      {
+        "id": 110333053499,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36851216341/job/110333053499"
+      },
+      {
+        "id": 110333053730,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36851216341/job/110333053730"
+      }
+    ]
+  },
+  "verified_behaviors": [
+    "stable conversation/message IDs and dedicated chatgpt namespace",
+    "identical second import and mapping reorder create zero new versions",
+    "single message edit advances one current head and retains immutable history",
+    "removed message and conversation become missing without deleting history",
+    "conversation title updates under the stable conversation ID",
+    "current scoped search excludes historical and missing revisions",
+    "parent node metadata preserves branch provenance",
+    "duplicate JSON keys/IDs and unsafe inputs fail before the data transaction",
+    "non-text attachment pointers are reported but never fetched",
+    "CLI receipt excludes chat titles, IDs and text"
+  ],
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 2,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "network_fetches": 0,
+    "real_user_exports_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "Only explicitly selected local ChatGPT conversations.json list exports are accepted.",
+    "No real user export was read or committed; compatibility is validated with synthetic fixtures.",
+    "Image, audio, file and other non-text parts are not imported or downloaded.",
+    "The export limit is 64 MiB, with 1000 conversations, 100000 text messages and 64 MiB extracted text bounds.",
+    "A dedicated namespace is required; this function does not automate ChatGPT account or browser access.",
+    "No voice/ASR/Laya/OpenShell/model/provider/market campaign.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 18,
+  "next_job": "Audit current Chrome library-store and SQLite record/tombstone owners, then implement one versioned Chrome-to-SQLite schema/conflict gap without adding a second store."
+}
