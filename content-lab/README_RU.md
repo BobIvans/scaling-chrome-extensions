@@ -45,10 +45,13 @@ python content-lab/automation_core.py --store ./local-content \
 не удаляется. Текущий scoped search использует существующие `sync_heads`, а
 `items/content_fts` остаются единственным владельцем текста и индекса.
 
-Лимиты: export до 64 MiB, до 1000 разговоров/100 000 текстовых сообщений и
-64 MiB извлечённого текста суммарно; одно сообщение — до 2 200 000 байт. Image,
-audio, file pointers и другие non-text parts не загружаются и считаются в
-`skipped_non_text`. CLI receipt содержит только counts/hashes, не текст чатов.
+Лимиты: export до 64 MiB, до 1000 разговоров/100 000 текстовых сообщений,
+100 000 non-text parts и 64 MiB извлечённого текста суммарно; одно сообщение —
+до 2 200 000 байт. Image/audio/file asset pointers не загружаются: metadata-only
+inventory в том же `content.sqlite3` различает `PRESENT`, `MISSING` и
+`UNSUPPORTED`, хранит версии метаданных и текущий/missing head. Content bytes
+не считаются присутствующими; права остаются `UNVERIFIED`, retrieval запрещён.
+CLI receipt содержит только counts/hashes, не текст чатов или asset pointers.
 В репозитории тестируются только синтетические fixtures.
 
 ## Необязательная транскрипция CPU INT8

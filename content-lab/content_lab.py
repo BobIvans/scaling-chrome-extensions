@@ -25,12 +25,17 @@ MAX_CHATGPT_EXPORT_BYTES = 64 * 1024 * 1024
 MAX_CHATGPT_CONVERSATIONS = 1000
 MAX_CHATGPT_MESSAGES = 100_000
 MAX_CHATGPT_TEXT_BYTES = 64 * 1024 * 1024
+MAX_CHATGPT_ATTACHMENTS = 100_000
+MAX_ATTACHMENT_POINTER_BYTES = 4096
 TEXT_SUFFIXES = {".txt", ".md", ".json", ".csv", ".py", ".js", ".ts", ".yaml", ".yml"}
 MODEL_FILES = ("model.bin", "config.json", "tokenizer.json", "preprocessor_config.json")
 SOURCE_ID = re.compile(r"^[A-Za-z0-9_.:-]{1,200}$")
 NAMESPACE = re.compile(r"^[A-Za-z0-9_.:-]{1,90}$")
 LIBRARY_STATUS = {"ORIGINAL", "EXTRACTED", "EMPTY", "UNSUPPORTED", "SELECTION",
                   "RAW_TEXT", "PARTIAL", "BEST_EFFORT"}
+ATTACHMENT_CONTENT_TYPES = {
+    "image_asset_pointer", "audio_asset_pointer", "file_asset_pointer"
+}
 
 
 def _digest_file(path: Path) -> str:
@@ -127,6 +132,73 @@ def _message_text(content):
     return (text if text.strip() else None), (skipped if text.strip() else max(1, skipped)), kind
 
 
+def _attachment_inventory(content, *, scope, conversation_id, message_id):
+    """Describe non-text parts without dereferencing their asset pointers."""
+    if not isinstance(content, dict):
+        return []
+    parts = content.get("parts")
+    if isinstance(parts, list):
+        candidates = [(index, part) for index, part in enumerate(parts)
+                      if not isinstance(part, str)]
+    elif content.get("content_type") not in (None, "text", "multimodal_text"):
+        candidates = [(0, content)]
+    else:
+        candidates = []
+    inventory = []
+    for part_index, part in candidates:
+        value = part if isinstance(part, dict) else {}
+        content_type = value.get("content_type")
+        pointer = value.get("asset_pointer")
+        if content_type in ATTACHMENT_CONTENT_TYPES:
+            if pointer is None or pointer == "":
+                state, pointer = "MISSING", None
+            elif (not isinstance(pointer, str)
+                  or len(pointer.encode("utf-8")) > MAX_ATTACHMENT_POINTER_BYTES):
+                state, pointer = "UNSUPPORTED", None
+            else:
+                state = "PRESENT"
+        else:
+            state, pointer = "UNSUPPORTED", None
+        if not isinstance(content_type, str) or not content_type or len(content_type) > 100:
+            content_type = "unknown"
+            state = "UNSUPPORTED"
+        declared_hash = value.get("sha256", value.get("content_sha256"))
+        if declared_hash is None:
+            declared_hash_status, declared_hash = "ABSENT", None
+        elif isinstance(declared_hash, str) and re.fullmatch(r"[0-9a-f]{64}", declared_hash):
+            declared_hash_status = "VALID"
+        else:
+            declared_hash_status, declared_hash = "INVALID", None
+        source_key = (
+            f"chatgpt/{conversation_id}/{message_id}/attachment/{part_index}"
+        )
+        record = {
+            "schema": "occ.attachment-inventory.v1",
+            "namespace": scope,
+            "source_key": source_key,
+            "conversation_id": conversation_id,
+            "message_id": message_id,
+            "part_index": part_index,
+            "content_type": content_type,
+            "state": state,
+            "asset_pointer": pointer,
+            "pointer_sha256": (hashlib.sha256(pointer.encode("utf-8")).hexdigest()
+                               if pointer is not None else None),
+            "declared_content_sha256": declared_hash,
+            "declared_hash_status": declared_hash_status,
+            "rights_status": "UNVERIFIED",
+            "retrieval_allowed": False,
+            "bytes_present": False,
+            "network_fetch_performed": False,
+            "authority": "source-metadata-not-action-instructions",
+        }
+        hash_source = json.dumps(record, ensure_ascii=False, sort_keys=True,
+                                 separators=(",", ":"), allow_nan=False).encode("utf-8")
+        record["metadata_sha256"] = hashlib.sha256(hash_source).hexdigest()
+        inventory.append(record)
+    return inventory
+
+
 def parse_chatgpt_export(path: Path, namespace: str) -> dict:
     """Parse selected conversations into immutable message revisions.
 
@@ -137,7 +209,7 @@ def parse_chatgpt_export(path: Path, namespace: str) -> dict:
         raise ValueError("bounded ChatGPT namespace required")
     conversations, export_sha256, input_bytes = _read_chatgpt_export(path)
     scope = "chatgpt:" + namespace
-    items, records, skipped_non_text, extracted_bytes = [], [], 0, 0
+    items, records, attachments, skipped_non_text, extracted_bytes = [], [], [], 0, 0
     seen_conversations, seen_messages = set(), set()
     for conversation in conversations:
         if not isinstance(conversation, dict):
@@ -183,6 +255,12 @@ def parse_chatgpt_export(path: Path, namespace: str) -> dict:
                 raise ValueError("stable ChatGPT author role required")
             text, skipped, content_type = _message_text(message.get("content"))
             skipped_non_text += skipped
+            attachments.extend(_attachment_inventory(
+                message.get("content"), scope=scope,
+                conversation_id=conversation_id, message_id=message_id,
+            ))
+            if len(attachments) > MAX_CHATGPT_ATTACHMENTS:
+                raise ValueError("ChatGPT attachment count exceeds budget")
             if text is None:
                 continue
             extracted_bytes += len(text.encode("utf-8"))
@@ -242,8 +320,10 @@ def parse_chatgpt_export(path: Path, namespace: str) -> dict:
                 raise ValueError("ChatGPT message count exceeds budget")
     items.sort(key=lambda item: (item["conversation_id"], item["message_id"], item["id"]))
     records.sort(key=lambda item: item["conversation_id"])
+    attachments.sort(key=lambda item: item["source_key"])
     return {"namespace": scope, "export_sha256": export_sha256,
             "input_bytes": input_bytes, "conversations": records, "items": items,
+            "attachments": attachments,
             "skipped_non_text": skipped_non_text, "extracted_bytes": extracted_bytes}
 
 
@@ -497,6 +577,14 @@ def _ensure_sync_tables(connection: sqlite3.Connection) -> None:
           create_time REAL, update_time REAL, current_node TEXT,
           export_sha256 TEXT, generation TEXT, present INTEGER, updated REAL,
           PRIMARY KEY(namespace, conversation_id));
+        CREATE TABLE IF NOT EXISTS attachment_versions(
+          namespace TEXT, source_key TEXT, metadata_sha256 TEXT,
+          payload TEXT, observed REAL,
+          PRIMARY KEY(namespace, source_key, metadata_sha256));
+        CREATE TABLE IF NOT EXISTS attachment_heads(
+          namespace TEXT, source_key TEXT, metadata_sha256 TEXT,
+          generation TEXT, present INTEGER, updated REAL,
+          PRIMARY KEY(namespace, source_key));
     """)
 
 
@@ -719,6 +807,7 @@ def import_chatgpt_export(store: Path, path: Path, namespace: str) -> dict:
     parsed = parse_chatgpt_export(path, namespace)
     generation = os.urandom(16).hex()
     observed, inserted, unchanged, receipts = time.time(), 0, 0, []
+    attachment_inserted, attachment_unchanged = 0, 0
     connection = _database(store)
     try:
         _ensure_sync_tables(connection)
@@ -756,6 +845,30 @@ def import_chatgpt_export(store: Path, path: Path, namespace: str) -> dict:
                  item["revision_sha256"], generation),
             )
             receipts.append((item["id"], stored))
+        for attachment in parsed["attachments"]:
+            payload = json.dumps(attachment, ensure_ascii=False, sort_keys=True,
+                                 separators=(",", ":"), allow_nan=False)
+            previous = connection.execute(
+                "SELECT metadata_sha256 FROM attachment_heads "
+                "WHERE namespace=? AND source_key=?",
+                (parsed["namespace"], attachment["source_key"]),
+            ).fetchone()
+            attachment_unchanged += int(
+                previous is not None and previous[0] == attachment["metadata_sha256"]
+            )
+            attachment_inserted += connection.execute(
+                "INSERT OR IGNORE INTO attachment_versions VALUES (?,?,?,?,?)",
+                (parsed["namespace"], attachment["source_key"],
+                 attachment["metadata_sha256"], payload, observed),
+            ).rowcount
+            connection.execute(
+                "INSERT INTO attachment_heads VALUES (?,?,?,?,1,?) "
+                "ON CONFLICT(namespace,source_key) DO UPDATE SET "
+                "metadata_sha256=excluded.metadata_sha256,"
+                "generation=excluded.generation,present=1,updated=excluded.updated",
+                (parsed["namespace"], attachment["source_key"],
+                 attachment["metadata_sha256"], generation, observed),
+            )
         connection.execute(
             "UPDATE sync_heads SET present=0 WHERE namespace=? AND generation<>?",
             (parsed["namespace"], generation),
@@ -764,12 +877,21 @@ def import_chatgpt_export(store: Path, path: Path, namespace: str) -> dict:
             "UPDATE chatgpt_conversations SET present=0 WHERE namespace=? AND generation<>?",
             (parsed["namespace"], generation),
         )
+        connection.execute(
+            "UPDATE attachment_heads SET present=0,updated=? "
+            "WHERE namespace=? AND generation<>?",
+            (observed, parsed["namespace"], generation),
+        )
         missing = connection.execute(
             "SELECT count(*) FROM sync_heads WHERE namespace=? AND present=0",
             (parsed["namespace"],),
         ).fetchone()[0]
         missing_conversations = connection.execute(
             "SELECT count(*) FROM chatgpt_conversations WHERE namespace=? AND present=0",
+            (parsed["namespace"],),
+        ).fetchone()[0]
+        removed_attachments = connection.execute(
+            "SELECT count(*) FROM attachment_heads WHERE namespace=? AND present=0",
             (parsed["namespace"],),
         ).fetchone()[0]
         connection.commit()
@@ -780,6 +902,9 @@ def import_chatgpt_export(store: Path, path: Path, namespace: str) -> dict:
         connection.close()
     for item_id, stored in receipts:
         _write_receipt(store, item_id, stored)
+    attachment_states = {state: 0 for state in ("PRESENT", "MISSING", "UNSUPPORTED")}
+    for attachment in parsed["attachments"]:
+        attachment_states[attachment["state"]] += 1
     return {
         "state": "IMPORTED_CHATGPT_EXPORT",
         "namespace": parsed["namespace"],
@@ -789,6 +914,11 @@ def import_chatgpt_export(store: Path, path: Path, namespace: str) -> dict:
         "unchanged": unchanged,
         "missing": missing,
         "missing_conversations": missing_conversations,
+        "attachments": len(parsed["attachments"]),
+        "new_attachment_versions": attachment_inserted,
+        "unchanged_attachments": attachment_unchanged,
+        "removed_attachments": removed_attachments,
+        "attachment_states": attachment_states,
         "skipped_non_text": parsed["skipped_non_text"],
         "input_bytes": parsed["input_bytes"],
         "extracted_bytes": parsed["extracted_bytes"],

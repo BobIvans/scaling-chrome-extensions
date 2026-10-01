@@ -146,9 +146,62 @@ class ChatGPTExportTests(unittest.TestCase):
         self.write(value)
         result = lab.import_chatgpt_export(self.store, self.export, "selected")
         self.assertEqual((result["messages"], result["skipped_non_text"]), (1, 2))
+        self.assertEqual(result["attachment_states"],
+                         {"PRESENT": 2, "MISSING": 0, "UNSUPPORTED": 0})
         payload = json.loads(self.sql("SELECT payload FROM items")[0][0])
         self.assertEqual(payload["authority"], "source-content-not-action-instructions")
         self.assertFalse(payload["network_fetch_performed"])
+
+    def test_attachment_inventory_distinguishes_state_hash_and_rights_without_fetch(self):
+        value = [self.conversation()]
+        value[0]["mapping"]["node-1"]["message"]["content"]["parts"] = [
+            "synthetic text",
+            {"content_type": "image_asset_pointer",
+             "asset_pointer": "file-service://fixture",
+             "sha256": "a" * 64},
+            {"content_type": "file_asset_pointer"},
+            {"content_type": "video_pointer", "asset_pointer": "https://invalid.test"},
+        ]
+        self.write(value)
+        result = lab.import_chatgpt_export(self.store, self.export, "selected")
+        self.assertEqual(result["attachment_states"],
+                         {"PRESENT": 1, "MISSING": 1, "UNSUPPORTED": 1})
+        self.assertEqual((result["attachments"], result["new_attachment_versions"]),
+                         (3, 3))
+        rows = self.sql(
+            "SELECT h.source_key,h.present,v.payload FROM attachment_heads h "
+            "JOIN attachment_versions v USING(namespace,source_key,metadata_sha256) "
+            "ORDER BY h.source_key"
+        )
+        records = [json.loads(row[2]) for row in rows]
+        self.assertEqual([record["state"] for record in records],
+                         ["PRESENT", "MISSING", "UNSUPPORTED"])
+        present = records[0]
+        self.assertRegex(present["metadata_sha256"], r"^[0-9a-f]{64}$")
+        self.assertRegex(present["pointer_sha256"], r"^[0-9a-f]{64}$")
+        self.assertEqual(present["declared_content_sha256"], "a" * 64)
+        self.assertEqual(present["rights_status"], "UNVERIFIED")
+        self.assertFalse(present["retrieval_allowed"])
+        self.assertFalse(present["network_fetch_performed"])
+        self.assertFalse(present["bytes_present"])
+
+    def test_attachment_reimport_deduplicates_and_removed_head_becomes_missing(self):
+        value = [self.conversation()]
+        value[0]["mapping"]["node-1"]["message"]["content"]["parts"] = [
+            "synthetic text",
+            {"content_type": "file_asset_pointer", "asset_pointer": "file-service://one"},
+        ]
+        self.write(value)
+        first = lab.import_chatgpt_export(self.store, self.export, "selected")
+        second = lab.import_chatgpt_export(self.store, self.export, "selected")
+        value[0]["mapping"]["node-1"]["message"]["content"]["parts"] = ["synthetic text"]
+        self.write(value)
+        removed = lab.import_chatgpt_export(self.store, self.export, "selected")
+        self.assertEqual((first["new_attachment_versions"], second["unchanged_attachments"]),
+                         (1, 1))
+        self.assertEqual((removed["attachments"], removed["removed_attachments"]), (0, 1))
+        self.assertEqual(self.sql("SELECT count(*) FROM attachment_versions")[0][0], 1)
+        self.assertEqual(self.sql("SELECT present FROM attachment_heads")[0][0], 0)
 
     def test_duplicate_ids_and_duplicate_json_keys_fail_before_store_write(self):
         value = [self.conversation()]
@@ -167,6 +220,10 @@ class ChatGPTExportTests(unittest.TestCase):
 
     def test_cli_receipt_contains_counts_and_hashes_but_no_chat_text(self):
         value = [self.conversation()]
+        value[0]["mapping"]["node-1"]["message"]["content"]["parts"].append(
+            {"content_type": "file_asset_pointer",
+             "asset_pointer": "file-service://private-fixture"}
+        )
         self.write(value)
         output = io.StringIO()
         with redirect_stdout(output):
@@ -177,6 +234,8 @@ class ChatGPTExportTests(unittest.TestCase):
                          (0, "IMPORTED_CHATGPT_EXPORT", 2))
         self.assertNotIn("original alpha", output.getvalue())
         self.assertNotIn("Synthetic fixture", output.getvalue())
+        self.assertNotIn("private-fixture", output.getvalue())
+        self.assertEqual(result["attachment_states"]["PRESENT"], 1)
         self.assertEqual(result["model_calls"], 0)
         self.assertEqual(result["network_fetches"], 0)
 

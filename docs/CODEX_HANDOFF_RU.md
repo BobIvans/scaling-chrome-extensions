@@ -54,8 +54,9 @@ F-13 — typed Native Host bridge к этому owner: поиск/контекс
 Его фактический PR/head и GitHub CI фиксируются отдельным receipt после публикации.
 Наличие adapter не доказывает установку в Windows Chrome.
 
-**Следующий номер для продолжения: 19.** F-18 покрыта draft #20; перед F-19
-проверь текущие attachment/artifact inventory owners и не выполняй auto-fetch.
+**Следующий номер для продолжения: 20 после публикации/CI F-19.** F-18 покрыта
+draft #20. F-19 добавляет metadata-only attachment inventory в тот же Content Lab
+SQLite owner и не выполняет auto-fetch; фактический PR/head фиксирует receipt.
 
 ## Система номеров
 
