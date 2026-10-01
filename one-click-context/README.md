@@ -1,11 +1,11 @@
-# One Click Context 0.12.0 — локальное Chrome-расширение
+# One Click Context 0.13.0 — локальное Chrome-расширение
 
-Версия 0.12.0 заменяет свободный agent instruction на локально проверяемый
-`occ.goal-proposal.v1`: обязательные положительная цель, constraints и отдельные
-prohibitions, а также типизированные `money_budget=0` и `max_parallel=1`.
-Пропуски, лишние поля, неверные типы и неоднозначные отрицания блокируются до
-Native Host. Proposal не даёт action authority и запускается только прежней
-доверенной кнопкой с подтверждением.
+Версия 0.13.0 добавляет детерминированный advisory router поверх проверенного
+`occ.goal-proposal.v1`. Он предлагает анализ, создание job-артефактов, просмотр
+зарегистрированного действия либо ручную проверку, но не меняет mode, не вызывает
+Native Host/queue и всегда возвращает `action_authority=false` и
+`dispatch_allowed=false`. Чувствительные и неоднозначные цели fail closed в
+ручную проверку независимо от confidence.
 
 Версия 0.9.0 разделяет найденные сообщения переписки и открытый документ, а также
 показывает детерминированный инвентарь видимых вложений, frames, медиа, свёрнутых
@@ -85,6 +85,9 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
 - Перед Codex handoff цель преобразуется в строгий `occ.goal-proposal.v1`.
   Budget и concurrency в этой версии принимают только `0` и `1`; отрицательные
   формулировки требуется перенести в отдельные prohibition labels без слов «не».
+- Кнопка маршрута Laya только показывает локальный `occ.advisory-route.v1`.
+  Confidence — диагностическая оценка, а не разрешение; запуск остаётся отдельным
+  доверенным кликом, повторной валидацией и confirm.
 
 Default traversal limits: 20,000 ms, 160 steps, approximately 2 MB of captured
 content. These are checked between DOM samples, not a preemptive hard CPU deadline.
