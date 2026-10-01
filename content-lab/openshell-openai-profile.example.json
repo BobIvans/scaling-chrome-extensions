@@ -1,0 +1,43 @@
+{
+  "id": "occ-openai-responses",
+  "display_name": "OCC OpenAI Responses",
+  "description": "Endpoint- and binary-bound profile for the OCC Responses adapter",
+  "category": "inference",
+  "inference_capable": true,
+  "credentials": [
+    {
+      "name": "api_key",
+      "env_vars": [
+        "OPENAI_API_KEY"
+      ],
+      "required": true,
+      "auth_style": "bearer"
+    }
+  ],
+  "discovery": {
+    "credentials": [
+      "api_key"
+    ]
+  },
+  "endpoints": [
+    {
+      "host": "api.openai.com",
+      "port": 443,
+      "path": "/v1/responses",
+      "protocol": "rest",
+      "enforcement": "enforce",
+      "allow_uninspected_credentials": false,
+      "rules": [
+        {
+          "allow": {
+            "method": "POST",
+            "path": "/v1/responses"
+          }
+        }
+      ]
+    }
+  ],
+  "binaries": [
+    "/opt/occ/bin/python3"
+  ]
+}
