@@ -48,6 +48,7 @@ class AutomationTests(unittest.TestCase):
 
     def git(self, repo, *args):
         return subprocess.check_output(["git", "-c", "user.name=Fixture", "-c",
+                                        "core.autocrlf=false", "-c",
                                         "user.email=fixture@invalid", "-c", "commit.gpgSign=false",
                                         *args], cwd=repo, stderr=subprocess.DEVNULL).decode().strip()
 
@@ -55,13 +56,13 @@ class AutomationTests(unittest.TestCase):
         repo = self.root / "repo"
         repo.mkdir()
         self.git(repo, "init", "-q")
-        (repo / "value.txt").write_text("bad\n")
+        (repo / "value.txt").write_text("bad\n", newline="\n")
         self.git(repo, "add", "value.txt")
         self.git(repo, "commit", "-qm", "base")
         patches = {}
         for number, value in enumerate(values):
             path = self.root / f"patch{number}.diff"
-            path.write_text("diff --git a/value.txt b/value.txt\n--- a/value.txt\n+++ b/value.txt\n@@ -1 +1 @@\n-bad\n+" + value + "\n")
+            path.write_text("diff --git a/value.txt b/value.txt\n--- a/value.txt\n+++ b/value.txt\n@@ -1 +1 @@\n-bad\n+" + value + "\n", newline="\n")
             patches[f"p{number}"] = {"file": str(path), "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
         self.snapshot = self.root / "ci.json"
         self.policy["repos"]["fixture"] = {
@@ -229,6 +230,16 @@ class AutomationTests(unittest.TestCase):
         self.assertEqual(self.core.run_once()["state"], "IDLE")
         self.assertEqual(self.core.get(job_id)["attempt"], 2)
 
+    def test_pinned_crlf_profile_applies_index_patch_and_runs_tests(self):
+        _, old_id = self.patch_fixture()
+        self.core.cancel(old_id)
+        self.policy["repos"]["fixture"]["git_autocrlf"] = True
+        self.core = ac.Core(self.store, self.policy)
+        ac.enqueue(self.store, self.policy, "crlf", self.core.get(old_id)["payload"])
+        result = self.core.run_once()
+        self.assertEqual(result["state"], "WAITING_CI", result)
+        self.assertEqual((Path(result["checkpoint"]["worktree"]) / "value.txt").read_text(), "good\n")
+
     def test_ci_wrong_sha_empty_missing_pending_and_untrusted_origin_never_pass(self):
         _, job_id = self.patch_fixture()
         self.assertEqual(self.core.run_once()["state"], "WAITING_CI")
@@ -291,7 +302,7 @@ class AutomationTests(unittest.TestCase):
         profile = self.policy["repos"]["fixture"]
         patch_path = Path(profile["patches"]["p0"]["file"])
         patch_path.write_text(patch_path.read_text() +
-                             "diff --git a/src/new.txt b/src/new.txt\nnew file mode 100644\n--- /dev/null\n+++ b/src/new.txt\n@@ -0,0 +1 @@\n+additional\n")
+                             "diff --git a/src/new.txt b/src/new.txt\nnew file mode 100644\n--- /dev/null\n+++ b/src/new.txt\n@@ -0,0 +1 @@\n+additional\n", newline="\n")
         profile["patches"]["p0"]["sha256"] = hashlib.sha256(patch_path.read_bytes()).hexdigest()
         profile["allowed_paths"].append("src/new.txt")
         self.core = ac.Core(self.store, self.policy)

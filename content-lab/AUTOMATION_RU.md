@@ -82,6 +82,11 @@ desktop IPC не наследуются, Git hooks отключены. Worktree 
 не регистрируйте непроверенные исполняемые патчи/test commands. Каждая попытка
 получает новый worktree; основной checkout сохраняется. Worktrees остаются для review.
 
+`git_autocrlf` задаётся в профиле как настоящий boolean и закрепляет одинаковую
+интерпретацию исходного checkout и worktree. Default — false; для CRLF checkout
+выберите true после проверки его clean status. Patch применяется через Git index.
+Глобальные пользовательские Git настройки не расширяют права и не меняют этот профиль.
+
 После локальных тестов job получает `WAITING_CI`. Core не выполняет push, merge
 или создание PR. Операторский GitHub adapter публикует проверенный commit и
 атомарно обновляет `ci.snapshot_file` из фактического GitHub Actions ответа:

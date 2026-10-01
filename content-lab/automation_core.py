@@ -225,6 +225,8 @@ def validate_job(payload, policy):
         if not isinstance(argv, list) or not argv or not all(isinstance(a, str) and a and "\0" not in a for a in argv):
             raise ValueError("TEST_ARGV_REQUIRED")
     strict_int(profile.get("timeout_seconds", 60), 1, 300)
+    if type(profile.get("git_autocrlf", False)) is not bool:
+        raise ValueError("GIT_AUTOCRLF_BOOLEAN_REQUIRED")
     ci = profile.get("ci")
     if not isinstance(ci, dict) or not isinstance(ci.get("required_checks"), list) or not ci["required_checks"] or len(set(ci["required_checks"])) != len(ci["required_checks"]) or not all(isinstance(n, str) and n for n in ci["required_checks"]):
         raise ValueError("CI_SNAPSHOT_AND_REQUIRED_CHECKS_REQUIRED")
@@ -413,13 +415,16 @@ class Core:
                 "seconds": round(time.monotonic() - started, 3)}
 
     def git(self, job, repo, *args):
+        profile = self.policy.get("repos", {}).get(job["payload"].get("repo_profile"), {})
+        autocrlf = "true" if profile.get("git_autocrlf", False) else "false"
         argv = ["git", "-c", "core.hooksPath=" + os.devnull,
+                "-c", "core.autocrlf=" + autocrlf,
                 "-c", "commit.gpgSign=false", "-c", "user.name=OCC Automation",
                 "-c", "user.email=occ-local@invalid", *args]
         result = self.command(job, argv, repo, 30)
         if result["reason"] or result["exit_code"]:
             raise ValueError("GIT_OPERATION_FAILED: " + result["output"][:500])
-        return result["output"].rstrip("\n")
+        return result["output"].rstrip("\r\n")
 
     def patch_test(self, job):
         payload = job["payload"]
@@ -448,8 +453,8 @@ class Core:
             frozen_patch = Path(handle.name)
             handle.write(raw)
         try:
-            self.git(job, worktree, "apply", "--check", str(frozen_patch))
-            self.git(job, worktree, "apply", str(frozen_patch))
+            self.git(job, worktree, "apply", "--index", "--check", str(frozen_patch))
+            self.git(job, worktree, "apply", "--index", str(frozen_patch))
         finally:
             frozen_patch.unlink(missing_ok=True)
         changes = self.git(job, worktree, "status", "--porcelain", "-z", "--untracked-files=all")

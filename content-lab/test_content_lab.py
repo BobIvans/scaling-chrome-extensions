@@ -1,4 +1,5 @@
 import hashlib
+from contextlib import closing
 import json
 from pathlib import Path
 import sqlite3
@@ -72,7 +73,7 @@ class ContentLabTests(unittest.TestCase):
         self.assertEqual(
             lab.search(store, "блокер")[0]["source_url"], item["source_url"]
         )
-        with sqlite3.connect(store / "content.sqlite3") as connection:
+        with closing(sqlite3.connect(store / "content.sqlite3")) as connection:
             self.assertEqual(
                 connection.execute("SELECT count(*) FROM content_fts").fetchone()[0], 1
             )
