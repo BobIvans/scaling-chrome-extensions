@@ -88,6 +88,10 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
 - Кнопка маршрута Laya только показывает локальный `occ.advisory-route.v1`.
   Confidence — диагностическая оценка, а не разрешение; запуск остаётся отдельным
   доверенным кликом, повторной валидацией и confirm.
+- `browser-action-contract.mjs` выдаёт короткоживущий одноразовый plan только для
+  пяти зарегистрированных capture-действий и привязывает его к точным
+  tab/document/origin после настоящего UI-события. Текст страницы остаётся
+  `DATA_ONLY`; plan не запускает Chrome transport, а trusted cancel терминален.
 
 Default traversal limits: 20,000 ms, 160 steps, approximately 2 MB of captured
 content. These are checked between DOM samples, not a preemptive hard CPU deadline.

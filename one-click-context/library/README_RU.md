@@ -33,6 +33,16 @@ authority. Настоящий запуск остаётся отдельным t
 меняет mode, не вызывает Native Host/очередь/сеть и не выдаёт execution authority;
 даже `confidence_milli=1000` требует отдельного доверенного действия.
 
+`browser-action-contract.mjs` — отдельный fail-closed контракт между доверенным
+UI и будущим browser transport. Grant живёт не более 30 секунд, хранится только
+в памяти и связывает одно из пяти фиксированных capture-действий с точными
+`tab_id`, `document_id` и каноническим HTTP(S) origin. Plan принимает только
+`grant_id` и `request_id`: страница не может подменить action, handler, selector,
+URL или options, а её текст помечен `DATA_ONLY`. Trusted UI/Escape cancel
+терминален. Этот модуль не вызывает `chrome.*`, не нажимает элементы и всегда
+возвращает `transport_qualified=false`, `dispatch_allowed=false`; реальный
+установленный Chrome transport остаётся отдельной квалификацией.
+
 Экспериментальный WebMCP: в поддерживающем браузере зарегистрированы read_collection_counts и read_selected_collection_txt. Второй требует подтверждения передачи выбранного текста. Это не авторизация Codex/OpenClaw и не AI backend. Регистрация и вызовы через реальный агентный WebMCP-контекст пока не проверены.
 
 Зависимости vendored: fflate 0.8.3, pdfjs-dist 4.10.38. Лицензии в vendor. Код pdf.js не выполняет захваченные скрипты. Сборка под Chrome 116 сохраняет прежние разрешения; установка и PDF worker в настоящем Chrome требуют ручной проверки.
