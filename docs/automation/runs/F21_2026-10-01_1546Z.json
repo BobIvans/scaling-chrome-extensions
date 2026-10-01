@@ -1,0 +1,152 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 21,
+  "job_id": "occ-f21-independent-voice-cancel-20261001T1546Z",
+  "recorded_at_utc": "2026-10-01T15:46:39Z",
+  "state": "DONE",
+  "completion_scope": "Independent trusted UI/Escape cancellation of the local voice session with an actual terminal receipt",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f21-independent-voice-cancel",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/23",
+  "pr_number": 23,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f20-push-to-talk-preview",
+  "base_sha": "0d514d621a3a33d1420ad658a27b033b0b08a5c6",
+  "head_sha": "7d5585abd298a2f6f5166b00634832468f2154aa",
+  "tested_tree_sha": "9846cf8e9de98829230d1dae306c007ae63a20e5",
+  "run_diff_sha256": "5737eb55574d639111297602052326d7245a63b69a68d41d86f71ff507a76807",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 22,
+    "previous_head_sha": "0d514d621a3a33d1420ad658a27b033b0b08a5c6",
+    "previous_exact_head_ci_run": 36879184788,
+    "previous_exact_head_ci": "success",
+    "open_f21_prs_before_write": [],
+    "duplicate_f21_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "F20 had no trusted standalone STOP/Escape path, no terminal local cancel receipt and no explicit invalidation of late microphone permission after cancel",
+    "owner_audit": "agent-bridge/host.mjs and durable-ui.mjs already own cancellation of their jobs; F21 preserves them and changes only the existing local voice owner"
+  },
+  "change": {
+    "owner": "one-click-context/library/voice-preview.mjs",
+    "extension_version": "0.11.0",
+    "trusted_cancel_triggers": [
+      "UI",
+      "KEYBOARD"
+    ],
+    "terminal_state": "CANCELLED",
+    "receipt_schema": "occ.voice-cancel-receipt.v1",
+    "late_permission_and_recorder_callbacks_invalidated": true,
+    "audio_retained": false,
+    "transcript_retained": false,
+    "action_dispatched": false,
+    "network_or_provider_call": false,
+    "queue_or_native_dispatch": false
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 unchanged",
+    "library": "existing one-click-context library records unchanged",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "native_host_cancel": "agent-bridge/host.mjs unchanged",
+    "durable_cancel": "one-click-context/library/durable-ui.mjs unchanged",
+    "asr": "content-lab local file experiment unchanged and not invoked",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "node --test one-click-context/tests/voice-preview.test.mjs",
+      "result": "PASS",
+      "checks": 8,
+      "exit_code": 0,
+      "phase": "focused; included in final extension discovery"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 79,
+      "exit_code": 0,
+      "attempt": 2,
+      "attempt_1": "FAILED only because the manifest version assertion still expected 0.10.0; assertion updated to 0.11.0"
+    },
+    {
+      "command": "python one-click-context/scripts/package_chrome_ready.py <temporary-directory>",
+      "result": "PASS",
+      "checks": 33,
+      "exit_code": 0,
+      "artifact_tracked": false,
+      "package_sha256": "d01f81983a43f756ed1948cae7ce1f992f78c6a20e7d7296b3ed59a847c4328e"
+    },
+    {
+      "command": "python -m json.tool docs/automation/functions-wave33.json >/dev/null && python -m json.tool docs/automation/runs/F21_2026-10-01_1546Z.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_local_regression_checks": 209,
+  "focused_checks_overlap_warning": "The 8 focused checks are included in the 79 extension checks; package entries are validation evidence and are not added to 209.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "7d5585abd298a2f6f5166b00634832468f2154aa",
+    "run": {
+      "id": 36886646645,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36886646645"
+    },
+    "checks": [
+      {
+        "id": 110451551920,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36886646645/job/110451551920"
+      },
+      {
+        "id": 110451552358,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36886646645/job/110451552358"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "test_attempts": 2,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "network_content_fetches": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F21 remains a draft PR and is not merged or deployed.",
+    "No real microphone, installed Windows Chrome, OS permission prompt or physical Escape key was exercised.",
+    "The receipt proves only cancellation of the local voice preview; Native Host and durable jobs retain their separate cancel controls.",
+    "No ASR is integrated, so the hang condition is represented by pending microphone/recorder callbacks that cancellation invalidates.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 22,
+  "next_job": "Audit current goal/input owners, then implement at most one typed goal and limits normalizer that rejects missing fields, negation ambiguity and invalid budget/concurrency values."
+}

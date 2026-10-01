@@ -1,19 +1,19 @@
 {
   "schema_version": "occ.wave33.v1",
-  "generated_at_utc": "2026-10-01T14:46:09+00:00",
+  "generated_at_utc": "2026-10-01T15:46:39+00:00",
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 8,
-  "next_function_number": 21,
+  "confirmed_new_github_pr_count": 9,
+  "next_function_number": 22,
   "items": [
     {
       "wave_id": "WAVE-01",
       "function_number": 13,
       "capability_id": "CAP-076",
       "title_ru": "Durable Host: library и jobs",
-      "proposed_owner_anchor": "agent-bridge/host.mjs",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "one-click-context/library/voice-preview.mjs (existing job cancellation owners remain in agent-bridge/host.mjs and durable-ui.mjs)",
+      "owner_status": "VERIFIED_EXISTING_VOICE_SESSION_OWNER_AND_SEPARATE_JOB_CANCEL_OWNERS",
       "related_candidate_ids": [
         "CAND-0751",
         "CAND-0752",
@@ -391,15 +391,20 @@
         "CAND-1749",
         "CAND-1750"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 23,
       "prerequisites_function_numbers": [
         20
       ],
       "acceptance": "UI/keyboard cancel still works if ASR hangs; actual terminal receipt shown",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "implementation_doc": "docs/automation/F21_INDEPENDENT_VOICE_CANCEL_RU.md",
+      "implementation_head_sha": "7d5585abd298a2f6f5166b00634832468f2154aa",
+      "receipt_path": "docs/automation/runs/F21_2026-10-01_1546Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-10",
@@ -1352,7 +1357,7 @@
       "max_attempts": 3
     }
   ],
-  "implemented_function_count": 8,
+  "implemented_function_count": 9,
   "actual_implementation_pr_numbers": [
     14,
     15,
@@ -1361,7 +1366,8 @@
     19,
     20,
     21,
-    22
+    22,
+    23
   ],
-  "confirmed_new_github_pr_count_semantics": "Eight implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21 and F20 -> #22; none merged. GitHub #17 is not counted as a function implementation PR."
+  "confirmed_new_github_pr_count_semantics": "Nine implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22 and F21 -> #23; none merged. GitHub #17 is not counted as a function implementation PR."
 }
