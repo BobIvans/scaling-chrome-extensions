@@ -210,11 +210,12 @@ test('untrusted sender cannot use privileged viewer routes', async () => {
   const h=harness(); const r=await h.message({target:'worker',type:'clear'},{id:'test-id',url:'https://evil.example',tab:{id:1}});
   assert.equal(r.ignored,true); assert(h.session.capture);
 });
-test('manifest is MV3 with narrow scope and explicitly optional native messaging', () => {
+test('manifest is MV3 with narrow required scope and explicitly optional relay grants', () => {
   const m=JSON.parse(fs.readFileSync(path.join(__dirname,'..','manifest.json'),'utf8'));
-  assert.equal(m.manifest_version,3); assert.equal(m.version,'0.9.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
-  for(const p of ['cookies','history','clipboardRead','debugger','all_urls']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
-  assert.deepEqual(m.optional_permissions,['nativeMessaging']);assert.equal(m.optional_host_permissions,undefined);assert(!m.permissions.includes('nativeMessaging'));
+  assert.equal(m.manifest_version,3); assert.equal(m.version,'1.0.0'); assert.equal(m.action.default_popup,undefined); assert.equal(m.host_permissions,undefined);
+  for(const p of ['cookies','history','clipboardRead','debugger','all_urls','tabs','nativeMessaging']) assert(!m.permissions.includes(p)); assert(m.permissions.includes('activeTab')); assert(m.permissions.includes('downloads'));
+  assert.deepEqual(m.optional_permissions,['nativeMessaging','tabs']);
+  assert.deepEqual(m.optional_host_permissions,['https://*/*','http://*/*']);
 });
 test('artifact inventory is accepted only with bounded versioned fields', async () => {
   const artifacts={schemaVersion:2,limited:false,items:[{id:'artifact-1',kind:'file-link',method:'USER_DOWNLOAD_IMPORT',state:'AVAILABLE',label:'report.pdf',source:'https://example.org/report.pdf',decision:'IMPORT_ORIGINAL',reason:'Exact bytes',requiresUser:true}]};
