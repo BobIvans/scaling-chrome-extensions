@@ -1,0 +1,158 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 28,
+  "job_id": "occ-f28-openshell-profile-review-20261001T2117Z",
+  "recorded_at_utc": "2026-10-01T21:17:46Z",
+  "state": "DONE",
+  "completion_scope": "Static fail-closed review of an OpenShell native endpoint and binary-bound provider profile with explicit Windows WSL2 qualification status",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f28-openshell-profile",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/30",
+  "pr_number": 30,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f27-hf-inference-adapter",
+  "base_sha": "3c4ef1fac0ec4160fff77084222e7b3affec447e",
+  "head_sha": "d38b6bfecd047db0b4d8664323c00ed7d87ffa8b",
+  "tested_tree_sha": "5db819bff8e39325a47d06adc97414a4227e06d6",
+  "run_diff_sha256": "e502bbce1037e1201f1bf5dbad4be8263efd7f78ac673b3308d774308dfa9fed",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 29,
+    "previous_head_sha": "3c4ef1fac0ec4160fff77084222e7b3affec447e",
+    "previous_exact_head_ci_run": 36926161314,
+    "previous_exact_head_ci": "success",
+    "open_f28_title_matches_before_write": [],
+    "duplicate_f28_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "F26 and F27 pin backend provider routes, but no owner reviewed OpenShell native endpoint/binary bindings or stated Windows WSL2 runtime qualification",
+    "owner_audit": "automation_core remains the worktree/queue owner and agent-bridge remains the Codex sandbox owner; no OpenShell implementation or alternate queue existed"
+  },
+  "official_contract_review": {
+    "verified_at_utc": "2026-10-01T21:05:00Z",
+    "reviewed_version": "OpenShell 0.1.2",
+    "inference_source": "https://docs.nvidia.com/openshell/latest/how-it-works/inference",
+    "profiles_source": "https://docs.nvidia.com/openshell/latest/how-it-works/providers/profiles",
+    "policy_source": "https://docs.nvidia.com/openshell/latest/how-it-works/policies/schema",
+    "support_source": "https://docs.nvidia.com/openshell/latest/about/support-matrix",
+    "verified_facts": [
+      "provider profiles own authorized endpoints, binaries and credential declarations",
+      "sandbox provider attachment selects which workload receives provider access",
+      "native provider requests require both network policy and endpoint credential binding",
+      "unmatched endpoint or binary traffic is denied",
+      "Windows x86_64 with WSL 2 and Docker Desktop is Experimental"
+    ]
+  },
+  "change": {
+    "owner": "content-lab/openshell_profile.py",
+    "review_schema": "occ.openshell-profile-review.v1",
+    "result_schema": "occ.openshell-profile-review-result.v1",
+    "profile_id": "occ-openai-responses",
+    "provider_name": "occ-openai",
+    "native_base_url": "https://api.openai.com/v1",
+    "native_request_url": "https://api.openai.com/v1/responses",
+    "endpoint": {
+      "host": "api.openai.com",
+      "port": 443,
+      "path": "/v1/responses",
+      "protocol": "rest",
+      "method": "POST",
+      "enforcement": "enforce",
+      "allow_uninspected_credentials": false
+    },
+    "binary": "/opt/occ/bin/python3",
+    "binary_globs_allowed": false,
+    "provider_attachment_required": true,
+    "profile_contains_secret_value": false,
+    "platform": "windows-wsl2-docker-desktop-x86_64",
+    "support_status": "EXPERIMENTAL_NOT_RUNTIME_QUALIFIED",
+    "runtime_smoke": "NOT_RUN",
+    "runnable_after_static_review": false,
+    "provider_api_budget": 0
+  },
+  "fixture_coverage": {
+    "exact_profile": "accepted as STATICALLY_REVIEWED_RUNTIME_UNQUALIFIED with runnable=false",
+    "wrong_host_port_path_or_protocol": "denied",
+    "wrong_or_wildcard_binary": "denied",
+    "audit_uninspected_or_broad_rest_grant": "denied",
+    "missing_provider_attachment": "denied",
+    "false_supported_or_runtime_smoke_claim": "denied",
+    "secret_value_field": "denied",
+    "cli": "secret-free result and stable blocked code"
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 owner unchanged",
+    "library": "existing items/content_fts and Chrome records unchanged",
+    "job_queue": "existing jobs/job_events and Core claim owner unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged",
+    "provider_budget": "F25 provider_budget.py unchanged; hard cap remains zero",
+    "backend_adapters": "F26/F27 adapters unchanged",
+    "voice_browser_laya": "no execution surface added",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python3 -m unittest discover -s content-lab -p 'test_openshell_profile.py' -v",
+      "result": "PASS",
+      "checks": 8,
+      "exit_code": 0,
+      "phase": "test iteration 1"
+    },
+    {
+      "command": "python3 -m unittest discover -s content-lab -p 'test_*.py' -v && node --test agent-bridge/*.test.mjs && node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 265,
+      "exit_code": 0,
+      "phase": "test iteration 2 before assertion-only test-output capture and documentation-link correction"
+    },
+    {
+      "command": "python3 -m unittest discover -s content-lab -p 'test_*.py' && node --test agent-bridge/*.test.mjs && node --test one-click-context/tests/*.test.* && git diff --check",
+      "result": "PASS",
+      "checks": 265,
+      "exit_code": 0,
+      "phase": "test iteration 3 on exact implementation tree"
+    }
+  ],
+  "ci": {
+    "workflow": "Deterministic OCC core",
+    "run_id": 36927512238,
+    "run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36927512238",
+    "exact_head_sha": "d38b6bfecd047db0b4d8664323c00ed7d87ffa8b",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "core (ubuntu-latest)",
+        "job_id": 110588376254,
+        "conclusion": "success"
+      },
+      {
+        "name": "core (windows-latest)",
+        "job_id": 110588376524,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "effects": {
+    "openshell_installed_or_started": false,
+    "profile_linted_or_imported": false,
+    "provider_created_or_attached": false,
+    "sandbox_created_or_started": false,
+    "credential_read": false,
+    "real_provider_api_calls": 0,
+    "real_spend": 0,
+    "merge_or_deploy": false,
+    "signup_or_purchase": false,
+    "blockchain_sign_or_send": false
+  },
+  "limits": [
+    "Static validation is not an OpenShell profile lint or runtime qualification.",
+    "The exact binary path must match a future reviewed OCI image layout.",
+    "Windows WSL2 plus Docker Desktop remains experimental and was not available for runtime smoke.",
+    "The example profile declares but never contains OPENAI_API_KEY.",
+    "No related CAND item is automatically closed."
+  ],
+  "next_function_number": 29,
+  "next_job": "Re-audit existing browser tab, origin, gesture and cancel owners before defining at most one Browser action contract; hostile page text must remain data and may not register commands."
+}
