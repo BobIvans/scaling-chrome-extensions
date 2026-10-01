@@ -1,0 +1,196 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 27,
+  "job_id": "occ-f27-hf-fixed-route-adapter-20261001T2101Z",
+  "recorded_at_utc": "2026-10-01T21:01:49Z",
+  "state": "DONE",
+  "completion_scope": "Budget-gated Hugging Face chat adapter with fixed endpoint, exact provider registry and terminal quota handling",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f27-hf-inference-adapter",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/29",
+  "pr_number": 29,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f26-openai-responses-adapter",
+  "base_sha": "3380824a1217dab79e5db5a7b670a5fd1e5dfa5d",
+  "head_sha": "d47676ea87d1b1b7d7b6e1ef7e9280cdde76dc81",
+  "tested_tree_sha": "45500ad8483631b6fc1312e58cf6b34e88609a88",
+  "run_diff_sha256": "0141d07c0b813ba018ed72899dbb6efebca5221c4d96c3423dce0656dd28ef74",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 28,
+    "previous_head_sha": "3380824a1217dab79e5db5a7b670a5fd1e5dfa5d",
+    "previous_exact_head_ci_run": 36924207419,
+    "previous_exact_head_ci": "success",
+    "open_f27_title_matches_before_write": [],
+    "duplicate_f27_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "F26 implemented only the OpenAI Responses backend; no owner pinned Hugging Face endpoint and exact model-provider routes or stopped terminally on provider quota exhaustion",
+    "owner_audit": "content-lab/hf_chat_adapter.py is the only new HF transport; provider_budget.py remains the SQLite accounting owner and browser/native-host surfaces accept neither token, endpoint nor model route"
+  },
+  "official_contract_review": {
+    "verified_at_utc": "2026-10-01T20:50:00Z",
+    "router_source": "https://huggingface.co/docs/inference-providers/index",
+    "router_facts": [
+      "POST https://router.huggingface.co/v1/chat/completions is OpenAI-compatible",
+      "a provider suffix pins an explicit provider while fastest/cheapest policies select routes",
+      "HF_TOKEN authenticates Inference Providers calls"
+    ],
+    "pricing_source": "https://huggingface.co/docs/inference-providers/pricing",
+    "pricing_facts": [
+      "monthly included credits are limited and subject to change",
+      "credits are applied before pay-as-you-go usage",
+      "free quota is not an unbounded entitlement and is not asserted by this adapter"
+    ]
+  },
+  "change": {
+    "owner": "content-lab/hf_chat_adapter.py",
+    "profile_schema": "occ.hf-chat-profile.v1",
+    "request_schema": "occ.hf-chat-request.v1",
+    "result_schema": "occ.hf-chat-result.v1",
+    "endpoint": "https://router.huggingface.co/v1/chat/completions",
+    "endpoint_override_allowed": false,
+    "redirect_allowed": false,
+    "backend_secret_env": "OCC_HF_TOKEN",
+    "secret_read_after_budget_reservation": true,
+    "model_registry": "bounded alias to exact model:provider route and exact response model",
+    "dynamic_model_discovery": false,
+    "forbidden_route_policies": [
+      "fastest",
+      "cheapest",
+      "auto"
+    ],
+    "organization_billing_header_added": false,
+    "automatic_retry": false,
+    "model_or_provider_fallback": false,
+    "quota_statuses_stop": [
+      402,
+      429
+    ],
+    "success_cost_semantics": "NEEDS_RECONCILIATION because token usage does not prove actual monetary charge",
+    "action_authority": false,
+    "browser_or_voice_surface_added": false,
+    "worker_dispatch_added": false
+  },
+  "fixture_coverage": {
+    "success_200": "registered provider route sent once; exact model/output/usage accepted; cost remains quarantined",
+    "authentication_401": "terminal zero settlement without provider error text",
+    "quota_402": "terminal zero settlement with no retry or fallback",
+    "rate_or_quota_429": "terminal zero settlement with no Retry-After execution",
+    "cancel_before_send": "reservation released",
+    "cancel_after_send": "reservation retained for reconciliation",
+    "reservation_replay": "transport is not dispatched twice",
+    "malformed_or_transport_unknown": "reservation retained for reconciliation",
+    "real_provider_smoke": "NOT_RUN_ZERO_AUTHORIZED_BUDGET"
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 through provider_budget/automation_core.connection",
+    "library": "existing items/content_fts and Chrome library records unchanged",
+    "job_queue": "existing jobs/job_events and Core claim owner unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged",
+    "voice_and_browser": "one-click-context UI, voice and router owners unchanged",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_hf_chat_adapter.py' -v && python -m py_compile content-lab/hf_chat_adapter.py && git diff --check",
+      "result": "FAIL",
+      "checks": 9,
+      "exit_code": 1,
+      "phase": "test iteration 1; production hard cap correctly blocked a third concurrently quarantined synthetic fixture; fixture cap was increased without changing adapter behavior"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_hf_chat_adapter.py' -v && python -m py_compile content-lab/hf_chat_adapter.py && git diff --check",
+      "result": "PASS",
+      "checks": 9,
+      "exit_code": 0,
+      "phase": "test iteration 2"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 127,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "python -m py_compile content-lab/hf_chat_adapter.py content-lab/openai_responses_adapter.py content-lab/provider_budget.py && python -m json.tool docs/automation/functions-wave33.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0,
+      "phase": "final static validation in iteration 3"
+    }
+  ],
+  "final_local_regression_checks": 257,
+  "focused_checks_overlap_warning": "The 9 focused HF checks are included in the 127 Python checks and are not added to 257.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "d47676ea87d1b1b7d7b6e1ef7e9280cdde76dc81",
+    "run": {
+      "id": 36925606621,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36925606621"
+    },
+    "checks": [
+      {
+        "id": 110582057394,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36925606621/job/110582057394"
+      },
+      {
+        "id": 110582057655,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36925606621/job/110582057655"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "test_iterations": 3,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "real_provider_api_calls": 0,
+    "real_provider_credentials_read": 0,
+    "model_inference_calls": 0,
+    "fake_transport_invocations": 10,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "purchase": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F27 remains a draft PR and is not merged or deployed.",
+    "Current runtime policy still requires money_budget=0, so no real provider call or token read is authorized.",
+    "The adapter is not connected to browser, voice, Laya or the durable worker.",
+    "Exact provider routing prevents model/provider fallback but cannot assert that an external HF account has pay-as-you-go disabled.",
+    "Injected fixtures do not prove account access, current model availability, pricing, quota, latency or provider behavior.",
+    "A successful chat completion reports token usage but not actual monetary charge, so the reservation remains NEEDS_RECONCILIATION.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 28,
+  "next_job": "Audit existing process and sandbox owners before defining at most one OpenShell isolation profile; preserve backend-only secrets, one writer and zero provider budget, and do not deploy or run untrusted workloads."
+}
