@@ -5,6 +5,18 @@
 
 ## Текущая точка
 
+F-15 реализована в draft PR [#16](https://github.com/BobIvans/scaling-chrome-extensions/pull/16),
+stacked на #15. Code head `49013fba8cd4f96b2828dbb557009826c6989f24`:
+172 локальных проверки, exact-head CI Linux/Windows PASS.
+Receipt: `docs/automation/runs/F15_2026-10-01_0832Z.json`.
+Admission разрешает только зарегистрированные sync templates; bounded supervisor
+имеет максимум суток/ticks, один lease и явную reconciliation истёкшего lease.
+Он не запускает worker. Windows service/Task Scheduler и реальный 24h run не проверены.
+Дальнейшая точка: F-16 — authenticated exact-head CI transport к существующему owner.
+Номер функции не является номером GitHub PR. #16 не merged.
+
+Предыдущая точка:
+
 F-14 реализована в draft PR [#15](https://github.com/BobIvans/scaling-chrome-extensions/pull/15),
 stacked на #14. Code head `561d7f30bb95541d2404f011201f948cb846c8cf`:
 136 локальных проверок, exact-head CI Linux/Windows PASS.
@@ -12,7 +24,7 @@ Receipt: `docs/automation/runs/F14_2026-10-01_0736Z.json`.
 Receipt attests указанный code commit; для более нового containing commit проверь CI отдельно.
 UI показывает known job references и current search/context; это не полный durable.list.
 Windows Chrome installation и device transport не квалифицированы.
-Дальнейшая точка: F-15 — один bounded local scheduler поверх существующего Core.
+Дальнейшая точка этой исторической записи была F-15; она теперь покрыта draft #16.
 Номер функции не является номером GitHub PR. #15 не merged.
 
 Историческая базовая точка ниже:
@@ -34,8 +46,8 @@ F-13 — typed Native Host bridge к этому owner: поиск/контекс
 Его фактический PR/head и GitHub CI фиксируются отдельным receipt после публикации.
 Наличие adapter не доказывает установку в Windows Chrome.
 
-**Следующий номер для продолжения: 15.** F-14 UI путь покрыт draft #15.
-Перед F-15 проверь актуальные head/receipts и CI; сохранить existing Core lease и очередь.
+**Следующий номер для продолжения: 16.** F-15 scheduler покрыт draft #16.
+Перед F-16 проверь актуальные head/receipts и CI; сохранить existing CI snapshot owner и release authority.
 
 ## Система номеров
 
@@ -57,7 +69,7 @@ Wave пересекается с каталогом: **2000 + 33 не означ
 1. Получи актуальные head/base/default SHA, открытые PR и точные CI checks.
    Прочитай `AGENTS.md`, если он появился, и действующий owner до правок.
 2. Сверь последние receipts и overlapping PR. Выбери один подтверждённый gap
-   из wave по dependencies; после проверки F-14 receipt начни с F-15. При изменении head повтори аудит.
+   из wave по dependencies; после проверки F-15 receipt начни с F-16. При изменении head повтори аудит.
 3. Один repo writer. Отдельная ветка/worktree от выбранного чистого SHA;
    подготовь минимальный diff, сохраняющий существующие публичные контракты.
 4. Запусти относящиеся к изменению meaningful regression/fault tests.
