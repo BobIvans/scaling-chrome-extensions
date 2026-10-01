@@ -1,7 +1,8 @@
-# F-15: первый срез — ограниченная постановка задач по времени
+# F-15: ограниченная постановка задач и supervisor
 
 База: OCC PR #15, `7e1350c184b6376b5d03aa72e9270d2eefe58396`.
-Это реализация части WAVE-03 / F-15 / CAP-078, а не завершение всего F-15.
+PR сначала добавил admission текущего слота. Следующий commit добавляет bounded
+supervisor, lease и аварийную reconciliation. Это не установка фоновой службы.
 Ссылки на CAND-0771–0780 и CAND-1771–1780 в functions-wave33.json являются
 тематическими соответствиями, не автоматическим закрытием двадцати карточек.
 33 работы волны и 2000 кандидатов нельзя складывать без дедупликации.
@@ -52,9 +53,46 @@ python content-lab/schedule_tick.py --schedule <schedule.json> --profile <absolu
 python content-lab/schedule_tick.py --schedule <schedule.json> --profile <absolute-profile.json> --stop
 ```
 
-Этот CLI не регистрирует себя в Windows Task Scheduler, не содержит бесконечного
-цикла и не запускает worker. Внешний локальный таймер и supervision остаются
-следующим срезом. Авторизация и запуск существующего worker — отдельное действие.
+`schedule_tick.py` не регистрирует себя в Windows Task Scheduler, не содержит
+цикла и не запускает worker. Авторизация и запуск существующего worker —
+отдельное действие.
+
+## Bounded supervisor
+
+`content-lab/schedule_supervisor.py` может повторно вызывать admission в одном
+локальном процессе. Его конфигурация ограничивает `poll_seconds`, `max_seconds`
+(не более суток), `max_ticks` и продолжительность lease. Пример
+`content-lab/supervisor.example.json` выключен по умолчанию.
+
+Предпросмотр проверяет файлы и текущий слот, но не создаёт lease/job:
+
+```text
+python content-lab/schedule_supervisor.py --supervisor <supervisor.json> --schedule <schedule.json> --profile <absolute-profile.json>
+```
+
+Ограниченный запуск требует одновременно `enabled: true` и явный `--apply`:
+
+```text
+python content-lab/schedule_supervisor.py --supervisor <supervisor.json> --schedule <schedule.json> --profile <absolute-profile.json> --apply
+```
+
+В той же SQLite создаётся только control lease для `schedule_id`. Jobs и события
+по-прежнему создаёт `automation_core.enqueue`. Второй supervisor блокируется.
+Чистое завершение по limit/STOP/interrupt освобождает lease. Interrupt прекращает
+процесс, но не является постоянным STOP расписания и не отменяет jobs.
+
+Если процесс или tick завершился с неизвестным исходом, lease остаётся. После
+истечения lease новый supervisor отвечает `SUPERVISOR_NEEDS_RECONCILIATION`.
+Оператор сначала проверяет, что прежний процесс действительно остановлен, затем
+явно очищает только истёкший lease:
+
+```text
+python content-lab/schedule_supervisor.py --supervisor <supervisor.json> --schedule <schedule.json> --profile <absolute-profile.json> --reconcile-stopped
+```
+
+Активный lease удалить этой командой нельзя. Если enqueue успел закоммититься,
+следующий tick повторит тот же slot task_key и получит существующий job.
+Supervisor не принимает argv/command, не выполняет payload и не запускает worker.
 
 ## Точная семантика stop
 
@@ -66,15 +104,15 @@ control-транзакцией постановка может завершит�
 
 ## Проверка и границы
 
-Добавлены 20 локальных contract tests (включая реальный SQLite для control,
-но с fake enqueue) и 5 интеграционных тестов для полной canonical queue:
+Первый commit добавил 20 contract tests (реальный SQLite для control,
+но fake enqueue) и 5 интеграционных тестов для canonical queue:
 replay, конкурентная постановка, cancelled replay, stop и отсутствие catch-up.
-В локальном контейнере исполнены 20 contract tests; прямой clone GitHub недоступен.
-Интеграционные тесты и регрессии должны проверяться существующим exact-head
-workflow на Linux/Windows; его test_*.py discovery уже включает новый файл.
-Статус CI следует читать по опубликованному SHA, а не из этого документа.
+Supervisor добавляет 11 проверок: строгие bounds, preview/disabled, clean limits,
+interrupt, single lease, expired reconciliation, unknown effect, lost lease,
+STOP и два тика через реальную canonical queue. Полный test discovery и exact-head
+workflow Linux/Windows проверяются на каждом опубликованном SHA.
 
 Не доказаны и не запускаются: установленный Chrome/Native Messaging, голос,
-Laya, API inference, суточный worker, market observation, paper profitability,
+Laya, API inference, установленный 24/7 service, market observation, paper profitability,
 qualification, signer/sender или live execution. Расходы по умолчанию нулевые.
 Источники и пользовательская история в PR не публикуются.
