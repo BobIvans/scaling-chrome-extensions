@@ -1,11 +1,11 @@
 {
   "schema_version": "occ.wave33.v1",
-  "generated_at_utc": "2026-10-01T18:51:41+00:00",
+  "generated_at_utc": "2026-10-01T19:41:40+00:00",
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 12,
-  "next_function_number": 25,
+  "confirmed_new_github_pr_count": 13,
+  "next_function_number": 26,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -544,8 +544,8 @@
       "function_number": 25,
       "capability_id": "CAP-055",
       "title_ru": "Бюджет до API-вызова",
-      "proposed_owner_anchor": "one-click-context/agent",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "content-lab/provider_budget.py via automation_core.connection/content.sqlite3",
+      "owner_status": "VERIFIED_EXISTING_SQLITE_OWNER_NO_SECOND_QUEUE_OR_STORE",
       "related_candidate_ids": [
         "CAND-0541",
         "CAND-0542",
@@ -568,8 +568,8 @@
         "CAND-1549",
         "CAND-1550"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 27,
       "prerequisites_function_numbers": [
         13,
         22
@@ -577,7 +577,21 @@
       "acceptance": "Reserve hard cap atomically; zero budget rejects call; reconcile usage and retries",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "verification": {
+        "python_tests": 109,
+        "native_tests": 35,
+        "extension_tests": 95,
+        "total": 239,
+        "result": "PASS",
+        "provider_api_calls": 0,
+        "real_spend": 0
+      },
+      "implementation_doc": "docs/automation/F25_ATOMIC_PROVIDER_BUDGET_RU.md",
+      "implementation_head_sha": "38e30d4660fe438a9a8fde9a5b741640277de05a",
+      "receipt_path": "docs/automation/runs/F25_2026-10-01_1941Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-14",
@@ -1372,7 +1386,7 @@
       "max_attempts": 3
     }
   ],
-  "implemented_function_count": 12,
+  "implemented_function_count": 13,
   "actual_implementation_pr_numbers": [
     14,
     15,
@@ -1385,7 +1399,8 @@
     23,
     24,
     25,
-    26
+    26,
+    27
   ],
-  "confirmed_new_github_pr_count_semantics": "Twelve implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23, F22 -> #24, F23 -> #25 and F24 -> #26; none merged. GitHub #17 is not counted as a function implementation PR."
+  "confirmed_new_github_pr_count_semantics": "Thirteen implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23, F22 -> #24, F23 -> #25, F24 -> #26 and F25 -> #27; none merged. GitHub #17 is not counted as a function implementation PR."
 }

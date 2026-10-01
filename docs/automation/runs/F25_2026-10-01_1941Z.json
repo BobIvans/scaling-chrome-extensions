@@ -1,0 +1,166 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 25,
+  "job_id": "occ-f25-atomic-provider-budget-20261001T1941Z",
+  "recorded_at_utc": "2026-10-01T19:41:40Z",
+  "state": "DONE",
+  "completion_scope": "Atomic provider-budget reservation, settlement, retry and reconciliation contract in the existing SQLite owner",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f25-atomic-provider-budget",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/27",
+  "pr_number": 27,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f24-local-asr-benchmark",
+  "base_sha": "b6d6360517be4f483e3ef276cad0e3b34d10b30f",
+  "head_sha": "38e30d4660fe438a9a8fde9a5b741640277de05a",
+  "tested_tree_sha": "aa15bc804ab317f134bb14f0b6cd7e7098a39ee7",
+  "run_diff_sha256": "eaa1938ca4265ed23872f565443b0d2b4468c5ac7f92df5e6d41b44f1d96e2a0",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 26,
+    "previous_head_sha": "b6d6360517be4f483e3ef276cad0e3b34d10b30f",
+    "previous_exact_head_ci_run": 36910336308,
+    "previous_exact_head_ci": "success",
+    "open_f25_title_matches_before_write": [],
+    "duplicate_f25_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "The current browser goal owner and durable core enforce zero spend but no existing owner could atomically reserve a future provider hard cap before a request or quarantine an unknown effect",
+    "owner_audit": "content-lab/provider_budget.py uses automation_core.connection and the existing content.sqlite3; browser state, library ownership and the durable jobs queue remain unchanged"
+  },
+  "change": {
+    "owner": "content-lab/provider_budget.py via automation_core.connection/content.sqlite3",
+    "plan_schema": "occ.provider-budget.v1",
+    "receipt_schema": "occ.provider-budget-reservation.v1",
+    "currency": "USD_MICRO",
+    "max_hard_cap_microunits": 1000000000000,
+    "max_attempts": 3,
+    "transaction": "BEGIN IMMEDIATE",
+    "invariant": "used_microunits + reserved_microunits <= hard_cap_microunits",
+    "zero_budget_rejects_before_operation_write": true,
+    "operation_key_idempotent": true,
+    "explicit_retry_only_after_released": true,
+    "unknown_effect_state": "NEEDS_RECONCILIATION",
+    "unknown_effect_remains_reserved": true,
+    "provider_receipt_sha256_binding": true,
+    "append_only_transition_events": true,
+    "action_authority": false,
+    "provider_dispatch_added": false,
+    "credential_access_added": false,
+    "network_transport_added": false
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 through automation_core.connection",
+    "library": "existing items/content_fts and Chrome library records unchanged",
+    "job_queue": "existing jobs/job_events and Core claim owner unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged",
+    "voice_and_browser": "one-click-context UI, voice and router owners unchanged",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_provider_budget.py' -v && python -m py_compile content-lab/provider_budget.py && git diff --check",
+      "result": "FAIL",
+      "checks": 7,
+      "exit_code": 1,
+      "phase": "test iteration 1; SQL insert had 13 placeholders for 12 columns; transaction rolled back and code was corrected"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_provider_budget.py' -v && python -m py_compile content-lab/provider_budget.py && git diff --check",
+      "result": "FAIL",
+      "checks": 7,
+      "exit_code": 1,
+      "phase": "test iteration 2; concurrent initialization of a synthetic empty SQLite store raced in the shared connection helper; explicit initialize_budget_store was added"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_provider_budget.py' -v",
+      "result": "PASS",
+      "checks": 7,
+      "exit_code": 0,
+      "phase": "test iteration 3"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 109,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "python -m py_compile content-lab/provider_budget.py && python -m json.tool docs/automation/functions-wave33.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0,
+      "phase": "final static validation in iteration 3"
+    }
+  ],
+  "final_local_regression_checks": 239,
+  "focused_checks_overlap_warning": "The 7 focused provider-budget checks are included in the 109 Python checks and are not added to 239.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "38e30d4660fe438a9a8fde9a5b741640277de05a",
+    "run": {
+      "id": 36915899952,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36915899952"
+    },
+    "checks": [
+      {
+        "id": 110549663961,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36915899952/job/110549663961"
+      },
+      {
+        "id": 110549663614,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36915899952/job/110549663614"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "test_iterations": 3,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "provider_api_calls": 0,
+    "model_inference_calls": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F25 remains a draft PR and is not merged or deployed.",
+    "Current OCC automation policy still requires money_budget=0; no existing runtime path can spend.",
+    "Positive caps in tests are local accounting fixtures, not provider entitlement or authorized spend.",
+    "initialize_budget_store must complete before concurrent backend workers start on a new store.",
+    "The module accounts integer USD microunits but does not obtain provider prices or independently prove a provider charge.",
+    "A future backend must reserve before dispatch and supply independently observed receipts for settlement/reconciliation.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 26,
+  "next_job": "Audit existing backend and secret owners, then implement at most one OpenAI Responses adapter with backend-only secret handling and deterministic 401/429/cancel fixtures; do not perform a real smoke call while authorized budget remains zero."
+}
