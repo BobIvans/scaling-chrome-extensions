@@ -26,6 +26,14 @@ routes, fallback, retry и `X-HF-Bill-To` не добавляются; 401/402/4
 вызов. Token читается backend-only после reservation, а текущий нулевой budget
 по-прежнему блокирует transport.
 
+`openshell_profile.py` статически сверяет OpenShell provider profile с отдельным
+review contract: только native OpenAI Responses endpoint, `POST /v1/responses`,
+`enforcement=enforce` и точный `/opt/occ/bin/python3`. Другой host/path/port,
+wildcard binary, audit/uninspected режим или отсутствие обязательного provider
+attachment отклоняются. Проверка не импортирует profile и не запускает sandbox;
+Windows WSL2 + Docker Desktop явно остаётся
+`EXPERIMENTAL_NOT_RUNTIME_QUALIFIED`, budget — 0.
+
 ## 12 функций и доступ
 
 | Функция | Доступ сейчас | Результат |

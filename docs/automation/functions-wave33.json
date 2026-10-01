@@ -1,11 +1,11 @@
 {
   "schema_version": "occ.wave33.v1",
-  "generated_at_utc": "2026-10-01T21:01:49+00:00",
+  "generated_at_utc": "2026-10-01T21:17:46+00:00",
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 15,
-  "next_function_number": 28,
+  "confirmed_new_github_pr_count": 16,
+  "next_function_number": 29,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -704,8 +704,8 @@
       "function_number": 28,
       "capability_id": "CAP-050",
       "title_ru": "OpenShell профиль изоляции",
-      "proposed_owner_anchor": "docs/automation",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "content-lab/openshell_profile.py + endpoint/binary-bound provider and review profiles",
+      "owner_status": "VERIFIED_STATIC_FAIL_CLOSED_BINDINGS_RUNTIME_UNQUALIFIED",
       "related_candidate_ids": [
         "CAND-0491",
         "CAND-0492",
@@ -728,15 +728,32 @@
         "CAND-1499",
         "CAND-1500"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 30,
       "prerequisites_function_numbers": [
         26
       ],
       "acceptance": "Reviewed native endpoint/binary bindings; deny wrong endpoint; Windows WSL2 status explicit",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "verification": {
+        "python_tests": 135,
+        "native_tests": 35,
+        "extension_tests": 95,
+        "total": 265,
+        "result": "PASS",
+        "openshell_profile_lint": "NOT_RUN",
+        "openshell_runtime_smoke": "NOT_RUN",
+        "windows_wsl2_status": "EXPERIMENTAL_NOT_RUNTIME_QUALIFIED",
+        "real_provider_api_calls": 0,
+        "real_spend": 0
+      },
+      "implementation_doc": "docs/automation/F28_OPENSHELL_PROFILE_RU.md",
+      "implementation_head_sha": "d38b6bfecd047db0b4d8664323c00ed7d87ffa8b",
+      "receipt_path": "docs/automation/runs/F28_2026-10-01_2117Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-17",
@@ -1414,7 +1431,7 @@
       "max_attempts": 3
     }
   ],
-  "implemented_function_count": 15,
+  "implemented_function_count": 16,
   "actual_implementation_pr_numbers": [
     14,
     15,
@@ -1430,7 +1447,8 @@
     26,
     27,
     28,
-    29
+    29,
+    30
   ],
-  "confirmed_new_github_pr_count_semantics": "Fifteen implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23, F22 -> #24, F23 -> #25, F24 -> #26, F25 -> #27, F26 -> #28 and F27 -> #29; none merged. GitHub #17 is not counted as a function implementation PR."
+  "confirmed_new_github_pr_count_semantics": "Sixteen implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23, F22 -> #24, F23 -> #25, F24 -> #26, F25 -> #27, F26 -> #28, F27 -> #29 and F28 -> #30; none merged. GitHub #17 is not counted as a function implementation PR."
 }
