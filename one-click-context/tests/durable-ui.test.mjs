@@ -102,9 +102,27 @@ class Element{
 function dom(){const ids=['durable-search','durable-context','durable-enqueue','durable-refresh','durable-status','durable-profile','durable-namespace','durable-query','durable-template','durable-task-key','durable-hits','durable-output','durable-jobs'];const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));elements['durable-profile'].value='local';elements['durable-namespace'].value='docs';return {elements,document:{getElementById:id=>elements[id],createElement:()=>new Element()}};}
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function agentDOM(){
- const d=dom();for(const id of ['agent-connect','agent-run','agent-disconnect','agent-status','agent-mode','agent-instruction','agent-jobs'])d.elements[id]=new Element();
+ const d=dom();for(const id of ['agent-connect','agent-run','agent-disconnect','agent-status','agent-mode','agent-instruction','agent-constraints','agent-prohibitions','agent-budget','agent-parallel','agent-normalize','agent-goal-proposal','agent-jobs'])d.elements[id]=new Element();
+ d.elements['agent-budget'].value='0';d.elements['agent-parallel'].value='1';
  const option=new Element();d.elements['agent-mode'].querySelector=()=>option;return d;
 }
+
+test('agent view normalizes locally and rejects ambiguous negation before native access',async t=>{
+ const saved={document:globalThis.document,localStorage:globalThis.localStorage,chrome:globalThis.chrome,window:globalThis.window};t.after(()=>Object.assign(globalThis,saved));
+ const {elements:e,document}=agentDOM();Object.assign(globalThis,{document,localStorage:storage(),chrome:undefined,window:{addEventListener(){}}});
+ const agent=attachAgent({getSelection:()=>'',getEpoch:()=>0,addResult:()=>{}});e['agent-instruction'].value='Сравнить документы';e['agent-constraints'].value='Сохранить SHA';e['agent-prohibitions'].value='Публикация данных';
+ e['agent-normalize'].onclick({isTrusted:false});assert.equal(e['agent-goal-proposal'].value,'');e['agent-normalize'].onclick({isTrusted:true});assert.equal(JSON.parse(e['agent-goal-proposal'].value).action_authority,false);
+ e['agent-instruction'].value='Не публиковать';e['agent-normalize'].onclick({isTrusted:true});assert.equal(e['agent-goal-proposal'].value,'');assert.match(e['agent-status'].textContent,/NEGATION_AMBIGUOUS/);agent.clear();
+});
+
+test('trusted run hands Native Host only the revalidated canonical goal proposal',async t=>{
+ const saved={document:globalThis.document,localStorage:globalThis.localStorage,chrome:globalThis.chrome,window:globalThis.window,confirm:globalThis.confirm};t.after(()=>Object.assign(globalThis,saved));
+ const {elements:e,document}=agentDOM(),calls=[];const port=wirePort(m=>{calls.push(m);if(m.type==='hello')return {version:1,supportedModes:['analyze']};if(m.type==='list')return {jobs:[]};if(m.type==='begin')return {job:{id:'typed-job'}};if(m.type==='append')return {received:m.offset+Buffer.from(m.base64,'base64').length};if(m.type==='run')return {job:{id:'typed-job',state:'QUEUED'}};throw Error('unexpected '+m.type);});
+ Object.assign(globalThis,{document,localStorage:storage(),confirm:()=>true,chrome:{runtime:{id:'testextension',connectNative:()=>port},permissions:{request:async()=>true}},window:{addEventListener(){}}});
+ const agent=attachAgent({getSelection:()=> 'selected context',getEpoch:()=>7,addResult:()=>{}});e['agent-instruction'].value='Сравнить документы';e['agent-constraints'].value='Сохранить SHA';e['agent-prohibitions'].value='Публикация данных';
+ try{await e['agent-connect'].onclick({isTrusted:true});await e['agent-run'].onclick({isTrusted:true});const begin=calls.find(m=>m.type==='begin'),instruction=JSON.parse(begin.instruction);assert.equal(instruction.schema,'occ.goal-proposal.v1');assert.equal(instruction.money_budget,0);assert.equal(instruction.max_parallel,1);assert.equal(instruction.action_authority,false);assert.deepEqual(Object.keys(instruction),['schema','goal','constraints','prohibitions','money_budget','max_parallel','action_authority']);}
+ finally{agent.clear();}
+});
 function wirePort(handler){
  const listeners={};return {listeners,onMessage:{addListener:f=>listeners.message=f},onDisconnect:{addListener:f=>listeners.disconnect=f},disconnect(){listeners.disconnect?.();},postMessage(m){void Promise.resolve().then(()=>handler(m)).then(r=>listeners.message({...r,ok:true,requestId:m.requestId}),e=>listeners.message({ok:false,requestId:m.requestId,error:e.message}));}};
 }
