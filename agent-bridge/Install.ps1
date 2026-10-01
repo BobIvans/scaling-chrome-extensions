@@ -1,5 +1,7 @@
 param(
  [Parameter(Mandatory=$true)][ValidatePattern('^[a-p]{32}$')][string]$ExtensionId,
+ [Parameter(Mandatory=$true)][ValidatePattern('^[0-9a-f]{64}$')][string]$PackageTreeSha256,
+ [Parameter(Mandatory=$true)][ValidatePattern('^[0-9]+\.[0-9]+\.[0-9]+(?:\.[0-9]+)?$')][string]$ExtensionVersion,
  [string]$Destination=(Join-Path $env:LOCALAPPDATA 'OneClickContextAgent'),
  [switch]$Register
 )
@@ -21,7 +23,7 @@ foreach($occFile in @('native_adapter.py','automation_core.py','content_lab.py')
 }
 & $occCompiler /nologo /target:exe /reference:System.Web.Extensions.dll "/out:$occDestination/occ-native-host.exe" (Join-Path $PSScriptRoot 'NativeHost.cs')
 if($LASTEXITCODE -ne 0){throw 'Compilation failed; registry unchanged.'}
-$occConfig=@{extensionId=$ExtensionId;nodePath=$occNode;codexPath=$occCodex;dataRoot=(Join-Path $occDestination 'jobs')}
+$occConfig=@{extensionId=$ExtensionId;extensionVersion=$ExtensionVersion;packageTreeSha256=$PackageTreeSha256;nodePath=$occNode;codexPath=$occCodex;dataRoot=(Join-Path $occDestination 'jobs')}
 [IO.File]::WriteAllText((Join-Path $occDestination 'host-config.json'),($occConfig|ConvertTo-Json),[Text.UTF8Encoding]::new($false))
 $occManifest=@{name='com.one_click_context.codex';description='Explicit One Click Context jobs through the local Codex CLI';path=(Join-Path $occDestination 'occ-native-host.exe');type='stdio';allowed_origins=@("chrome-extension://$ExtensionId/")}
 $occManifestPath=Join-Path $occDestination 'native-host.json'

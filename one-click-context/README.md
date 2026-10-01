@@ -92,6 +92,10 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
   пяти зарегистрированных capture-действий и привязывает его к точным
   tab/document/origin после настоящего UI-события. Текст страницы остаётся
   `DATA_ONLY`; plan не запускает Chrome transport, а trusted cancel терминален.
+- Страница `qualification.html` по одному доверенному клику сверяет установленное
+  дерево пакета, два fresh native handshake и фактический revoke optional
+  `nativeMessaging`. Она не запускает capture/action/job; PASS возможен только на
+  установленном Chrome с host, закреплённым за тем же extension ID/version/hash.
 
 Default traversal limits: 20,000 ms, 160 steps, approximately 2 MB of captured
 content. These are checked between DOM samples, not a preemptive hard CPU deadline.
@@ -126,8 +130,9 @@ Build a Chrome-ready ZIP (generated archives are deliberately not tracked by Git
 
     ./one-click-context/scripts/package_chrome_ready.sh
 
-The verified package is written to `dist/` with `manifest.json` and
-`INSTALL_RU.txt` directly at the ZIP root. Pass another output directory as the
+The verified package is written to `dist/` with `manifest.json`,
+`PACKAGE_IDENTITY.json` and `INSTALL_RU.txt` directly at the ZIP root. The build
+prints both installed-tree SHA-256 and ZIP SHA-256. Pass another output directory as the
 first argument when the artifact must live outside the repository.
 
 Run JavaScript syntax checks and orchestration unit tests:
