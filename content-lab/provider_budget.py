@@ -150,7 +150,7 @@ def reserve_budget(store, plan, op_key, reserve_microunits, *, retry_reservation
                                          or existing["request_hash"] != request_hash):
                 raise ValueError("BUDGET_OPERATION_CONFLICT")
             if retry_reservation_id is None and existing is not None:
-                return _operation_receipt(existing)
+                return {**_operation_receipt(existing), "reused": True}
             if plan["hard_cap_microunits"] == 0:
                 raise ValueError("ZERO_BUDGET_REJECTS_CALL")
             if existing is None:
@@ -181,7 +181,7 @@ def reserve_budget(store, plan, op_key, reserve_microunits, *, retry_reservation
             row = db.execute("SELECT * FROM provider_budget_ops WHERE op_key=?",
                              (op_key,)).fetchone()
             _event(db, row, now)
-            return _operation_receipt(row)
+            return {**_operation_receipt(row), "reused": False}
 
         return _transaction(db, mutate)
     finally:

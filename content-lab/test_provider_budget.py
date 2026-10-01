@@ -50,7 +50,10 @@ class ProviderBudgetTests(unittest.TestCase):
 
     def test_reservation_replay_and_conflicts_do_not_double_count(self):
         first = pb.reserve_budget(self.store, self.plan, "call-1", 30)
-        self.assertEqual(pb.reserve_budget(self.store, self.plan, "call-1", 30), first)
+        replay = pb.reserve_budget(self.store, self.plan, "call-1", 30)
+        self.assertFalse(first["reused"])
+        self.assertTrue(replay["reused"])
+        self.assertEqual(replay["reservation_id"], first["reservation_id"])
         self.assertEqual(pb.budget_status(self.store, "run-1")["reserved_microunits"], 30)
         with self.assertRaisesRegex(ValueError, "OPERATION_CONFLICT"):
             pb.reserve_budget(self.store, self.plan, "call-1", 31)
@@ -76,7 +79,9 @@ class ProviderBudgetTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "CONFIRMATION"):
             pb.release_budget(self.store, first["reservation_id"], request_not_sent=False)
         released = pb.release_budget(self.store, first["reservation_id"], request_not_sent=True)
-        self.assertEqual(pb.reserve_budget(self.store, self.plan, "call-1", 40), released)
+        replay = pb.reserve_budget(self.store, self.plan, "call-1", 40)
+        self.assertEqual(replay["state"], released["state"])
+        self.assertTrue(replay["reused"])
         with self.assertRaisesRegex(ValueError, "MISMATCH"):
             pb.reserve_budget(self.store, self.plan, "call-1", 40,
                               retry_reservation_id="rsv-not-the-owner")
