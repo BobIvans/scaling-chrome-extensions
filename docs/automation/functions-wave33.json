@@ -1,11 +1,11 @@
 {
   "schema_version": "occ.wave33.v1",
-  "generated_at_utc": "2026-10-01T06:26:13.804436+00:00",
+  "generated_at_utc": "2026-10-01T13:40:34+00:00",
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 4,
-  "next_function_number": 19,
+  "confirmed_new_github_pr_count": 7,
+  "next_function_number": 20,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -37,7 +37,7 @@
         "CAND-1760"
       ],
       "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
-      "github_pr_number": 20,
+      "github_pr_number": 14,
       "prerequisites_function_numbers": [],
       "acceptance": "Real SQLite search/context/enqueue/get/cancel; replay, restart, namespace isolation",
       "max_repo_writers": 1,
@@ -258,8 +258,8 @@
         "CAND-1889",
         "CAND-1890"
       ],
-      "state": "IMPLEMENTED_LOCAL_VERIFIED",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 20,
       "prerequisites_function_numbers": [
         17
       ],
@@ -302,15 +302,20 @@
         "CAND-1029",
         "CAND-1030"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 21,
       "prerequisites_function_numbers": [
         17
       ],
       "acceptance": "Present/missing/unsupported distinctions, hashes and rights; no automatic fetch",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "implementation_doc": "docs/automation/F19_ATTACHMENT_INVENTORY_RU.md",
+      "implementation_head_sha": "f9110dcf0c6b036180b62d4abcccf0845eb6f9bc",
+      "receipt_path": "docs/automation/runs/F19_2026-10-01_1340Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-08",
@@ -1342,12 +1347,15 @@
       "max_attempts": 3
     }
   ],
-  "implemented_function_count": 3,
+  "implemented_function_count": 7,
   "actual_implementation_pr_numbers": [
     14,
     15,
-    16
+    16,
+    18,
+    19,
+    20,
+    21
   ],
-  "confirmed_new_github_pr_count": 3,
-  "confirmed_new_github_pr_count_semantics": "Three implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16. The current F15 run updated existing #16 and created no new PR; none merged."
+  "confirmed_new_github_pr_count_semantics": "Seven implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20 and F19 -> #21; none merged. GitHub #17 is not counted as a function implementation PR."
 }
