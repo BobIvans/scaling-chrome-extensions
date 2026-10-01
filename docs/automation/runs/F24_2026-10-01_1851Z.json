@@ -1,0 +1,201 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 24,
+  "job_id": "occ-f24-local-asr-benchmark-20261001T1851Z",
+  "recorded_at_utc": "2026-10-01T18:51:41Z",
+  "state": "DONE",
+  "completion_scope": "Consent-bound local RU/LV ASR benchmark harness with honest unknown measurements",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f24-local-asr-benchmark",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/26",
+  "pr_number": 26,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f23-laya-advisory-router",
+  "base_sha": "8b57a61881e24218f0876181d88643ef7331ecce",
+  "head_sha": "808438b9bf54f32ebfcb75bf3576b7c2d28be4ce",
+  "tested_tree_sha": "4ac5d76efdc2fa0597938a55d911f0ab551ede02",
+  "run_diff_sha256": "cfccadb7358bbbe332fee6ec0ecf7b882c8b31e6acba4e70f551f163c24fad70",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 25,
+    "previous_head_sha": "8b57a61881e24218f0876181d88643ef7331ecce",
+    "previous_exact_head_ci_run": 36901941887,
+    "previous_exact_head_ci": "success",
+    "open_f24_title_matches_before_write": [],
+    "duplicate_f24_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "The local CPU ASR adapter had no strict consented RU/LV suite, WER/action scoring, p95/RAM receipt, or explicit unknown-measurement semantics",
+    "owner_audit": "content_lab.py::transcribe_file remains the only local inference owner; asr_benchmark.py validates/scorers its receipt without adding a model, downloader, store, queue or action owner"
+  },
+  "change": {
+    "owner": "content-lab/content_lab.py::transcribe_file",
+    "benchmark": "content-lab/asr_benchmark.py",
+    "suite_schema": "occ.asr-benchmark-suite.v1",
+    "report_schema": "occ.asr-benchmark-report.v1",
+    "languages": [
+      "ru",
+      "lv"
+    ],
+    "max_cases": 100,
+    "max_audio_bytes_per_case": 67108864,
+    "consent_required": [
+      "owned_or_licensed",
+      "benchmark_use_authorized"
+    ],
+    "measurements": [
+      "wer_milli",
+      "action_accuracy_milli",
+      "latency_p95_ms",
+      "sampled_peak_process_rss_bytes"
+    ],
+    "unknown_measurements_are_null": true,
+    "audio_and_model_sha_binding": true,
+    "report_contains_transcript_text": false,
+    "action_authority": false,
+    "dispatch_allowed": false,
+    "network_or_provider_call_added": false,
+    "model_download_added": false,
+    "queue_or_store_write_added": false
+  },
+  "measurement_status": {
+    "harness_contract": "VERIFIED_WITH_SYNTHETIC_BYTES_AND_FAKE_BACKEND",
+    "real_owned_audio_available_in_run": false,
+    "local_model_available_in_run": false,
+    "real_local_inference_performed": false,
+    "real_dell_device_run_performed": false,
+    "real_ru_wer_milli": null,
+    "real_lv_wer_milli": null,
+    "real_action_accuracy_milli": null,
+    "real_latency_p95_ms": null,
+    "real_sampled_peak_process_rss_bytes": null,
+    "real_measurement_state": "BLOCKED_INPUTS",
+    "missing_inputs": [
+      "explicitly selected owned-or-licensed RU/LV audio suite with manual references",
+      "complete reviewed local CTranslate2 Whisper model directory",
+      "authorized device qualification run"
+    ]
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 unchanged",
+    "library": "existing one-click-context library records unchanged",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged",
+    "durable_ui": "one-click-context/library/durable-ui.mjs unchanged",
+    "voice_ui": "one-click-context/library/voice-preview.mjs unchanged and remains unbound to ASR",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -B -m unittest content-lab/test_asr_benchmark.py -v",
+      "result": "FAIL",
+      "checks": 0,
+      "exit_code": 1,
+      "phase": "test iteration 1; incorrect unittest module invocation did not add content-lab to sys.path; no code effect"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_asr_benchmark.py' -v",
+      "result": "PASS",
+      "checks": 7,
+      "exit_code": 0,
+      "phase": "test iteration 2 before receipt-binding hardening"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_asr_benchmark.py' -v && python -m py_compile content-lab/asr_benchmark.py && git diff --check",
+      "result": "PASS",
+      "checks": 7,
+      "exit_code": 0,
+      "phase": "test iteration 3 after audio/model receipt binding"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 102,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0,
+      "phase": "final regression in iteration 3"
+    },
+    {
+      "command": "python -m json.tool content-lab/asr-benchmark.example.json >/dev/null && python -m py_compile content-lab/asr_benchmark.py && git diff --check",
+      "result": "PASS",
+      "exit_code": 0,
+      "phase": "final static validation in iteration 3"
+    },
+    {
+      "command": "python -m json.tool docs/automation/functions-wave33.json >/dev/null && python -m json.tool docs/automation/runs/F24_2026-10-01_1851Z.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0,
+      "phase": "receipt/catalog validation"
+    }
+  ],
+  "final_local_regression_checks": 232,
+  "focused_checks_overlap_warning": "The 7 focused benchmark checks are included in the 102 Python checks and are not added to 232.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "808438b9bf54f32ebfcb75bf3576b7c2d28be4ce",
+    "run": {
+      "id": 36909749447,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36909749447"
+    },
+    "checks": [
+      {
+        "id": 110529161713,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36909749447/job/110529161713"
+      },
+      {
+        "id": 110529161348,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36909749447/job/110529161348"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "test_iterations": 3,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "actual_model_inference_calls": 0,
+    "fake_backend_invocations": 4,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "network_content_fetches": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F24 remains a draft PR and is not merged or deployed.",
+    "No user audio, model files or transcripts are committed.",
+    "Synthetic bytes are not audio-quality evidence and fake-backend metrics are not model benchmarks.",
+    "Sampled process RSS can miss a peak between samples and is not device-wide memory.",
+    "Action accuracy is exact accepted-phrase recognition and does not authorize or dispatch an action.",
+    "Real RU/LV quality and Dell performance remain unknown until explicit inputs and a separate authorized device run exist.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 25,
+  "next_job": "Audit current budget owners, then implement at most one atomic hard-cap reservation before any provider call; zero budget must reject, and retries/usage require reconciliation without adding a second queue."
+}
