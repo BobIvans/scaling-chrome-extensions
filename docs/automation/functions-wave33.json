@@ -1,11 +1,11 @@
 {
   "schema_version": "occ.wave33.v1",
-  "generated_at_utc": "2026-10-01T21:17:46+00:00",
+  "generated_at_utc": "2026-10-01T21:40:10+00:00",
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 16,
-  "next_function_number": 29,
+  "confirmed_new_github_pr_count": 17,
+  "next_function_number": 30,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -760,8 +760,8 @@
       "function_number": 29,
       "capability_id": "CAP-049",
       "title_ru": "Browser action contract",
-      "proposed_owner_anchor": "one-click-context/agent",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "one-click-context/library/browser-action-contract.mjs",
+      "owner_status": "VERIFIED_EPHEMERAL_FAIL_CLOSED_ACTION_PLAN_OWNER",
       "related_candidate_ids": [
         "CAND-0481",
         "CAND-0482",
@@ -784,8 +784,8 @@
         "CAND-1489",
         "CAND-1490"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 31,
       "prerequisites_function_numbers": [
         14,
         22
@@ -793,7 +793,23 @@
       "acceptance": "Explicit tab/origin actions and cancel; hostile page text cannot register commands",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "verification": {
+        "python_tests": 135,
+        "native_tests": 35,
+        "extension_tests": 105,
+        "total": 275,
+        "result": "PASS",
+        "installed_chrome_transport": "NOT_RUN",
+        "exact_package_hash": "NOT_RUN",
+        "real_browser_dispatches": 0,
+        "real_provider_api_calls": 0
+      },
+      "implementation_doc": "docs/automation/F29_BROWSER_ACTION_CONTRACT_RU.md",
+      "implementation_head_sha": "591135f1028539a08533c1f6d6eebdf9ef7bfb91",
+      "receipt_path": "docs/automation/runs/F29_2026-10-01_2140Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-18",
@@ -1431,7 +1447,7 @@
       "max_attempts": 3
     }
   ],
-  "implemented_function_count": 16,
+  "implemented_function_count": 17,
   "actual_implementation_pr_numbers": [
     14,
     15,
@@ -1448,7 +1464,8 @@
     27,
     28,
     29,
-    30
+    30,
+    31
   ],
-  "confirmed_new_github_pr_count_semantics": "Sixteen implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23, F22 -> #24, F23 -> #25, F24 -> #26, F25 -> #27, F26 -> #28, F27 -> #29 and F28 -> #30; none merged. GitHub #17 is not counted as a function implementation PR."
+  "confirmed_new_github_pr_count_semantics": "Seventeen implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23, F22 -> #24, F23 -> #25, F24 -> #26, F25 -> #27, F26 -> #28, F27 -> #29, F28 -> #30 and F29 -> #31; none merged. GitHub #17 is not counted as a function implementation PR."
 }
