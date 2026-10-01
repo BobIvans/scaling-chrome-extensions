@@ -1,10 +1,10 @@
 {
   "schema_version": "occ.wave33.v1",
-  "generated_at_utc": "2026-10-01T21:40:10+00:00",
+  "generated_at_utc": "2026-10-01T22:47:57+00:00",
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 17,
+  "confirmed_new_github_pr_count": 18,
   "next_function_number": 30,
   "items": [
     {
@@ -816,8 +816,8 @@
       "function_number": 30,
       "capability_id": "CAP-071",
       "title_ru": "Browser transport qualification",
-      "proposed_owner_anchor": "one-click-context/agent",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "one-click-context/library/browser-transport-qualification.mjs + qualification.html + agent-bridge/host.mjs",
+      "owner_status": "VERIFIED_HARNESS_EXACT_HEAD_CI_PASS_INSTALLED_DEVICE_INPUTS_BLOCKED",
       "related_candidate_ids": [
         "CAND-0701",
         "CAND-0702",
@@ -840,15 +840,33 @@
         "CAND-1709",
         "CAND-1710"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_HARNESS_EXACT_HEAD_CI_PASS_DEVICE_BLOCKED_INPUTS",
+      "github_pr_number": 32,
       "prerequisites_function_numbers": [
         29
       ],
       "acceptance": "Installed Chrome handshake/reconnect/revoke with exact package hash",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "verification": {
+        "python_tests": 137,
+        "native_tests": 37,
+        "extension_tests": 115,
+        "total": 289,
+        "result": "PASS",
+        "package_files": 40,
+        "package_tree_sha256": "4799d7aaa9234970a67ed4d0b4f56997635eb7c70a7ee37e6c21d04b0e8c9260",
+        "zip_sha256": "ccf69a0c0bbdf9503bce551351b0cc14b0b43ccdae15decfffbf42b49d7ed748",
+        "installed_windows_chrome_receipt": "BLOCKED_INPUTS",
+        "real_browser_dispatches": 0,
+        "real_provider_api_calls": 0
+      },
+      "implementation_doc": "docs/automation/F30_BROWSER_TRANSPORT_QUALIFICATION_RU.md",
+      "implementation_head_sha": "d4cc9d0c0f32d94c93dab98a9939b3f94c9ec07e",
+      "receipt_path": "docs/automation/runs/F30_BLOCKED_INPUTS_2026-10-01_2247Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-19",
@@ -1465,7 +1483,8 @@
     28,
     29,
     30,
-    31
+    31,
+    32
   ],
-  "confirmed_new_github_pr_count_semantics": "Seventeen implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23, F22 -> #24, F23 -> #25, F24 -> #26, F25 -> #27, F26 -> #28, F27 -> #29, F28 -> #30 and F29 -> #31; none merged. GitHub #17 is not counted as a function implementation PR."
+  "confirmed_new_github_pr_count_semantics": "Eighteen draft implementation PRs exist in this wave: F13 -> #14 through F29 -> #31 as previously recorded, plus F30 qualification harness -> #32. F30 is not counted in implemented_function_count because installed Windows Chrome evidence remains BLOCKED_INPUTS; none are merged. GitHub #17 is not counted as a function implementation PR."
 }

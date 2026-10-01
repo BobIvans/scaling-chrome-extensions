@@ -43,6 +43,15 @@ URL или options, а её текст помечен `DATA_ONLY`. Trusted UI/Es
 возвращает `transport_qualified=false`, `dispatch_allowed=false`; реальный
 установленный Chrome transport остаётся отдельной квалификацией.
 
+Ссылка «Квалификация установленного transport» открывает локальную страницу,
+которая по одному trusted click запрашивает optional `nativeMessaging`, сверяет
+каждый файл с `PACKAGE_IDENTITY.json`, делает два независимых handshake с exact
+extension ID/version/package-tree SHA-256 и затем отзывает разрешение. Одинаковый
+host session ID, stale/wrong nonce, несовпавший файл/hash или неуспешный revoke
+дают BLOCKED. PASS ничего не запускает и после проверки оставляет
+`nativeMessaging` отозванным. Реальный PASS требует установленного Windows Chrome
+и подготовленного host; репозиторные mocks его не заменяют.
+
 Экспериментальный WebMCP: в поддерживающем браузере зарегистрированы read_collection_counts и read_selected_collection_txt. Второй требует подтверждения передачи выбранного текста. Это не авторизация Codex/OpenClaw и не AI backend. Регистрация и вызовы через реальный агентный WebMCP-контекст пока не проверены.
 
 Зависимости vendored: fflate 0.8.3, pdfjs-dist 4.10.38. Лицензии в vendor. Код pdf.js не выполняет захваченные скрипты. Сборка под Chrome 116 сохраняет прежние разрешения; установка и PDF worker в настоящем Chrome требуют ручной проверки.

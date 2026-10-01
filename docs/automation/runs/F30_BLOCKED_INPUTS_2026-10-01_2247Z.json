@@ -1,0 +1,155 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 30,
+  "job_id": "occ-f30-browser-transport-qualification-20261001T2247Z",
+  "recorded_at_utc": "2026-10-01T22:47:57Z",
+  "state": "BLOCKED",
+  "blocker_code": "BLOCKED_INPUTS",
+  "completion_scope": "Deterministic installed-browser qualification harness implemented and exact-head CI verified; actual Windows Chrome handshake, reconnect and revoke receipt not observed",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f30-browser-transport-qualification",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/32",
+  "pr_number": 32,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f29-browser-action-contract",
+  "base_sha": "475b7ca3cb3ccf948ef9e69886c3657875636a9f",
+  "head_sha": "d4cc9d0c0f32d94c93dab98a9939b3f94c9ec07e",
+  "tested_tree_sha": "0a9d2cbcf00304d96c8f829f1031ba40432fca48",
+  "run_diff_sha256": "e2ab3a778a5365d935293c2a6e72d7e347177934fd5aead5b5e17a95510a0a45",
+  "head_semantics": "head_sha is the exact harness commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 31,
+    "previous_head_sha": "475b7ca3cb3ccf948ef9e69886c3657875636a9f",
+    "previous_exact_head_ci_run": 36930387096,
+    "previous_exact_head_ci": "success",
+    "open_f30_title_matches_before_write": [],
+    "duplicate_f30_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "Basic NativeClient hello/disconnect and ZIP hashing existed, but no owner bound installed package bytes to exact extension identity across two fresh host sessions and permission revoke",
+    "owner_audit": "agent-bridge remains the native transport owner and package_chrome_ready.py remains the Chrome bundle owner; no installed-device qualification receipt owner existed"
+  },
+  "official_contract_review": {
+    "verified_at_utc": "2026-10-01T22:18:00Z",
+    "native_messaging_source": "https://developer.chrome.com/docs/extensions/develop/concepts/native-messaging",
+    "runtime_source": "https://developer.chrome.com/docs/extensions/reference/api/runtime/#method-connectNative",
+    "service_worker_source": "https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle",
+    "verified_facts": [
+      "connectNative requires the nativeMessaging permission and returns a Port to a registered host",
+      "Chrome passes the calling extension origin to the native host",
+      "native host process lifetime is bound to the messaging port",
+      "onDisconnect is the observable boundary for host crash or port closure",
+      "MV3 implementations must account for native-host disconnect and explicit reconnect"
+    ]
+  },
+  "change": {
+    "package_identity_schema": "occ.extension-package-identity.v1",
+    "qualification_request_schema": "occ.browser-transport-qualification-request.v1",
+    "binding_schema": "occ.browser-transport-qualification-binding.v1",
+    "receipt_schema": "occ.browser-transport-qualification-receipt.v1",
+    "host_name": "com.one_click_context.codex",
+    "package_files": 40,
+    "package_tree_sha256": "4799d7aaa9234970a67ed4d0b4f56997635eb7c70a7ee37e6c21d04b0e8c9260",
+    "zip_sha256": "ccf69a0c0bbdf9503bce551351b0cc14b0b43ccdae15decfffbf42b49d7ed748",
+    "required_handshakes": 2,
+    "fresh_session_required": true,
+    "disconnect_observation_required": true,
+    "permission_revoke_required": true,
+    "action_dispatch_allowed": false,
+    "installed_device_result": "BLOCKED_INPUTS"
+  },
+  "fixture_coverage": {
+    "deterministic_package_identity": "verified",
+    "language_neutral_tree_digest": "verified",
+    "tampered_missing_or_reordered_package_file": "denied",
+    "wrong_extension_version_hash_host_or_nonce": "denied",
+    "same_host_session_on_reconnect": "denied",
+    "unobserved_disconnect": "denied",
+    "missing_or_failed_permission_revoke": "denied",
+    "page_scope": "only own chrome-extension package files; no tabs, scripting or browser action"
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 owner unchanged",
+    "library": "existing items/content_fts and Chrome records unchanged",
+    "job_queue": "existing jobs/job_events and Core claim owner unchanged",
+    "native_host": "existing agent-bridge JobHost extended with one strict qualification command",
+    "browser_actions": "F29 registered action set unchanged and never dispatched",
+    "voice_laya": "advisory-only owners unchanged",
+    "provider_budget": "hard cap remains zero",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python3 -m unittest content-lab/test_package_chrome_ready.py -v && node --test one-click-context/tests/browser-transport-qualification.test.mjs agent-bridge/host.test.mjs",
+      "result": "PASS",
+      "checks": 27,
+      "exit_code": 0,
+      "phase": "test iteration 1 before disconnect-observation and cross-language digest assertions"
+    },
+    {
+      "command": "python3 -m unittest discover -s content-lab -p 'test_*.py' -v && node --test agent-bridge/*.test.mjs && node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 289,
+      "exit_code": 0,
+      "phase": "test iteration 2 on exact implementation tree"
+    },
+    {
+      "command": "python3 one-click-context/scripts/package_chrome_ready.py <temporary-output> && node --check one-click-context/qualification.mjs && node --check one-click-context/library/browser-transport-qualification.mjs && node --check agent-bridge/host.mjs && python3 -m py_compile one-click-context/scripts/package_chrome_ready.py content-lab/test_package_chrome_ready.py && git diff --check",
+      "result": "PASS",
+      "checks": 7,
+      "exit_code": 0,
+      "phase": "static and deterministic package validation"
+    }
+  ],
+  "ci": {
+    "workflow": "Deterministic OCC core",
+    "run_id": 36937060112,
+    "run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36937060112",
+    "exact_head_sha": "d4cc9d0c0f32d94c93dab98a9939b3f94c9ec07e",
+    "status": "completed",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "name": "core (ubuntu-latest)",
+        "job_id": 110619678648,
+        "conclusion": "success"
+      },
+      {
+        "name": "core (windows-latest)",
+        "job_id": 110619678341,
+        "conclusion": "success"
+      }
+    ]
+  },
+  "blocked_inputs": {
+    "installed_windows_chrome": "required",
+    "exact_zip_loaded_unpacked": "required",
+    "registered_native_host_for_observed_extension_id": "required",
+    "trusted_qualification_click": "required",
+    "saved_qualified_receipt": "required",
+    "available_in_current_execution_environment": false
+  },
+  "effects": {
+    "chrome_started_or_modified": false,
+    "windows_registry_modified": false,
+    "native_host_installed_or_started": false,
+    "browser_action_dispatched": false,
+    "codex_or_durable_job_created": false,
+    "credential_read": false,
+    "real_provider_api_calls": 0,
+    "real_spend": 0,
+    "merge_or_deploy": false,
+    "signup_or_purchase": false,
+    "blockchain_sign_or_send": false
+  },
+  "limits": [
+    "Repository fixtures and CI do not substitute for an installed Chrome receipt.",
+    "TREE_SHA256 identifies installed package paths and bytes; ZIP_SHA256 separately identifies the archive.",
+    "A PASS receipt is valid only for its observed extension ID, version, tree hash and registered host.",
+    "Qualification revokes nativeMessaging and grants no browser-action authority.",
+    "No related CAND item is automatically closed."
+  ],
+  "next_function_number": 30,
+  "next_job": "On an authorized Windows device, load the exact ZIP, register the host with its observed extension ID/version/TREE_SHA256, run qualification.html once, and attach the resulting PASS receipt; do not advance to F31 before this evidence exists."
+}

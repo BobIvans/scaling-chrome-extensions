@@ -6,6 +6,7 @@ import {fileURLToPath} from 'node:url';
 import {DurableBridge,DURABLE_COMMANDS} from './durable.mjs';
 export const MAX_BYTES=2200000, CHUNK=49152, MAX_FRAME=262144;
 const hash=b=>createHash('sha256').update(b).digest('hex');
+const EXTENSION=/^[a-p]{32}$/, HEX=/^[0-9a-f]{64}$/, VERSION=/^[0-9]+\.[0-9]+\.[0-9]+(?:\.[0-9]+)?$/, UUID=/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/;
 export function encodeFrame(value){const bytes=Buffer.from(JSON.stringify(value));if(bytes.length>MAX_FRAME)throw Error('FRAME_LIMIT');const header=Buffer.alloc(4);header.writeUInt32LE(bytes.length);return Buffer.concat([header,bytes]);}
 export function decoder(onMessage,onError){let pending=Buffer.alloc(0),failed=false;return chunk=>{if(failed)return;try{pending=Buffer.concat([pending,chunk]);while(pending.length>=4){const size=pending.readUInt32LE();if(!size||size>MAX_FRAME)throw Error('FRAME_LIMIT');if(pending.length<size+4)return;const value=JSON.parse(pending.subarray(4,size+4).toString('utf8'));pending=pending.subarray(size+4);onMessage(value);}}catch(e){failed=true;onError(e);}};}
 export function codexArgs(directory,mode){if(!['analyze','build'].includes(mode))throw Error('MODE');return ['exec','--ignore-user-config',...(process.platform==='win32'?['-c','windows.sandbox="elevated"']:[]),'--sandbox',mode==='build'?'workspace-write':'read-only','--skip-git-repo-check','--ephemeral','--color','never','--json','--cd',directory,'--output-last-message',path.join(directory,'result.txt'),'-'];}
@@ -16,11 +17,17 @@ export function codexEnvironment(source=process.env){const env={...source};
  return env;
 }
 export class JobHost{
- constructor(config,{spawnProcess=spawn,durableSpawnProcess=spawn}={}){this.config=config;this.spawnProcess=spawnProcess;this.durable=new DurableBridge(config.durableCore,{spawnProcess:durableSpawnProcess});this.jobs=new Map();this.running=null;this.closed=false;}
+ constructor(config,{spawnProcess=spawn,durableSpawnProcess=spawn}={}){this.config=config;this.spawnProcess=spawnProcess;this.durable=new DurableBridge(config.durableCore,{spawnProcess:durableSpawnProcess});this.jobs=new Map();this.running=null;this.closed=false;this.sessionId=randomUUID();}
  async handle(m){
   if(this.closed)throw Error('CLOSED');
   if(!m||typeof m!=='object'||typeof m.type!=='string')throw Error('SCHEMA');
   if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false,supportedModes:this.config.allowBuild===true?['analyze','build']:['analyze'],...(this.durable.enabled?{durableCommands:DURABLE_COMMANDS}: {})};
+  if(m.type==='transport.qualify'){
+   const keys=['type','requestId','schema','nonce','extensionId','extensionVersion','packageTreeSha256'];
+   if(Object.keys(m).length!==keys.length||keys.some(key=>!Object.hasOwn(m,key))||m.schema!=='occ.browser-transport-qualification-request.v1'||!UUID.test(m.requestId)||!UUID.test(m.nonce)||!EXTENSION.test(m.extensionId)||!VERSION.test(m.extensionVersion)||!HEX.test(m.packageTreeSha256))throw Error('TRANSPORT_QUALIFY_SCHEMA');
+   if(this.config.extensionId!==m.extensionId||this.config.extensionVersion!==m.extensionVersion||this.config.packageTreeSha256!==m.packageTreeSha256)throw Error('TRANSPORT_PACKAGE_BINDING');
+   return {qualification:{schema:'occ.browser-transport-qualification-binding.v1',nonce:m.nonce,extension_id:m.extensionId,extension_version:m.extensionVersion,package_tree_sha256:m.packageTreeSha256,host_name:'com.one_click_context.codex',session_id:this.sessionId,action_dispatch_allowed:false}};
+  }
   if(m.type.startsWith('durable.'))return this.durable.handle(m);
   if(m.type==='list')return {jobs:[...this.jobs.values()].map(j=>this.summary(j))};
   if(m.type==='begin'){
