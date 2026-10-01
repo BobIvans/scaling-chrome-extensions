@@ -78,6 +78,38 @@ BEST_EFFORT. Receipt включает хеши модели, параметры,
 или memory sandbox. Начни с записи 60–120 секунд и запускай под внешним supervisor.
 Для одиночной записи VAD и diarization пока не включены.
 
+## Consent-bound RU/LV benchmark
+
+`asr_benchmark.py` использует существующий локальный `transcribe_file`, но принимает
+только строгий JSON suite с явными `owned_or_licensed=true` и
+`benchmark_use_authorized=true`. Каждый RU/LV case связывает относительный локальный
+audio-файл, ручной эталон и необязательную зарегистрированную action phrase.
+Абсолютные пути, symlink/path traversal, повторные ID/JSON keys, неизвестный язык,
+неполная consent-схема и изменение audio/model binding отклоняются.
+
+Скопируй `asr-benchmark.example.json`, укажи только собственные или лицензированные
+записи и проверенный локальный каталог модели, затем запусти без сети:
+
+```bash
+python content-lab/asr_benchmark.py \
+  --suite /selected/asr-suite.json \
+  --model-dir ./content-lab/models/whisper-small \
+  --output /selected/asr-report.json \
+  --threads 4
+```
+
+Report содержит общий WER, exact accepted-phrase action accuracy, p95 полной
+локальной latency и sampled peak RSS процесса. Transcript/reference text в report
+не попадает: сохраняются только SHA-256, counts и метрики. Неподдерживаемый RSS или
+отсутствующие action-cases остаются JSON `null` и перечисляются в
+`unknown_measurements`; они не превращаются в ноль. Action metric ничего не
+исполняет и всегда имеет `action_authority=false`, `dispatch_allowed=false`.
+
+В репозитории нет пользовательского audio или модели. Автотест использует fake
+backend и синтетические временные bytes только для контракта. Поэтому реальные
+RU/LV WER, p95 и RAM на Dell остаются неизвестными до отдельного разрешённого
+device run; результаты fake backend не являются качеством модели.
+
 ## Следующие эксперименты
 
 1. **ASR-CPU:** те же 3–5 минут RU/LV/EN для faster-whisper small/turbo,
