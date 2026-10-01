@@ -1,5 +1,6 @@
 import {convert,encode,digest,MAX_BYTES,safeName} from './convert.mjs';
 import {attachAgent} from './agent.mjs';
+import {attachVoicePreview} from './voice-preview.mjs';
 import {normalizedRecord,filterRecords,facets,restorePlan,applyRestorePlan,aggregateWorkspace,text as cleanText} from './workspace.mjs';
 
 const $=id=>document.getElementById(id);
@@ -102,6 +103,7 @@ loadDefaults();
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');if(saved){if(![1,2].includes(saved.version))throw Error('Версия не поддерживается.');records=validate(saved.records,currentDefaults());notice(saved.version===1?'Открыта и мигрирована локально библиотека v1; сохраните её для фиксации project/session metadata.':'Открыта библиотека, ранее сохранённая по согласию.');}}catch(e){notice('Сохранённая копия не открыта: '+e.message);}
 if(!globalThis.chrome?.runtime?.id){$('capture').disabled=true;for(const id of ['recent-load','recent-download','recent-clear'])$(id).disabled=true;$('capture').title='Снимки доступны в установленном расширении.';const home=document.querySelector('header a');home.href='/';home.textContent='Collect Data / Библиотека';}
 render();
+attachVoicePreview();
 agent=attachAgent({getSelection:()=>aggregateWorkspace(records.filter(r=>selected.has(r.id))),getEpoch:()=>epoch,addResult:async(value,token)=>add([{name:'Ответ локального агента',text:value,status:'EXTRACTED',warnings:['Результат AI: требует проверки по источникам.'],sha256:await digest(encode(value))}],'Локальный Codex',token)});
 
 const modelContext=document.modelContext;
