@@ -1,0 +1,156 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 22,
+  "job_id": "occ-f22-typed-goal-normalizer-20261001T1645Z",
+  "recorded_at_utc": "2026-10-01T16:45:29Z",
+  "state": "DONE",
+  "completion_scope": "Typed fail-closed goal, constraints, prohibitions, zero budget and single concurrency proposal before agent handoff",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f22-typed-goal-normalizer",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/24",
+  "pr_number": 24,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f21-independent-voice-cancel",
+  "base_sha": "4da4482dc68e89a54bdaaa629fb007fd0aaf9d9a",
+  "head_sha": "90912948d4e1d1b89b853c3aaac91389d0929045",
+  "tested_tree_sha": "406003ead05232783b9e9d66524c5e2abccbe712",
+  "run_diff_sha256": "637a3c05a8fcc08ac72787f342de12ba48018e5002640e8b8ec1fe23ab8872b6",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 23,
+    "previous_head_sha": "4da4482dc68e89a54bdaaa629fb007fd0aaf9d9a",
+    "previous_exact_head_ci_run": 36887104953,
+    "previous_exact_head_ci": "success",
+    "open_f22_prs_before_write": [],
+    "duplicate_f22_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "Agent UI submitted one free-form instruction without typed goal/constraints/prohibitions or explicit budget/concurrency binding",
+    "owner_audit": "agent.mjs remains the Codex handoff owner; Native Host, durable UI, SQLite library and canonical job queue remain unchanged"
+  },
+  "change": {
+    "owner": "one-click-context/library/agent.mjs",
+    "pure_normalizer": "one-click-context/library/goal-normalizer.mjs",
+    "extension_version": "0.12.0",
+    "proposal_schema": "occ.goal-proposal.v1",
+    "required_fields": [
+      "goal",
+      "constraints",
+      "prohibitions",
+      "money_budget",
+      "max_parallel"
+    ],
+    "money_budget": 0,
+    "max_parallel": 1,
+    "action_authority": false,
+    "negation_markers": "RU/EN/LV semantic markers reject as ambiguous",
+    "local_preview_dispatch": false,
+    "trusted_run_revalidates": true,
+    "network_or_provider_call_added": false,
+    "queue_or_action_dispatch_added": false
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 unchanged",
+    "library": "existing one-click-context library records unchanged",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged",
+    "durable_ui": "one-click-context/library/durable-ui.mjs unchanged",
+    "voice": "voice transcript remains unbound and has no goal/router/queue authority",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "node --test one-click-context/tests/goal-normalizer.test.mjs one-click-context/tests/durable-ui.test.mjs",
+      "result": "PASS",
+      "checks": 25,
+      "exit_code": 0,
+      "phase": "focused; included in final extension discovery"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 88,
+      "exit_code": 0
+    },
+    {
+      "command": "python one-click-context/scripts/package_chrome_ready.py <temporary-directory>",
+      "result": "PASS",
+      "checks": 34,
+      "exit_code": 0,
+      "artifact_tracked": false,
+      "package_sha256": "545ff3534d303142856e4365c583039019688e1e69972caeb61c9c57eb241505"
+    },
+    {
+      "command": "python -m json.tool docs/automation/functions-wave33.json >/dev/null && python -m json.tool docs/automation/runs/F22_2026-10-01_1645Z.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_local_regression_checks": 218,
+  "focused_checks_overlap_warning": "The 25 focused checks are included in the 88 extension checks; package entries are validation evidence and are not added to 218.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "90912948d4e1d1b89b853c3aaac91389d0929045",
+    "run": {
+      "id": 36894143112,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36894143112"
+    },
+    "checks": [
+      {
+        "id": 110476769039,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36894143112/job/110476769039"
+      },
+      {
+        "id": 110476769368,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36894143112/job/110476769368"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "test_attempts": 1,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "network_content_fetches": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F22 remains a draft PR and is not merged or deployed.",
+    "No installed Windows Chrome or real Codex CLI job was exercised; Native Host integration uses deterministic test ports.",
+    "The negation detector is a bounded RU/EN/LV lexical guard, not semantic language understanding.",
+    "Budget 0 is a policy boundary and not a claim that any provider grants free quota.",
+    "Proposal normalization does not route, enqueue or execute an action.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 23,
+  "next_job": "Audit current routing owners, then implement at most one advisory-only rules baseline and held-out route evaluator over occ.goal-proposal.v1 with schema validation and no execution authority from confidence."
+}
