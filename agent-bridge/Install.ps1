@@ -12,6 +12,13 @@ $occDestination=[IO.Path]::GetFullPath($Destination)
 if(Test-Path -LiteralPath $occDestination){throw 'Destination already exists. Use another explicit directory; existing installs are never overwritten.'}
 New-Item -ItemType Directory -Path $occDestination | Out-Null
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'host.mjs') -Destination $occDestination
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'durable.mjs') -Destination $occDestination
+# Preserve the adapter's sibling layout. Durable access remains opt-in in host-config.json.
+$occContentDestination=Join-Path $occDestination 'content-lab'
+New-Item -ItemType Directory -Path $occContentDestination | Out-Null
+foreach($occFile in @('native_adapter.py','automation_core.py','content_lab.py')){
+ Copy-Item -LiteralPath (Join-Path (Join-Path $PSScriptRoot '../content-lab') $occFile) -Destination $occContentDestination
+}
 & $occCompiler /nologo /target:exe /reference:System.Web.Extensions.dll "/out:$occDestination/occ-native-host.exe" (Join-Path $PSScriptRoot 'NativeHost.cs')
 if($LASTEXITCODE -ne 0){throw 'Compilation failed; registry unchanged.'}
 $occConfig=@{extensionId=$ExtensionId;nodePath=$occNode;codexPath=$occCodex;dataRoot=(Join-Path $occDestination 'jobs')}

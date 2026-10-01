@@ -37,7 +37,7 @@ jobs:
       - name: Content and durable automation contracts
         run: python -m unittest discover -s content-lab -p 'test_*.py' -v
       - name: Existing native bridge regression
-        run: node --test agent-bridge/host.test.mjs agent-bridge/client.test.mjs
+        run: node --test agent-bridge/*.test.mjs
       - name: Existing extension regression
         shell: bash
         run: node --test one-click-context/tests/*.test.*
