@@ -268,6 +268,53 @@ class AutomationTests(unittest.TestCase):
         self.snapshot.write_text(json.dumps(snapshot))
         self.assertEqual(self.core.poll_ci()[0]["state"], "FAILED")
 
+    def test_authenticated_ci_origin_is_bound_to_registered_repository_and_checks(self):
+        _, old_id = self.patch_fixture()
+        payload = self.core.get(old_id)["payload"]
+        self.core.cancel(old_id)
+        self.policy["repos"]["fixture"]["ci"]["transport"] = {
+            "kind": "github_check_runs_v1", "repository": "owner/repo",
+            "token_env": "OCC_GITHUB_TOKEN", "timeout_seconds": 10, "max_pages": 2}
+        self.core = ac.Core(self.store, self.policy)
+        job_id = ac.enqueue(self.store, self.policy, "authenticated", payload)["id"]
+        self.assertEqual(self.core.run_once()["state"], "WAITING_CI")
+        snapshot = self.snapshot_for(job_id, origin="authenticated_github_check_runs_v1")
+        snapshot.update(repository="owner/repo", required_checks=["test", "lint"],
+                        transport_status="OBSERVED")
+        self.snapshot.write_text(json.dumps(snapshot))
+        self.assertEqual(self.core.poll_ci()[0]["state"], "SUCCEEDED")
+        self.assertEqual(self.core.get(job_id)["result"]["evidence_origin"],
+                         "authenticated_github_check_runs_v1")
+
+    def test_authenticated_ci_mismatch_or_blocked_transport_never_passes(self):
+        _, old_id = self.patch_fixture()
+        payload = self.core.get(old_id)["payload"]
+        self.core.cancel(old_id)
+        self.policy["repos"]["fixture"]["ci"]["transport"] = {
+            "kind": "github_check_runs_v1", "repository": "owner/repo",
+            "token_env": "OCC_GITHUB_TOKEN"}
+        self.core = ac.Core(self.store, self.policy)
+        job_id = ac.enqueue(self.store, self.policy, "authenticated-blocked", payload)["id"]
+        self.core.run_once()
+        base = self.snapshot_for(job_id, origin="authenticated_github_check_runs_v1")
+        base.update(repository="owner/repo", required_checks=["test", "lint"],
+                    transport_status="OBSERVED")
+        for change in ({"repository": "other/repo"}, {"required_checks": ["test"]},
+                       {"transport_status": "BLOCKED"}):
+            snapshot = {**base, **change}
+            self.snapshot.write_text(json.dumps(snapshot))
+            self.assertEqual(self.core.poll_ci(), [])
+        self.assertEqual(self.core.get(job_id)["state"], "WAITING_CI")
+
+    def test_policy_rejects_unregistered_ci_transport_shape(self):
+        _, old_id = self.patch_fixture()
+        self.core.cancel(old_id)
+        ci_policy = self.policy["repos"]["fixture"]["ci"]
+        ci_policy["transport"] = {"kind": "github_check_runs_v1",
+                                  "repository": "owner/repo", "token_env": "TOKEN"}
+        with self.assertRaisesRegex(ValueError, "CI_TRANSPORT_SCHEMA"):
+            ac.enqueue(self.store, self.policy, "bad-transport", self.core.get(old_id)["payload"])
+
     def test_changed_patch_is_blocked_before_test_execution(self):
         repo, job_id = self.patch_fixture()
         path = Path(self.policy["repos"]["fixture"]["patches"]["p0"]["file"])

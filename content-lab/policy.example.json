@@ -20,7 +20,14 @@
       "retry_delay_seconds": 5,
       "ci": {
         "snapshot_file": "/absolute/path/operator-ci.json",
-        "required_checks": ["core (ubuntu-latest)", "core (windows-latest)"]
+        "required_checks": ["core (ubuntu-latest)", "core (windows-latest)"],
+        "transport": {
+          "kind": "github_check_runs_v1",
+          "repository": "OWNER/REPOSITORY",
+          "token_env": "OCC_GITHUB_TOKEN",
+          "timeout_seconds": 15,
+          "max_pages": 10
+        }
       }
     }
   }
