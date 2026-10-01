@@ -14,6 +14,12 @@
 `NEEDS_RECONCILIATION`, а retry требует доказанного `RELEASED` и ограничен тремя
 попытками. Модуль сам не вызывает API и текущий `money_budget=0` не меняет.
 
+`openai_responses_adapter.py` — backend-only Responses transport: фиксированный
+OpenAI endpoint, secret только из `OCC_OPENAI_API_KEY`, обязательная reservation
+до чтения secret/send и fail-closed reconciliation неизвестного исхода. Adapter
+не доступен из browser/voice, не делает auto-retry и при текущем нулевом budget
+не может выполнить provider call.
+
 ## 12 функций и доступ
 
 | Функция | Доступ сейчас | Результат |
