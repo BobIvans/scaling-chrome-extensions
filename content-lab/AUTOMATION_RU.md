@@ -20,6 +20,12 @@ OpenAI endpoint, secret только из `OCC_OPENAI_API_KEY`, обязател
 не доступен из browser/voice, не делает auto-retry и при текущем нулевом budget
 не может выполнить provider call.
 
+`hf_chat_adapter.py` использует только фиксированный HF chat endpoint и
+операторский registry точных `model:provider` routes. Динамические/cheapest/fastest
+routes, fallback, retry и `X-HF-Bill-To` не добавляются; 401/402/429 останавливают
+вызов. Token читается backend-only после reservation, а текущий нулевой budget
+по-прежнему блокирует transport.
+
 ## 12 функций и доступ
 
 | Функция | Доступ сейчас | Результат |
