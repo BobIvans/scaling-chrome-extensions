@@ -119,6 +119,10 @@ def normalize_export(
                 "source_kind": "telegram_export", "coverage": "EXPORTED_RECORD_ONLY",
                 "access_class": "PRIVATE_PROJECTS", "authority": "UNTRUSTED_DATA",
                 "date": message.get("date"), "edited": message.get("edited"),
+                "author": {"name": message.get("from"), "id": message.get("from_id")},
+                "conversation_title": chat.get("name"),
+                "reply_to_message_id": message.get("reply_to_message_id"),
+                "forwarded_from": message.get("forwarded_from"),
                 "text": text, "segments": [], "asr_status": "NOT_APPLICABLE",
                 "model_id": None, "audio_sha256": None,
             }
@@ -151,7 +155,8 @@ def render_markdown(records: list[dict[str, Any]]) -> str:
     for record in records:
         output += [f"## {record['source_id']}",
                    f"Record SHA-256: {record['record_sha256']}",
-                   f"Date: {record['date']}; ASR: {record['asr_status']}", "",
+                   f"Date: {record['date']}; ASR: {record['asr_status']}",
+                   "Author: " + json.dumps(record["author"], ensure_ascii=False), "",
                    record["text"], ""]
         for segment in record["segments"]:
             output.append(f"[{segment['start']:.2f}–{segment['end']:.2f}] {segment['text']}")
@@ -221,7 +226,7 @@ def main() -> int:
                                    authorized=args.authorized_export,
                                    transcribe=transcribe, model_id=model_id)
         write_bundle(args.out, records, sha256(raw))
-    except (OSError, ValueError, PermissionError, ImportError) as exc:
+    except (OSError, ValueError, PermissionError, ImportError, RuntimeError) as exc:
         # Do not print raw message text, credentials or full media paths in shared logs.
         print(json.dumps({"status": "BLOCKED", "error_type": type(exc).__name__}))
         return 2
