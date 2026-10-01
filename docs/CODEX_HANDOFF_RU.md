@@ -5,14 +5,14 @@
 
 ## Текущая точка
 
-F-18 начата в draft PR [#20](https://github.com/BobIvans/scaling-chrome-extensions/pull/20),
-stacked на #19. Code head `4037a67c79c93f1386420c2ce971d33a7eb8305e`:
-199 локальных проверок PASS; exact-head CI Ubuntu PASS, Windows BLOCKED.
-Причина Windows известна: `test_library_records.py::rows` не закрывает read-only
-SQLite connection, поэтому cleanup получает `WinError 32`; production assertions
-до teardown прошли. Receipt: `docs/automation/runs/F18_2026-10-01_1145Z.json`.
-Следующая работа остаётся F-18: закрыть test connection через `contextlib.closing`,
-повторить полный exact-head CI и обновить этот же PR, не создавая новый.
+F-18 реализована в draft PR [#20](https://github.com/BobIvans/scaling-chrome-extensions/pull/20),
+stacked на #19. Code head `be561e9c9b0a8abe82b03950dae2b334386f5f0e`:
+199 локальных проверок и exact-head CI Ubuntu/Windows PASS. Versioned Chrome
+record transport применяет revision/parent CAS и tombstones к существующему
+`content.sqlite3`, сохраняя provenance и текущие `items/sync_heads` owners.
+Windows-only test connection leak из первого прохода закрыт и повторно проверен.
+Receipt: `docs/automation/runs/F18_RECONCILIATION_2026-10-01_1242Z.json`.
+Следующая функция: F-19 — инвентарь разрешённых вложений после свежего owner audit.
 Номер функции не является номером GitHub PR. #20 не merged.
 
 Предыдущая точка:
@@ -54,8 +54,8 @@ F-13 — typed Native Host bridge к этому owner: поиск/контекс
 Его фактический PR/head и GitHub CI фиксируются отдельным receipt после публикации.
 Наличие adapter не доказывает установку в Windows Chrome.
 
-**Следующий номер для продолжения: 18.** Продолжить reconciliation в draft #20:
-исправить только Windows test connection leak и повторить exact-head CI.
+**Следующий номер для продолжения: 19.** F-18 покрыта draft #20; перед F-19
+проверь текущие attachment/artifact inventory owners и не выполняй auto-fetch.
 
 ## Система номеров
 
@@ -77,7 +77,7 @@ Wave пересекается с каталогом: **2000 + 33 не означ
 1. Получи актуальные head/base/default SHA, открытые PR и точные CI checks.
    Прочитай `AGENTS.md`, если он появился, и действующий owner до правок.
 2. Сверь последние receipts и overlapping PR. Выбери один подтверждённый gap
-   из wave по dependencies; сначала заверши F-18 reconciliation в существующем #20. При изменении head повтори аудит.
+   из wave по dependencies; после проверки F-18 receipt начни owner audit F-19. При изменении head повтори аудит.
 3. Один repo writer. Отдельная ветка/worktree от выбранного чистого SHA;
    подготовь минимальный diff, сохраняющий существующие публичные контракты.
 4. Запусти относящиеся к изменению meaningful regression/fault tests.
