@@ -13,6 +13,8 @@ if(Test-Path -LiteralPath $occDestination){throw 'Destination already exists. Us
 New-Item -ItemType Directory -Path $occDestination | Out-Null
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'host.mjs') -Destination $occDestination
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'durable.mjs') -Destination $occDestination
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'qualification.mjs') -Destination $occDestination
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'qualification_adapter.py') -Destination $occDestination
 # Preserve the adapter's sibling layout. Durable access remains opt-in in host-config.json.
 $occContentDestination=Join-Path $occDestination 'content-lab'
 New-Item -ItemType Directory -Path $occContentDestination | Out-Null
