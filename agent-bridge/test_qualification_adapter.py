@@ -110,6 +110,15 @@ class QualificationAdapterTests(unittest.TestCase):
                     value | {"bot_bridge_script": str(wrong.resolve())}
                 )
 
+    def test_historical_qualification_owner_cannot_be_rebound_as_current_script(self):
+        with tempfile.TemporaryDirectory() as d:
+            occ, bot, output, script = fixture(Path(d))
+            historical = bot / 'scripts' / 'run_qualification_task.py'
+            historical.write_text('# closed PR donor fixture\n', encoding='utf-8')
+            with self.assertRaisesRegex(ValueError, 'NOT_CANONICAL'):
+                q.verify_profile_paths(profile(occ, bot, output, script) |
+                                       {'bot_bridge_script': str(historical.resolve())})
+
     def test_blocked_bot_result_is_valid_and_replayed_without_second_execution(self):
         with tempfile.TemporaryDirectory() as d:
             root = Path(d)

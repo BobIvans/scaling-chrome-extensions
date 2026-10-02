@@ -1,0 +1,123 @@
+{
+  "schema_version": "occ-paper-campaign-proposal.v1",
+  "status": "BLOCKED_NOT_STARTED",
+  "native_adapter_compatible": false,
+  "warning": "A proposed future market campaign contract. Do NOT pass this file to run_qualification_task.py or Laya /v1/systemone.",
+  "goal": "Test whether a reproducible net edge exists after modeled costs; negative results are valid.",
+  "repository": "BobIvans/studious-pancake",
+  "trusted_source_commit": null,
+  "campaign_id": "paper-24h-proposal-001",
+  "campaign_duration_seconds": 86400,
+  "checkpoint_interval_seconds": 3600,
+  "singleton_campaign": true,
+  "execution": {
+    "mode": "SENDER_FREE_OBSERVATION_AND_REPLAY",
+    "implemented_in_this_package": false,
+    "provider_allowlist": [],
+    "wallet_access": false,
+    "signer_access": false,
+    "send_transactions": false,
+    "send_bundles": false,
+    "auto_live_promotion": false,
+    "marginfi_policy": "PRESERVE_PAUSED"
+  },
+  "admission_requirements": [
+    "canonical_paper_vertical_wired",
+    "exact_source_and_installed_package_verified",
+    "existing_source_rights_and_capability_gates_pass",
+    "provider_quota_and_budget_approved",
+    "data_capture_and_point_in_time_consistency_verified",
+    "cost_model_units_and_no_double_counting_reviewed",
+    "heldout_protocol_frozen",
+    "stop_controls_verified"
+  ],
+  "data": {
+    "frozen_dataset_hash": null,
+    "source_ids": [],
+    "clock_basis": "UTC_with_monotonic_latency",
+    "fields": [
+      "observation_id",
+      "source_event_time",
+      "received_at",
+      "slot",
+      "slot_lag",
+      "pool_state_hash",
+      "quote_age_ms",
+      "route",
+      "input_amount",
+      "quoted_output",
+      "simulated_output",
+      "simulation_error",
+      "compute_units",
+      "expected_priority_fee",
+      "expected_jito_tip",
+      "flashloan_fee",
+      "gas_token_conversion_basis",
+      "failure_cost_assumption"
+    ],
+    "private_telegram_as_market_truth": false
+  },
+  "cost_model": {
+    "unit": "same_quote_asset_for_all_components",
+    "net_edge": "final_quote_asset_after_round_trip - initial_quote_asset - explicit_costs_not_already_embedded",
+    "reject_double_counting_embedded_swap_fees_or_slippage": true,
+    "fees_need_actual_source_and_effective_date": true,
+    "infrastructure_cost_amortization_required": true,
+    "fills_and_landing": "modeled_or_unmeasured_when_no_transactions_sent"
+  },
+  "metrics": [
+    "sample_count",
+    "rejected_stale_or_inconsistent_count",
+    "quote_to_simulation_error",
+    "latency_p50_p95_p99",
+    "slot_lag",
+    "cost_adjusted_pnl",
+    "failure_rate",
+    "drawdown_under_model",
+    "holdout_stability",
+    "missing_data_ratio",
+    "provider_rate_limit_events"
+  ],
+  "thresholds": {
+    "min_observations": null,
+    "max_missing_fraction": null,
+    "max_quote_age_ms": null,
+    "max_p95_latency_ms": null,
+    "min_net_edge_after_costs": null,
+    "confidence_interval_method": null
+  },
+  "threshold_policy": "Freeze justified thresholds before holdout evaluation; missing required settings block admission.",
+  "stop_on": [
+    "duration_exhausted",
+    "user_stop",
+    "budget_exhausted",
+    "source_rights_revoked",
+    "unapproved_endpoint",
+    "stale_or_inconsistent_state",
+    "capability_gate_failure",
+    "sustained_provider_errors"
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "NO_EVIDENCE",
+    "NEGATIVE_EDGE",
+    "INCONCLUSIVE",
+    "POSITIVE_PAPER_EDGE_REQUIRES_REPLICATION"
+  ],
+  "profitability_proven": false,
+  "realized_profit": null,
+  "market_campaign_executed": false,
+  "receipt_requirements": [
+    "source_commit",
+    "configuration_hash",
+    "dataset_hash",
+    "cost_model_version",
+    "trial_registry",
+    "started_at",
+    "ended_at",
+    "clock_method",
+    "raw_log_digests",
+    "missing_evidence",
+    "observed_vs_modeled_labels"
+  ]
+}
