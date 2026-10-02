@@ -5,6 +5,18 @@
 
 ## Текущая точка
 
+F-14 реализована в draft PR [#15](https://github.com/BobIvans/scaling-chrome-extensions/pull/15),
+stacked на #14. Code head `561d7f30bb95541d2404f011201f948cb846c8cf`:
+136 локальных проверок, exact-head CI Linux/Windows PASS.
+Receipt: `docs/automation/runs/F14_2026-10-01_0736Z.json`.
+Receipt attests указанный code commit; для более нового containing commit проверь CI отдельно.
+UI показывает known job references и current search/context; это не полный durable.list.
+Windows Chrome installation и device transport не квалифицированы.
+Дальнейшая точка: F-15 — один bounded local scheduler поверх существующего Core.
+Номер функции не является номером GitHub PR. #15 не merged.
+
+Историческая базовая точка ниже:
+
 Core находится в draft PR [#13](https://github.com/BobIvans/scaling-chrome-extensions/pull/13),
 head `0e0aa7509850ca5a1b73633f183dfc394ca0e497`, base `codex/hf-content-lab` (#11).
 На этом head выполнены 107 локальных проверок; GitHub CI Linux/Windows прошёл.
@@ -22,8 +34,8 @@ F-13 — typed Native Host bridge к этому owner: поиск/контекс
 Его фактический PR/head и GitHub CI фиксируются отдельным receipt после публикации.
 Наличие adapter не доказывает установку в Windows Chrome.
 
-**Следующий номер для продолжения: 14.** F-14 — UI очереди и поиск/context через bridge.
-Сначала проверить фактический owner и diff открытых PR, затем реализовать отсутствующий UI путь.
+**Следующий номер для продолжения: 15.** F-14 UI путь покрыт draft #15.
+Перед F-15 проверь актуальные head/receipts и CI; сохранить existing Core lease и очередь.
 
 ## Система номеров
 
@@ -45,7 +57,7 @@ Wave пересекается с каталогом: **2000 + 33 не означ
 1. Получи актуальные head/base/default SHA, открытые PR и точные CI checks.
    Прочитай `AGENTS.md`, если он появился, и действующий owner до правок.
 2. Сверь последние receipts и overlapping PR. Выбери один подтверждённый gap
-   из wave по dependencies; начни с F-14. При изменении head повтори аудит.
+   из wave по dependencies; после проверки F-14 receipt начни с F-15. При изменении head повтори аудит.
 3. Один repo writer. Отдельная ветка/worktree от выбранного чистого SHA;
    подготовь минимальный diff, сохраняющий существующие публичные контракты.
 4. Запусти относящиеся к изменению meaningful regression/fault tests.

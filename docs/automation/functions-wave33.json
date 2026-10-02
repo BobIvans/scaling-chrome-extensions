@@ -4,8 +4,8 @@
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 0,
-  "next_function_number": 14,
+  "confirmed_new_github_pr_count": 2,
+  "next_function_number": 15,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -58,8 +58,8 @@
       "function_number": 14,
       "capability_id": "CAP-065",
       "title_ru": "UI очереди и search/context",
-      "proposed_owner_anchor": "one-click-context/agent/bridge-client.mjs",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "one-click-context/library/agent.mjs::attachAgent + durable-ui.mjs",
+      "owner_status": "VERIFIED_EXISTING_NATIVE_HOST_SQLITE_OWNER",
       "related_candidate_ids": [
         "CAND-0641",
         "CAND-0642",
@@ -82,15 +82,20 @@
         "CAND-1649",
         "CAND-1650"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 15,
       "prerequisites_function_numbers": [
         13
       ],
       "acceptance": "UI calls durable host; pending/error/cancel display derives from job receipt",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "implementation_doc": "docs/automation/F14_UI_RU.md",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE",
+      "implementation_head_sha": "561d7f30bb95541d2404f011201f948cb846c8cf",
+      "receipt_path": "docs/automation/runs/F14_2026-10-01_0736Z.json"
     },
     {
       "wave_id": "WAVE-03",
@@ -1316,5 +1321,11 @@
       "paid_api_budget_default": 0,
       "max_attempts": 3
     }
-  ]
+  ],
+  "implemented_function_count": 2,
+  "actual_implementation_pr_numbers": [
+    14,
+    15
+  ],
+  "confirmed_new_github_pr_count_semantics": "Two implementation PRs in this wave: F13 -> #14, F14 -> #15. Only #15 was created in the current F14 run; none merged."
 }
