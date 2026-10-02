@@ -1,5 +1,10 @@
 # OCC intake и сохраняемые review-сессии
 
+Git-backed full-repository indexing и законченный repo/review UI описаны в
+[context foundation](context-foundation.md). Existing bounded inbox intake ниже
+сохраняется; для полного Git inventory используется новый cursor owner в том же
+store. Generic client base_repo_sha остаётся UNBOUND, Git binding проверяется отдельно.
+
 Интеграция двух ZIP от 2026-10-02 в `BobIvans/scaling-chrome-extensions`.
 Точные хеши входных архивов и карта реализованного/оставшегося:
 [occ-package-reconciliation.json](occ-package-reconciliation.json).
