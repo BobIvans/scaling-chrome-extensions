@@ -17,7 +17,7 @@ const fields={
  'durable.repo.list':[],
  'durable.repo.scan':['repository','snapshotId'],
  'durable.repo.get':['repository','snapshotId','offset'],
- 'durable.repo.export':['repository','snapshotId','paths','goal','scope','acceptance','maxBytes']
+ 'durable.repo.export':['repository','snapshotId','paths','goal','scope','acceptance','maxBytes','sourceOffset']
 };
 export function durableEnvironment(source=process.env){
  const env={PYTHONUTF8:'1',PYTHONIOENCODING:'utf-8'};

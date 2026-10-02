@@ -39,20 +39,29 @@ test('source selection and import cannot add paths, commands or execution author
  await assert.rejects(s.import('code','{"x":1,"x":2}'),/DUPLICATE/);
 });
 
+test('next context part sends the disclosed source cursor without changing repo/snapshot selection',async()=>{
+ const {s,calls}=setup(op=>response(op,{snapshot}));await s.scan();s.select('main.py',true);
+ s.durable.request=async(op,args)=>{calls.push({op,args});return response(op,{export:{document:{schema:'occ.repo-request.v1',selection:{next_source_offset:4}},review:status}});};
+ await s.export('goal','scope',['criterion']);await s.export('goal','scope',['criterion'],s.exported.document.selection.next_source_offset);
+ assert.equal(calls.at(-1).args.sourceOffset,4);assert.equal(calls.at(-1).args.snapshotId,snapshotId);assert.deepEqual(calls.at(-1).args.paths,['main.py']);
+ await assert.rejects(s.export('goal','scope',['criterion'],-1),/OFFSET_REQUIRED/);
+});
+
 class Element{
  constructor(){this.children=[];this.value='';this.disabled=false;this.checked=false;this._text='';}
  set textContent(v){this._text=String(v);}get textContent(){return this._text;}
  set innerHTML(_value){throw Error('Unsafe source rendering');}
  append(...children){this.children.push(...children);}replaceChildren(...children){this.children=[...children];}
 }
-function dom(){const ids=['repo-panel','repo-status','repo-list','repo-scan','repo-rescan','review-list','review-import','repo-export','repo-next','repo-prev','repo-copy','repo-download','repo-repository','repo-progress','repo-files','repo-goal','repo-scope','repo-acceptance','repo-output','review-sessions','review-details','review-next-request','review-namespace','review-input','review-file'];const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));return {elements,document:{getElementById:id=>elements[id],createElement:()=>new Element()}};}
+function dom(){const ids=['repo-panel','repo-status','repo-list','repo-scan','repo-rescan','review-list','review-import','repo-export','repo-export-next','repo-coverage','repo-next','repo-prev','repo-copy','repo-download','repo-repository','repo-progress','repo-files','repo-goal','repo-scope','repo-acceptance','repo-output','review-sessions','review-details','review-next-request','review-namespace','review-input','review-file'];const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));return {elements,document:{getElementById:id=>elements[id],createElement:()=>new Element()}};}
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 test('production view wires repo selection → scan → finding → request → review with text-only rendering',async()=>{
  const {elements:e,document}=dom(),calls=[];
- const durable={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});if(op==='durable.repo.list')return response(op,{repositories:[{repository:'sce',namespace:'code'}]});if(op==='durable.repo.scan')return response(op,{snapshot});if(op==='durable.repo.export')return response(op,{export:{document:{schema:'occ.repo-request.v1',goal:'fixture'},review:status}});if(op==='durable.review.list')return response(op,{reviews:[status]});return response(op,{review:{...status,coverage:{reviewed:['main.py']},finding_details:[{finding_id:'F1',criterion:'<img src=evil>',disposition:'DONE'}]}});}};
+ const durable={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});if(op==='durable.repo.list')return response(op,{repositories:[{repository:'sce',namespace:'code'}]});if(op==='durable.repo.scan')return response(op,{snapshot});if(op==='durable.repo.export')return response(op,{export:{document:{schema:'occ.repo-request.v1',goal:'fixture',selection:{source_offset:args.sourceOffset||0,next_source_offset:4,source_total:8,omitted_count:4,coverage:'PARTIAL'}},review:status}});if(op==='durable.review.list')return response(op,{reviews:[status]});return response(op,{review:{...status,coverage:{reviewed:['main.py']},finding_details:[{finding_id:'F1',criterion:'<img src=evil>',disposition:'DONE'}]}});}};
  const view=attachRepoReviewView({document,session:durable});view.connect();e['repo-list'].onclick({isTrusted:false});await flush();assert.equal(calls.length,0);
  e['repo-list'].onclick({isTrusted:true});await flush();e['repo-scan'].onclick({isTrusted:true});await flush();assert.match(e['repo-progress'].textContent,/1\/1/);
  e['repo-files'].children[0].children[2].onclick({isTrusted:true});e['repo-scope'].value='current owner';e['repo-acceptance'].value='test criterion';e['repo-export'].onclick({isTrusted:true});await flush();assert.match(e['repo-output'].value,/fixture/);
+ assert.equal(e['repo-export-next'].disabled,false);e['repo-export-next'].onclick({isTrusted:true});await flush();assert.equal(calls.at(-1).args.sourceOffset,4);
  e['review-input'].value=JSON.stringify({session_id:sessionId});e['review-import'].onclick({isTrusted:true});await flush();assert.match(e['review-details'].textContent,/<img src=evil>/);assert.match(e['review-next-request'].value,/VERIFY_CRITERION_EVIDENCE/);
  view.disconnect();assert.equal(e['repo-output'].value,'');assert.equal(view.state.review,null);
 });

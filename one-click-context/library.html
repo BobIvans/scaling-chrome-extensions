@@ -39,7 +39,7 @@
 <label>Цель review<textarea id="repo-goal" maxlength="4000" placeholder="Например: проверить обработку удаления источника."></textarea></label>
 <label>Принятая область изменений<textarea id="repo-scope" maxlength="2000" placeholder="Владелец функции, контракты и допустимые изменения."></textarea></label>
 <label>Критерии приёмки, по одному на строку<textarea id="repo-acceptance" maxlength="4000" placeholder="Например: deletion делает прежний review stale."></textarea></label>
-<div class="actions"><button id="repo-export" disabled>Экспортировать запрос для AI</button><button id="repo-copy" disabled>Копировать запрос</button><button id="repo-download" disabled>Скачать запрос JSON</button></div>
+<div class="actions"><button id="repo-export" disabled>Экспортировать запрос для AI</button><button id="repo-export-next" disabled>Следующая часть контекста</button><button id="repo-copy" disabled>Копировать запрос</button><button id="repo-download" disabled>Скачать запрос JSON</button></div><p id="repo-coverage" role="status"></p>
 <textarea id="repo-output" readonly aria-label="Запрос AI с проверенными исходниками и coverage"></textarea>
 <p class="note">Запрос содержит выбранные фрагменты, статические Python dependencies, SHA и пропуски. Большие файлы дробятся; omitted sources требуют продолжения. JavaScript пока учитывается как текст, без заявления о syntax/dependency coverage.</p>
 <div class="actions"><label>Review namespace<input id="review-namespace" value="code" maxlength="100"></label><button id="review-list" disabled>Показать review sessions</button></div><div id="review-sessions"></div>

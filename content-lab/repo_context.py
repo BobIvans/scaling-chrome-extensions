@@ -366,8 +366,9 @@ def verify_source_item(db, chunk):
         raise ValueError('CONTEXT_CORRUPT')
 
 
-def selection(store, namespace, snapshot_id, paths, max_bytes=24_000):
+def selection(store, namespace, snapshot_id, paths, max_bytes=24_000, source_offset=0):
     strict_int(max_bytes, 4000, 32_000)
+    strict_int(source_offset, 0, 1_000_000)
     if not isinstance(paths, list) or not 1 <= len(paths) <= 10 or len(set(paths)) != len(paths):
         raise ValueError('REPO_SELECTED_PATHS_REQUIRED')
     for path in paths:
@@ -400,6 +401,7 @@ def selection(store, namespace, snapshot_id, paths, max_bytes=24_000):
                      'one-click-context/library/durable-ui.mjs': 'docs/automation/F14_UI_RU.md'}
         related_contracts = sorted({contracts[p] for p in selected if p in contracts and contracts[p] in by_path})
         ids, bindings, omitted, used = [], [], [], 0
+        source_total, next_offset = 0, None
         for path in paths + sorted(selected - set(paths)):
             row = by_path[path]
             if row['state'] != 'INDEXED':
@@ -407,10 +409,17 @@ def selection(store, namespace, snapshot_id, paths, max_bytes=24_000):
                 continue
             bindings.append({'path': path, 'sha256': row['file_hash'], 'git_oid': row['oid']})
             for c in db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snapshot_id, path)):
+                ordinal = source_total
+                source_total += 1
                 # Bound the serialized export metadata as well as source bytes.
                 cost = len(c['raw']) + 1200
-                if c['item_id'] is None or len(ids) >= 10 or used + cost > max_bytes:
-                    omitted.append({'path': path, 'logical_id': c['logical_id'], 'reason': 'BINARY_OR_BUDGET'})
+                reason = ('PREVIOUS_PAGE_NOT_INCLUDED' if ordinal < source_offset else
+                          'BINARY_NOT_TEXT' if c['item_id'] is None else
+                          'BUDGET_NEXT_PAGE' if next_offset is not None or len(ids) >= 10 or used + cost > max_bytes else None)
+                if reason:
+                    if reason == 'BUDGET_NEXT_PAGE' and next_offset is None:
+                        next_offset = ordinal
+                    omitted.append({'path': path, 'logical_id': c['logical_id'], 'reason': reason})
                     continue
                 verify_source_item(db, c)
                 ids.append(c['item_id'])
@@ -425,7 +434,9 @@ def selection(store, namespace, snapshot_id, paths, max_bytes=24_000):
                 'relevant_contracts': [{'path': p, 'sha256': by_path[p]['file_hash'],
                                         'coverage': 'SELECTED' if p in selected else 'RELATED_NOT_EXPORTED'} for p in related_contracts],
                 'static_cycles': [g for g in components(sorted(selected), edges) if len(g) > 1],
-                'omitted_sources': omitted, 'missing_dependencies': gaps,
+                'source_offset': source_offset, 'next_source_offset': next_offset, 'source_total': source_total,
+                'omitted_sources': omitted[:50], 'omitted_count': len(omitted),
+                'omitted_summary_truncated': len(omitted) > 50, 'missing_dependencies': gaps,
                 'coverage': 'PARTIAL' if omitted or gaps else 'SELECTED_STATIC_CLOSURE',
                 'parser_scope': 'Python static imports; external/dynamic/ambiguous and JS edges unresolved'}
     finally:
@@ -474,7 +485,7 @@ def bind_ids(store, namespace, snapshot_id, ids):
     return selection(store, namespace, snapshot_id, sorted(set(rows)))['binding']
 
 
-def export_request(store, namespace, snapshot_id, paths, goal, scope, acceptance, max_bytes=24_000):
+def export_request(store, namespace, snapshot_id, paths, goal, scope, acceptance, max_bytes=24_000, source_offset=0):
     # Imports are local owners, never modules from the scanned repository.
     from automation_core import context_pack
     from context_review import bounded_text, create_session
@@ -486,7 +497,7 @@ def export_request(store, namespace, snapshot_id, paths, goal, scope, acceptance
         bounded_text(criterion, 1000)
     if not goal.strip() or not scope.strip() or any(not criterion.strip() for criterion in acceptance):
         raise ValueError('REPO_GOAL_SCOPE_ACCEPTANCE_REQUIRED')
-    chosen = selection(store, namespace, snapshot_id, paths, max_bytes)
+    chosen = selection(store, namespace, snapshot_id, paths, max_bytes, source_offset)
     verified = verify_binding(store, chosen['binding'])
     if verified['state'] != 'VERIFIED':
         raise ValueError('SOURCE_DRIFT')

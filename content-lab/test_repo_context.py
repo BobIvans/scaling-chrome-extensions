@@ -379,3 +379,28 @@ class RepoContextTests(TestCase):
         self.assertEqual(status['counts'], {'ERROR': 1})
         self.assertFalse(status['roundtrip']['all_tracked_bytes_exportable'])
         self.assertEqual(requests, [])
+
+    def test_export_pages_reach_large_file_tail_and_reconstruct_all_selected_bytes(self):
+        raw = b'# prefix\r\n' + ('Я👋' * 45000).encode('utf-8') + b'\r\n# FINAL_TAIL\n'
+        self.put('content-lab/main.py', raw)
+        self.commit()
+        snapshot = self.scan()
+        offset, pieces, sessions = 0, {}, set()
+        while True:
+            exported = repo.export_request(self.store, 'code', snapshot['snapshot_id'], ['content-lab/main.py'],
+                                           'Review large source', 'Entire selected file in separate requests', ['Byte coverage'], source_offset=offset)
+            selection = exported['document']['selection']
+            self.assertEqual(selection['source_offset'], offset)
+            for item in exported['document']['context']['items']:
+                self.assertNotIn(item['byte_start'], pieces)
+                pieces[item['byte_start']] = item['text'].encode('utf-8')
+            self.assertNotIn(exported['review']['session_id'], sessions)
+            sessions.add(exported['review']['session_id'])
+            self.assertLess(exported['bytes'], 80_001)
+            if selection['next_source_offset'] is None:
+                break
+            self.assertGreater(selection['next_source_offset'], offset)
+            offset = selection['next_source_offset']
+        self.assertGreater(len(sessions), 1)
+        self.assertEqual(b''.join(pieces[k] for k in sorted(pieces)), raw)
+        self.assertTrue(any(b'FINAL_TAIL' in value for value in pieces.values()))

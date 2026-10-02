@@ -51,10 +51,11 @@ export class RepoReviewSession{
   const d=await this.call('durable.repo.get',{repository:this.repository,snapshotId:this.snapshot.snapshot_id,offset});
   if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');return this.acceptSnapshot(d.snapshot);
  }
- async export(goal,scope,acceptance){
+ async export(goal,scope,acceptance,sourceOffset=0){
   if(this.snapshot?.state!=='COMPLETE'||!this.selected.size)throw Error('CONTEXT_INCOMPLETE');
   const version=++this.version;this.exported=null;this.onChange();
-  const args={repository:this.repository,snapshotId:this.snapshot.snapshot_id,paths:[...this.selected],goal,scope,acceptance,maxBytes:24000};
+  if(!Number.isSafeInteger(sourceOffset)||sourceOffset<0)throw Error('REPO_SOURCE_OFFSET_REQUIRED');
+  const args={repository:this.repository,snapshotId:this.snapshot.snapshot_id,paths:[...this.selected],goal,scope,acceptance,maxBytes:24000,...(sourceOffset?{sourceOffset}:{})};
   if(bytes(JSON.stringify({type:'durable.repo.export',...args}))>REVIEW_NATIVE_INPUT_BYTES)throw Error('REVIEW_NATIVE_INPUT_LIMIT');
   const d=await this.call('durable.repo.export',args);if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');
   if(d.export?.document?.schema!=='occ.repo-request.v1'||!HASH.test(d.export?.review?.session_id)||d.export.review.namespace!==this.namespace)throw Error('REPO_RESULT_SCHEMA');
@@ -90,6 +91,7 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
   if(!state)return;
   for(const [id,command] of [['repo-list','durable.repo.list'],['repo-scan','durable.repo.scan'],['repo-rescan','durable.repo.scan'],['review-list','durable.review.list'],['review-import','durable.review.import']])$(id).disabled=state.busy||!durable.can(command);
   $('repo-export').disabled=state.busy||!durable.can('durable.repo.export')||state.snapshot?.state!=='COMPLETE'||!state.selected.size;
+  if($('repo-export-next'))$('repo-export-next').disabled=state.busy||!durable.can('durable.repo.export')||state.exported?.document?.selection?.next_source_offset==null;
   $('repo-next').disabled=state.busy||!durable.can('durable.repo.get')||state.snapshot?.next_offset==null;
   $('repo-prev').disabled=state.busy||!durable.can('durable.repo.get')||!state.snapshot?.offset;
   $('repo-copy').disabled=!state.exported;
@@ -110,6 +112,7 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
    $('repo-files').append(row);
   }
   $('repo-output').value=state.exported?JSON.stringify(state.exported.document,null,2):'';
+  if($('repo-coverage'))$('repo-coverage').textContent=state.exported?JSON.stringify({coverage:state.exported.document.selection?.coverage,source_offset:state.exported.document.selection?.source_offset,next_source_offset:state.exported.document.selection?.next_source_offset,source_total:state.exported.document.selection?.source_total,omitted:state.exported.document.selection?.omitted_count}):'';
   $('review-sessions').replaceChildren();
   for(const r of state.reviews){const button=document.createElement('button');button.textContent=r.session_id.slice(0,12)+' · '+r.state;button.onclick=e=>{if(e.isTrusted)void act(()=>state.get(r.namespace,r.session_id),'Review сверён с источниками.');};$('review-sessions').append(button);}
   const r=state.review;
@@ -131,6 +134,7 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
  $('repo-prev').onclick=e=>{if(e.isTrusted)void act(()=>state.page(Math.max(0,state.snapshot.offset-20)),'Предыдущая страница файлов.');};
  for(const id of ['repo-goal','repo-scope','repo-acceptance'])$(id).oninput=()=>state.invalidate();
  $('repo-export').onclick=e=>{if(e.isTrusted)void act(()=>state.export($('repo-goal').value,$('repo-scope').value,$('repo-acceptance').value.split('\n').map(x=>x.trim()).filter(Boolean)),'Запрос и review session сохранены. Проверьте coverage и пропуски перед передачей в AI.');};
+ if($('repo-export-next'))$('repo-export-next').onclick=e=>{if(e.isTrusted&&state.exported?.document?.selection?.next_source_offset!=null){const offset=state.exported.document.selection.next_source_offset;void act(()=>state.export($('repo-goal').value,$('repo-scope').value,$('repo-acceptance').value.split('\n').map(x=>x.trim()).filter(Boolean),offset),'Следующая часть context экспортирована. Сохраните каждую часть отдельно.');}};
  $('repo-copy').onclick=e=>{if(e.isTrusted&&state.exported)void act(()=>globalThis.navigator.clipboard.writeText($('repo-output').value),'Запрос скопирован.');};
  $('repo-download').onclick=e=>{if(!e.isTrusted||!state.exported)return;const url=URL.createObjectURL(new Blob([$('repo-output').value],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download='OCC_REVIEW_REQUEST_'+state.exported.review.session_id.slice(0,12)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
  $('review-list').onclick=e=>{if(e.isTrusted)void act(()=>state.list($('review-namespace').value.trim()),'Сохранённые review sessions получены.');};

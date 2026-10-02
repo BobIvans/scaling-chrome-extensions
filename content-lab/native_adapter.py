@@ -37,7 +37,7 @@ FIELDS = {
     "durable.repo.list": ({"type"}, set()),
     "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
-    "durable.repo.export": ({"type", "repository", "snapshotId", "paths", "goal", "scope", "acceptance"}, {"maxBytes"}),
+    "durable.repo.export": ({"type", "repository", "snapshotId", "paths", "goal", "scope", "acceptance"}, {"maxBytes", "sourceOffset"}),
 }
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
@@ -128,7 +128,7 @@ def dispatch(request, profile_path):
                 value['snapshot'] = repo_context.get_snapshot(store, namespace, snapshot_id, offset=request.get('offset', 0))
             else:
                 value['export'] = repo_context.export_request(store, namespace, snapshot_id, request['paths'],
-                    request['goal'], request['scope'], request['acceptance'], request.get('maxBytes', 24_000))
+                    request['goal'], request['scope'], request['acceptance'], request.get('maxBytes', 24_000), request.get('sourceOffset', 0))
     elif operation.startswith('durable.review.'):
         namespace = identifier(request['namespace'])
         if namespace not in profile['namespaces']:

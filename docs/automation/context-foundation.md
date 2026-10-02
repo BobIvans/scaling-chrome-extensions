@@ -100,6 +100,10 @@ coverage, omitted fragments и review-result template. Pack: до 10 text chunks
 выдаётся за exact: UTF-8 length — conservative bound для byte-based tokenizers,
 намного меньше 300k. Export SHA относится к sorted JSON до форматирования UI.
 Binary bytes сохранены для roundtrip; в AI text pack они явно omitted.
+`sourceOffset` и «Следующая часть контекста» продолжают deterministic chunk order
+до EOF. Selection сохраняет source_total/next_source_offset и полный omitted_count;
+длинная omitted summary ограничена 50 refs с явным truncated flag. Предыдущие части
+не объявляются включёнными в текущий request; каждую часть сохраняйте отдельно.
 
 Native весь request с envelope ≤16 000 UTF-8 bytes. UI preflight учитывает envelope
 и duplicate JSON keys. Большой review можно импортировать existing CLI ≤128 000:
