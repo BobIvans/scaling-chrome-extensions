@@ -1,0 +1,66 @@
+ONE CLICK CONTEXT — СТАТУС ОБНОВЛЕНИЯ И ОСТАВШИЕСЯ РАБОТЫ
+Дата проверки: 2026-09-09
+Рабочая ветка: occ-library
+Проверенная runtime-версия manifest: 0.7.0
+
+ЧТО УЖЕ ЕСТЬ В ВЕТКЕ 0.7.0
+1. OCC-03: снимок страницы, Copy, Download TXT, просмотр, сохранность последнего результата, PARTIAL/BEST_EFFORT.
+2. 0.4: локальная библиотека документов и конвертация TXT/код/CSV/JSON/DOCX/PPTX/XLSX/text-PDF/ZIP с ограничениями.
+3. 0.5.x: интерфейс задания локальному Codex/nativeMessaging и получение файлов результата; это требует установленного native host.
+4. 0.6: временная история текущей Chrome-сессии; до 50 снимков и общий TXT текущей сессии; недавние снимки можно перенести в библиотеку.
+5. 0.7: разделение «переписка / открытый документ / переписка + документ»; выбор области при неоднозначности; навигация исключается; iframe и неизвестное покрытие редактора не объявляются полным текстом.
+6. Ветка содержит локальные vendor-библиотеки и лицензии для fflate/PDF.js.
+
+ЧТО ЕЩЁ НЕ СЧИТАЕТСЯ ЗАВЕРШЁННЫМ
+P0 — ПРИЁМКА НА УСТАНОВЛЕННОМ CHROME
+- Проверить существующую папку установленного расширения и версию после Reload.
+- Реально проверить toolbar click, context-menu Chat/Document/Combined, правый ChatGPT artifact, DeepSeek и Codex на авторизованных страницах.
+- Проверить реальный offscreen clipboard, chrome.downloads, закрытие исходной вкладки, полный restart Chrome, сохранение/удаление и session TXT.
+- Если ChatGPT меняет DOM, добавить и протестировать site adapter; generic selector не считать доказательством полной истории.
+
+P1 — ПАМЯТЬ И БИБЛИОТЕКА
+- Структурированный JSON backup restore библиотеки ещё нужен: сейчас старый README отмечает отсутствие полного автоматического restore.
+- Масштабируемое хранилище (IndexedDB/OPFS или другой единый owner) для больших библиотек; не увеличивать старые 2.2 MB лимиты молча.
+- Проекты, сессии, даты источника/сбора/сохранения, версии, исправления и tombstones должны сохранять provenance и не воскрешать удалённые данные.
+- Экспорт выбранных дат/проектов/сессий в один TXT должен быть детерминирован и не делать новый сетевой сбор.
+
+P1 — ВЛОЖЕНИЯ И ФОРМАТЫ
+- Автоматический, но user-confirmed сбор реально обнаруженных вложений ChatGPT/DeepSeek/Codex ещё не доказан.
+- Нужны адаптеры закрытых attachment controls и реальные E2E fixtures; никаких blind-click всех кнопок.
+- OCR сканов/картинок, аудио/видео/ASR, старые DOC/PPT/XLS и сложные embedded Office objects не реализованы полностью.
+- PDF text layer работает как конвертер, но image-only PDF должен оставаться NEEDS_OCR.
+
+P1 — JOB ENGINE / АГЕНТ
+- Длительные jobs: durable queue, checkpoint, resume после service-worker restart, cancellation, budgets, exact status и журнал действий.
+- Управление несколькими разрешёнными вкладками: checklist scopes, pause/cancel и отдельный результат каждой вкладки.
+- Локальный Codex должен оставаться отдельной optional capability; перепроверить native host с фактическим extension ID и текущей Codex CLI.
+- Другие AI/OpenClaw/MCP — отдельные адаптеры; не выдавать регистрацию за выполненное действие.
+
+P2 — ОБЛАКО И КАНАЛЫ
+- Supabase sync остаётся выключенным до отдельного согласования миграций, RLS/private Storage и проверки двумя пользователями.
+- Gmail/Drive/Telegram/GitHub/другие отправки требуют отдельного adapter + recipient preview + подтверждение + receipt.
+- Никаких cookies/auth tokens в библиотеку и никакого обхода лимитов аккаунтов.
+
+P2 — WEB3 RESEARCH
+- Добавить read-only market/data adapters, timestamps/slot/block/provenance, integer atomic units, freshness/TTL.
+- Нормализация котировок, fees/slippage и исторические research/backtest datasets — отдельно от торгового исполнения.
+- Расширение не должно подписывать или отправлять транзакции и не является кошельком/торговым runtime.
+
+P3 — SAAS
+- Командные пространства, квоты, биллинг, observability, публичная multi-user isolation и production deployment ещё не квалифицированы.
+
+ОБНОВЛЕНИЕ СУЩЕСТВУЮЩЕЙ ПАПКИ WINDOWS
+Путь пользователя: ~\Downloads\ONE_CLICK_CONTEXT_CHROME_READY
+
+Использовать scripts/renew_windows.ps1. Скрипт:
+- требует существующий manifest.json прямо в этой папке;
+- делает полную резервную копию папки;
+- скачивает runtime 0.7.0 с зафиксированного commit 38540e6712e8d74354d134abd856f6c43a5b91e7;
+- проверяет Manifest V3 и version=0.7.0;
+- заменяет только известные runtime/vendor files;
+- при ошибке восстанавливает backup;
+- НЕ удаляет расширение из Chrome, НЕ читает профиль/cookies, НЕ меняет native host и НЕ нажимает Reload автоматически.
+
+После скрипта: chrome://extensions -> существующая карточка One Click Context -> Reload -> убедиться в 0.7.0 -> обновить вкладку ChatGPT -> проверить Chat / Document / Chat + Document.
+
+Не удалять установленное расширение для обновления: это может сменить ID/хранилище. Сначала экспортировать важный session TXT.
