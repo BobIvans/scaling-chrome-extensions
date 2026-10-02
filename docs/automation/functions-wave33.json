@@ -5,7 +5,7 @@
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
   "confirmed_new_github_pr_count": 2,
-  "next_function_number": 15,
+  "next_function_number": 16,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -102,8 +102,8 @@
       "function_number": 15,
       "capability_id": "CAP-078",
       "title_ru": "Локальный scheduler одного writer",
-      "proposed_owner_anchor": "content-lab/automation_core.py",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "content-lab/schedule_tick.py + schedule_supervisor.py over automation_core.enqueue",
+      "owner_status": "VERIFIED_EXISTING_CORE_QUEUE_OWNER",
       "related_candidate_ids": [
         "CAND-0771",
         "CAND-0772",
@@ -126,8 +126,13 @@
         "CAND-1779",
         "CAND-1780"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 16,
+      "implementation_doc": "docs/automation/F15_BOUNDED_ADMISSION_RU.md",
+      "implementation_head_sha": "49013fba8cd4f96b2828dbb557009826c6989f24",
+      "receipt_path": "docs/automation/runs/F15_2026-10-01_0832Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE",
       "prerequisites_function_numbers": [
         14
       ],
@@ -1322,10 +1327,12 @@
       "max_attempts": 3
     }
   ],
-  "implemented_function_count": 2,
+  "implemented_function_count": 3,
   "actual_implementation_pr_numbers": [
     14,
-    15
+    15,
+    16
   ],
-  "confirmed_new_github_pr_count_semantics": "Two implementation PRs in this wave: F13 -> #14, F14 -> #15. Only #15 was created in the current F14 run; none merged."
+  "confirmed_new_github_pr_count": 3,
+  "confirmed_new_github_pr_count_semantics": "Three implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16. The current F15 run updated existing #16 and created no new PR; none merged."
 }

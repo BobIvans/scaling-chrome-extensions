@@ -1,0 +1,142 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 15,
+  "job_id": "occ-f15-supervisor-20261001T0832Z",
+  "recorded_at_utc": "2026-10-01T08:40:58.114Z",
+  "state": "DONE",
+  "completion_scope": "F15 bounded local schedule admission and supervisor contracts; not installed Windows service or 24-hour campaign",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f15-bounded-schedule-admission",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/16",
+  "pr_number": 16,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f14-durable-library-ui",
+  "pr_base_sha": "7e1350c184b6376b5d03aa72e9270d2eefe58396",
+  "run_base_sha": "d116f0b67b2563625d0611f1c6aff8da3d4355b1",
+  "head_sha": "49013fba8cd4f96b2828dbb557009826c6989f24",
+  "tested_tree_sha": "872bd68c87b53b12dab6c652bbdabc7962db2f27",
+  "run_diff_sha256": "2ebcf809e633e0441cb63add97d6c6d92aba5e612a3d678cdb519d9afa6103b6",
+  "head_semantics": "head_sha is the exact F15 supervisor code commit tested locally and by CI. The later containing receipt/handoff commit must receive its own exact-head CI.",
+  "preflight": {
+    "f14_pr": 15,
+    "f14_head": "7e1350c184b6376b5d03aa72e9270d2eefe58396",
+    "f14_exact_head_ci": "PASS",
+    "existing_f15_pr": 16,
+    "duplicate_f15_prs_created": 0,
+    "existing_f15_head": "d116f0b67b2563625d0611f1c6aff8da3d4355b1",
+    "existing_f15_exact_head_ci": "PASS",
+    "agents_files_present": false,
+    "prior_f15_receipt_present": false
+  },
+  "owner_preservation": {
+    "job_queue": "content-lab/automation_core.py::enqueue/Core",
+    "schedule_admission": "content-lab/schedule_tick.py",
+    "new_supervisor": "content-lab/schedule_supervisor.py",
+    "new_queue_or_worker_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_schedule_supervisor.py' -v",
+      "result": "PASS",
+      "checks": 11,
+      "phase": "focused; included in final Python discovery"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 70,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 34,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 68,
+      "exit_code": 0
+    },
+    {
+      "command": "python -m py_compile content-lab/schedule_tick.py content-lab/schedule_supervisor.py",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_regression_checks": 172,
+  "new_supervisor_checks": 11,
+  "checks_overlap_warning": "Focused 11 tests are included in the 70 Python checks; do not add them to172.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "49013fba8cd4f96b2828dbb557009826c6989f24",
+    "runs": [
+      {
+        "id": 36837643876,
+        "head_sha": "49013fba8cd4f96b2828dbb557009826c6989f24",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36837643876"
+      }
+    ],
+    "checks": [
+      {
+        "id": 110288843388,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36837643876/job/110288843388"
+      },
+      {
+        "id": 110288843691,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36837643876/job/110288843691"
+      }
+    ]
+  },
+  "verified_behaviors": [
+    "strict bounded supervisor configuration",
+    "preview and disabled mode have no lease/job write",
+    "maximum duration/tick count",
+    "one active supervisor lease per schedule",
+    "expired lease blocks automatic takeover",
+    "explicit reconciliation clears only expired lease",
+    "unknown tick outcome retains lease",
+    "lost lease cannot release another owner",
+    "interrupt releases clean lease but does not claim persistent STOP",
+    "existing STOP terminates supervision without cancelling jobs",
+    "two ticks replay one canonical Core job"
+  ],
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 0,
+    "updated_draft_prs": 1,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "No Windows Task Scheduler/service installation or installed-PC receipt.",
+    "No real 24-hour run; bounds and replay tested deterministically.",
+    "Supervisor admits only registered sync templates; it never starts Core.work.",
+    "Signal interrupt stops the supervisor process but does not persistently stop the schedule.",
+    "Unknown effects require operator confirmation followed by --reconcile-stopped.",
+    "No voice/ASR/Laya/API/OpenShell/market campaign.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 16,
+  "next_job": "Audit current head and existing CI snapshot owner, then implement one authenticated exact-head CI transport gap without changing release authority."
+}
