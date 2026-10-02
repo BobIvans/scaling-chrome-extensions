@@ -1,0 +1,124 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 18,
+  "job_id": "occ-f18-chrome-sqlite-records-20261001T1145Z",
+  "recorded_at_utc": "2026-10-01T11:45:21Z",
+  "state": "BLOCKED",
+  "completion_scope": "F18 versioned Chrome-to-SQLite record mutation transport implemented and locally verified; exact-head Windows CI blocked by a known test-only SQLite connection leak",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f18-chrome-sqlite-record-schema",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/20",
+  "pr_number": 20,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f17-chatgpt-export-parser",
+  "pr_base_sha": "bdf645e12f50a84d7bd89e2c3b22fa62cac12788",
+  "run_base_sha": "bdf645e12f50a84d7bd89e2c3b22fa62cac12788",
+  "head_sha": "4037a67c79c93f1386420c2ce971d33a7eb8305e",
+  "tested_tree_sha": "2ee2124f36ff7ff1219169877b6bd0bb2b2f2a65",
+  "run_diff_sha256": "fdbe2d3d69a523b6f72071d8560c42d1c74436c9a55a8831f34a0db3bb8d083a",
+  "preflight": {
+    "f17_pr": 19,
+    "f17_head": "bdf645e12f50a84d7bd89e2c3b22fa62cac12788",
+    "f17_exact_head_ci": "PASS",
+    "f17_ci_run": 36851524189,
+    "open_f18_record_prs_before_write": 0,
+    "duplicate_f18_prs_created": 0,
+    "agents_files_present": false,
+    "prior_f18_receipt_present": false,
+    "active_previous_repo_writer": false
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3",
+    "text_and_index": "existing items/content_fts",
+    "current_and_history": "existing sync_heads/sync_versions",
+    "record_cas_metadata": "library_record_heads/library_record_versions in the same SQLite owner",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "new_database_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 93,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 71,
+      "exit_code": 0
+    },
+    {
+      "command": "python -m json.tool docs/automation/functions-wave33.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_local_regression_checks": 199,
+  "ci": {
+    "state": "FAIL",
+    "head_sha": "4037a67c79c93f1386420c2ce971d33a7eb8305e",
+    "run": {
+      "id": 36857235265,
+      "status": "completed",
+      "conclusion": "failure",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36857235265"
+    },
+    "checks": [
+      {
+        "id": 110352548458,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36857235265/job/110352548458"
+      },
+      {
+        "id": 110352548907,
+        "name": "core (windows-latest)",
+        "conclusion": "failure",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36857235265/job/110352548907",
+        "failure": "Three new tests complete their assertions, then TemporaryDirectory cleanup fails with WinError 32 because test_library_records.py::rows uses sqlite3.connect as a transaction context manager but does not close the connection."
+      }
+    ]
+  },
+  "verified_behaviors": [
+    "strict occ.library-record.v1 carries revision, parent revision, content hash and provenance",
+    "actual Node to isolated Python subprocess to existing SQLite roundtrip",
+    "exact replay is idempotent and changed bytes under the same revision conflict",
+    "stale or skipped lineage is rejected atomically",
+    "tombstone preserves provenance, contains no text and hides the current search head",
+    "native profile namespace scope and existing request byte limits remain enforced"
+  ],
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 3,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "network_content_fetches": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "Exact-head Windows CI is not green; F18 is not DONE.",
+    "One native record is limited to 8000 UTF-8 text bytes inside the 16000-byte request limit.",
+    "Chunked large-record transport and bulk-sync UI are not implemented.",
+    "Windows Chrome installation and device transport were not run.",
+    "No automatic background sync, model/provider call, voice, browser action or Web3 sender is included.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 18,
+  "next_job": "On the existing PR #20 branch, replace test_library_records.py::rows with an explicitly closing SQLite connection (for example contextlib.closing), rerun all three suites, publish a fast-forward commit only if the current remote head is still 4037a67c79c93f1386420c2ce971d33a7eb8305e, and require exact-head Linux plus Windows CI before marking F18 DONE."
+}

@@ -17,6 +17,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from automation_core import (Core, context_pack, digest, enqueue, identifier,
                              load_json, search, strict_int, validate_job,
                              validate_policy)
+from content_lab import apply_library_record
 
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
@@ -26,6 +27,7 @@ FIELDS = {
     "durable.enqueue": ({"type", "template", "taskKey"}, set()),
     "durable.get": ({"type", "jobId"}, set()),
     "durable.cancel": ({"type", "jobId"}, set()),
+    "durable.record": ({"type", "mutation"}, set()),
 }
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
@@ -91,6 +93,12 @@ def dispatch(request, profile_path):
             if not isinstance(ids, list) or not 1 <= len(ids) <= 10 or not all(isinstance(item_id, str) and ITEM_ID.fullmatch(item_id) for item_id in ids):
                 raise ValueError("DURABLE_ITEM_IDS_REQUIRED")
             value["context"] = context_pack(store, namespace, ids, strict_int(request.get("maxBytes", 48_000), 1, 48_000))
+    elif operation == "durable.record":
+        mutation = request["mutation"]
+        namespace = mutation.get("namespace") if isinstance(mutation, dict) else None
+        if namespace not in profile["namespaces"]:
+            raise ValueError("DURABLE_NAMESPACE_OUTSIDE_SCOPE")
+        value["record"] = apply_library_record(store, mutation)
     elif operation == "durable.enqueue":
         template = identifier(request["template"])
         if template not in profile["templates"]:

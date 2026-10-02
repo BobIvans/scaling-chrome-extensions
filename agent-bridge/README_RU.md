@@ -72,6 +72,7 @@ adapter с зависимостями внутрь выбранной устан
 | `durable.enqueue`, template, taskKey | `durable.job` | Только зарегистрированный template; тот же ключ возвращает тот же job |
 | `durable.get`, jobId | `durable.job` | Job совпадает с policy hash и одним template; без paths/logs/lease tokens |
 | `durable.cancel`, jobId | `durable.job` | Та же scope; отмена сохраняется в SQLite |
+| `durable.record`, mutation | `durable.record` | `occ.library-record.v1`, разрешённый namespace, CAS revision; text до 8 000 UTF-8 bytes |
 
 Ответ помечен `schema: occ.native-durable-result.v1` и исходной `operation`.
 Пример: `{"type":"durable.enqueue","template":"sync-exports","taskKey":"exports-20261001T1000"}`.

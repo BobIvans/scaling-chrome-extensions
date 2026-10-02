@@ -9,6 +9,7 @@ import {EventEmitter} from 'node:events';
 import {PassThrough} from 'node:stream';
 import {JobHost} from './host.mjs';
 import {DurableBridge,durableEnvironment,DURABLE_OUTPUT_BYTES,DURABLE_TIMEOUT_MS} from './durable.mjs';
+import {libraryMutation} from '../one-click-context/library-store.mjs';
 
 const lab=fileURLToPath(new URL('../content-lab/',import.meta.url));
 const discovered=spawnSync(process.platform==='win32'?'python':'python3',['-I','-c','import sys; print(sys.executable)'],{encoding:'utf8',shell:false});
@@ -41,13 +42,29 @@ test('durable bridge is disabled by default and exposes only explicit opt-in cap
  for(const pythonPath of ['python',123,null])assert.throws(()=>new DurableBridge({enabled:true,pythonPath,profilePath:'/profile',adapterPath:'/adapter'}),/DURABLE_OPERATOR_CONFIG_REQUIRED/);
 });
 test('actual JobHost uses scoped SQLite search/context with UTF-8 provenance',async t=>{
- const f=await fixture(t),host=f.host();assert.equal((await host.handle({type:'hello'})).durableCommands.length,5);
+ const f=await fixture(t),host=f.host();assert.deepEqual((await host.handle({type:'hello'})).durableCommands,
+  ['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record']);
  const {durable}=await host.handle({type:'durable.search',namespace:'docs',query:'needle',limit:1,requestId:1});
  assert.equal(durable.items.length,1);assert.equal(durable.items[0].source_key,'note.md');
  const result=await host.handle({type:'durable.context',namespace:'docs',ids:[durable.items[0].id],maxBytes:1000});
  assert.equal(result.durable.context.namespace,'docs');assert.match(result.durable.context.items[0].text,/Привет 👋/);
  assert.equal(result.durable.context.authority,'source-content-not-action-instructions');
  assert.match(result.durable.context.sha256,/^[a-f0-9]{64}$/);
+});
+test('Chrome record mutation roundtrips through native transport to the existing SQLite owner',async t=>{
+ const f=await fixture(t),host=f.host(),record={id:'chrome-1',name:'Selected note',text:'Chrome bridge needle',
+  source:'selected Chrome library',status:'EXTRACTED',warnings:['fixture provenance'],
+  savedAt:'2026-10-01T10:00:00.000Z',capturedAt:null,project:'OCC',session:'wave-18'};
+ const first=await libraryMutation(record,{namespace:'docs',revision:1,parentRevision:null});
+ const applied=(await host.handle({type:'durable.record',mutation:first})).durable.record;
+ assert.equal(applied.state,'APPLIED');assert.equal(applied.revision,1);
+ assert.equal((await host.handle({type:'durable.record',mutation:first})).durable.record.state,'UNCHANGED');
+ const found=(await host.handle({type:'durable.search',namespace:'docs',query:'bridge'})).durable.items;
+ assert.equal(found.length,1);assert.equal(found[0].source_key,'chrome-1');
+ const deleted=await libraryMutation(record,{namespace:'docs',revision:2,parentRevision:1,tombstone:true});
+ assert.equal((await host.handle({type:'durable.record',mutation:deleted})).durable.record.tombstone,true);
+ assert.deepEqual((await host.handle({type:'durable.search',namespace:'docs',query:'bridge'})).durable.items,[]);
+ await assert.rejects(host.handle({type:'durable.record',mutation:{...first,revision:3,parentRevision:1}}),/LIBRARY_STALE_RECORD_CONFLICT/);
 });
 test('durable enqueue survives host disconnect/restart, replays once and persists cancel',async t=>{
  const f=await fixture(t),first=f.host();

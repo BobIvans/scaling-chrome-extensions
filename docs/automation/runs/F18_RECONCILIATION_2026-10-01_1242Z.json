@@ -1,0 +1,132 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 18,
+  "job_id": "occ-f18-windows-ci-reconciliation-20261001T1242Z",
+  "recorded_at_utc": "2026-10-01T12:42:29Z",
+  "state": "DONE",
+  "completion_scope": "Reconciled the known F18 Windows-only test SQLite connection leak in existing draft PR 20; production implementation is unchanged",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f18-chrome-sqlite-record-schema",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/20",
+  "pr_number": 20,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f17-chatgpt-export-parser",
+  "pr_base_sha": "bdf645e12f50a84d7bd89e2c3b22fa62cac12788",
+  "run_base_sha": "74576003617e7e51f79eab2c221ff98392965623",
+  "head_sha": "be561e9c9b0a8abe82b03950dae2b334386f5f0e",
+  "tested_tree_sha": "9082f65e4a24de602a794c0d9b03e49caa60e870",
+  "run_diff_sha256": "d4ddb952f2e1610191cccf99b2b7077f94027d7d8256e860ef5c8055987e7bfb",
+  "head_semantics": "head_sha is the exact F18 code plus Windows test-resource fix tested locally and by CI. A later containing receipt/handoff commit requires its own exact-head CI.",
+  "preflight": {
+    "previous_f18_receipt": "docs/automation/runs/F18_2026-10-01_1145Z.json",
+    "previous_state": "BLOCKED",
+    "previous_pr_head": "74576003617e7e51f79eab2c221ff98392965623",
+    "current_pr_head_before_write": "74576003617e7e51f79eab2c221ff98392965623",
+    "pr_base_sha": "bdf645e12f50a84d7bd89e2c3b22fa62cac12788",
+    "open_f18_prs": [20],
+    "duplicate_f18_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "known_failure": "test_library_records.py::rows did not explicitly close sqlite3.Connection on Windows"
+  },
+  "change": {
+    "file": "content-lab/test_library_records.py",
+    "production_files_changed": 0,
+    "test_files_changed": 1,
+    "mechanism": "contextlib.closing around the read-only SQLite query helper",
+    "production_behavior_changed": false
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3",
+    "text_and_index": "existing items/content_fts",
+    "current_and_history": "existing sync_heads/sync_versions",
+    "record_cas_metadata": "library_record_heads/library_record_versions in the same SQLite owner",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "new_database_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_library_records.py' -v",
+      "result": "PASS",
+      "checks": 4,
+      "exit_code": 0,
+      "phase": "focused; included in final Python discovery"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 93,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 71,
+      "exit_code": 0
+    },
+    {
+      "command": "python -m json.tool docs/automation/functions-wave33.json >/dev/null && python -m json.tool docs/automation/runs/F18_2026-10-01_1145Z.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_local_regression_checks": 199,
+  "focused_checks_overlap_warning": "The 4 focused checks are included in the 93 Python checks; do not add them to 199.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "be561e9c9b0a8abe82b03950dae2b334386f5f0e",
+    "run": {
+      "id": 36863366794,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36863366794"
+    },
+    "checks": [
+      {
+        "id": 110372771761,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36863366794/job/110372771761"
+      },
+      {
+        "id": 110372771997,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36863366794/job/110372771997"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 2,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 0,
+    "updated_draft_prs": 1,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "network_content_fetches": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F18 remains a draft PR and is not merged or deployed.",
+    "One native record is limited to 8000 UTF-8 text bytes inside the 16000-byte request limit.",
+    "Chunked large-record transport and bulk-sync UI are not implemented.",
+    "Windows Chrome installation and device transport were not run.",
+    "No automatic background sync, model/provider call, voice, browser action or Web3 sender is included.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 19,
+  "next_job": "Audit current permitted attachment and artifact-inventory owners for F19, then implement at most one present/missing/unsupported plus hash/rights gap without automatic fetch or a second store."
+}

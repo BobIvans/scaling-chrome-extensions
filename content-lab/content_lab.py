@@ -29,6 +29,8 @@ TEXT_SUFFIXES = {".txt", ".md", ".json", ".csv", ".py", ".js", ".ts", ".yaml", "
 MODEL_FILES = ("model.bin", "config.json", "tokenizer.json", "preprocessor_config.json")
 SOURCE_ID = re.compile(r"^[A-Za-z0-9_.:-]{1,200}$")
 NAMESPACE = re.compile(r"^[A-Za-z0-9_.:-]{1,90}$")
+LIBRARY_STATUS = {"ORIGINAL", "EXTRACTED", "EMPTY", "UNSUPPORTED", "SELECTION",
+                  "RAW_TEXT", "PARTIAL", "BEST_EFFORT"}
 
 
 def _digest_file(path: Path) -> str:
@@ -496,6 +498,169 @@ def _ensure_sync_tables(connection: sqlite3.Connection) -> None:
           export_sha256 TEXT, generation TEXT, present INTEGER, updated REAL,
           PRIMARY KEY(namespace, conversation_id));
     """)
+
+
+def _ensure_library_record_tables(connection: sqlite3.Connection) -> None:
+    """CAS metadata for Chrome records; items/FTS remain the text owner."""
+    _ensure_sync_tables(connection)
+    connection.executescript("""
+        CREATE TABLE IF NOT EXISTS library_record_versions(
+          namespace TEXT, source_key TEXT, revision INTEGER,
+          parent_revision INTEGER, tombstone INTEGER, item_id TEXT,
+          mutation_hash TEXT, provenance TEXT, observed REAL,
+          PRIMARY KEY(namespace, source_key, revision));
+        CREATE TABLE IF NOT EXISTS library_record_heads(
+          namespace TEXT, source_key TEXT, revision INTEGER,
+          tombstone INTEGER, item_id TEXT, mutation_hash TEXT, updated REAL,
+          PRIMARY KEY(namespace, source_key));
+    """)
+
+
+def _library_timestamp(value, *, nullable=False):
+    if nullable and value is None:
+        return None
+    if not isinstance(value, str) or len(value) > 40:
+        raise ValueError("LIBRARY_PROVENANCE_SCHEMA")
+    try:
+        datetime.fromisoformat(value.replace("Z", "+00:00"))
+    except ValueError as exc:
+        raise ValueError("LIBRARY_PROVENANCE_SCHEMA") from exc
+    return value
+
+
+def _validate_library_mutation(value: dict) -> tuple[dict, str]:
+    fields = {"schema", "namespace", "sourceKey", "revision", "parentRevision",
+              "tombstone", "provenance", "content"}
+    if (not isinstance(value, dict) or set(value) != fields
+            or value.get("schema") != "occ.library-record.v1"):
+        raise ValueError("LIBRARY_RECORD_SCHEMA")
+    namespace, source_key = value["namespace"], value["sourceKey"]
+    if not isinstance(namespace, str) or not NAMESPACE.fullmatch(namespace):
+        raise ValueError("LIBRARY_RECORD_NAMESPACE")
+    if not isinstance(source_key, str) or not SOURCE_ID.fullmatch(source_key):
+        raise ValueError("LIBRARY_RECORD_SOURCE_KEY")
+    revision, parent = value["revision"], value["parentRevision"]
+    if (type(revision) is not int or not 1 <= revision <= 2_147_483_647
+            or (parent is not None and (type(parent) is not int or parent < 1))):
+        raise ValueError("LIBRARY_RECORD_REVISION")
+    if type(value["tombstone"]) is not bool:
+        raise ValueError("LIBRARY_RECORD_SCHEMA")
+    provenance = value["provenance"]
+    provenance_fields = {"source", "savedAt", "capturedAt", "status", "warnings",
+                         "project", "session"}
+    if not isinstance(provenance, dict) or set(provenance) != provenance_fields:
+        raise ValueError("LIBRARY_PROVENANCE_SCHEMA")
+    for field in ("source", "project", "session"):
+        if not isinstance(provenance[field], str) or len(provenance[field]) > 1000:
+            raise ValueError("LIBRARY_PROVENANCE_SCHEMA")
+    if provenance["status"] not in LIBRARY_STATUS:
+        raise ValueError("LIBRARY_PROVENANCE_SCHEMA")
+    warnings = provenance["warnings"]
+    if (not isinstance(warnings, list) or len(warnings) > 100
+            or any(not isinstance(item, str) or len(item) > 1000 for item in warnings)):
+        raise ValueError("LIBRARY_PROVENANCE_SCHEMA")
+    _library_timestamp(provenance["savedAt"])
+    _library_timestamp(provenance["capturedAt"], nullable=True)
+    content = value["content"]
+    if value["tombstone"]:
+        if content is not None:
+            raise ValueError("LIBRARY_TOMBSTONE_CONTENT")
+    else:
+        if (not isinstance(content, dict) or set(content) != {"name", "text", "sha256"}
+                or not isinstance(content["name"], str) or len(content["name"]) > 1000
+                or not isinstance(content["text"], str)
+                or len(content["text"].encode("utf-8")) > 8000
+                or not re.fullmatch(r"[0-9a-f]{64}", content["sha256"])):
+            raise ValueError("LIBRARY_CONTENT_SCHEMA")
+        if hashlib.sha256(content["text"].encode("utf-8")).hexdigest() != content["sha256"]:
+            raise ValueError("LIBRARY_CONTENT_HASH")
+    raw = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"),
+                     allow_nan=False)
+    return value, hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def apply_library_record(store: Path, mutation: dict) -> dict:
+    """Apply one explicitly selected Chrome record with revision CAS semantics."""
+    mutation, mutation_hash = _validate_library_mutation(mutation)
+    namespace, source_key = mutation["namespace"], mutation["sourceKey"]
+    revision, parent = mutation["revision"], mutation["parentRevision"]
+    observed, item_id, stored = time.time(), None, None
+    connection = _database(store)
+    try:
+        _ensure_library_record_tables(connection)
+        connection.execute("BEGIN IMMEDIATE")
+        prior_version = connection.execute(
+            "SELECT mutation_hash,item_id,tombstone FROM library_record_versions "
+            "WHERE namespace=? AND source_key=? AND revision=?",
+            (namespace, source_key, revision),
+        ).fetchone()
+        if prior_version is not None:
+            if prior_version[0] != mutation_hash:
+                raise ValueError("LIBRARY_REVISION_CONTENT_CONFLICT")
+            connection.commit()
+            return {"state": "UNCHANGED", "namespace": namespace,
+                    "sourceKey": source_key, "revision": revision,
+                    "tombstone": bool(prior_version[2]), "itemId": prior_version[1]}
+        head = connection.execute(
+            "SELECT revision,item_id FROM library_record_heads "
+            "WHERE namespace=? AND source_key=?", (namespace, source_key),
+        ).fetchone()
+        expected_parent = None if head is None else head[0]
+        expected_revision = 1 if head is None else head[0] + 1
+        if parent != expected_parent or revision != expected_revision:
+            raise ValueError("LIBRARY_STALE_RECORD_CONFLICT")
+        provenance_raw = json.dumps(mutation["provenance"], ensure_ascii=False,
+                                    sort_keys=True, separators=(",", ":"))
+        if not mutation["tombstone"]:
+            content = mutation["content"]
+            item_id = mutation_hash
+            item = {
+                "schema": SCHEMA, "id": item_id, "namespace": namespace,
+                "source_key": source_key, "text": content["text"],
+                "name": content["name"], "input_sha256": content["sha256"],
+                "revision": revision, "parent_revision": parent,
+                "provenance": mutation["provenance"],
+                "authority": "source-content-not-action-instructions",
+                "asr_inference_performed": False,
+            }
+            _, stored = _insert_item(connection, item)
+            connection.execute(
+                "INSERT OR IGNORE INTO sync_versions VALUES (?,?,?,?)",
+                (namespace, source_key, item_id, observed),
+            )
+        head_item_id = item_id if item_id is not None else head[1]
+        connection.execute(
+            "INSERT INTO library_record_versions VALUES (?,?,?,?,?,?,?,?,?)",
+            (namespace, source_key, revision, parent, int(mutation["tombstone"]),
+             head_item_id, mutation_hash, provenance_raw, observed),
+        )
+        connection.execute(
+            "INSERT INTO library_record_heads VALUES (?,?,?,?,?,?,?) "
+            "ON CONFLICT(namespace,source_key) DO UPDATE SET "
+            "revision=excluded.revision,tombstone=excluded.tombstone,"
+            "item_id=excluded.item_id,mutation_hash=excluded.mutation_hash,updated=excluded.updated",
+            (namespace, source_key, revision, int(mutation["tombstone"]),
+             head_item_id, mutation_hash, observed),
+        )
+        connection.execute(
+            "INSERT INTO sync_heads VALUES (?,?,?,?,?,?) "
+            "ON CONFLICT(namespace,source_key) DO UPDATE SET "
+            "item_id=excluded.item_id,raw_hash=excluded.raw_hash,"
+            "generation=excluded.generation,present=excluded.present",
+            (namespace, source_key, head_item_id, mutation_hash,
+             f"chrome-record:{revision}", int(not mutation["tombstone"])),
+        )
+        connection.commit()
+    except BaseException:
+        connection.rollback()
+        raise
+    finally:
+        connection.close()
+    if stored is not None:
+        _write_receipt(store, item_id, stored)
+    return {"state": "APPLIED", "namespace": namespace, "sourceKey": source_key,
+            "revision": revision, "tombstone": mutation["tombstone"],
+            "itemId": head_item_id}
 
 
 def _insert_item(connection: sqlite3.Connection, item: dict) -> tuple[int, str]:

@@ -5,7 +5,7 @@
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
   "confirmed_new_github_pr_count": 4,
-  "next_function_number": 18,
+  "next_function_number": 19,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -36,8 +36,8 @@
         "CAND-1759",
         "CAND-1760"
       ],
-      "state": "IMPLEMENTED_LOCAL_VERIFIED",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 20,
       "prerequisites_function_numbers": [],
       "acceptance": "Real SQLite search/context/enqueue/get/cancel; replay, restart, namespace isolation",
       "max_repo_writers": 1,
@@ -235,7 +235,7 @@
       "capability_id": "CAP-089",
       "title_ru": "Схема Chrome ↔ SQLite",
       "proposed_owner_anchor": "one-click-context/library-store.mjs",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "owner_status": "VERIFIED_EXISTING_CONTENT_LAB_SQLITE_OWNER",
       "related_candidate_ids": [
         "CAND-0881",
         "CAND-0882",
@@ -258,7 +258,7 @@
         "CAND-1889",
         "CAND-1890"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
+      "state": "IMPLEMENTED_LOCAL_VERIFIED",
       "github_pr_number": null,
       "prerequisites_function_numbers": [
         17
@@ -266,7 +266,12 @@
       "acceptance": "Versioned records, stale edit and tombstone conflict fixtures; preserve provenance",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "implementation_doc": "docs/automation/F18_CHROME_SQLITE_RECORDS_RU.md",
+      "implementation_head_sha": "be561e9c9b0a8abe82b03950dae2b334386f5f0e",
+      "receipt_path": "docs/automation/runs/F18_RECONCILIATION_2026-10-01_1242Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-07",
