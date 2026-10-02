@@ -25,6 +25,32 @@ python -m unittest discover -s content-lab -p 'test_*.py' -v
 FTS. Изменение ASR-модели или настроек создаёт другую identity.
 Предел текста — 2 200 000 байт; молчаливого усечения нет.
 
+## Выбранный ChatGPT export
+
+F-17 разбирает только явно выбранный локальный `conversations.json`, без cookies,
+аккаунта, browser automation или сетевого доступа:
+
+```bash
+python content-lab/content_lab.py ingest-chatgpt \
+  --file /selected/conversations.json --store ./local-content --namespace personal
+python content-lab/automation_core.py --store ./local-content \
+  search --namespace chatgpt:personal --query "qualification blocker"
+```
+
+Каждое текстовое сообщение получает стабильные `conversation_id`, `message_id`
+и `source_key`; identity версии зависит от текста, роли и позиции в mapping, но
+не от порядка JSON или времени повторного импорта. Неизменный второй импорт даёт
+`new_versions=0`. Изменённое сообщение создаёт новую immutable version и двигает
+только его current head; удалённые сообщения/разговоры становятся missing, история
+не удаляется. Текущий scoped search использует существующие `sync_heads`, а
+`items/content_fts` остаются единственным владельцем текста и индекса.
+
+Лимиты: export до 64 MiB, до 1000 разговоров/100 000 текстовых сообщений и
+64 MiB извлечённого текста суммарно; одно сообщение — до 2 200 000 байт. Image,
+audio, file pointers и другие non-text parts не загружаются и считаются в
+`skipped_non_text`. CLI receipt содержит только counts/hashes, не текст чатов.
+В репозитории тестируются только синтетические fixtures.
+
 ## Необязательная транскрипция CPU INT8
 
 Создай отдельное окружение и установи faster-whisper из его официального

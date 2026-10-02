@@ -8,6 +8,7 @@ import hashlib
 from html import unescape
 from html.parser import HTMLParser
 import json
+import math
 import os
 from pathlib import Path
 import re
@@ -20,8 +21,14 @@ from typing import Any
 SCHEMA = "occ.content-lab.item.v1"
 MAX_TEXT_BYTES = 2_200_000
 MAX_AUDIO_BYTES = 64 * 1024 * 1024
+MAX_CHATGPT_EXPORT_BYTES = 64 * 1024 * 1024
+MAX_CHATGPT_CONVERSATIONS = 1000
+MAX_CHATGPT_MESSAGES = 100_000
+MAX_CHATGPT_TEXT_BYTES = 64 * 1024 * 1024
 TEXT_SUFFIXES = {".txt", ".md", ".json", ".csv", ".py", ".js", ".ts", ".yaml", ".yml"}
 MODEL_FILES = ("model.bin", "config.json", "tokenizer.json", "preprocessor_config.json")
+SOURCE_ID = re.compile(r"^[A-Za-z0-9_.:-]{1,200}$")
+NAMESPACE = re.compile(r"^[A-Za-z0-9_.:-]{1,90}$")
 
 
 def _digest_file(path: Path) -> str:
@@ -43,6 +50,199 @@ def _read_text(path: Path) -> tuple[str, str]:
     if "\0" in text:
         raise ValueError("binary or UTF-16 input unsupported")
     return text, hashlib.sha256(raw).hexdigest()
+
+
+def _unique_object(pairs):
+    value = {}
+    for key, item in pairs:
+        if key in value:
+            raise ValueError("duplicate JSON key in ChatGPT export")
+        value[key] = item
+    return value
+
+
+def _reject_json_constant(value):
+    raise ValueError("non-finite JSON number in ChatGPT export")
+
+
+def _read_chatgpt_export(path: Path) -> tuple[list, str, int]:
+    if path.is_symlink() or not path.is_file() or path.suffix.lower() != ".json":
+        raise ValueError("regular local ChatGPT JSON export required")
+    before = path.stat()
+    with path.open("rb") as handle:
+        raw = handle.read(MAX_CHATGPT_EXPORT_BYTES + 1)
+    after = path.stat()
+    if path.is_symlink() or (before.st_size, before.st_mtime_ns) != (after.st_size, after.st_mtime_ns):
+        raise ValueError("ChatGPT export changed during read")
+    if len(raw) > MAX_CHATGPT_EXPORT_BYTES:
+        raise ValueError("ChatGPT export exceeds byte budget")
+    try:
+        source = raw.decode("utf-8-sig")
+        value = json.loads(source, object_pairs_hook=_unique_object,
+                           parse_constant=_reject_json_constant)
+    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+        raise ValueError("invalid UTF-8 ChatGPT JSON export") from exc
+    if not isinstance(value, list) or not 1 <= len(value) <= MAX_CHATGPT_CONVERSATIONS:
+        raise ValueError("bounded ChatGPT conversation array required")
+    return value, hashlib.sha256(raw).hexdigest(), len(raw)
+
+
+def _source_id(value, label):
+    if not isinstance(value, str) or not SOURCE_ID.fullmatch(value):
+        raise ValueError(f"stable ChatGPT {label} required")
+    return value
+
+
+def _source_time(value):
+    if value is None:
+        return None
+    if (isinstance(value, bool) or not isinstance(value, (int, float))
+            or not math.isfinite(value) or not 0 <= value <= 253402300799):
+        raise ValueError("finite ChatGPT source timestamp required")
+    return float(value)
+
+
+def _message_text(content):
+    if not isinstance(content, dict):
+        return None, 0, None
+    kind = content.get("content_type")
+    if kind is not None and (not isinstance(kind, str) or len(kind) > 100):
+        raise ValueError("bounded ChatGPT content type required")
+    parts = content.get("parts")
+    accepted, skipped = [], 0
+    if isinstance(parts, list):
+        for part in parts:
+            if isinstance(part, str):
+                if part.strip():
+                    accepted.append(part)
+            else:
+                skipped += 1
+    elif isinstance(content.get("text"), str) and content["text"].strip():
+        accepted.append(content["text"])
+    else:
+        return None, 1, kind
+    text = "\n".join(accepted)
+    return (text if text.strip() else None), (skipped if text.strip() else max(1, skipped)), kind
+
+
+def parse_chatgpt_export(path: Path, namespace: str) -> dict:
+    """Parse selected conversations into immutable message revisions.
+
+    Only synthetic schema facts become code assumptions. User content remains
+    local data and never grants action authority.
+    """
+    if not isinstance(namespace, str) or not NAMESPACE.fullmatch(namespace):
+        raise ValueError("bounded ChatGPT namespace required")
+    conversations, export_sha256, input_bytes = _read_chatgpt_export(path)
+    scope = "chatgpt:" + namespace
+    items, records, skipped_non_text, extracted_bytes = [], [], 0, 0
+    seen_conversations, seen_messages = set(), set()
+    for conversation in conversations:
+        if not isinstance(conversation, dict):
+            raise ValueError("ChatGPT conversation object required")
+        conversation_id = _source_id(conversation.get("id"), "conversation id")
+        if conversation_id in seen_conversations:
+            raise ValueError("duplicate ChatGPT conversation id")
+        seen_conversations.add(conversation_id)
+        title = conversation.get("title")
+        if title is not None and (not isinstance(title, str) or len(title) > 1000):
+            raise ValueError("bounded ChatGPT conversation title required")
+        mapping = conversation.get("mapping")
+        if not isinstance(mapping, dict) or len(mapping) > MAX_CHATGPT_MESSAGES:
+            raise ValueError("bounded ChatGPT mapping required")
+        records.append({
+            "conversation_id": conversation_id,
+            "title": title,
+            "create_time": _source_time(conversation.get("create_time")),
+            "update_time": _source_time(conversation.get("update_time")),
+            "current_node": (None if conversation.get("current_node") is None else
+                             _source_id(conversation.get("current_node"), "current node")),
+        })
+        for node_id, node in mapping.items():
+            node_id = _source_id(node_id, "node id")
+            if not isinstance(node, dict):
+                raise ValueError("ChatGPT mapping node object required")
+            message = node.get("message")
+            if message is None:
+                continue
+            if not isinstance(message, dict):
+                raise ValueError("ChatGPT message object required")
+            message_id = _source_id(message.get("id"), "message id")
+            message_key = (conversation_id, message_id)
+            if message_key in seen_messages:
+                raise ValueError("duplicate ChatGPT message id in conversation")
+            seen_messages.add(message_key)
+            parent = node.get("parent")
+            if parent is not None:
+                parent = _source_id(parent, "parent node id")
+            author = message.get("author")
+            role = author.get("role") if isinstance(author, dict) else None
+            if not isinstance(role, str) or not SOURCE_ID.fullmatch(role):
+                raise ValueError("stable ChatGPT author role required")
+            text, skipped, content_type = _message_text(message.get("content"))
+            skipped_non_text += skipped
+            if text is None:
+                continue
+            extracted_bytes += len(text.encode("utf-8"))
+            if extracted_bytes > MAX_CHATGPT_TEXT_BYTES or len(text.encode("utf-8")) > MAX_TEXT_BYTES:
+                raise ValueError("ChatGPT extracted text exceeds byte budget")
+            source_key = f"chatgpt/{conversation_id}/{message_id}"
+            revision_source = {
+                "conversation_id": conversation_id,
+                "message_id": message_id,
+                "node_id": node_id,
+                "parent_node_id": parent,
+                "role": role,
+                "content_type": content_type,
+                "text": text,
+            }
+            revision_sha256 = hashlib.sha256(
+                json.dumps(revision_source, ensure_ascii=False, sort_keys=True,
+                           separators=(",", ":"), allow_nan=False).encode("utf-8")
+            ).hexdigest()
+            item_id = hashlib.sha256(
+                json.dumps({"namespace": scope, "source_key": source_key,
+                            "revision_sha256": revision_sha256,
+                            "extractor": "chatgpt-export.v1"},
+                           sort_keys=True, separators=(",", ":")).encode()
+            ).hexdigest()
+            created = _source_time(message.get("create_time"))
+            items.append({
+                "schema_version": SCHEMA,
+                "id": item_id,
+                "input_file": path.name,
+                "source_url": None,
+                "input_sha256": revision_sha256,
+                "export_sha256": export_sha256,
+                "text_sha256": hashlib.sha256(text.encode("utf-8")).hexdigest(),
+                "kind": "chatgpt_message",
+                "extractor": "chatgpt-export.v1",
+                "text": text,
+                "authority": "source-content-not-action-instructions",
+                "completeness": "SELECTED_LOCAL_EXPORT_TEXT_ONLY",
+                "asr_inference_performed": False,
+                "network_fetch_performed": False,
+                "namespace": scope,
+                "source_key": source_key,
+                "conversation_id": conversation_id,
+                "conversation_title": title,
+                "message_id": message_id,
+                "node_id": node_id,
+                "parent_node_id": parent,
+                "author_role": role,
+                "content_type": content_type,
+                "source_created_at": created,
+                "revision_sha256": revision_sha256,
+                "created_at": (datetime.fromtimestamp(created, timezone.utc).isoformat()
+                               if created is not None else None),
+            })
+            if len(items) > MAX_CHATGPT_MESSAGES:
+                raise ValueError("ChatGPT message count exceeds budget")
+    items.sort(key=lambda item: (item["conversation_id"], item["message_id"], item["id"]))
+    records.sort(key=lambda item: item["conversation_id"])
+    return {"namespace": scope, "export_sha256": export_sha256,
+            "input_bytes": input_bytes, "conversations": records, "items": items,
+            "skipped_non_text": skipped_non_text, "extracted_bytes": extracted_bytes}
 
 
 class _HtmlText(HTMLParser):
@@ -281,6 +481,23 @@ def _database(store: Path) -> sqlite3.Connection:
     return connection
 
 
+def _ensure_sync_tables(connection: sqlite3.Connection) -> None:
+    """Use the durable Core head/version schema in the same SQLite owner."""
+    connection.executescript("""
+        CREATE TABLE IF NOT EXISTS sync_heads(
+          namespace TEXT, source_key TEXT, item_id TEXT, raw_hash TEXT,
+          generation TEXT, present INTEGER, PRIMARY KEY(namespace, source_key));
+        CREATE TABLE IF NOT EXISTS sync_versions(
+          namespace TEXT, source_key TEXT, item_id TEXT, observed REAL,
+          PRIMARY KEY(namespace, source_key, item_id));
+        CREATE TABLE IF NOT EXISTS chatgpt_conversations(
+          namespace TEXT, conversation_id TEXT, title TEXT,
+          create_time REAL, update_time REAL, current_node TEXT,
+          export_sha256 TEXT, generation TEXT, present INTEGER, updated REAL,
+          PRIMARY KEY(namespace, conversation_id));
+    """)
+
+
 def _insert_item(connection: sqlite3.Connection, item: dict) -> tuple[int, str]:
     """Shared transaction primitive for ingestion and durable synchronization."""
     raw = json.dumps(item, ensure_ascii=False, sort_keys=True, allow_nan=False)
@@ -332,6 +549,90 @@ def save_item(store: Path, item: dict) -> dict:
     }
 
 
+def import_chatgpt_export(store: Path, path: Path, namespace: str) -> dict:
+    """Atomically advance current message heads while retaining revision history."""
+    parsed = parse_chatgpt_export(path, namespace)
+    generation = os.urandom(16).hex()
+    observed, inserted, unchanged, receipts = time.time(), 0, 0, []
+    connection = _database(store)
+    try:
+        _ensure_sync_tables(connection)
+        connection.execute("BEGIN IMMEDIATE")
+        for record in parsed["conversations"]:
+            connection.execute(
+                "INSERT INTO chatgpt_conversations VALUES (?,?,?,?,?,?,?,?,?,?) "
+                "ON CONFLICT(namespace,conversation_id) DO UPDATE SET "
+                "title=excluded.title,create_time=excluded.create_time,"
+                "update_time=excluded.update_time,current_node=excluded.current_node,"
+                "export_sha256=excluded.export_sha256,generation=excluded.generation,"
+                "present=1,updated=excluded.updated",
+                (parsed["namespace"], record["conversation_id"], record["title"],
+                 record["create_time"], record["update_time"], record["current_node"],
+                 parsed["export_sha256"], generation, 1, observed),
+            )
+        for item in parsed["items"]:
+            count, stored = _insert_item(connection, item)
+            inserted += count
+            previous = connection.execute(
+                "SELECT item_id FROM sync_heads WHERE namespace=? AND source_key=?",
+                (parsed["namespace"], item["source_key"]),
+            ).fetchone()
+            unchanged += int(previous is not None and previous[0] == item["id"])
+            connection.execute(
+                "INSERT OR IGNORE INTO sync_versions VALUES (?,?,?,?)",
+                (parsed["namespace"], item["source_key"], item["id"], observed),
+            )
+            connection.execute(
+                "INSERT INTO sync_heads VALUES (?,?,?,?,?,1) "
+                "ON CONFLICT(namespace,source_key) DO UPDATE SET "
+                "item_id=excluded.item_id,raw_hash=excluded.raw_hash,"
+                "generation=excluded.generation,present=1",
+                (parsed["namespace"], item["source_key"], item["id"],
+                 item["revision_sha256"], generation),
+            )
+            receipts.append((item["id"], stored))
+        connection.execute(
+            "UPDATE sync_heads SET present=0 WHERE namespace=? AND generation<>?",
+            (parsed["namespace"], generation),
+        )
+        connection.execute(
+            "UPDATE chatgpt_conversations SET present=0 WHERE namespace=? AND generation<>?",
+            (parsed["namespace"], generation),
+        )
+        missing = connection.execute(
+            "SELECT count(*) FROM sync_heads WHERE namespace=? AND present=0",
+            (parsed["namespace"],),
+        ).fetchone()[0]
+        missing_conversations = connection.execute(
+            "SELECT count(*) FROM chatgpt_conversations WHERE namespace=? AND present=0",
+            (parsed["namespace"],),
+        ).fetchone()[0]
+        connection.commit()
+    except BaseException:
+        connection.rollback()
+        raise
+    finally:
+        connection.close()
+    for item_id, stored in receipts:
+        _write_receipt(store, item_id, stored)
+    return {
+        "state": "IMPORTED_CHATGPT_EXPORT",
+        "namespace": parsed["namespace"],
+        "conversations": len(parsed["conversations"]),
+        "messages": len(parsed["items"]),
+        "new_versions": inserted,
+        "unchanged": unchanged,
+        "missing": missing,
+        "missing_conversations": missing_conversations,
+        "skipped_non_text": parsed["skipped_non_text"],
+        "input_bytes": parsed["input_bytes"],
+        "extracted_bytes": parsed["extracted_bytes"],
+        "export_sha256": parsed["export_sha256"],
+        "model_calls": 0,
+        "network_fetches": 0,
+    }
+
+
 def search(store: Path, query: str, *, limit: int = 5) -> list[dict]:
     if not 1 <= limit <= 50:
         raise ValueError("search limit must be between 1 and 50")
@@ -372,6 +673,10 @@ def main(argv=None) -> int:
     lookup.add_argument("--store", required=True, type=Path)
     lookup.add_argument("--query", required=True)
     lookup.add_argument("--limit", type=int, default=5)
+    chatgpt = commands.add_parser("ingest-chatgpt")
+    chatgpt.add_argument("--file", required=True, type=Path)
+    chatgpt.add_argument("--store", required=True, type=Path)
+    chatgpt.add_argument("--namespace", required=True)
     args = parser.parse_args(argv)
     try:
         if args.command == "search":
@@ -379,6 +684,8 @@ def main(argv=None) -> int:
                 "state": "searched",
                 "matches": search(args.store, args.query, limit=args.limit),
             }
+        elif args.command == "ingest-chatgpt":
+            result = import_chatgpt_export(args.store, args.file, args.namespace)
         else:
             item = (
                 extract_file(args.file, source_url=args.source_url)
