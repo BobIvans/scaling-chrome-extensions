@@ -356,7 +356,9 @@ class RepoContextTests(TestCase):
         self.put('main.py', b'pass\n')
         self.commit()
         oid = self.git('rev-parse', 'HEAD:main.py').decode().strip()
-        (self.checkout / '.git/objects' / oid[:2] / oid[2:]).unlink()
+        blob = self.checkout / '.git/objects' / oid[:2] / oid[2:]
+        blob.chmod(0o600)  # Git for Windows marks object fixtures read-only.
+        blob.unlink()
         requests = []
         class Handler(http.server.BaseHTTPRequestHandler):
             def do_GET(self):
