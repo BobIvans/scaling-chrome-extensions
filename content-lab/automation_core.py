@@ -26,6 +26,8 @@ from content_lab import _database, _insert_item, _write_receipt, extract_file
 
 NAME = re.compile(r"^[A-Za-z0-9_.:-]{1,100}$")
 SHA = re.compile(r"^[0-9a-f]{40}$")
+GITHUB_REPOSITORY = re.compile(r"^[A-Za-z0-9_.-]{1,100}/[A-Za-z0-9_.-]{1,100}$")
+TOKEN_ENV = re.compile(r"^OCC_[A-Z0-9_]{1,59}$")
 SUPPORTED = {".txt", ".md", ".json", ".csv", ".py", ".js", ".ts",
              ".yaml", ".yml", ".html", ".htm", ".srt", ".vtt"}
 TERMINAL = {"SUCCEEDED", "FAILED", "CANCELLED", "BLOCKED"}
@@ -232,6 +234,21 @@ def validate_job(payload, policy):
         raise ValueError("CI_SNAPSHOT_AND_REQUIRED_CHECKS_REQUIRED")
     if not isinstance(ci.get("snapshot_file"), str):
         raise ValueError("OPERATOR_CI_SNAPSHOT_REQUIRED")
+    transport = ci.get("transport")
+    if transport is not None:
+        allowed = {"kind", "repository", "token_env", "timeout_seconds", "max_pages"}
+        if (not isinstance(transport, dict) or set(transport) - allowed
+                or transport.get("kind") != "github_check_runs_v1"
+                or not isinstance(transport.get("repository"), str)
+                or not GITHUB_REPOSITORY.fullmatch(transport["repository"])
+                or not isinstance(transport.get("token_env"), str)
+                or not TOKEN_ENV.fullmatch(transport["token_env"])):
+            raise ValueError("CI_TRANSPORT_SCHEMA")
+        if (not Path(ci["snapshot_file"]).is_absolute()
+                or any(len(name) > 200 for name in ci["required_checks"])):
+            raise ValueError("CI_TRANSPORT_SCHEMA")
+        strict_int(transport.get("timeout_seconds", 15), 1, 30)
+        strict_int(transport.get("max_pages", 10), 1, 10)
     strict_int(profile.get("retry_delay_seconds", 1), 0, 300)
     allowed = profile.get("allowed_paths")
     if not isinstance(allowed, list) or not allowed or not all(isinstance(p, str) and p and not p.startswith(("/", "\\")) and ".." not in Path(p).parts for p in allowed):
@@ -504,7 +521,18 @@ class Core:
                 snapshot = load_json(Path(ci["snapshot_file"]))
                 if snapshot.get("schema") != "occ.ci-snapshot.v1" or snapshot.get("head_sha") != job["checkpoint"]["head_sha"]:
                     continue
-                if snapshot.get("origin") != "operator_github_actions_export":
+                origin = snapshot.get("origin")
+                if origin == "operator_github_actions_export":
+                    evidence_origin = "operator_snapshot_not_independently_authenticated"
+                elif origin == "authenticated_github_check_runs_v1":
+                    transport = ci.get("transport")
+                    if (not isinstance(transport, dict)
+                            or snapshot.get("repository") != transport.get("repository")
+                            or snapshot.get("required_checks") != ci["required_checks"]
+                            or snapshot.get("transport_status") != "OBSERVED"):
+                        continue
+                    evidence_origin = "authenticated_github_check_runs_v1"
+                else:
                     continue
                 checks = snapshot.get("checks")
                 if not isinstance(checks, list):
@@ -532,7 +560,7 @@ class Core:
                     with db:
                         result = {"local_tests": "PASSED", "ci": state,
                                   "ci_snapshot_sha256": digest(snapshot),
-                                  "evidence_origin": "operator_snapshot_not_independently_authenticated",
+                                  "evidence_origin": evidence_origin,
                                   "model_calls": 0, "transactions_sent": 0}
                         changed = db.execute("UPDATE jobs SET state=?,result=?,available=?,updated=? WHERE id=? AND state='WAITING_CI' AND cancel_requested=0",
                                              (state, encoded(result), time.time() + profile.get("retry_delay_seconds", 1), time.time(), job["id"])).rowcount

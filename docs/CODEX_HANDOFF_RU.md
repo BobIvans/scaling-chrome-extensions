@@ -5,15 +5,16 @@
 
 ## Текущая точка
 
-F-15 реализована в draft PR [#16](https://github.com/BobIvans/scaling-chrome-extensions/pull/16),
-stacked на #15. Code head `49013fba8cd4f96b2828dbb557009826c6989f24`:
-172 локальных проверки, exact-head CI Linux/Windows PASS.
-Receipt: `docs/automation/runs/F15_2026-10-01_0832Z.json`.
-Admission разрешает только зарегистрированные sync templates; bounded supervisor
-имеет максимум суток/ticks, один lease и явную reconciliation истёкшего lease.
-Он не запускает worker. Windows service/Task Scheduler и реальный 24h run не проверены.
-Дальнейшая точка: F-16 — authenticated exact-head CI transport к существующему owner.
-Номер функции не является номером GitHub PR. #16 не merged.
+F-16 реализована в draft PR [#18](https://github.com/BobIvans/scaling-chrome-extensions/pull/18),
+stacked на #16. Code head `2823c7788a76fb1c45e63b189f205a1272b560c1`:
+182 локальные проверки, exact-head CI Linux/Windows PASS.
+Receipt: `docs/automation/runs/F16_2026-10-01_0952Z.json`.
+Read-only transport получает exact-head GitHub Actions check runs для repository,
+зарегистрированного в policy, и атомарно обновляет существующий snapshot owner.
+Missing/revoked credential и bounded transport failures очищают stale green.
+Core сохраняет release-state authority. Реальный authenticated credential smoke не выполнялся.
+Дальнейшая точка: F-17 — parser выбранного ChatGPT export после owner/duplicate аудита.
+Номер функции не является номером GitHub PR. #18 не merged.
 
 Предыдущая точка:
 
@@ -46,8 +47,8 @@ F-13 — typed Native Host bridge к этому owner: поиск/контекс
 Его фактический PR/head и GitHub CI фиксируются отдельным receipt после публикации.
 Наличие adapter не доказывает установку в Windows Chrome.
 
-**Следующий номер для продолжения: 16.** F-15 scheduler покрыт draft #16.
-Перед F-16 проверь актуальные head/receipts и CI; сохранить existing CI snapshot owner и release authority.
+**Следующий номер для продолжения: 17.** F-16 CI transport покрыт draft #18.
+Перед F-17 проверь актуальные head/receipts и существующий Content Lab parser/SQLite owner.
 
 ## Система номеров
 
@@ -69,7 +70,7 @@ Wave пересекается с каталогом: **2000 + 33 не означ
 1. Получи актуальные head/base/default SHA, открытые PR и точные CI checks.
    Прочитай `AGENTS.md`, если он появился, и действующий owner до правок.
 2. Сверь последние receipts и overlapping PR. Выбери один подтверждённый gap
-   из wave по dependencies; после проверки F-15 receipt начни с F-16. При изменении head повтори аудит.
+   из wave по dependencies; после проверки F-16 receipt начни с F-17. При изменении head повтори аудит.
 3. Один repo writer. Отдельная ветка/worktree от выбранного чистого SHA;
    подготовь минимальный diff, сохраняющий существующие публичные контракты.
 4. Запусти относящиеся к изменению meaningful regression/fault tests.

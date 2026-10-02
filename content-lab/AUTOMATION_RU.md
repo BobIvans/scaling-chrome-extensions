@@ -94,14 +94,32 @@ desktop IPC не наследуются, Git hooks отключены. Worktree 
 Глобальные пользовательские Git настройки не расширяют права и не меняют этот профиль.
 
 После локальных тестов job получает `WAITING_CI`. Core не выполняет push, merge
-или создание PR. Операторский GitHub adapter публикует проверенный commit и
-атомарно обновляет `ci.snapshot_file` из фактического GitHub Actions ответа:
+или создание PR. Публикация проверенного commit остаётся отдельным операторским
+действием. После неё F-16 transport читает GitHub check-runs только для
+зарегистрированного repository и exact head, затем атомарно заменяет существующий
+`ci.snapshot_file`:
+
+```sh
+OCC_GITHUB_TOKEN=... python content-lab/github_ci_snapshot.py \
+  --policy policy.json --repo-profile occ --head-sha EXACT_40_HEX_COMMIT
+```
+
+Имя private token env, repository, required checks, таймаут и предел страниц
+заданы policy, а не job/чатом. Поддерживается только `https://api.github.com`;
+redirect блокируется. Token не записывается в snapshot или CLI output. При
+отсутствующем/отозванном token, сетевой ошибке или превышении pagination bound
+старый green snapshot заменяется `transport_status=BLOCKED` без checks, поэтому
+Core не может принять его за успех. Transport не вызывает worker и не выполняет
+push/PR/merge.
 
 ```json
 {
   "schema":"occ.ci-snapshot.v1",
-  "origin":"operator_github_actions_export",
+  "origin":"authenticated_github_check_runs_v1",
+  "repository":"OWNER/REPOSITORY",
   "head_sha":"EXACT_40_HEX_COMMIT",
+  "required_checks":["core (ubuntu-latest)","core (windows-latest)"],
+  "transport_status":"OBSERVED",
   "checks":[
     {"name":"core (ubuntu-latest)","run_id":123,"head_sha":"EXACT_40_HEX_COMMIT","status":"completed","conclusion":"success"},
     {"name":"core (windows-latest)","run_id":124,"head_sha":"EXACT_40_HEX_COMMIT","status":"completed","conclusion":"success"}
@@ -109,10 +127,12 @@ desktop IPC не наследуются, Git hooks отключены. Worktree 
 }
 ```
 
-Check names совпадают с policy, каждый запуск относится к этому commit. Вход —
-**доверенный операторский export**, а не independently authenticated release proof.
-Page text или модель не подменяют этот файл. Latest run ID по имени заменяет
-прежний результат; неполный, чужой или конфликтующий export оставляет `WAITING_CI`.
+Check names совпадают с policy, каждый check run относится к этому commit и
+принадлежит GitHub Actions app. Repository и required set повторно связываются
+Core с policy. Page text или модель не подменяют этот файл. Latest check-run ID
+по имени заменяет прежний результат; неполный, чужой, pending или конфликтующий
+ответ оставляет `WAITING_CI`. Старый `operator_github_actions_export` сохранён
+для совместимости, но результат явно помечается как independently unauthenticated.
 Полный отрицательный CI или failed test может выбрать следующий подготовленный
 патч. Лимит — 3 попытки, concurrency — 1, money budget — 0. Неизвестная ошибка
 не исправляется без нового подготовленного патча.
