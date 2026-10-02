@@ -8,7 +8,7 @@ import {spawnSync} from 'node:child_process';
 import {EventEmitter} from 'node:events';
 import {PassThrough} from 'node:stream';
 import {JobHost} from './host.mjs';
-import {DurableBridge,durableEnvironment,DURABLE_OUTPUT_BYTES,DURABLE_TIMEOUT_MS} from './durable.mjs';
+import {DurableBridge,durableEnvironment,DURABLE_COMMANDS,DURABLE_OUTPUT_BYTES,DURABLE_TIMEOUT_MS} from './durable.mjs';
 import {libraryMutation} from '../one-click-context/library-store.mjs';
 
 const lab=fileURLToPath(new URL('../content-lab/',import.meta.url));
@@ -42,8 +42,7 @@ test('durable bridge is disabled by default and exposes only explicit opt-in cap
  for(const pythonPath of ['python',123,null])assert.throws(()=>new DurableBridge({enabled:true,pythonPath,profilePath:'/profile',adapterPath:'/adapter'}),/DURABLE_OPERATOR_CONFIG_REQUIRED/);
 });
 test('actual JobHost uses scoped SQLite search/context with UTF-8 provenance',async t=>{
- const f=await fixture(t),host=f.host();assert.deepEqual((await host.handle({type:'hello'})).durableCommands,
-  ['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get']);
+ const f=await fixture(t),host=f.host();assert.deepEqual((await host.handle({type:'hello'})).durableCommands,DURABLE_COMMANDS);
  const {durable}=await host.handle({type:'durable.search',namespace:'docs',query:'needle',limit:1,requestId:1});
  assert.equal(durable.items.length,1);assert.equal(durable.items[0].source_key,'note.md');
  const result=await host.handle({type:'durable.context',namespace:'docs',ids:[durable.items[0].id],maxBytes:1000});
