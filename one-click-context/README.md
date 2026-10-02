@@ -1,10 +1,11 @@
-# One Click Context 0.11.0 — локальное Chrome-расширение
+# One Click Context 0.12.0 — локальное Chrome-расширение
 
-Версия 0.11.0 добавляет независимый STOP для bounded push-to-talk: доверенная
-кнопка или Escape немедленно отменяет локальную voice-сессию, отбрасывает audio и
-ручной transcript preview, инвалидирует позднее разрешение микрофона и показывает
-терминальный JSON receipt. Путь не ждёт и не вызывает ASR, upload, AI, Native Host,
-очередь или действие.
+Версия 0.12.0 заменяет свободный agent instruction на локально проверяемый
+`occ.goal-proposal.v1`: обязательные положительная цель, constraints и отдельные
+prohibitions, а также типизированные `money_budget=0` и `max_parallel=1`.
+Пропуски, лишние поля, неверные типы и неоднозначные отрицания блокируются до
+Native Host. Proposal не даёт action authority и запускается только прежней
+доверенной кнопкой с подтверждением.
 
 Версия 0.9.0 разделяет найденные сообщения переписки и открытый документ, а также
 показывает детерминированный инвентарь видимых вложений, frames, медиа, свёрнутых
@@ -81,6 +82,9 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
   и не передаётся в очередь, Native Host, Web Speech или сеть.
 - STOP voice и Escape не зависят от ASR: они закрывают media tracks, отбрасывают
   незавершённые callbacks/audio/transcript и показывают фактический local receipt.
+- Перед Codex handoff цель преобразуется в строгий `occ.goal-proposal.v1`.
+  Budget и concurrency в этой версии принимают только `0` и `1`; отрицательные
+  формулировки требуется перенести в отдельные prohibition labels без слов «не».
 
 Default traversal limits: 20,000 ms, 160 steps, approximately 2 MB of captured
 content. These are checked between DOM samples, not a preemptive hard CPU deadline.

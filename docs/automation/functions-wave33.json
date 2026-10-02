@@ -1,11 +1,11 @@
 {
   "schema_version": "occ.wave33.v1",
-  "generated_at_utc": "2026-10-01T15:46:39+00:00",
+  "generated_at_utc": "2026-10-01T16:45:29+00:00",
   "task_count": 33,
   "interpretation_ru": "33 связующие работы, не 33 прочитанных чата и не 33 созданных PR. Wave пересекает существующие 2000 CAND; числа не складываются без дедупликации.",
   "existing_candidate_count": 2000,
-  "confirmed_new_github_pr_count": 9,
-  "next_function_number": 22,
+  "confirmed_new_github_pr_count": 10,
+  "next_function_number": 23,
   "items": [
     {
       "wave_id": "WAVE-01",
@@ -322,8 +322,8 @@
       "function_number": 20,
       "capability_id": "CAP-073",
       "title_ru": "Push-to-talk и транскрипт preview",
-      "proposed_owner_anchor": "one-click-context/agent",
-      "owner_status": "REVERIFY_ON_CURRENT_SHA",
+      "proposed_owner_anchor": "one-click-context/library/agent.mjs + goal-normalizer.mjs",
+      "owner_status": "VERIFIED_EXISTING_AGENT_HANDOFF_OWNER_WITH_NEW_PURE_NORMALIZER",
       "related_candidate_ids": [
         "CAND-0721",
         "CAND-0722",
@@ -435,8 +435,8 @@
         "CAND-1249",
         "CAND-1250"
       ],
-      "state": "PROPOSED_REQUIRES_OWNER_AUDIT",
-      "github_pr_number": null,
+      "state": "IMPLEMENTED_LOCAL_AND_EXACT_HEAD_CI_PASS",
+      "github_pr_number": 24,
       "prerequisites_function_numbers": [
         20,
         21
@@ -444,7 +444,12 @@
       "acceptance": "Typed goal/constraints/budget/concurrency; negation and missing fields reject",
       "max_repo_writers": 1,
       "paid_api_budget_default": 0,
-      "max_attempts": 3
+      "max_attempts": 3,
+      "implementation_doc": "docs/automation/F22_TYPED_GOAL_NORMALIZER_RU.md",
+      "implementation_head_sha": "90912948d4e1d1b89b853c3aaac91389d0929045",
+      "receipt_path": "docs/automation/runs/F22_2026-10-01_1645Z.json",
+      "closed_candidate_ids": [],
+      "related_candidate_link_semantics": "TOPIC_REFERENCE_ONLY; NO_AUTOMATIC_CLOSURE"
     },
     {
       "wave_id": "WAVE-11",
@@ -1357,7 +1362,7 @@
       "max_attempts": 3
     }
   ],
-  "implemented_function_count": 9,
+  "implemented_function_count": 10,
   "actual_implementation_pr_numbers": [
     14,
     15,
@@ -1367,7 +1372,8 @@
     20,
     21,
     22,
-    23
+    23,
+    24
   ],
-  "confirmed_new_github_pr_count_semantics": "Nine implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22 and F21 -> #23; none merged. GitHub #17 is not counted as a function implementation PR."
+  "confirmed_new_github_pr_count_semantics": "Ten implementation PRs in this wave: F13 -> #14, F14 -> #15, F15 -> #16, F16 -> #18, F17 -> #19, F18 -> #20, F19 -> #21, F20 -> #22, F21 -> #23 and F22 -> #24; none merged. GitHub #17 is not counted as a function implementation PR."
 }
