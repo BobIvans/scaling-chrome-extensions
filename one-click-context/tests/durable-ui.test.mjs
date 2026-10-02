@@ -102,7 +102,7 @@ class Element{
 function dom(){const ids=['durable-search','durable-context','durable-enqueue','durable-refresh','durable-status','durable-profile','durable-namespace','durable-query','durable-template','durable-task-key','durable-hits','durable-output','durable-jobs'];const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));elements['durable-profile'].value='local';elements['durable-namespace'].value='docs';return {elements,document:{getElementById:id=>elements[id],createElement:()=>new Element()}};}
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
 function agentDOM(){
- const d=dom();for(const id of ['agent-connect','agent-run','agent-disconnect','agent-status','agent-mode','agent-instruction','agent-constraints','agent-prohibitions','agent-budget','agent-parallel','agent-normalize','agent-goal-proposal','agent-jobs'])d.elements[id]=new Element();
+ const d=dom();for(const id of ['agent-connect','agent-run','agent-disconnect','agent-status','agent-mode','agent-instruction','agent-constraints','agent-prohibitions','agent-budget','agent-parallel','agent-normalize','agent-route','agent-goal-proposal','agent-route-advice','agent-jobs'])d.elements[id]=new Element();
  d.elements['agent-budget'].value='0';d.elements['agent-parallel'].value='1';
  const option=new Element();d.elements['agent-mode'].querySelector=()=>option;return d;
 }
@@ -112,6 +112,7 @@ test('agent view normalizes locally and rejects ambiguous negation before native
  const {elements:e,document}=agentDOM();Object.assign(globalThis,{document,localStorage:storage(),chrome:undefined,window:{addEventListener(){}}});
  const agent=attachAgent({getSelection:()=>'',getEpoch:()=>0,addResult:()=>{}});e['agent-instruction'].value='Сравнить документы';e['agent-constraints'].value='Сохранить SHA';e['agent-prohibitions'].value='Публикация данных';
  e['agent-normalize'].onclick({isTrusted:false});assert.equal(e['agent-goal-proposal'].value,'');e['agent-normalize'].onclick({isTrusted:true});assert.equal(JSON.parse(e['agent-goal-proposal'].value).action_authority,false);
+ e['agent-route'].onclick({isTrusted:false});assert.equal(e['agent-route-advice'].value,'');e['agent-route'].onclick({isTrusted:true});const route=JSON.parse(e['agent-route-advice'].value);assert.equal(route.route,'ANALYZE_SELECTED_CONTEXT');assert.equal(route.action_authority,false);assert.equal(route.dispatch_allowed,false);
  e['agent-instruction'].value='Не публиковать';e['agent-normalize'].onclick({isTrusted:true});assert.equal(e['agent-goal-proposal'].value,'');assert.match(e['agent-status'].textContent,/NEGATION_AMBIGUOUS/);agent.clear();
 });
 

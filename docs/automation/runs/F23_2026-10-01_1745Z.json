@@ -1,0 +1,175 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 23,
+  "job_id": "occ-f23-laya-advisory-router-20261001T1745Z",
+  "recorded_at_utc": "2026-10-01T17:45:17Z",
+  "state": "DONE",
+  "completion_scope": "Deterministic advisory-only Laya routing over canonical typed goal proposals",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f23-laya-advisory-router",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/25",
+  "pr_number": 25,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f22-typed-goal-normalizer",
+  "base_sha": "ca78537b6676346556742e46972b039af23e55cf",
+  "head_sha": "99d5e4eb2887dc56a441fd1f3562d2861dea94e8",
+  "tested_tree_sha": "135aa6cde29ab45a555cf1d96cd6f83e52a11617",
+  "run_diff_sha256": "421639569e1ca9e8017487d668af26d53eef650fe011146d30b04a00bbd1acde",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 24,
+    "previous_head_sha": "ca78537b6676346556742e46972b039af23e55cf",
+    "previous_exact_head_ci_run": 36894559624,
+    "previous_exact_head_ci": "success",
+    "open_f23_prs_before_write": [],
+    "duplicate_f23_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "Canonical goal proposals had no validated advisory route or explicit confidence-to-authority boundary",
+    "owner_audit": "agent.mjs remains the UI owner; advisory-router.mjs is pure and existing SQLite library, canonical job queue, Native Host and cancellation owners remain unchanged"
+  },
+  "change": {
+    "owner": "one-click-context/library/agent.mjs",
+    "pure_router": "one-click-context/library/advisory-router.mjs",
+    "extension_version": "0.13.0",
+    "proposal_schema": "occ.goal-proposal.v1",
+    "route_schema": "occ.advisory-route.v1",
+    "routes": [
+      "ANALYZE_SELECTED_CONTEXT",
+      "BUILD_JOB_ARTIFACTS",
+      "REVIEW_REGISTERED_ACTION",
+      "MANUAL_REVIEW"
+    ],
+    "languages_in_fixture": [
+      "ru",
+      "en",
+      "lv"
+    ],
+    "held_out_cases": 12,
+    "router_correct": 12,
+    "baseline_correct": 6,
+    "router_accuracy_milli": 1000,
+    "baseline_accuracy_milli": 500,
+    "delta_accuracy_milli": 500,
+    "action_authority": false,
+    "dispatch_allowed": false,
+    "confidence_grants_authority": false,
+    "prohibitions_used_as_positive_matches": false,
+    "network_or_provider_call_added": false,
+    "queue_or_action_dispatch_added": false
+  },
+  "catalog_reconciliation": {
+    "reason": "Earlier catalog-only generic patches shifted owner metadata while the implementation records and receipts remained correct",
+    "corrected_function_numbers": [
+      20,
+      21,
+      22
+    ],
+    "code_changed_for_reconciled_functions": false,
+    "implementation_sha_changed_for_reconciled_functions": false
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 unchanged",
+    "library": "existing one-click-context library records unchanged",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "native_host": "agent-bridge/host.mjs unchanged",
+    "durable_ui": "one-click-context/library/durable-ui.mjs behavior unchanged",
+    "voice": "voice transcript remains unbound and has no goal/router/queue authority",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "node --test one-click-context/tests/advisory-router.test.mjs one-click-context/tests/goal-normalizer.test.mjs one-click-context/tests/durable-ui.test.mjs",
+      "result": "PASS",
+      "checks": 32,
+      "exit_code": 0,
+      "phase": "focused; included in final extension discovery"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0
+    },
+    {
+      "command": "python one-click-context/scripts/package_chrome_ready.py <temporary-directory>",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0,
+      "artifact_tracked": false,
+      "package_sha256": "a714fef36207dc492e4f254f3f03674bf2baed87f27b9d756a91098f4fd31937"
+    },
+    {
+      "command": "python -m json.tool docs/automation/functions-wave33.json >/dev/null && python -m json.tool docs/automation/runs/F23_2026-10-01_1745Z.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_local_regression_checks": 225,
+  "focused_checks_overlap_warning": "The 32 focused checks are included in the 95 extension checks; package entries are validation evidence and are not added to 225.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "99d5e4eb2887dc56a441fd1f3562d2861dea94e8",
+    "run": {
+      "id": 36901436826,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36901436826"
+    },
+    "checks": [
+      {
+        "id": 110501306396,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36901436826/job/110501306396"
+      },
+      {
+        "id": 110501305955,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36901436826/job/110501305955"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "test_attempts": 1,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "network_content_fetches": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F23 remains a draft PR and is not merged or deployed.",
+    "No installed Windows Chrome or real Codex CLI job was exercised; UI integration uses deterministic test ports.",
+    "The router is a bounded lexical RU/EN/LV rules baseline, not semantic language understanding.",
+    "The versioned HELD_OUT fixture is repository evaluation data, not an independently collected production corpus.",
+    "A suggested registered action has not yet been bound to a strict template and cannot execute.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 24,
+  "next_job": "Audit the existing CPU ASR adapter and owned consented-audio fixtures, then implement at most one local RU/LV benchmark that reports WER, action accuracy, p95 and RAM without downloads or provider calls; unknown measurements must remain unknown."
+}
