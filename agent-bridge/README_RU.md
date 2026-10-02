@@ -88,3 +88,12 @@ transport child завершается, SQLite остаётся владельц
 проверьте get. Новый ключ может создать второе задание. Cancel можно повторить;
 RUNNING/NEEDS_RECONCILIATION остаётся таким до подтверждения остановки worker
 согласно core policy. Adapter не утверждает, что сторонний worker уже остановлен.
+
+
+## Opt-in qualification.inspect
+
+Текущий Native Host также может открыть одну фиксированную diagnostic-команду для связки с `studious-pancake`: `qualification.inspect`. По умолчанию она отсутствует. Для включения оператор должен отдельно подготовить `qualification-profile.json` и добавить `qualificationCore.enabled=true` в `host-config.json`.
+
+Команда принимает только task ID, одну из точных readiness-фраз и bounded source refs. Python/script/checkouts/SHA/output/timeout не приходят из Chrome или AI и берутся только из operator profile. Child запускается без shell и без AI/API secrets; ответ обязан оставаться sender-free: `qualified=false`, `release_authorized=false`, `live_authorized=false`, `transactions_sent=0`.
+
+Подробный runbook: `QUALIFICATION_ADAPTER_RU.md`. Installer копирует `qualification.mjs` и `qualification_adapter.py`, но не включает эту возможность автоматически.
