@@ -25,11 +25,17 @@
 | Подготовленный patch и тесты | `work` | Отдельный worktree, pinned base/patch, зарегистрированный argv |
 | CI и bounded retry | `work` | Все required checks на exact SHA; до 3 подготовленных попыток |
 
-Это **локальный CLI backend**. Существующая Chrome библиотека (`library.html`,
-localStorage) пока не синхронизирована с SQLite. Native JobHost (`agent-bridge/host.mjs`)
-сохраняет прежний контракт и не перенаправляет jobs автоматически в этот backend.
-Следующий этап: search/context и enqueue/get/cancel через существующий host,
-одна согласованная record schema, затем карточки очереди в UI.
+**Функция 13 — типизированный Native JobHost adapter.** `agent-bridge/host.mjs`
+сохраняет прежние временные Codex jobs и по отдельному операторскому opt-in
+принимает `durable.search/context/enqueue/get/cancel`. Эти пять команд обращаются
+к тому же SQLite owner через `native_adapter.py`, без второго индекса/очереди.
+Host не запускает `work` и не удаляет долговечные jobs при disconnect.
+Инструкция настройки и схемы — в `agent-bridge/README_RU.md`.
+
+Существующая Chrome библиотека (`library.html`, localStorage) пока не
+синхронизирована с SQLite. **Следующая функция 14** — карточки долговечной очереди
+и поиск/context через этот контракт в UI. Голос и browser actions следуют после
+этой интеграции. Проверка adapter не является тестом установленного Windows Chrome.
 
 ## Запуск без модели
 
@@ -127,7 +133,7 @@ retry. V1 core не исполняет внешних эффектов.
 
 ```sh
 python -m unittest discover -s content-lab -p 'test_*.py' -v
-node --test agent-bridge/host.test.mjs agent-bridge/client.test.mjs
+node --test agent-bridge/*.test.mjs
 node --test one-click-context/tests/*.test.*
 ```
 
@@ -136,3 +142,6 @@ cancel, concurrent claim, restart/replay и подготовленная failed/
 патчей. CI snapshots в tests **синтетические**, не реальная публикация GitHub.
 ASR/Laya inference, установленный Windows Chrome, browser relay, подпись, sender
 и рыночные результаты не проверяются этим suite.
+Native durable tests дополнительно запускают настоящий Python subprocess через
+production `JobHost`, проверяют restart/replay, cancel, namespace/template scope,
+stale IDs, отказ передачи путей/argv, полные byte limits и завершение транспорта.

@@ -27,8 +27,63 @@
 
 ## Проверки
 
-`node --test agent-bridge/host.test.mjs agent-bridge/client.test.mjs` — production transport/job functions, подменённый процесс AI.
+`node --test agent-bridge/*.test.mjs` — production transport/job functions, подменённый процесс AI; durable tests используют настоящий Python subprocess и SQLite.
 
 `node agent-bridge/smoke.mjs ../native-host-smoke --live` — синтетический тест подготовленного exe с тестовым ID; реальный Codex, расходует один небольшой запрос. Это не доказательство подключения Chrome extension API. Тестовый host не регистрируется.
 
 Изоляция запуска: удаляются только известные переменные родительской задачи/IPC и API-key overrides. CODEX_HOME и неизвестные managed-настройки сохраняются. execpolicy rules не отключаются. Windows использует windows.sandbox="elevated", процесс задания — read-only или workspace-write; режима bypass нет.
+
+## Функция 13: доступ к долговечной библиотеке и очереди
+
+Этот opt-in относится к `content-lab/automation_core.py`. Прежние `begin/run/list`
+остаются временными Codex jobs. Новые `durable.*` не вызывают Codex, модель, сеть
+или worker; отключение host не отменяет и не удаляет долговечную очередь.
+Chrome UI ещё не вызывает эти команды: следующая функция 14 — подключение UI.
+
+После review локальных профилей добавьте в `host-config.json`:
+
+```json
+{
+  "durableCore": {
+    "enabled": true,
+    "pythonPath": "C:/Python313/python.exe",
+    "adapterPath": "C:/OCCNativePrepared/content-lab/native_adapter.py",
+    "profilePath": "C:/OCCData/native-profile.json"
+  }
+}
+```
+
+Это фрагмент существующего config: сохраните его `extensionId`, `nodePath`,
+`codexPath`, `dataRoot` и проверенный `allowBuild`. Installer копирует Python
+adapter с зависимостями внутрь выбранной установки; durableCore выключен по
+умолчанию. Python 3.11+ / SQLite FTS5 устанавливает оператор. Для запуска из repo
+`adapterPath` указывает на его `content-lab/native_adapter.py`.
+
+`content-lab/native-profile.example.json` задаёт абсолютные store/policy paths,
+список разрешённых namespaces и фиксированные job templates. Сам policy остаётся
+операторским; `work --policy ...` вызывает отдельный операторский scheduler.
+Изменённый policy или удалённый template не разрешают доступ к старому job.
+Не регистрируйте шаблоны непроверенных исполняемых патчей/test commands.
+
+| Native запрос | Ответ | Ограничение |
+|---|---|---|
+| `durable.search`, namespace, query, optional limit | `durable.items` | Разрешённый namespace; limit 1–20, query до 1000 символов |
+| `durable.context`, namespace, ids, optional maxBytes | `durable.context` | 1–10 current IDs; текст до 48 000 UTF-8 bytes |
+| `durable.enqueue`, template, taskKey | `durable.job` | Только зарегистрированный template; тот же ключ возвращает тот же job |
+| `durable.get`, jobId | `durable.job` | Job совпадает с policy hash и одним template; без paths/logs/lease tokens |
+| `durable.cancel`, jobId | `durable.job` | Та же scope; отмена сохраняется в SQLite |
+
+Ответ помечен `schema: occ.native-durable-result.v1` и исходной `operation`.
+Пример: `{"type":"durable.enqueue","template":"sync-exports","taskKey":"exports-20261001T1000"}`.
+Request не принимает root/store/policy/argv/patch/worker overrides или новые
+permissions. Дочерний процесс Python запускается по зарегистрированному
+абсолютному пути с `-I -X utf8`, `shell:false`, без AI keys/HF tokens/PYTHONPATH
+и без desktop IPC. Полный request — до 16 000 bytes; stdout+stderr — до 192 000
+bytes, timeout — 10 секунд; stderr не возвращается в Chrome. При disconnect
+transport child завершается, SQLite остаётся владельцем подтверждённых данных.
+
+**Timeout/disconnect означает неизвестный исход операции.** Enqueue мог уже
+сохраниться до обрыва ответа: повторите тот же template и **тот же taskKey**, затем
+проверьте get. Новый ключ может создать второе задание. Cancel можно повторить;
+RUNNING/NEEDS_RECONCILIATION остаётся таким до подтверждения остановки worker
+согласно core policy. Adapter не утверждает, что сторонний worker уже остановлен.
