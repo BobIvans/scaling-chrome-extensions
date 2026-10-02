@@ -4,6 +4,7 @@ import {randomUUID,createHash} from 'node:crypto';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {DurableBridge,DURABLE_COMMANDS} from './durable.mjs';
+import {QualificationBridge,QUALIFICATION_COMMANDS} from './qualification.mjs';
 export const MAX_BYTES=2200000, CHUNK=49152, MAX_FRAME=262144;
 const hash=b=>createHash('sha256').update(b).digest('hex');
 export function encodeFrame(value){const bytes=Buffer.from(JSON.stringify(value));if(bytes.length>MAX_FRAME)throw Error('FRAME_LIMIT');const header=Buffer.alloc(4);header.writeUInt32LE(bytes.length);return Buffer.concat([header,bytes]);}
@@ -16,12 +17,13 @@ export function codexEnvironment(source=process.env){const env={...source};
  return env;
 }
 export class JobHost{
- constructor(config,{spawnProcess=spawn,durableSpawnProcess=spawn}={}){this.config=config;this.spawnProcess=spawnProcess;this.durable=new DurableBridge(config.durableCore,{spawnProcess:durableSpawnProcess});this.jobs=new Map();this.running=null;this.closed=false;}
+ constructor(config,{spawnProcess=spawn,durableSpawnProcess=spawn,qualificationSpawnProcess=spawn}={}){this.config=config;this.spawnProcess=spawnProcess;this.durable=new DurableBridge(config.durableCore,{spawnProcess:durableSpawnProcess});this.qualification=new QualificationBridge(config.qualificationCore,{spawnProcess:qualificationSpawnProcess});this.jobs=new Map();this.running=null;this.closed=false;}
  async handle(m){
   if(this.closed)throw Error('CLOSED');
   if(!m||typeof m!=='object'||typeof m.type!=='string')throw Error('SCHEMA');
-  if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false,supportedModes:this.config.allowBuild===true?['analyze','build']:['analyze'],...(this.durable.enabled?{durableCommands:DURABLE_COMMANDS}: {})};
+  if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false,supportedModes:this.config.allowBuild===true?['analyze','build']:['analyze'],...(this.durable.enabled?{durableCommands:DURABLE_COMMANDS}: {}),...(this.qualification.enabled?{qualificationCommands:QUALIFICATION_COMMANDS}: {})};
   if(m.type.startsWith('durable.'))return this.durable.handle(m);
+  if(m.type.startsWith('qualification.'))return this.qualification.handle(m);
   if(m.type==='list')return {jobs:[...this.jobs.values()].map(j=>this.summary(j))};
   if(m.type==='begin'){
    if(m.mode==='build'&&this.config.allowBuild!==true)throw Error('BUILD_UNAVAILABLE: local sandbox write access has not been verified');
@@ -83,7 +85,7 @@ export class JobHost{
   }catch(e){if(j.state!=='CANCELLED'){j.state='FAILED';j.error=e.message;}}
   finally{this.running=null;if(!this.closed)void this.pump();}
  }
- async close(){this.closed=true;this.durable.close();for(const j of this.jobs.values()){await this.cancel(j);await this.remove(j);}this.jobs.clear();}
+ async close(){this.closed=true;this.durable.close();this.qualification.close();for(const j of this.jobs.values()){await this.cancel(j);await this.remove(j);}this.jobs.clear();}
 }
 async function main(){
  const config=JSON.parse(await fs.readFile(new URL('./host-config.json',import.meta.url),'utf8'));
