@@ -30,6 +30,17 @@ test('release during permission prompt never starts a late recording',async()=>{
  assert.equal(recorder.state,'IDLE');assert.equal(recorder.recording,null);assert.equal(source.tracks[0].stopped,1);
 });
 
+test('independent cancel is terminal, discards audio and invalidates late permission result',async()=>{
+ const source=stream(),recorder=new VoiceRecorder({mediaDevices:{getUserMedia:async()=>source},MediaRecorderCtor:FakeRecorder,now:()=> '2026-10-01T15:00:00.000Z'});
+ await recorder.press();const receipt=recorder.cancel('UI');
+ assert.deepEqual(receipt,{schema:'occ.voice-cancel-receipt.v1',scope:'LOCAL_VOICE_PREVIEW',state:'CANCELLED',terminal:true,trigger:'UI',at:'2026-10-01T15:00:00.000Z',audio_retained:false,transcript_retained:false,action_dispatched:false});
+ assert.equal(recorder.state,'CANCELLED');assert.equal(recorder.recording,null);assert.equal(source.tracks[0].stopped,1);
+ let resolve;const pending=new Promise(r=>resolve=r),lateStream=stream(),late=new VoiceRecorder({mediaDevices:{getUserMedia:()=>pending},MediaRecorderCtor:FakeRecorder});
+ const start=late.press();late.cancel('KEYBOARD');resolve(lateStream);await start;
+ assert.equal(late.state,'CANCELLED');assert.equal(late.receipt.trigger,'KEYBOARD');assert.equal(late.recording,null);assert.equal(lateStream.tracks[0].stopped,1);
+ assert.throws(()=>late.cancel('ASR'),error=>error.code==='CANCEL_TRIGGER_INVALID');
+});
+
 test('timeout, byte budget and permission failures are explicit terminal states',async()=>{
  let timeout;const source=stream();
  const timed=new VoiceRecorder({mediaDevices:{getUserMedia:async()=>source},MediaRecorderCtor:FakeRecorder,setTimer:fn=>(timeout=fn,1),clearTimer:()=>{}});
@@ -60,9 +71,9 @@ class Element{
  setPointerCapture(){}
 }
 function dom(){
- const ids=['voice-hold','voice-status','voice-audio','voice-download','voice-clear','voice-transcript','voice-transcript-meta'];
+ const ids=['voice-hold','voice-status','voice-audio','voice-download','voice-clear','voice-cancel','voice-cancel-receipt','voice-transcript','voice-transcript-meta'];
  const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));
- return {elements,document:{getElementById:id=>elements[id],createElement:()=>Object.assign(new Element(),{click(){this.clicked=true;}})}};
+ const handlers={};return {elements,handlers,document:{getElementById:id=>elements[id],createElement:()=>Object.assign(new Element(),{click(){this.clicked=true;}}),addEventListener:(name,fn)=>handlers[name]=fn}};
 }
 
 test('view shows unsupported device and ignores synthetic recording gesture',async()=>{
@@ -72,6 +83,17 @@ test('view shows unsupported device and ignores synthetic recording gesture',asy
  supported.elements['voice-hold'].onpointerdown({isTrusted:false});await new Promise(resolve=>setImmediate(resolve));assert.equal(calls,0);
  supported.elements['voice-transcript'].value='editable';supported.elements['voice-transcript'].oninput();assert.match(supported.elements['voice-transcript-meta'].textContent,/EDITED_UNVERIFIED/);
  supported.elements['voice-hold'].onpointerdown({isTrusted:true,pointerId:1,preventDefault(){}});await new Promise(resolve=>setImmediate(resolve));assert.equal(view.recorder.state,'RECORDING');handlers.blur();assert.equal(view.recorder.recording.stopReason,'FOCUS_LOST');view.dispose();
+});
+
+test('trusted STOP button and Escape cancel without ASR and show terminal receipt',async()=>{
+ const button=dom(),windowHandlers={},source=stream();
+ const view=attachVoicePreview({document:button.document,window:{addEventListener:(name,fn)=>windowHandlers[name]=fn},mediaDevices:{getUserMedia:async()=>source},MediaRecorderCtor:FakeRecorder,urlAPI:{createObjectURL:()=>'',revokeObjectURL(){}}});
+ button.elements['voice-transcript'].value='untrusted draft';button.elements['voice-cancel'].onclick({isTrusted:false});assert.equal(view.recorder.state,'IDLE');
+ button.elements['voice-hold'].onpointerdown({isTrusted:true,pointerId:1,preventDefault(){}});await new Promise(resolve=>setImmediate(resolve));
+ let prevented=false;button.handlers.keydown({isTrusted:true,repeat:false,key:'Escape',preventDefault(){prevented=true;}});
+ assert.equal(prevented,true);assert.equal(view.recorder.state,'CANCELLED');assert.equal(view.recorder.receipt.trigger,'KEYBOARD');assert.equal(button.elements['voice-transcript'].value,'');
+ assert.equal(button.elements['voice-cancel-receipt'].hidden,false);assert.match(button.elements['voice-cancel-receipt'].textContent,/"terminal": true/);assert.match(button.elements['voice-status'].textContent,/независимо/);
+ button.elements['voice-cancel'].onclick({isTrusted:true,preventDefault(){}});assert.equal(view.recorder.receipt.trigger,'UI');view.dispose();
 });
 
 test('production voice module has no network, speech provider or action dispatch',()=>{
