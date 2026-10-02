@@ -1,0 +1,83 @@
+{
+  "schema": "occ.package-reconciliation.v1",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "audited_base_sha": "a8ced6d5bc2eb36d454c1fa003ccdecebc2462fb",
+  "inputs": [
+    {
+      "filename": "STUDIOUS_PANCAKE_OCC_LAYA_MEGA_PR_ONE_SHOT_2026-10-02(1)(1).zip",
+      "sha256": "499f66ea59201ec6341fec060b3c6d841f988bd41e76b697717ba31ecb90f638"
+    },
+    {
+      "filename": "OCC_CONTEXT_REVIEW_VOICE_MEGA_PR_ONE_SHOT_2026-10-02(1)(1).zip",
+      "sha256": "2e3ca298246433c127712445a68001691f943a871ee0c19a8b558b638db79c28"
+    }
+  ],
+  "components": [
+    {
+      "component": "local intake",
+      "owner": "content-lab/occ_local.py",
+      "status": "ADAPTED",
+      "storage": "existing content.sqlite3/occ_intake_items; metadata only"
+    },
+    {
+      "component": "review ledger/import",
+      "owner": "content-lab/context_review.py",
+      "status": "IMPLEMENTED",
+      "storage": "existing content.sqlite3/review_sessions,review_results,review_heads"
+    },
+    {
+      "component": "Laya/voice advisory contracts",
+      "owner": "content-lab/occ_proposal.py",
+      "status": "IMPLEMENTED_DATA_ONLY"
+    },
+    {
+      "component": "ASR experiment",
+      "owner": "content-lab/content_lab.py:transcribe_file",
+      "adapter": "content-lab/asr_cpu_experiment.py",
+      "status": "REUSED_OPT_IN_NOT_DEVICE_TESTED"
+    },
+    {
+      "component": "scheduler",
+      "owner": "content-lab/schedule_tick.py; content-lab/schedule_supervisor.py",
+      "status": "REUSED_NO_NEW_SCHEDULE_REGISTERED"
+    },
+    {
+      "component": "qualification diagnostics",
+      "owner": "agent-bridge/qualification_adapter.py",
+      "bot_owner": "scripts/run_occ_memory_qualification.py -> src/occ_memory_qualification_bridge.py -> src/qualification_report.py:qualify_and_report",
+      "status": "CURRENT_MAIN_OWNER_REAUDITED_EXISTING_BRIDGE_REUSED"
+    },
+    {
+      "component": "selected-chat capture/ask dispatch",
+      "status": "BLOCKED_BROWSER_INTEGRATION",
+      "reason": "F29/F30 remain draft stacked branches; no installed Windows Chrome transport qualification or durable selected-chat executor on audited main"
+    },
+    {
+      "component": "criterion-specific finding closure",
+      "status": "NEEDS_EVIDENCE_VERIFIER",
+      "reason": "Imported receipts are untrusted references; no finding auto-closes"
+    },
+    {
+      "component": "historical FAST-Q receipts, private aggregated chats and speculative waves",
+      "status": "REFERENCE_ONLY_NOT_PUBLISHED_AS_CURRENT_EVIDENCE"
+    }
+  ],
+  "donor_validation": {
+    "context_studio": {
+      "passed": 93
+    },
+    "voice_skill_bridge": {
+      "passed": 37
+    },
+    "intake_tests_preserved": 20
+  },
+  "runtime": {
+    "second_store": false,
+    "second_queue": false,
+    "new_scheduler": false,
+    "browser_send_enabled": false,
+    "market_campaign_started": false,
+    "provider_calls": 0,
+    "execution_authorized": false
+  }
+}

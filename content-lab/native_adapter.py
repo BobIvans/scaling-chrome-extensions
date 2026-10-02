@@ -18,6 +18,7 @@ from automation_core import (Core, context_pack, digest, enqueue, identifier,
                              load_json, search, strict_int, validate_job,
                              validate_policy)
 from content_lab import apply_library_record
+from context_review import create_session, get_session, import_review, list_sessions, strict_json
 
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
@@ -28,6 +29,10 @@ FIELDS = {
     "durable.get": ({"type", "jobId"}, set()),
     "durable.cancel": ({"type", "jobId"}, set()),
     "durable.record": ({"type", "mutation"}, set()),
+    "durable.review.create": ({"type", "namespace", "ids", "goal"}, {"baseRepoSha"}),
+    "durable.review.import": ({"type", "namespace", "review"}, set()),
+    "durable.review.list": ({"type", "namespace"}, {"limit"}),
+    "durable.review.get": ({"type", "namespace", "sessionId"}, set()),
 }
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
@@ -82,7 +87,22 @@ def dispatch(request, profile_path):
     store, operation = Path(profile["store"]), request["type"]
     core = Core(store, policy)
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
-    if operation in {"durable.search", "durable.context"}:
+    if operation.startswith('durable.review.'):
+        namespace = identifier(request['namespace'])
+        if namespace not in profile['namespaces']:
+            raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
+        if operation == 'durable.review.create':
+            ids = request['ids']
+            if not isinstance(ids, list) or not 1 <= len(ids) <= 10 or not all(isinstance(item_id, str) and ITEM_ID.fullmatch(item_id) for item_id in ids):
+                raise ValueError('DURABLE_ITEM_IDS_REQUIRED')
+            value['review'] = create_session(store, namespace, ids, request['goal'], request.get('baseRepoSha'))
+        elif operation == 'durable.review.import':
+            value['review'] = import_review(store, namespace, request['review'])
+        elif operation == 'durable.review.list':
+            value['reviews'] = list_sessions(store, namespace, request.get('limit', 20))
+        else:
+            value['review'] = get_session(store, namespace, request['sessionId'])
+    elif operation in {"durable.search", "durable.context"}:
         namespace = identifier(request["namespace"])
         if namespace not in profile["namespaces"]:
             raise ValueError("DURABLE_NAMESPACE_OUTSIDE_SCOPE")
@@ -123,7 +143,7 @@ def main(argv=None):
         raw = sys.stdin.buffer.read(INPUT_BYTES + 1)
         if len(raw) > INPUT_BYTES:
             raise ValueError("DURABLE_INPUT_LIMIT")
-        value = {"ok": True, "result": dispatch(json.loads(raw.decode("utf-8")), args.profile)}
+        value = {"ok": True, "result": dispatch(strict_json(raw), args.profile)}
         output = json.dumps(value, ensure_ascii=False, allow_nan=False).encode("utf-8")
         if len(output) > OUTPUT_BYTES:
             raise ValueError("DURABLE_OUTPUT_LIMIT")

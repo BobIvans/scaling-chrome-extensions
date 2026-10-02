@@ -43,7 +43,7 @@ test('durable bridge is disabled by default and exposes only explicit opt-in cap
 });
 test('actual JobHost uses scoped SQLite search/context with UTF-8 provenance',async t=>{
  const f=await fixture(t),host=f.host();assert.deepEqual((await host.handle({type:'hello'})).durableCommands,
-  ['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record']);
+  ['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get']);
  const {durable}=await host.handle({type:'durable.search',namespace:'docs',query:'needle',limit:1,requestId:1});
  assert.equal(durable.items.length,1);assert.equal(durable.items[0].source_key,'note.md');
  const result=await host.handle({type:'durable.context',namespace:'docs',ids:[durable.items[0].id],maxBytes:1000});
@@ -65,6 +65,30 @@ test('Chrome record mutation roundtrips through native transport to the existing
  assert.equal((await host.handle({type:'durable.record',mutation:deleted})).durable.record.tombstone,true);
  assert.deepEqual((await host.handle({type:'durable.search',namespace:'docs',query:'bridge'})).durable.items,[]);
  await assert.rejects(host.handle({type:'durable.record',mutation:{...first,revision:3,parentRevision:1}}),/LIBRARY_STALE_RECORD_CONFLICT/);
+});
+
+test('review exports and untrusted findings survive a fresh host without restoring approvals',async t=>{
+ const f=await fixture(t),host=f.host();
+ const id=(await host.handle({type:'durable.search',namespace:'docs',query:'needle'})).durable.items[0].id;
+ const created=(await host.handle({type:'durable.review.create',namespace:'docs',ids:[id],goal:'Private synthetic review goal'})).durable.review;
+ const review={schema:'occ.review-result.v1',session_id:created.session_id,snapshot_sha256:created.snapshot_sha256,
+  sources:created.sources,base_repo_sha:null,coverage:{reviewed:['note.md'],not_reviewed:[],missing_dependencies:[]},
+  findings:[{finding_id:'F001',classification:'CODE_DEFECT',disposition:'DONE',source_key:'note.md',
+   source_sha256:created.sources[0].sha256,criterion:'Model says done',evidence_refs:[],duplicate_of:null,supersedes:null}]};
+ const imported=(await host.handle({type:'durable.review.import',namespace:'docs',review})).durable.review;
+ await host.close();
+ const fresh=f.host(),status=(await fresh.handle({type:'durable.review.get',namespace:'docs',sessionId:created.session_id})).durable.review;
+ assert.equal(status.review_id,imported.review_id);assert.equal(status.state,'NEEDS_REVIEW');
+ assert.equal(status.findings[0].state,'STATIC_CANDIDATE');assert.equal(status.findings[0].closed,false);
+ assert.equal(status.execution_authorized,false);assert.equal(status.approvals_restored,false);
+ assert.equal(status.timers_restored,false);assert.equal(status.dispatch_allowed,false);
+ assert.doesNotMatch(JSON.stringify(status),/Private synthetic review goal|Model says done/);
+ const listed=(await fresh.handle({type:'durable.review.list',namespace:'docs'})).durable.reviews;
+ assert.equal(listed[0].session_id,created.session_id);
+ await assert.rejects(fresh.handle({type:'durable.review.get',namespace:'private',sessionId:created.session_id}),/OUTSIDE_SCOPE/);
+ await assert.rejects(fresh.handle({type:'durable.review.import',namespace:'docs',review:{...review,patches:[]}}),/REVIEW_SCHEMA/);
+ const duplicate=(await fresh.handle({type:'durable.review.import',namespace:'docs',review})).durable.review;
+ assert.equal(duplicate.import_state,'UNCHANGED');assert.equal(duplicate.duplicate_of,imported.review_id);
 });
 test('durable enqueue survives host disconnect/restart, replays once and persists cancel',async t=>{
  const f=await fixture(t),first=f.host();

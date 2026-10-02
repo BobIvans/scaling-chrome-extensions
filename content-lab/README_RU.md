@@ -2,6 +2,9 @@
 
 Долговечная синхронизация и jobs поверх этого же SQLite: [AUTOMATION_RU.md](AUTOMATION_RU.md).
 
+Локальный intake, Laya/voice proposals и сохраняемые review-сессии:
+[context-review-ledger.md](../docs/automation/context-review-ledger.md).
+
 Этот Python-прототип дополняет экспорт OCC. Он импортирует выбранные UTF-8
 TXT/код/JSON, статический HTML и SRT/VTT, записывает источник и хеши, устраняет
 повторный импорт и делает поиск SQLite FTS5. Скрипты захваченной страницы не

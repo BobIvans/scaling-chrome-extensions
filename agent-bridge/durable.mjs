@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 
-export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record']);
+export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get']);
 export const DURABLE_INPUT_BYTES=16000,DURABLE_OUTPUT_BYTES=192000,DURABLE_TIMEOUT_MS=10000;
 const fields={
  'durable.search':['namespace','query','limit'],
@@ -9,7 +9,11 @@ const fields={
  'durable.enqueue':['template','taskKey'],
  'durable.get':['jobId'],
  'durable.cancel':['jobId'],
- 'durable.record':['mutation']
+ 'durable.record':['mutation'],
+ 'durable.review.create':['namespace','ids','goal','baseRepoSha'],
+ 'durable.review.import':['namespace','review'],
+ 'durable.review.list':['namespace','limit'],
+ 'durable.review.get':['namespace','sessionId']
 };
 export function durableEnvironment(source=process.env){
  const env={PYTHONUTF8:'1',PYTHONIOENCODING:'utf-8'};
