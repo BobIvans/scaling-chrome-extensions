@@ -1,0 +1,166 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 20,
+  "job_id": "occ-f20-push-to-talk-preview-20261001T1446Z",
+  "recorded_at_utc": "2026-10-01T14:46:09Z",
+  "state": "DONE",
+  "completion_scope": "Bounded microphone-only push-to-talk and manually editable transcript preview without ASR or action dispatch",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f20-push-to-talk-preview",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/22",
+  "pr_number": 22,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f19-attachment-inventory",
+  "base_sha": "c05072330e5c24d5166c865a1d39898ca6473c35",
+  "head_sha": "e7a35d9d5a1bb974003016823a68aefbb39e1015",
+  "tested_tree_sha": "0e92985a6539ae06f83d613b7cc2179f3f815848",
+  "run_diff_sha256": "69da127a8aaef911d67e72fb7c3b9b041e03378ffe86fb85daa24e5fbd77e7db",
+  "head_semantics": "head_sha is the exact implementation commit tested locally and by CI; the later containing receipt/catalog commit requires its own exact-head CI and is recorded in the draft PR body",
+  "preflight": {
+    "previous_pr": 21,
+    "previous_head_sha": "c05072330e5c24d5166c865a1d39898ca6473c35",
+    "previous_exact_head_ci_run": 36870790791,
+    "previous_exact_head_ci": "success",
+    "open_f20_prs_before_write": [],
+    "duplicate_f20_prs_created": 0,
+    "agents_files_present": false,
+    "active_previous_repo_writer": false,
+    "confirmed_gap": "No microphone recording owner, push-to-talk state machine or editable transcript preview existed on the verified F19 head"
+  },
+  "change": {
+    "owner": "one-click-context/library/voice-preview.mjs",
+    "extension_version": "0.10.0",
+    "recording_scope": {
+      "audio": true,
+      "video": false,
+      "requires_trusted_hold": true,
+      "max_duration_ms": 60000,
+      "max_audio_bytes": 16777216,
+      "storage": "tab memory only"
+    },
+    "stop_paths": [
+      "user release",
+      "lost pointer capture",
+      "window blur",
+      "page hidden",
+      "page close",
+      "duration limit",
+      "byte limit",
+      "recorder error",
+      "explicit clear"
+    ],
+    "transcript": {
+      "source": "manual input or paste only",
+      "max_utf8_bytes": 16000,
+      "states": [
+        "EMPTY",
+        "EDITED_UNVERIFIED"
+      ],
+      "action_authority": false
+    },
+    "network_or_provider_call": false,
+    "queue_or_native_dispatch": false
+  },
+  "owner_preservation": {
+    "database": "existing content.sqlite3 unchanged",
+    "library": "existing one-click-context library records unchanged",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core unchanged",
+    "native_host": "agent-bridge host unchanged",
+    "asr": "content-lab local file experiment unchanged and not invoked",
+    "new_persistent_store_or_queue_owner": false
+  },
+  "tests": [
+    {
+      "command": "node --test one-click-context/tests/voice-preview.test.mjs",
+      "result": "PASS",
+      "checks": 6,
+      "exit_code": 0,
+      "phase": "focused; included in final extension discovery"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 95,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 35,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 77,
+      "exit_code": 0
+    },
+    {
+      "command": "python one-click-context/scripts/package_chrome_ready.py /tmp/occ-f20-package-final",
+      "result": "PASS",
+      "checks": 33,
+      "exit_code": 0,
+      "artifact_tracked": false,
+      "package_sha256": "810be1c22624b2a144e90b324d4f6eec14cac1a7ba6e32f4fad9557c67e0f14e"
+    },
+    {
+      "command": "python -m json.tool docs/automation/functions-wave33.json >/dev/null && git diff --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_local_regression_checks": 207,
+  "focused_checks_overlap_warning": "The 6 focused checks are included in the 77 extension checks; package entries are validation evidence and are not added to 207.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "e7a35d9d5a1bb974003016823a68aefbb39e1015",
+    "run": {
+      "id": 36878656589,
+      "name": "Deterministic OCC core",
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36878656589"
+    },
+    "checks": [
+      {
+        "id": 110424510595,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36878656589/job/110424510595"
+      },
+      {
+        "id": 110424510085,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36878656589/job/110424510085"
+      }
+    ]
+  },
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "network_content_fetches": 0,
+    "private_user_records_read": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "F20 remains a draft PR and is not merged or deployed.",
+    "No real microphone, Windows Chrome permission prompt, codec or installed extension was exercised.",
+    "The duration stop is an event-loop timer rather than a hard OS sandbox.",
+    "Transcript is manual and unverified; local ASR integration is outside F20.",
+    "Transcript and audio have no goal, queue, Native Host, browser action or shell authority.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 21,
+  "next_job": "Audit current cancel owners, then implement at most one keyboard/UI cancel path that remains available if ASR hangs and shows the actual terminal receipt."
+}

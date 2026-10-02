@@ -1,4 +1,10 @@
-# One Click Context 0.9.0 — локальное Chrome-расширение
+# One Click Context 0.10.0 — локальное Chrome-расширение
+
+Версия 0.10.0 сохраняет разделение переписки/документа и добавляет bounded
+push-to-talk на странице библиотеки: только микрофон, только во время удержания,
+не более 60 секунд. Запись остаётся в памяти вкладки и может быть явно скачана;
+редактируемый transcript preview не является командой. ASR, upload и запуск
+действия не подключены.
 
 Версия 0.9.0 разделяет найденные сообщения переписки и открытый документ, а также
 показывает детерминированный инвентарь видимых вложений, frames, медиа, свёрнутых
@@ -70,6 +76,9 @@ the visible preview; ERR = failed. BEST_EFFORT does not mean complete history.
   уничтожает последний принятый снимок. Единственная постоянная local-копия
   создаётся только явной кнопкой и после предупреждения. Clear removes both copies,
   NOT the system clipboard or downloaded files.
+- Push-to-talk вызывает `getUserMedia({audio:true,video:false})` только из настоящего
+  удержания кнопки. Audio ограничено 60 секундами/16 MiB, не сохраняется автоматически
+  и не передаётся в очередь, Native Host, Web Speech или сеть.
 
 Default traversal limits: 20,000 ms, 160 steps, approximately 2 MB of captured
 content. These are checked between DOM samples, not a preemptive hard CPU deadline.
