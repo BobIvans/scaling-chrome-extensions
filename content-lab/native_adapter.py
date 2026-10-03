@@ -34,6 +34,9 @@ FIELDS = {
     "durable.review.import": ({"type", "namespace", "review"}, set()),
     "durable.review.list": ({"type", "namespace"}, {"limit"}),
     "durable.review.get": ({"type", "namespace", "sessionId"}, {"includeContent"}),
+    "durable.review.report": ({"type", "namespace", "sessionId", "template", "taskKey"}, set()),
+    "durable.review.handoff": ({"type", "namespace", "sessionId"}, set()),
+    "durable.review.importBound": ({"type", "namespace", "sessionId", "review"}, set()),
     "durable.repo.list": ({"type"}, set()),
     "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
@@ -72,6 +75,12 @@ def operator_profile(path):
         repo_context.validate_profile(source)
         if source['namespace'] not in namespaces:
             raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
+    for payload in templates.values():
+        if payload.get('kind') == 'review_report':
+            report = policy['reports'][payload['report_profile']]
+            if (report['namespace'] not in namespaces
+                    or repositories.get(report['repository']) != report['repository_profile']):
+                raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
     return profile, policy
 
 
@@ -79,6 +88,19 @@ def summary(job):
     # Do not return policy/payload, worktree paths, lease tokens or test logs.
     result = {key: job[key] for key in ("id", "task_key", "state", "attempt", "max_attempts", "created", "updated")}
     result["cancel_requested"] = bool(job["cancel_requested"])
+    # Make failures/output visible without exposing paths, policy or source text.
+    receipt = job.get('result', {})
+    result['outcome'] = {}
+    reason = receipt.get('reason')
+    if isinstance(reason, str):
+        result['outcome']['reason'] = reason if re.fullmatch(r'[A-Z_]{1,100}', reason) else 'LOCAL_OPERATION_BLOCKED'
+    if job['payload'].get('kind') == 'review_report':
+        allowed = ('state', 'sha256', 'bytes', 'filename', 'verified_property', 'findings_closed', 'reused')
+        result['outcome'].update({k: receipt[k] for k in allowed if k in receipt})
+    result['next_step'] = ('RUN_REGISTERED_LOCAL_WORKER' if job['state'] in {'QUEUED', 'RETRY_READY'} else
+                           'RECONCILE_AFTER_PROCESS_STOP_CHECK' if job['state'] == 'NEEDS_RECONCILIATION' else
+                           'CHECK_OUTPUT_RECEIPT' if job['state'] == 'SUCCEEDED' else
+                           'INSPECT_BLOCKER' if job['state'] in {'FAILED', 'BLOCKED'} else job['state'])
     return result
 
 
@@ -151,6 +173,28 @@ def dispatch(request, profile_path):
             value['review'] = import_review(store, namespace, request['review'], repo_profiles=profile.get('repositories', {}))
         elif operation == 'durable.review.list':
             value['reviews'] = list_sessions(store, namespace, request.get('limit', 20), repo_profiles=profile.get('repositories', {}))
+        elif operation in {'durable.review.handoff', 'durable.review.importBound'}:
+            from context_handoff import handoff, import_bound
+            if operation == 'durable.review.handoff':
+                bundle = handoff(store, namespace, request['sessionId'], repo_profiles=profile.get('repositories', {}))
+                # Return one document; repeated JSON sources exceed native bounds.
+                value['handoff'] = {k: bundle[k] for k in ('rendered_txt', 'rendered_txt_bytes', 'review_template', 'binding_v7')}
+            else:
+                value['review'] = import_bound(store, namespace, request['sessionId'], request['review'], repo_profiles=profile.get('repositories', {}))
+        elif operation == 'durable.review.report':
+            template = identifier(request['template'])
+            payload = profile['templates'].get(template)
+            if not isinstance(payload, dict) or payload.get('kind') != 'review_report':
+                raise ValueError('DURABLE_REPORT_TEMPLATE_REQUIRED')
+            registered = policy['reports'][payload['report_profile']]
+            if registered['namespace'] != namespace or registered['session_id'] != request['sessionId']:
+                raise ValueError('DURABLE_REPORT_SESSION_MISMATCH')
+            if profile.get('repositories', {}).get(registered['repository']) != registered['repository_profile']:
+                raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+            from review_report import expected_report
+            expected_report(store, registered)
+            job = enqueue(store, policy, request['taskKey'], payload)
+            value['job'] = summary(scoped_job(core, profile, policy, job['id']))
         else:
             details = request.get('includeContent', False)
             if type(details) is not bool:
@@ -177,7 +221,8 @@ def dispatch(request, profile_path):
         template = identifier(request["template"])
         if template not in profile["templates"]:
             raise ValueError("DURABLE_TEMPLATE_OUTSIDE_SCOPE")
-        value["job"] = enqueue(store, policy, request["taskKey"], profile["templates"][template])
+        registered = enqueue(store, policy, request["taskKey"], profile["templates"][template])
+        value['job'] = summary(scoped_job(core, profile, policy, registered['id'])) | {'reused': registered['reused']}
     else:
         job = scoped_job(core, profile, policy, request["jobId"])
         if operation == "durable.cancel":

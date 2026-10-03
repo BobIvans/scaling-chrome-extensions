@@ -12,6 +12,14 @@ export function boundedTranscript(value){
  return {text:value,bytes,state:value.trim()?'EDITED_UNVERIFIED':'EMPTY'};
 }
 
+export function transcriptGoal(value){
+ const transcript=boundedTranscript(value);
+ if(transcript.state==='EMPTY')throw error('TRANSCRIPT_EMPTY');
+ if(transcript.bytes>8000)throw error('REPO_GOAL_LIMIT');
+ // Preserve negations/numbers verbatim. This is an editable goal, never dispatch.
+ return {text:transcript.text,authority:'DATA_ONLY',dispatch_allowed:false};
+}
+
 export class VoiceRecorder{
  constructor({mediaDevices,MediaRecorderCtor,onState=()=>{},setTimer=setTimeout,clearTimer=clearTimeout,now=()=>new Date().toISOString(),maxMs=MAX_RECORDING_MS,maxBytes=MAX_AUDIO_BYTES}={}){
   this.mediaDevices=mediaDevices;this.MediaRecorderCtor=MediaRecorderCtor;this.onState=onState;
@@ -106,6 +114,11 @@ export function attachVoicePreview({document:doc=globalThis.document,window:win=
  hold.onpointerdown=press;hold.onpointerup=release;hold.onpointercancel=release;hold.onlostpointercapture=release;
  hold.onkeydown=event=>{if([' ','Enter'].includes(event.key))press(event);};hold.onkeyup=event=>{if([' ','Enter'].includes(event.key))release(event);};
  transcript.oninput=()=>{try{const value=boundedTranscript(transcript.value);meta.textContent=`${value.state} · ${value.bytes} / ${MAX_TRANSCRIPT_BYTES} байт UTF-8`;transcript.setAttribute?.('aria-invalid','false');}catch(e){meta.textContent=e.code==='TRANSCRIPT_LIMIT'?'Транскрипт превышает 16 000 байт UTF-8.':'Транскрипт содержит неподдерживаемые данные.';transcript.setAttribute?.('aria-invalid','true');}};
+ if($('voice-to-repo-goal'))$('voice-to-repo-goal').onclick=event=>{
+  if(!event.isTrusted)return;
+  try{const goal=transcriptGoal(transcript.value),target=$('repo-goal');if(!target)throw error('REPO_GOAL_UNAVAILABLE');target.value=goal.text;target.oninput?.();status.textContent='Текст перенесён в редактируемую цель review. Проверьте область и критерии; экспорт запускается отдельно.';}
+  catch(e){status.textContent=e.code||e.message;}
+ };
  download.onclick=event=>{if(!event.isTrusted||!recorder.recording||!objectURL)return;const link=doc.createElement('a');link.href=objectURL;link.download=`occ_voice_${new Date().toISOString().replace(/[:.]/g,'-')}.webm`;link.click();status.textContent='Скачивание локальной записи запрошено; завершение проверьте в Chrome.';};
  clear.onclick=event=>{if(!event.isTrusted)return;recorder.clear();revoke();transcript.value='';transcript.oninput();};
  const cancelSession=trigger=>{const receipt=recorder.cancel(trigger);revoke();transcript.value='';transcript.oninput();return receipt;};

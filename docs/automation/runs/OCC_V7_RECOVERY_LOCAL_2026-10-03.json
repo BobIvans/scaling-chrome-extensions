@@ -1,0 +1,61 @@
+{
+  "schema": "occ.v7.local-validation.v1",
+  "base_sha": "336a970ca222d513150d0183226a59d2da4bec8f",
+  "python": "3.12.14",
+  "node": "v24.19.0",
+  "tests": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "passed": 173,
+      "status": "PASSED",
+      "log_sha256": "8a8138f49574984789ecc835bcb68e5993000f5213baa766cc1d190204d4d884"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "passed": 44,
+      "status": "PASSED",
+      "log_sha256": "5eb22cef15967414d38fba718dbdd022b50cd6d7feb98830f21fa7e179d13484"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "passed": 99,
+      "status": "PASSED",
+      "log_sha256": "1d0422a82f06970fd3c042e2850ecc75f5b24e784b8749f94c6430324531f462"
+    },
+    {
+      "command": "python -m unittest discover -s agent-bridge -p 'test_qualification_adapter.py' -v",
+      "passed": 8,
+      "status": "PASSED",
+      "log_sha256": "ed1a3165535a082ab88560c8dcfe4bc0ee3ee4eef810edf00c2dc3221ff3132d"
+    }
+  ],
+  "total_passed": 324,
+  "implementation_sha256": {
+    "agent-bridge/Install.ps1": "26a23f55cc829f9a94de78933e525d9019ab294fc9f60f0ee27bb40f927db721",
+    "agent-bridge/durable.mjs": "e70b39ec9957a486e49e4517cfc5d39409e4ae3724551e3fa0396e9deedea012",
+    "content-lab/automation_core.py": "1f2409de8892c23d78322fc096f3c56f8b48aef56ccc259cd294a02b6c27f6da",
+    "content-lab/context_handoff.py": "5c09eb7ea1091807824e66b80e641a0feea55b99f23b12105ad16abdec23b10c",
+    "content-lab/native_adapter.py": "b356a9e4be598b3adc919cfbda58bb5becf8f90b7e8a469a2d6bee51b3efe3bf",
+    "content-lab/occ_v4/__init__.py": "13cf1571d3c6089125ff846f9c6e968e7c4a00c722cf1a2d6fd8bd5465ebdb34",
+    "content-lab/occ_v4/protocol.py": "febb43591d7889e9741fc3ff26b42b485c1fcca99ced0cd0946c0301e147ce82",
+    "content-lab/occ_v5/__init__.py": "711bf23a49325004908a0467890d12a586c6ca6a3c490bb900a3c1fee1670c88",
+    "content-lab/occ_v5/context.py": "761bfb35451c8d4cfe2d0456f789324cdef2f135951e704841e05d37552bd7aa",
+    "content-lab/review_report.py": "1e3c2c86ac4dc6ed767da29646e5eead7fd51a05a6b7eff7d958442fe4b75207",
+    "content-lab/test_review_report.py": "54e3c5a941c2b21c6142823c8ad6199f502789594aaaa166003fe5e73cb70647",
+    "one-click-context/library.html": "65b60052ebf29d0645cf37ab044e0e8da01d72aba932fb80bfe0143e1fc73377",
+    "one-click-context/library/durable-ui.mjs": "b8911e1bf63fce0c4b90405650bc707c88879f8291337a02ab3d5be7c9170e41",
+    "one-click-context/library/repo-review-ui.mjs": "c7c1f0c45959fbefbb7e6a8db521d78d8d930e47b6346601aa71c3f42851c0fa",
+    "one-click-context/library/voice-preview.mjs": "91b6e580a4fd40b42dbaf7d0cfdd539d0a2c140f0560f158faf82731f05d27ef",
+    "one-click-context/tests/durable-ui.test.mjs": "af6dd57a309c5a8f96bec1cc72eeb1806d95e46cdd7caae410257dbfcadaf0d5",
+    "one-click-context/tests/repo-review-ui.test.mjs": "0c52c12e24fdad1c6cc5063b8aa3c2ae81ffd0c9a63d374717955b88aae8bd3d",
+    "one-click-context/tests/voice-preview.test.mjs": "58ebdd2586f15fcfe447ccb91288c6ddd9bc19bc92aab2e7374d3165de55e545"
+  },
+  "syntax_and_diff_check": "PASSED",
+  "package_files": 35,
+  "installed_chrome": "NOT_RUN",
+  "installed_windows_native_host": "NOT_RUN",
+  "ASR_and_Laya_inference": "NOT_RUN",
+  "paid_API_calls": 0,
+  "transactions_sent": 0,
+  "private_history_published": false
+}

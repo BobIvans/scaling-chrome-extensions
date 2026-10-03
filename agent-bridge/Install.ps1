@@ -18,8 +18,16 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'qualification_adapter.py') -Des
 # Preserve the adapter's sibling layout. Durable access remains opt-in in host-config.json.
 $occContentDestination=Join-Path $occDestination 'content-lab'
 New-Item -ItemType Directory -Path $occContentDestination | Out-Null
-foreach($occFile in @('native_adapter.py','automation_core.py','content_lab.py','context_review.py','repo_context.py','repo_source.py')){
+foreach($occFile in @('native_adapter.py','automation_core.py','content_lab.py','context_review.py','repo_context.py','repo_source.py','review_report.py','context_handoff.py')){
  Copy-Item -LiteralPath (Join-Path (Join-Path $PSScriptRoot '../content-lab') $occFile) -Destination $occContentDestination
+}
+foreach($occPackage in @('occ_v4','occ_v5')){
+ $occPackageDestination=Join-Path $occContentDestination $occPackage
+ New-Item -ItemType Directory -Path $occPackageDestination | Out-Null
+ $occPackageFiles=@('__init__.py',$(if($occPackage -eq 'occ_v4'){'protocol.py'}else{'context.py'}))
+ foreach($occFile in $occPackageFiles){
+  Copy-Item -LiteralPath (Join-Path (Join-Path (Join-Path $PSScriptRoot '../content-lab') $occPackage) $occFile) -Destination $occPackageDestination
+ }
 }
 & $occCompiler /nologo /target:exe /reference:System.Web.Extensions.dll "/out:$occDestination/occ-native-host.exe" (Join-Path $PSScriptRoot 'NativeHost.cs')
 if($LASTEXITCODE -ne 0){throw 'Compilation failed; registry unchanged.'}

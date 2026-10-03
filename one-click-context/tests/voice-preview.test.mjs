@@ -2,7 +2,13 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import {fileURLToPath} from 'node:url';
-import {VoiceRecorder,attachVoicePreview,boundedTranscript,MAX_TRANSCRIPT_BYTES} from '../library/voice-preview.mjs';
+import {VoiceRecorder,attachVoicePreview,boundedTranscript,transcriptGoal,MAX_TRANSCRIPT_BYTES} from '../library/voice-preview.mjs';
+
+test('final text uses the shared editable goal and preserves negations and numbers',()=>{
+ const value='Не запускай 24 сделки; проверь 3 файла.\nLimit 0 EUR.';
+ assert.deepEqual(transcriptGoal(value),{text:value,authority:'DATA_ONLY',dispatch_allowed:false});
+ for(const input of ['', '   ', 'x\0y', 'Я'.repeat(4001)])assert.throws(()=>transcriptGoal(input));
+});
 
 const track=()=>({stopped:0,stop(){this.stopped++;}});
 const stream=(audio=1)=>{const tracks=Array.from({length:audio},track);return {tracks,getTracks:()=>tracks,getAudioTracks:()=>tracks};};
@@ -71,10 +77,20 @@ class Element{
  setPointerCapture(){}
 }
 function dom(){
- const ids=['voice-hold','voice-status','voice-audio','voice-download','voice-clear','voice-cancel','voice-cancel-receipt','voice-transcript','voice-transcript-meta'];
+ const ids=['voice-hold','voice-status','voice-audio','voice-download','voice-clear','voice-cancel','voice-cancel-receipt','voice-transcript','voice-transcript-meta','voice-to-repo-goal','repo-goal'];
  const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));
  const handlers={};return {elements,handlers,document:{getElementById:id=>elements[id],createElement:()=>Object.assign(new Element(),{click(){this.clicked=true;}}),addEventListener:(name,fn)=>handlers[name]=fn}};
 }
+
+test('trusted transfer edits the repo goal and invalidates its prior request; STOP clears input',()=>{
+ const d=dom();let invalidations=0;d.elements['repo-goal'].oninput=()=>invalidations++;
+ attachVoicePreview({document:d.document,window:{addEventListener(){}},mediaDevices:null,MediaRecorderCtor:FakeRecorder,urlAPI:{}});
+ d.elements['voice-transcript'].value='Не запускай 24 сделки';
+ d.elements['voice-to-repo-goal'].onclick({isTrusted:false});assert.equal(invalidations,0);
+ d.elements['voice-to-repo-goal'].onclick({isTrusted:true});assert.equal(invalidations,1);assert.equal(d.elements['repo-goal'].value,'Не запускай 24 сделки');
+ d.elements['voice-cancel'].onclick({isTrusted:true});
+ d.elements['voice-to-repo-goal'].onclick({isTrusted:true});assert.equal(invalidations,1);assert.match(d.elements['voice-status'].textContent,/TRANSCRIPT_EMPTY/);
+});
 
 test('view shows unsupported device and ignores synthetic recording gesture',async()=>{
  const unsupported=dom();attachVoicePreview({document:unsupported.document,window:{addEventListener(){}},mediaDevices:null,MediaRecorderCtor:FakeRecorder,urlAPI:{}});

@@ -19,6 +19,12 @@ function storage(){const data=new Map();return {data,getItem:k=>data.get(k)||nul
 function setup(handler,cache=storage()){const calls=[],client={closed:false,request:async(type,args)=>{calls.push({type,args});return handler(type,args);}};const s=new DurableSession({storage:cache});s.connect(client,hello,'test:local');return {s,calls,client,cache};}
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 
+test('native output and terminal failure reason survive observation in the queue view',async()=>{
+ const {s}=setup(op=>response(op,{job:job('BLOCKED',{outcome:{reason:'REPORT_POSTCONDITION_FAILED'},next_step:'INSPECT_BLOCKER'})}));
+ await s.enqueue('report','key');assert.equal(s.refs[0].outcome.reason,'REPORT_POSTCONDITION_FAILED');assert.equal(s.refs[0].nextStep,'INSPECT_BLOCKER');
+ await s.observe(s.refs[0]);assert.equal(s.refs[0].outcome.reason,'REPORT_POSTCONDITION_FAILED');
+});
+
 test('legacy v1/malformed capabilities grant no durable authority',async()=>{
  for(const h of [{version:1},{version:1,durableCommands:'all'},{version:2,durableCommands:commands},{version:1,durableCommands:['shell.exec',{}]}]){
   let called=false;const s=new DurableSession({storage:storage()});s.connect({request(){called=true;}},h,'test');

@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 
-export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.export']);
+export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.export']);
 export const DURABLE_INPUT_BYTES=16000,DURABLE_OUTPUT_BYTES=192000,DURABLE_TIMEOUT_MS=10000;
 const fields={
  'durable.search':['namespace','query','limit'],
@@ -14,6 +14,9 @@ const fields={
  'durable.review.import':['namespace','review'],
  'durable.review.list':['namespace','limit'],
  'durable.review.get':['namespace','sessionId','includeContent'],
+ 'durable.review.report':['namespace','sessionId','template','taskKey'],
+ 'durable.review.handoff':['namespace','sessionId'],
+ 'durable.review.importBound':['namespace','sessionId','review'],
  'durable.repo.list':[],
  'durable.repo.scan':['repository','snapshotId'],
  'durable.repo.get':['repository','snapshotId','offset'],
