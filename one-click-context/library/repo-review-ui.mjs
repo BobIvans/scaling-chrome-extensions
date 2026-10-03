@@ -95,10 +95,10 @@ export class RepoReviewSession{
   const r=this.review;
   if(!r?.session_id||r.state!=='NEEDS_REVIEW')throw Error('REPORT_CURRENT_COMPLETE_REVIEW_REQUIRED');
   const version=this.version;
-  const d=await this.call('durable.review.report',{namespace:r.namespace,sessionId:r.session_id,template,taskKey});
+  const job=await this.durable.enqueueReport(r.namespace,r.session_id,template,taskKey);
   if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');
-  if(!/^[0-9a-f]{32}$/.test(d.job?.id))throw Error('DURABLE_RESULT_SCHEMA');
-  this.reportJob=d.job;this.onChange();return d.job;
+  if(!/^[0-9a-f]{32}$/.test(job?.id))throw Error('DURABLE_RESULT_SCHEMA');
+  this.reportJob=job;this.onChange();return job;
  }
  async refreshReport(){
   if(!this.reportJob)throw Error('REPORT_JOB_REQUIRED');

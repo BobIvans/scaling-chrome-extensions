@@ -24,6 +24,7 @@ V5 replies сохраняются полностью в `review_bound_claims` т
 После lost lease очередь остаётся `NEEDS_RECONCILIATION`. Reconcile только читает
 файл после явной проверки остановки процесса и не создаёт/повторяет эффект.
 
+Report enqueue сохраняет intent в существующей очереди UI до dispatch; reconnect/replay и STOP используют прежнего durable owner.
 Queue UI теперь показывает bounded outcome/reason и следующий шаг. Report UI
 показывает filename/hash/bytes. Native Messaging по-прежнему не запускает worker.
 Кнопка «Использовать текст как цель review» переносит редактируемый транскрипт в

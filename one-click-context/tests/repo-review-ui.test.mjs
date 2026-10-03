@@ -16,7 +16,7 @@ const snapshot={schema:'occ.repo-snapshot.v1',alias:'sce',namespace:'code',snaps
 const status={schema:'occ.review-status.v1',namespace:'code',session_id:sessionId,state:'NEEDS_REVIEW',sources:[],next_step:'VERIFY_CRITERION_EVIDENCE'};
 const response=(operation,payload)=>({schema:'occ.native-durable-result.v1',operation,...payload});
 function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};}
-function setup(handler){const calls=[],d={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});return handler(op,args);}};const s=new RepoReviewSession({durable:d});s.repositories=[{repository:'sce',namespace:'code'}];s.choose('sce');return {s,d,calls};}
+function setup(handler){const calls=[],d={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});return handler(op,args);}};d.enqueueReport=async(namespace,sessionId,template,taskKey)=>(await d.request('durable.review.report',{namespace,sessionId,template,taskKey})).job;const s=new RepoReviewSession({durable:d});s.repositories=[{repository:'sce',namespace:'code'}];s.choose('sce');return {s,d,calls};}
 
 test('review import preflights complete UTF-8 native envelope and duplicate keys',()=>{
  assert.equal(REVIEW_NATIVE_INPUT_BYTES,DURABLE_INPUT_BYTES);

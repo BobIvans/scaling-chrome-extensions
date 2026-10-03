@@ -76,8 +76,11 @@ export class DurableSession{
   if(job.next_step!==undefined&&typeof job.next_step!=='string')throw Error('DURABLE_RESULT_SCHEMA');
   return job;
  }
- async enqueue(template,taskKey){
-  name(template);name(taskKey);if(!this.can('durable.enqueue'))throw Error('DURABLE_UNAVAILABLE');
+ async enqueue(template,taskKey,reviewContext=null){
+  name(template);name(taskKey);
+  const operation=reviewContext?'durable.review.report':'durable.enqueue';
+  if(reviewContext&&(typeof reviewContext.namespace!=='string'||!ITEM.test(reviewContext.sessionId)||!NAME.test(reviewContext.namespace)))throw Error('DURABLE_REPORT_CONTEXT_REQUIRED');
+  if(!this.can(operation))throw Error('DURABLE_UNAVAILABLE');
   let ref=this.refs.find(x=>x.taskKey===taskKey);
   if(ref&&ref.template!==template)throw Error('TASK_KEY_TEMPLATE_CONFLICT');
   if(!ref){if(this.refs.length>=MAX_REFS)throw Error('DURABLE_REFERENCE_LIMIT');ref={id:null,template,taskKey,state:'UNKNOWN_COMMIT',observed:false,revision:0};this.refs.push(ref);}
@@ -85,11 +88,12 @@ export class DurableSession{
   // Persist the intent before dispatch: timeout/disconnect must replay this key.
   ref.observed=false;ref.error=null;this.persist();this.onChange();
   try{
-   const d=await this.request('durable.enqueue',{template,taskKey});
+   const d=await this.request(operation,{template,taskKey,...(reviewContext||{})});
    if(revision!==ref.revision)throw Error('STALE_JOB_REPLY');
    const j=this.validateJob(d.job,ref);ref.id=j.id;ref.state=j.state;ref.outcome=j.outcome;ref.nextStep=j.next_step;ref.observed=true;ref.error=null;this.persist();this.onChange();return j;
   }catch(e){if(generation===this.generation&&revision===ref.revision){ref.state='UNKNOWN_COMMIT';ref.error=e.message;this.onChange();}throw e;}
  }
+ async enqueueReport(namespace,sessionId,template,taskKey){return this.enqueue(template,taskKey,{namespace,sessionId});}
  async observe(ref,operation='durable.get'){
   if(!this.refs.includes(ref)||!JOB.test(ref.id))throw Error('DURABLE_JOB_ID_REQUIRED');
   const revision=++ref.revision,generation=this.generation;
