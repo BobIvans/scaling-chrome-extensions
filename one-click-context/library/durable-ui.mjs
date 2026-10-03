@@ -1,6 +1,6 @@
 import {attachRepoReviewView} from './repo-review-ui.mjs';
 // A view over the existing Native Host/SQLite owners, never a second queue.
-const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.export']);
+const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.export']);
 const NAME=/^[A-Za-z0-9_.:-]{1,100}$/, JOB=/^[0-9a-f]{32}$/, ITEM=/^[0-9a-f]{64}$/;
 const TERMINAL=new Set(['SUCCEEDED','FAILED','CANCELLED','BLOCKED']);
 const STATES=new Set(['QUEUED','RUNNING','RETRY_READY','WAITING_CI','NEEDS_RECONCILIATION',...TERMINAL]);
@@ -72,10 +72,15 @@ export class DurableSession{
  }
  validateJob(job,ref){
   if(!job||!JOB.test(job.id)||!STATES.has(job.state)||(ref.id&&job.id!==ref.id)||(job.task_key!==undefined&&job.task_key!==ref.taskKey))throw Error('DURABLE_RESULT_SCHEMA');
+  if(job.outcome!==undefined&&(!job.outcome||typeof job.outcome!=='object'||Array.isArray(job.outcome)))throw Error('DURABLE_RESULT_SCHEMA');
+  if(job.next_step!==undefined&&typeof job.next_step!=='string')throw Error('DURABLE_RESULT_SCHEMA');
   return job;
  }
- async enqueue(template,taskKey){
-  name(template);name(taskKey);if(!this.can('durable.enqueue'))throw Error('DURABLE_UNAVAILABLE');
+ async enqueue(template,taskKey,reviewContext=null){
+  name(template);name(taskKey);
+  const operation=reviewContext?'durable.review.report':'durable.enqueue';
+  if(reviewContext&&(typeof reviewContext.namespace!=='string'||!ITEM.test(reviewContext.sessionId)||!NAME.test(reviewContext.namespace)))throw Error('DURABLE_REPORT_CONTEXT_REQUIRED');
+  if(!this.can(operation))throw Error('DURABLE_UNAVAILABLE');
   let ref=this.refs.find(x=>x.taskKey===taskKey);
   if(ref&&ref.template!==template)throw Error('TASK_KEY_TEMPLATE_CONFLICT');
   if(!ref){if(this.refs.length>=MAX_REFS)throw Error('DURABLE_REFERENCE_LIMIT');ref={id:null,template,taskKey,state:'UNKNOWN_COMMIT',observed:false,revision:0};this.refs.push(ref);}
@@ -83,11 +88,12 @@ export class DurableSession{
   // Persist the intent before dispatch: timeout/disconnect must replay this key.
   ref.observed=false;ref.error=null;this.persist();this.onChange();
   try{
-   const d=await this.request('durable.enqueue',{template,taskKey});
+   const d=await this.request(operation,{template,taskKey,...(reviewContext||{})});
    if(revision!==ref.revision)throw Error('STALE_JOB_REPLY');
-   const j=this.validateJob(d.job,ref);ref.id=j.id;ref.state=j.state;ref.observed=true;ref.error=null;this.persist();this.onChange();return j;
+   const j=this.validateJob(d.job,ref);ref.id=j.id;ref.state=j.state;ref.outcome=j.outcome;ref.nextStep=j.next_step;ref.observed=true;ref.error=null;this.persist();this.onChange();return j;
   }catch(e){if(generation===this.generation&&revision===ref.revision){ref.state='UNKNOWN_COMMIT';ref.error=e.message;this.onChange();}throw e;}
  }
+ async enqueueReport(namespace,sessionId,template,taskKey){return this.enqueue(template,taskKey,{namespace,sessionId});}
  async observe(ref,operation='durable.get'){
   if(!this.refs.includes(ref)||!JOB.test(ref.id))throw Error('DURABLE_JOB_ID_REQUIRED');
   const revision=++ref.revision,generation=this.generation;
@@ -95,7 +101,7 @@ export class DurableSession{
   try{
    const d=await this.request(operation,{jobId:ref.id});
    if(revision!==ref.revision)throw Error('STALE_JOB_REPLY');
-   const j=this.validateJob(d.job,ref);ref.state=j.state;ref.cancelRequested=!!j.cancel_requested;ref.observed=true;ref.error=null;this.onChange();return j;
+   const j=this.validateJob(d.job,ref);ref.state=j.state;ref.outcome=j.outcome;ref.nextStep=j.next_step;ref.cancelRequested=!!j.cancel_requested;ref.observed=true;ref.error=null;this.onChange();return j;
   }catch(e){if(generation===this.generation&&revision===ref.revision){ref.observed=false;ref.error=e.message;this.onChange();}throw e;}
  }
  async refresh(){
@@ -131,6 +137,7 @@ export function attachDurableView({document=globalThis.document,storage=globalTh
    const row=document.createElement('div');row.className='item';const text=document.createElement('span');
    text.textContent=`${ref.template} · ${ref.taskKey} · ${ref.id||'ID пока неизвестен'} · ${ref.state} · ${ref.observed?'получено от host':'требует сверки'}${ref.cancelRequested?' · остановка запрошена':''}${ref.error?' · '+ref.error:''}`;
    row.append(text);
+   if(ref.observed&&(ref.outcome||ref.nextStep)){const details=document.createElement('pre');details.textContent=JSON.stringify({outcome:ref.outcome,next_step:ref.nextStep},null,2);row.append(details);}
    if(!ref.id||ref.state==='UNKNOWN_COMMIT'){
     const replay=document.createElement('button');replay.textContent='Сверить тем же ключом';replay.disabled=!session.can('durable.enqueue');
     replay.onclick=e=>{if(e.isTrusted)void act(()=>session.enqueue(ref.template,ref.taskKey),'Получен receipt по прежнему ключу.');};row.append(replay);

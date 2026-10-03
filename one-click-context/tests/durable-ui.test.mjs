@@ -19,6 +19,24 @@ function storage(){const data=new Map();return {data,getItem:k=>data.get(k)||nul
 function setup(handler,cache=storage()){const calls=[],client={closed:false,request:async(type,args)=>{calls.push({type,args});return handler(type,args);}};const s=new DurableSession({storage:cache});s.connect(client,hello,'test:local');return {s,calls,client,cache};}
 function deferred(){let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b;});return {promise,resolve,reject};}
 
+test('native output and terminal failure reason survive observation in the queue view',async()=>{
+ const {s}=setup(op=>response(op,{job:job('BLOCKED',{outcome:{reason:'REPORT_POSTCONDITION_FAILED'},next_step:'INSPECT_BLOCKER'})}));
+ await s.enqueue('report','key');assert.equal(s.refs[0].outcome.reason,'REPORT_POSTCONDITION_FAILED');assert.equal(s.refs[0].nextStep,'INSPECT_BLOCKER');
+ await s.observe(s.refs[0]);assert.equal(s.refs[0].outcome.reason,'REPORT_POSTCONDITION_FAILED');
+});
+
+test('report enqueue uses the same persisted intent and existing cancellation/reconnect owners',async()=>{
+ const {s,calls,client,cache}=setup(op=>response(op,{job:job('QUEUED')}));
+ s.connect(client,{version:1,durableCommands:[...commands,'durable.review.report']},'test:local');
+ await s.enqueueReport('code',item,'report','report-key');
+ assert.equal(calls[0].type,'durable.review.report');assert.equal(s.refs[0].id,id);
+ assert.equal(JSON.parse([...cache.data.values()][0]).refs[0].taskKey,'report-key');
+ await s.observe(s.refs[0],'durable.cancel');assert.equal(calls.at(-1).type,'durable.cancel');
+ const broken=setup(()=>{throw Error('MUST_NOT_DISPATCH');},{getItem:()=>null,setItem(){throw Error('QUOTA');}});
+ broken.s.connect(broken.client,{version:1,durableCommands:[...commands,'durable.review.report']},'test:local');
+ await assert.rejects(broken.s.enqueueReport('code',item,'report','report-key'),/QUOTA/);assert.equal(broken.calls.length,0);
+});
+
 test('legacy v1/malformed capabilities grant no durable authority',async()=>{
  for(const h of [{version:1},{version:1,durableCommands:'all'},{version:2,durableCommands:commands},{version:1,durableCommands:['shell.exec',{}]}]){
   let called=false;const s=new DurableSession({storage:storage()});s.connect({request(){called=true;}},h,'test');

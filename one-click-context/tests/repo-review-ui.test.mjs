@@ -16,7 +16,7 @@ const snapshot={schema:'occ.repo-snapshot.v1',alias:'sce',namespace:'code',snaps
 const status={schema:'occ.review-status.v1',namespace:'code',session_id:sessionId,state:'NEEDS_REVIEW',sources:[],next_step:'VERIFY_CRITERION_EVIDENCE'};
 const response=(operation,payload)=>({schema:'occ.native-durable-result.v1',operation,...payload});
 function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};}
-function setup(handler){const calls=[],d={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});return handler(op,args);}};const s=new RepoReviewSession({durable:d});s.repositories=[{repository:'sce',namespace:'code'}];s.choose('sce');return {s,d,calls};}
+function setup(handler){const calls=[],d={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});return handler(op,args);}};d.enqueueReport=async(namespace,sessionId,template,taskKey)=>(await d.request('durable.review.report',{namespace,sessionId,template,taskKey})).job;const s=new RepoReviewSession({durable:d});s.repositories=[{repository:'sce',namespace:'code'}];s.choose('sce');return {s,d,calls};}
 
 test('review import preflights complete UTF-8 native envelope and duplicate keys',()=>{
  assert.equal(REVIEW_NATIVE_INPUT_BYTES,DURABLE_INPUT_BYTES);
@@ -45,6 +45,27 @@ test('next context part sends the disclosed source cursor without changing repo/
  await s.export('goal','scope',['criterion']);await s.export('goal','scope',['criterion'],s.exported.document.selection.next_source_offset);
  assert.equal(calls.at(-1).args.sourceOffset,4);assert.equal(calls.at(-1).args.snapshotId,snapshotId);assert.deepEqual(calls.at(-1).args.paths,['main.py']);
  await assert.rejects(s.export('goal','scope',['criterion'],-1),/OFFSET_REQUIRED/);
+});
+
+test('report queue exposes verified output and blocker; stale replies do not replace a new goal',async()=>{
+ const jobId='d'.repeat(32),{s,calls}=setup(op=>response(op,{job:{id:jobId,state:'QUEUED',next_step:'RUN_REGISTERED_LOCAL_WORKER'}}));
+ s.review=status;await s.enqueueReport('configured-report','report-one');
+ assert.equal(calls[0].op,'durable.review.report');assert.equal(calls[0].args.sessionId,sessionId);
+ assert.equal(s.reportJob.next_step,'RUN_REGISTERED_LOCAL_WORKER');
+ s.durable.request=async op=>response(op,{job:{id:jobId,state:'BLOCKED',outcome:{reason:'REPORT_POSTCONDITION_FAILED'},next_step:'INSPECT_BLOCKER'}});
+ await s.refreshReport();assert.equal(s.reportJob.outcome.reason,'REPORT_POSTCONDITION_FAILED');
+ const late=deferred();s.durable.request=()=>late.promise;const pending=assert.rejects(s.refreshReport(),/STALE_CONTEXT_REPLY/);s.invalidate();late.resolve(response('durable.get',{job:{id:jobId,state:'SUCCEEDED'}}));await pending;
+ assert.equal(s.review,null);
+});
+
+test('V4/V5 TXT and bound reply use the selected immutable session and reject goal changes',async()=>{
+ const {s,calls}=setup(op=>response(op,{handoff:{binding_v7:{session_id:sessionId},rendered_txt:'V4 request + V5 overlay'}}));
+ s.review=status;await s.exportHandoff();assert.equal(s.handoff.rendered_txt,'V4 request + V5 overlay');
+ s.durable.request=async(op,args)=>{calls.push({op,args});return response(op,{review:status});};
+ await s.import('code',JSON.stringify({schema:'occ.review_bundle.v5'}));
+ assert.equal(calls.at(-1).op,'durable.review.importBound');assert.equal(calls.at(-1).args.sessionId,sessionId);
+ s.invalidate();assert.equal(s.handoff,null);
+ await assert.rejects(s.import('code',JSON.stringify({schema:'occ.review_bundle.v5'})),/SELECTED_SESSION/);
 });
 
 class Element{

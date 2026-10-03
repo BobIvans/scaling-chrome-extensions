@@ -200,6 +200,12 @@ def validate_policy(policy):
 def validate_job(payload, policy):
     if not isinstance(payload, dict):
         raise ValueError("JOB_OBJECT_REQUIRED")
+    if payload.get('kind') == 'review_report':
+        if set(payload) != {'kind', 'report_profile'}:
+            raise ValueError('REPORT_JOB_SCHEMA')
+        from review_report import validate_profile
+        validate_profile(policy.get('reports', {}).get(identifier(payload['report_profile'])))
+        return 1
     if payload.get("kind") == "sync":
         if set(payload) != {"kind", "source_profile"}:
             raise ValueError("SYNC_SCHEMA")
@@ -362,6 +368,41 @@ class Core:
             return self.get(row["id"])
         finally:
             db.close()
+
+    def reconcile_report(self, job_id, process_stopped):
+        # Explicit operator check is required: a lost lease may still write.
+        if process_stopped is not True:
+            raise ValueError('OPERATOR_PROCESS_STOP_CONFIRMATION_REQUIRED')
+        from review_report import expected_report, output_path, verify_output
+        db = connection(self.store)
+        try:
+            db.execute('BEGIN IMMEDIATE')
+            row = db.execute('SELECT * FROM jobs WHERE id=?', (job_id,)).fetchone()
+            if row is None or row['state'] != 'NEEDS_RECONCILIATION':
+                raise ValueError('ORPHAN_RECONCILIATION_STATE_REQUIRED')
+            payload = json.loads(row['payload'])
+            if (row['policy_hash'] != digest(self.policy) or row['payload_hash'] != digest(payload)
+                    or payload.get('kind') != 'review_report'):
+                raise ValueError('REPORT_RECONCILIATION_SCOPE')
+            validate_job(payload, self.policy)
+            profile = self.policy['reports'][payload['report_profile']]
+            try:
+                expected = expected_report(self.store, profile)
+                result = verify_output(output_path(self.store, profile), expected)
+                state = 'SUCCEEDED'
+            except (OSError, ValueError) as exc:
+                code = str(exc)
+                result = {'reason': code if re.fullmatch(r'[A-Z_]{1,100}', code) else 'REPORT_OUTPUT_UNAVAILABLE'}
+                state = 'BLOCKED'
+            if row['cancel_requested']:
+                state = 'CANCELLED'
+            db.execute('UPDATE jobs SET state=?,result=?,updated=? WHERE id=?',
+                       (state, encoded(result), time.time(), job_id))
+            event(db, job_id, state, result | {'operator_verified_process_stopped': True})
+            db.commit()
+        finally:
+            db.close()
+        return self.get(job_id)
 
     def heartbeat(self, job):
         db = connection(self.store)
@@ -587,6 +628,11 @@ class Core:
                               max_files=profile.get("max_files", 100), max_bytes=profile.get("max_bytes", 25_000_000),
                               progress=lambda: self.heartbeat(job))
                 self.transition(job, "SUCCEEDED", result=result)
+            elif job['payload']['kind'] == 'review_report':
+                from review_report import write_report
+                result = write_report(self.store, self.policy['reports'][job['payload']['report_profile']],
+                                      progress=lambda: self.heartbeat(job))
+                self.transition(job, 'SUCCEEDED', result=result)
             else:
                 self.patch_test(job)
         except Cancelled:
@@ -611,12 +657,12 @@ def main(argv=None):
     pack = commands.add_parser("context")
     pack.add_argument("--namespace", required=True)
     pack.add_argument("--id", action="append", required=True)
-    for name in ("enqueue", "work", "get", "cancel", "abandon-orphan"):
+    for name in ("enqueue", "work", "get", "cancel", "abandon-orphan", "reconcile-report"):
         cmd = commands.add_parser(name)
         cmd.add_argument("--policy", required=True, type=Path)
-        if name in {"get", "cancel", "abandon-orphan"}:
+        if name in {"get", "cancel", "abandon-orphan", "reconcile-report"}:
             cmd.add_argument("--id", required=True)
-        if name == "abandon-orphan":
+        if name in {"abandon-orphan", "reconcile-report"}:
             cmd.add_argument("--process-stopped", required=True, action="store_true")
         if name == "enqueue":
             cmd.add_argument("--task-key", required=True)
@@ -647,6 +693,8 @@ def main(argv=None):
                 result = core.get(args.id)
             elif args.command == "abandon-orphan":
                 result = core.abandon_orphan(args.id, args.process_stopped)
+            elif args.command == 'reconcile-report':
+                result = core.reconcile_report(args.id, args.process_stopped)
             else:
                 result = core.cancel(args.id)
         print(json.dumps(result, ensure_ascii=False, indent=2))

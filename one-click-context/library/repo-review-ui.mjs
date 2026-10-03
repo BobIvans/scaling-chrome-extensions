@@ -3,7 +3,7 @@ export const REVIEW_NATIVE_INPUT_BYTES=16000;
 const HASH=/^[0-9a-f]{64}$/;
 const bytes=value=>new TextEncoder().encode(value).length;
 
-export function parseReviewInput(raw,namespace){
+export function parseReviewInput(raw,namespace,sessionId=null){
  if(typeof raw!=='string'||bytes(raw)>REVIEW_NATIVE_INPUT_BYTES)throw Error('REVIEW_NATIVE_INPUT_LIMIT');
  const value=JSON.parse(raw);
  // JSON.parse otherwise drops duplicate keys before the native strict parser.
@@ -21,14 +21,15 @@ export function parseReviewInput(raw,namespace){
   }else if(token==='['){while(tokens[pos]!==']'){walk(depth+1);if(tokens[pos]!==',')break;pos++;}pos++;}
  }
  walk();
- if(bytes(JSON.stringify({type:'durable.review.import',namespace,review:value}))>REVIEW_NATIVE_INPUT_BYTES)throw Error('REVIEW_NATIVE_INPUT_LIMIT');
+ const envelope=value.schema==='occ.review_bundle.v5'?{type:'durable.review.importBound',namespace,sessionId,review:value}:{type:'durable.review.import',namespace,review:value};
+ if(bytes(JSON.stringify(envelope))>REVIEW_NATIVE_INPUT_BYTES)throw Error('REVIEW_NATIVE_INPUT_LIMIT');
  return value;
 }
 
 export class RepoReviewSession{
  constructor({durable,onChange=()=>{}}){this.durable=durable;this.onChange=onChange;this.version=0;this.reset();}
- reset(){this.version++;this.repositories=[];this.repository=null;this.namespace=null;this.snapshot=null;this.selected=new Set();this.exported=null;this.reviews=[];this.review=null;this.busy=false;this.onChange();}
- invalidate(){this.version++;this.exported=null;this.onChange();}
+ reset(){this.version++;this.repositories=[];this.repository=null;this.namespace=null;this.snapshot=null;this.selected=new Set();this.exported=null;this.handoff=null;this.reviews=[];this.review=null;this.reportJob=null;this.busy=false;this.onChange();}
+ invalidate(){this.version++;this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.onChange();}
  async call(type,args={}){return this.durable.request(type,args);}
  async loadRepositories(){
   const version=++this.version;const d=await this.call('durable.repo.list');
@@ -36,9 +37,9 @@ export class RepoReviewSession{
   if(!Array.isArray(d.repositories)||d.repositories.length>20||d.repositories.some(r=>typeof r.repository!=='string'||typeof r.namespace!=='string'))throw Error('REPO_RESULT_SCHEMA');
   this.repositories=d.repositories;this.onChange();return d.repositories;
  }
- choose(alias){const repo=this.repositories.find(r=>r.repository===alias);if(!repo)throw Error('REPO_OUTSIDE_OPERATOR_SCOPE');this.version++;this.repository=alias;this.namespace=repo.namespace;this.snapshot=null;this.selected.clear();this.exported=null;this.review=null;this.reviews=[];this.onChange();}
+ choose(alias){const repo=this.repositories.find(r=>r.repository===alias);if(!repo)throw Error('REPO_OUTSIDE_OPERATOR_SCOPE');this.version++;this.repository=alias;this.namespace=repo.namespace;this.snapshot=null;this.selected.clear();this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.reviews=[];this.onChange();}
  select(path,checked){if(!this.snapshot?.files.some(f=>f.path===path&&f.state==='INDEXED'))throw Error('REPO_PATH_OUTSIDE_SNAPSHOT');if(checked&&this.selected.size>=10&&!this.selected.has(path))throw Error('REPO_SELECTION_LIMIT');checked?this.selected.add(path):this.selected.delete(path);this.invalidate();}
- acceptSnapshot(s){if(s?.schema!=='occ.repo-snapshot.v1'||s.alias!==this.repository||s.namespace!==this.namespace||!HASH.test(s.snapshot_id)||!Array.isArray(s.files)||!Number.isInteger(s.cursor)||!Number.isInteger(s.total)||s.cursor<0||s.cursor>s.total)throw Error('REPO_RESULT_SCHEMA');this.snapshot=s;this.exported=null;this.onChange();return s;}
+ acceptSnapshot(s){if(s?.schema!=='occ.repo-snapshot.v1'||s.alias!==this.repository||s.namespace!==this.namespace||!HASH.test(s.snapshot_id)||!Array.isArray(s.files)||!Number.isInteger(s.cursor)||!Number.isInteger(s.total)||s.cursor<0||s.cursor>s.total)throw Error('REPO_RESULT_SCHEMA');this.snapshot=s;this.exported=null;this.handoff=null;this.review=null;this.onChange();return s;}
  async scan({fresh=false}={}){
   if(!this.repository)throw Error('REPO_SELECTION_REQUIRED');
   const version=++this.version;
@@ -71,14 +72,41 @@ export class RepoReviewSession{
   const version=++this.version;const d=await this.call('durable.review.get',{namespace,sessionId,includeContent:true});
   if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');
   if(d.review?.session_id!==sessionId||d.review.namespace!==namespace)throw Error('REVIEW_RESULT_SCHEMA');
-  this.review=d.review;this.onChange();return d.review;
+  this.review=d.review;this.handoff=null;this.onChange();return d.review;
  }
  async import(namespace,raw){
-  const value=parseReviewInput(raw,namespace);const version=++this.version;
-  const d=await this.call('durable.review.import',{namespace,review:value});
+  const sessionId=this.review?.session_id,value=parseReviewInput(raw,namespace,sessionId);const version=++this.version;
+  const bound=value.schema==='occ.review_bundle.v5';
+  if(bound&&(!sessionId||this.review.namespace!==namespace))throw Error('HANDOFF_SELECTED_SESSION_REQUIRED');
+  const d=await this.call(bound?'durable.review.importBound':'durable.review.import',{namespace,...(bound?{sessionId}:{}),review:value});
   if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');
-  if(d.review?.session_id!==value.session_id||d.review.namespace!==namespace)throw Error('REVIEW_RESULT_SCHEMA');
-  this.review=d.review;this.onChange();return d.review;
+  if(d.review?.session_id!==(bound?sessionId:value.session_id)||d.review.namespace!==namespace)throw Error('REVIEW_RESULT_SCHEMA');
+  this.review=d.review;this.handoff=null;this.onChange();return d.review;
+ }
+ async exportHandoff(){
+  if(!this.review)throw Error('HANDOFF_SELECTED_SESSION_REQUIRED');
+  const version=this.version,id=this.review.session_id;
+  const d=await this.call('durable.review.handoff',{namespace:this.review.namespace,sessionId:id});
+  if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');
+  if(d.handoff?.binding_v7?.session_id!==id||typeof d.handoff.rendered_txt!=='string')throw Error('HANDOFF_RESULT_SCHEMA');
+  this.handoff=d.handoff;this.onChange();return d.handoff;
+ }
+ async enqueueReport(template,taskKey){
+  const r=this.review;
+  if(!r?.session_id||r.state!=='NEEDS_REVIEW')throw Error('REPORT_CURRENT_COMPLETE_REVIEW_REQUIRED');
+  const version=this.version;
+  const job=await this.durable.enqueueReport(r.namespace,r.session_id,template,taskKey);
+  if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');
+  if(!/^[0-9a-f]{32}$/.test(job?.id))throw Error('DURABLE_RESULT_SCHEMA');
+  this.reportJob=job;this.onChange();return job;
+ }
+ async refreshReport(){
+  if(!this.reportJob)throw Error('REPORT_JOB_REQUIRED');
+  const version=this.version,id=this.reportJob.id;
+  const d=await this.call('durable.get',{jobId:id});
+  if(version!==this.version)throw Error('STALE_CONTEXT_REPLY');
+  if(d.job?.id!==id)throw Error('DURABLE_RESULT_SCHEMA');
+  this.reportJob=d.job;this.onChange();return d.job;
  }
 }
 
@@ -117,6 +145,12 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
   for(const r of state.reviews){const button=document.createElement('button');button.textContent=r.session_id.slice(0,12)+' · '+r.state;button.onclick=e=>{if(e.isTrusted)void act(()=>state.get(r.namespace,r.session_id),'Review сверён с источниками.');};$('review-sessions').append(button);}
   const r=state.review;
   $('review-details').textContent=r?JSON.stringify({state:r.state,repo_binding:r.repo_binding,coverage:r.coverage,unaccounted_sources:r.unaccounted_sources,findings:r.finding_details||r.findings,missing:r.missing_dependencies,changed:r.changed_dependencies,next_step:r.next_step,request:r.request_meta},null,2):'Сессия review ещё не выбрана.';
+  if($('review-report-enqueue'))$('review-report-enqueue').disabled=state.busy||!durable.can('durable.review.report')||r?.state!=='NEEDS_REVIEW';
+  if($('review-report-refresh'))$('review-report-refresh').disabled=state.busy||!state.reportJob||!durable.can('durable.get');
+  if($('review-report-status'))$('review-report-status').textContent=state.reportJob?JSON.stringify(state.reportJob,null,2):'Отчёт ещё не поставлен в очередь. Выберите настроенный оператором template.';
+  if($('review-handoff'))$('review-handoff').disabled=state.busy||!state.review||!durable.can('durable.review.handoff');
+  if($('review-handoff-download'))$('review-handoff-download').disabled=!state.handoff;
+  if($('review-handoff-txt'))$('review-handoff-txt').value=state.handoff?.rendered_txt||'';
   $('review-next-request').value=r?JSON.stringify({session_id:r.session_id,goal:r.request_meta?.goal,next_step:r.next_step,missing:r.missing_dependencies,changed:r.changed_dependencies,criteria:(r.finding_details||[]).map(f=>({finding_id:f.finding_id,criterion:f.criterion})),authority:'DATA_ONLY'},null,2):'';
  }
  state=new RepoReviewSession({durable,onChange:render});
@@ -140,6 +174,10 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
  $('review-list').onclick=e=>{if(e.isTrusted)void act(()=>state.list($('review-namespace').value.trim()),'Сохранённые review sessions получены.');};
  $('review-import').onclick=e=>{if(e.isTrusted)void act(async()=>{const r=await state.import($('review-namespace').value.trim(),$('review-input').value);await state.get(r.namespace,r.session_id);},'Review импортирован. DONE остаётся заявлением до проверки evidence.');};
  $('review-file').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;if(file.size>REVIEW_NATIVE_INPUT_BYTES){notice('Файл превышает лимит native import: 16 000 байт включая request.');return;}$('review-input').value=await file.text();};
+ if($('review-report-enqueue'))$('review-report-enqueue').onclick=e=>{if(e.isTrusted)void act(()=>state.enqueueReport($('review-report-template').value.trim(),$('review-report-key').value.trim()),'Отчёт поставлен в существующую очередь. Для создания файла запустите настроенный локальный worker; затем обновите статус.');};
+ if($('review-report-refresh'))$('review-report-refresh').onclick=e=>{if(e.isTrusted)void act(()=>state.refreshReport(),'Получен статус worker и проверка результата.');};
+ if($('review-handoff'))$('review-handoff').onclick=e=>{if(e.isTrusted)void act(()=>state.exportHandoff(),'V4 request + V5 overlay собраны из текущих host-bound источников.');};
+ if($('review-handoff-download'))$('review-handoff-download').onclick=e=>{if(!e.isTrusted||!state.handoff)return;const url=URL.createObjectURL(new Blob([state.handoff.rendered_txt],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='REQUEST_TO_AI_RU_'+state.handoff.binding_v7.session_id.slice(0,12)+'.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};
  render();
  return {state,connect(){state.reset();notice(durable.can('durable.repo.list')?'Подключён repo/review host. Получите список репозиториев.':'Установленный host ещё не поддерживает repo/review.');render();},disconnect(){state.reset();notice('Канал закрыт. Scan и review сохранены в локальном store.');render();}};
 }
