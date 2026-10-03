@@ -1,5 +1,6 @@
+import {attachRepoReviewView} from './repo-review-ui.mjs';
 // A view over the existing Native Host/SQLite owners, never a second queue.
-const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record']);
+const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.export']);
 const NAME=/^[A-Za-z0-9_.:-]{1,100}$/, JOB=/^[0-9a-f]{32}$/, ITEM=/^[0-9a-f]{64}$/;
 const TERMINAL=new Set(['SUCCEEDED','FAILED','CANCELLED','BLOCKED']);
 const STATES=new Set(['QUEUED','RUNNING','RETRY_READY','WAITING_CI','NEEDS_RECONCILIATION',...TERMINAL]);
@@ -111,6 +112,7 @@ export function attachDurableView({document=globalThis.document,storage=globalTh
  const message=t=>{$('durable-status').textContent=t;};
  let client=null,hello=null,selected=new Set();
  const session=new DurableSession({storage,onChange:()=>render()});
+ const contextView=attachRepoReviewView({document,session});
  function render(){
   $('durable-search').disabled=!session.can('durable.search');
   $('durable-context').disabled=!session.can('durable.context')||!selected.size;
@@ -147,7 +149,7 @@ export function attachDurableView({document=globalThis.document,storage=globalTh
  }
  function bind(){
   selected=new Set();
-  try{session.connect(client,hello,scopePrefix+':'+name($('durable-profile').value.trim()));message(session.can('durable.search')?'Доступен локальный durable host. SQLite хранит данные и задания.':'Durable capability не включена у этого host.');}
+  try{session.connect(client,hello,scopePrefix+':'+name($('durable-profile').value.trim()));contextView.connect();message(session.can('durable.search')?'Доступен локальный durable host. SQLite хранит данные и задания.':'Durable capability не включена у этого host.');}
   catch(e){session.disconnect();message(e.message);}
  }
  $('durable-profile').onchange=()=>{if(client&&!client.closed)bind();};
@@ -158,5 +160,5 @@ export function attachDurableView({document=globalThis.document,storage=globalTh
  $('durable-enqueue').onclick=e=>{if(e.isTrusted)void act(()=>session.enqueue($('durable-template').value.trim(),$('durable-task-key').value.trim()),'Задание зарегистрировано. Worker этим UI не запускается.');};
  $('durable-refresh').onclick=e=>{if(e.isTrusted)void act(()=>session.refresh(),'Сверены известные ссылки на jobs; это не список всей очереди.');};
  render();
- return {session,connect(c,h){client=c;hello=h;bind();},disconnect(){client=null;hello=null;selected.clear();session.disconnect();message('Канал закрыт. Durable queue сохранена; состояния требуют сверки после подключения.');}};
+ return {session,contextView,connect(c,h){client=c;hello=h;bind();},disconnect(){client=null;hello=null;selected.clear();session.disconnect();contextView.disconnect();message('Канал закрыт. Durable queue сохранена; состояния требуют сверки после подключения.');}};
 }

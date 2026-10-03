@@ -68,7 +68,8 @@ def db_for(store):
     return db
 
 
-def create_session(store, namespace, ids, goal, base_repo_sha=None):
+def create_session(store, namespace, ids, goal, base_repo_sha=None, *,
+                   repo_snapshot_id=None, request_meta=None, repo_binding=None):
     identifier(namespace)
     bounded_text(goal, 8000)
     if base_repo_sha is not None and (not isinstance(base_repo_sha, str) or not SHA.fullmatch(base_repo_sha)):
@@ -83,6 +84,18 @@ def create_session(store, namespace, ids, goal, base_repo_sha=None):
                'goal_sha256': hashlib.sha256(goal.encode('utf-8')).hexdigest(),
                'export_bundle_id': pack['sha256'], 'export_sha256': pack['sha256'],
                'base_repo_sha': base_repo_sha, 'evidence_refs': []}
+    if repo_snapshot_id is not None:
+        from repo_context import bind_ids, verify_binding
+        binding = repo_binding or bind_ids(store, namespace, repo_snapshot_id, ids)
+        verified = verify_binding(store, binding)
+        if verified['state'] != 'VERIFIED':
+            raise ValueError('SOURCE_DRIFT')
+        if base_repo_sha is not None and base_repo_sha != binding['repo_sha']:
+            raise ValueError('REVIEW_REPO_SHA_MISMATCH')
+        payload.update(base_repo_sha=binding['repo_sha'], repo_binding=binding)
+    if request_meta is not None:
+        payload['request_meta'] = request_meta
+    strict_json(json.dumps(payload, ensure_ascii=False).encode('utf-8'))
     session_id = digest(payload)
     db = db_for(store)
     try:
@@ -120,16 +133,39 @@ def binding_state(db, payload):
             item = db.execute('SELECT payload FROM items WHERE id=?', (ref['item_id'],)).fetchone()
             if item is None:
                 missing.append(ref['source_key'])
-            elif strict_json(item['payload'].encode('utf-8')).get('input_sha256') != ref['sha256']:
-                changed.append(ref['source_key'])
+            else:
+                source = strict_json(item['payload'].encode('utf-8'))
+                if (source.get('input_sha256') != ref['sha256'] or
+                        'repo_binding' in payload and
+                        hashlib.sha256(source.get('text', '').encode('utf-8')).hexdigest() != ref['sha256']):
+                    changed.append(ref['source_key'])
     return ('NEEDS_CONTEXT' if missing else 'STALE' if changed else 'EXPORTED'), missing, changed
 
 
-def get_session(store, namespace, session_id):
+def get_session(store, namespace, session_id, *, details=False, repo_profiles=None):
     db = db_for(store)
     try:
         row, payload = load_session(db, namespace, session_id)
         state, missing, changed = binding_state(db, payload)
+        repo_state = {'state': 'UNBOUND', 'source_bytes_verified': False}
+        if 'repo_binding' in payload:
+            from repo_context import verify_binding, db_for as repo_db, load_snapshot
+            authorized = True
+            if repo_profiles is not None:
+                context_db = repo_db(store)
+                try:
+                    snap = load_snapshot(context_db, namespace, payload['repo_binding']['snapshot_id'])
+                    authorized = repo_profiles.get(snap['alias']) == json.loads(snap['profile'])
+                finally:
+                    context_db.close()
+            repo_state = (verify_binding(store, payload['repo_binding']) if authorized else
+                          {'state': 'NEEDS_CONTEXT', 'missing': ['REPO_PROFILE_REVOKED'], 'changed': [], 'source_bytes_verified': False})
+            missing += repo_state['missing']
+            changed += repo_state['changed']
+            if missing:
+                state = 'NEEDS_CONTEXT'
+            elif changed:
+                state = 'STALE'
         head = db.execute('SELECT review_id FROM review_heads WHERE session_id=?', (session_id,)).fetchone()
         result = {'schema': 'occ.review-status.v1', 'session_id': session_id,
                   'namespace': namespace, 'snapshot_sha256': payload['snapshot_sha256'],
@@ -140,6 +176,9 @@ def get_session(store, namespace, session_id):
                   'review_id': head['review_id'] if head else None,
                   'authority': 'DATA_ONLY', 'execution_authorized': False,
                   'dispatch_allowed': False, 'approvals_restored': False, 'timers_restored': False}
+        result['repo_binding'] = repo_state
+        if details:
+            result['request_meta'] = payload.get('request_meta')
         if head:
             review = db.execute('SELECT * FROM review_results WHERE id=? AND session_id=?',
                                 (head['review_id'], session_id)).fetchone()
@@ -154,12 +193,21 @@ def get_session(store, namespace, session_id):
             result['findings'] = [{'finding_id': f['finding_id'], 'classification': f['classification'],
                                   'state': 'STATIC_CANDIDATE' if f['classification'] == 'CODE_DEFECT' else 'NEEDS_REVIEW',
                                   'closed': False, 'evidence_verified': False} for f in data['findings']]
+            if details:
+                result['coverage'] = data['coverage']
+                result['finding_details'] = data['findings']
+                covered = set(data['coverage']['reviewed'] + data['coverage']['not_reviewed'])
+                result['unaccounted_sources'] = [s['source_key'] for s in payload['sources'] if s['source_key'] not in covered]
+        if payload.get('request_meta', {}).get('selection', {}).get('coverage') == 'PARTIAL' and result['state'] in {'EXPORTED', 'NEEDS_REVIEW'}:
+            result['state'] = 'NEEDS_CONTEXT'
+        result['next_step'] = ('RESCAN_AND_EXPORT' if result['state'] in {'STALE', 'NEEDS_CONTEXT'} else
+                               'VERIFY_CRITERION_EVIDENCE' if head else 'IMPORT_REVIEW')
         return result
     finally:
         db.close()
 
 
-def list_sessions(store, namespace, limit=20):
+def list_sessions(store, namespace, limit=20, *, repo_profiles=None):
     identifier(namespace)
     strict_int(limit, 1, 20)
     db = db_for(store)
@@ -168,7 +216,7 @@ def list_sessions(store, namespace, limit=20):
                                       (namespace, limit))]
     finally:
         db.close()
-    return [get_session(store, namespace, session_id) for session_id in ids]
+    return [get_session(store, namespace, session_id, repo_profiles=repo_profiles) for session_id in ids]
 
 
 def validate_review(value):
@@ -223,7 +271,7 @@ def validate_review(value):
     return value
 
 
-def import_review(store, namespace, value):
+def import_review(store, namespace, value, *, repo_profiles=None):
     value = validate_review(value)
     db = db_for(store)
     review_id = digest(value)
@@ -245,7 +293,7 @@ def import_review(store, namespace, value):
             # Old replay does not roll the current head backwards.
     finally:
         db.close()
-    result = get_session(store, namespace, value['session_id'])
+    result = get_session(store, namespace, value['session_id'], repo_profiles=repo_profiles)
     result.update(imported_review_id=review_id, duplicate_of=review_id if existing else None,
                   import_state='UNCHANGED' if existing else 'IMPORTED')
     return result

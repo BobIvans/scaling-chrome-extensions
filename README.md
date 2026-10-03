@@ -1,5 +1,16 @@
 # Scaling Chrome Extensions
 
+Текущий локальный repo/review сценарий: выберите настроенный Git repo в библиотеке,
+продолжите scan до COMPLETE, выберите файлы или finding, экспортируйте запрос для AI
+и импортируйте JSON review. Git inventory, byte-preserving source chunks и review
+живут в существующем `content.sqlite3`; host устанавливается отдельно.
+
+[Настройка, команды и границы context foundation](docs/automation/context-foundation.md).
+Локальные regression tests выполнены на Linux; workflow проверяет Ubuntu и Windows
+на exact PR head. Установленный Windows Chrome/native host: **NOT RUN**, receipt
+нужно получить на устройстве. Browser DOM fixtures и native subprocess tests
+не заменяют эту проверку.
+
 ## One Click Context
 
 Локальное расширение Chrome: **открой страницу → нажми значок → вставь текст через Ctrl+V**.

@@ -19,6 +19,7 @@ from automation_core import (Core, context_pack, digest, enqueue, identifier,
                              validate_policy)
 from content_lab import apply_library_record
 from context_review import create_session, get_session, import_review, list_sessions, strict_json
+import repo_context
 
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
@@ -29,10 +30,14 @@ FIELDS = {
     "durable.get": ({"type", "jobId"}, set()),
     "durable.cancel": ({"type", "jobId"}, set()),
     "durable.record": ({"type", "mutation"}, set()),
-    "durable.review.create": ({"type", "namespace", "ids", "goal"}, {"baseRepoSha"}),
+    "durable.review.create": ({"type", "namespace", "ids", "goal"}, {"baseRepoSha", "repoSnapshotId"}),
     "durable.review.import": ({"type", "namespace", "review"}, set()),
     "durable.review.list": ({"type", "namespace"}, {"limit"}),
-    "durable.review.get": ({"type", "namespace", "sessionId"}, set()),
+    "durable.review.get": ({"type", "namespace", "sessionId"}, {"includeContent"}),
+    "durable.repo.list": ({"type"}, set()),
+    "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
+    "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
+    "durable.repo.export": ({"type", "repository", "snapshotId", "paths", "goal", "scope", "acceptance"}, {"maxBytes", "sourceOffset"}),
 }
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
@@ -40,7 +45,8 @@ ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
 
 def operator_profile(path):
     profile = load_json(path)
-    if not isinstance(profile, dict) or set(profile) != {"schema", "store", "policy_file", "namespaces", "templates"} or profile["schema"] != "occ.native-durable-profile.v1":
+    required = {"schema", "store", "policy_file", "namespaces", "templates"}
+    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories'} or profile["schema"] != "occ.native-durable-profile.v1":
         raise ValueError("DURABLE_OPERATOR_PROFILE_REQUIRED")
     for field in ("store", "policy_file"):
         value = profile[field]
@@ -58,6 +64,14 @@ def operator_profile(path):
     for name, payload in templates.items():
         identifier(name)
         validate_job(payload, policy)
+    repositories = profile.get('repositories', {})
+    if not isinstance(repositories, dict) or len(repositories) > 20:
+        raise ValueError('REPO_OPERATOR_PROFILE_REQUIRED')
+    for alias, source in repositories.items():
+        identifier(alias)
+        repo_context.validate_profile(source)
+        if source['namespace'] not in namespaces:
+            raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
     return profile, policy
 
 
@@ -87,7 +101,35 @@ def dispatch(request, profile_path):
     store, operation = Path(profile["store"]), request["type"]
     core = Core(store, policy)
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
-    if operation.startswith('durable.review.'):
+    if operation.startswith('durable.repo.'):
+        repositories = profile.get('repositories', {})
+        if operation == 'durable.repo.list':
+            value['repositories'] = [{'repository': alias, 'namespace': p['namespace']}
+                                     for alias, p in repositories.items()]
+        else:
+            alias = identifier(request['repository'])
+            if alias not in repositories:
+                raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+            source = repositories[alias]
+            namespace = source['namespace']
+            snapshot_id = request.get('snapshotId')
+            if operation == 'durable.repo.scan' and snapshot_id is None:
+                snapshot_id = repo_context.start_scan(store, alias, source)
+            db = repo_context.db_for(store)
+            try:
+                snapshot = repo_context.load_snapshot(db, namespace, snapshot_id)
+                if snapshot['alias'] != alias or json.loads(snapshot['profile']) != source:
+                    raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+            finally:
+                db.close()
+            if operation == 'durable.repo.scan':
+                value['snapshot'] = repo_context.scan_page(store, namespace, snapshot_id)
+            elif operation == 'durable.repo.get':
+                value['snapshot'] = repo_context.get_snapshot(store, namespace, snapshot_id, offset=request.get('offset', 0))
+            else:
+                value['export'] = repo_context.export_request(store, namespace, snapshot_id, request['paths'],
+                    request['goal'], request['scope'], request['acceptance'], request.get('maxBytes', 24_000), request.get('sourceOffset', 0))
+    elif operation.startswith('durable.review.'):
         namespace = identifier(request['namespace'])
         if namespace not in profile['namespaces']:
             raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
@@ -95,13 +137,25 @@ def dispatch(request, profile_path):
             ids = request['ids']
             if not isinstance(ids, list) or not 1 <= len(ids) <= 10 or not all(isinstance(item_id, str) and ITEM_ID.fullmatch(item_id) for item_id in ids):
                 raise ValueError('DURABLE_ITEM_IDS_REQUIRED')
-            value['review'] = create_session(store, namespace, ids, request['goal'], request.get('baseRepoSha'))
+            snapshot_id = request.get('repoSnapshotId')
+            if snapshot_id is not None:
+                db = repo_context.db_for(store)
+                try:
+                    snap = repo_context.load_snapshot(db, namespace, snapshot_id)
+                    if json.loads(snap['profile']) != profile.get('repositories', {}).get(snap['alias']):
+                        raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+                finally:
+                    db.close()
+            value['review'] = create_session(store, namespace, ids, request['goal'], request.get('baseRepoSha'), repo_snapshot_id=snapshot_id)
         elif operation == 'durable.review.import':
-            value['review'] = import_review(store, namespace, request['review'])
+            value['review'] = import_review(store, namespace, request['review'], repo_profiles=profile.get('repositories', {}))
         elif operation == 'durable.review.list':
-            value['reviews'] = list_sessions(store, namespace, request.get('limit', 20))
+            value['reviews'] = list_sessions(store, namespace, request.get('limit', 20), repo_profiles=profile.get('repositories', {}))
         else:
-            value['review'] = get_session(store, namespace, request['sessionId'])
+            details = request.get('includeContent', False)
+            if type(details) is not bool:
+                raise ValueError('DURABLE_SCHEMA')
+            value['review'] = get_session(store, namespace, request['sessionId'], details=details, repo_profiles=profile.get('repositories', {}))
     elif operation in {"durable.search", "durable.context"}:
         namespace = identifier(request["namespace"])
         if namespace not in profile["namespaces"]:

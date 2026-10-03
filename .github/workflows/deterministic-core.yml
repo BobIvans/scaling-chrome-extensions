@@ -6,10 +6,18 @@ on:
       - 'content-lab/**'
       - 'agent-bridge/**'
       - 'one-click-context/**'
-      - 'docs/automation/runs/**'
+      - 'docs/automation/**'
+      - 'README.md'
       - '.github/workflows/deterministic-core.yml'
   push:
-    branches: ['codex/durable-automation-core-20261001']
+    branches: ['main', 'codex/durable-automation-core-20261001']
+    paths:
+      - 'content-lab/**'
+      - 'agent-bridge/**'
+      - 'one-click-context/**'
+      - 'docs/automation/**'
+      - 'README.md'
+      - '.github/workflows/deterministic-core.yml'
   workflow_dispatch:
 
 permissions:
@@ -28,6 +36,11 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
           persist-credentials: false
+      - name: Verify exact event head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: '3.13'
