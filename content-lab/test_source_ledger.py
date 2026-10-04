@@ -187,6 +187,20 @@ class SourceLedgerTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'SOURCE_OUTSIDE_SCOPE'):
             ledger.delta_parts(self.store, 'other', base['version_id'], head['version_id'])
 
+    def test_delta_over_frame_budget_recovers_last_part(self):
+        self.first.write_bytes(b'a' * (ledger.PART_BYTES * 51))
+        base = ledger.capture_file(self.store, 'docs', 'FILE', self.first, '1' * 32)
+        self.first.write_bytes(b'b' * (ledger.PART_BYTES * 51))
+        head = ledger.capture_file(self.store, 'docs', 'FILE', self.first, '2' * 32)
+        first = ledger.delta_parts(self.store, 'docs', base['version_id'],
+                                   head['version_id'], limit=50)
+        self.assertEqual(len(first['changes']), 50)
+        self.assertFalse(first['eof'])
+        last = ledger.delta_parts(self.store, 'docs', base['version_id'],
+                                  head['version_id'], limit=50, cursor=first['next_cursor'])
+        self.assertEqual((len(last['changes']), last['changes'][0]['ordinal']), (1, 50))
+        self.assertTrue(last['eof'])
+
 
 if __name__ == '__main__':
     unittest.main()
