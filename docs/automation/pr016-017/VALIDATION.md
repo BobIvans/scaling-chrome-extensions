@@ -4,7 +4,7 @@ Local Linux, Python 3.12.14, Node 24.19.0:
 
 | Command | Result | Scope |
 |---|---|---|
-| `python -m unittest discover -s content-lab -p 'test_*.py' -q` | 304 PASS | Real Git/SQLite, synthetic corpus; 125000-file inventory fixture |
+| `python -m unittest discover -s content-lab -p 'test_*.py' -q` | 353 PASS (after integrating PR-006/007) | Real Git/SQLite, synthetic corpus; 125000-file inventory fixture |
 | `python -m unittest discover -s desktop/tests -p 'test_*.py' -q` | 30 tests, PASS, 2 skipped | Real Native IPC, synthetic PCM; Tk display unavailable locally |
 | `node --test agent-bridge/*.test.mjs` | 47 PASS | Native bridge regression |
 | `node --test one-click-context/tests/*.test.*` | 116 PASS | Existing browser extension regression |
