@@ -1,5 +1,9 @@
 # Scaling Chrome Extensions
 
+Локальный Desktop-клиент без Chrome: [запуск на Windows](desktop/README_RU.md).
+Поиск и выбранный контекст используют существующую библиотеку; полный manifest
+репозитория сохраняется потоково без общего лимита файлов/частей.
+
 Текущий локальный repo/review сценарий: выберите настроенный Git repo в библиотеке,
 нажмите «Собрать весь repo», затем выберите файлы или finding и экспортируйте запрос для AI
 и импортируйте JSON review. Git inventory, byte-preserving source chunks и review

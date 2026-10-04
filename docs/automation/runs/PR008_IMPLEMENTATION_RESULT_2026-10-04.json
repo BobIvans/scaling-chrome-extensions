@@ -1,0 +1,267 @@
+{
+  "schema": "occ.pr008-implementation-receipt.v1",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "package_id": "PR-008",
+  "actual_base_sha": "e6af765dcb94e9462c6adf071a3df8421e141cc5",
+  "actual_head_sha": "8572258abf3933fc9087dcc6f708ace40c50d2f3",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/45",
+  "merge_sha": null,
+  "implementation": "IMPLEMENTED_LOCAL_TESTS_PASS",
+  "github_ci": "FINAL_STATUS_IN_PR_CHECKS_AND_DESCRIPTION",
+  "windows_installed": "NOT_RUN",
+  "functions_engineered": [
+    "versioned durable.info handshake",
+    "same loaded-profile desktop stdio dispatch",
+    "existing-store read-only connections",
+    "fixed argv trusted subprocess",
+    "strict UTF8/JSON/schema/operation/identity/digest validation",
+    "bounded concurrent stdout/stderr and cancel/reap",
+    "Tk main-thread search/selection/preview",
+    "generation and query fences",
+    "atomic selected-context draft export",
+    "complete manifest/parts stream to EOF without total cap",
+    "Windows launcher/runtime/Tk preflight",
+    "verified shell stage/uninstall retaining external data",
+    "existing ChatGPT prefixed namespace/source-fidelity compatibility",
+    "current whole-source eligibility and classifier-version compatibility"
+  ],
+  "changed_files": [
+    ".github/workflows/deterministic-core.yml",
+    "README.md",
+    "agent-bridge/durable.mjs",
+    "content-lab/automation_core.py",
+    "content-lab/native_adapter.py",
+    "content-lab/repo_manifest.py",
+    "desktop/Launch_Windows.ps1",
+    "desktop/OWNED_FILES.json",
+    "desktop/README_RU.md",
+    "desktop/__init__.py",
+    "desktop/app.py",
+    "desktop/client.py",
+    "desktop/connection.example.json",
+    "desktop/draft.py",
+    "desktop/package.py",
+    "desktop/preflight.py",
+    "desktop/state.py",
+    "desktop/tests/fake_adapter.py",
+    "desktop/tests/fixtures/UI_FENCE_CASES.json",
+    "desktop/tests/fixtures/duplicate_keys.bin",
+    "desktop/tests/fixtures/hello.json",
+    "desktop/tests/fixtures/invalid_utf8.bin",
+    "desktop/tests/fixtures/nonfinite.bin",
+    "desktop/tests/fixtures/operation_mismatch.json",
+    "desktop/tests/fixtures/profile_changed.json",
+    "desktop/tests/fixtures/protocol_mismatch.json",
+    "desktop/tests/fixtures/repo_list.json",
+    "desktop/tests/fixtures/search_utf8.json",
+    "desktop/tests/fixtures/selected_context.json",
+    "desktop/tests/fixtures/setup_required.json",
+    "desktop/tests/fixtures/trailing_json.bin",
+    "desktop/tests/fixtures/write_rejected.json",
+    "desktop/tests/test_app.py",
+    "desktop/tests/test_desktop.py",
+    "docs/automation/roadmap-pr008-desktop.md",
+    "docs/automation/runs/PR008_IMPLEMENTATION_RESULT_2026-10-04.json",
+    "docs/automation/runs/PR008_FOLLOWUPS_2026-10-04.json",
+    ".gitattributes"
+  ],
+  "tests_and_results": [
+    {
+      "suite": "content-lab",
+      "passed": 272,
+      "failed": 0
+    },
+    {
+      "suite": "agent-bridge Node",
+      "passed": 47,
+      "failed": 0
+    },
+    {
+      "suite": "qualification adapter Python",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "suite": "extension Node",
+      "passed": 116,
+      "failed": 0
+    },
+    {
+      "suite": "desktop",
+      "passed": 22,
+      "failed": 0,
+      "skipped": 1,
+      "skip_reason": "Local display absent; real Tk test enabled in Ubuntu/Windows CI"
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "A01",
+      "status": "NOT_RUN",
+      "evidence": "User Windows device with Chrome closed is required; hosted Tk smoke is separate."
+    },
+    {
+      "id": "A02",
+      "status": "PASS_LOCAL",
+      "evidence": "Actual native handshake/capabilities + typed old/nonzero/protocol fixtures."
+    },
+    {
+      "id": "A03",
+      "status": "PASS_LOCAL",
+      "evidence": "Owner/client reject mutations/argv/SQL before profile effects or subprocess."
+    },
+    {
+      "id": "A04",
+      "status": "PASS_LOCAL",
+      "evidence": "Independent UTF8/duplicate/nonfinite/trailing/unknown/operation fault replies."
+    },
+    {
+      "id": "A05",
+      "status": "PASS_LOCAL",
+      "evidence": "stdout/stderr/combined flood tests; total budget and bounded diagnostics."
+    },
+    {
+      "id": "A06",
+      "status": "PARTIAL_LOCAL",
+      "evidence": "Real child timeout/cancel reaped, pipes/threads closed; installed Windows descendant cleanup NOT_RUN."
+    },
+    {
+      "id": "A07",
+      "status": "PASS_LOCAL",
+      "evidence": "Generation/reconnect/namespace/query/request/profile fences; independent design fixtures."
+    },
+    {
+      "id": "A08",
+      "status": "PASS_LOCAL",
+      "evidence": "One operator_profile load and real changed-profile binding rejection."
+    },
+    {
+      "id": "A09",
+      "status": "PASS_LOCAL",
+      "evidence": "Ready-store preflight and missing/partial schema sentinel retained without creation/migration."
+    },
+    {
+      "id": "A10",
+      "status": "PASS_LOCAL",
+      "evidence": "All 76 files and part metadata streamed to EOF; top search labelled bounded."
+    },
+    {
+      "id": "A11",
+      "status": "PASS_LOCAL",
+      "evidence": "Exact owner digest/BOM/CRLF preserved, tampering and stale source IDs rejected. Current PR009 retained ChatGPT originals also project exact derived items through Desktop. Current PR005 classifier generation and eligibility gate retained by actual Desktop read-only integration."
+    },
+    {
+      "id": "A12",
+      "status": "PASS_LOCAL",
+      "evidence": "SELECTED_ITEMS/null canonical task/UNKNOWN corpus and separate file hash."
+    },
+    {
+      "id": "A13",
+      "status": "PASS_LOCAL",
+      "evidence": "Disk-full/output-conflict/concurrent empty-directory race rollback fixtures."
+    },
+    {
+      "id": "A14",
+      "status": "PARTIAL_LOCAL",
+      "evidence": "Real Unicode/space paths and repeat connection identity; actual Windows device NOT_RUN."
+    },
+    {
+      "id": "A15",
+      "status": "PARTIAL_LOCAL",
+      "evidence": "Pure lifecycle fixtures pass. Tk UI is skipped locally and enabled in both CI matrix jobs; operator keyboard NOT_RUN."
+    },
+    {
+      "id": "A16",
+      "status": "PASS_LOCAL",
+      "evidence": "Browser/desktop search/context/info/manifest domain DTO equality; 47 bridge regressions, including current coverage dispatcher."
+    },
+    {
+      "id": "A17",
+      "status": "PARTIAL_LOCAL",
+      "evidence": "Hash-verified shell staging/uninstall retains sentinel/corpus/backend/profile/output and subsequent browser read; actual Windows install NOT_RUN."
+    },
+    {
+      "id": "A18",
+      "status": "PARTIAL_LOCAL",
+      "evidence": "Observed runtime/Tk/OS/hash and synthetic transport/test resource receipt; installed device resources NOT_RUN."
+    }
+  ],
+  "observed_python_version": "3.12.14",
+  "observed_tk_version": "9.0",
+  "backend_profile_store_identity": {
+    "scope": "PRIOR_IMPLEMENTATION_SYNTHETIC_FIXTURE_ONLY",
+    "adapter_context": {
+      "protocol": "occ.desktop-stdio.v1",
+      "profile_digest": "ce4d937fd70761638ccb69dcddc8124f38856a7f385dfcf1ed6da0c09a1a1afb",
+      "store_identity": "c6f335de5ff740695de759484723f3b3598f664a999ce08fc13c2df624d4b9b8",
+      "adapter_sha256": "f606b56223457cd1de3ddd3498f1a80ef66bc52fbc4c3c036d77d4f69bf7f1a9",
+      "backend_bundle_sha256": null
+    },
+    "measured_implementation_sha": "67f0f4c1f7f7109260797f62e824a86df431960c"
+  },
+  "desktop_protocol": "occ.desktop-stdio.v1",
+  "source_bundle_manifest_sha256": null,
+  "resource_measurements": {
+    "local_desktop_test_process": {
+      "scope": "LOCAL_SYNTHETIC_DESKTOP_TESTS",
+      "elapsed_seconds": 4.516,
+      "max_child_rss_kib": 27612,
+      "returncode": 0,
+      "windows_device": "NOT_RUN",
+      "measured_implementation_sha": "67f0f4c1f7f7109260797f62e824a86df431960c"
+    },
+    "synthetic_handshake_transport": {
+      "elapsed_ms": 51,
+      "combined_bytes": 920,
+      "stderr_retained_bytes": 0,
+      "exit_code": 0,
+      "child_reaped": true,
+      "pipes_closed": true,
+      "io_threads_stopped": true
+    },
+    "actual_windows_device": "NOT_RUN"
+  },
+  "same_browser_desktop_head": "PASS_LOCAL_SHARED_OWNER_DTOS",
+  "chrome_closed_actions": "NOT_RUN_USER_DEVICE",
+  "uninstall_data_retained": "PASS_LOCAL_SYNTHETIC_SENTINEL",
+  "whole_action5_02_closed": false,
+  "whole_action5_03_closed": false,
+  "remaining": "PR008_FOLLOWUPS_2026-10-04.json",
+  "head_sha_scope": "Implementation commit before this receipt/manifest-only commit; final exact CI head is in PR metadata",
+  "input_zip_sha256": "04e4182c262d40683d25ba3af6db249b53a5500a9c7a73ca5738ce825ca112dc",
+  "observed_os": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "shell_manifest_sha256": "222960c3d1d78726882f2de3332f771c386ab9d8919996a745b4e3666a1dbe9e",
+  "initial_base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
+  "integration": "Current main PR009 original-source fidelity and PR005 whole-source eligibility preserved. Namespace grammar matches the owner, including chatgpt:code. Registered source classifier version accepted; current eligibility gate is shared by read-only Desktop search/context.",
+  "windows_ci_regression": {
+    "run_id": 37203670302,
+    "job_id": 111440307123,
+    "failure": "Tk test compared Windows 8.3 temporary path with canonical path displayed by backend",
+    "fix": "Compare Path(store).resolve() with displayed canonical store location; preserve identity and Unicode/space tests",
+    "remaining": "Final exact-head Ubuntu/Windows CI pending"
+  },
+  "github_ci_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/45/checks",
+  "captured_stage": "LOCAL_AND_PRIOR_CI_EVIDENCE; final PR checks are authoritative",
+  "windows_package_regression": {
+    "run_id": 37204407321,
+    "job_id": 111442489230,
+    "desktop_tests": "22 passed, including real Tk smoke and ChatGPT prefixed namespaces",
+    "failure": "Owned-file hashes differed after Windows checkout LF/CRLF conversion",
+    "fix": "desktop/** text eol=lf; binary wire fixtures explicitly -text",
+    "remaining": "Final exact-head matrix required before merge"
+  },
+  "previous_integration_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+  "tests_implementation_sha": "8572258abf3933fc9087dcc6f708ace40c50d2f3",
+  "local_passed_total": 465,
+  "local_skipped_total": 1,
+  "main_integration_regression": {
+    "base_sha": "e6af765dcb94e9462c6adf071a3df8421e141cc5",
+    "reason": "PR #42 merged while Desktop Windows CI was running",
+    "preserved": "Whole-source eligibility and browser coverage, with unchanged raw manifest/ZIP64 owners",
+    "new_test": "test_current_main_source_classifier_and_readonly_gate_are_preserved",
+    "local_content_tests": 272,
+    "desktop_discovered": 23,
+    "desktop_passed": 22,
+    "desktop_skipped": 1
+  }
+}
