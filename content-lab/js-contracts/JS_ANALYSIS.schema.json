@@ -1,0 +1,151 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roadmap:pr007:js-analysis",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "snapshot_id",
+    "namespace",
+    "repository",
+    "source_path",
+    "source_sha256",
+    "raw_bytes",
+    "analysis_status",
+    "reason",
+    "symbol_binding",
+    "symbols",
+    "reference_count",
+    "interpretation_digest"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-js-file-analysis.v1"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,100}$"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,100}$"
+    },
+    "source_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "raw_bytes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "analysis_status": {
+      "enum": [
+        "AST_SYNTAX_ONLY",
+        "PARSER_FAILED",
+        "ELIGIBILITY_GAP",
+        "RAW_BYTES_UNAVAILABLE",
+        "NOT_SUPPORTED"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "symbol_binding": {
+      "const": "NOT_TYPECHECKED"
+    },
+    "symbols": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name",
+          "kind",
+          "byte_start",
+          "byte_end",
+          "range_sha256"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "enum": [
+              "FUNCTION_DECLARATION",
+              "CLASS_DECLARATION"
+            ]
+          },
+          "byte_start": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "byte_end": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "range_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    },
+    "reference_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "interpretation_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "analysis_status": {
+            "enum": [
+              "PARSER_FAILED",
+              "ELIGIBILITY_GAP",
+              "RAW_BYTES_UNAVAILABLE",
+              "NOT_SUPPORTED"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "symbols": {
+            "maxItems": 0
+          },
+          "reference_count": {
+            "const": 0
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Actual AST rows require source sha/byte proof, interpretation pins and complete eligibility/source binding. Example fixture labels are synthetic; schema is not parser qualification."
+}

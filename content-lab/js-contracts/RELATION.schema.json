@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roadmap:pr007:relation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "edge_id",
+    "revision",
+    "snapshot_id",
+    "namespace",
+    "repository",
+    "source_path",
+    "source_sha256",
+    "byte_start",
+    "byte_end",
+    "range_sha256",
+    "syntax_form",
+    "specifier",
+    "occurrence",
+    "dependency_kind",
+    "target_path",
+    "target_sha256",
+    "resolution_status",
+    "reason",
+    "resolution_scope",
+    "symbol_binding",
+    "evidence_class",
+    "interpretation_digest"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-static-relation.v1"
+    },
+    "edge_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,100}$"
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,100}$"
+    },
+    "source_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "byte_start": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "byte_end": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "range_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "syntax_form": {
+      "enum": [
+        "ESM_IMPORT",
+        "ESM_SIDE_EFFECT",
+        "ESM_REEXPORT",
+        "TS_IMPORT_TYPE",
+        "TS_EXPORT_TYPE",
+        "COMMONJS_REQUIRE",
+        "IMPORT_EQUALS",
+        "DYNAMIC_IMPORT",
+        "COMPUTED_IMPORT"
+      ]
+    },
+    "specifier": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "occurrence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "dependency_kind": {
+      "enum": [
+        "VALUE_OR_MIXED",
+        "TYPE_ONLY",
+        "DYNAMIC_OR_UNKNOWN"
+      ]
+    },
+    "target_path": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "target_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "resolution_status": {
+      "enum": [
+        "LOCAL_STATIC_EXACT_PATH",
+        "UNRESOLVED"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "resolution_scope": {
+      "const": "MANIFEST_SOURCE_PATH_ONLY"
+    },
+    "symbol_binding": {
+      "const": "NOT_TYPECHECKED"
+    },
+    "evidence_class": {
+      "const": "JS_TS_STATIC_SYNTAX"
+    },
+    "interpretation_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "resolution_status": {
+            "const": "LOCAL_STATIC_EXACT_PATH"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "target_sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "reason": {
+            "const": null
+          },
+          "dependency_kind": {
+            "enum": [
+              "VALUE_OR_MIXED",
+              "TYPE_ONLY"
+            ]
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "resolution_status": {
+            "const": "UNRESOLVED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "target_path": {
+            "const": null
+          },
+          "target_sha256": {
+            "const": null
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ],
+  "$comment": "Validate byte_start<byte_end<=source length, raw slice hash, source/target scope, edge/revision digests and interpretation pins in code. Schema alone is not byte proof."
+}
