@@ -1,0 +1,76 @@
+Реализуй ровно один управляемый PR в BobIvans/scaling-chrome-extensions
+по этому ZIP: whole-repo scan controller поверх существующего repo_context,
+native adapter и Content Lab SQLite. Ориентир — один focused coding session
+примерно на час; завершённость определяет acceptance, не таймер.
+
+Главный пользовательский сценарий:
+Выбираю локальный repo из существующего operator profile → «Собрать весь repo» →
+вижу pinned SHA и cursor/total → Pause → закрываю UI → открываю UI →
+Continue → scan доходит до конца без ручных кликов на каждую порцию.
+Stop сохраняет CANCELLED и не возобновляет этот intent после restart.
+
+Сначала прочитай AGENTS.md текущего checkout и зафиксируй actual base SHA.
+Архив содержит исторические исходники da6abf4, а reference local V4 — 5574ab7.
+Проверь текущие owners и diff/ancestry. Отсутствующий V4 commit отметь как
+MISSING_BASELINE_EVIDENCE, не придумывай ancestry и не копируй старые файлы
+поверх новых. Этот scope не требует восстановить весь прежний V4 PR.
+Если controller уже реализован, исправь только наблюдаемую недостающую
+приёмку этого scope и перечисли reused criteria; не создавай второй controller.
+
+Обязательный build:
+1. Существующий content.sqlite3 хранит scan-run control metadata: run identity,
+   intent key, snapshot reference, profile revision и состояния. Источник
+   ledger/cursor/bytes — прежние repo_snapshots/repo_entries/repo_chunks.
+2. Один typed endpoint durable.repo.scanRun (предлагаемое новое API) с
+   START/STATUS/STEP/PAUSE/CONTINUE/CANCEL. Не считаем его существующим API.
+   Action-specific strict fields и scope checks описаны в contracts/.
+3. STEP делает не более одной bounded page. expectedCursor проверяется
+   внутри той же SQLite write transaction, где обрабатываются entries.
+   Повтор STEP после lost reply не должен продвигать следующую страницу.
+   Проверка состояния RUNNING и контрольной revision также атомарны.
+4. UI вызывает STEP строго последовательно, делает yield между порциями,
+   хранит только reference/cache и получает authoritative state из backend.
+   После reconnect не запускай pump автоматически: покажи Continue.
+   Pause/Stop не блокируются общим busy флагом; late reply не оживляет pump.
+5. Счётчики: total, ledger_entries, cursor, processed, pending, indexed,
+   excluded, errors. processed=total-pending; прежний accounted включает
+   PENDING и не должен выглядеть как 100% выполненной обработки.
+6. COMPLETE только при полном ledger, отсутствии PENDING, cursor==total и
+   exact_for_indexed=true. Исключения/ошибки сохраняются как gaps. Binary
+   INDEXED относится к сохранённым raw bytes и не означает текст/AI чтение.
+
+Сохрани legacy durable.repo.scan/get/export и старые DB/review/task записи.
+Это управляющая metadata над существующими read-only operations; Core остаётся
+владельцем executable jobs. Не добавляй новый worker/scheduler, вторую DB,
+Electron/Tauri shell, новый JS parser, Laya runtime или универсальный executor.
+Не снимай 32 MiB Git-output, 8 MiB blob и native transport limits в этом PR:
+всё, что выходит за них, получает явный blocker/gap, а не ложный success.
+
+Операции простого scan не импортируют код исследуемого repo, не запускают
+его hooks/tests/install scripts, не делают fetch и не отправляют данные AI.
+SCE regression tests выполняются на отдельном синтетическом Git fixture;
+scan studious-pancake рассматривает его код как данные, не запускает бота.
+
+Проверки реализации обязательны по plan/ACCEPTANCE_CASES.json:
+многостраничный и empty tree; double START; replay STEP после lost reply;
+crash rollback и committed-page recovery; PAUSE/Continue/restart;
+CANCEL + late reply + cancelled intent; changed HEAD/profile;
+old/new database compatibility; native roundtrip/hello; control UI и counters;
+явная ошибка существующего лимита. Используй реальные SQLite/native fixtures
+для backend-инвариантов, а не только mocks, повторяющие implementation.
+
+Команды checks уточни по текущему CI. Сохранённые базовые команды находятся
+в 01_PR_001_IMPLEMENTATION_RU.md. После успешного focused suite выполни
+обязательные repository gates; не запускай endless retries.
+
+На выходе: один связный diff/branch, concrete PR description, actual base/head,
+owner map, criteria evidence и честный результат Windows NOT_RUN если устройство
+не проверялось. Заполни receipts/IMPLEMENTATION_RESULT_TEMPLATE.json фактическими
+данными. Не назови M5-02 целиком закрытым: full export, streaming enumeration,
+форматы и related code/test groups остаются в следующем scope.
+Не создавай commits только с ещё одним roadmap вместо работающего controller.
+
+Этот запрос подготавливает локальный PR-input. Публикацию/merge выполняй только
+в рамках фактического текущего задания и действующих разрешений среды.
+Если выполнение требует больше часа, закончи coherent required slice и проверки;
+в отчёте укажи фактическое время и unmet criteria, не объявляй их PASS по таймеру.

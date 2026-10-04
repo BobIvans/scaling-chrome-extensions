@@ -1,0 +1,28 @@
+ZIP №5 / PR-005 / 2026-10-04
+Репозиторий: BobIvans/scaling-chrome-extensions
+Главная задача roadmap: LAYA4-004 (частичный implementation slice).
+Оценка: около 60 минут focused build; завершение определяется проверками.
+
+Начните с EXECUTE_THIS_PR_RU.txt, затем 01_PR_005_IMPLEMENTATION_RU.md.
+
+Прирост: для каждого tracked entry показать, что именно сохранено и пригодно
+для текстового контекста. Binary/raw, LFS pointer, внешний payload, link,
+submodule, protected/excluded, parse failure, missing и oversize имеют разные
+признаки. Декодируемый кусок бинарного исходника не становится текстом файла.
+
+Ни число файлов, ни число parts не ограничивать общим лимитом 20/39.
+Предел одной Native page является транспортным бюджетом; идти до EOF.
+Existing per-blob/resource limits сохранять видимыми gaps, не выдавать skipped
+content за captured. Их streaming-расширение сохранено в очереди продолжений.
+
+№3 отвечает за payload ZIP/export/resume. №4 — за streaming inventory CLI.
+№5 — за format/eligibility facts и read-only coverage view. Долгий Native/Core
+job и streaming Git index из №4 не переобъявлены выполненными этим пакетом.
+
+Внутри: 6 шагов, 18 acceptance cases, 64 golden entries, native request/response
+schemas, правила совместимости, archived source excerpts, registry №1–5,
+передача следующему чату и byte-preserved полный каталог из 160 задач.
+
+STATUS: IMPLEMENTATION_PACKAGE_PREPARED. Код нового PR не внедрён, PR/merge/CI
+не наблюдались. Проверка ZIP/fixtures не является тестом установленного app.
+INDEX.html открывается локально. package number не является GitHub PR number.

@@ -1,0 +1,253 @@
+{
+  "number": 14,
+  "package_id": "ROADMAP-PR-014",
+  "title": "Долговременный контекст: AI packets, NEED_CONTEXT, retrieval, backup/restore и sync",
+  "user_outcome": "Собрать управляемый контекст для разных AI, проверяемый task/result roundtrip, temporal retrieval большого архива и восстанавливаемую библиотеку.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    2,
+    3,
+    10,
+    11,
+    13
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Единый AI-пакет: task/result, WHY_THIS_PACKET, NEED_CONTEXT и share projection",
+      "lane": "Контекст",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Provider-neutral immutable task document и проверяемый result contract",
+        "Selection basket, WHY_THIS_PACKET, share/redaction preview",
+        "Все части, exact range NEED_CONTEXT, typed read-only library gateway"
+      ],
+      "acceptance": [
+        "Preview и export имеют один digest",
+        "Любой обязательный source вне текущей части остаётся в manifest",
+        "Ответ связан с task/packet/criterion revision",
+        "Supplied/read/used не смешиваются",
+        "Ручной roundtrip работает до подключения UI automation",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Переиспользовать существующие handoff/review/manifest/export owners. Реальные provider/API/CLI/UI adapters имеют независимую qualification; их лимиты не задают лимит архива.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-003",
+        "G3-004",
+        "G3-006",
+        "UI3-003",
+        "UI3-004",
+        "EVO3-003",
+        "EVO3-006",
+        "TAB4-05",
+        "TAB4-19",
+        "LAYA4-019",
+        "LAYA4-020",
+        "LAYA4-021",
+        "ACTION5-13",
+        "ACTION5-14"
+      ],
+      "feature_ids": [
+        "LIB-005",
+        "LIB-025",
+        "LIB-026",
+        "LIB-027",
+        "LIB-037",
+        "LIB-038",
+        "LIB-040",
+        "ACT-005",
+        "ACT-009",
+        "ACT-010"
+      ],
+      "decision_ids": [
+        "DEC5-05",
+        "DEC5-13"
+      ],
+      "goal_ids": [
+        "GOAL5-04",
+        "GOAL5-11",
+        "GOAL5-12"
+      ],
+      "workstream_id": "WS-013",
+      "parent_package": "ROADMAP-PR-014",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-001",
+        "WS-005",
+        "WS-012"
+      ],
+      "original_package_inputs": [
+        2,
+        3
+      ]
+    },
+    {
+      "title": "Backup, restore, миграции, retention и опциональная синхронизация",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Согласованные DB/blob/event backups и проверка восстановления",
+        "Tombstones/retention/derived cleanup и conflicts",
+        "Portable snapshot sync с явными namespaces и rehearsal миграций"
+      ],
+      "acceptance": [
+        "Restore сравнивает hashes/heads/overlays/relations",
+        "Повреждённый или неполный backup не активируется",
+        "Старый backup не resurrect удалённые current sources",
+        "Два профиля не становятся competing writers",
+        "Каждая migration/rollback проверена на копии",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Это жизненный цикл данных. Переключение исполняемого release и canary — №33. Опциональный sync не должен требоваться для локальной работы.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "EVO3-014",
+        "LAYA4-017",
+        "LAYA4-027",
+        "ACTION5-15",
+        "ACTION5-16",
+        "ACTION5-17"
+      ],
+      "feature_ids": [
+        "LIB-030",
+        "LIB-035",
+        "LIB-036",
+        "LIB-051"
+      ],
+      "decision_ids": [
+        "DEC5-10",
+        "DEC5-11",
+        "DEC5-12"
+      ],
+      "goal_ids": [
+        "GOAL5-08",
+        "GOAL5-23"
+      ],
+      "workstream_id": "WS-014",
+      "parent_package": "ROADMAP-PR-014",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-007"
+      ],
+      "original_package_inputs": [
+        9
+      ]
+    },
+    {
+      "title": "Долговременная память: поиск по времени, версиям и большим корпусам",
+      "lane": "Контекст",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Goal-directed retrieval с exact ranges и temporal applicability",
+        "Frozen relevance corpus, hard negatives и conflicting versions",
+        "Объяснение выбора контекста и bounded retrieval из растущего архива"
+      ],
+      "acceptance": [
+        "На собственных вопросах возвращается нужная версия источника",
+        "Устаревшее и противоречивое не сливается в один факт",
+        "Manual corrections сохраняются",
+        "Cold/warm latency и RAM имеют corpus denominator",
+        "Missing evidence вызывает точный запрос, а не выдуманный ответ",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "№10 реализует базовый поиск; №24 квалифицирует lifetime retrieval. Расширяемый corpus не означает, что один AI-запрос прочитал все данные.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "LAYA4-018",
+        "LAYA4-025",
+        "ACTION5-12"
+      ],
+      "feature_ids": [
+        "ACT-052"
+      ],
+      "decision_ids": [
+        "DEC5-14"
+      ],
+      "goal_ids": [
+        "GOAL5-09",
+        "GOAL5-23"
+      ],
+      "workstream_id": "WS-015",
+      "parent_package": "ROADMAP-PR-014",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-001",
+        "WS-008",
+        "WS-009",
+        "WS-010",
+        "WS-011",
+        "WS-012",
+        "WS-014"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "G3-003",
+    "G3-004",
+    "G3-006",
+    "UI3-003",
+    "UI3-004",
+    "EVO3-003",
+    "EVO3-006",
+    "EVO3-014",
+    "TAB4-05",
+    "TAB4-19",
+    "LAYA4-017",
+    "LAYA4-018",
+    "LAYA4-019",
+    "LAYA4-020",
+    "LAYA4-021",
+    "LAYA4-025",
+    "LAYA4-027",
+    "ACTION5-12",
+    "ACTION5-13",
+    "ACTION5-14",
+    "ACTION5-15",
+    "ACTION5-16",
+    "ACTION5-17"
+  ],
+  "feature_ids": [
+    "LIB-005",
+    "LIB-025",
+    "LIB-026",
+    "LIB-027",
+    "LIB-030",
+    "LIB-035",
+    "LIB-036",
+    "LIB-037",
+    "LIB-038",
+    "LIB-040",
+    "LIB-051",
+    "ACT-005",
+    "ACT-009",
+    "ACT-010",
+    "ACT-052"
+  ],
+  "decision_ids": [
+    "DEC5-05",
+    "DEC5-10",
+    "DEC5-11",
+    "DEC5-12",
+    "DEC5-13",
+    "DEC5-14"
+  ],
+  "goal_ids": [
+    "GOAL5-04",
+    "GOAL5-08",
+    "GOAL5-09",
+    "GOAL5-11",
+    "GOAL5-12",
+    "GOAL5-23"
+  ]
+}

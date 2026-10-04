@@ -1,0 +1,105 @@
+12 КРУПНЫХ ПАКЕТОВ ПРОДОЛЖЕНИЯ — №010–021
+
+9 существующих пакетов + 12 следующих = 21 целевой roadmap-пакет. Предварительная декомпозиция в 36 новых PR заменена 36 внутренними workstreams внутри этих 12. Пакеты №001–009 сохраняют номера. Номер roadmap-пакета отличается от GitHub PR number.
+
+Количество пакетов не является оценкой часов. Реализацию ещё не оценили по полному актуальному коду, фактическим adapters и устройству. Нет подтверждения, что первые девять заняли ровно час каждый, что 45 PR потребовали бы 45 часов, или что этот полный объём теперь займёт 12 часов. Укрупнение уменьшает документы/чаты/интеграционные границы; сами функции и проверки остаются.
+
+Новые пакеты в среднем шире прежних №1–9: от двух до пяти крупных внутренних workstreams. За один working session реализуется наиболее связанная часть, остальные остаются явными внутри того же пакета. Не закрывать общий пакет по истечению часа и не создавать обязательный отдельный PR для каждой мелкой функции.
+
+010. Единая библиотека источников: точный поиск, версии, метки, цели и импорт файлов/чатов
+Пользовательский результат: Закрыть source fidelity/import/search debt №5/8/9 и получить полезную локальную библиотеку с originals, SourceAddress, TXT/folders/archives, ChatGPT/Telegram branches и goal overlays.
+Внутренних крупных блоков: 4; назначенных исходных task records: 16; feature cards: 24.
+Предпосылки интеграции: 005, 009.
+WS-001 — Точные ссылки на источники, поиск и ручные метки
+WS-007 — Общий импорт файлов: TXT, папки, архивы, кодировки и специальные Git payloads
+WS-008 — Полная история чатов и Telegram: scroll, ветви, правки, авторы и вложения
+WS-012 — Реестр целей, противоречий, заметок и покрытия требований
+
+011. Полный граф кода: JS/TS resolver, Python SCC, owners, tests, contracts и code smells
+Пользовательский результат: Довести №6/7 до единого provenance graph, расширить aliases/workspaces/CommonJS и сохранить большие связанные группы без потери raw bytes.
+Внутренних крупных блоков: 2; назначенных исходных task records: 4; feature cards: 3.
+Предпосылки интеграции: 005, 006, 007.
+WS-004 — Полный статический JS/TS resolver: aliases, workspaces, exports и CommonJS
+WS-005 — Единый граф Python/JS/TS, owners, tests, contracts и подтверждаемые code smells
+
+012. Repo engine до конца: Core jobs, streaming, полные страницы, delta, CAS и resume
+Пользовательский результат: Свести №1–4 в устойчивый repo lifecycle, закрыть paging/delta/history ограничения и добавить reuse/invalidation, сохранив готовый exporter и inventory.
+Внутренних крупных блоков: 3; назначенных исходных task records: 8; feature cards: 8.
+Предпосылки интеграции: 001, 002, 003, 004, 011.
+WS-002 — Долгие repo-задания через существующий Core: прогресс, отмена и resume
+WS-003 — Полная выдача repo, delta и истории без скрытых общих лимитов
+WS-006 — Инкрементальные snapshots, CAS, delta-context и инвалидация доказательств
+
+013. Импорт документов и внешних источников: PDF/Office/OCR, media, RSS/web и GitHub history
+Пользовательский результат: Расширить importer registry форматными adapters с точными page/cell/time ranges, полными cursors и provenance всех наблюдений.
+Внутренних крупных блоков: 3; назначенных исходных task records: 2; feature cards: 7.
+Предпосылки интеграции: 010.
+WS-009 — PDF, Office, OCR и таблицы с точными ссылками и проверкой чисел
+WS-010 — Аудио и видео: импорт, транскрипция и временные ссылки
+WS-011 — RSS, web snapshots и история GitHub PR/issues/CI с полной пагинацией
+
+014. Долговременный контекст: AI packets, NEED_CONTEXT, retrieval, backup/restore и sync
+Пользовательский результат: Собрать управляемый контекст для разных AI, проверяемый task/result roundtrip, temporal retrieval большого архива и восстанавливаемую библиотеку.
+Внутренних крупных блоков: 3; назначенных исходных task records: 23; feature cards: 15.
+Предпосылки интеграции: 002, 003, 010, 011, 013.
+WS-013 — Единый AI-пакет: task/result, WHY_THIS_PACKET, NEED_CONTEXT и share projection
+WS-014 — Backup, restore, миграции, retention и опциональная синхронизация
+WS-015 — Долговременная память: поиск по времени, версиям и большим корпусам
+
+015. Полноценный Windows desktop: installer, единый Core, capabilities, templates и STOP
+Пользовательский результат: Развить desktop pilot №8 в установленный клиент с canonical writes, recovery, keyboard accessibility и исполнением зарегистрированных capabilities.
+Внутренних крупных блоков: 2; назначенных исходных task records: 19; feature cards: 18.
+Предпосылки интеграции: 008, 009, 010, 012, 014.
+WS-016 — Полноценный Windows desktop: установка, canonical writes и восстановление
+WS-017 — Capabilities, execution templates, scope и независимый STOP
+
+016. Текст и голос → действия: IntentSpec, Laya, ASR, corrections и planner/retriever/critic
+Пользовательский результат: Дать один проверяемый plan для text/voice, подключить сменные Laya/ASR adapters и измерить реальные critical-slot errors на Windows.
+Внутренних крупных блоков: 2; назначенных исходных task records: 6; feature cards: 10.
+Предпосылки интеграции: 013, 014, 015.
+WS-018 — Текст → план действий: IntentSpec, Laya и роли planner/retriever/critic
+WS-019 — Голосовое управление Windows: hotkey, ASR, исправления и STOP
+
+017. Выбранные AI-вкладки и навыки: Grok delivery, outbox, recovery и demonstration replay
+Пользовательский результат: Квалифицировать targets/PC adapters, надёжно передавать все части и ответы, затем превращать наблюдаемые сценарии в versioned skills.
+Внутренних крупных блоков: 3; назначенных исходных task records: 24; feature cards: 15.
+Предпосылки интеграции: 014, 015, 016.
+WS-020 — Навыки из демонстраций, failure memory и выборочная requalification
+WS-021 — Выбранные Grok/GitHub targets и квалифицированные PC/browser adapters
+WS-022 — Надёжная доставка в AI UI: outbox, части, ответы и unknown-send recovery
+
+018. Код → проверенный PR/merge → установленное обновление с canary и rollback
+Пользовательский результат: Замкнуть worktree/diff/tests/CI/final-tree/release/install цикл с одним integrator/updater и qualification новых capabilities.
+Внутренних крупных блоков: 2; назначенных исходных task records: 25; feature cards: 7.
+Предпосылки интеграции: 011, 012, 014, 015, 017.
+WS-023 — AI patch → worktree → проверки → PR/CI → подтверждённый merge
+WS-024 — Воспроизводимый release, staged updater, canary и проверенный rollback
+
+019. Долгие параллельные кампании и R&D: scheduler, leases, budgets, resume и next briefs
+Пользовательский результат: Развить текущий scheduler/Core, измерить concurrency, связывать источники с экспериментами и продолжать кампанию по checkpoints без повторных effects.
+Внутренних крупных блоков: 4; назначенных исходных task records: 20; feature cards: 22.
+Предпосылки интеграции: 011, 013, 014, 015, 016, 017, 018.
+WS-025 — Durable расписания и долгие кампании: offline, sleep, restart и budgets
+WS-026 — Ресурсные конфликты, leases, fencing и управляемая параллельность Dell
+WS-027 — Параллельные campaign DAG: общий контекст, ветви, resume и журнал решений
+WS-028 — Автоматический R&D цикл: источники → гипотеза → эксперимент → следующий PR brief
+
+020. SCE → Studious: datasets, qualification, replay/paper и новые web3 research packs
+Пользовательский результат: Подключить реальные Studious handlers, данные и qualification campaigns; добавить воспроизводимые atomic и delayed-capital research packs текущего roadmap.
+Внутренних крупных блоков: 5; назначенных исходных task records: 3; feature cards: 22.
+Предпосылки интеграции: 013, 014, 015, 016, 019.
+WS-029 — SCE → Studious: каталог реальных функций и qualification bridge
+WS-030 — Рыночные datasets: broker, freshness, point-in-time и независимые views
+WS-031 — Replay/paper qualification: repayment, экономика, holdout и stateful campaigns
+WS-032 — Research packs: circular/triangular, liquidation и peg/wrapper opportunities
+WS-033 — Research packs: intent/clearing, cross-chain, basis и funding
+
+021. Закрытие продукта: Windows scale/fault qualification, польза, стоимость и все критерии V5
+Пользовательский результат: Проверить конечные пользовательские вертикали, исправить реальные integration faults и сверить все 160 задач/164 карточки/28 целей/24 решения.
+Внутренних крупных блоков: 3; назначенных исходных task records: 10; feature cards: 13.
+Предпосылки интеграции: 010, 011, 012, 013, 014, 015, 016, 017, 018, 019, 020.
+WS-034 — Сквозная квалификация Windows 11: масштаб, сбои, UI, voice и обновления
+WS-035 — Полезность и стоимость: benchmarks, ablation, manual baseline и все попытки
+WS-036 — Закрытие V5: все 160 задач, 164 карточки, 28 целей и выпуск продукта
+
+Все 160 задач, 164 карточки, 28 целей и 24 решения получили owner продолжения. Это полнота планирования; каждый исходный criterion требует evidence. №021 обязан отличать открытую работу, квалифицированный scope и DEFERRED: deferred criterion не считается выполненным. Web3 scope включает зарегистрированные research/replay/paper workflows и текущие research packs; произвольные будущие live protocols не становятся готовыми из-за упаковки ZIP.

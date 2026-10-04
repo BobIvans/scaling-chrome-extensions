@@ -1,0 +1,71 @@
+Реализуй один следующий PR в BobIvans/scaling-chrome-extensions по ZIP-002:
+complete repo manifest + captured chunk/range index поверх существующего
+Content Lab SQLite. Ориентир — focused build примерно на час, acceptance
+проверить до заявления готовности. Не расширять diff до остальных roadmap задач.
+
+Вход: фактически COMPLETE snapshot с exact namespace/alias/profile/SHA binding.
+PR-001 — предыдущий подготовленный scope, не доказанный merged implementation.
+Если его controller доступен — reuse; иначе read-only manifest может работать
+с COMPLETE snapshot, полученным прежним manual scan. PENDING/CORRUPT snapshot
+получает CONTEXT_INCOMPLETE/CONTEXT_CORRUPT и не становится verified batch.
+
+Сначала actual base SHA, AGENTS/CI и owner map. Проверить actual repo_context
+schema и Native/UI API; не копировать reference source da6abf4 поверх новых файлов.
+Historical local V4 5574ab7 отметить UNKNOWN/MISSING, если commit недоступен.
+Если полноценный manifest уже есть, закрыть только наблюдаемые gaps и reuse
+его owner, не создать конкурирующий exporter или второй store.
+
+Обязательный scope:
+1. Детерминированные projections из existing repo_snapshots/repo_entries/
+   repo_chunks, ordered by entry ordinal then chunk ordinal. Для каждого
+   tracked entry ровно одна manifest row, включая EXCLUDED/ERROR metadata.
+2. На каждый существующий INDEXED chunk — одна PARTS_INDEX row: part_id=revision,
+   logical_id, snapshot binding, source path/file ordinal, chunk ordinal,
+   [source_start,source_end), bytes, raw SHA256, file SHA256 и text eligibility.
+   File→parts lookup использует fileOrdinal + paged cursor, без большого массива
+   всех part IDs в одной file row. Part→file проходит по file ordinal/path.
+3. Pure streaming writer/validator в existing repo_context owner или одном
+   sibling repo_manifest.py. Один SQLite read view; не читать working-tree
+   files и не выполнять scan/import/fetch. Новый module не является executor.
+4. CLI с existing operator profile пишет BATCH.json, REPO_MANIFEST.jsonl,
+   PARTS_INDEX.jsonl, VALIDATION.json в staged output directory за пределами
+   source repo. Full proof проверяет ranges, hashes, revision и реконструкцию
+   всех INDEXED bytes и Git blob OID. Publish whole metadata directory только после PASS.
+   Basic atomic publication здесь; crash-resume payload ZIP остаётся PR-003.
+5. Предлагаемый один новый endpoint durable.repo.manifest:
+   INFO / ENTRIES / PARTS, strict action fields, up to 20 rows и <=32,768 bytes
+   полной serialized native frame JSON на page. Actual native limits сохраняются.
+   PARTS optional fileOrdinal позволяет reverse lookup. Raw bytes через Native
+   в этом PR не передавать. INFO сообщает NOT_RUN для global byte proof,
+   если его фактически не выполняли; returned part page proof != global proof.
+6. Small UI manifest summary + paged entry/part browser + source/part navigation
+   поверх existing library view. Scope/total/nextOffset показываются явно.
+   Selected AI export и manifest inventory — разные операции/кнопки.
+
+Batch identity policy описана в contracts/MANIFEST_CONTRACT.json. Для этого
+whole-repo slice goal_revision=null, group policy=RAW_CHUNK_MAPPING_V1 и
+dependency status=NOT_GENERATED. Null/NOT_GENERATED не подменять пустым resolved
+graph. Перенос current parser kind из сохранённого analysis не доказывает version
+исторического scanner build. Full LAYA4-009 с goals/groups/packets остаётся PARTIAL.
+
+В output нет абсолютного root/store path, raw protected content или source bytes.
+INDEXED binary chunks доступны как captured bytes в store, text eligibility
+раздельна. Empty source имеет явный нулевой chunk. Source offsets — bytes,
+не Python characters и не JavaScript UTF16 positions. Newlines/tabs/quotes
+в именах корректно JSON-escaped; не искать path через substring matching.
+
+Нужные проверки: plan/ACCEPTANCE_CASES.json (14 criteria). Corpus: 50 entries,
+46 INDEXED и 4 gaps, больше 20 entries и >20 chunks одного source. Negative
+fixtures: deleted entry, duplicate/missing part, overlap/gap, corrupted raw/hash,
+stale revision, mixed snapshot, changed query pagination. Backend доказать на
+actual SQLite/native fixtures, не только на packaged synthetic golden files.
+
+Output готового build: один coherent diff, base/head, actual criteria evidence,
+required repository checks и заполненный IMPLEMENTATION_RESULT_TEMPLATE.json.
+Windows NOT_RUN без installed-device receipt. PR URL/CI добавлять только после
+реального создания/выполнения. Ни source zip packaging, ни old tests не означают
+runtime PASS. Не закрывать broad M5-02 по metadata-only реализации.
+
+После этого PR готовить ZIP-003 для полного captured-payload archive, portable
+index и resumable parts. Voice/Laya/Grok/updater/web3 live execution остаются
+собственными scopes. Публикация/merge — по actual текущему заданию и разрешениям.

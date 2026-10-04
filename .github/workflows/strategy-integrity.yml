@@ -1,0 +1,41 @@
+name: Voice AgentOS strategy integrity
+
+on:
+  pull_request:
+    paths:
+      - 'MASTER_CONTEXT.md'
+      - 'CODEX_START_HERE.md'
+      - 'docs/strategy/**'
+      - '.github/workflows/strategy-integrity.yml'
+  push:
+    branches: ['main']
+    paths:
+      - 'MASTER_CONTEXT.md'
+      - 'CODEX_START_HERE.md'
+      - 'docs/strategy/**'
+      - '.github/workflows/strategy-integrity.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  source-integrity:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.13'
+      - name: Verify complete supplied bytes and requirement owners
+        run: |
+          python docs/strategy/voice-agentos/verify_integrity.py
+          python docs/strategy/pr012-013/verify_integrity.py

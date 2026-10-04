@@ -1,0 +1,272 @@
+{
+  "number": 20,
+  "package_id": "ROADMAP-PR-020",
+  "title": "SCE → Studious: datasets, qualification, replay/paper и новые web3 research packs",
+  "user_outcome": "Подключить реальные Studious handlers, данные и qualification campaigns; добавить воспроизводимые atomic и delayed-capital research packs текущего roadmap.",
+  "repository": "BobIvans/scaling-chrome-extensions + BobIvans/studious-pancake",
+  "prerequisite_packages": [
+    13,
+    14,
+    15,
+    16,
+    19
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "SCE → Studious: каталог реальных функций и qualification bridge",
+      "lane": "Web3",
+      "repository": "BobIvans/scaling-chrome-extensions + BobIvans/studious-pancake",
+      "scope": [
+        "Актуальная карта command/function/test handlers обоих repo",
+        "Typed READ_ONLY/REPLAY/PAPER profiles через существующий qualification owner",
+        "Dataset/config/repo identities и UI результатов в SCE"
+      ],
+      "acceptance": [
+        "Каждый handler найден в actual code либо помечен GAP",
+        "Нет второго trading runtime или market-data owner",
+        "Result сохраняет exact config/dataset/build",
+        "Missing credentials/data показаны отдельным blocker",
+        "Read-only/replay/paper режимы не смешиваются",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "SCE владеет контекстом и orchestration; Studious — рыночными/qualification handlers. Этот аудит не был выполнен текущим документом; #38 должен прочитать оба repo.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-27"
+      ],
+      "feature_ids": [
+        "RND-009",
+        "RND-010"
+      ],
+      "decision_ids": [
+        "DEC5-24"
+      ],
+      "goal_ids": [
+        "GOAL5-24"
+      ],
+      "workstream_id": "WS-029",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-017",
+        "WS-018"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Рыночные datasets: broker, freshness, point-in-time и независимые views",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE adapter",
+      "scope": [
+        "Адаптация существующего market-data owner к research observations",
+        "Raw/provider/version/time/hash и point-in-time anchors",
+        "Backpressure/quotas/completeness, opportunity identity и общий dataset cache"
+      ],
+      "acceptance": [
+        "Missing/stale data не объявляется отсутствием opportunity",
+        "Provider views имеют независимое происхождение",
+        "Look-ahead исключён проверкой времени входов",
+        "Повтор dataset не увеличивает число независимых наблюдений",
+        "Offline fixtures и реальный acquisition имеют разные receipts",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Аудитировать и развивать текущий Studious broker; SCE сохраняет references/receipts. Цены и live APIs изучать заново при создании detailed ZIP.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-28"
+      ],
+      "feature_ids": [
+        "RND-015",
+        "RND-016",
+        "RND-017",
+        "RND-018",
+        "RND-027"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-24"
+      ],
+      "workstream_id": "WS-030",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-011",
+        "WS-025",
+        "WS-029"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Replay/paper qualification: repayment, экономика, holdout и stateful campaigns",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE adapter",
+      "scope": [
+        "Exact dataset/config replay и PAPER/SHADOW outputs",
+        "Repayment/boundary/fuzz/stateful corpus",
+        "Fees/slippage/latency/units, all-trial registry и time/venue holdout"
+      ],
+      "acceptance": [
+        "Replay воспроизводим по hashes/config",
+        "Stateful campaign непустая и проверяет инварианты",
+        "Полная экономика включает заявленные затраты",
+        "Неудачные trials и unknown включены в denominator",
+        "Paper/replay outcome не маркируется live profit",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Переиспользовать реализованные qualification commands Studious. Не добавлять автоматический money-moving маршрут как условие закрытия исследовательского scope.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-29"
+      ],
+      "feature_ids": [
+        "RND-012",
+        "RND-013",
+        "RND-014",
+        "RND-019",
+        "RND-020",
+        "RND-022",
+        "RND-028",
+        "RND-029"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-24",
+        "GOAL5-25"
+      ],
+      "workstream_id": "WS-031",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-013",
+        "WS-029",
+        "WS-030"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Research packs: circular/triangular, liquidation и peg/wrapper opportunities",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE workflow",
+      "scope": [
+        "Atlas рынков/протоколов и eligibility каждого route",
+        "Сопоставимые packs circular/triangular, liquidation+swap, stable peg/wrappers",
+        "Atomic boundary, costs, liquidity/settlement и отрицательные cases"
+      ],
+      "acceptance": [
+        "Каждый pack имеет dataset, hypothesis и verifier contract",
+        "Неподдерживаемый protocol явно GAP",
+        "Route repayment/settlement проверяется в своей модели",
+        "Независимый holdout сохранён",
+        "Opportunity не выдаётся за исполнимую прибыль без evidence",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Это конечный набор research packs текущих feature cards RND-030..033, не обещание всех будущих протоколов. SCE содержит workflows; экономический код принадлежит Studious.",
+      "application_code_changed": false,
+      "source_task_ids": [],
+      "feature_ids": [
+        "RND-021",
+        "RND-030",
+        "RND-031",
+        "RND-032",
+        "RND-033"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-25"
+      ],
+      "workstream_id": "WS-032",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-031"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Research packs: intent/clearing, cross-chain, basis и funding",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE workflow",
+      "scope": [
+        "Intent/clearing/coincidence-of-wants solver experiment",
+        "Cross-chain/basis/funding с моделью времени, капитала и settlement",
+        "Сравнение с атомарными pack baselines и failure cases"
+      ],
+      "acceptance": [
+        "Atomic и delayed-capital модели разделены",
+        "Capital lock/finality/hedging assumptions заданы явно",
+        "Нет look-ahead в funding/venue данных",
+        "Settlement failure и stale quote входят в corpus",
+        "Результат имеет mode и scope, пригодный для повторной проверки",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Закрывает определения и проверяемые эксперименты RND-034/035. Для реальных protocol execution adapters потребуются подтверждённые отдельные scopes.",
+      "application_code_changed": false,
+      "source_task_ids": [],
+      "feature_ids": [
+        "RND-034",
+        "RND-035"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-25"
+      ],
+      "workstream_id": "WS-033",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-031"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "ACTION5-27",
+    "ACTION5-28",
+    "ACTION5-29"
+  ],
+  "feature_ids": [
+    "RND-009",
+    "RND-010",
+    "RND-012",
+    "RND-013",
+    "RND-014",
+    "RND-015",
+    "RND-016",
+    "RND-017",
+    "RND-018",
+    "RND-019",
+    "RND-020",
+    "RND-021",
+    "RND-022",
+    "RND-027",
+    "RND-028",
+    "RND-029",
+    "RND-030",
+    "RND-031",
+    "RND-032",
+    "RND-033",
+    "RND-034",
+    "RND-035"
+  ],
+  "decision_ids": [
+    "DEC5-24"
+  ],
+  "goal_ids": [
+    "GOAL5-24",
+    "GOAL5-25"
+  ]
+}

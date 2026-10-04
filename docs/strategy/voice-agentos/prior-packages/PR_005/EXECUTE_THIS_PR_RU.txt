@@ -1,0 +1,47 @@
+Выполни один scoped PR-005 в BobIvans/scaling-chrome-extensions по этому ZIP.
+Цель: полный format/eligibility ledger, source-level text gate и bounded coverage
+view. Начни с actual checkout: прочитай AGENTS.md, зафиксируй base SHA, сверяй
+действующие функции с источниками в sources/archived_sce/. Не откатывай уже
+внедрённые PR-001..004 и не копируй старые source files поверх нового HEAD.
+
+Прочитай:
+1. 01_PR_005_IMPLEMENTATION_RU.md и plan/PR_PLAN.json.
+2. contracts/ELIGIBILITY_CONTRACT.json и docs/FORMAT_MATRIX_RU.md.
+3. contracts/NATIVE_REQUEST.schema.json, NATIVE_RESPONSE.schema.json.
+4. docs/MIGRATION_AND_PARALLEL_INTEGRATION_RU.md.
+5. plan/ACCEPTANCE_CASES.json и fixtures/EXPECTED_LEDGER.jsonl.
+
+Минимальный результат:
+- Versioned format facts добавлены в существующий repo_entries.analysis JSON;
+  state/oid/size/path и raw chunk identity/revision остаются прежними.
+- Classify whole source до создания новых text items. UTF-8 validation и
+  binary-control policy действуют на весь source, не на отдельные fragments.
+- INDEXED binary/non-UTF8 сохраняет raw capture; ordinary UTF8, empty, BOM/CRLF
+  и Python parse-failed source имеют честный text fallback.
+- Canonical 3-line LFS v1 pointer <1024 bytes связывает payload OID/size как
+  утверждение pointer; payload availability NOT_CHECKED. Malformed, extended
+  и legacy pointer cases различимы. Pointer bytes не считаются payload bytes.
+- Metadata-only links/submodules и existing exclusions/errors не исчезают.
+- Read-only SUMMARY/PAGE durable.repo.coverage с keyset continuation и byte
+  budget. Ни API, ни UI query не запускает Git scan, backfill или full proof.
+- Versioned backfill CLI берёт только stored chunks, bounded по источникам/
+  bytes; replay идемпотентен. Legacy state UNKNOWN до explicit backfill.
+- Selected text export проверяет source facts. Ineligible whole source
+  исключается с reason; existing capture/chunks не удаляются.
+- UI показывает inventory/facts/raw-capture/text-eligibility отдельно,
+  безопасно отображает paths/reasons и отбрасывает stale replies.
+
+Ориентир — 60 минут; 6 шагов в PR_PLAN. При отличающемся actual owner/API
+адаптируй implementation к существующему владельцу. Раздели расширенный scope
+в followup receipt, если он не помещается; критерии не ослабляй ради времени.
+Full LAYA4-004, M5-02 и unlimited-size promise этим срезом не закрываются.
+
+Запусти реальные tests/checks проекта и 18 acceptance cases, которые применимы
+к данному slice. Протоколируй NOT_RUN, failures и missing receipts честно.
+Проверки самого design ZIP: python tools/verify_package.py <unpacked-root>.
+Для внедрения такие проверки не заменяют unit/native/UI regressions.
+
+Заполни receipts/IMPLEMENTATION_RESULT_TEMPLATE.json фактическими результатами.
+Отчёт: base/head SHA, diff, все новые функции, команды и результаты tests,
+Windows/installed status, gaps/followups и ссылка на созданный PR, если он
+создан в текущей execution-сессии. Номер ZIP не использовать как GitHub PR ID.

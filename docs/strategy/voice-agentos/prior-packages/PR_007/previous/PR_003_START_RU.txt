@@ -1,0 +1,39 @@
+ZIP №3 · PORTABLE CONTEXT ZIP + OFFLINE INDEX + ATOMIC RESUME
+Дата: 2026-10-04. Target: BobIvans/scaling-chrome-extensions.
+PR-003 — локальный номер пакета, НЕ номер GitHub PR.
+Статус: PREPARED_IMPLEMENTATION_BRIEF. Код PR не внедрён этой упаковкой.
+Оценка: ~60 минут focused build + необходимые проверки; время не доказывает done.
+
+Этот чат отвечает за ZIP-003 / LAYA4-010. ZIP-001 и ZIP-002 подготовлены
+в чате «Create First PR Zip». Их build/merge/CI здесь не наблюдались.
+Сначала сверить actual HEAD и фактическую реализацию контракта ZIP-002.
+
+Результат PR: один локальный запуск экспортирует все captured INDEXED chunks
+verified batch в переносимый ZIP. В нём source/part manifest, raw bytes,
+gaps, hashes, офлайн HTML-индекс с двусторонними relative links и byte proof.
+После сбоя --resume проверяет и переиспользует завершённые payload parts.
+ZIP assembly после сбоя начинается заново из этих parts; byte-level resume
+частично записанного ZIP в этом часовом срезе НЕ обещается.
+
+Основной путь — foreground CLI поверх existing Content Lab owner, как в №2.
+Нового background worker, desktop shell или long native response не требуется.
+Масштаб repo не ограничивается общим cap на files/chunks. Disk/time/RAM budgets
+возвращают явный blocker; полнота ограничена реально captured snapshot.
+
+Начни с EXECUTE_THIS_PR_RU.txt, затем 01_PR_003_IMPLEMENTATION_RU.md.
+02_PARALLEL_CHAT_NAVIGATION_RU.md объясняет, что дать каждому параллельному чату.
+contracts/EXPORT_CONTRACT.json и plan/PR_PLAN.json фиксируют scope и 6 шагов.
+plan/ACCEPTANCE_CASES.json содержит 16 сценариев; runtime cases пока NOT_RUN.
+fixtures/portable_bundle/ и fixtures/PORTABLE_CONTEXT.example.zip — синтетический
+пример на точных metadata №2: 50 entries, 46 INDEXED, 78 parts, 4 gaps.
+fixtures не являются реализацией exporter в SCE и не доказывают crash recovery.
+
+Проверка этого implementation-input: python tools/verify_package.py
+Проверка примера bundle: python tools/verify_bundle.py fixtures/portable_bundle
+После build заполни receipts/IMPLEMENTATION_RESULT_TEMPLATE.json реальными
+SHA, commands, CI и case evidence. Не заменять NOT_RUN историческими тестами.
+
+Все 160 tasks, 164 feature definitions, 28 goals, 24 decisions и 10 milestones
+сохранены в sources/roadmap_v5/. Большой master/history ~387 MB не дублируется;
+precise archives/member hashes находятся в provenance/SOURCES.json.
+Следующий по исходной очереди ZIP-004: streaming Git inventory / LAYA4-003.

@@ -1,0 +1,41 @@
+{
+  "schema": "sce.pr012-013.local-validation.v1",
+  "observed_at": "2026-10-04T16:51:30.761781+00:00",
+  "checkout_sha_before_documentation": "27cb446fc803df63d485ad376c1954bed30b30f7",
+  "pr51_original_head_sha": "83f6337ccf725da443a673fc84d623bed04a3c29",
+  "merged_main_sha": "ccf73e747e6743ead68040e3eb6837b3a5233fbc",
+  "code_sha256": {
+    "content-lab/source_ledger.py": "e45e1758faccb75537fad79d3c78b594b6f9b6fda3fa0b5897aa31bf5de6dfeb",
+    "content-lab/test_source_ledger.py": "6c2dc4dd87710749e286fb3a20b1e3503755ee6683e4f2f33aa3207d316eb57d",
+    "content-lab/repo_history.py": "1d835f3159b5ad46870b646b8be411e6fe42a213a00917d442a85ac541ebd1ef",
+    "content-lab/test_repo_history.py": "932a095be7f9d27fe51892abbc58dfd230be9f669ca27b7f2dae20570f0d0f15",
+    "content-lab/context_library.py": "710b9f7e6620d7b63cb7ed92c8cf9597a799b7e9a215b41f85e2a85fa4af706c",
+    "content-lab/context_runtime.py": "911da539f9bb946a2d8a4f1b0b96b8c87692ce556fc9dc54cad97e5754759f77",
+    "content-lab/automation_core.py": "e798dca93ba84d9c1c2dec1e18aa61cc3c5e1460befb8a0c1376d99cc3c0ef59",
+    "content-lab/native_adapter.py": "2bbcb96401ed57a832d7cd9fe27bdbda81bfaaf3969cff21524c6acd55d6801b",
+    "desktop/client.py": "bc3acb9d5cfa7256a93be843f10f8eac246042a125d9303e862653a5becb9e03"
+  },
+  "checks": [
+    {
+      "command": "python -m unittest test_source_ledger test_repo_history -v",
+      "cwd": "content-lab",
+      "result": "PASS",
+      "tests": 13,
+      "duration_seconds": 14.097,
+      "scope": "9 source ledger + 4 repository history tests; not the 101 full criteria"
+    },
+    {
+      "command": "python docs/strategy/voice-agentos/verify_integrity.py",
+      "result": "PASS",
+      "source_files_verified": 1826
+    },
+    {
+      "command": "python -I -X utf8 desktop/package.py verify --shell desktop",
+      "result": "PASS",
+      "device_qualification": "NOT_RUN"
+    }
+  ],
+  "ci_status": "OBSERVED_SEPARATELY_IN_REPOSITORY_AUDIT; refresh current head",
+  "installed_windows_dell": "NOT_RUN",
+  "full_package_qualification": "OPEN"
+}

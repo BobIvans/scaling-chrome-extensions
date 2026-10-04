@@ -1,0 +1,146 @@
+{
+  "schema": "roadmap.proposed-native-contract.v1",
+  "implementation_status": "PROPOSED_NOT_INSTALLED",
+  "command": "durable.repo.scanRun",
+  "wire_owner": "content-lab/native_adapter.py",
+  "result_envelope_schema": "occ.native-durable-result.v1",
+  "projection_schema": "occ.repo-scan-run.v1",
+  "source_identity": [
+    "repository alias",
+    "namespace",
+    "operator-profile digest",
+    "snapshot_id",
+    "repo_sha",
+    "tree_sha"
+  ],
+  "request_schema_file": "contracts/SCAN_RUN_REQUEST.schema.json",
+  "projection_schema_file": "contracts/SCAN_RUN.schema.json",
+  "actions": {
+    "START": {
+      "required": [
+        "type",
+        "repository",
+        "action",
+        "intentKey"
+      ],
+      "optional": [],
+      "rule": "Look up intent before reading a new HEAD. Repeated intent returns same run, including terminal states. Active different intent => ACTIVE_SCAN_EXISTS."
+    },
+    "STATUS": {
+      "required": [
+        "type",
+        "repository",
+        "action"
+      ],
+      "optional": [
+        "runId"
+      ],
+      "rule": "Get chosen scoped run or latest scoped run; return scan_run:null if no run. Never starts a page or auto-resumes."
+    },
+    "STEP": {
+      "required": [
+        "type",
+        "repository",
+        "action",
+        "runId",
+        "expectedCursor",
+        "expectedRevision"
+      ],
+      "optional": [],
+      "rule": "Atomic RUNNING/revision/cursor guard with page transaction. cursor>expected => current status/no page; cursor<expected => CURSOR_AHEAD; terminal states no page."
+    },
+    "PAUSE": {
+      "required": [
+        "type",
+        "repository",
+        "action",
+        "runId",
+        "expectedRevision"
+      ],
+      "optional": [],
+      "rule": "Idempotent same-target PAUSE; prevents new pages after committed transition. Existing page may finish first."
+    },
+    "CONTINUE": {
+      "required": [
+        "type",
+        "repository",
+        "action",
+        "runId",
+        "expectedRevision"
+      ],
+      "optional": [],
+      "rule": "Explicit current-revision PAUSED to RUNNING; already RUNNING returns same state without increment and allows a user-requested client pump after reconnect. Never revives CANCELLED/FAILED/BLOCKED/COMPLETE."
+    },
+    "CANCEL": {
+      "required": [
+        "type",
+        "repository",
+        "action",
+        "runId",
+        "expectedRevision"
+      ],
+      "optional": [],
+      "rule": "Idempotent CANCELLED tombstone. No data deletion. Persisted state confirmed only after receipt/STATUS."
+    }
+  },
+  "ids": {
+    "runId": "lowercase SHA256 hex (64 chars)",
+    "intentKey": "random lowercase hex (32 chars), generated once per explicit new START",
+    "expectedCursor": "nonnegative safe integer from authoritative STATUS; keep actual snapshot limits",
+    "expectedRevision": "nonnegative safe integer control revision; changes only on control-state transitions"
+  },
+  "run_states": [
+    "RUNNING",
+    "PAUSED",
+    "CANCELLED",
+    "COMPLETE",
+    "BLOCKED",
+    "FAILED"
+  ],
+  "request_effect": "Data-only source scan plus existing store mutation; no source-code execution, cloud send or second worker.",
+  "serialization": "Maximum one in-flight client STEP; state/cursor guards checked in the same SQLite transaction; one active intent per repository/profile.",
+  "control_uncertainty": "UI local pause/stop stops scheduling immediately; backend transition may wait for existing page. Lost response requires STATUS. A late CONTINUE cannot remove newer pause/cancel.",
+  "completion": [
+    "cursor == total",
+    "ledger_entries == total",
+    "pending == 0",
+    "sum entry counts == total",
+    "existing exact_for_indexed proof true"
+  ],
+  "coverage_notes": [
+    "ledger_entries includes PENDING",
+    "processed = total - pending",
+    "INDEXED binary means raw capture, not text extraction",
+    "COMPLETE may contain exclusions/errors",
+    "all_tracked_bytes_exportable distinct from inventory_complete",
+    "AI delivery/read not performed"
+  ],
+  "legacy_compatibility": [
+    "durable.repo.scan",
+    "durable.repo.get",
+    "durable.repo.export",
+    "existing review/task/snapshot records"
+  ],
+  "resource_limits_baseline": {
+    "native_input_bytes": 16000,
+    "native_output_bytes": 192000,
+    "page_entries_default": 20,
+    "git_enumeration_output_bytes": 33554432,
+    "blob_bytes": 8388608,
+    "native_timeout_ms": 10000,
+    "verify_actual_constants_before_implementation": true
+  },
+  "failure_rules": {
+    "SOURCE_DRIFT": "Block existing run; preserve old pinned snapshot.",
+    "PROFILE_CHANGED": "Block/scope-error; no new head under repeated old intent.",
+    "CONTEXT_INCOMPLETE": "No COMPLETE run when ledger/proof corrupt.",
+    "CURSOR_AHEAD": "Caller expected cursor beyond stored cursor; reject, do not skip.",
+    "CONTROL_REVISION_STALE": "No control mutation; return current status/reconcile.",
+    "NO_PROGRESS": "Stop client pump with explicit blocker; no endless retry.",
+    "NATIVE_TIMEOUT": "STATUS before any further STEP/control; no blind replay loop."
+  },
+  "response_payload": {
+    "scan_run": "Compact projection object; STATUS may return null when no scoped run exists. File pages remain on legacy durable.repo.get.",
+    "start_outcome": "For START only: CREATED, REUSED_INTENT, or ACTIVE_SCAN_EXISTS. Active-conflict response exposes only the already-authorized active run reference; does not start the new intent."
+  }
+}

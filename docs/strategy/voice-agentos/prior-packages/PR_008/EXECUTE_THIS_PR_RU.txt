@@ -1,0 +1,44 @@
+Выполни PR-008 для BobIvans/scaling-chrome-extensions по этому ZIP.
+Срез: read-only desktop transport + Windows launcher + selected-context draft.
+Начни с actual HEAD/AGENTS/owners. Source excerpts da6abf4 являются reference;
+не копируй их поверх текущего кода и не откатывай работу №1–7.
+
+Read order:
+1. 01_PR_008_IMPLEMENTATION_RU.md и plan/PR_PLAN.json.
+2. contracts/DESKTOP_TRANSPORT_CONTRACT.json, DESKTOP_CONFIG.schema.json.
+3. docs/OWNER_OPERATION_MAP_RU.md, contracts/NATIVE_DESKTOP_RESULT.schema.json.
+4. docs/WINDOWS_INSTALL_AND_ROLLBACK_RU.md и docs/UI_FLOW_RU.md.
+5. plan/ACCEPTANCE_CASES.json, fixtures/README_RU.txt.
+6. coordination/PARALLEL_PACKAGES_RU.md и NEXT_PR_009_RU.txt.
+
+Реализуй минимальные функции:
+- Native durable.info: version/capabilities/byte budgets/profile/store/backend
+  identity; metadata query без создания Core/DB и без выполнения jobs.
+- --desktop-stdio mode для того же installed native_adapter; versioned reply
+  содержит actual loaded-profile binding от объекта, использованного dispatcher.
+  Browser legacy mode/dispatch(request, profile_path) остаётся совместимым.
+- Desktop client принимает только read allowlist, запускает configured Python +
+  installed adapter + operator profile через argv/shell=False, отправляет один
+  UTF8 JSON + EOF. stdout/stderr читаются совместно с общим byte budget.
+- Timeout/close: stop child, reap, close pipes; UI остаётся отзывчивым.
+- Strict reply/schema/operation/profile identity; requestId и generation fence
+  локально связывают child и UI. Late replies не меняют новое окно/namespace.
+- Tkinter UI: настройки подключения, версии/путь данных, namespaces, search,
+  выбранные items → bounded context → TASK_DRAFT.txt + metadata JSON.
+- Поиск обозначен top matches; selected context не выдаётся за весь repo.
+  Existing inventory paging проходит до EOF, только если API объявлен backend.
+- Launch_Windows.ps1 + preflight к имеющемуся runtime/backend. Shell uninstall
+  сохраняет backend, profile и corpus. Не требуются Chrome/extension ID/Node/
+  Codex для этого direct-Python route; existing browser installer не заменять.
+
+Оценка 60 минут не отменяет acceptance. Если actual owner/DTO отличаются,
+адаптируй срез к их реализации и запиши gaps. TXT import/large-file ingestion,
+canonical task writes и all-in-one installer оставь в followup register.
+
+Проверь actual Python/native/UI regressions и применимые acceptance cases.
+Windows installed receipt остаётся NOT_RUN без настоящего target device.
+tools/verify_package.py проверяет design bytes/fixtures, а не реализацию app.
+
+Заполни receipts/IMPLEMENTATION_RESULT_TEMPLATE.json. В итоговом отчёте укажи
+base/head SHA, новые функции, реальные проверки, device/gaps и actual PR URL,
+если PR создан в execution-сессии. Не объявляй whole ACTION5-02/03 completed.
