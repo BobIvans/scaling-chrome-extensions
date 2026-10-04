@@ -1,0 +1,302 @@
+{
+  "package_id": "ROADMAP-PR-016-017",
+  "title": "Текст и голос → проверяемый план → выбранный Grok-чат → надёжная доставка → переносимые навыки",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "target_final_code_pr_count": 1,
+  "merged_from": [
+    16,
+    17
+  ],
+  "external_prerequisites": [
+    13,
+    14,
+    15
+  ],
+  "implementation_hours": null,
+  "estimate_status": "NEEDS_ACTUAL_CODE_AUDIT; coding/CI/device qualification estimated separately",
+  "application_code_changed": false,
+  "code_pr_created": false,
+  "merged": false,
+  "stages": [
+    {
+      "stage": 1,
+      "workstream": "WS-018",
+      "title": "Текст → план действий: IntentSpec, Laya и роли planner/retriever/critic",
+      "owner_role": "Core intent/compiler owner",
+      "actions": [
+        "baseline current owners",
+        "typed revisions/slots and deterministic compiler",
+        "separate retrieval/planner/critic outputs",
+        "Laya discovery/advisory/direct UI fallback",
+        "atomic correction+effect fence",
+        "unknown capability DevelopmentRequest"
+      ],
+      "logical_change_areas": [
+        "existing Core service handlers/events/migrations",
+        "existing desktop IPC/UI bridge",
+        "versioned adapters and qualification tests"
+      ],
+      "actual_paths": null,
+      "source_task_ids": [
+        "PAR3-005",
+        "LAYA4-022",
+        "ACTION5-20"
+      ],
+      "feature_ids": [
+        "ACT-001",
+        "ACT-006",
+        "ACT-007",
+        "ACT-008"
+      ],
+      "required_cases": [
+        "INT-PARITY",
+        "INT-AMBIGUOUS",
+        "INT-DAG",
+        "INT-NEGATION",
+        "INT-RETRIEVAL",
+        "INT-LAYA",
+        "INT-REVISION",
+        "INT-RACE",
+        "INT-UNKNOWN",
+        "INT-REPEAT",
+        "INT-ROLES"
+      ],
+      "integration_cases": [
+        "COMPAT-UPSTREAM",
+        "COMPAT-DOWNSTREAM",
+        "ALL-RESTART"
+      ],
+      "commit_boundary": "internal commit(s) in same final code PR",
+      "status": "PLANNED"
+    },
+    {
+      "stage": 2,
+      "workstream": "WS-019",
+      "title": "Голосовое управление Windows: hotkey, ASR, исправления и STOP",
+      "owner_role": "Windows voice/accessibility owner",
+      "actions": [
+        "single PTT capture lifecycle",
+        "pinned interchangeable ASR",
+        "TTS/background guards and critical slot preview",
+        "keyboard/accessible parity",
+        "independent Core STOP",
+        "actual Dell mic measurement after integration"
+      ],
+      "logical_change_areas": [
+        "existing Core service handlers/events/migrations",
+        "existing desktop IPC/UI bridge",
+        "versioned adapters and qualification tests"
+      ],
+      "actual_paths": null,
+      "source_task_ids": [
+        "TAB4-16",
+        "LAYA4-023",
+        "ACTION5-22"
+      ],
+      "feature_ids": [
+        "ACT-028",
+        "ACT-029",
+        "ACT-030",
+        "ACT-031",
+        "ACT-034",
+        "ACT-058"
+      ],
+      "required_cases": [
+        "VOICE-ONE",
+        "VOICE-RELEASE",
+        "VOICE-GAPS",
+        "VOICE-GOLD",
+        "VOICE-TTS",
+        "VOICE-CORRECTION",
+        "VOICE-OFFLINE",
+        "UI-KEYBOARD",
+        "UI-A11Y",
+        "STOP-INDEPENDENT"
+      ],
+      "integration_cases": [
+        "COMPAT-UPSTREAM",
+        "COMPAT-DOWNSTREAM",
+        "ALL-RESTART"
+      ],
+      "commit_boundary": "internal commit(s) in same final code PR",
+      "status": "PLANNED"
+    },
+    {
+      "stage": 3,
+      "workstream": "WS-021",
+      "title": "Выбранные Grok/GitHub targets и квалифицированные PC/browser adapters",
+      "owner_role": "Browser target/adapter owner",
+      "actions": [
+        "selected target identity/binding revisions",
+        "actual route capabilities",
+        "canary/drift quarantine",
+        "one physical composer writer",
+        "user takeover/clipboard ownership",
+        "actual selected route qualification"
+      ],
+      "logical_change_areas": [
+        "existing Core service handlers/events/migrations",
+        "existing desktop IPC/UI bridge",
+        "versioned adapters and qualification tests"
+      ],
+      "actual_paths": null,
+      "source_task_ids": [
+        "UI3-001",
+        "UI3-002",
+        "UI3-006",
+        "TAB4-03",
+        "TAB4-04"
+      ],
+      "feature_ids": [
+        "ACT-035",
+        "ACT-036",
+        "ACT-037",
+        "ACT-039"
+      ],
+      "required_cases": [
+        "TARGET-DUPLICATE",
+        "TARGET-DRIFT",
+        "TARGET-RESTART",
+        "TARGET-ROUTE",
+        "TARGET-CANARY",
+        "TARGET-LOGIN",
+        "TARGET-FOCUS",
+        "TARGET-CLIPBOARD",
+        "TARGET-MULTILINE"
+      ],
+      "integration_cases": [
+        "COMPAT-UPSTREAM",
+        "COMPAT-DOWNSTREAM",
+        "ALL-RESTART"
+      ],
+      "commit_boundary": "internal commit(s) in same final code PR",
+      "status": "PLANNED"
+    },
+    {
+      "stage": 4,
+      "workstream": "WS-022",
+      "title": "Надёжная доставка в AI UI: outbox, части, ответы и unknown-send recovery",
+      "owner_role": "Core outbox/reconciliation owner",
+      "actions": [
+        "transactional immutable packet outbox",
+        "draft+supported upload receipt grades",
+        "persisted arm/one local send invocation",
+        "unknown outcome reconciliation",
+        "lossless per-part ledger+streaming cursor",
+        "correlated finalized idempotent result import"
+      ],
+      "logical_change_areas": [
+        "existing Core service handlers/events/migrations",
+        "existing desktop IPC/UI bridge",
+        "versioned adapters and qualification tests"
+      ],
+      "actual_paths": null,
+      "source_task_ids": [
+        "UI3-005",
+        "UI3-007",
+        "UI3-008",
+        "UI3-009",
+        "UI3-010",
+        "UI3-011",
+        "UI3-012",
+        "UI3-016",
+        "PAR3-009",
+        "PAR3-010",
+        "EVO3-004",
+        "TAB4-06",
+        "TAB4-07",
+        "TAB4-08"
+      ],
+      "feature_ids": [
+        "LIB-057",
+        "ACT-022",
+        "ACT-023"
+      ],
+      "required_cases": [
+        "OUTBOX-TX",
+        "OUTBOX-LEASE",
+        "OUTBOX-ENVELOPE",
+        "DRAFT-CONFLICT",
+        "DRAFT-VERIFY",
+        "DRAFT-NOUPLOAD",
+        "SEND-SCOPE",
+        "SEND-PROVENANCE",
+        "SEND-ONCE",
+        "SEND-OBSERVE",
+        "SEND-UNKNOWN",
+        "SEND-RECONCILE",
+        "SEND-CANCEL",
+        "SEND-SOURCE",
+        "PART-COVERAGE",
+        "PART-SCALE",
+        "RESULT-CORRELATION",
+        "RESULT-IDEMPOTENT",
+        "RESULT-DATA"
+      ],
+      "integration_cases": [
+        "COMPAT-UPSTREAM",
+        "COMPAT-DOWNSTREAM",
+        "ALL-RESTART"
+      ],
+      "commit_boundary": "internal commit(s) in same final code PR",
+      "status": "PLANNED"
+    },
+    {
+      "stage": 5,
+      "workstream": "WS-020",
+      "title": "Навыки из демонстраций, failure memory и выборочная requalification",
+      "owner_role": "Skill registry/qualification owner",
+      "actions": [
+        "sanitized recording/portable skill contract",
+        "same Core recipe compile/invoke",
+        "independent unseen/fault promotion",
+        "invariant preserving optimization",
+        "retained failure capsules",
+        "dependency/permission selective invalidation/repair"
+      ],
+      "logical_change_areas": [
+        "existing capability/skill registry",
+        "recording/provenance and failure store owner",
+        "same Core compiler/replay tests"
+      ],
+      "actual_paths": null,
+      "source_task_ids": [
+        "UI3-019",
+        "PAR3-024",
+        "LAYA4-024",
+        "ACTION5-23",
+        "ACTION5-24"
+      ],
+      "feature_ids": [
+        "LIB-054",
+        "ACT-041",
+        "ACT-042",
+        "ACT-043",
+        "ACT-044",
+        "ACT-048",
+        "RND-042",
+        "RND-043"
+      ],
+      "required_cases": [
+        "SKILL-RECORD",
+        "SKILL-SECRET",
+        "SKILL-UNSEEN",
+        "SKILL-OPTIMIZE",
+        "SKILL-DRIFT",
+        "SKILL-SCOPE",
+        "SKILL-FAILURE",
+        "SKILL-RECIPE",
+        "SKILL-NEGATIVE"
+      ],
+      "integration_cases": [
+        "COMPAT-UPSTREAM",
+        "COMPAT-DOWNSTREAM",
+        "ALL-RESTART"
+      ],
+      "commit_boundary": "internal commit(s) in same final code PR",
+      "status": "PLANNED"
+    }
+  ],
+  "completion_rule": "All scoped original criteria need actual receipts. If code/CI ready but Dell/UI unavailable, report code ready with explicit OPEN qualification gates; do not declare full package complete.",
+  "runtime_activation_rule": "Actual grant, capability versions, prerequisite and qualified route/device receipts checked by existing Core owner; mock/document fixtures cannot satisfy activation"
+}

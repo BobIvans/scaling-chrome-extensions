@@ -1,9 +1,10 @@
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 
-export const DURABLE_COMMANDS=Object.freeze(['durable.campaign.pause','durable.campaign.resume','durable.campaign.inspect','durable.campaign.advance','durable.campaign.cancel','durable.info','durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.scanRun','durable.repo.get','durable.repo.manifest','durable.repo.coverage','durable.repo.export']);
+export const DURABLE_COMMANDS=Object.freeze(['durable.action','durable.campaign.pause','durable.campaign.resume','durable.campaign.inspect','durable.campaign.advance','durable.campaign.cancel','durable.info','durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.scanRun','durable.repo.get','durable.repo.manifest','durable.repo.coverage','durable.repo.export']);
 export const DURABLE_INPUT_BYTES=16000,DURABLE_OUTPUT_BYTES=192000,DURABLE_TIMEOUT_MS=10000;
 const fields={
+ 'durable.action':['action','payload'],
  'durable.campaign.pause':['campaign'],
  'durable.campaign.resume':['campaign'],
  'durable.campaign.inspect':['campaign','offset','limit'],

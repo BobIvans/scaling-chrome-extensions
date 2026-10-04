@@ -1,0 +1,21 @@
+ОБЪЕДИНЁННЫЙ PR-016 + PR-017 — один implementation ZIP и один целевой code PR.
+Репозиторий: https://github.com/BobIvans/scaling-chrome-extensions
+
+Цель: текст/голос → общий versioned intent → разрешённые capabilities → immutable AI packet → выбранный AI-чат → durable send/reconciliation → связанный result → квалифицированный skill.
+
+Порядок чтения:
+1. 01_PR_DESCRIPTION_RU.md — итоговое описание PR.
+2. 02_IMPLEMENTATION_RU.md и 03_FUNCTIONS_RU.md — конкретная реализация.
+3. contracts/CONTRACTS_RU.md, contracts/STATE_MACHINES.json, schemas/ — DTO и инварианты.
+4. plan/PR_PLAN.json, plan/DEPENDENCIES.json, plan/CURRENT_VS_PLANNED.json — этапы и границы.
+5. acceptance/CRITERION_COVERAGE.json, acceptance/ACCEPTANCE_CASES.json — исходные критерии и проверки.
+6. 04_WINDOWS_QUALIFICATION_RU.md, 05_MIGRATION_ROLLBACK_RU.md.
+7. EXECUTE_THIS_PR_RU.txt — готовая инструкция coding-чату.
+
+СТАТУС: IMPLEMENTATION_SPEC_READY. Код приложения здесь не изменён, PR не создан и не merged. Schemas/fixtures и целостность ZIP проверяются отдельно от runtime. Все runtime/device criteria имеют статус OPEN до фактических receipts.
+
+Один итоговый PR; пять внутренних WS, не пять новых обязательных PR. Внешние prerequisite packages: 013, 014, 015. Исходная связь 017 → 016 стала внутренней зависимостью. Следующий пакет — 018; нумерация других пакетов не сдвигается.
+
+Архив содержит исходный numbered roadmap ZIP целиком, точные извлечённые master members, все 160 task cards и общий backlog. Полный master (387 MB) остаётся отдельным исходным вложением; его SHA записан в BASELINE/PROVENANCE.json. Этот ZIP достаточен для реализации выбранного scope; для всего исторического контекста приложить также master.
+
+Нет фиксированного лимита 20 файлов, документов, repo bytes или числа частей. Budgets ограничивают одновременно активную порцию, память и ресурсы. Недоступные данные и ограничения провайдера остаются явно учтёнными.

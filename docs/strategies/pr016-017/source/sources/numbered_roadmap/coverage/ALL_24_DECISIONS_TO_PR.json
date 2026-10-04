@@ -1,0 +1,266 @@
+[
+  {
+    "id": "DEC5-01",
+    "title": "Desktop transport, упаковка и владелец процесса",
+    "completion_owner": "ROADMAP-PR-015",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Зафиксированы shell/runtime versions, IPC schema, process ownership и пути профиля/данных.",
+      "Установка и повторный запуск проверены на конкретной Windows сборке; второй клиент не создаёт второго writer.",
+      "Показаны offline режим и восстановление после crash без потери task references."
+    ]
+  },
+  {
+    "id": "DEC5-02",
+    "title": "Версия scope/auth и отделение контекста от полномочий",
+    "completion_owner": "ROADMAP-PR-015",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Schema и canonical digest policy version зафиксированы.",
+      "Разрешённый повтор в неизменном scope не требует нового решения; новая цель/данные/права не получают старый grant.",
+      "Revocation semantics покрывают pending intent, completed remote effect и queued remaining work."
+    ]
+  },
+  {
+    "id": "DEC5-03",
+    "title": "Долговременная идентичность вкладки и чата",
+    "completion_owner": "ROADMAP-PR-017",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Версия TargetBinding и capabilities наблюдения задокументированы.",
+      "Wrong-target corpus не разрешает Send и не заменяет адресат похожим URL/title.",
+      "Rebind сохраняет связь task/packet с прежним target и создаёт новую binding revision."
+    ]
+  },
+  {
+    "id": "DEC5-04",
+    "title": "Контракт и qualification corpus реального Grok UI",
+    "completion_owner": "ROADMAP-PR-017",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Документированы adapter version, environment, supported controls и ограничения наблюдения.",
+      "Unknown не создаёт автоматическую повторную отправку; reconciliation имеет реальный путь или explicit unresolved state.",
+      "Canary/drift снимают qualification до новых внешних действий."
+    ]
+  },
+  {
+    "id": "DEC5-05",
+    "title": "Envelope многотомного контекста и бюджет транспорта",
+    "completion_owner": "ROADMAP-PR-014",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Schema manifest и continuation request заданы; packet identity не зависит от mutable UI поля.",
+      "Все исходные selected bytes восстановимы либо имеют explicit reason отсутствия.",
+      "Для каждого provider указаны measured/unknown limits и сила каждого receipt вида."
+    ]
+  },
+  {
+    "id": "DEC5-06",
+    "title": "Языковые версии JS/TS parser/resolver и provenance edges",
+    "completion_owner": "ROADMAP-PR-011",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Support matrix и parser/config/resolver versions сохранены в graph artifact.",
+      "Каждая edge имеет source span, rule, confidence/type и resolved target либо конкретную причину unresolved.",
+      "Неподдерживаемый синтаксис сохраняет raw coverage и не добавляет выдуманных связей."
+    ]
+  },
+  {
+    "id": "DEC5-07",
+    "title": "Политика связанных chunks и oversize SCC",
+    "completion_owner": "ROADMAP-PR-011",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Policy version задаёт tie-breaks, bytes/token estimate, duplication rules и oversized behavior.",
+      "Все crossing edges и исключённые dependencies видны в manifest/WHY_THIS_PACKET.",
+      "Изменение budget меняет physical parts без потери logical source/range identity."
+    ]
+  },
+  {
+    "id": "DEC5-08",
+    "title": "Snapshot scope: commit, dirty, history, LFS и submodules",
+    "completion_owner": "ROADMAP-PR-012",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Scope manifest определяет inclusion/exclusion и source revision каждого layer.",
+      "Selected entries = represented originals + explicit unresolved/unsupported; secret exclusion не уничтожает original identity.",
+      "Resume не смешивает разные tree/overlay revisions."
+    ]
+  },
+  {
+    "id": "DEC5-09",
+    "title": "Canonical object model, CAS и дисковая нагрузка",
+    "completion_owner": "ROADMAP-PR-012",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Схема object references, CAS layout, transaction boundary и orphan recovery зафиксированы.",
+      "Failed object не становится COMPLETE; завершённые версии и все origins сохраняются.",
+      "Дисковый долг/очередь видны; garbage collection не удаляет reachable originals."
+    ]
+  },
+  {
+    "id": "DEC5-10",
+    "title": "Версионирование схем, migration rehearsal и rollback",
+    "completion_owner": "ROADMAP-PR-014",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Зафиксированы min/max schema compatibility, migration steps, recovery point и irreversible cases.",
+      "Репетиция не изменяет production store; interrupted migration имеет однозначное recovery state.",
+      "После восстановления ссылки goals/tasks/evidence валидны; incompatible job не возобновляется silently."
+    ]
+  },
+  {
+    "id": "DEC5-11",
+    "title": "Согласованный backup и полное восстановление",
+    "completion_owner": "ROADMAP-PR-014",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Backup manifest перечисляет DB revision, objects, schemas, state boundary и проверенные hashes.",
+      "Restore обнаруживает отсутствующий/повреждённый object и не выдаёт partial restore за complete.",
+      "Политика ключей/destination/access явна; проверенный restore имеет receipt."
+    ]
+  },
+  {
+    "id": "DEC5-12",
+    "title": "Retention, tombstones и пределы удаления",
+    "completion_owner": "ROADMAP-PR-014",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Retention classes, inheritance, TTL conditions и delete semantics versioned.",
+      "Reachable shared blob сохраняется; удалённые source/derivatives не участвуют в обычном retrieval.",
+      "UI перечисляет external/backups copies и известные ограничения удаления."
+    ]
+  },
+  {
+    "id": "DEC5-13",
+    "title": "Share projection, redaction и recipient binding",
+    "completion_owner": "ROADMAP-PR-014",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Projection/redaction/recipient schemas и dry-run preview зафиксированы.",
+      "Original fidelity не меняется; export показывает omissions и преобразования.",
+      "Изменившийся recipient/document не использует preview прежней версии; secret references не разворачиваются из context автоматически."
+    ]
+  },
+  {
+    "id": "DEC5-14",
+    "title": "Lifetime retrieval, временные версии и противоречия",
+    "completion_owner": "ROADMAP-PR-014",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Retrieval policy задаёт tie-breaks, temporal rules, filters и provenance/exclusion explanations.",
+      "Ответ приводит exact source spans и known gaps; contradiction не скрыта единственным уверенным summary.",
+      "Публикуются scope/corpus и actual retrieval measurements без обещания unlimited context."
+    ]
+  },
+  {
+    "id": "DEC5-15",
+    "title": "Таксономия автометок и устойчивые исправления",
+    "completion_owner": "ROADMAP-PR-010",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Ontology version и alias/migration policy описаны; label provenance обязателен.",
+      "Manual corrections не теряются после reindex и доступны для revert.",
+      "Uncertain labels видны и не дают полномочий на execution/share."
+    ]
+  },
+  {
+    "id": "DEC5-16",
+    "title": "Порядок source adapters и контракты извлечения",
+    "completion_owner": "ROADMAP-PR-010",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Support matrix, original/source/version identity и parser/extractor versions определены.",
+      "Точные слова/bytes восстанавливаются в declared scope; quotes/assistant proposals не приписаны пользователю.",
+      "Missing/unsupported/failed различаются; доступ нового источника не предполагается установленным заранее."
+    ]
+  },
+  {
+    "id": "DEC5-17",
+    "title": "Voice capture, ASR и критические intent slots",
+    "completion_owner": "ROADMAP-PR-016",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Capture/device/ASR versions, slot schema, uncertainty и intent revision semantics зафиксированы.",
+      "Неверный critical slot не исполняется guessed; text path остаётся полностью рабочим.",
+      "Raw audio retention согласовано с lifecycle policy; device loss имеет recoverable state."
+    ]
+  },
+  {
+    "id": "DEC5-18",
+    "title": "Доступность, focus и независимый STOP",
+    "completion_owner": "ROADMAP-PR-015",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Control/focus/stop contracts и поддерживаемые assistive modes заданы.",
+      "Нельзя остаться без работающего stop/text пути при сбое ASR или браузера.",
+      "Receipt фиксирует приложение/устройство/assistive mode и известные ограничения."
+    ]
+  },
+  {
+    "id": "DEC5-19",
+    "title": "Capability registry и связь с installed build",
+    "completion_owner": "ROADMAP-PR-015",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Capability/skill schemas и compatibility transitions описаны.",
+      "Новая capability не расширяет полномочия старого profile; missing dependency/qualification видны.",
+      "Execution receipt связан с actual installed artifact и зарегистрированным verifier."
+    ]
+  },
+  {
+    "id": "DEC5-20",
+    "title": "Release provenance, exact-SHA updater и активация",
+    "completion_owner": "ROADMAP-PR-018",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Channel/provenance/release manifest, dependency policy и activation ABI зафиксированы.",
+      "Квалифицированы именно итоговый install SHA/artifact и target device; drift вызывает новую проверку.",
+      "Failure сохраняет рабочую версию; восстановление данных/jobs проверено; updater не меняет собственные критерии."
+    ]
+  },
+  {
+    "id": "DEC5-21",
+    "title": "Durable scheduler, budgets и возобновление Windows",
+    "completion_owner": "ROADMAP-PR-019",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Resource identity, admission/budget/lease schema и catch-up policy зафиксированы.",
+      "Reservation и reconciliation переживают restart; old lease не пишет после нового fence.",
+      "Pilot публикует corpus/resource measurements; production limit не повышается только по успеху reference tests."
+    ]
+  },
+  {
+    "id": "DEC5-22",
+    "title": "Границы автономного improvement loop",
+    "completion_owner": "ROADMAP-PR-019",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Iteration/progress/stop schemas, ceilings и frozen-criteria semantics описаны.",
+      "Каждый переход имеет reason и источник; loop не повторяет uncertain effect и не меняет criteria silently.",
+      "Blocked goal остаётся в deferred register с конкретным revisit condition."
+    ]
+  },
+  {
+    "id": "DEC5-23",
+    "title": "Outcome metrics, baseline и сила доказательств",
+    "completion_owner": "ROADMAP-PR-021",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Outcome/evidence schema и counting rules versioned, denominator воспроизводим.",
+      "MODEL_CLAIM/operator/UI/Git/test/device evidence имеют разные свойства и не повышаются silently.",
+      "Report разделяет targets и measurements, local/CI/device и verified_property конкретного verifier."
+    ]
+  },
+  {
+    "id": "DEC5-24",
+    "title": "Граница SCE/library и web3 campaign owner",
+    "completion_owner": "ROADMAP-PR-020",
+    "status": "EXPERIMENT_AND_DECISION_REQUIRED",
+    "decision_acceptance": [
+      "Проверены current bot SHA/runtime owner и adapter commands/input/output/effect classes.",
+      "Paper/shadow/replay labels не повышаются до live/production; экономические measurements имеют scope/units/costs.",
+      "Library хранит evidence links; executions принадлежат bot owner; live permissions не выводятся из document."
+    ]
+  }
+]

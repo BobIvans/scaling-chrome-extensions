@@ -1,0 +1,161 @@
+{
+  "version": "proposed.v1",
+  "machines": {
+    "intent": [
+      {
+        "from": "NEEDS_INPUT",
+        "to": "PROPOSED",
+        "guard": "resolved exact slots"
+      },
+      {
+        "from": "PROPOSED",
+        "to": "COMPILED",
+        "guard": "validated registry/template/DAG"
+      },
+      {
+        "from": "COMPILED",
+        "to": "ADMITTED",
+        "guard": "current revision/grant/STOP fence"
+      },
+      {
+        "from": "COMPILED",
+        "to": "SUPERSEDED",
+        "guard": "atomic correction"
+      },
+      {
+        "from": "ADMITTED",
+        "to": "EFFECT_UNKNOWN",
+        "guard": "correction/cancel with possible external effect"
+      }
+    ],
+    "capture": [
+      {
+        "from": "IDLE",
+        "to": "CAPTURING",
+        "guard": "physical PTT + exclusive capture owner"
+      },
+      {
+        "from": "CAPTURING",
+        "to": "STOPPED",
+        "guard": "release/explicit stop"
+      },
+      {
+        "from": "CAPTURING",
+        "to": "DEVICE_LOST",
+        "guard": "disconnect"
+      },
+      {
+        "from": "CAPTURING",
+        "to": "ABORTED",
+        "guard": "crash recovery"
+      },
+      {
+        "from": "STOPPED",
+        "to": "TRANSCRIBING",
+        "guard": "ASR available"
+      },
+      {
+        "from": "TRANSCRIBING",
+        "to": "TRANSCRIBED",
+        "guard": "complete transcript stored"
+      }
+    ],
+    "target": [
+      {
+        "from": "UNBOUND",
+        "to": "BOUND",
+        "guard": "explicit selection + sufficient qualified identity"
+      },
+      {
+        "from": "BOUND",
+        "to": "REBIND_REQUIRED",
+        "guard": "identity drift/ambiguous restart"
+      },
+      {
+        "from": "BOUND",
+        "to": "NEEDS_LOGIN",
+        "guard": "session expiry"
+      },
+      {
+        "from": "REBIND_REQUIRED",
+        "to": "BOUND",
+        "guard": "explicit rebind new revision + canary"
+      }
+    ],
+    "send": [
+      {
+        "from": "PREPARED",
+        "to": "DRAFT_ATTACHED",
+        "guard": "qualified draft/upload observations"
+      },
+      {
+        "from": "DRAFT_ATTACHED",
+        "to": "SEND_ARMED",
+        "guard": "current revision/scope/target/STOP checks persisted"
+      },
+      {
+        "from": "SEND_ARMED",
+        "to": "MESSAGE_OBSERVED",
+        "guard": "correlated message observation"
+      },
+      {
+        "from": "SEND_ARMED",
+        "to": "EFFECT_UNKNOWN",
+        "guard": "timeout/crash/lease loss or uncertain click"
+      },
+      {
+        "from": "EFFECT_UNKNOWN",
+        "to": "MESSAGE_OBSERVED",
+        "guard": "unique qualified match"
+      },
+      {
+        "from": "EFFECT_UNKNOWN",
+        "to": "CONFLICT",
+        "guard": "multiple matches"
+      },
+      {
+        "from": "EFFECT_UNKNOWN",
+        "to": "NO_EFFECT_VERIFIED",
+        "guard": "sufficient independent no-effect proof"
+      },
+      {
+        "from": "PREPARED",
+        "to": "CANCELLED_UNSENT",
+        "guard": "cancel before dispatch"
+      },
+      {
+        "from": "DRAFT_ATTACHED",
+        "to": "CANCELLED_UNSENT",
+        "guard": "cancel before arming"
+      }
+    ],
+    "skill": [
+      {
+        "from": "CANDIDATE",
+        "to": "QUALIFIED",
+        "guard": "exact code/dependency/device receipts + unseen/fault cases"
+      },
+      {
+        "from": "QUALIFIED",
+        "to": "STALE",
+        "guard": "dependent drift/permission growth"
+      },
+      {
+        "from": "STALE",
+        "to": "RETIRED",
+        "guard": "superseded by separately qualified new version"
+      }
+    ]
+  },
+  "prohibited_transitions": [
+    "EFFECT_UNKNOWN → PREPARED by timeout/lease expiry",
+    "old intent revision → effect after correction",
+    "STALE skill → invoke without new compatible receipt",
+    "ATTACHED → USED by generic model reply"
+  ],
+  "notes": [
+    "New skill repair creates new version, never mutates old receipt",
+    "NO_EFFECT_VERIFIED allows separately identified new attempt only after re-admission",
+    "Cancel preserves remote uncertainty; observed send cannot become CANCELLED_UNSENT"
+  ]
+}

@@ -1,0 +1,95 @@
+Создай большой подробный ZIP ROADMAP-PR-016: «Текст и голос → действия: IntentSpec, Laya, ASR, corrections и planner/retriever/critic».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Дать один проверяемый plan для text/voice, подключить сменные Laya/ASR adapters и измерить реальные critical-slot errors на Windows.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: PAR3-005, TAB4-16, LAYA4-022, LAYA4-023, ACTION5-20, ACTION5-22
+Feature cards: ACT-001, ACT-006, ACT-007, ACT-008, ACT-028, ACT-029, ACT-030, ACT-031, ACT-034, ACT-058
+Decisions: DEC5-17
+Goals: GOAL5-17, GOAL5-18, GOAL5-19
+Dependencies: PR-013, PR-014, PR-015
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-018 — Текст → план действий: IntentSpec, Laya и роли planner/retriever/critic
+Scope:
+- Общий typed IntentSpec и deterministic route известных команд
+- Laya как заменяемый advisory adapter
+- Раздельные planning/retrieval/critique outputs и запрос недостающих slots
+Граница: Контракты выбранного Laya adapter проверить по фактически доступной интеграции; не выдавать предложенный JSON за уже поддерживаемый vendor API. Voice — №28.
+Приёмка:
+- Одинаковый исправленный input даёт тот же plan при тех же версиях
+- Неоднозначные repo/recipient/effect не угадываются
+- Correction отзывает старый неисполненный intent
+- Unknown capability создаёт связанный development request
+- Laya proposal не обходит registry/template validation
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-019 — Голосовое управление Windows: hotkey, ASR, исправления и STOP
+Scope:
+- Один capture stream и push-to-talk
+- Сменный ASR RU/EN/code-switch и critical slots
+- Text/voice parity, correction revisions, TTS/background rejection
+Граница: Media extraction №19 переиспользуется; live capture имеет собственный device receipt. Не считать Linux fixture измерением микрофона Dell.
+Приёмка:
+- Повтор hotkey не открывает второй микрофон
+- Микрофон освобождается после crash/stop
+- Critical-slot errors измерены отдельно от WER
+- Текстовое исправление меняет intent revision до effect
+- STOP и keyboard path работают при отказе ASR
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+PAR3-005 — Общий компилятор голосового и текстового DAG
+- Исходный текст/транскрипт и corrections сохраняются отдельно от интерпретации.
+- Циклы, duplicate IDs, missing inputs, version mismatch и unknown capability обнаружены до dispatch.
+- План имеет ревизию, хеш и конкретные output criteria; retrieved text не становится пользовательской командой.
+TAB4-16 — Доступное управление текстом и голосом
+- Выбор задачи, привязка вкладки, просмотр документа, запуск, пауза и отмена доступны с клавиатуры и имеют доступные названия.
+- Голосовая команда показывает текст и выбранный объект; неоднозначность не выполняет внешнее действие.
+- Пауза не требует точной фразы в текущем документе и немедленно блокирует новые шаги.
+- Потеря микрофона оставляет текстовый путь; состояние и ошибки доступны вспомогательным технологиям.
+- Для настроенного ограниченного workflow не запрашивается одно и то же разрешение на каждом шаге.
+LAYA4-022 — Подключить Laya через typed intent adapter
+- Обнаружены фактическая local Laya version/interface и capability; UNKNOWN/UNAVAILABLE имеют рабочий direct UI fallback.
+- Adapter понимает prepare_repo_context/find_context/compile_ai_packet/show_packet/request_more_context/inspect_result как typed operations.
+- Intent хранит original text/transcript revision, repo/scope/goal/criteria; интерпретация имеет отдельное author/version поле.
+- Document/repo content не может добавить executable argv, grant, recipient, root или verifier registration.
+- Existing operator scope применяется перед Core/native вызовом; free-form Laya answer остаётся proposal до компиляции известной capability.
+LAYA4-023 — Доступный единый text/voice контроль
+- Keyboard-only пользователь выбирает repo, задаёт цель, запускает scan, открывает part, preview и копирует документ.
+- Controls имеют имена, focus order, live status и text error; drag-and-drop необязателен.
+- Voice correction показывает точные repo/destination/scope до дальнейшего действия и создаёт versioned intent.
+- Stop доступен независимо от модели/ASR и во всех длительных состояниях.
+- Падение ASR не блокирует текстовый путь; статус данных и выполняемой операции не теряется.
+ACTION5-20 — Один IntentSpec для текста, голоса и Laya proposal
+- Одинаковый исправленный text и voice transcript компилируются в одинаковый typed plan при одинаковых версиях.
+- Repo, destination, effect kind и amount не угадываются при неоднозначности.
+- Correction создаёт новую intent revision и отзывает неисполненный old intent.
+- Из Laya принят только типизированный proposal; неизвестные instructions не обходят template/grant validation.
+ACTION5-22 — Квалифицировать voice capture и исправление критических slots
+- Повтор hotkey не открывает второй capture stream; микрофон освобождён после stop/crash recovery.
+- TTS/background speech и ошибочная фраза не получают готового execution grant.
+- До action пользователь может исправить repo/destination/effect slots текстом; correction сохраняет provenance.
+- Latency/accuracy/critical-slot error измерены на выбранном Windows mic и отмечены как qualification данного устройства.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

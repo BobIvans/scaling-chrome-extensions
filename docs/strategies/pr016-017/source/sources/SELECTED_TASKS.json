@@ -1,0 +1,1593 @@
+[
+  {
+    "task_id": "UI3-001",
+    "title": "Версия контракта UI-маршрута и связь с существующими owners",
+    "dependencies": [],
+    "acceptance_criteria": [
+      "Обязательные поля валидируются; unknown поля не заполняются вымышленными значениями.",
+      "CLI/ACP fallback невозможен без отдельного выбора; V2-035 не является prerequisite."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-001",
+      "title": "Версия контракта UI-маршрута и связь с существующими owners",
+      "depends_on": [],
+      "refines_v2": [
+        "V2-001",
+        "V2-004",
+        "V2-022"
+      ],
+      "owner": "existing context_review/native_adapter/Core",
+      "acceptance": [
+        "Обязательные поля валидируются; unknown поля не заполняются вымышленными значениями.",
+        "CLI/ACP fallback невозможен без отдельного выбора; V2-035 не является prerequisite."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-001",
+        "title_ru": "Версия контракта UI-маршрута и связь с существующими owners",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [],
+        "v2_continuation_refs": [
+          "V2-001",
+          "V2-004",
+          "V2-022"
+        ],
+        "implementation_ru": [
+          "Проверить актуальные владельцы source/request/job перед PR; зафиксировать diff к сохранённому V2 commit.",
+          "Добавить route=ui и версию binding в действующие интерфейсы; не заменять единый ledger."
+        ],
+        "acceptance_ru": [
+          "Обязательные поля валидируются; unknown поля не заполняются вымышленными значениями.",
+          "CLI/ACP fallback невозможен без отдельного выбора; V2-035 не является prerequisite."
+        ],
+        "failure_behavior_ru": "Несовместимая схема остаётся неподключённой; локальные исходники доступны.",
+        "deliverables": [
+          "owner_mapping.json",
+          "contract_validation_cases"
+        ],
+        "owner_extension": "existing context_review/native_adapter/Core",
+        "live_connection_required_for_completion": false
+      }
+    }
+  },
+  {
+    "task_id": "UI3-002",
+    "title": "Привязать фактический аккаунт, workspace и чат без отправки",
+    "dependencies": [
+      "UI3-001"
+    ],
+    "acceptance_criteria": [
+      "Два чата с одинаковым заголовком различаются либо автоотправка недоступна.",
+      "Смена аккаунта/чата обнаруживается до загрузки и отправки."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-002",
+      "title": "Привязать фактический аккаунт, workspace и чат без отправки",
+      "depends_on": [
+        "UI3-001"
+      ],
+      "refines_v2": [
+        "V2-022",
+        "V2-033"
+      ],
+      "owner": "UI provider adapter",
+      "acceptance": [
+        "Два чата с одинаковым заголовком различаются либо автоотправка недоступна.",
+        "Смена аккаунта/чата обнаруживается до загрузки и отправки."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-002",
+        "title_ru": "Привязать фактический аккаунт, workspace и чат без отправки",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-001"
+        ],
+        "v2_continuation_refs": [
+          "V2-022",
+          "V2-033"
+        ],
+        "implementation_ru": [
+          "Наблюдать выбранную пользователем поверхность и устойчивые признаки назначения.",
+          "Записать binding revision и условия инвалидирования без сохранения cookie/ключей."
+        ],
+        "acceptance_ru": [
+          "Два чата с одинаковым заголовком различаются либо автоотправка недоступна.",
+          "Смена аккаунта/чата обнаруживается до загрузки и отправки."
+        ],
+        "failure_behavior_ru": "Сохранить локальный draft; объяснить конкретный отсутствующий признак назначения.",
+        "deliverables": [
+          "observed_binding_fixture",
+          "binding_probe_report"
+        ],
+        "owner_extension": "UI provider adapter",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-005",
+    "title": "Добавить durable outbox к существующему Core",
+    "dependencies": [
+      "UI3-001",
+      "UI3-003"
+    ],
+    "acceptance_criteria": [
+      "Перезапуск восстанавливает очередь без потери ревизии.",
+      "Истёкший lease не превращается в разрешение повторно нажать Send."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-005",
+      "title": "Добавить durable outbox к существующему Core",
+      "depends_on": [
+        "UI3-001",
+        "UI3-003"
+      ],
+      "refines_v2": [
+        "V2-025",
+        "V2-028",
+        "V2-029"
+      ],
+      "owner": "existing automation Core/durable.mjs",
+      "acceptance": [
+        "Перезапуск восстанавливает очередь без потери ревизии.",
+        "Истёкший lease не превращается в разрешение повторно нажать Send."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-005",
+        "title_ru": "Добавить durable outbox к существующему Core",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-001",
+          "UI3-003"
+        ],
+        "v2_continuation_refs": [
+          "V2-025",
+          "V2-028",
+          "V2-029"
+        ],
+        "implementation_ru": [
+          "Сохранить payload hash, target, attempt, checkpoint, lease и причинные события.",
+          "Отделить snapshot UI от источника состояния."
+        ],
+        "acceptance_ru": [
+          "Перезапуск восстанавливает очередь без потери ревизии.",
+          "Истёкший lease не превращается в разрешение повторно нажать Send."
+        ],
+        "failure_behavior_ru": "Любой неизвестный внешний исход переводится в reconciliation.",
+        "deliverables": [
+          "outbox_migration",
+          "replay_cases"
+        ],
+        "owner_extension": "existing automation Core/durable.mjs",
+        "live_connection_required_for_completion": false
+      }
+    }
+  },
+  {
+    "task_id": "UI3-006",
+    "title": "Квалифицировать реальные controls и режим ввода",
+    "dependencies": [
+      "UI3-002",
+      "UI3-005"
+    ],
+    "acceptance_criteria": [
+      "Многострочный текст не отправляется при вставке.",
+      "Перемещение фокуса или новый UI contract останавливает дальнейшие внешние действия."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-006",
+      "title": "Квалифицировать реальные controls и режим ввода",
+      "depends_on": [
+        "UI3-002",
+        "UI3-005"
+      ],
+      "refines_v2": [
+        "V2-033"
+      ],
+      "owner": "UI provider adapter",
+      "acceptance": [
+        "Многострочный текст не отправляется при вставке.",
+        "Перемещение фокуса или новый UI contract останавливает дальнейшие внешние действия."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-006",
+        "title_ru": "Квалифицировать реальные controls и режим ввода",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-002",
+          "UI3-005"
+        ],
+        "v2_continuation_refs": [
+          "V2-033"
+        ],
+        "implementation_ru": [
+          "Найти composer/upload/send/history/cancel по наблюдаемым ролям.",
+          "Проверить multiline/focus и вариант TUI/desktop/browser раздельно."
+        ],
+        "acceptance_ru": [
+          "Многострочный текст не отправляется при вставке.",
+          "Перемещение фокуса или новый UI contract останавливает дальнейшие внешние действия."
+        ],
+        "failure_behavior_ru": "Не угадывать selector/координату; binding становится stale.",
+        "deliverables": [
+          "ui_control_observations",
+          "input_mode_fixtures"
+        ],
+        "owner_extension": "UI provider adapter",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-007",
+    "title": "Собрать локальный и удалённый draft с точной сверкой",
+    "dependencies": [
+      "UI3-003",
+      "UI3-004",
+      "UI3-006"
+    ],
+    "acceptance_criteria": [
+      "До Send видны назначение, состав и точный prompt.",
+      "Недоступная upload-функция не заменяется передачей одного локального пути в web chat."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-007",
+      "title": "Собрать локальный и удалённый draft с точной сверкой",
+      "depends_on": [
+        "UI3-003",
+        "UI3-004",
+        "UI3-006"
+      ],
+      "refines_v2": [
+        "V2-021",
+        "V2-025"
+      ],
+      "owner": "UI adapter + grant validator",
+      "acceptance": [
+        "До Send видны назначение, состав и точный prompt.",
+        "Недоступная upload-функция не заменяется передачей одного локального пути в web chat."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-007",
+        "title_ru": "Собрать локальный и удалённый draft с точной сверкой",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-003",
+          "UI3-004",
+          "UI3-006"
+        ],
+        "v2_continuation_refs": [
+          "V2-021",
+          "V2-025"
+        ],
+        "implementation_ru": [
+          "Локальный preview не передаёт байты сервису.",
+          "Remote staging требует разрешения загрузки; сохраняет наблюдаемые metadata вложений."
+        ],
+        "acceptance_ru": [
+          "До Send видны назначение, состав и точный prompt.",
+          "Недоступная upload-функция не заменяется передачей одного локального пути в web chat."
+        ],
+        "failure_behavior_ru": "Неверный draft очищается только в пределах собственного composer; чужой ввод не перезаписывается.",
+        "deliverables": [
+          "draft_receipt",
+          "staging_cases"
+        ],
+        "owner_extension": "UI adapter + grant validator",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-008",
+    "title": "Выполнять scoped auto-send без повторных вопросов",
+    "dependencies": [
+      "UI3-005",
+      "UI3-007"
+    ],
+    "acceptance_criteria": [
+      "Одна разрешённая задача отправляется без вопроса на каждую часть.",
+      "Новая область не наследует полномочия из ответа модели или документа."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-008",
+      "title": "Выполнять scoped auto-send без повторных вопросов",
+      "depends_on": [
+        "UI3-005",
+        "UI3-007"
+      ],
+      "refines_v2": [
+        "V2-025",
+        "V2-028"
+      ],
+      "owner": "Core dispatcher + UI adapter",
+      "acceptance": [
+        "Одна разрешённая задача отправляется без вопроса на каждую часть.",
+        "Новая область не наследует полномочия из ответа модели или документа."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-008",
+        "title_ru": "Выполнять scoped auto-send без повторных вопросов",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-005",
+          "UI3-007"
+        ],
+        "v2_continuation_refs": [
+          "V2-025",
+          "V2-028"
+        ],
+        "implementation_ru": [
+          "Проверять действующий grant для binding/data/action; сохранять send intent перед действием.",
+          "Один писатель держит lease и перепроверяет назначение непосредственно перед Send."
+        ],
+        "acceptance_ru": [
+          "Одна разрешённая задача отправляется без вопроса на каждую часть.",
+          "Новая область не наследует полномочия из ответа модели или документа."
+        ],
+        "failure_behavior_ru": "Сохранить draft; блокировать только неразрешённый внешний шаг.",
+        "deliverables": [
+          "grant_dispatch_checks",
+          "send_intent_events"
+        ],
+        "owner_extension": "Core dispatcher + UI adapter",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-009",
+    "title": "Фиксировать отправку по наблюдаемой истории",
+    "dependencies": [
+      "UI3-008"
+    ],
+    "acceptance_criteria": [
+      "Видимый filename не маркируется как remote SHA verification.",
+      "Чужой похожий ответ не принимается за исходящее сообщение задачи."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-009",
+      "title": "Фиксировать отправку по наблюдаемой истории",
+      "depends_on": [
+        "UI3-008"
+      ],
+      "refines_v2": [
+        "V2-028",
+        "V2-029"
+      ],
+      "owner": "receipt owner + UI adapter",
+      "acceptance": [
+        "Видимый filename не маркируется как remote SHA verification.",
+        "Чужой похожий ответ не принимается за исходящее сообщение задачи."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-009",
+        "title_ru": "Фиксировать отправку по наблюдаемой истории",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-008"
+        ],
+        "v2_continuation_refs": [
+          "V2-028",
+          "V2-029"
+        ],
+        "implementation_ru": [
+          "Сопоставлять уникальный marker, checkpoint и outgoing message.",
+          "Хранить receipt с уровнем достоверности идентичности байтов."
+        ],
+        "acceptance_ru": [
+          "Видимый filename не маркируется как remote SHA verification.",
+          "Чужой похожий ответ не принимается за исходящее сообщение задачи."
+        ],
+        "failure_behavior_ru": "Нет достоверной истории — ambiguous_send, без blind retry.",
+        "deliverables": [
+          "delivery_receipt",
+          "history_matching_cases"
+        ],
+        "owner_extension": "receipt owner + UI adapter",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-010",
+    "title": "Восстанавливать ambiguous send после падения",
+    "dependencies": [
+      "UI3-009"
+    ],
+    "acceptance_criteria": [
+      "Crash сразу после Send не создаёт вторую задачу при повторном старте.",
+      "Несколько совпадений дают конфликт, неполная история — unknown."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-010",
+      "title": "Восстанавливать ambiguous send после падения",
+      "depends_on": [
+        "UI3-009"
+      ],
+      "refines_v2": [
+        "V2-028",
+        "V2-029"
+      ],
+      "owner": "Core reconciliation + UI observer",
+      "acceptance": [
+        "Crash сразу после Send не создаёт вторую задачу при повторном старте.",
+        "Несколько совпадений дают конфликт, неполная история — unknown."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-010",
+        "title_ru": "Восстанавливать ambiguous send после падения",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-009"
+        ],
+        "v2_continuation_refs": [
+          "V2-028",
+          "V2-029"
+        ],
+        "implementation_ru": [
+          "Сначала искать маркер в том же разговоре; не считать отсутствие на экране отсутствием в истории.",
+          "Связывать новую попытку с исходной только после надёжного reconciliation."
+        ],
+        "acceptance_ru": [
+          "Crash сразу после Send не создаёт вторую задачу при повторном старте.",
+          "Несколько совпадений дают конфликт, неполная история — unknown."
+        ],
+        "failure_behavior_ru": "Остановить писателя этого чата и сохранить failure capsule.",
+        "deliverables": [
+          "reconciliation_receipt",
+          "crash_window_cases"
+        ],
+        "owner_extension": "Core reconciliation + UI observer",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-011",
+    "title": "Вести coverage получения и использования частей",
+    "dependencies": [
+      "UI3-004",
+      "UI3-009"
+    ],
+    "acceptance_criteria": [
+      "Ответ «всё прочитал» не закрывает все chunk IDs.",
+      "Отсутствующая часть видна и имеет очередь повторной доставки/причину."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-011",
+      "title": "Вести coverage получения и использования частей",
+      "depends_on": [
+        "UI3-004",
+        "UI3-009"
+      ],
+      "refines_v2": [
+        "V2-019",
+        "V2-022"
+      ],
+      "owner": "context_review evidence projection",
+      "acceptance": [
+        "Ответ «всё прочитал» не закрывает все chunk IDs.",
+        "Отсутствующая часть видна и имеет очередь повторной доставки/причину."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-011",
+        "title_ru": "Вести coverage получения и использования частей",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-004",
+          "UI3-009"
+        ],
+        "v2_continuation_refs": [
+          "V2-019",
+          "V2-022"
+        ],
+        "implementation_ru": [
+          "Разделить upload/message/provider_claim/independent_check по каждому chunk.",
+          "После compaction добавить checkpoint и необходимые источники по новым запросам."
+        ],
+        "acceptance_ru": [
+          "Ответ «всё прочитал» не закрывает все chunk IDs.",
+          "Отсутствующая часть видна и имеет очередь повторной доставки/причину."
+        ],
+        "failure_behavior_ru": "Результат пометить partial evidence и запросить недостающее внутри действующего grant.",
+        "deliverables": [
+          "coverage_ledger",
+          "provider_ack_parser"
+        ],
+        "owner_extension": "context_review evidence projection",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-012",
+    "title": "Импортировать результат из связанного UI",
+    "dependencies": [
+      "UI3-009",
+      "UI3-011"
+    ],
+    "acceptance_criteria": [
+      "Чужой task ID, незаконченный streaming и неполный JSON не завершают job.",
+      "Повторный импорт того же ответа идемпотентен."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-012",
+      "title": "Импортировать результат из связанного UI",
+      "depends_on": [
+        "UI3-009",
+        "UI3-011"
+      ],
+      "refines_v2": [
+        "V2-021",
+        "V2-036"
+      ],
+      "owner": "content-lab/context_review.py",
+      "acceptance": [
+        "Чужой task ID, незаконченный streaming и неполный JSON не завершают job.",
+        "Повторный импорт того же ответа идемпотентен."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-012",
+        "title_ru": "Импортировать результат из связанного UI",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-009",
+          "UI3-011"
+        ],
+        "v2_continuation_refs": [
+          "V2-021",
+          "V2-036"
+        ],
+        "implementation_ru": [
+          "Сохранить ответ/файл с task/job/bundle/base IDs.",
+          "Разобрать RETURN_CONTRACT, сохраняя исходный ответ при ошибке."
+        ],
+        "acceptance_ru": [
+          "Чужой task ID, незаконченный streaming и неполный JSON не завершают job.",
+          "Повторный импорт того же ответа идемпотентен."
+        ],
+        "failure_behavior_ru": "Сохранить raw response как claim и ожидаемый repair request.",
+        "deliverables": [
+          "AIResult_record",
+          "result_parser_cases"
+        ],
+        "owner_extension": "content-lab/context_review.py",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-016",
+    "title": "Независимый от голоса STOP и честное возобновление",
+    "dependencies": [
+      "UI3-005",
+      "UI3-006",
+      "UI3-010"
+    ],
+    "acceptance_criteria": [
+      "Без ASR STOP работает.",
+      "Локальная остановка не отображается как доказанная отмена удалённой задачи."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-016",
+      "title": "Независимый от голоса STOP и честное возобновление",
+      "depends_on": [
+        "UI3-005",
+        "UI3-006",
+        "UI3-010"
+      ],
+      "refines_v2": [
+        "V2-028",
+        "V2-030",
+        "V2-032"
+      ],
+      "owner": "UI + Core cancel owner",
+      "acceptance": [
+        "Без ASR STOP работает.",
+        "Локальная остановка не отображается как доказанная отмена удалённой задачи."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-016",
+        "title_ru": "Независимый от голоса STOP и честное возобновление",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-005",
+          "UI3-006",
+          "UI3-010"
+        ],
+        "v2_continuation_refs": [
+          "V2-028",
+          "V2-030",
+          "V2-032"
+        ],
+        "implementation_ru": [
+          "Добавить кнопку и клавишу, блокирующие новые внешние шаги.",
+          "Удалённую отмену наблюдать отдельно; при resume выполнить reconciliation."
+        ],
+        "acceptance_ru": [
+          "Без ASR STOP работает.",
+          "Локальная остановка не отображается как доказанная отмена удалённой задачи."
+        ],
+        "failure_behavior_ru": "Удалённый исход сохраняется unknown, если подтверждения отмены нет.",
+        "deliverables": [
+          "stop_resume_receipts",
+          "cancellation_cases"
+        ],
+        "owner_extension": "UI + Core cancel owner",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "UI3-019",
+    "title": "Инвалидировать устаревший UI adapter и восстановить его",
+    "dependencies": [
+      "UI3-018"
+    ],
+    "acceptance_criteria": [
+      "Удалённая кнопка/изменённый composer останавливает отправку до Send.",
+      "После обновления адаптера повторяется затронутая qualification, а не весь бессвязный suite."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-019",
+      "title": "Инвалидировать устаревший UI adapter и восстановить его",
+      "depends_on": [
+        "UI3-018"
+      ],
+      "refines_v2": [
+        "V2-022",
+        "V2-048"
+      ],
+      "owner": "UI adapter lifecycle",
+      "acceptance": [
+        "Удалённая кнопка/изменённый composer останавливает отправку до Send.",
+        "После обновления адаптера повторяется затронутая qualification, а не весь бессвязный suite."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-019",
+        "title_ru": "Инвалидировать устаревший UI adapter и восстановить его",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-018"
+        ],
+        "v2_continuation_refs": [
+          "V2-022",
+          "V2-048"
+        ],
+        "implementation_ru": [
+          "Сравнивать наблюдаемые controls/режим/версию с квалифицированным contract.",
+          "Сохранять trace ошибки для восстановления адаптера; не подменять UI API-маршрутом."
+        ],
+        "acceptance_ru": [
+          "Удалённая кнопка/изменённый composer останавливает отправку до Send.",
+          "После обновления адаптера повторяется затронутая qualification, а не весь бессвязный suite."
+        ],
+        "failure_behavior_ru": "Переключить на локальный draft и текущую информацию о несовместимости.",
+        "deliverables": [
+          "adapter_freshness_record",
+          "targeted_requalification"
+        ],
+        "owner_extension": "UI adapter lifecycle",
+        "live_connection_required_for_completion": true
+      }
+    }
+  },
+  {
+    "task_id": "PAR3-005",
+    "title": "Общий компилятор голосового и текстового DAG",
+    "dependencies": [
+      "PAR3-002",
+      "PAR3-003"
+    ],
+    "acceptance_criteria": [
+      "Исходный текст/транскрипт и corrections сохраняются отдельно от интерпретации.",
+      "Циклы, duplicate IDs, missing inputs, version mismatch и unknown capability обнаружены до dispatch.",
+      "План имеет ревизию, хеш и конкретные output criteria; retrieved text не становится пользовательской командой."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "PAR3-005",
+      "title": "Общий компилятор голосового и текстового DAG",
+      "depends_on": [
+        "PAR3-002",
+        "PAR3-003"
+      ],
+      "refines_v2": [
+        "V2-017",
+        "V2-026",
+        "V2-031"
+      ],
+      "owner": "GoalRequest compiler -> existing Core",
+      "acceptance": [
+        "Исходный текст/транскрипт и corrections сохраняются отдельно от интерпретации.",
+        "Циклы, duplicate IDs, missing inputs, version mismatch и unknown capability обнаружены до dispatch.",
+        "План имеет ревизию, хеш и конкретные output criteria; retrieved text не становится пользовательской командой."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "parallel/TASKS_PARALLEL_V3.json",
+      "source_status": "production_extension_not_implemented",
+      "original_card": {
+        "id": "PAR3-005",
+        "title": "Общий компилятор голосового и текстового DAG",
+        "depends_on": [
+          "PAR3-002",
+          "PAR3-003"
+        ],
+        "refines_v2": [
+          "V2-017",
+          "V2-026",
+          "V2-031"
+        ],
+        "related_core_tasks": [
+          "G3-002"
+        ],
+        "slice": "S3-A",
+        "owner_layer": "GoalRequest compiler -> existing Core",
+        "status": "proposed",
+        "implementation_status": "production_extension_not_implemented",
+        "acceptance": [
+          "Исходный текст/транскрипт и corrections сохраняются отдельно от интерпретации.",
+          "Циклы, duplicate IDs, missing inputs, version mismatch и unknown capability обнаружены до dispatch.",
+          "План имеет ревизию, хеш и конкретные output criteria; retrieved text не становится пользовательской командой."
+        ],
+        "failure_cases": [
+          "Неуверенное распознавание ветки оставляет черновик, не выбирает похожую ветку.",
+          "Изменение получателя или цели создаёт новую ревизию с повторной scope check."
+        ],
+        "failure_behavior": "Сохранить наблюдаемые данные и причину; не обозначать незавершённый или неизвестный эффект как success.",
+        "artifact": "qualification/parallel_v3/TYPED_PARALLEL_PLAN.json",
+        "source_or_rationale": "Запрос пользователя 2026-10-04: развивать сценарий context app → UI Grok Build → технологическое обновление и параллельное выполнение.",
+        "reference_implementation_note": "planner_reference.py проверяет только DAG/resources/logical conflicts; не закрывает production acceptance."
+      }
+    }
+  },
+  {
+    "task_id": "PAR3-009",
+    "title": "Сериализация передачи в выбранный UI-чат",
+    "dependencies": [
+      "PAR3-005",
+      "PAR3-008"
+    ],
+    "acceptance_criteria": [
+      "Один owner удерживает chat/composer/clipboard scopes от draft до observed send result.",
+      "Envelope связывает operation ID, target chat, snapshot и content/part hashes.",
+      "Ручной takeover и смена вкладки проверяются до следующего действия.",
+      "Разработка и приёмка адаптера не включают runtime: перед внешним действием проверены activation_prerequisites и актуальные qualified receipts по contracts/ACTIVATION_GATES.json."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "PAR3-009",
+      "title": "Сериализация передачи в выбранный UI-чат",
+      "depends_on": [
+        "PAR3-005",
+        "PAR3-008"
+      ],
+      "refines_v2": [
+        "V2-022",
+        "V2-028",
+        "V2-033"
+      ],
+      "owner": "registered UI adapter + existing outbox owner",
+      "acceptance": [
+        "Один owner удерживает chat/composer/clipboard scopes от draft до observed send result.",
+        "Envelope связывает operation ID, target chat, snapshot и content/part hashes.",
+        "Ручной takeover и смена вкладки проверяются до следующего действия.",
+        "Разработка и приёмка адаптера не включают runtime: перед внешним действием проверены activation_prerequisites и актуальные qualified receipts по contracts/ACTIVATION_GATES.json."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "parallel/TASKS_PARALLEL_V3.json",
+      "source_status": "production_extension_not_implemented",
+      "original_card": {
+        "id": "PAR3-009",
+        "title": "Сериализация передачи в выбранный UI-чат",
+        "depends_on": [
+          "PAR3-005",
+          "PAR3-008"
+        ],
+        "refines_v2": [
+          "V2-022",
+          "V2-028",
+          "V2-033"
+        ],
+        "related_core_tasks": [
+          "G3-001",
+          "G3-011"
+        ],
+        "slice": "S3-B",
+        "owner_layer": "registered UI adapter + existing outbox owner",
+        "status": "proposed",
+        "implementation_status": "production_extension_not_implemented",
+        "acceptance": [
+          "Один owner удерживает chat/composer/clipboard scopes от draft до observed send result.",
+          "Envelope связывает operation ID, target chat, snapshot и content/part hashes.",
+          "Ручной takeover и смена вкладки проверяются до следующего действия.",
+          "Разработка и приёмка адаптера не включают runtime: перед внешним действием проверены activation_prerequisites и актуальные qualified receipts по contracts/ACTIVATION_GATES.json."
+        ],
+        "failure_cases": [
+          "Нельзя смешать части двух одновременных пакетов в одном composer.",
+          "Потеря locator или фокуса сохраняет draft и observed state; координаты не угадываются.",
+          "Нет актуального baseline keyboard STOP, target/scope receipt или нужной квалификации эффекта — dispatch заблокирован; наличие готовой карточки или плана не даёт исключения."
+        ],
+        "failure_behavior": "Сохранить наблюдаемые данные и причину; не обозначать незавершённый или неизвестный эффект как success.",
+        "artifact": "qualification/parallel_v3/UI_DELIVERY_LOCK_RECEIPT.json",
+        "source_or_rationale": "Запрос пользователя 2026-10-04: развивать сценарий context app → UI Grok Build → технологическое обновление и параллельное выполнение.",
+        "reference_implementation_note": null,
+        "activation_prerequisites": {
+          "contract_ref": "contracts/ACTIVATION_GATES.json",
+          "gate_ids": [
+            "local_keyboard_stop_qualified",
+            "current_scope_valid",
+            "current_target_verified",
+            "payload_scope_valid",
+            "durable_effect_reconciliation_ready",
+            "exact_effect_qualified"
+          ],
+          "require_adapter_specific_gates": true,
+          "runtime_enabled": false,
+          "development_completion_activates": false,
+          "voice_required": false,
+          "evidence_policy": "qualified receipts bound to the current target, effect, payload scope, capability version and plan revision; recheck before dispatch",
+          "qualification_mode": {
+            "central_contract_profile_required": true,
+            "separately_scoped_test_mode": true,
+            "baseline_local_keyboard_stop_still_required": true,
+            "unattended_runtime_activation": false
+          }
+        }
+      }
+    }
+  },
+  {
+    "task_id": "PAR3-010",
+    "title": "Сверка неопределённых внешних эффектов",
+    "dependencies": [
+      "PAR3-009"
+    ],
+    "acceptance_criteria": [
+      "Timeout после click/send ведёт в effect_unknown, а не в автоматический повтор.",
+      "Повторная доставка job проверяет существующий receipt либо внешний operation ID/content hash.",
+      "Отсутствие способа достоверной сверки сохраняет неопределённость и понятный next action."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "PAR3-010",
+      "title": "Сверка неопределённых внешних эффектов",
+      "depends_on": [
+        "PAR3-009"
+      ],
+      "refines_v2": [
+        "V2-028",
+        "V2-029"
+      ],
+      "owner": "existing durable reconciliation + UI adapter",
+      "acceptance": [
+        "Timeout после click/send ведёт в effect_unknown, а не в автоматический повтор.",
+        "Повторная доставка job проверяет существующий receipt либо внешний operation ID/content hash.",
+        "Отсутствие способа достоверной сверки сохраняет неопределённость и понятный next action."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "parallel/TASKS_PARALLEL_V3.json",
+      "source_status": "production_extension_not_implemented",
+      "original_card": {
+        "id": "PAR3-010",
+        "title": "Сверка неопределённых внешних эффектов",
+        "depends_on": [
+          "PAR3-009"
+        ],
+        "refines_v2": [
+          "V2-028",
+          "V2-029"
+        ],
+        "related_core_tasks": [
+          "G3-001",
+          "G3-011"
+        ],
+        "slice": "S3-B",
+        "owner_layer": "existing durable reconciliation + UI adapter",
+        "status": "proposed",
+        "implementation_status": "production_extension_not_implemented",
+        "acceptance": [
+          "Timeout после click/send ведёт в effect_unknown, а не в автоматический повтор.",
+          "Повторная доставка job проверяет существующий receipt либо внешний operation ID/content hash.",
+          "Отсутствие способа достоверной сверки сохраняет неопределённость и понятный next action."
+        ],
+        "failure_cases": [
+          "Crash после реально отправленного сообщения не создаёт второй send.",
+          "Изменённое содержимое с прежним operation ID отклоняется."
+        ],
+        "failure_behavior": "Сохранить наблюдаемые данные и причину; не обозначать незавершённый или неизвестный эффект как success.",
+        "artifact": "qualification/parallel_v3/EFFECT_RECONCILIATION_MATRIX.json",
+        "source_or_rationale": "Запрос пользователя 2026-10-04: развивать сценарий context app → UI Grok Build → технологическое обновление и параллельное выполнение.",
+        "reference_implementation_note": null
+      }
+    }
+  },
+  {
+    "task_id": "PAR3-024",
+    "title": "Продвижение проверенного сценария в повторяемый навык",
+    "dependencies": [
+      "PAR3-022",
+      "PAR3-023"
+    ],
+    "acceptance_criteria": [
+      "Кандидат содержит версии, scopes, inputs/outputs, recovery, evidence и условия инвалидирования.",
+      "Promotion опирается на новые случаи и отказы, а не один успешный прогон.",
+      "Повтор использует прежнее совместимое разрешение без повторных вопросов; новые эффекты требуют отдельного scope решения."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "PAR3-024",
+      "title": "Продвижение проверенного сценария в повторяемый навык",
+      "depends_on": [
+        "PAR3-022",
+        "PAR3-023"
+      ],
+      "refines_v2": [
+        "V2-048"
+      ],
+      "owner": "capability/workflow catalog",
+      "acceptance": [
+        "Кандидат содержит версии, scopes, inputs/outputs, recovery, evidence и условия инвалидирования.",
+        "Promotion опирается на новые случаи и отказы, а не один успешный прогон.",
+        "Повтор использует прежнее совместимое разрешение без повторных вопросов; новые эффекты требуют отдельного scope решения."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "parallel/TASKS_PARALLEL_V3.json",
+      "source_status": "production_extension_not_implemented",
+      "original_card": {
+        "id": "PAR3-024",
+        "title": "Продвижение проверенного сценария в повторяемый навык",
+        "depends_on": [
+          "PAR3-022",
+          "PAR3-023"
+        ],
+        "refines_v2": [
+          "V2-048"
+        ],
+        "related_core_tasks": [
+          "G3-012"
+        ],
+        "slice": "S3-F",
+        "owner_layer": "capability/workflow catalog",
+        "status": "proposed",
+        "implementation_status": "production_extension_not_implemented",
+        "acceptance": [
+          "Кандидат содержит версии, scopes, inputs/outputs, recovery, evidence и условия инвалидирования.",
+          "Promotion опирается на новые случаи и отказы, а не один успешный прогон.",
+          "Повтор использует прежнее совместимое разрешение без повторных вопросов; новые эффекты требуют отдельного scope решения."
+        ],
+        "failure_cases": [
+          "Устаревший навык виден как stale/unavailable.",
+          "Сохранённые failure capsules предотвращают повтор известного ошибочного пути."
+        ],
+        "failure_behavior": "Сохранить наблюдаемые данные и причину; не обозначать незавершённый или неизвестный эффект как success.",
+        "artifact": "qualification/parallel_v3/PARALLEL_SKILL_CANDIDATE.json",
+        "source_or_rationale": "Запрос пользователя 2026-10-04: развивать сценарий context app → UI Grok Build → технологическое обновление и параллельное выполнение.",
+        "reference_implementation_note": null
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-004",
+    "title": "Связать наблюдения UI доставки с UpdateCase",
+    "dependencies": [
+      "EVO3-003"
+    ],
+    "acceptance_criteria": [
+      "Prepared, attachment_confirmed, message_observed и response_observed различимы; upload не означает прочтение всех частей моделью.",
+      "Receipt хранит target profile/version, chat identity, request ID и наблюдение; новый destination не берёт grant старого чата.",
+      "Unknown после потери связи требует reconciliation; повторное нажатие Send без определения исхода не выполняется."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-004",
+      "title": "Связать наблюдения UI доставки с UpdateCase",
+      "depends_on": [
+        "EVO3-003"
+      ],
+      "refines_v2": [
+        "V2-021",
+        "V2-022",
+        "V2-028"
+      ],
+      "owner": "Provider UI adapter via native_adapter.py / durable.mjs",
+      "acceptance": [
+        "Prepared, attachment_confirmed, message_observed и response_observed различимы; upload не означает прочтение всех частей моделью.",
+        "Receipt хранит target profile/version, chat identity, request ID и наблюдение; новый destination не берёт grant старого чата.",
+        "Unknown после потери связи требует reconciliation; повторное нажатие Send без определения исхода не выполняется."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-004",
+        "title": "Связать наблюдения UI доставки с UpdateCase",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-003"
+        ],
+        "owner": "Provider UI adapter via native_adapter.py / durable.mjs",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Принять typed receipts от выбранного UI маршрута; сам transport разрабатывается отдельным адаптером.",
+        "acceptance": [
+          "Prepared, attachment_confirmed, message_observed и response_observed различимы; upload не означает прочтение всех частей моделью.",
+          "Receipt хранит target profile/version, chat identity, request ID и наблюдение; новый destination не берёт grant старого чата.",
+          "Unknown после потери связи требует reconciliation; повторное нажатие Send без определения исхода не выполняется."
+        ],
+        "deliverables": [
+          "UIDeliveryReceipt.json",
+          "case_transport_projection.json"
+        ],
+        "verification_fixture": "Send прошёл, ответ UI потерян; вкладка сменена; похожее имя чужого чата.",
+        "failure_behavior": "Оставить transport outcome unknown, сохранить пакет и предложить проверяемое продолжение через тот же target.",
+        "refines_v2": [
+          "V2-021",
+          "V2-022",
+          "V2-028"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "TAB4-03",
+    "title": "Привязка указанной пользователем вкладки",
+    "goal": "Запомнить точный чат Grok Build и вторую вкладку GitHub, выбранные пользователем, с обнаружением подмены адресата.",
+    "dependencies": [
+      "TAB4-02"
+    ],
+    "acceptance_criteria": [
+      "Дескриптор содержит роль, origin, доступный устойчивый ID диалога/репозитория, версию привязки и временный указатель на браузер/вкладку.",
+      "Выбор подтверждается видимым превью адресата; одинаковые заголовки вкладок не дают автоматического совпадения.",
+      "Навигация, смена аккаунта, новый диалог в том же tab ID и неоднозначность после перезапуска дают REBIND_REQUIRED.",
+      "Перемещение вкладки не требует нового выбора, если её проверенная идентичность сохранилась."
+    ],
+    "failure_recovery": [
+      "Закрытая вкладка сохраняет задачу и её контекст; повторная привязка сверяет адресата до действия.",
+      "При недоступном устойчивом ID адаптер явно ограничивает восстановление текущей сессией браузера."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Тесты двух одинаковых заголовков, tab ID reuse, навигации, смены аккаунта и рестарта.",
+      "Запись наблюдения привязки без сохранения пароля или сессионных токенов."
+    ],
+    "stage": "B — вкладка",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-04",
+    "title": "Квалификация адаптера интерфейса Grok Build",
+    "goal": "Определить, какие действия реально поддерживает выбранный интерфейс, до включения автоматической передачи.",
+    "dependencies": [
+      "TAB4-03"
+    ],
+    "acceptance_criteria": [
+      "Адаптер сообщает поддержку и ограничения чтения диалога, загрузки файла, проверки черновика, Send и наблюдения результата.",
+      "Версия адаптера связана с наблюдаемым вариантом интерфейса; изменённые ориентиры не приводят к случайному клику.",
+      "Вход выполняет пользователь; истёкшая сессия вызывает состояние NEEDS_LOGIN с сохранением задачи.",
+      "Квалификация не предполагает наличие официального API Grok Build; результат UNSUPPORTED оставляет ручной экспорт доступным."
+    ],
+    "failure_recovery": [
+      "После изменения интерфейса внешние действия приостанавливаются до повторной квалификации.",
+      "Неподдерживаемый способ загрузки не заменяется скрытой вставкой обрезанного документа."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Протокол на контролируемом чате с конкретными поддержанными операциями.",
+      "Версия адаптера, дата квалификации и набор воспроизводимых наблюдений.",
+      "Тесты sign-in wall, modal overlay и отсутствующей кнопки."
+    ],
+    "stage": "B — вкладка",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-06",
+    "title": "Заполнение проверяемого черновика в выбранном чате",
+    "goal": "Загрузить документ в указанный интерфейс и проверить черновик до отправки.",
+    "dependencies": [
+      "TAB4-04",
+      "TAB4-05"
+    ],
+    "acceptance_criteria": [
+      "Перед заполнением проверяются профиль, источник, идентичность вкладки и версия адаптера.",
+      "Вложение связано с локальными именем/размером/document SHA доступным квалифицированным способом; степень подтверждения отражена явно.",
+      "Существующий чужой черновик не затирается; конфликт даёт отдельное состояние и сохраняет исходный документ.",
+      "Автозаполнение заканчивается на DRAFT_ATTACHED; отправка имеет отдельный записанный intent."
+    ],
+    "failure_recovery": [
+      "При частичной загрузке адаптер не отправляет запрос и очищает только свой доказанно принадлежащий черновик, если это действие поддержано.",
+      "После потери связи черновик перечитывается; загрузка не повторяется вслепую."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Сценарии готового, чужого и частично загруженного черновика.",
+      "Сопоставление task/packet/document с наблюдением интерфейса.",
+      "Тест блокировки при смене вкладки между выбором и загрузкой."
+    ],
+    "stage": "B — вкладка",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-07",
+    "title": "Отправка с журналом намерения и сверкой неизвестного исхода",
+    "goal": "Не допустить повторной отправки документа после двойного клика, сбоя или перезапуска.",
+    "dependencies": [
+      "TAB4-06"
+    ],
+    "acceptance_criteria": [
+      "Intent фиксируется до Send и связывает attempt ID, task ID, packet SHA, target binding и profile digest.",
+      "Одна попытка допускает не более одного внешнего действия Send; повтор клиентского запроса возвращает состояние той же попытки.",
+      "Подтверждение содержит наблюдаемый message ID, если доступен, либо ограниченный квалифицированный UI receipt с происхождением.",
+      "Сбой после возможного клика даёт NEEDS_RECONCILIATION; новая отправка запрещена до разрешения исхода.",
+      "OPERATOR_REPORTED и UI_OBSERVED остаются разными типами доказательств."
+    ],
+    "failure_recovery": [
+      "Неопределённая попытка сначала ищет уже отправленный запрос в том же чате; отсутствие доказательства не считается NOT_SENT.",
+      "Отмена сохраняет неопределённость удалённого эффекта и блокирует следующие действия."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Fault injection до записи intent, после неё, до/после Send и до/после квитанции.",
+      "Тест двойного клика и replay после рестарта.",
+      "Журнал, показывающий отсутствие ложного обещания exactly-once удалённого UI."
+    ],
+    "stage": "B — вкладка",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-08",
+    "title": "Получение и импорт связанного ответа",
+    "goal": "Связать результат Grok с точной задачей и пакетом, сохранив предложенные изменения отдельно от проверенных фактов.",
+    "dependencies": [
+      "TAB4-07"
+    ],
+    "acceptance_criteria": [
+      "Ответ из выбранного диалога связан с попыткой отправки; требуется точный task ID и packet SHA для импорта.",
+      "Схема ограничена и проверена до записи; команды, новые права и пути из ответа не исполняются.",
+      "Coverage, missing context, findings и ссылки сохраняются с происхождением; DONE остаётся утверждением.",
+      "Повтор старого ответа не откатывает более новую голову результата."
+    ],
+    "failure_recovery": [
+      "Неполный ответ сохраняется как неподтверждённый материал; готовится конкретный запрос недостающих полей.",
+      "Чужой packet SHA даёт понятную ошибку привязки и не меняет актуальную задачу."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Тесты устаревшего, неправильного, повторного и частичного результата.",
+      "Сопоставление импортированного результата с каноническим review ID.",
+      "Проверка, что prompt injection из ответа не создаёт actions/grants."
+    ],
+    "stage": "B — вкладка",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-16",
+    "title": "Доступное управление текстом и голосом",
+    "goal": "Дать пользователю запуск, остановку, просмотр эффекта и восстановление без обязательного использования мыши.",
+    "dependencies": [
+      "TAB4-02",
+      "TAB4-03",
+      "TAB4-07"
+    ],
+    "acceptance_criteria": [
+      "Выбор задачи, привязка вкладки, просмотр документа, запуск, пауза и отмена доступны с клавиатуры и имеют доступные названия.",
+      "Голосовая команда показывает текст и выбранный объект; неоднозначность не выполняет внешнее действие.",
+      "Пауза не требует точной фразы в текущем документе и немедленно блокирует новые шаги.",
+      "Потеря микрофона оставляет текстовый путь; состояние и ошибки доступны вспомогательным технологиям.",
+      "Для настроенного ограниченного workflow не запрашивается одно и то же разрешение на каждом шаге."
+    ],
+    "failure_recovery": [
+      "Сбой распознавания сохраняет введённую цель как черновик без исполнения.",
+      "Отмена уже отправленного запроса показывает удалённый исход как отдельное наблюдение."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Проверка клавиатурой и средствами доступности на целевом устройстве.",
+      "Сценарии акцента, фонового звука, неверной цели, потери микрофона и остановки.",
+      "Пользовательский receipt доступности конкретного сценария."
+    ],
+    "stage": "D — помощник",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "LAYA4-022",
+    "title": "Подключить Laya через typed intent adapter",
+    "goal": "Превратить текстовый/голосовой запрос в проверяемый план существующих контекстных действий без второго executor.",
+    "dependencies": [
+      "LAYA4-001",
+      "LAYA4-019",
+      "LAYA4-020"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Обнаружены фактическая local Laya version/interface и capability; UNKNOWN/UNAVAILABLE имеют рабочий direct UI fallback.",
+      "Adapter понимает prepare_repo_context/find_context/compile_ai_packet/show_packet/request_more_context/inspect_result как typed operations.",
+      "Intent хранит original text/transcript revision, repo/scope/goal/criteria; интерпретация имеет отдельное author/version поле.",
+      "Document/repo content не может добавить executable argv, grant, recipient, root или verifier registration.",
+      "Existing operator scope применяется перед Core/native вызовом; free-form Laya answer остаётся proposal до компиляции известной capability."
+    ],
+    "failure_recovery": [
+      "Если Laya unavailable/timeout, сохранить intent и продолжить direct typed UI flow.",
+      "Ошибочное распознавание изменяет intent revision и инвалидирует prepared side effects."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Observed adapter/version receipt.",
+      "Intent schema and prompt-in-source isolation tests.",
+      "Same request via direct UI/Laya equivalence receipt."
+    ],
+    "stage": "L4-S4",
+    "owner_layer": "Voice Agent OS/Laya adapter → existing Core/native interfaces",
+    "source_evidence_refs": [
+      "L4-E04",
+      "L4-E10",
+      "L4-E11",
+      "L4-E12"
+    ],
+    "related_v3_tasks": [
+      "G3-002",
+      "PAR3-005",
+      "UI3-017"
+    ],
+    "experiments": [
+      "LX4-10"
+    ],
+    "deliverables": [
+      "Laya adapter contract",
+      "Intent compiler"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-023",
+    "title": "Доступный единый text/voice контроль",
+    "goal": "Обеспечить выполнение core сценария без мыши, без обязательного голоса и без потери Stop/Resume.",
+    "dependencies": [
+      "LAYA4-002",
+      "LAYA4-019"
+    ],
+    "optional_extensions": [
+      "LAYA4-022"
+    ],
+    "acceptance_criteria": [
+      "Keyboard-only пользователь выбирает repo, задаёт цель, запускает scan, открывает part, preview и копирует документ.",
+      "Controls имеют имена, focus order, live status и text error; drag-and-drop необязателен.",
+      "Voice correction показывает точные repo/destination/scope до дальнейшего действия и создаёт versioned intent.",
+      "Stop доступен независимо от модели/ASR и во всех длительных состояниях.",
+      "Падение ASR не блокирует текстовый путь; статус данных и выполняемой операции не теряется."
+    ],
+    "failure_recovery": [
+      "После ошибки ввода фокус переходит к конкретному полю без сброса остальных данных.",
+      "После cancellation сохраняются завершённые source parts и честный unfinished state."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Keyboard-only + screen-reader review.",
+      "Voice correction fixtures.",
+      "Windows Stop/Resume device receipt."
+    ],
+    "stage": "L4-S4",
+    "owner_layer": "Existing library UI + voice input adapter",
+    "source_evidence_refs": [
+      "L4-E08",
+      "L4-E10",
+      "L4-E11",
+      "L4-E12"
+    ],
+    "related_v3_tasks": [
+      "G3-005",
+      "UI3-016",
+      "UI3-017",
+      "PAR3-021"
+    ],
+    "experiments": [
+      "LX4-10"
+    ],
+    "deliverables": [
+      "Accessible controls",
+      "Shared intent entry UI"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-024",
+    "title": "Сохранить повторяемые контекстные automation recipes",
+    "goal": "Запускать известный bounded workflow по короткой команде внутри заранее настроенного scope.",
+    "dependencies": [
+      "LAYA4-002",
+      "LAYA4-010",
+      "LAYA4-020",
+      "LAYA4-022",
+      "LAYA4-023"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Recipe связывает version, repo alias, data scope, goal template, provider projection и required capabilities.",
+      "Routine повтор внутри согласованного scope идёт без повторных setup вопросов; новые полномочия не выводятся из free-form документа.",
+      "Recipe использует существующие Core jobs/leases/cancel/reconciliation; отдельного worker или бесконечной queue не создаёт.",
+      "Рецепты подготовка/поиск/экспорт квалифицируются до live send/update; реальные UI routes связаны с UI3 receipts.",
+      "Повторный запуск учитывает source change/unknown send и не дублирует внешние эффекты."
+    ],
+    "failure_recovery": [
+      "Недоступная capability оставляет понятный missing prerequisite и resumable plan.",
+      "Изменение workflow/profile version требует requalification recipe, а не автоматического расширения прав."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Recipe replay/scope change fixtures.",
+      "Core ownership/lease integration test.",
+      "Device qualification for each activated recipe."
+    ],
+    "stage": "L4-S4",
+    "owner_layer": "Existing Core capability/recipe projection",
+    "source_evidence_refs": [
+      "L4-E04",
+      "L4-E06",
+      "L4-E10",
+      "L4-E12"
+    ],
+    "related_v3_tasks": [
+      "PAR3-003",
+      "PAR3-009",
+      "PAR3-016",
+      "PAR3-024",
+      "UI3-008"
+    ],
+    "experiments": [
+      "LX4-02",
+      "LX4-10",
+      "LX4-11"
+    ],
+    "deliverables": [
+      "Recipe catalog",
+      "Recipe readiness view"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "ACTION5-20",
+    "title": "Один IntentSpec для текста, голоса и Laya proposal",
+    "goal": "Разбирать разные входы в одну ревизию цели с критическими slots и явными неизвестностями.",
+    "refines_existing_task_ids": [
+      "PAR3-005",
+      "LAYA4-022",
+      "LAYA4-023",
+      "G3-002"
+    ],
+    "related_feature_ids": [
+      "ACT-001",
+      "ACT-007",
+      "ACT-030",
+      "ACT-031"
+    ],
+    "dependencies": [
+      "ACTION5-18",
+      "ACTION5-19"
+    ],
+    "inputs": [
+      "Text или transcript source ref; corrected input; target aliases; capability registry"
+    ],
+    "outputs": [
+      "IntentSpec goal revision/slots/scope; ambiguity report; deterministic plan proposal"
+    ],
+    "owner": "Существующий intent compiler; Laya/ASR advisory adapters, Core executor",
+    "acceptance_criteria": [
+      "Одинаковый исправленный text и voice transcript компилируются в одинаковый typed plan при одинаковых версиях.",
+      "Repo, destination, effect kind и amount не угадываются при неоднозначности.",
+      "Correction создаёт новую intent revision и отзывает неисполненный old intent.",
+      "Из Laya принят только типизированный proposal; неизвестные instructions не обходят template/grant validation."
+    ],
+    "failure_recovery": [
+      "Ambiguous critical slot остаётся NEEDS_INPUT и сохраняет подготовленный контекст.",
+      "Исправление после возможного эффекта требует reconciliation прежнего intent до нового action."
+    ],
+    "evidence_required": [
+      "Text/voice parity corpus; RU/EN critical-slot cases; correction/replay receipts"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-22",
+    "title": "Квалифицировать voice capture и исправление критических slots",
+    "goal": "Сделать голос альтернативным входом в локальное приложение, сохраняя текстовый путь и жизненный цикл аудио.",
+    "refines_existing_task_ids": [
+      "UI3-017",
+      "LAYA4-023",
+      "TAB4-16",
+      "PAR3-021"
+    ],
+    "related_feature_ids": [
+      "ACT-028",
+      "ACT-029",
+      "ACT-030",
+      "ACT-034",
+      "ACT-058"
+    ],
+    "dependencies": [
+      "ACTION5-08",
+      "ACTION5-20",
+      "ACTION5-21"
+    ],
+    "inputs": [
+      "Mic device choice; push-to-talk policy; ASR adapter; RU/EN/code-switch corpus"
+    ],
+    "outputs": [
+      "Capture session identity; audio retention choice; transcript/revision; slot correction UI; qualification receipt"
+    ],
+    "owner": "Существующий voice intake → intent compiler; ASR не executor",
+    "acceptance_criteria": [
+      "Повтор hotkey не открывает второй capture stream; микрофон освобождён после stop/crash recovery.",
+      "TTS/background speech и ошибочная фраза не получают готового execution grant.",
+      "До action пользователь может исправить repo/destination/effect slots текстом; correction сохраняет provenance.",
+      "Latency/accuracy/critical-slot error измерены на выбранном Windows mic и отмечены как qualification данного устройства."
+    ],
+    "failure_recovery": [
+      "Mic denied/model unavailable оставляет text input и показывает конкретный fallback.",
+      "ASR failure не удаляет выбранный audio source вопреки retention policy."
+    ],
+    "evidence_required": [
+      "Mic lifecycle fixtures; RU/EN ASR corpus; installed-device receipts"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P1",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-23",
+    "title": "Преобразовать показанную автоматизацию в тестируемый skill",
+    "goal": "Записывать демонстрацию в ограниченный навык с typed slots, preconditions и expected outcomes.",
+    "refines_existing_task_ids": [
+      "PAR3-024",
+      "LAYA4-024",
+      "G3-010"
+    ],
+    "related_feature_ids": [
+      "ACT-041",
+      "ACT-042",
+      "ACT-043"
+    ],
+    "dependencies": [
+      "ACTION5-18",
+      "ACTION5-19",
+      "ACTION5-20",
+      "ACTION5-21"
+    ],
+    "inputs": [
+      "User-selected demonstration scope; observed steps; capability versions; source refs"
+    ],
+    "outputs": [
+      "Skill draft; typed step graph; parameter slots; required grants; replay qualification cases"
+    ],
+    "owner": "Existing skill catalog/projected metadata; Core executes registered steps",
+    "acceptance_criteria": [
+      "Skill включает только наблюдаемые и разрешённые steps; пароль/secret values заменены credential references.",
+      "Recorded tab/focus координаты не считаются переносимой identity без adapter binding.",
+      "Skill replay проходит sandbox fixture и device scenario с независимым outcome receipt.",
+      "Оптимизация лишних steps сохраняет preconditions, STOP и expected effect invariants."
+    ],
+    "failure_recovery": [
+      "Необъяснимый шаг остаётся manual/NEEDS_CONTEXT и блокирует autonomous qualification.",
+      "Replay failure сохраняется как failure capsule с applicability conditions."
+    ],
+    "evidence_required": [
+      "Demo-source refs; skill schema; sandbox/device replay receipts"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P2",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-24",
+    "title": "Инвалидировать skills при drift и permission diff",
+    "goal": "Связать работоспособность навыка с build/adapter/template/grant и своевременно требовать повторную qualification.",
+    "refines_existing_task_ids": [
+      "UI3-019",
+      "EVO3-010",
+      "TAB4-13",
+      "PAR3-023"
+    ],
+    "related_feature_ids": [
+      "ACT-039",
+      "ACT-044",
+      "ACT-048",
+      "RND-042"
+    ],
+    "dependencies": [
+      "ACTION5-18",
+      "ACTION5-23"
+    ],
+    "inputs": [
+      "Skill dependency manifest; installed version changes; grant diff; adapter canary results"
+    ],
+    "outputs": [
+      "Affected-skill graph; stale reason; repair brief; requalification receipt"
+    ],
+    "owner": "Existing qualification/provenance owner; updater сообщает version change",
+    "acceptance_criteria": [
+      "Изменившийся adapter/critical permission помечает зависимый skill STALE до execution admission.",
+      "Не затронутые навыки сохраняют valid receipt только при доказанной dependency independence.",
+      "Permission growth отображается как новый scope; прежний grant не расширяется молча.",
+      "Repaired skill имеет новую version; failure capsules не исчезают."
+    ],
+    "failure_recovery": [
+      "Canary failure помещает capability/skill в quarantine, текстовый/manual fallback остаётся доступен.",
+      "Отсутствующие dependency hashes дают UNKNOWN вместо optimistic reuse."
+    ],
+    "evidence_required": [
+      "Drift/permission corpus; affected graph; repaired skill qualification"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P2",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  }
+]

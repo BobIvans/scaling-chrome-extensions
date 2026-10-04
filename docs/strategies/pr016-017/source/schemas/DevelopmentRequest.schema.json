@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DevelopmentRequest",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "development-request.v1"
+    },
+    "request_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "missing_capability": {
+      "type": "string",
+      "minLength": 1
+    },
+    "requested_scope_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "criteria": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "context_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "next_action": {
+      "type": "string",
+      "enum": [
+        "RESEARCH",
+        "CODE_BRIEF"
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "PROPOSED",
+        "BOUNDED_REVIEW",
+        "HANDED_OFF"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "request_id",
+    "intent_ref",
+    "missing_capability",
+    "requested_scope_ref",
+    "criteria",
+    "context_refs",
+    "next_action",
+    "state"
+  ],
+  "additionalProperties": false
+}

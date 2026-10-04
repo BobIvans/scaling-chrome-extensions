@@ -1,5 +1,10 @@
 # Scaling Chrome Extensions
 
+Продолжение стратегии Voice AgentOS / PR-016+017 через Codex:
+[CODEX_START_HERE.md](CODEX_START_HERE.md), [MASTER_CONTEXT.md](MASTER_CONTEXT.md).
+Полные исходные ZIP, contracts, backlog и аудит сохранены в
+[`docs/strategies/pr016-017/`](docs/strategies/pr016-017/).
+
 Локальный Desktop-клиент без Chrome: [запуск на Windows](desktop/README_RU.md).
 Поиск и выбранный контекст используют существующую библиотеку; полный manifest
 репозитория сохраняется потоково без общего лимита файлов/частей.

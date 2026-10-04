@@ -1,0 +1,359 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "IntentSpec",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "intent.v1"
+    },
+    "intent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "input_revision_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registry_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "template_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "canonicalizer_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "grant_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scope_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "effect_kind": {
+          "type": "string",
+          "enum": [
+            "LOCAL_READ",
+            "LOCAL_WRITE",
+            "AI_MESSAGE",
+            "DEVELOPMENT_REQUEST"
+          ]
+        },
+        "repo_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "target_binding_ref": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "grant_ref",
+        "scope_digest",
+        "effect_kind",
+        "repo_ref",
+        "target_binding_ref"
+      ],
+      "additionalProperties": false
+    },
+    "slots": {
+      "type": "object",
+      "properties": {
+        "repo": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "RESOLVED",
+                "UNCERTAIN",
+                "MISSING",
+                "CONFLICT"
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provenance_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "provenance_ref"
+          ],
+          "additionalProperties": false
+        },
+        "destination": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "RESOLVED",
+                "UNCERTAIN",
+                "MISSING",
+                "CONFLICT"
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provenance_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "provenance_ref"
+          ],
+          "additionalProperties": false
+        },
+        "effect": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "RESOLVED",
+                "UNCERTAIN",
+                "MISSING",
+                "CONFLICT"
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provenance_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "provenance_ref"
+          ],
+          "additionalProperties": false
+        },
+        "amount": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "RESOLVED",
+                "UNCERTAIN",
+                "MISSING",
+                "CONFLICT"
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provenance_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "provenance_ref"
+          ],
+          "additionalProperties": false
+        },
+        "path": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "RESOLVED",
+                "UNCERTAIN",
+                "MISSING",
+                "CONFLICT"
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provenance_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "provenance_ref"
+          ],
+          "additionalProperties": false
+        },
+        "mode": {
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "RESOLVED",
+                "UNCERTAIN",
+                "MISSING",
+                "CONFLICT"
+              ]
+            },
+            "value": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provenance_ref": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "status",
+            "value",
+            "provenance_ref"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "repo",
+        "destination",
+        "effect",
+        "amount",
+        "path",
+        "mode"
+      ],
+      "additionalProperties": false
+    },
+    "source_snapshot_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "output_criteria": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "NEEDS_INPUT",
+        "PROPOSED",
+        "COMPILED",
+        "ADMITTED",
+        "SUPERSEDED",
+        "CANCELLED",
+        "EFFECT_UNKNOWN"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "intent_id",
+    "revision",
+    "input_revision_ref",
+    "registry_version",
+    "template_version",
+    "canonicalizer_version",
+    "capability_ref",
+    "scope",
+    "slots",
+    "source_snapshot_refs",
+    "output_criteria",
+    "state"
+  ],
+  "additionalProperties": false
+}

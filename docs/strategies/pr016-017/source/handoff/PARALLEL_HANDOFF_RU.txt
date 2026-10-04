@@ -1,0 +1,10 @@
+Один owner объединённого ROADMAP-PR-016-017. Целевой repo BobIvans/scaling-chrome-extensions. Current HEAD/actual touched paths ещё UNKNOWN; заполняются coding-чатом.
+
+Для PR-013: audio/transcript source refs, codecs/ASR adapter interoperability; live capture device receipt принадлежит этому PR.
+Для PR-014: immutable packet/part manifests, source version refs, projection/WHY_THIS_PACKET/NEED_CONTEXT и restore receipt. Не менять packet producer/store owner.
+Для PR-015: Core IPC/service ops, grants/capabilities/templates/STOP, canonical DB migration coordinator и resource fencing. Один coordinator сериализует schema; browser writer использует общий owner.
+Внутри этого PR: WS-018→WS-019; WS-021 использует WS-017 upstream; WS-022 ждёт WS-018/WS-021/WS-013; WS-020 ждёт 018/019/021/022.
+Для PR-018: DevelopmentRequest, validated response refs, UpdateCase delivery receipts, skill dependency/permission diff. Git PR/merge/release/updater — owner PR-018, не browser adapter.
+Для PR-019/021: durable events, all attempts, unknown outcomes, device/route receipts, critical slot measurements, stale skill index и cost/latency metrics.
+
+Shared DTO здесь PROPOSED v1. Перед code интеграцией сверить contracts соседей. Передача содержит actual base SHA, changed handlers/paths, DTO schema digest, owner, source IDs, actual tests/receipts, blockers. Не предполагать автоматическое чтение параллельных чатов.

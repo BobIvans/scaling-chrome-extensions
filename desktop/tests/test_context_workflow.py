@@ -14,6 +14,7 @@ import context_runtime as runtime
 import context_library as lib
 import context_packets as packets
 import automation_core as core
+from test_action_runtime import configuration, input_value
 
 
 class InstalledContext(unittest.TestCase):
@@ -64,6 +65,35 @@ class InstalledContext(unittest.TestCase):
         with self.assertRaisesRegex(DesktopError,'DESKTOP_BACKEND_CHANGED'):self.client.verify_backend_bundle()
         with self.assertRaisesRegex(DesktopError,'DESKTOP_PROFILE_CHANGED'):self.request('CAPABILITIES',{})
         with self.assertRaisesRegex(DesktopError,'DESKTOP_BACKEND_CHANGED'):verify_install(self.installed)
+
+    def test_installed_actions_and_library_share_core_stop_and_build_binding(self):
+        actions=configuration();actions['namespaces']=['n']
+        self.policy['actions']=actions
+        self.policy_path.write_bytes(lib.encoded(self.policy))
+        self.client.close();self.client=DesktopClient(self.connection)
+        self.addCleanup(self.client.close);self.client.handshake()
+        self.client.verify_backend_bundle()
+        self.assertIn('durable.action',self.client.info['capabilities'])
+        self.assertIn('durable.library',self.client.info['capabilities'])
+
+        def action(name,payload):
+            return self.client.request({'type':'durable.action','action':name,
+                                        'payload':payload})['result']['action']
+
+        intent=action('CREATE',input_value(namespace='n'))
+        job=action('ENQUEUE',{'intent_id':intent['intent_id'],'revision':1})
+        outcome=self.command('work');self.assertEqual(outcome['id'],job['id'])
+        self.assertEqual(outcome['state'],'SUCCEEDED')
+        self.client.request({'type':'durable.stop','requestId':'library-action-stop'})
+        second=action('CREATE',input_value(namespace='n'))
+        with self.assertRaisesRegex(DesktopError,'CORE_STOPPED'):
+            action('ENQUEUE',{'intent_id':second['intent_id'],'revision':1})
+        action('RESUME',{})
+        self.assertFalse(core.Core(self.store,self.policy).control_status()['stopped'])
+        module=self.installed/'backend/action_runtime.py'
+        module.write_text(module.read_text()+'\n# changed\n')
+        with self.assertRaisesRegex(DesktopError,'DESKTOP_BACKEND_CHANGED'):
+            self.client.verify_backend_bundle()
     def test_context_window_keyboard_controls_on_available_display(self):
         import tkinter as tk
         from desktop.library import LibraryWindow

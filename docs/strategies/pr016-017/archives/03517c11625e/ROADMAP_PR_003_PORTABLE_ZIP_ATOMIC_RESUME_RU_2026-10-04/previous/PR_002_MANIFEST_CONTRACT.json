@@ -1,0 +1,117 @@
+{
+  "schema": "roadmap.proposed-manifest-contract.v1",
+  "implementation_status": "PROPOSED_NOT_INSTALLED",
+  "owner": "Existing Content Lab SQLite/repo_context; optional pure sibling repo_manifest.py",
+  "batch_binding_example": {
+    "schema": "occ.repo-manifest-binding.v1",
+    "snapshot_id": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "namespace": "code",
+    "repository": "sce",
+    "repo_sha": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+    "tree_sha": "cccccccccccccccccccccccccccccccccccccccc",
+    "profile_revision": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+    "goal_revision": null,
+    "grouping_policy": "RAW_CHUNK_MAPPING_V1",
+    "parser_policy": "PRESERVED_ANALYSIS_KINDS_NO_NEW_PARSE",
+    "historical_scanner_build": "UNKNOWN",
+    "export_policy": "LOCAL_CAPTURED_CHUNK_METADATA_V1"
+  },
+  "batch_id_algorithm": "existing automation_core.digest(binding); use actual helper serialization, not compact JSONL serialization",
+  "jsonl_policy": "UTF8, sorted keys, compact comma/colon separators, allow_nan=False, one LF per row",
+  "entry_order": [
+    "repo_entries.ordinal"
+  ],
+  "part_order": [
+    "entry ordinal",
+    "chunk ordinal"
+  ],
+  "part_id": "existing repo_chunks.revision",
+  "part_revision_verifier": "automation_core.digest([logical_id, file_hash, sha256(raw), byte_start, byte_end])",
+  "offset_semantics": "Half-open byte intervals; empty file represented by one zero-length chunk; no UTF16/character offsets.",
+  "precondition": [
+    "cursor == total",
+    "entry count == total",
+    "no PENDING entries",
+    "all indexed range/hash/revision proof must pass before verified publication"
+  ],
+  "entry_fields": [
+    "schema",
+    "snapshot_id",
+    "ordinal",
+    "path",
+    "mode",
+    "git_type",
+    "git_oid",
+    "size",
+    "state",
+    "reason",
+    "file_sha256",
+    "parser",
+    "chunk_count",
+    "part_locator",
+    "packet_coverage"
+  ],
+  "part_fields": [
+    "schema",
+    "snapshot_id",
+    "file_ordinal",
+    "path",
+    "chunk_ordinal",
+    "part_id",
+    "logical_id",
+    "revision",
+    "source_start",
+    "source_end",
+    "bytes",
+    "sha256",
+    "file_sha256",
+    "text_eligible",
+    "dependency_status"
+  ],
+  "artifacts": {
+    "BATCH.json": "Identity/binding/counts/output hashes/proof scope.",
+    "REPO_MANIFEST.jsonl": "All entries, including gaps. No unbounded per-file part ID array.",
+    "PARTS_INDEX.jsonl": "Every INDEXED captured chunk with immutable byte range/hash.",
+    "VALIDATION.json": "Streaming reconstruction/index proof; PASS only after actual verification."
+  },
+  "proof_scopes": {
+    "native_info": "Global byte proof NOT_RUN unless actually executed.",
+    "native_part_page": "Returned chunk rows only, if verified.",
+    "cli_validation": "Full indexed-byte reconstruction in one consistent read view.",
+    "ai_packet": "NOT_BUILT",
+    "dependency_graph": "NOT_GENERATED",
+    "device": "NOT_RUN"
+  },
+  "failure_rules": [
+    "PENDING snapshot refuses verified projection.",
+    "Orphan/non-indexed raw chunks and corrupted ranges/revisions reject verified publication.",
+    "Output staged until proof passes; no success on interrupt/disk-full.",
+    "Existing damaged output never silently overwritten as verified.",
+    "Protected/excluded bytes are never added as part payload."
+  ],
+  "request_schema": "contracts/NATIVE_REQUEST.schema.json",
+  "native": {
+    "command": "durable.repo.manifest",
+    "actions": [
+      "INFO",
+      "ENTRIES",
+      "PARTS"
+    ],
+    "input_bytes_baseline": 16000,
+    "output_bytes_baseline": 192000,
+    "page_full_frame_bytes_budget": 32768,
+    "rows_per_page_max": 20,
+    "timeout_ms_baseline": 10000,
+    "limits_are_per_request_not_corpus": true,
+    "verify_actual_constants": true,
+    "scope": "repository/snapshot/profile; PARTS fileOrdinal is part of query identity",
+    "pagination": "offset relative to query scope, nextOffset only after emitted rows; row overflow explicit, never skipped",
+    "response": "occ.native-durable-result.v1 + manifest binding/scope/total/rows/nextOffset/proof_scope; raw chunk bytes not included"
+  },
+  "writer_cli": {
+    "profile": "Existing trusted operator profile; UI cannot override root/store/output argv.",
+    "output": "Operator-selected directory outside source repo, whole-directory staged publish after PASS; actual handler not implemented in this package.",
+    "is_background_runtime": false
+  },
+  "git_blob_oid_verifier": "Stream hash of b\"blob \"+ascii(size)+b\"\\0\"+captured bytes, SHA1 for 40-hex OID or SHA256 for 64-hex OID; compare to original stored git_oid without Git calls."
+}

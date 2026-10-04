@@ -1,0 +1,174 @@
+Создай большой подробный ZIP ROADMAP-PR-017: «Выбранные AI-вкладки и навыки: Grok delivery, outbox, recovery и demonstration replay».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Квалифицировать targets/PC adapters, надёжно передавать все части и ответы, затем превращать наблюдаемые сценарии в versioned skills.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: UI3-001, UI3-002, UI3-005, UI3-006, UI3-007, UI3-008, UI3-009, UI3-010, UI3-011, UI3-012, UI3-016, UI3-019, PAR3-009, PAR3-010, PAR3-024, EVO3-004, TAB4-03, TAB4-04, TAB4-06, TAB4-07, TAB4-08, LAYA4-024, ACTION5-23, ACTION5-24
+Feature cards: LIB-054, LIB-057, ACT-022, ACT-023, ACT-035, ACT-036, ACT-037, ACT-039, ACT-041, ACT-042, ACT-043, ACT-044, ACT-048, RND-042, RND-043
+Decisions: DEC5-03, DEC5-04
+Goals: GOAL5-11, GOAL5-12, GOAL5-13, GOAL5-16, GOAL5-19, GOAL5-22
+Dependencies: PR-014, PR-015, PR-016
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-020 — Навыки из демонстраций, failure memory и выборочная requalification
+Scope:
+- Recording→portable skill с preconditions/effects/recovery
+- Оптимизация шагов с сохранением проверяемых инвариантов
+- Failure capsules, permission diff и selective stale/repair
+Граница: Отдельные навыки могут начинаться с локальных templates; browser skills ждут №30/31. Не создавать второй executor.
+Приёмка:
+- Replay skill проходит normal/fault cases
+- Secrets представлены references
+- Координаты и tab ID не подменяют устойчивую identity
+- Изменение adapter/permission инвалидирует зависимые навыки
+- Новая skill version сохраняет отрицательные попытки
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-021 — Выбранные Grok/GitHub targets и квалифицированные PC/browser adapters
+Scope:
+- Account/workspace/chat/repo/branch binding выбранных targets
+- Маршрутизация API/CLI/UIA/DOM и управление focus
+- Canary, target drift, rebind и adapter qualification
+Граница: Здесь target discovery и adapter identity. Durable доставка/повтор — №31, Git changes — №32. Discovery можно проектировать параллельно с desktop.
+Приёмка:
+- Wrong account/chat/repo обнаруживается до effect
+- Restart не полагается только на tab ID
+- User focus получает приоритет
+- UI drift блокирует только затронутый adapter
+- Capabilities выбранной среды, включая доступ Grok к repo, реально проверены
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-022 — Надёжная доставка в AI UI: outbox, части, ответы и unknown-send recovery
+Scope:
+- Durable outbox к текущему Core и единственный UI writer
+- Draft/upload/send/result observations по каждой части
+- Unknown effect reconciliation, STOP и реестр полученного/использованного контекста
+Граница: Использует неизменяемый пакет №22. Разные провайдеры подключаются как adapters с отдельными receipts; нет общего скрытого потолка частей.
+Приёмка:
+- Lost acknowledgement не вызывает blind duplicate send
+- Upload сверяется с packet/part hash
+- Ответ принадлежит выбранному task/chat
+- Cancel сохраняет неопределённость уже возможного effect
+- Receipt получения не считается доказательством использования всех частей
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+UI3-001 — Версия контракта UI-маршрута и связь с существующими owners
+- Обязательные поля валидируются; unknown поля не заполняются вымышленными значениями.
+- CLI/ACP fallback невозможен без отдельного выбора; V2-035 не является prerequisite.
+UI3-002 — Привязать фактический аккаунт, workspace и чат без отправки
+- Два чата с одинаковым заголовком различаются либо автоотправка недоступна.
+- Смена аккаунта/чата обнаруживается до загрузки и отправки.
+UI3-005 — Добавить durable outbox к существующему Core
+- Перезапуск восстанавливает очередь без потери ревизии.
+- Истёкший lease не превращается в разрешение повторно нажать Send.
+UI3-006 — Квалифицировать реальные controls и режим ввода
+- Многострочный текст не отправляется при вставке.
+- Перемещение фокуса или новый UI contract останавливает дальнейшие внешние действия.
+UI3-007 — Собрать локальный и удалённый draft с точной сверкой
+- До Send видны назначение, состав и точный prompt.
+- Недоступная upload-функция не заменяется передачей одного локального пути в web chat.
+UI3-008 — Выполнять scoped auto-send без повторных вопросов
+- Одна разрешённая задача отправляется без вопроса на каждую часть.
+- Новая область не наследует полномочия из ответа модели или документа.
+UI3-009 — Фиксировать отправку по наблюдаемой истории
+- Видимый filename не маркируется как remote SHA verification.
+- Чужой похожий ответ не принимается за исходящее сообщение задачи.
+UI3-010 — Восстанавливать ambiguous send после падения
+- Crash сразу после Send не создаёт вторую задачу при повторном старте.
+- Несколько совпадений дают конфликт, неполная история — unknown.
+UI3-011 — Вести coverage получения и использования частей
+- Ответ «всё прочитал» не закрывает все chunk IDs.
+- Отсутствующая часть видна и имеет очередь повторной доставки/причину.
+UI3-012 — Импортировать результат из связанного UI
+- Чужой task ID, незаконченный streaming и неполный JSON не завершают job.
+- Повторный импорт того же ответа идемпотентен.
+UI3-016 — Независимый от голоса STOP и честное возобновление
+- Без ASR STOP работает.
+- Локальная остановка не отображается как доказанная отмена удалённой задачи.
+UI3-019 — Инвалидировать устаревший UI adapter и восстановить его
+- Удалённая кнопка/изменённый composer останавливает отправку до Send.
+- После обновления адаптера повторяется затронутая qualification, а не весь бессвязный suite.
+PAR3-009 — Сериализация передачи в выбранный UI-чат
+- Один owner удерживает chat/composer/clipboard scopes от draft до observed send result.
+- Envelope связывает operation ID, target chat, snapshot и content/part hashes.
+- Ручной takeover и смена вкладки проверяются до следующего действия.
+- Разработка и приёмка адаптера не включают runtime: перед внешним действием проверены activation_prerequisites и актуальные qualified receipts по contracts/ACTIVATION_GATES.json.
+PAR3-010 — Сверка неопределённых внешних эффектов
+- Timeout после click/send ведёт в effect_unknown, а не в автоматический повтор.
+- Повторная доставка job проверяет существующий receipt либо внешний operation ID/content hash.
+- Отсутствие способа достоверной сверки сохраняет неопределённость и понятный next action.
+PAR3-024 — Продвижение проверенного сценария в повторяемый навык
+- Кандидат содержит версии, scopes, inputs/outputs, recovery, evidence и условия инвалидирования.
+- Promotion опирается на новые случаи и отказы, а не один успешный прогон.
+- Повтор использует прежнее совместимое разрешение без повторных вопросов; новые эффекты требуют отдельного scope решения.
+EVO3-004 — Связать наблюдения UI доставки с UpdateCase
+- Prepared, attachment_confirmed, message_observed и response_observed различимы; upload не означает прочтение всех частей моделью.
+- Receipt хранит target profile/version, chat identity, request ID и наблюдение; новый destination не берёт grant старого чата.
+- Unknown после потери связи требует reconciliation; повторное нажатие Send без определения исхода не выполняется.
+TAB4-03 — Привязка указанной пользователем вкладки
+- Дескриптор содержит роль, origin, доступный устойчивый ID диалога/репозитория, версию привязки и временный указатель на браузер/вкладку.
+- Выбор подтверждается видимым превью адресата; одинаковые заголовки вкладок не дают автоматического совпадения.
+- Навигация, смена аккаунта, новый диалог в том же tab ID и неоднозначность после перезапуска дают REBIND_REQUIRED.
+- Перемещение вкладки не требует нового выбора, если её проверенная идентичность сохранилась.
+TAB4-04 — Квалификация адаптера интерфейса Grok Build
+- Адаптер сообщает поддержку и ограничения чтения диалога, загрузки файла, проверки черновика, Send и наблюдения результата.
+- Версия адаптера связана с наблюдаемым вариантом интерфейса; изменённые ориентиры не приводят к случайному клику.
+- Вход выполняет пользователь; истёкшая сессия вызывает состояние NEEDS_LOGIN с сохранением задачи.
+- Квалификация не предполагает наличие официального API Grok Build; результат UNSUPPORTED оставляет ручной экспорт доступным.
+TAB4-06 — Заполнение проверяемого черновика в выбранном чате
+- Перед заполнением проверяются профиль, источник, идентичность вкладки и версия адаптера.
+- Вложение связано с локальными именем/размером/document SHA доступным квалифицированным способом; степень подтверждения отражена явно.
+- Существующий чужой черновик не затирается; конфликт даёт отдельное состояние и сохраняет исходный документ.
+- Автозаполнение заканчивается на DRAFT_ATTACHED; отправка имеет отдельный записанный intent.
+TAB4-07 — Отправка с журналом намерения и сверкой неизвестного исхода
+- Intent фиксируется до Send и связывает attempt ID, task ID, packet SHA, target binding и profile digest.
+- Одна попытка допускает не более одного внешнего действия Send; повтор клиентского запроса возвращает состояние той же попытки.
+- Подтверждение содержит наблюдаемый message ID, если доступен, либо ограниченный квалифицированный UI receipt с происхождением.
+- Сбой после возможного клика даёт NEEDS_RECONCILIATION; новая отправка запрещена до разрешения исхода.
+- OPERATOR_REPORTED и UI_OBSERVED остаются разными типами доказательств.
+TAB4-08 — Получение и импорт связанного ответа
+- Ответ из выбранного диалога связан с попыткой отправки; требуется точный task ID и packet SHA для импорта.
+- Схема ограничена и проверена до записи; команды, новые права и пути из ответа не исполняются.
+- Coverage, missing context, findings и ссылки сохраняются с происхождением; DONE остаётся утверждением.
+- Повтор старого ответа не откатывает более новую голову результата.
+LAYA4-024 — Сохранить повторяемые контекстные automation recipes
+- Recipe связывает version, repo alias, data scope, goal template, provider projection и required capabilities.
+- Routine повтор внутри согласованного scope идёт без повторных setup вопросов; новые полномочия не выводятся из free-form документа.
+- Recipe использует существующие Core jobs/leases/cancel/reconciliation; отдельного worker или бесконечной queue не создаёт.
+- Рецепты подготовка/поиск/экспорт квалифицируются до live send/update; реальные UI routes связаны с UI3 receipts.
+- Повторный запуск учитывает source change/unknown send и не дублирует внешние эффекты.
+ACTION5-23 — Преобразовать показанную автоматизацию в тестируемый skill
+- Skill включает только наблюдаемые и разрешённые steps; пароль/secret values заменены credential references.
+- Recorded tab/focus координаты не считаются переносимой identity без adapter binding.
+- Skill replay проходит sandbox fixture и device scenario с независимым outcome receipt.
+- Оптимизация лишних steps сохраняет preconditions, STOP и expected effect invariants.
+ACTION5-24 — Инвалидировать skills при drift и permission diff
+- Изменившийся adapter/critical permission помечает зависимый skill STALE до execution admission.
+- Не затронутые навыки сохраняют valid receipt только при доказанной dependency independence.
+- Permission growth отображается как новый scope; прежний grant не расширяется молча.
+- Repaired skill имеет новую version; failure capsules не исчезают.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

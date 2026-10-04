@@ -1,0 +1,131 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CompiledPlan",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "plan.v1"
+    },
+    "plan_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "semantic_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "canonicalizer_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registry_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "template_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "step_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capability_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "capability_version": {
+            "type": "string",
+            "minLength": 1
+          },
+          "depends_on": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          },
+          "input_refs": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 0
+          },
+          "expected_output_criteria": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "minItems": 1
+          },
+          "effect_kind": {
+            "type": "string",
+            "enum": [
+              "LOCAL_READ",
+              "LOCAL_WRITE",
+              "AI_MESSAGE",
+              "DEVELOPMENT_REQUEST"
+            ]
+          }
+        },
+        "required": [
+          "step_id",
+          "capability_ref",
+          "capability_version",
+          "depends_on",
+          "input_refs",
+          "expected_output_criteria",
+          "effect_kind"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "COMPILED",
+        "ADMITTED",
+        "SUPERSEDED",
+        "CANCELLED",
+        "EFFECT_UNKNOWN"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "plan_id",
+    "intent_id",
+    "intent_revision",
+    "semantic_hash",
+    "canonicalizer_version",
+    "registry_version",
+    "template_version",
+    "scope_digest",
+    "steps",
+    "state"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,65 @@
+{
+  "schema": "occ.pr008-wire-faults.v1",
+  "cases": [
+    {
+      "id": "invalid_utf8",
+      "file": "fixtures/replies/invalid_utf8.bin",
+      "expected": "DESKTOP_INVALID_RESPONSE"
+    },
+    {
+      "id": "duplicate_keys",
+      "file": "fixtures/replies/duplicate_keys.bin",
+      "expected": "DESKTOP_INVALID_RESPONSE"
+    },
+    {
+      "id": "trailing_json",
+      "file": "fixtures/replies/trailing_json.bin",
+      "expected": "DESKTOP_INVALID_RESPONSE"
+    },
+    {
+      "id": "nonfinite",
+      "file": "fixtures/replies/nonfinite.bin",
+      "expected": "DESKTOP_INVALID_RESPONSE"
+    },
+    {
+      "id": "operation_mismatch",
+      "file": "fixtures/replies/operation_mismatch.json",
+      "expected": "DESKTOP_RESULT_OPERATION"
+    },
+    {
+      "id": "profile_changed",
+      "file": "fixtures/replies/profile_changed.json",
+      "expected": "DESKTOP_PROFILE_CHANGED"
+    },
+    {
+      "id": "protocol_mismatch",
+      "file": "fixtures/replies/protocol_mismatch.json",
+      "expected": "DESKTOP_PROTOCOL_MISMATCH"
+    },
+    {
+      "id": "stderr_flood",
+      "recipe": "combined bytes >192000 through stderr while stdout small",
+      "expected": "DESKTOP_OUTPUT_LIMIT"
+    },
+    {
+      "id": "output_flood",
+      "recipe": "stdout >192000",
+      "expected": "DESKTOP_OUTPUT_LIMIT"
+    },
+    {
+      "id": "timeout",
+      "recipe": "fake adapter exceeds qualified read deadline, UI cancel/close still works",
+      "expected": "DESKTOP_TIMEOUT"
+    },
+    {
+      "id": "nonzero",
+      "recipe": "fake adapter exit 7, no accepted result",
+      "expected": "DESKTOP_PROCESS_FAILED"
+    },
+    {
+      "id": "write_rejected",
+      "file": "fixtures/replies/write_rejected.json",
+      "expected": "DESKTOP_READONLY_SCOPE"
+    }
+  ]
+}

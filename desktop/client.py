@@ -21,6 +21,7 @@ TIMEOUT_MS = 10_000
 HASH = re.compile(r'^[0-9a-f]{64}$')
 NAME = re.compile(r'^[A-Za-z0-9_.:-]{1,100}$')
 READS = {
+    'durable.action': ({'type', 'action', 'payload'}, set()),
     'durable.library': ({'type','namespace','action','arguments'}, {'operationId'}),
     'durable.stop': ({'type','requestId'}, set()),
     'durable.control.resume': ({'type','expectedEpoch'}, set()),
@@ -187,6 +188,10 @@ def validate_request(request):
     for key in ('namespace', 'repository'):
         if key in request:
             require(isinstance(request[key], str) and NAME.fullmatch(request[key]))
+    if request['type'] == 'durable.action':
+        require(request['action'] in {'INFO','CREATE','GET','CORRECT','ENQUEUE','STOP','RESUME','BIND',
+                'PACKET_START','PACKET_APPEND','PACKET_SEAL','PACKET_PAGE','RECONCILE','IMPORT_RESULT','SKILL_RECORD','SKILL_INVOKE','CONTINUE'})
+        require(isinstance(request['payload'], dict))
     if request['type']=='durable.library':
         require(isinstance(request['action'],str) and isinstance(request['arguments'],dict))
         if 'operationId' in request:require(isinstance(request['operationId'],str) and NAME.fullmatch(request['operationId']))
@@ -492,12 +497,16 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
             and result.get('operation') == operation, 'DESKTOP_OPERATION_MISMATCH')
     field = {'durable.info': 'info', 'durable.repo.list': 'repositories',
              'durable.search': 'items', 'durable.context': 'context',
-             'durable.repo.manifest': 'manifest', 'durable.library':'library',
+             'durable.repo.manifest': 'manifest', 'durable.action':'action', 'durable.library':'library',
              'durable.stop':'library','durable.control.resume':'library',
              'durable.repo.history': 'page', 'durable.repo.delta': 'page',
              'durable.repo.scanRun': 'scan_run'}[operation]
     exact(result, {'schema', 'operation', field})
-    if field=='library':
+    if operation == 'durable.action':
+        require(isinstance(result[field], dict), 'DESKTOP_ACTION_SCHEMA')
+        # This is typed data from the installed Core owner. It is never used as
+        # argv, local paths or authority for a subsequent action.
+    elif field=='library':
         dto=result[field]
         exact(dto,{'schema','namespace','action','data','authority'})
         require(dto['schema']=='occ.context-service-result.v1' and dto['authority']=='DATA_ONLY')

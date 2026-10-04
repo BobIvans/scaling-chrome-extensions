@@ -1,0 +1,146 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TargetBinding",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "target.v1"
+    },
+    "binding_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "provider": {
+      "type": "string",
+      "minLength": 1
+    },
+    "origin": {
+      "type": "string",
+      "minLength": 1
+    },
+    "account_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "workspace_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "conversation_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "repo_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "branch_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "identity_evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "adapter_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ui_contract_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identity_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "transient_handle": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "BOUND",
+        "REBIND_REQUIRED",
+        "NEEDS_LOGIN",
+        "UNSUPPORTED"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "binding_id",
+    "revision",
+    "provider",
+    "origin",
+    "account_ref",
+    "workspace_ref",
+    "conversation_ref",
+    "repo_ref",
+    "branch_ref",
+    "identity_evidence_refs",
+    "adapter_ref",
+    "adapter_version",
+    "ui_contract_digest",
+    "identity_digest",
+    "transient_handle",
+    "state"
+  ],
+  "additionalProperties": false
+}

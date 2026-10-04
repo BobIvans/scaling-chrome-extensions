@@ -73,6 +73,7 @@ class App:
         ttk.Button(toolbar, text='Настройки', command=self.configure).pack(side='left')
         ttk.Button(toolbar, text='Подключиться', command=self.connect).pack(side='left', padx=6)
         ttk.Button(toolbar, text='Отмена (Esc)', command=self.cancel).pack(side='left')
+        ttk.Button(toolbar, text='Текст / голос → действия', command=self.open_actions).pack(side='left', padx=6)
         ttk.Button(toolbar, text='Контекст и задания', command=self.open_library).pack(side='right', padx=6)
         ttk.Button(toolbar, text='Диагностика', command=self.diagnostics).pack(side='right')
         ttk.Label(body, textvariable=self.status, wraplength=940).grid(row=1, column=0, columnspan=3, sticky='w', pady=(8, 3))
@@ -150,6 +151,16 @@ class App:
 
     def assert_main(self):
         assert threading.get_ident() == self.owner_thread, 'Tk must stay on its owner thread'
+
+    def open_actions(self):
+        if not self.client or not self.client.info or 'durable.action' not in self.client.info['capabilities']:
+            self.status.set('Действия не включены в operator policy. Поиск/экспорт остаются доступны.')
+            return
+        if self.busy():
+            self.status.set('Дождитесь завершения текущего чтения.')
+            return
+        from desktop.actions_ui import ActionsPanel
+        ActionsPanel(self.root, self.client)
 
     def busy(self):
         return self.worker is not None and self.worker.is_alive()

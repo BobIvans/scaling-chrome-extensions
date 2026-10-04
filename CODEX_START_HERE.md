@@ -1,36 +1,24 @@
 # Codex: начать здесь
 
-Цель и источник требований: `MASTER_CONTEXT.md`.
-Полная стратегия уже находится в `docs/strategy/voice-agentos/`; повторный ZIP
-upload не нужен для всех материалов, предоставленных в этой передаче.
-
-1. Прочитай repository instructions, `MASTER_CONTEXT.md`,
-   `docs/strategy/voice-agentos/handoff/NEXT_STAGE.md`,
-   `handoff/PACKAGE_STATUS.json`, `handoff/WORKSTREAM_STATUS.json`.
-2. Выполни `git fetch origin`, проверь текущие main и PR #49/#51/#52,
-   companion `BobIvans/studious-pancake#565` и их актуальные CI.
-   Audit — dated snapshot. Уже merged код не реализуй повторно; активные
-   ветки не переписывай и не force-push.
-3. Проверь сохранность источников:
+1. Прочитай `MASTER_CONTEXT.md`, repository instructions и текущие Git refs/CI.
+   Сохрани чужие изменения и исходную нумерацию всех packages.
+2. Для текущего запроса ROADMAP-PR-016+017 следуй
+   `docs/strategies/pr016-017/PACKAGE_CODEX_START_HERE.md`,
+   `PACKAGE_MASTER_CONTEXT.md`, `EXECUTION_AUDIT.md` и `NEXT_IMPLEMENTATION.md`.
+   Эти три последние пути также относительно `docs/strategies/pr016-017/`.
+   Следующий этап пакета — typed roles и resumable mixed-effect Core pipeline;
+   конкретные upstream blockers проверить по #50/#51 и actual contracts.
+3. Для продолжения всей стратегии без заданного package следуй
+   `docs/strategy/voice-agentos/handoff/NEXT_STAGE.md`: unified SourceAddress
+   и интеграция source ledger #51 с context/Core. Полный общий Codex handoff
+   сохранён в `docs/strategies/pr016-017/UPSTREAM_CODEX_START_HERE_PR53.md`.
+4. Проверь **оба** набора bytes и source criteria:
+   `python docs/strategies/pr016-017/verify_context.py` и
    `python docs/strategy/voice-agentos/verify_integrity.py`.
-4. Читай `roadmap/briefs/PR_010.json`, `PR_011.json`,
-   `roadmap/plan/DELIVERY_DAG.json`, полные task/feature records по исходным
-   IDs, исходные acceptance и текущие owners. Старые номера prose не заменяют
-   текущий workstream mapping.
-5. Следующий этап — интеграция source ledger #51 с context/Core #50,
-   единый versioned SourceAddress №010 и точные read/search adapters. Продолжай
-   существующий PR/branch, если он актуален; если уже merged, реализуй только
-   фактический остаток. Scope и acceptance подробно в `NEXT_STAGE.md`.
-6. Сохраняй existing SQLite/Core/native/Desktop owners, compatibility,
-   exact bytes/revisions и полный traversal до EOF. Обнови installer/owned
-   manifests при shipping changes. Проверь scope/hash/ranges, restart,
-   ack loss, STOP/cancel и source drift применимыми независимыми fixtures.
-7. Прогони gates текущего workflow, проверь CI актуального commit и merge.
-   Запиши changed functions, фактические receipts, остаток и следующий stage
-   в `handoff/`. Полную стратегию не сокращай и не объявляй завершённой
-   по одному merge/тесту/AI result.
-
-Для любого следующего package читай соответствующий `briefs/PR_NNN.json`,
-полный `prompts/PR_NNN_CREATE_BIG_ZIP_RU.txt`, исходные V5 records и
-`coverage/`. Выполнять написание нового ZIP перед кодом не обязательно:
-все предоставленные inputs теперь доступны непосредственно из repo.
+5. Переиспользуй canonical SQLite/Core/jobs/STOP/grants; не создавай второй
+   executor, не сокращай стратегию, не повторяй уже merged implementation.
+   Device/UI/Laya/Grok/criterion gates остаются открытыми до actual evidence.
+6. Запусти применимые gates текущих workflows, сверяй exact-head CI до merge,
+   обновляй audits/receipts/next stage. Windows clone требует
+   `git -c core.longpaths=true clone ...`; в существующем checkout используй
+   `git config core.longpaths true`. Содержимое ZIP не изменяется ради path limit.

@@ -26,6 +26,7 @@ import repo_context
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 FIELDS = {
+    "durable.action": ({"type", "action", "payload"}, set()),
     "durable.library": ({"type", "namespace", "action", "arguments"}, {"operationId"}),
     "durable.stop": ({"type", "requestId"}, set()),
     "durable.control.resume": ({"type", "expectedEpoch"}, set()),
@@ -119,10 +120,14 @@ def ready_scan_store(store):
         return False
 
 
-def info(profile):
+def info(profile, policy):
     store = Path(profile['store'])
     repo_reads = {'durable.repo.manifest', 'durable.repo.history', 'durable.repo.delta'}
     capabilities = sorted((DESKTOP_READS - repo_reads) & FIELDS.keys())
+    if policy.get('actions', {}).get('enabled') is True:
+        from action_intent import registry
+        registry(policy['actions'])
+        capabilities.append('durable.action')
     if 'durable.repo.manifest' in FIELDS and ready_store(store, manifest=True):
         import repo_manifest
         if callable(getattr(repo_manifest, 'page', None)):
@@ -160,6 +165,13 @@ def operator_profile(path):
     if not isinstance(templates, dict) or len(templates) > 100:
         raise ValueError("DURABLE_TEMPLATES_REQUIRED")
     policy = validate_policy(load_json(Path(profile["policy_file"])))
+    if policy.get('actions', {}).get('enabled') is True:
+        from action_intent import registry
+        configured = registry(policy['actions'])
+        if not set(configured['namespaces']) <= set(namespaces):
+            raise ValueError('ACTION_NAMESPACE_OUTSIDE_SCOPE')
+        if any(profile.get('repositories', {}).get(k) != v for k, v in configured['repositories'].items()):
+            raise ValueError('ACTION_REPO_OUTSIDE_SCOPE')
     for name, payload in templates.items():
         identifier(name)
         validate_job(payload, policy)
@@ -259,9 +271,13 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     store, operation = Path(profile["store"]), request["type"]
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
     if desktop and operation not in DESKTOP_READS and not (
-            (operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile)['capabilities']) or
+            operation == 'durable.action' or
+            (operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile, policy)['capabilities']) or
             (profile.get('context_service') and operation in {'durable.library','durable.stop','durable.control.resume'})):
         raise ValueError('DESKTOP_READ_ONLY')
+    if operation == 'durable.action':
+        value['action'] = Core(store, policy).actions.handle(request['action'], request['payload'])
+        return value
     if operation in {'durable.library','durable.stop','durable.control.resume'}:
         import context_runtime as runtime
         service=profile.get('context_service')
@@ -303,7 +319,7 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
         value['coverage'] = coverage
         return value
     if operation == 'durable.info':
-        value['info'] = info(profile)
+        value['info'] = info(profile, policy)
         return value
     if desktop and not ready_store(store, manifest=operation in {
             'durable.repo.manifest', 'durable.repo.history', 'durable.repo.delta', DESKTOP_SCAN}):
@@ -446,11 +462,12 @@ def dispatch_desktop(request, profile_path):
     context = None
     try:
         validate_request(request)
-        if request['type'] not in DESKTOP_READS | {'durable.library','durable.stop','durable.control.resume', DESKTOP_SCAN}:
+        if request['type'] not in DESKTOP_READS | {'durable.action','durable.library','durable.stop','durable.control.resume', DESKTOP_SCAN}:
             raise ValueError('DESKTOP_READ_ONLY')
         profile, policy = operator_profile(profile_path)
         if request['type'] not in DESKTOP_READS and not (
-                (request['type'] == DESKTOP_SCAN and DESKTOP_SCAN in info(profile)['capabilities']) or
+                (request['type'] == 'durable.action' and 'durable.action' in info(profile, policy)['capabilities']) or
+                (request['type'] == DESKTOP_SCAN and DESKTOP_SCAN in info(profile, policy)['capabilities']) or
                 (profile.get('context_service') and request['type'] in {'durable.library','durable.stop','durable.control.resume'})):
             raise ValueError('DESKTOP_READ_ONLY')
         context = adapter_context(profile, policy)

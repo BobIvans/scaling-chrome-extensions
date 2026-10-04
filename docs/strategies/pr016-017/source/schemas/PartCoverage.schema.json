@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PartCoverage",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "part-coverage.v1"
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packet_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "part_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_version_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "delivery": {
+      "type": "string",
+      "enum": [
+        "MISSING",
+        "PREPARED",
+        "ATTACHED",
+        "MESSAGE_OBSERVED",
+        "UNKNOWN"
+      ]
+    },
+    "receipt_kind": {
+      "type": "string",
+      "enum": [
+        "LOCAL_VERIFIED",
+        "UI_OBSERVED",
+        "OPERATOR_REPORTED",
+        "MODEL_REPORTED",
+        "REMOTE_HASH_VERIFIED"
+      ]
+    },
+    "received_claim_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "used_claim_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "direct_evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "task_id",
+    "packet_sha256",
+    "part_id",
+    "source_version_ref",
+    "delivery",
+    "receipt_kind",
+    "received_claim_ref",
+    "used_claim_ref",
+    "direct_evidence_refs"
+  ],
+  "additionalProperties": false
+}

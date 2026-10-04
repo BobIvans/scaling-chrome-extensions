@@ -1,0 +1,110 @@
+{
+  "schema": "roadmap.proposed-group-planner-contract.v1",
+  "implementation_status": "PROPOSED_NOT_INSTALLED",
+  "package_id": "ROADMAP-PR-006",
+  "source_task": "LAYA4-008",
+  "scope": "PYTHON_RAW_REFERENCE_GROUPS_V1",
+  "owner": "existing repo_source/repo_context + full manifest writer, optional pure repo_groups sibling",
+  "runtime": "FOREGROUND_CLI",
+  "new_store": false,
+  "new_background_worker": false,
+  "new_native_endpoint": false,
+  "inputs": [
+    "verified PR002 full manifests",
+    "exact saved analysis",
+    "qualified PR005 source-level adapter view",
+    "trusted roots/related mapping/policy"
+  ],
+  "pr005_schema_known": false,
+  "pr005_preflight": "contracts/PR005_ADAPTER_MAP_REQUIRED.json",
+  "source_id_algorithm": "automation_core.digest({schema:occ.repo-logical-source.v1,namespace,repository,path})",
+  "group_id_algorithm": "automation_core.digest({schema:occ.repo-logical-group.v1,planner_version,members:sorted(source_ids)})",
+  "group_revision_algorithm": "digest({group_id,member file hashes,topology relations,non-topological related relations,unresolved records,policy versions})",
+  "group_part_id_algorithm": "digest({schema:occ.repo-group-part.v1,group_id,chunk_logical_ids,policy_digest})",
+  "group_part_revision_algorithm": "digest({group_part_id,base_batch_id,exact raw_refs,previous,next})",
+  "grouping_batch_binding": [
+    "base_batch_id",
+    "snapshot/profile scope",
+    "eligibility_digest",
+    "analysis_digest",
+    "roots",
+    "planner/parser/resolver versions",
+    "declared_map_digest",
+    "policy_digest"
+  ],
+  "topology": {
+    "use_existing_iterative_scc": true,
+    "accepted_relations": [
+      "PYTHON_STATIC_IMPORT",
+      "STATIC_TEST_IMPORT"
+    ],
+    "qualified_endpoints_required": true,
+    "noncode_or_gap": "metadata singleton; preserve source row",
+    "unknown_edges": "UNRESOLVED row; no invented target or guessed static resolution"
+  },
+  "related_types": {
+    "OPERATOR_DECLARED_CONTRACT": "non-topological, exact endpoint/hash mapping",
+    "HEURISTIC_TEST_CANDIDATE": "non-topological filename hypothesis, no measured coverage",
+    "STATIC_TEST_IMPORT": "static local dependency, not observed test coverage"
+  },
+  "edge_provenance": [
+    "source_id/hash",
+    "target_id/hash when resolved",
+    "parser/resolver/rule version",
+    "IMPORT_START_LINE_ONLY or DECLARED_MAP_FILE",
+    "evidence class"
+  ],
+  "ownership": "UNSPECIFIED unless exact trusted map supplied; no inferred installed capability",
+  "membership": "Every entry belongs to exactly one group; every INDEXED part one primary segment raw_ref",
+  "segment_policy": {
+    "raw_bytes": "sum immutable part bytes per segment <= policy budget",
+    "frame_bytes": "actual compact UTF8 JSON bytes + newline <= budget",
+    "refs_per_segment": "configurable per segment; no corpus cap",
+    "oversized_single_part": "explicit PART_BUDGET_TOO_SMALL or REFERENCE_ROW_TOO_LARGE; no tail clipping",
+    "empty_chunk": "one reference [0,0)",
+    "binary_lfs": "raw ref survives; source-level text/code eligibility false",
+    "links": "prev/next within group, related-link locator outside; null at actual boundaries only"
+  },
+  "outputs": [
+    "GROUPS.json",
+    "GROUP_HEADS.jsonl",
+    "GROUP_MEMBERS.jsonl",
+    "GROUP_PARTS.jsonl",
+    "RELATIONS.jsonl",
+    "UNRESOLVED.jsonl",
+    "COVERAGE.json",
+    "INDEX.html",
+    "navigation/*.html"
+  ],
+  "storage_policy": "new derived grouping directory, preserve original PR002 bytes; staged verify then atomic publish",
+  "raw_chunk_policy": "never change raw part_id/logical_id/revision/ranges in old base batch",
+  "coverage_axes": [
+    "all_entries_grouped",
+    "all_captured_parts_referenced",
+    "text_eligible_references",
+    "graph_supported_scope",
+    "related_evidence_class",
+    "ai_read_UNKNOWN"
+  ],
+  "graph_memory": "existing helper O(V+E); explicit resource blockers, out-of-core future scope",
+  "failure_codes": [
+    "PR005_ADAPTER_UNMAPPED",
+    "ANALYSIS_REVISION_STALE",
+    "MANIFEST_UNVERIFIED",
+    "GRAPH_RESOURCE_BUDGET",
+    "PART_BUDGET_TOO_SMALL",
+    "REFERENCE_ROW_TOO_LARGE",
+    "GROUP_MEMBERSHIP_CORRUPT",
+    "RAW_REFERENCE_CORRUPT",
+    "DECLARED_MAPPING_STALE"
+  ],
+  "deferred": [
+    "JS/TS resolver",
+    "full unified provenance graph",
+    "actual test execution/coverage",
+    "native group picker",
+    "AI packet send/usefulness qualification",
+    "Core long inventory",
+    "scale verifier"
+  ]
+}

@@ -1,0 +1,105 @@
+{
+  "status": "PASS",
+  "scope": "PACKAGE_SYNTHETIC_DATA_AND_DRAFT_SQL_ONLY",
+  "preserved_source_files": 42,
+  "source_tasks": 160,
+  "six_step_minutes": 60,
+  "runtime_acceptance_cases": 20,
+  "fixture": {
+    "cases": 18,
+    "captured_originals": 17,
+    "unique_captured_blobs": 13,
+    "source_versions": 14,
+    "extraction_versions": 15,
+    "origins": 15,
+    "node_rows": 89,
+    "attachment_rows": 30,
+    "relative_links": 29,
+    "manual_oracle": "PASS",
+    "schema_experiment": "PASS_PROTOTYPE_ONLY",
+    "schema_rejections": [
+      "wrong_blob_length",
+      "missing_raw_fk",
+      "missing_extraction_fk"
+    ],
+    "prototype_rollback": "PASS",
+    "application_runtime": "NOT_RUN"
+  },
+  "negative_mutations": [
+    {
+      "name": "duplicate-node",
+      "status": "REJECTED",
+      "reason": "node coverage F01"
+    },
+    {
+      "name": "lost-alternative-branch",
+      "status": "REJECTED",
+      "reason": "node coverage F01"
+    },
+    {
+      "name": "lost-structural-node",
+      "status": "REJECTED",
+      "reason": "node coverage F01"
+    },
+    {
+      "name": "pointer-is-payload-claim",
+      "status": "REJECTED",
+      "reason": "attachment coverage/truth F01"
+    },
+    {
+      "name": "invented-raw-byte-range",
+      "status": "REJECTED",
+      "reason": "invented raw byte range"
+    },
+    {
+      "name": "false-remote-completeness",
+      "status": "REJECTED",
+      "reason": "false remote completeness"
+    },
+    {
+      "name": "wrong-message-time",
+      "status": "REJECTED",
+      "reason": "source message time"
+    },
+    {
+      "name": "lost-topology-gap",
+      "status": "REJECTED",
+      "reason": "topology gaps F08"
+    },
+    {
+      "name": "selected-scope-mislabel",
+      "status": "REJECTED",
+      "reason": "false selection label"
+    },
+    {
+      "name": "original-byte-tamper",
+      "status": "REJECTED",
+      "reason": "original hash F01"
+    },
+    {
+      "name": "consistent-wrong-source-id",
+      "status": "REJECTED",
+      "reason": "identity F01"
+    },
+    {
+      "name": "same-extraction-different-payload",
+      "status": "REJECTED",
+      "reason": "same extraction identity different payload F02"
+    },
+    {
+      "name": "captured-error-original-lost",
+      "status": "REJECTED",
+      "reason": "capture budget truth F11"
+    },
+    {
+      "name": "wrong-legacy-item-id",
+      "status": "REJECTED",
+      "reason": "legacy text identity"
+    }
+  ],
+  "application_tests": "NOT_RUN",
+  "current_head_verified": false,
+  "github_pr": null,
+  "windows_device": "NOT_RUN",
+  "remote_completeness": "UNKNOWN"
+}

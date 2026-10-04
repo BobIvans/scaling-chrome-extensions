@@ -10,6 +10,8 @@ sys.path.insert(0, str(ROOT))
 from desktop.client import Connection, DesktopClient, DesktopError, sha_file, validate_scan_run
 import repo_context
 from test_repo_history import RepoHistoryTests
+from test_action_runtime import configuration, input_value
+from automation_core import Core
 
 
 class DesktopScanTests(unittest.TestCase):
@@ -69,6 +71,43 @@ class DesktopScanTests(unittest.TestCase):
         self.assertEqual(client.request(step)['result']['scan_run']['cursor'], 1)
         with self.assertRaises(DesktopError):
             validate_scan_run(dict(done, processed=2), step)
+
+    def test_actions_and_repo_scan_share_installed_dispatch_and_store(self):
+        (self.repo / 'one.py').write_text('x = 1\n')
+        self.git('add', '-A')
+        self.git('commit', '-qm', 'coexistence')
+        repo_context.db_for(self.store).close()
+        policy = {'schema': 'occ.automation-policy.v1', 'money_budget': 0,
+                  'max_parallel': 1, 'actions': configuration()}
+        policy_path = self.root / 'policy.json'
+        policy_path.write_text(json.dumps(policy))
+        self.profile_path = self.root / 'profile.json'
+        self.profile_path.write_text(json.dumps({
+            'schema': 'occ.native-durable-profile.v1', 'store': str(self.store),
+            'policy_file': str(policy_path), 'namespaces': ['code'], 'templates': {},
+            'repositories': {'sce': self.profile}, 'campaigns': [],
+            'desktop_scan_enabled': True}))
+        client = self.connect_client()
+        for capability in ['durable.action', 'durable.repo.scanRun',
+                           'durable.repo.history', 'durable.repo.delta']:
+            self.assertIn(capability, client.info['capabilities'])
+        self.assertNotIn('durable.campaign.advance', client.info['capabilities'])
+
+        def action(name, payload):
+            return client.request({'type': 'durable.action', 'action': name,
+                                   'payload': payload})['result']['action']
+
+        intent = action('CREATE', input_value())
+        job = action('ENQUEUE', {'intent_id': intent['intent_id'], 'revision': 1})
+        scan = client.request({'type': 'durable.repo.scanRun', 'repository': 'sce',
+                               'action': 'START', 'intentKey': '2' * 32})['result']['scan_run']
+        client.request({'type': 'durable.repo.scanRun', 'repository': 'sce', 'action': 'STEP',
+                        'runId': scan['run_id'], 'expectedRevision': scan['run_revision'],
+                        'expectedCursor': scan['cursor']})
+        core = Core(self.store, policy)
+        self.assertEqual(core.run_once()['id'], job['id'])
+        self.assertEqual(core.get(job['id'])['state'], 'SUCCEEDED')
+        self.assertEqual(action('STOP', {})['state'], 'STOPPED')
 
 
 if __name__ == '__main__':

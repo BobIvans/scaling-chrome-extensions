@@ -1,0 +1,44 @@
+{
+  "schema": "occ.activation-policy.v3.design",
+  "status": "DESIGN_ONLY",
+  "execution_enabled": false,
+  "policy_owner": "existing production durable/native owner; this file is not an executable authorizer",
+  "principle": "Development task completion is not activation evidence. Evaluate current receipts for exact target, effect, adapter version and scope at effect time.",
+  "gates": [
+    {"id":"local_keyboard_stop_qualified","evidence":"Local keyboard/UI STOP blocks new effects without ASR; ongoing remote work is shown unknown until observed cancellation.","invalidated_by":["control adapter change","device/input change","failed stop qualification"]},
+    {"id":"current_scope_valid","evidence":"Previously authorized actor/effect/recipient/data/repo/time/budget scope still covers this operation; prompt contents cannot issue a grant.","invalidated_by":["revocation","expiration","new effect or target outside scope"]},
+    {"id":"current_target_verified","evidence":"Current account/workspace/conversation or device/action target matches binding revision immediately before the external effect.","invalidated_by":["account/chat/workspace switch","ambiguous identity","stale UI binding"]},
+    {"id":"payload_scope_valid","evidence":"Immutable packet digest and actual transmitted projection match permitted data categories and target; remote upload is an external effect before Send.","invalidated_by":["changed input","new snapshot","edited attachment","destination change"]},
+    {"id":"exact_effect_qualified","evidence":"Relevant acceptance and failure fixtures passed for this effect on this adapter/device/target class; no generic all-PC qualification.","invalidated_by":["adapter version change","contract drift","negative runtime evidence"]},
+    {"id":"durable_effect_reconciliation_ready","evidence":"Owner lease/fencing, durable pre-effect intent and post-effect evidence are available; unknown outcome cannot cause blind resend.","invalidated_by":["lease lost","storage unavailable","unresolved previous attempt"]},
+    {"id":"foreground_resource_owned","evidence":"One controller owns desktop foreground/input/clipboard resources for the required operation, across all chats.","invalidated_by":["focus changed","lease lost","concurrent input owner"]},
+    {"id":"build_provenance_verified","evidence":"Specific source version/build artifact/digest link and required checks are independently observed.","invalidated_by":["moved tag","asset replacement","mismatched tested head"]},
+    {"id":"exact_device_qualified_for_install","evidence":"Chosen device, package format and current configuration meet installation prerequisites; staged test profile is recorded.","invalidated_by":["device/config mismatch","schema mismatch"]},
+    {"id":"rollback_ready","evidence":"Previous artifact and data recovery path are verified; irreversible migration blocks automatic installation until a separate scoped plan exists.","invalidated_by":["backup missing","rollback test failed","migration incompatibility"]},
+    {"id":"installed_capability_receipt_valid","evidence":"Actual installed action binding and observable postcondition were verified for current code/config; AI claims and merge receipts are insufficient.","invalidated_by":["code/config/binding change","device failure","receipt freshness policy"]}
+  ],
+  "modes": {
+    "local_draft": {"external_effects_allowed":false,"requirements":["local source/path scope","immutable input version"]},
+    "bounded_qualification_session": {
+      "purpose":"Collect real adapter evidence using explicitly scoped qualification fixtures; full qualification cannot be a prerequisite for collecting itself.",
+      "required_gate_ids":["local_keyboard_stop_qualified","current_scope_valid","current_target_verified","payload_scope_valid","durable_effect_reconciliation_ready"],
+      "additional_requirements":["bounded fixture/test recipient and effect list","foreground_resource_owned if UI uses shared desktop","record NOT_PASSED until actual case evidence exists"],
+      "grants_unattended_runtime":false
+    },
+    "scoped_auto_ui_delivery": {
+      "required_gate_ids":["local_keyboard_stop_qualified","current_scope_valid","current_target_verified","payload_scope_valid","exact_effect_qualified","durable_effect_reconciliation_ready","foreground_resource_owned"],
+      "development_refs":["UI3-016","UI3-018"],
+      "voice_required":false
+    },
+    "scoped_auto_install": {
+      "required_gate_ids":["local_keyboard_stop_qualified","current_scope_valid","current_target_verified","exact_effect_qualified","durable_effect_reconciliation_ready","build_provenance_verified","exact_device_qualified_for_install","rollback_ready"],
+      "voice_required":false
+    },
+    "use_new_capability": {
+      "required_gate_ids":["current_scope_valid","current_target_verified","installed_capability_receipt_valid"],
+      "additional_requirements":["all effect-specific gates still apply","unknown or unregistered effects remain disabled"],
+      "voice_required":false
+    }
+  },
+  "not_implied": ["The user has granted any new live external effect in this strategy-only task.","A passed development DAG node is a runtime receipt.","Planner projection holds locks or executes jobs.","A user implementation assertion proves merge or installation."]
+}

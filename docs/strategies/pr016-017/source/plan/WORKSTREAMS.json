@@ -1,0 +1,261 @@
+[
+  {
+    "title": "Текст → план действий: IntentSpec, Laya и роли planner/retriever/critic",
+    "lane": "Автоматизация",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Общий typed IntentSpec и deterministic route известных команд",
+      "Laya как заменяемый advisory adapter",
+      "Раздельные planning/retrieval/critique outputs и запрос недостающих slots"
+    ],
+    "acceptance": [
+      "Одинаковый исправленный input даёт тот же plan при тех же версиях",
+      "Неоднозначные repo/recipient/effect не угадываются",
+      "Correction отзывает старый неисполненный intent",
+      "Unknown capability создаёт связанный development request",
+      "Laya proposal не обходит registry/template validation",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Контракты выбранного Laya adapter проверить по фактически доступной интеграции; не выдавать предложенный JSON за уже поддерживаемый vendor API. Voice — №28.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "PAR3-005",
+      "LAYA4-022",
+      "ACTION5-20"
+    ],
+    "feature_ids": [
+      "ACT-001",
+      "ACT-006",
+      "ACT-007",
+      "ACT-008"
+    ],
+    "decision_ids": [],
+    "goal_ids": [
+      "GOAL5-17"
+    ],
+    "workstream_id": "WS-018",
+    "parent_package": "ROADMAP-PR-016",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-013",
+      "WS-017"
+    ],
+    "original_package_inputs": []
+  },
+  {
+    "title": "Голосовое управление Windows: hotkey, ASR, исправления и STOP",
+    "lane": "Автоматизация",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Один capture stream и push-to-talk",
+      "Сменный ASR RU/EN/code-switch и critical slots",
+      "Text/voice parity, correction revisions, TTS/background rejection"
+    ],
+    "acceptance": [
+      "Повтор hotkey не открывает второй микрофон",
+      "Микрофон освобождается после crash/stop",
+      "Critical-slot errors измерены отдельно от WER",
+      "Текстовое исправление меняет intent revision до effect",
+      "STOP и keyboard path работают при отказе ASR",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Media extraction №19 переиспользуется; live capture имеет собственный device receipt. Не считать Linux fixture измерением микрофона Dell.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "TAB4-16",
+      "LAYA4-023",
+      "ACTION5-22"
+    ],
+    "feature_ids": [
+      "ACT-028",
+      "ACT-029",
+      "ACT-030",
+      "ACT-031",
+      "ACT-034",
+      "ACT-058"
+    ],
+    "decision_ids": [
+      "DEC5-17"
+    ],
+    "goal_ids": [
+      "GOAL5-18",
+      "GOAL5-19"
+    ],
+    "workstream_id": "WS-019",
+    "parent_package": "ROADMAP-PR-016",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-010",
+      "WS-018"
+    ],
+    "original_package_inputs": []
+  },
+  {
+    "title": "Навыки из демонстраций, failure memory и выборочная requalification",
+    "lane": "Автоматизация",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Recording→portable skill с preconditions/effects/recovery",
+      "Оптимизация шагов с сохранением проверяемых инвариантов",
+      "Failure capsules, permission diff и selective stale/repair"
+    ],
+    "acceptance": [
+      "Replay skill проходит normal/fault cases",
+      "Secrets представлены references",
+      "Координаты и tab ID не подменяют устойчивую identity",
+      "Изменение adapter/permission инвалидирует зависимые навыки",
+      "Новая skill version сохраняет отрицательные попытки",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Отдельные навыки могут начинаться с локальных templates; browser skills ждут №30/31. Не создавать второй executor.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "UI3-019",
+      "PAR3-024",
+      "LAYA4-024",
+      "ACTION5-23",
+      "ACTION5-24"
+    ],
+    "feature_ids": [
+      "LIB-054",
+      "ACT-041",
+      "ACT-042",
+      "ACT-043",
+      "ACT-044",
+      "ACT-048",
+      "RND-042",
+      "RND-043"
+    ],
+    "decision_ids": [],
+    "goal_ids": [
+      "GOAL5-16",
+      "GOAL5-22"
+    ],
+    "workstream_id": "WS-020",
+    "parent_package": "ROADMAP-PR-017",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-018",
+      "WS-019",
+      "WS-021",
+      "WS-022"
+    ],
+    "original_package_inputs": []
+  },
+  {
+    "title": "Выбранные Grok/GitHub targets и квалифицированные PC/browser adapters",
+    "lane": "UI-интеграция",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Account/workspace/chat/repo/branch binding выбранных targets",
+      "Маршрутизация API/CLI/UIA/DOM и управление focus",
+      "Canary, target drift, rebind и adapter qualification"
+    ],
+    "acceptance": [
+      "Wrong account/chat/repo обнаруживается до effect",
+      "Restart не полагается только на tab ID",
+      "User focus получает приоритет",
+      "UI drift блокирует только затронутый adapter",
+      "Capabilities выбранной среды, включая доступ Grok к repo, реально проверены",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Здесь target discovery и adapter identity. Durable доставка/повтор — №31, Git changes — №32. Discovery можно проектировать параллельно с desktop.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "UI3-001",
+      "UI3-002",
+      "UI3-006",
+      "TAB4-03",
+      "TAB4-04"
+    ],
+    "feature_ids": [
+      "ACT-035",
+      "ACT-036",
+      "ACT-037",
+      "ACT-039"
+    ],
+    "decision_ids": [
+      "DEC5-03",
+      "DEC5-04"
+    ],
+    "goal_ids": [
+      "GOAL5-13",
+      "GOAL5-19"
+    ],
+    "workstream_id": "WS-021",
+    "parent_package": "ROADMAP-PR-017",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-017"
+    ],
+    "original_package_inputs": [
+      8
+    ]
+  },
+  {
+    "title": "Надёжная доставка в AI UI: outbox, части, ответы и unknown-send recovery",
+    "lane": "UI-интеграция",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Durable outbox к текущему Core и единственный UI writer",
+      "Draft/upload/send/result observations по каждой части",
+      "Unknown effect reconciliation, STOP и реестр полученного/использованного контекста"
+    ],
+    "acceptance": [
+      "Lost acknowledgement не вызывает blind duplicate send",
+      "Upload сверяется с packet/part hash",
+      "Ответ принадлежит выбранному task/chat",
+      "Cancel сохраняет неопределённость уже возможного effect",
+      "Receipt получения не считается доказательством использования всех частей",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Использует неизменяемый пакет №22. Разные провайдеры подключаются как adapters с отдельными receipts; нет общего скрытого потолка частей.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "UI3-005",
+      "UI3-007",
+      "UI3-008",
+      "UI3-009",
+      "UI3-010",
+      "UI3-011",
+      "UI3-012",
+      "UI3-016",
+      "PAR3-009",
+      "PAR3-010",
+      "EVO3-004",
+      "TAB4-06",
+      "TAB4-07",
+      "TAB4-08"
+    ],
+    "feature_ids": [
+      "LIB-057",
+      "ACT-022",
+      "ACT-023"
+    ],
+    "decision_ids": [],
+    "goal_ids": [
+      "GOAL5-11",
+      "GOAL5-12",
+      "GOAL5-13"
+    ],
+    "workstream_id": "WS-022",
+    "parent_package": "ROADMAP-PR-017",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-013",
+      "WS-018",
+      "WS-021"
+    ],
+    "original_package_inputs": []
+  }
+]

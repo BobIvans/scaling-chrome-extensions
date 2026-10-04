@@ -1,3 +1,28 @@
+# Текущая навигация: полный Voice AgentOS и PR-016+017
+
+Эта интеграция сохраняет обе передачи без потери исходной стратегии.
+Полный общий roadmap из merged #53 находится в `docs/strategy/voice-agentos/`.
+Специализированный исходный ZIP 016+017 и все вложенные архивы —
+`docs/strategies/pr016-017/source/`, `archives/`, `original-strategy.zip`.
+
+Для продолжения текущего пакета 016+017 читай `CODEX_START_HERE.md`,
+`docs/strategies/pr016-017/PACKAGE_MASTER_CONTEXT.md`, `EXECUTION_AUDIT.md`
+и `NEXT_IMPLEMENTATION.md`. Новые action/context изменения интегрируют #50
+и общий Core STOP; 220 критериев сохраняются OPEN.
+
+Для общего foundation этапа №010/011 и всех остальных packages читай полный
+roadmap ниже и `docs/strategy/voice-agentos/handoff/NEXT_STAGE.md`.
+SourceAddress/source ledger #51 — prerequisite там, где действительно нужен
+унифицированный upstream owner. Независимый typed planning 016/017 можно
+продолжать без ложного утверждения, что все prerequisite criteria закрыты.
+
+Exact root handoffs из #53 сохранены также в `UPSTREAM_*_PR53.md` внутри
+`docs/strategies/pr016-017/`. Исторические PR statuses ниже — dated snapshots;
+текущие refs/CI/merge читать из Git/GitHub и пакета EXECUTION_AUDIT.
+Ни один исходный backlog/критерий не удалён ради объединения.
+
+---
+
 # Voice AgentOS / Context Library — полный контекст продолжения
 
 Репозиторий: `BobIvans/scaling-chrome-extensions`. Рыночный owner: отдельный

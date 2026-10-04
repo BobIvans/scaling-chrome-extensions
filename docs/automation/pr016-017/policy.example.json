@@ -1,0 +1,101 @@
+{
+  "schema": "occ.automation-policy.v1",
+  "max_parallel": 1,
+  "money_budget": 0,
+  "sources": {},
+  "repos": {},
+  "actions": {
+    "schema": "occ.action-registry.v1",
+    "enabled": true,
+    "version": "1",
+    "namespaces": [
+      "code"
+    ],
+    "repositories": {},
+    "capabilities": {
+      "find": {
+        "operation": "find_context",
+        "effect": "LOCAL_READ",
+        "version": "1",
+        "required_slots": [
+          "namespace"
+        ],
+        "aliases": [
+          "find"
+        ]
+      },
+      "prepare": {
+        "operation": "prepare_repo_context",
+        "effect": "LOCAL_WRITE",
+        "version": "1",
+        "required_slots": [
+          "repo"
+        ],
+        "aliases": [
+          "prepare"
+        ]
+      },
+      "packet": {
+        "operation": "compile_ai_packet",
+        "effect": "LOCAL_WRITE",
+        "version": "1",
+        "required_slots": [
+          "namespace"
+        ],
+        "aliases": [
+          "packet"
+        ]
+      },
+      "show": {
+        "operation": "show_packet",
+        "effect": "LOCAL_READ",
+        "version": "1",
+        "required_slots": [
+          "packet_id"
+        ],
+        "aliases": [
+          "show"
+        ]
+      },
+      "more": {
+        "operation": "request_more_context",
+        "effect": "LOCAL_READ",
+        "version": "1",
+        "required_slots": [
+          "namespace"
+        ],
+        "aliases": [
+          "more"
+        ]
+      },
+      "inspect": {
+        "operation": "inspect_result",
+        "effect": "LOCAL_READ",
+        "version": "1",
+        "required_slots": [
+          "packet_id"
+        ],
+        "aliases": [
+          "inspect"
+        ]
+      },
+      "send": {
+        "operation": "send_packet",
+        "effect": "AI_MESSAGE",
+        "version": "1",
+        "required_slots": [
+          "destination",
+          "packet_id"
+        ],
+        "aliases": [
+          "send"
+        ]
+      }
+    },
+    "grants": {
+      "effects": [],
+      "targets": []
+    },
+    "dependency_versions": {}
+  }
+}

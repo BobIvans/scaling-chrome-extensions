@@ -1,0 +1,47 @@
+Реализуй один PR по ZIP-007 в BobIvans/scaling-chrome-extensions:
+derived JS/TS AST analysis + conservative exact source-path relations.
+План focused build примерно на час; не считать estimate тестовым результатом.
+
+Сначала: actual HEAD/AGENTS.md/owners, затем contracts/SUPPORT_MATRIX.json.
+Saved source da6abf4 и local V4 5574ab7 — historical reference, не current main.
+№5/№6 input ZIPs и contracts получены; implementation/merge не наблюдались.
+Для actual integration проверить факты/owners/diff/SHA и заполнить receipt.
+
+1. Доверенный pinned AST parser выбрать через ADR measurements; никаких regex
+   вместо AST и никакой зависимости из node_modules анализируемого repo.
+   Кандидаты: TypeScript Compiler API <7, @babel/parser, Tree-sitter bindings.
+   Exact package version, artifacts/lock hashes, license и offline Windows receipt
+   обязательны до qualification. Здесь package pin=null: parser не установлен.
+2. Добавить sibling repo_js.py и trusted Node helper (либо выбранный qualified
+   equivalent) в existing Content Lab owner. Analyze captured immutable bytes
+   по одной file, verify reconstruction/hash; читать snapshot через SQLite cursor.
+   New CLI uses native_adapter.operator_profile, namespace/alias/store guards.
+3. Extract function/class declaration spans, import declarations и module
+   re-export references. Symbol ranges имеют bytes, не JS UTF-16 offsets.
+   BOM/CRLF/multibyte/astral symbols и literals обязательно проверить.
+4. Support RELATIVE_SOURCE_EXACT_V1: manifest-only, case-sensitive exact path,
+   explicit source extension, no filesystem/package lookup. TS callers с .js/.mjs/
+   .cjs specifier получают TYPE_RESOLUTION_POLICY_REQUIRED. Это literal source
+   graph, не claim о compiler/runtime binding. Aliases/workspaces/extensionless/
+   CommonJS/dynamic/unsupported остаются typed gaps. Type-only edges отдельно.
+5. Писать отдельный staged derived bundle: JS_ANALYSIS.jsonl, RELATIONS.jsonl,
+   ANALYSIS_STATUS.json, INTERPRETATION.json. Atomic directory publish после
+   counts/hash/version proof; no total files cap и no whole-repo stdout response.
+   Per-file failure даёт fallback/outcome; global budget interruption не даёт READY.
+6. Focused tests по 16 cases и labelled corpus; required actual repo checks.
+   Fill IMPLEMENTATION_RESULT_TEMPLATE.json: source SHA, parser pin, results,
+   precision/recall/unresolved, device metrics и deferred work. Package fixture
+   oracle не является AST adapter и не даёт application PASS.
+
+Не вызывать source imports, transpile/emit, createProgram с default filesystem
+host, source hooks, npm install в scanned repo или runtime handlers найденного кода.
+Не менять repo_source.analyze/partition default, raw chunks, IDs/revisions,
+snapshot schema или PR003 exporter. Python graph/grouping принадлежит №6.
+No new Native endpoint/worker/scheduler, alias resolver, mixed language join,
+owner picker или enabled capability в этом часовом срезе.
+
+Начинать analysis только с actual inventory/capture completeness; Несовпадающий
+eligibility version/schema — explicit status, не успех совместимости №5.
+Source text eligibility потребляется через validated projection; не создавать
+конкурирующий format detector. Legacy opt-in guard, если №5 ещё не implemented (только explicit opt-in),
+отмечается LEGACY_CAPTURE_GUARD_UNVERIFIED_PR005, и whole LAYA4-005 остаётся open.

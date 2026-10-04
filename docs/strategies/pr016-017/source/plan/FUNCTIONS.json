@@ -1,0 +1,770 @@
+[
+  {
+    "function_id": "F001",
+    "proposed_symbol": "captureInputRevision",
+    "workstream": "WS-018",
+    "input_output": "original source + corrected text → InputRevision",
+    "state_error_recovery": "Append-only provenance/revision; INPUT_INVALID",
+    "verification_case_ids": [
+      "INT-PARITY"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F002",
+    "proposed_symbol": "resolveCriticalSlots",
+    "workstream": "WS-018",
+    "input_output": "text + selected aliases → resolved/uncertain slots",
+    "state_error_recovery": "No guessed repo/chat/effect/amount; NEEDS_INPUT",
+    "verification_case_ids": [
+      "INT-AMBIGUOUS"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F003",
+    "proposed_symbol": "routeKnownCommand",
+    "workstream": "WS-018",
+    "input_output": "typed slots + pinned registry → template route",
+    "state_error_recovery": "Deterministic route; unknown→development request",
+    "verification_case_ids": [
+      "INT-REPEAT"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F004",
+    "proposed_symbol": "retrievePlanEvidence",
+    "workstream": "WS-018",
+    "input_output": "allowlisted source refs → EvidenceBundle",
+    "state_error_recovery": "Missing mandatory refs→retrieval required; content untrusted",
+    "verification_case_ids": [
+      "INT-RETRIEVAL"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F005",
+    "proposed_symbol": "proposePlan",
+    "workstream": "WS-018",
+    "input_output": "IntentSpec + evidence → PlanProposal",
+    "state_error_recovery": "Separate author/version; cannot create grants",
+    "verification_case_ids": [
+      "INT-ROLES"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F006",
+    "proposed_symbol": "critiquePlan",
+    "workstream": "WS-018",
+    "input_output": "proposal + criteria → Verdict",
+    "state_error_recovery": "Reject missing source/scopes; goal unchanged",
+    "verification_case_ids": [
+      "INT-ROLES"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F007",
+    "proposed_symbol": "discoverLayaAdapter",
+    "workstream": "WS-018",
+    "input_output": "installed interface → capability receipt",
+    "state_error_recovery": "UNKNOWN/UNAVAILABLE→direct UI; no guessed vendor API",
+    "verification_case_ids": [
+      "INT-LAYA"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F008",
+    "proposed_symbol": "validateLayaProposal",
+    "workstream": "WS-018",
+    "input_output": "proposal → typed known operations",
+    "state_error_recovery": "Registry/template/grant checks before dispatch",
+    "verification_case_ids": [
+      "INT-LAYA"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F009",
+    "proposed_symbol": "compileIntentDag",
+    "workstream": "WS-018",
+    "input_output": "validated intent → versioned steps/hash",
+    "state_error_recovery": "Cycles/duplicates/missing/version mismatch rejected",
+    "verification_case_ids": [
+      "INT-DAG"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F010",
+    "proposed_symbol": "canonicalizeSemanticPlan",
+    "workstream": "WS-018",
+    "input_output": "normalized semantic payload → SHA256",
+    "state_error_recovery": "Modality metadata separate; decimals strings, versions pinned",
+    "verification_case_ids": [
+      "INT-PARITY"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F011",
+    "proposed_symbol": "reviseIntent",
+    "workstream": "WS-018",
+    "input_output": "correction + expected revision → new revision",
+    "state_error_recovery": "Atomic revoke unexecuted old jobs; race→unknown/reconcile",
+    "verification_case_ids": [
+      "INT-REVISION",
+      "ALL-RESTART"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F012",
+    "proposed_symbol": "admitCurrentRevision",
+    "workstream": "WS-018",
+    "input_output": "current Core state + grant → admitted/fenced",
+    "state_error_recovery": "Recheck STOP/revision/qualification at effect boundary",
+    "verification_case_ids": [
+      "INT-RACE"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F013",
+    "proposed_symbol": "createDevelopmentRequest",
+    "workstream": "WS-018",
+    "input_output": "unknown capability → bounded request",
+    "state_error_recovery": "Linked exact intent/criteria; no arbitrary shell/install",
+    "verification_case_ids": [
+      "INT-UNKNOWN"
+    ],
+    "owner_role": "Core intent/compiler owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F014",
+    "proposed_symbol": "startPushToTalk",
+    "workstream": "WS-019",
+    "input_output": "physical hotkey/device → CaptureSession",
+    "state_error_recovery": "Single stream; reentrant call returns same ID",
+    "verification_case_ids": [
+      "VOICE-ONE"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F015",
+    "proposed_symbol": "stopCapture",
+    "workstream": "WS-019",
+    "input_output": "stop/release → final segment or aborted",
+    "state_error_recovery": "Always release device handle; explicit stop fallback",
+    "verification_case_ids": [
+      "VOICE-RELEASE"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F016",
+    "proposed_symbol": "recoverCaptureLifecycle",
+    "workstream": "WS-019",
+    "input_output": "crash/sleep/device change → gaps/new session",
+    "state_error_recovery": "Persisted incomplete ranges do not become valid audio",
+    "verification_case_ids": [
+      "VOICE-GAPS",
+      "ALL-RESTART"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F017",
+    "proposed_symbol": "transcribeAudio",
+    "workstream": "WS-019",
+    "input_output": "audio_ref + pinned ASR → transcript revisions",
+    "state_error_recovery": "Consume iterator; failure preserves text path",
+    "verification_case_ids": [
+      "VOICE-OFFLINE"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F018",
+    "proposed_symbol": "guardTtsBackground",
+    "workstream": "WS-019",
+    "input_output": "activation/segments → accepted/uncertain",
+    "state_error_recovery": "Background/TTS no execution grant; preview required",
+    "verification_case_ids": [
+      "VOICE-TTS"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F019",
+    "proposed_symbol": "reviewVoiceSlots",
+    "workstream": "WS-019",
+    "input_output": "transcript/gold slots → preview/correction",
+    "state_error_recovery": "Exact repo/chat/path/effect/amount; old revision fenced",
+    "verification_case_ids": [
+      "VOICE-CORRECTION"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F020",
+    "proposed_symbol": "dispatchIndependentStop",
+    "workstream": "WS-019",
+    "input_output": "keyboard/Core stop → blocked admission",
+    "state_error_recovery": "No ASR dependency; unknown remote effects retained",
+    "verification_case_ids": [
+      "STOP-INDEPENDENT"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F021",
+    "proposed_symbol": "measureCriticalSlotErrors",
+    "workstream": "WS-019",
+    "input_output": "held-out gold/attempts → device metrics",
+    "state_error_recovery": "Separate WER/slots/false admission/latency; missing null",
+    "verification_case_ids": [
+      "VOICE-GOLD"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F022",
+    "proposed_symbol": "provideKeyboardParity",
+    "workstream": "WS-019",
+    "input_output": "desktop controls → same intent operations",
+    "state_error_recovery": "Names/focus/status/errors; no drag requirement",
+    "verification_case_ids": [
+      "UI-KEYBOARD",
+      "UI-A11Y"
+    ],
+    "owner_role": "Windows voice/accessibility owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F023",
+    "proposed_symbol": "bindSelectedTarget",
+    "workstream": "WS-021",
+    "input_output": "user selection+observation → TargetBinding",
+    "state_error_recovery": "Observable stable identity; missing→rebind/manual",
+    "verification_case_ids": [
+      "TARGET-DUPLICATE"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F024",
+    "proposed_symbol": "revalidateTarget",
+    "workstream": "WS-021",
+    "input_output": "binding+current observation → match/rebind",
+    "state_error_recovery": "Before upload/Send; tab handles not identity",
+    "verification_case_ids": [
+      "TARGET-DRIFT"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F025",
+    "proposed_symbol": "resolveTargetAfterRestart",
+    "workstream": "WS-021",
+    "input_output": "persisted binding → qualified handle",
+    "state_error_recovery": "Duplicate title/account/reused ID block guessed match",
+    "verification_case_ids": [
+      "TARGET-RESTART",
+      "ALL-RESTART"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F026",
+    "proposed_symbol": "discoverAdapterCapabilities",
+    "workstream": "WS-021",
+    "input_output": "route/environment → actual capabilities",
+    "state_error_recovery": "Separate API/CLI/UIA/DOM qualification; no silent switch",
+    "verification_case_ids": [
+      "TARGET-ROUTE",
+      "TARGET-LOGIN",
+      "COMPAT-UPSTREAM"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F027",
+    "proposed_symbol": "runAdapterCanary",
+    "workstream": "WS-021",
+    "input_output": "UI contract+environment → qualification receipt",
+    "state_error_recovery": "Drift invalidates only affected adapter",
+    "verification_case_ids": [
+      "TARGET-CANARY",
+      "TARGET-MULTILINE"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F028",
+    "proposed_symbol": "acquireComposerOwnership",
+    "workstream": "WS-021",
+    "input_output": "target resource key → lease/fence",
+    "state_error_recovery": "One writer across contexts; user focus priority",
+    "verification_case_ids": [
+      "OUTBOX-LEASE"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F029",
+    "proposed_symbol": "yieldFocusToUser",
+    "workstream": "WS-021",
+    "input_output": "manual takeover → paused operation",
+    "state_error_recovery": "Block next keystroke/click; retain task/draft",
+    "verification_case_ids": [
+      "TARGET-FOCUS"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F030",
+    "proposed_symbol": "restoreOwnedClipboard",
+    "workstream": "WS-021",
+    "input_output": "saved clipboard/current version → restore/noop",
+    "state_error_recovery": "Never overwrite new user clipboard value",
+    "verification_case_ids": [
+      "TARGET-CLIPBOARD"
+    ],
+    "owner_role": "Browser target/adapter owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F031",
+    "proposed_symbol": "enqueueImmutableDelivery",
+    "workstream": "WS-022",
+    "input_output": "packet/binding/intent → durable outbox",
+    "state_error_recovery": "Same operation keys; atomic commit; local hashes verified",
+    "verification_case_ids": [
+      "OUTBOX-TX",
+      "OUTBOX-ENVELOPE",
+      "COMPAT-UPSTREAM"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F032",
+    "proposed_symbol": "inspectDraftConflict",
+    "workstream": "WS-022",
+    "input_output": "current composer → empty/owned/conflict",
+    "state_error_recovery": "Do not overwrite foreign draft",
+    "verification_case_ids": [
+      "DRAFT-CONFLICT"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F033",
+    "proposed_symbol": "prepareAndAttachDraft",
+    "workstream": "WS-022",
+    "input_output": "supported parts/prompt → draft evidence",
+    "state_error_recovery": "Separate local hashes and observable upload grades",
+    "verification_case_ids": [
+      "DRAFT-VERIFY",
+      "DRAFT-NOUPLOAD"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F034",
+    "proposed_symbol": "armSendAttempt",
+    "workstream": "WS-022",
+    "input_output": "validated current state → SEND_ARMED",
+    "state_error_recovery": "Persist before click; separate intent; STOP/revision check",
+    "verification_case_ids": [
+      "SEND-SCOPE",
+      "SEND-PROVENANCE"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F035",
+    "proposed_symbol": "dispatchSingleSend",
+    "workstream": "WS-022",
+    "input_output": "armed attempt → one invocation+observation",
+    "state_error_recovery": "No retries per attempt even after lease loss",
+    "verification_case_ids": [
+      "SEND-ONCE"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F036",
+    "proposed_symbol": "observeOutgoingMessage",
+    "workstream": "WS-022",
+    "input_output": "qualified history → observed evidence",
+    "state_error_recovery": "Match exact task/attempt/packet; no similar unrelated reply",
+    "verification_case_ids": [
+      "SEND-OBSERVE"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F037",
+    "proposed_symbol": "reconcileUnknownSend",
+    "workstream": "WS-022",
+    "input_output": "attempt+history → observed/no-effect/unknown/conflict",
+    "state_error_recovery": "Incomplete history remains unknown; no blind retry",
+    "verification_case_ids": [
+      "SEND-RECONCILE",
+      "SEND-UNKNOWN"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F038",
+    "proposed_symbol": "recordPartCoverage",
+    "workstream": "WS-022",
+    "input_output": "part+observation/claim → typed ledger",
+    "state_error_recovery": "Received/use claims not inferred from attach or generic reply",
+    "verification_case_ids": [
+      "PART-COVERAGE"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F039",
+    "proposed_symbol": "iteratePacketParts",
+    "workstream": "WS-022",
+    "input_output": "manifest+cursor → bounded pages",
+    "state_error_recovery": "No hidden total cap; backpressure/checkpoints preserve all IDs",
+    "verification_case_ids": [
+      "PART-SCALE"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F040",
+    "proposed_symbol": "importCorrelatedResult",
+    "workstream": "WS-022",
+    "input_output": "final response+task/packet → result event",
+    "state_error_recovery": "Schema/correlation/current-head checks; idempotent; data only",
+    "verification_case_ids": [
+      "RESULT-CORRELATION",
+      "RESULT-IDEMPOTENT",
+      "RESULT-DATA",
+      "COMPAT-DOWNSTREAM"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F041",
+    "proposed_symbol": "cancelDelivery",
+    "workstream": "WS-022",
+    "input_output": "Core cancel/STOP → per-attempt outcomes",
+    "state_error_recovery": "Remote unknown retained; next parts not dispatched",
+    "verification_case_ids": [
+      "SEND-CANCEL"
+    ],
+    "owner_role": "Core outbox/reconciliation owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F042",
+    "proposed_symbol": "recordScopedDemonstration",
+    "workstream": "WS-020",
+    "input_output": "allowed UI events → candidate recording",
+    "state_error_recovery": "Sanitize before persistence; credential refs only",
+    "verification_case_ids": [
+      "SKILL-SECRET"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F043",
+    "proposed_symbol": "compilePortableSkill",
+    "workstream": "WS-020",
+    "input_output": "recording+contracts → versioned skill",
+    "state_error_recovery": "Same Core compiler; stable identity not recorded coordinates",
+    "verification_case_ids": [
+      "SKILL-RECORD"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F044",
+    "proposed_symbol": "qualifySkillReplay",
+    "workstream": "WS-020",
+    "input_output": "normal/unseen/fault cases → scoped receipt",
+    "state_error_recovery": "Bind exact code/environment/dependency hashes",
+    "verification_case_ids": [
+      "SKILL-UNSEEN"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F045",
+    "proposed_symbol": "optimizeSkillSteps",
+    "workstream": "WS-020",
+    "input_output": "candidate step diff+verifier → optimized version",
+    "state_error_recovery": "Mandatory checks/STOP/effect invariant preserved",
+    "verification_case_ids": [
+      "SKILL-OPTIMIZE"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F046",
+    "proposed_symbol": "appendFailureCapsule",
+    "workstream": "WS-020",
+    "input_output": "failed attempt → immutable capsule",
+    "state_error_recovery": "All negative attempts survive success/repair",
+    "verification_case_ids": [
+      "SKILL-FAILURE"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F047",
+    "proposed_symbol": "computePermissionDiff",
+    "workstream": "WS-020",
+    "input_output": "old/new scopes → unchanged/reduced/grown",
+    "state_error_recovery": "No implicit scope growth; compatible reuse allowed",
+    "verification_case_ids": [
+      "SKILL-SCOPE"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F048",
+    "proposed_symbol": "invalidateDependentSkills",
+    "workstream": "WS-020",
+    "input_output": "changed dependency → STALE closure",
+    "state_error_recovery": "Selective index; independence proven before retaining receipt",
+    "verification_case_ids": [
+      "SKILL-DRIFT"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F049",
+    "proposed_symbol": "repairSkillVersion",
+    "workstream": "WS-020",
+    "input_output": "capsules+repair → new version",
+    "state_error_recovery": "Old version/receipts/failures retained; requalify negative corpus",
+    "verification_case_ids": [
+      "SKILL-NEGATIVE"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  },
+  {
+    "function_id": "F050",
+    "proposed_symbol": "invokeQualifiedRecipe",
+    "workstream": "WS-020",
+    "input_output": "skill+scope+current refs → Core plan",
+    "state_error_recovery": "Reuse jobs/leases/cancel/reconcile; no second executor",
+    "verification_case_ids": [
+      "SKILL-RECIPE",
+      "ALL-RESTART",
+      "COMPAT-UPSTREAM",
+      "COMPAT-DOWNSTREAM"
+    ],
+    "owner_role": "Skill registry/qualification owner",
+    "actual_path": null,
+    "actual_handler": null,
+    "implementation_status": "PLANNED_NOT_ENGINEERED",
+    "mapping_action": "reuse/extend existing owner after actual checkout audit"
+  }
+]

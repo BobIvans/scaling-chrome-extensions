@@ -1,0 +1,1882 @@
+[
+  {
+    "feature_id": "LIB-001",
+    "phase": "P0",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [],
+    "experiment": "На временной копии библиотеки пройти импорт→поиск→экспорт через оба клиента."
+  },
+  {
+    "feature_id": "LIB-002",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001"
+    ],
+    "experiment": "Сравнить fixture дерева с ignore rules, binary и необычными именами с manifest."
+  },
+  {
+    "feature_id": "LIB-003",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001"
+    ],
+    "experiment": "Импортировать большой текст и binary с ограниченным worker budget и прерыванием."
+  },
+  {
+    "feature_id": "LIB-004",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001"
+    ],
+    "experiment": "Пройти коллекцию 1001 объектов с page size 20 и restart на промежуточном cursor."
+  },
+  {
+    "feature_id": "LIB-005",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-002",
+      "LIB-003",
+      "LIB-004"
+    ],
+    "experiment": "Экспортировать тестовый корпус с маленьким part size и восстановить полный поток."
+  },
+  {
+    "feature_id": "LIB-006",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001",
+      "LIB-003"
+    ],
+    "experiment": "Прерывать worker в трёх стадиях одного большого импорта."
+  },
+  {
+    "feature_id": "LIB-007",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-003"
+    ],
+    "experiment": "Импортировать mixed corpus и намеренно сломать один extractor."
+  },
+  {
+    "feature_id": "LIB-008",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001",
+      "LIB-003"
+    ],
+    "experiment": "Импортировать два перекрывающихся ZIP и сравнить object и alias counts."
+  },
+  {
+    "feature_id": "LIB-009",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-003",
+      "LIB-006",
+      "LIB-008"
+    ],
+    "experiment": "Fixture nested ZIP с duplicate entry names, traversal, encrypted placeholder и budget exhaustion."
+  },
+  {
+    "feature_id": "LIB-010",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-002"
+    ],
+    "experiment": "Экспортировать fixture с отсутствующим payload и затем добавить payload delta."
+  },
+  {
+    "feature_id": "LIB-011",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-002",
+      "LIB-006"
+    ],
+    "experiment": "Собрать packet до и после локального изменения без нового commit."
+  },
+  {
+    "feature_id": "LIB-012",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-006",
+      "LIB-008"
+    ],
+    "experiment": "Fixture с разветвлённым диалогом, отсутствующим attachment и повторным импортом."
+  },
+  {
+    "feature_id": "LIB-013",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-012"
+    ],
+    "experiment": "Разметить fixture из реальных смешанных RU/EN сообщений и quoted blocks."
+  },
+  {
+    "feature_id": "LIB-014",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-007",
+      "LIB-008"
+    ],
+    "experiment": "Проверить Unicode, эмодзи, CRLF и намеренные опечатки на roundtrip."
+  },
+  {
+    "feature_id": "LIB-015",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-008"
+    ],
+    "experiment": "Импортировать старое сообщение сегодня и несколько неоднозначных временных меток."
+  },
+  {
+    "feature_id": "LIB-016",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-007",
+      "LIB-014"
+    ],
+    "experiment": "Прогнать два parser versions на одном документе и сравнить derived diff."
+  },
+  {
+    "feature_id": "LIB-017",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001",
+      "LIB-014",
+      "LIB-016"
+    ],
+    "experiment": "Набор 30 реальных запросов на сохранённых источниках: FTS baseline."
+  },
+  {
+    "feature_id": "LIB-018",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-014",
+      "LIB-016"
+    ],
+    "experiment": "Разметить stratified corpus детерминированно, затем добавить AI proposals на выбранной части."
+  },
+  {
+    "feature_id": "LIB-019",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-013",
+      "LIB-014",
+      "LIB-018"
+    ],
+    "experiment": "20 пар RU/EN запросов с corrections и незнакомыми терминами."
+  },
+  {
+    "feature_id": "LIB-020",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-019"
+    ],
+    "experiment": "Пройти исходные запросы и сравнить вопросы с существующими ответами."
+  },
+  {
+    "feature_id": "LIB-021",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-015",
+      "LIB-019"
+    ],
+    "experiment": "Разрешить три известные пары conflicting docs в UI draft."
+  },
+  {
+    "feature_id": "LIB-022",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-014",
+      "LIB-019"
+    ],
+    "experiment": "На frozen fixture поменять код после receipt и проверить ослабление статуса."
+  },
+  {
+    "feature_id": "LIB-023",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-016",
+      "LIB-022"
+    ],
+    "experiment": "Поменять source fragment в графе с двумя независимыми ветвями."
+  },
+  {
+    "feature_id": "LIB-024",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-002",
+      "LIB-007",
+      "LIB-014"
+    ],
+    "experiment": "Смешанный corpus: text, binary, broken OCR и неиспользованный tail."
+  },
+  {
+    "feature_id": "LIB-025",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-017",
+      "LIB-019",
+      "LIB-024"
+    ],
+    "experiment": "Собрать одну команду «полный контекст repo и мои идеи» и дать независимому reviewer восстановить следующий шаг."
+  },
+  {
+    "feature_id": "LIB-026",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-025"
+    ],
+    "experiment": "Сравнить packet при двух разных token budgets на одном goal."
+  },
+  {
+    "feature_id": "LIB-027",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-025",
+      "LIB-026"
+    ],
+    "experiment": "Два последовательных дозапроса к большому файлу и один invalid source request."
+  },
+  {
+    "feature_id": "LIB-028",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-005",
+      "LIB-019",
+      "LIB-025"
+    ],
+    "experiment": "Сделать два updates с rename, delete и corrected goal; replay deltas."
+  },
+  {
+    "feature_id": "LIB-029",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001",
+      "LIB-006"
+    ],
+    "experiment": "Один Windows scenario без установленного extension, с process restart."
+  },
+  {
+    "feature_id": "LIB-030",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-001",
+      "LIB-008"
+    ],
+    "experiment": "Копия базы со старой схемой и failure injection на середине migration."
+  },
+  {
+    "feature_id": "LIB-031",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-029",
+      "LIB-030"
+    ],
+    "experiment": "Clean-user installation на Dell с путём Unicode/пробелами."
+  },
+  {
+    "feature_id": "LIB-032",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-004",
+      "LIB-029"
+    ],
+    "experiment": "Synthetic 10k source library с большим Unicode текстом."
+  },
+  {
+    "feature_id": "LIB-033",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-002",
+      "LIB-011",
+      "LIB-029"
+    ],
+    "experiment": "Fixture rename и drift между pinned source и local checkout."
+  },
+  {
+    "feature_id": "LIB-034",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-006",
+      "LIB-029"
+    ],
+    "experiment": "Прогнать один и несколько collectors при ограниченной памяти."
+  },
+  {
+    "feature_id": "LIB-035",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-008",
+      "LIB-030"
+    ],
+    "experiment": "Roundtrip на corpus с deliberate corruption одной копии."
+  },
+  {
+    "feature_id": "LIB-036",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Вернуться после надёжного local backup/restore и реальной потребности второго устройства.",
+    "depends_on": [
+      "LIB-023",
+      "LIB-035"
+    ],
+    "experiment": "Два локальных replicas с divergent edits и последующим merge."
+  },
+  {
+    "feature_id": "LIB-037",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-025",
+      "LIB-026"
+    ],
+    "experiment": "Создать public/private коллекции и экспортировать goal с обеими зависимостями."
+  },
+  {
+    "feature_id": "LIB-038",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-014",
+      "LIB-016",
+      "LIB-037"
+    ],
+    "experiment": "Fixture из заметок с synthetic tokens и полезными adjacent code lines."
+  },
+  {
+    "feature_id": "LIB-039",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-029",
+      "LIB-037"
+    ],
+    "experiment": "Использовать synthetic credential и просканировать generated packet/logs."
+  },
+  {
+    "feature_id": "LIB-040",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Добавлять после работающего manual handoff и source scope controls.",
+    "depends_on": [
+      "LIB-017",
+      "LIB-027",
+      "LIB-037"
+    ],
+    "experiment": "Локальный prototype reader выполняет search→range→citation и invalid scope query."
+  },
+  {
+    "feature_id": "LIB-041",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-003",
+      "LIB-006",
+      "LIB-008"
+    ],
+    "experiment": "Обновить folder: добавить, изменить, переименовать и убрать четыре файла."
+  },
+  {
+    "feature_id": "LIB-042",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-012",
+      "LIB-016",
+      "LIB-041"
+    ],
+    "experiment": "Два экспорта одного synthetic чата с edited message и voice placeholder."
+  },
+  {
+    "feature_id": "LIB-043",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-006",
+      "LIB-016",
+      "LIB-023"
+    ],
+    "experiment": "Fixture feed и страницы с revisions, redirect и unavailable response."
+  },
+  {
+    "feature_id": "LIB-044",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После Git snapshot и manual handoff; доступ/API лимиты сверять при реализации.",
+    "depends_on": [
+      "LIB-004",
+      "LIB-011",
+      "LIB-022"
+    ],
+    "experiment": "Импорт fixture из >1 страницы обсуждений с changed PR head."
+  },
+  {
+    "feature_id": "LIB-045",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-007",
+      "LIB-016"
+    ],
+    "experiment": "Набор PDF/DOCX/table/scan и ручной gold subset."
+  },
+  {
+    "feature_id": "LIB-046",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-007",
+      "LIB-014",
+      "LIB-016"
+    ],
+    "experiment": "Короткое RU/EN media с числами, repo names и deliberately wrong ASR token."
+  },
+  {
+    "feature_id": "LIB-047",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-006",
+      "LIB-008",
+      "LIB-016"
+    ],
+    "experiment": "Изменить fixture export field names и добавить неизвестную вложенную структуру."
+  },
+  {
+    "feature_id": "LIB-048",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-008",
+      "LIB-018"
+    ],
+    "experiment": "Fixture original→quote→summary→copied archive и действительно независимый source."
+  },
+  {
+    "feature_id": "LIB-049",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После достоверного requirement/evidence graph и измерения baseline.",
+    "depends_on": [
+      "LIB-020",
+      "LIB-022",
+      "LIB-024"
+    ],
+    "experiment": "На десяти открытых целях сравнить FIFO и debt-based выбор сбора."
+  },
+  {
+    "feature_id": "LIB-050",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-017",
+      "LIB-018",
+      "LIB-032"
+    ],
+    "experiment": "Создать views «мои идеи», «unanswered», «Studious blockers» на одном corpus."
+  },
+  {
+    "feature_id": "LIB-051",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Реализовать после backup/scope controls и явного выбора retention; автоматическое удаление по умолчанию выключено.",
+    "depends_on": [
+      "LIB-008",
+      "LIB-023",
+      "LIB-035",
+      "LIB-038"
+    ],
+    "experiment": "Synthetic private source с aliases и embeddings: dry-run deletion graph."
+  },
+  {
+    "feature_id": "LIB-052",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-008",
+      "LIB-014"
+    ],
+    "experiment": "Импорт пересекающихся DESK/F/CAP каталогов и проверка namespace collisions."
+  },
+  {
+    "feature_id": "LIB-053",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-019",
+      "LIB-020",
+      "LIB-025",
+      "LIB-052"
+    ],
+    "experiment": "Намеренно удалить один редкий goal из draft packet и проверить checker."
+  },
+  {
+    "feature_id": "LIB-054",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-020",
+      "LIB-022",
+      "LIB-025"
+    ],
+    "experiment": "Повторить похожий запрос с сохранённой failure capsule и без неё."
+  },
+  {
+    "feature_id": "LIB-055",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-017",
+      "LIB-025",
+      "LIB-032"
+    ],
+    "experiment": "10–30 реальных рабочих задач с baseline текущего пути и новой вертикалью."
+  },
+  {
+    "feature_id": "LIB-056",
+    "phase": "P1",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-014",
+      "LIB-024",
+      "LIB-052"
+    ],
+    "experiment": "Пересчитать текущий union и сформировать reproducible count table."
+  },
+  {
+    "feature_id": "LIB-057",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-014",
+      "LIB-024",
+      "LIB-025"
+    ],
+    "experiment": "Новый reviewer читает выборочно 3 из 10 parts; проверить coverage statement."
+  },
+  {
+    "feature_id": "LIB-058",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После raw library и поиска; rich block editor не блокирует первый handoff.",
+    "depends_on": [
+      "LIB-016",
+      "LIB-030",
+      "LIB-050"
+    ],
+    "experiment": "Создать note из трёх source quotes и отредактировать свой текст."
+  },
+  {
+    "feature_id": "LIB-059",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+    "depends_on": [
+      "LIB-014",
+      "LIB-016",
+      "LIB-018"
+    ],
+    "experiment": "Fixture с евро/SOL, decimal amounts и старой примерной воронкой результатов."
+  },
+  {
+    "feature_id": "LIB-060",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После correctness raw preservation; compact format не заменяет original uploads до roundtrip verifier.",
+    "depends_on": [
+      "LIB-008",
+      "LIB-009",
+      "LIB-028",
+      "LIB-056"
+    ],
+    "experiment": "Сравнить naive recursive unpack и archive graph на текущих пяти ZIP."
+  },
+  {
+    "feature_id": "ACT-001",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Реализацию начать после определения владельца команд и библиотечного состояния в актуальном коде.",
+    "depends_on": [],
+    "experiment": "Разметить 30 команд с отрицаниями, названиями repo и исправлениями и проверить сериализацию."
+  },
+  {
+    "feature_id": "ACT-002",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не включать capability, пока текущий код и среда не проверены.",
+    "depends_on": [
+      "ACT-001"
+    ],
+    "experiment": "Сопоставить один текущий workflow с реальным entrypoint после чтения репозитория."
+  },
+  {
+    "feature_id": "ACT-003",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не выдавать широкие права ради прохождения неизвестного workflow.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-002"
+    ],
+    "experiment": "Проверить разрешённый read и запрещённый write для одного intent."
+  },
+  {
+    "feature_id": "ACT-004",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Любой новый adapter проходит этот корпус до разрешения действий.",
+    "depends_on": [
+      "ACT-003"
+    ],
+    "experiment": "Вставить hostile инструкции в три разрешённых источника и сравнить исходные и итоговые scopes."
+  },
+  {
+    "feature_id": "ACT-005",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Пока scope источника неизвестен, внешняя передача этого источника заблокирована.",
+    "depends_on": [],
+    "experiment": "Собрать два пакета одной задачи для local-only и разрешённого внешнего получателя."
+  },
+  {
+    "feature_id": "ACT-006",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Правила расширяются по проверенным примерам, не по угадыванию названия функции.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-002"
+    ],
+    "experiment": "Сравнить простой rule router с ручной эталонной разметкой команд."
+  },
+  {
+    "feature_id": "ACT-007",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не делать Laya обязательной зависимостью, пока измеримое преимущество не показано.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-002",
+      "ACT-006"
+    ],
+    "experiment": "На одном RU/EN code-switch corpus измерить routing quality локально после проверки реального интерфейса выбранного инструмента."
+  },
+  {
+    "feature_id": "ACT-008",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Несколько LLM использовать только если качество превышает дешевую базовую схему.",
+    "depends_on": [],
+    "experiment": "На одном дефекте сравнить monolithic ответ и роли с одинаковым бюджетом."
+  },
+  {
+    "feature_id": "ACT-009",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Автоматический поиск не расширяет разрешённые namespace и источники.",
+    "depends_on": [
+      "ACT-008"
+    ],
+    "experiment": "Удалить из исходного task pack вызывающую функцию и проверить точечный цикл дополнения."
+  },
+  {
+    "feature_id": "ACT-010",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Доступность API и формат конкретного provider проверять отдельно; manual export остаётся рабочим маршрутом.",
+    "depends_on": [
+      "ACT-005",
+      "ACT-009"
+    ],
+    "experiment": "Сделать один ручной TXT roundtrip и один adapter roundtrip на одинаковой задаче."
+  },
+  {
+    "feature_id": "ACT-011",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Нельзя применять к новой базе по одному совпадению имени проекта.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-003"
+    ],
+    "experiment": "Изменить один файл между retrieval и commit на fixture."
+  },
+  {
+    "feature_id": "ACT-012",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Verified всегда указывает scope; не повышать исторический prototype receipt до production.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-002",
+      "ACT-011"
+    ],
+    "experiment": "Подложить ложный DONE, чужой тест и частичный экспорт под один goal."
+  },
+  {
+    "feature_id": "ACT-013",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не публиковать проценты надёжности из предположения независимости.",
+    "depends_on": [
+      "ACT-012"
+    ],
+    "experiment": "Всем маршрутам дать общий неверный snapshot и добавить независимый инвариант."
+  },
+  {
+    "feature_id": "ACT-014",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Generated test code тоже требует отдельной среды исполнения.",
+    "depends_on": [
+      "ACT-008"
+    ],
+    "experiment": "Создать намеренно неверный fix, проходящий старый тест, и измерить обнаружение."
+  },
+  {
+    "feature_id": "ACT-015",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Хеш текста сам по себе не является достаточной идентичностью операции.",
+    "depends_on": [
+      "ACT-001"
+    ],
+    "experiment": "Послать 16 повторов, затем новую намеренную команду с таким же текстом."
+  },
+  {
+    "feature_id": "ACT-016",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Топология resources уточняется на настоящих adapters, не только в JSON.",
+    "depends_on": [
+      "ACT-002",
+      "ACT-015"
+    ],
+    "experiment": "Запустить API collector, индексатор и два GUI job; проверить конфликт только GUI."
+  },
+  {
+    "feature_id": "ACT-017",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Разные права или snapshots никогда не объединяются одним key.",
+    "depends_on": [
+      "ACT-011",
+      "ACT-016"
+    ],
+    "experiment": "Пять simultaneous goals запрашивают один repo graph; отменить один."
+  },
+  {
+    "feature_id": "ACT-018",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Включать по классам задач после измерений, не назначать универсальный порог.",
+    "depends_on": [
+      "ACT-012",
+      "ACT-013",
+      "ACT-016"
+    ],
+    "experiment": "Сравнить serial, eager и delayed hedge на одинаковом corpus и бюджете."
+  },
+  {
+    "feature_id": "ACT-019",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не переиспользовать FIRST_VERIFIED для полного экспорта или суммы partitions.",
+    "depends_on": [
+      "ACT-012",
+      "ACT-016"
+    ],
+    "experiment": "На одном workflow сделать обязательный поздний результат и проверить разные join modes."
+  },
+  {
+    "feature_id": "ACT-020",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Реальные connectors подключать по одному после проверки доступа и coverage.",
+    "depends_on": [
+      "ACT-016",
+      "ACT-019"
+    ],
+    "experiment": "Запустить три collectors с duplicate и out-of-order observations и остановить один."
+  },
+  {
+    "feature_id": "ACT-021",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Для удалённого сервиса граница гарантий описывается отдельно.",
+    "depends_on": [
+      "ACT-011",
+      "ACT-012",
+      "ACT-015",
+      "ACT-016"
+    ],
+    "experiment": "Гонка двух кандидатов вокруг одной локальной записи и двух независимых файлов."
+  },
+  {
+    "feature_id": "ACT-022",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не объявлять произвольный remote action ACID и не создавать вторую конкурирующую очередь.",
+    "depends_on": [
+      "ACT-015"
+    ],
+    "experiment": "Fault injection до/после каждой локальной транзакционной границы."
+  },
+  {
+    "feature_id": "ACT-023",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Без наблюдаемого результата необратимую операцию автоматически не повторять.",
+    "depends_on": [
+      "ACT-012",
+      "ACT-015",
+      "ACT-022"
+    ],
+    "experiment": "Смоделировать сервер, выполнивший запрос и потерявший ответ."
+  },
+  {
+    "feature_id": "ACT-024",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Нельзя продолжать на изменённой среде без revalidation.",
+    "depends_on": [
+      "ACT-011",
+      "ACT-012",
+      "ACT-022",
+      "ACT-023"
+    ],
+    "experiment": "Остановить workflow после каждого шага, восстановить и сравнить итог с непрерывным запуском."
+  },
+  {
+    "feature_id": "ACT-025",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Отмена HTTP не трактуется как доказанная отмена server-side эффекта.",
+    "depends_on": [
+      "ACT-015",
+      "ACT-023",
+      "ACT-024"
+    ],
+    "experiment": "Отменить parent при одновременно queued, running и remote-unknown steps."
+  },
+  {
+    "feature_id": "ACT-026",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не публиковать SLA и миллисекунды до измерения на целевой машине.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-012"
+    ],
+    "experiment": "Прогнать 20 baseline задач и сохранить сырые timestamps вместе с итогами."
+  },
+  {
+    "feature_id": "ACT-027",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Выбор числа workers основывать на измерениях, не путать с лимитом документов.",
+    "depends_on": [
+      "ACT-016",
+      "ACT-025",
+      "ACT-026"
+    ],
+    "experiment": "Сравнить 1/2/4 workers при Chrome, ASR и импорте на Dell после подключения runtime."
+  },
+  {
+    "feature_id": "ACT-028",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Ambient always-on режим оставить отдельным последующим исследованием.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-020",
+      "ACT-025"
+    ],
+    "experiment": "Провести одно voice-to-handoff действие на Windows, включая остановку записи."
+  },
+  {
+    "feature_id": "ACT-029",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не фиксировать победителя или актуальную поддержку модели без отдельной проверки.",
+    "depends_on": [
+      "ACT-028",
+      "ACT-026"
+    ],
+    "experiment": "Сравнить минимум два реальных кандидата или один кандидат и baseline на одном corpus."
+  },
+  {
+    "feature_id": "ACT-030",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "До приемлемой точности потенциально критические слоты требуют явного review.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-029"
+    ],
+    "experiment": "Корпус minimal pairs с отрицаниями, близкими именами и фоновыми голосами."
+  },
+  {
+    "feature_id": "ACT-031",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Speculative действия разрешать только в пределах обратимой read preparation.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-011",
+      "ACT-025",
+      "ACT-030"
+    ],
+    "experiment": "Подать позднее отрицание во время подготовки action."
+  },
+  {
+    "feature_id": "ACT-032",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Полную отмену необратимых внешних действий не обещать.",
+    "depends_on": [
+      "ACT-025",
+      "ACT-023"
+    ],
+    "experiment": "Остановить каждый тип job при искусственно зависшем worker."
+  },
+  {
+    "feature_id": "ACT-033",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не объявлять доступность для всех пользователей по одному скриншоту или тесту.",
+    "depends_on": [
+      "ACT-001",
+      "ACT-028",
+      "ACT-031",
+      "ACT-032"
+    ],
+    "experiment": "Проверить полный сценарий на Windows с клавиатурой и выбранным screen-reader."
+  },
+  {
+    "feature_id": "ACT-034",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Политику долгого хранения и ambient capture задавать отдельно от обычного push-to-talk.",
+    "depends_on": [
+      "ACT-028",
+      "ACT-029",
+      "ACT-033"
+    ],
+    "experiment": "Сменить устройство, усыпить ПК и отключить аудио во время записи."
+  },
+  {
+    "feature_id": "ACT-035",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Vision-first universal desktop оставлять позже, пока узкие адаптеры не квалифицированы.",
+    "depends_on": [
+      "ACT-002",
+      "ACT-003",
+      "ACT-012"
+    ],
+    "experiment": "Одно безопасное действие выполнить через два подготовительных маршрута и сравнить verified результат."
+  },
+  {
+    "feature_id": "ACT-036",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Shared mouse/keyboard нельзя запускать параллельно без scoped coordination.",
+    "depends_on": [
+      "ACT-016",
+      "ACT-032",
+      "ACT-035"
+    ],
+    "experiment": "Во время rehearsal переключить окно и вручную изменить clipboard."
+  },
+  {
+    "feature_id": "ACT-037",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Каждый сайт требует своей проверенной семантики; универсальный доступ не предполагать.",
+    "depends_on": [
+      "ACT-003",
+      "ACT-012",
+      "ACT-035"
+    ],
+    "experiment": "Проверить один браузерный read workflow и один rehearsal submit без реальной публикации."
+  },
+  {
+    "feature_id": "ACT-038",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Неизвестная команда остаётся proposal до добавления adapter, а не run-any-shell.",
+    "depends_on": [
+      "ACT-002",
+      "ACT-003",
+      "ACT-012",
+      "ACT-035"
+    ],
+    "experiment": "Сделать open-file и одну безопасную зарегистрированную проверку в fixture repo."
+  },
+  {
+    "feature_id": "ACT-039",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Canary не заменяет полную проверку outcome, особенно для необратимого шага.",
+    "depends_on": [
+      "ACT-002",
+      "ACT-012",
+      "ACT-035"
+    ],
+    "experiment": "Изменить API field, UIA name и CLI flag в controlled fixtures."
+  },
+  {
+    "feature_id": "ACT-040",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Planner не расширяет права при ремонте маршрута.",
+    "depends_on": [
+      "ACT-011",
+      "ACT-012",
+      "ACT-024",
+      "ACT-039"
+    ],
+    "experiment": "В середине fixture workflow изменить состояние одного зависимого ресурса."
+  },
+  {
+    "feature_id": "ACT-041",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не публиковать skill как production до проверенного применения в нужной среде.",
+    "depends_on": [
+      "ACT-002",
+      "ACT-003",
+      "ACT-012",
+      "ACT-039"
+    ],
+    "experiment": "Один known workflow воспроизвести с другим project path и версией fixture app."
+  },
+  {
+    "feature_id": "ACT-042",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Демонстрация сама по себе не доказывает надёжность и не выдаёт новые scopes.",
+    "depends_on": [
+      "ACT-020",
+      "ACT-035",
+      "ACT-041"
+    ],
+    "experiment": "Записать один локальный file workflow и воспроизвести на другом имени файла."
+  },
+  {
+    "feature_id": "ACT-043",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не минимизировать по одному успешному replay.",
+    "depends_on": [
+      "ACT-012",
+      "ACT-014",
+      "ACT-041",
+      "ACT-042"
+    ],
+    "experiment": "Сравнить длинный и минимизированный file workflow при изменённых путях и окнах."
+  },
+  {
+    "feature_id": "ACT-044",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не обобщать отсутствие успеха одного примера до невозможности всего класса действий.",
+    "depends_on": [
+      "ACT-012",
+      "ACT-024",
+      "ACT-039"
+    ],
+    "experiment": "Повторить один failure, затем исправить fixture version и проверить requalification."
+  },
+  {
+    "feature_id": "ACT-045",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Git worktree не считать песочницей; интеграция зависит от разрешённого отдельного сценария.",
+    "depends_on": [
+      "ACT-008",
+      "ACT-010",
+      "ACT-014",
+      "ACT-041"
+    ],
+    "experiment": "Создать один новый read-only adapter из задачи и проверить два held-out случая."
+  },
+  {
+    "feature_id": "ACT-046",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Текущую поддержку подписи/attestation конкретного distribution channel проверить отдельно.",
+    "depends_on": [
+      "ACT-011",
+      "ACT-012",
+      "ACT-041"
+    ],
+    "experiment": "Подать чужой пакет, старую подписанную версию и корректный новый release."
+  },
+  {
+    "feature_id": "ACT-047",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не обещать универсальный rollback внешних сообщений, сделок или необратимой миграции.",
+    "depends_on": [
+      "ACT-024",
+      "ACT-046"
+    ],
+    "experiment": "Fault injection на migration steps и восстановление копии библиотеки."
+  },
+  {
+    "feature_id": "ACT-048",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Если authority расширяется, активация этой части ждёт соответствующей авторизации.",
+    "depends_on": [
+      "ACT-003",
+      "ACT-041",
+      "ACT-046"
+    ],
+    "experiment": "Обновить skill с одним новым read root и проверить поведение политики."
+  },
+  {
+    "feature_id": "ACT-049",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "В этом архиве расписания только специфицируются; 24/7 выполнение требует реально работающего host.",
+    "depends_on": [
+      "ACT-024",
+      "ACT-025",
+      "RND-039"
+    ],
+    "experiment": "На fake clock смоделировать сон, переход даты и restart; реальное расписание создавать только отдельной командой."
+  },
+  {
+    "feature_id": "ACT-050",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Каталоги/магазины, коммерческое распространение и их текущие требования проверять перед реальной публикацией.",
+    "depends_on": [
+      "ACT-003",
+      "ACT-005",
+      "ACT-041",
+      "ACT-046"
+    ],
+    "experiment": "Собрать dry-run public manifest из synthetic corpus и проверить privacy boundary."
+  },
+  {
+    "feature_id": "ACT-051",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Поддержку MCP/Tasks/Skills конкретного клиента и API проверять интеграционным тестом, не названием протокола.",
+    "depends_on": [
+      "ACT-002",
+      "ACT-003",
+      "ACT-005",
+      "ACT-010"
+    ],
+    "experiment": "Подключить один тестовый caller к read-only gateway и прогнать bad inputs."
+  },
+  {
+    "feature_id": "ACT-052",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не реконструировать отсутствующую личную историю как цитату.",
+    "depends_on": [
+      "ACT-005"
+    ],
+    "experiment": "Создать конфликт старого ZIP и новой команды и проверить объяснимое разрешение."
+  },
+  {
+    "feature_id": "ACT-053",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Новые adapters не наследуют qualification другого инструмента автоматически.",
+    "depends_on": [
+      "ACT-012",
+      "ACT-026",
+      "ACT-032",
+      "LIB-048"
+    ],
+    "experiment": "Начать с 20 Windows операторских команд и fault scenarios; размер corpus не является лимитом приложения."
+  },
+  {
+    "feature_id": "ACT-054",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Audit не должен записывать секреты; retention настраивается отдельно.",
+    "depends_on": [
+      "ACT-003",
+      "ACT-011",
+      "ACT-012",
+      "ACT-015"
+    ],
+    "experiment": "Выполнить fixture job, сменить policy и сравнить old/new decisions."
+  },
+  {
+    "feature_id": "ACT-055",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Цены provider брать из проверенной на момент внедрения конфигурации, не из старых ZIP.",
+    "depends_on": [
+      "ACT-018",
+      "ACT-026",
+      "ACT-027"
+    ],
+    "experiment": "Сравнить predicted и actual cost на serial и hedged corpus."
+  },
+  {
+    "feature_id": "ACT-056",
+    "phase": "P2",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Сначала внедрить для одного vertical, затем расширять ontology результатов.",
+    "depends_on": [
+      "ACT-010"
+    ],
+    "experiment": "Сравнить две команды с одинаковым контекстом и разными конечными результатами."
+  },
+  {
+    "feature_id": "ACT-057",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не предлагать одну кнопку retry для всех типов ошибок.",
+    "depends_on": [
+      "ACT-023",
+      "ACT-024",
+      "ACT-025",
+      "ACT-044"
+    ],
+    "experiment": "Дать пользователю три synthetic failure capsules и измерить восстановление без чтения raw logs."
+  },
+  {
+    "feature_id": "ACT-058",
+    "phase": "P5",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "При включении ambient режима потребуется отдельный более широкий corpus и разрешение capture.",
+    "depends_on": [
+      "ACT-029",
+      "ACT-030",
+      "ACT-032",
+      "ACT-034"
+    ],
+    "experiment": "Проиграть агентский TTS и фоновые minimal pairs одновременно с capture fixture."
+  },
+  {
+    "feature_id": "RND-001",
+    "phase": "P0",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Нужен доступный выбранный snapshot; нынешняя упаковка repo не проверяет.",
+    "depends_on": [],
+    "experiment": "Сравнить один сохранённый snapshot с будущим актуальным checkout без выполнения кода."
+  },
+  {
+    "feature_id": "RND-002",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После карты source owners и доступного каталога требований.",
+    "depends_on": [
+      "RND-001"
+    ],
+    "experiment": "Внести в fixture пять обещанных функций, из которых только две имеют рабочий тест."
+  },
+  {
+    "feature_id": "RND-003",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Полный semantic parser добавлять отдельно для каждого фактически нужного языка.",
+    "depends_on": [
+      "RND-001"
+    ],
+    "experiment": "Небольшой смешанный Python/JS/TS corpus с циклами, alias и config dispatch."
+  },
+  {
+    "feature_id": "RND-004",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Автоисправление только после подтверждения проблемы и выбранного scope.",
+    "depends_on": [
+      "RND-001",
+      "RND-003"
+    ],
+    "experiment": "Разобрать десять кандидатов и отделить подтверждённые дефекты от ложных срабатываний."
+  },
+  {
+    "feature_id": "RND-005",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Для недоступных PR сохранять missing-source запись, не выдумывать причину.",
+    "depends_on": [
+      "RND-001",
+      "RND-002"
+    ],
+    "experiment": "Подготовить историю одного blocker из сохранённых PR metadata, затем проверить вручную связи."
+  },
+  {
+    "feature_id": "RND-006",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После working context roundtrip и установленных проверок репозитория.",
+    "depends_on": [
+      "RND-002",
+      "RND-003",
+      "RND-004"
+    ],
+    "experiment": "Одна реальная маленькая исправляемая ошибка на pinned fixture репозитория."
+  },
+  {
+    "feature_id": "RND-007",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Реальные записи GitHub только в отдельно заданном scope.",
+    "depends_on": [
+      "RND-006"
+    ],
+    "experiment": "Испытать dry-run adapter на fixture ответах CI с изменением head и таймаутом."
+  },
+  {
+    "feature_id": "RND-008",
+    "phase": "P3",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Реальное устройство и поддержанная текущим репозиторием среда ещё не проверены.",
+    "depends_on": [
+      "RND-001"
+    ],
+    "experiment": "Установить две версии в изолированных каталогах и обнаружить намеренную подмену entrypoint."
+  },
+  {
+    "feature_id": "RND-009",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "До доступа к установленному профилю показывать только проектную схему.",
+    "depends_on": [
+      "RND-001",
+      "RND-008"
+    ],
+    "experiment": "Сопоставить десять source candidates и реально найденные CLI entrypoints."
+  },
+  {
+    "feature_id": "RND-010",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После точного command contract и установленной среды.",
+    "depends_on": [
+      "RND-008",
+      "RND-009"
+    ],
+    "experiment": "Пройти один положительный и один отрицательный локальный qualification-сценарий."
+  },
+  {
+    "feature_id": "RND-011",
+    "phase": "P0",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Старые неизвестные схемы сохранять raw до написания проверенного импортёра.",
+    "depends_on": [
+      "RND-001"
+    ],
+    "experiment": "Матрица valid/stale/corrupt/missing/conflicting fixtures."
+  },
+  {
+    "feature_id": "RND-012",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Нужен набор сохранённых рыночных данных или явно синтетическая fixture.",
+    "depends_on": [
+      "RND-011"
+    ],
+    "experiment": "Два запуска одной версии и один запуск изменённой версии на одинаковом сохранённом потоке."
+  },
+  {
+    "feature_id": "RND-013",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После выбранного protocol adapter; реальные транзакции не следуют из этой карточки.",
+    "depends_on": [
+      "RND-008",
+      "RND-011",
+      "RND-012"
+    ],
+    "experiment": "Один adapter на pinned local validator/fork; реальная поддержка adapter сначала устанавливается по коду."
+  },
+  {
+    "feature_id": "RND-014",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не расширять число trials до проверки непустого покрытия.",
+    "depends_on": [
+      "RND-012",
+      "RND-013"
+    ],
+    "experiment": "Включить заведомо vacuous handler и сравнить с рабочим state machine."
+  },
+  {
+    "feature_id": "RND-015",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Реальный fetch только после выбора доступного провайдера и его лимитов.",
+    "depends_on": [
+      "RND-011"
+    ],
+    "experiment": "Сравнить 1/2/4 replay workers с общим cache и независимым fetch."
+  },
+  {
+    "feature_id": "RND-016",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "До покрытия timestamp semantics внешнего API данные остаются time-uncertain.",
+    "depends_on": [
+      "RND-012",
+      "RND-015"
+    ],
+    "experiment": "Подмешать задержанный и будущий snapshot в один route."
+  },
+  {
+    "feature_id": "RND-017",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Дополнительного провайдера подключать после измерения полезности и стоимости.",
+    "depends_on": [
+      "RND-015",
+      "RND-016"
+    ],
+    "experiment": "Fixture common-upstream outage и один независимый источник."
+  },
+  {
+    "feature_id": "RND-018",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Freshness thresholds выбирать из измеренной стратегии, не задавать произвольной общей константой.",
+    "depends_on": [
+      "RND-015",
+      "RND-016"
+    ],
+    "experiment": "Ввести задержку, 429 и потерю сети в сохранённую capture session."
+  },
+  {
+    "feature_id": "RND-019",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Реальные fee schedules получать заново перед будущей campaign.",
+    "depends_on": [
+      "RND-013",
+      "RND-016",
+      "RND-018"
+    ],
+    "experiment": "Независимый пересчёт десяти fixture routes с fee/decimal sweeps."
+  },
+  {
+    "feature_id": "RND-020",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Без глубины/состояния пула выводить недостаточность данных.",
+    "depends_on": [
+      "RND-016",
+      "RND-019"
+    ],
+    "experiment": "Матрица трёх размеров и трёх задержек на одинаковых historical routes."
+  },
+  {
+    "feature_id": "RND-021",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Сначала подтвердить поддержку конкретного lender и venue в текущем коде.",
+    "depends_on": [
+      "RND-013",
+      "RND-019",
+      "RND-020"
+    ],
+    "experiment": "Проверить один circular route и один намеренно non-atomic route на pinned fixture."
+  },
+  {
+    "feature_id": "RND-022",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Нет данных о реальном profitability; длительность 24h сама по себе ничего не доказывает.",
+    "depends_on": [
+      "RND-010",
+      "RND-011",
+      "RND-015",
+      "RND-018",
+      "RND-019",
+      "RND-020",
+      "RND-021"
+    ],
+    "experiment": "Ограниченная observation campaign после проверки адаптера; длительность выбрать по необходимому покрытию режимов."
+  },
+  {
+    "feature_id": "RND-023",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Без реального устройства результаты остаются device-unverified.",
+    "depends_on": [
+      "RND-010",
+      "RND-018",
+      "RND-022"
+    ],
+    "experiment": "Отмена под indexing/ASR load, отключение сети и restart в трёх контрольных точках."
+  },
+  {
+    "feature_id": "RND-024",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Расписание устанавливается отдельной конкретной настройкой; ZIP его не включает.",
+    "depends_on": [
+      "RND-009",
+      "RND-011",
+      "RND-023"
+    ],
+    "experiment": "Смоделировать двое суток virtual time с missed tick, restart и overlapping job."
+  },
+  {
+    "feature_id": "RND-025",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Concurrency текущего runtime не повышается без отдельной проверки его owner.",
+    "depends_on": [
+      "RND-012",
+      "RND-015",
+      "RND-018",
+      "RND-024"
+    ],
+    "experiment": "Сравнить throughput и полезный результат при 1/2/4 workers до увеличения лимита."
+  },
+  {
+    "feature_id": "RND-026",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Live resource coordination требует отдельного runtime qualification, здесь только research spec.",
+    "depends_on": [
+      "RND-021",
+      "RND-025"
+    ],
+    "experiment": "Replay portfolio с shared pools/accounts и независимыми маршрутами."
+  },
+  {
+    "feature_id": "RND-027",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Ключ identity настраивать по фактической protocol semantics.",
+    "depends_on": [
+      "RND-015",
+      "RND-016"
+    ],
+    "experiment": "Обработать три перекрывающихся detector outputs."
+  },
+  {
+    "feature_id": "RND-028",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Пороги определять до просмотра holdout.",
+    "depends_on": [
+      "RND-011",
+      "RND-012"
+    ],
+    "experiment": "Провести пять synthetic variations с одним случайным победителем."
+  },
+  {
+    "feature_id": "RND-029",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Без достаточного независимого набора не объявлять устойчивость.",
+    "depends_on": [
+      "RND-016",
+      "RND-028"
+    ],
+    "experiment": "Tune на одном фиксированном интервале и оценить один раз на отложенном интервале."
+  },
+  {
+    "feature_id": "RND-030",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Расширять после полезного полного цикла на одной вертикали.",
+    "depends_on": [
+      "RND-015",
+      "RND-028",
+      "RND-029"
+    ],
+    "experiment": "Составить source-backed карточки трёх рынков и выбрать один по измеримой доступности данных."
+  },
+  {
+    "feature_id": "RND-031",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Profitability неизвестна; live не включается этим roadmap.",
+    "depends_on": [
+      "RND-019",
+      "RND-020",
+      "RND-021",
+      "RND-029",
+      "RND-030"
+    ],
+    "experiment": "Один трёхшаговый historical route и отрицательный контроль с закрывающими edge fees."
+  },
+  {
+    "feature_id": "RND-032",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Требуются protocol state и подтверждённый adapter; доходность неизвестна.",
+    "depends_on": [
+      "RND-013",
+      "RND-019",
+      "RND-021",
+      "RND-029",
+      "RND-030"
+    ],
+    "experiment": "Replay одного eligible и одного ineligible liquidation fixture."
+  },
+  {
+    "feature_id": "RND-033",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После получения актуальных конкретных правил redemption.",
+    "depends_on": [
+      "RND-019",
+      "RND-020",
+      "RND-021",
+      "RND-029",
+      "RND-030"
+    ],
+    "experiment": "Сравнить мгновенный conversion fixture с отложенным redeem fixture."
+  },
+  {
+    "feature_id": "RND-034",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Только после данных/adapter; не заявлять готовый интегрированный solver.",
+    "depends_on": [
+      "RND-021",
+      "RND-029",
+      "RND-030"
+    ],
+    "experiment": "Небольшой синтетический набор пересекающихся intents и независимый checker clearing."
+  },
+  {
+    "feature_id": "RND-035",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Дальняя R&D ветка; никаких предположений о готовности adapters и доходности.",
+    "depends_on": [
+      "RND-019",
+      "RND-020",
+      "RND-029",
+      "RND-030"
+    ],
+    "experiment": "Offline timeline одного cross-chain и одного funding сценария с задержкой/отказом."
+  },
+  {
+    "feature_id": "RND-036",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Новый web scouting запускается отдельно; текущий пакет лишь развивает сохранённую стратегию.",
+    "depends_on": [
+      "RND-011",
+      "RND-028"
+    ],
+    "experiment": "Пять сохранённых публикаций с общими upstream источниками."
+  },
+  {
+    "feature_id": "RND-037",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Live media connectors после полезного офлайн импорта и проверенных условий доступа.",
+    "depends_on": [
+      "RND-011",
+      "RND-036"
+    ],
+    "experiment": "Сопоставить предоставленные subtitles и ручную расшифровку короткого RU/EN отрывка."
+  },
+  {
+    "feature_id": "RND-038",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Не устанавливать model до определения benchmark и нужных ресурсов.",
+    "depends_on": [
+      "RND-002",
+      "RND-028",
+      "RND-036"
+    ],
+    "experiment": "Сравнить один candidate extractor/router с текущим deterministic baseline."
+  },
+  {
+    "feature_id": "RND-039",
+    "phase": "P4",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Тарифы и доступные квоты уточнять при интеграции, не переносить из старых чатов.",
+    "depends_on": [
+      "RND-011"
+    ],
+    "experiment": "Fixture campaign с двумя конкурирующими запросами и частично выполненным job."
+  },
+  {
+    "feature_id": "RND-040",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После стабильного end-to-end coding loop; raw архив никогда не режется ради эксперимента.",
+    "depends_on": [
+      "RND-003",
+      "RND-006",
+      "RND-028",
+      "RND-039"
+    ],
+    "experiment": "Десять сохранённых bug задач с удержанным holdout."
+  },
+  {
+    "feature_id": "RND-041",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Порог окупаемости выбрать до расширения масштабов.",
+    "depends_on": [
+      "RND-028",
+      "RND-039"
+    ],
+    "experiment": "Одинаковая недельная выборка research/context задач в ручном и автоматизированном режиме."
+  },
+  {
+    "feature_id": "RND-042",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После provenance графа и проверенных receipt bindings.",
+    "depends_on": [
+      "RND-003",
+      "RND-008",
+      "RND-011",
+      "RND-024"
+    ],
+    "experiment": "Изменить source schema и затем unrelated doc в fixture графе."
+  },
+  {
+    "feature_id": "RND-043",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Секретные значения исключать из share projection с явной записью о редактировании.",
+    "depends_on": [
+      "RND-011",
+      "RND-012",
+      "RND-028"
+    ],
+    "experiment": "Минимизировать один failing market fixture и один broken code handoff."
+  },
+  {
+    "feature_id": "RND-044",
+    "phase": "P6",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Рекомендация следующего действия не означает автоматический запуск.",
+    "depends_on": [
+      "RND-002",
+      "RND-011",
+      "RND-028",
+      "RND-043"
+    ],
+    "experiment": "Передать один failure capsule в независимый новый контекст и проверить восстановление следующего шага."
+  },
+  {
+    "feature_id": "RND-045",
+    "phase": "P8",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "После накопления достоверных time/cost/outcome данных.",
+    "depends_on": [
+      "RND-028",
+      "RND-029",
+      "RND-039",
+      "RND-041"
+    ],
+    "experiment": "Сравнить FIFO и экспертно проверенный information-value ranking на десяти прошлых blocker задачах."
+  },
+  {
+    "feature_id": "RND-046",
+    "phase": "P7",
+    "state": "PLANNED_UNVERIFIED",
+    "return_condition": "Eventual live readiness требует отдельной текущей программы runtime/risk/signer/settlement; здесь не оценивается.",
+    "depends_on": [
+      "RND-022",
+      "RND-023",
+      "RND-025",
+      "RND-029",
+      "RND-041"
+    ],
+    "experiment": "Подать полный архив без device/market receipts и проверить, что readiness остаётся unverified по этим осям."
+  }
+]

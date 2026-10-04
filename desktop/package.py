@@ -13,7 +13,7 @@ from desktop.client import (Connection, DesktopError, exact, hash_value, is_link
                             require, sha_file, strict_json)
 from desktop.draft import publication, write_verified, json_bytes
 
-FILES = ('__init__.py', 'app.py', 'client.py', 'draft.py', 'state.py', 'preflight.py',
+FILES = ('__init__.py', 'app.py', 'client.py', 'draft.py', 'state.py', 'preflight.py', 'actions_ui.py', 'voice.py',
          'library.py', 'install.py', 'Install_Windows.ps1', 'package.py', 'Launch_Windows.ps1', 'connection.example.json', 'README_RU.md')
 
 

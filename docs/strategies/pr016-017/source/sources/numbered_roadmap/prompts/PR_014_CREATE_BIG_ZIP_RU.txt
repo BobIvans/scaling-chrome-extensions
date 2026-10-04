@@ -1,0 +1,188 @@
+Создай большой подробный ZIP ROADMAP-PR-014: «Долговременный контекст: AI packets, NEED_CONTEXT, retrieval, backup/restore и sync».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Собрать управляемый контекст для разных AI, проверяемый task/result roundtrip, temporal retrieval большого архива и восстанавливаемую библиотеку.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: G3-003, G3-004, G3-006, UI3-003, UI3-004, EVO3-003, EVO3-006, EVO3-014, TAB4-05, TAB4-19, LAYA4-017, LAYA4-018, LAYA4-019, LAYA4-020, LAYA4-021, LAYA4-025, LAYA4-027, ACTION5-12, ACTION5-13, ACTION5-14, ACTION5-15, ACTION5-16, ACTION5-17
+Feature cards: LIB-005, LIB-025, LIB-026, LIB-027, LIB-030, LIB-035, LIB-036, LIB-037, LIB-038, LIB-040, LIB-051, ACT-005, ACT-009, ACT-010, ACT-052
+Decisions: DEC5-05, DEC5-10, DEC5-11, DEC5-12, DEC5-13, DEC5-14
+Goals: GOAL5-04, GOAL5-08, GOAL5-09, GOAL5-11, GOAL5-12, GOAL5-23
+Dependencies: PR-002, PR-003, PR-010, PR-011, PR-013
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-013 — Единый AI-пакет: task/result, WHY_THIS_PACKET, NEED_CONTEXT и share projection
+Scope:
+- Provider-neutral immutable task document и проверяемый result contract
+- Selection basket, WHY_THIS_PACKET, share/redaction preview
+- Все части, exact range NEED_CONTEXT, typed read-only library gateway
+Граница: Переиспользовать существующие handoff/review/manifest/export owners. Реальные provider/API/CLI/UI adapters имеют независимую qualification; их лимиты не задают лимит архива.
+Приёмка:
+- Preview и export имеют один digest
+- Любой обязательный source вне текущей части остаётся в manifest
+- Ответ связан с task/packet/criterion revision
+- Supplied/read/used не смешиваются
+- Ручной roundtrip работает до подключения UI automation
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-014 — Backup, restore, миграции, retention и опциональная синхронизация
+Scope:
+- Согласованные DB/blob/event backups и проверка восстановления
+- Tombstones/retention/derived cleanup и conflicts
+- Portable snapshot sync с явными namespaces и rehearsal миграций
+Граница: Это жизненный цикл данных. Переключение исполняемого release и canary — №33. Опциональный sync не должен требоваться для локальной работы.
+Приёмка:
+- Restore сравнивает hashes/heads/overlays/relations
+- Повреждённый или неполный backup не активируется
+- Старый backup не resurrect удалённые current sources
+- Два профиля не становятся competing writers
+- Каждая migration/rollback проверена на копии
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-015 — Долговременная память: поиск по времени, версиям и большим корпусам
+Scope:
+- Goal-directed retrieval с exact ranges и temporal applicability
+- Frozen relevance corpus, hard negatives и conflicting versions
+- Объяснение выбора контекста и bounded retrieval из растущего архива
+Граница: №10 реализует базовый поиск; №24 квалифицирует lifetime retrieval. Расширяемый corpus не означает, что один AI-запрос прочитал все данные.
+Приёмка:
+- На собственных вопросах возвращается нужная версия источника
+- Устаревшее и противоречивое не сливается в один факт
+- Manual corrections сохраняются
+- Cold/warm latency и RAM имеют corpus denominator
+- Missing evidence вызывает точный запрос, а не выдуманный ответ
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+G3-003 — Скомпилировать проверяемый пакет из существующего snapshot
+- Все selected parts имеют hashes/ranges; omitted sources перечислены.
+- Старый V2 handoff импортируется явным адаптером; новый digest учитывает task и source revision.
+G3-004 — Связать пакет, попытки и журнал без потери provenance
+- Один operation ID не принимает другой payload.
+- Неопределённый send отличается от failed-before-send и требует reconciliation.
+G3-006 — Импортировать типизированный ответ и запрос следующего контекста
+- Reply связан с request/packet/target; неизвестные IDs помещаются в review.
+- Запрос части разрешается только в выбранном snapshot; ссылка за его пределы не читается.
+UI3-003 — Скомпилировать неизменяемый task document с возвратным контрактом
+- Каждое требование имеет источник или явно авторство системы.
+- Изменение цели/байтов создаёт новую ревизию; старая очередь неизменна.
+UI3-004 — Планировать части по ограничениям наблюдаемого UI
+- Отклонённая большая часть делится без потери исходного диапазона.
+- Никакая очередь не объявляется полной при неотправленных частях.
+EVO3-003 — Связать ContextPack с ожидаемым результатом AI
+- Manifest включает repo identity, snapshot commit/overlay, chunk hashes, omissions, goal IDs и acceptance version.
+- RETURN_CONTRACT требует изменённые пути, критерии, подтверждения и оставшиеся gaps; отсутствие поля не заменяется успехом.
+- Изменение manifest создаёт новую revision; receipt относится только к точному digest переданного пакета.
+EVO3-006 — Импорт AI claims и артефактов без доверенного исполнения
+- Каждый claim ссылается на request ID и criterion; цитата AI доступна без переатрибуции пользователю.
+- Команды/инструкции из ответа и исходников хранятся как данные, пока не зарегистрированы точным adapter.
+- Повреждённый, частичный или дублирующий ответ не закрывает критерии; все приложения содержат hashes.
+EVO3-014 — Точка восстановления и политика данных
+- Checkpoint связывает build, data schema, backup manifest и проверяемые hashes; restore rehearsal пройден.
+- Политика различает обратимую схему, совместимый rollback и восстановление данных с оценкой последующих записей.
+- Отозванная/несовместимая старая сборка не выбирается автоматически; failure plan фиксируется заранее.
+TAB4-05 — Документ изменения с происхождением и покрытием
+- В документ входят точные goal/scope/criteria, repo SHA, packet SHA, ID частей, связи, известные пробелы и шаблон связанного ответа.
+- Полный snapshot и частичный пакет различимы; неприсутствующие части не считаются прочитанными AI.
+- Передаваемые группы личных данных соответствуют профилю; невыбранные источники и найденные секреты исключены с видимым отчётом.
+- Многочастная передача имеет manifest и продолжение; ограничение размера не приводит к молчаливому обрезанию.
+TAB4-19 — Единый пакет для других выбранных AI
+- Основной packet/result contract не содержит обязательного Grok-only поля.
+- Каждое назначение имеет собственные target binding, profile и квалификацию UI/API; права Grok не переносятся автоматически.
+- Различия лимитов, вложений и получения ответа видимы до передачи.
+- Ручная загрузка того же проверяемого пакета остаётся доступной при неподдержанном адаптере.
+LAYA4-017 — Dedup, версии, tombstones и управляемое хранение
+- Exact raw dedup может объединять physical bytes, сохраняя все origin refs и индивидуальные policies.
+- Semantic similarity создаёт duplicate candidate; разные решения/версии не сливаются автоматически.
+- Current head, deleted/tombstoned и historical versions имеют разные projections.
+- Retention/delete распространяется на raw/derived/cache/backups по явному manifest; shared blobs удаляются только при отсутствии допустимых refs.
+- Local deletion не заявляет удаление внешней копии; external delivery receipt остаётся объяснимым и минимальным.
+LAYA4-018 — Bounded retrieval из архива всей жизни
+- Pipeline применяет goal/project/time scope, exact/FTS retrieval, graph neighbours и budget selection перед optional semantic rerank.
+- Project/episode/lifetime summaries имеют source refs и expand-to-original; изменение источника помечает summary stale.
+- Conflicts, uncertainty и missing facts переносятся в ответ и packet; summary не удаляет альтернативные свидетельства.
+- Budget, selected refs и excluded reasons видны пользователю; запрос дополнительных частей ограничен текущим scope.
+- Quality evaluation проверяет source recall и evidence correctness, а не только stylistic AI judgement.
+LAYA4-019 — Provider-neutral packet и профили Grok/ChatGPT/Gemini
+- Core packet содержит goal/scope/criteria/source refs/gaps/result contract независимо от provider UI.
+- Provider profile задаёт observed input/attachment limits и version; неизвестный лимит не выдаётся за факт.
+- Bytes, exact tokens при наличии qualified tokenizer и token estimate method различаются.
+- Передача части не меняет source identity; provider projection имеет собственный digest.
+- Carry-over в новую session содержит decisions/open issues/source refs; не утверждает прежнее чтение моделью.
+LAYA4-020 — Preview share projection и быстрый локальный экспорт
+- Preview показывает goal/source projects/data categories/destination binding revision/parts/bytes/gaps.
+- Raw archive и share projection имеют разные IDs; redaction не меняет оригинал и меняет share digest.
+- Explicit scope и protected fields проверяются вместе с heuristic scan; heuristic не обещает полного нахождения секретов.
+- Смена recipient/account/chat или расширение scope инвалидирует old ready projection, не удаляя локальный archive.
+- После одной настройки routine export в прежнем scope не требует повторной настройки; send остаётся отдельным UI adapter эффектом.
+LAYA4-021 — Следующие части и bounded запрос missing context
+- AI request принимает part/source identifiers из manifest, reason и критерий; произвольный filesystem path не открывается.
+- Следующая часть привязана к той же goal/source revision или явно supersedes её.
+- Inventory/captured/selected/delivered/model-declared-reviewed/criterion-verified ведутся раздельно.
+- Out-of-scope/missing/stale запросы показывают конкретный blocker и не запускают скрытый gather.
+- Repeated request возвращает прежний immutable part при совпадающих inputs, не создаёт новую delivery attempt.
+LAYA4-025 — Объяснимое «найди нужный контекст для этой цели»
+- Каждый factual answer указывает source revision/range или явно unknown; model-generated citation валидируется на существование.
+- Панель why-selected показывает exact match/filter/graph/summary reason.
+- Запрос дополнительных данных предлагает конкретные missing source categories и ожидаемую пользу для критерия.
+- Goal/source conflict не скрывается summary; пользователь может открыть обе версии и изменить scope.
+- Ответ сам по себе не вызывает repo execution/provider send и не помечает цель achieved.
+LAYA4-027 — Backup, restore и миграции личного каталога
+- Backup manifest связывает SQLite snapshot, raw blobs, derived indexes policy, schema versions и hashes.
+- Consistent snapshot не смешивает поколения DB/blob publication; backup проверяется до отметки complete.
+- Restore сверяет hashes/lineage/tombstones/user labels; никаких stale source resurrection.
+- Migration имеет preflight/free-space/rollback point; старый archive читается или даёт явный unsupported schema.
+- Restore не восстанавливает grants, credentials или active external sends автоматически; data continuity отделена от execution state.
+ACTION5-12 — Квалифицировать поиск по точным источникам и областям
+- ID/path/exact quote возвращают правильный source version или явный no-match; выдача включает ranges.
+- Namespace/project/time filters применяются до построения packet и не раскрывают cross-scope snippets.
+- Saved view хранит запрос, а не копии источников; deleted source исчезает из current view.
+- Latency и relevance измерены на corpus отдельно для cold/warm; пороги описаны как proposed до измерения.
+ACTION5-13 — Зафиксировать WHY_THIS_PACKET и управляемую корзину контекста
+- Для каждого включённого range указана связь с goal/criterion либо user choice.
+- Обязательный источник вне budget попадает в next-part/missing ledger; количество частей не имеет скрытого общего потолка.
+- User removal меняет selection revision и packet digest; старый пакет остаётся auditable.
+- Неизвестное утверждение создаёт bounded NEXT_CONTEXT_REQUEST, а не fabricated evidence.
+ACTION5-14 — Сделать быстрый переносимый share projection
+- Preview и export имеют один projection digest; все omissions отмечены и доступны для продолжения.
+- Private overlay/excluded source не попадает в share bytes; эвристика секретов не выдаётся за гарантию.
+- После export offline index позволяет найти исходный range без сети.
+- Grok/ChatGPT/Gemini profile меняет transport formatting, сохраняя source/goal identity; фактические лимиты требуют qualification.
+ACTION5-15 — Резервировать библиотеку согласованным snapshot
+- Backup во время допустимых операций даёт согласованный source-head/event/blob snapshot.
+- Каждый blob и DB artifact проходит hash/integrity check; missing bytes не скрываются.
+- Ключи не копируются из credential storage в архив; сохраняются ссылки и шаги повторного подключения.
+- Пользователь видит расположение, размер, время и последний проверенный restore status.
+ACTION5-16 — Проверить restore и миграцию на копии до активации
+- Restore восстанавливает hashes, source heads, overlays, tombstones и task state; старое UNKNOWN не превращается в sent.
+- Schema migration rehearsal сравнивает record/relationship counts и exact-source queries до/после.
+- Активен один canonical DB path; activation выполняется при закрытых writer leases.
+- Downgrade, не совместимый с новой схемой, использует проверенный pre-migration backup.
+ACTION5-17 — Определить tombstone, retention и очистку производных данных
+- До удаления показаны зависимые packets/reviews и данные, ещё находящиеся в snapshots.
+- Current retrieval не возвращает tombstoned source; lease завершение не resurrect data.
+- Raw original, transcript, derived index и external projection имеют отдельные retention states.
+- Restore old backup применяет текущие tombstones либо явно предлагает отдельный recovery namespace.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

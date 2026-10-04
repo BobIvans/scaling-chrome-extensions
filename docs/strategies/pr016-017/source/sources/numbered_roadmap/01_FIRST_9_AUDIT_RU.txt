@@ -1,0 +1,76 @@
+ЧТО РАЗРАБОТАНО В ПЕРВЫХ ДЕВЯТИ ПАКЕТАХ
+
+Прочитаны все девять ZIP и каталог V5. Найдены доступные фрагменты трёх чатов: «Create First PR Zip» (№1/2/4/7), «Создание ZIP PR 3» (№3/6/9), «Создание ZIP 5» (№5/8). Полных стенограмм не получено. Scope определяется итоговыми архивами; текущий merge проверяется отдельно через GitHub.
+
+Финальная повторная проверка: №001–004 merged (#38–41); №005, №007 и №009 имеют открытые GitHub PR #42, #43, #44. Код/CI этих новых heads этим исследованием не проверялся. Для №006/008 сохранены спецификации, публикация реализации на снимке не подтверждена.
+
+001. Полный repo scan с progress/pause/resume/cancel
+Task IDs: LAYA4-001, LAYA4-002, LAYA4-004. Сценариев приёмки в спецификации: 12.
+Статус на момент снимка: MERGED_SCOPED.
+https://github.com/BobIvans/scaling-chrome-extensions/pull/38
+Остаток: Durable Core job и клиентский lifecycle; реальная Windows qualification.
+Крупные продолжения: 012, 015, 021
+
+002. Manifest всех файлов/chunks и точный range index
+Task IDs: LAYA4-009. Сценариев приёмки в спецификации: 14.
+Статус на момент снимка: MERGED_SCOPED.
+https://github.com/BobIvans/scaling-chrome-extensions/pull/39
+Остаток: Все старые listing/delta/selection entrypoints; delta invalidation; полная desktop интеграция.
+Крупные продолжения: 012, 015, 021
+
+003. Полный portable ZIP64, offline index и atomic resume
+Task IDs: LAYA4-010. Сценариев приёмки в спецификации: 16.
+Статус на момент снимка: MERGED_SCOPED.
+https://github.com/BobIvans/scaling-chrome-extensions/pull/40
+Остаток: Интеграция с долгими jobs/desktop/share projection и qualification на устройстве.
+Крупные продолжения: 012, 014, 015, 021
+
+004. Потоковый Git inventory и атомарная публикация
+Task IDs: LAYA4-003. Сценариев приёмки в спецификации: 16.
+Статус на момент снимка: MERGED_SCOPED.
+https://github.com/BobIvans/scaling-chrome-extensions/pull/41
+Остаток: Durable Core lifecycle и installed-device receipt. Исторические пункты про index streaming и large blobs уже частично устарели.
+Крупные продолжения: 012, 021
+
+005. Форматы, gaps и source-wide eligibility
+Task IDs: LAYA4-004. Сценариев приёмки в спецификации: 18.
+Статус на момент снимка: OPEN_PR_IMPLEMENTATION_SCOPE_NOT_AUDITED.
+https://github.com/BobIvans/scaling-chrome-extensions/pull/42
+Остаток: Специальные payloads и дополнительные encodings/extractors; interop с №6/7. Проверять actual implementation.
+Крупные продолжения: 010, 011, 021
+
+006. Python code/tests/contracts groups и SCC continuation
+Task IDs: LAYA4-008. Сценариев приёмки в спецификации: 18.
+Статус на момент снимка: MERGE_NOT_CONFIRMED_AT_INSPECTION.
+Остаток: Адаптация к фактической eligibility №5, mixed-language graph, utility/scale и device evidence.
+Крупные продолжения: 011, 012, 021
+
+007. JS/TS AST и ограниченные статические relations
+Task IDs: LAYA4-005, LAYA4-006. Сценариев приёмки в спецификации: 16.
+Статус на момент снимка: OPEN_PR_IMPLEMENTATION_SCOPE_NOT_AUDITED.
+https://github.com/BobIvans/scaling-chrome-extensions/pull/43
+Остаток: Aliases/workspaces/exports/CommonJS; общий Python/JS graph; owner/test picker; независимый Windows holdout.
+Крупные продолжения: 011, 021
+
+008. Минимальный desktop/stdio Windows pilot
+Task IDs: ACTION5-01, ACTION5-02, ACTION5-03, TAB4-01. Сценариев приёмки в спецификации: 18.
+Статус на момент снимка: MERGE_NOT_CONFIRMED_AT_INSPECTION.
+Остаток: Standalone installer, canonical task/write/reconciliation, TXT import и installed receipt.
+Крупные продолжения: 010, 014, 015, 021
+
+009. ChatGPT JSON: originals, extraction revisions и наблюдаемые ветви
+Task IDs: ACTION5-04, ACTION5-05, ACTION5-06. Сценариев приёмки в спецификации: 20.
+Статус на момент снимка: OPEN_PR_IMPLEMENTATION_SCOPE_NOT_AUDITED.
+https://github.com/BobIvans/scaling-chrome-extensions/pull/44
+Остаток: Full-scroll/remote branches, generic imports/TXT, attachments payload, normalized reverse offsets, correction overlays, scale и retention.
+Крупные продолжения: 010, 014, 021
+
+АКТУАЛЬНЫЕ КОРРЕКЦИИ ДОЛГА
+
+В pinned main 9fbadef2714fae92e516a80b52d29cb9824b0e44 уже есть streaming blobs, потоковое index_matches_head и последовательный verify_roundtrip_db. Старые 8 MiB/whole-index/whole-proof blockers нельзя переносить как невыполненный код без проверки. AST_WINDOW_BYTES=2 MiB сохраняет ограничение синтаксического анализа, которое отличается от capture всех bytes; WS графа обязан квалифицировать большие sources или оставить явный gap.
+
+Реальные наблюдаемые ограничения: list_snapshots LIMIT 20; snapshot_changes создаёт before/after массивы и отдаёт [:20] paths. №012 закрывает выдачу/масштаб/delta и долговременный Core lifecycle. Streaming Native START и heartbeat уже реализованы, но не подменяют durable job identity/recovery.
+
+№006 и №007 используют разные relation dialects; №011 owns их адаптацию и расширение resolver. №008 даёт read-only desktop draft; №015 owns canonical writes, installer и установленный Windows результат. Итоговый №009 — local ChatGPT JSON, хотя №008 ранее предлагал TXT: TXT/folders/general importer входят в №010.
+
+Исторический BLOCKED_AUTO_REVIEW master V4 хранится как факт прошлого, а текущие №001–004 merged подтверждены GitHub #38–41. Current main уже содержит Core, schedules, handoff/review и Python graph. Все продолжения начинаются с reuse/gap audit.

@@ -1,0 +1,169 @@
+Создай большой подробный ZIP ROADMAP-PR-018: «Код → проверенный PR/merge → установленное обновление с canary и rollback».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Замкнуть worktree/diff/tests/CI/final-tree/release/install цикл с одним integrator/updater и qualification новых capabilities.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: G3-007, UI3-013, UI3-014, UI3-020, PAR3-012, PAR3-013, PAR3-017, PAR3-018, EVO3-005, EVO3-007, EVO3-008, EVO3-009, EVO3-011, EVO3-013, EVO3-015, EVO3-016, EVO3-018, EVO3-020, TAB4-09, TAB4-10, TAB4-11, TAB4-12, TAB4-13, TAB4-14, TAB4-15
+Feature cards: ACT-011, ACT-012, ACT-046, ACT-047, RND-006, RND-007, RND-008
+Decisions: DEC5-20
+Goals: GOAL5-05, GOAL5-14, GOAL5-15, GOAL5-16
+Dependencies: PR-011, PR-012, PR-014, PR-015, PR-017
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-023 — AI patch → worktree → проверки → PR/CI → подтверждённый merge
+Scope:
+- Изолированный worktree и source fence для каждого изменения
+- Registered verifier, diff/review и точная связь final tree с CI
+- GitHub merge observer для merge/squash/rebase и ручного внедрения
+Граница: Историю read-only собирает №20. Пакет сам не доказывает установленное обновление; это №33. Один интегратор владеет итоговой веткой.
+Приёмка:
+- Проверяется фактический artifact, а не фраза AI
+- Base drift вызывает rebase/revalidation
+- Повторное наблюдение не создаёт второй effect
+- CI связан с окончательной ревизией
+- Manual «я внедрил» проверяет реальную версию
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-024 — Воспроизводимый release, staged updater, canary и проверенный rollback
+Scope:
+- Source/build/assets provenance и получение exact candidate
+- Rehearsal migration, quiescence и атомарная активация
+- Installed receipt, capability diff, canary и rollback
+Граница: Переиспользует data backup №23 и registry №26. Merge/download не заполняет installed/usable статус.
+Приёмка:
+- Release связан с точным source и asset hash
+- Работающий component не заменяется посреди операции
+- Сбой миграции оставляет рабочую предыдущую версию
+- Canary измеряет функцию на устройстве
+- Usable capability связана с installed build и qualification
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+G3-007 — Поддержать ручное внедрение пользователем
+- Фраза или кнопка «я внедрил» сохраняет assertion.
+- Наблюдатель получает конкретный repo/PR/commit; assertion не становится installed evidence.
+UI3-013 — Проверить изменение по реальным артефактам
+- Success модели без артефактов остаётся unverified.
+- Проверки привязаны к конкретному commit и acceptance.
+UI3-014 — Превратить ручное «я внедрил» в проверку версии
+- Голосовое утверждение не меняет статус на merge_verified само по себе.
+- Новый head после review требует актуальных доказательств.
+UI3-020 — Связать проверенный merge с обновлением и новой capability
+- Merge без соответствующего release не запускает установку случайной версии.
+- Capability публикуется после фактической установленной проверки.
+PAR3-012 — Worktree на отдельную write-задачу с одним Git-owner
+- Создание/удаление worktree и изменения Git metadata выполняет один owner.
+- Каждая write-задача имеет base SHA, отдельный путь/ветку и разрешённый output scope.
+- Общие инструменты, файлы вне worktree, сети и процессы входят в эффекты отдельно.
+PAR3-013 — Последовательный integrator с фактическим diff
+- Интегратор принимает patch только для ожидаемого base и после independent review.
+- Пересечения вычислены по реальным изменённым путям и повторно проверены после первого patch.
+- Один owner изменяет integration branch; конфликт имеет отдельную задачу и проверяемое разрешение.
+PAR3-017 — Независимая проверка AI-результата и ручного внедрения
+- AI claims, patch, тестовые свидетельства и пользовательское сообщение о внедрении различаются.
+- Проверки связаны с точным code snapshot и исходными acceptance criteria.
+- Ручное внедрение пользователя входит в тот же путь наблюдения результата; отсутствие automerge не блокирует сценарий.
+PAR3-018 — Merge evidence → единственный updater → capability
+- Наблюдаемые repo/PR/head/merge commit и проверки соответствуют ожидаемому изменению.
+- Происхождение сборки и совместимость миграции проверены до переключения версии.
+- Capability доступна только после проверки установленной версии и её результата.
+- Разработка и приёмка адаптера не включают runtime: перед внешним действием проверены activation_prerequisites и актуальные qualified receipts по contracts/ACTIVATION_GATES.json.
+EVO3-005 — Checkpoint пользователя «я применил / merged»
+- UI принимает PR URL, commit URL/SHA или local build reference вместе с исходным текстом пользователя.
+- Assertion запускает чтение evidence в рамках уже согласованного scope; не устанавливает verified сама.
+- Отсутствие PR допустимо для manual_commit/local_build; UI явно показывает выбранное происхождение.
+EVO3-007 — Зафиксировать целевую ревизию и ручной путь commit
+- Сохраняются роли каждого SHA, repo stable identity и разрешённая target ref; текущая branch name не подменяет immutable commit.
+- Manual commit проверяется по свежему Git/remote evidence и достижимости; local overlay сохраняется отдельно.
+- При смене repo/account/ref дальнейший update не наследует прежний target scope.
+EVO3-008 — Сопоставить merge, squash и rebase без SHA shortcuts
+- Нужны правильные repo/base/PR/head и merged state; pre-merge test SHA не считается интеграцией.
+- Squash/rebase проверяются по итоговой связи и финальному diff/дереву; равенство PR head и результата не требуется.
+- Новый head, неизвестный mapping или последующий revert не дают coverage для текущего поведения без повторной проверки.
+EVO3-009 — Проверять критерии на итоговой ревизии
+- TestRun содержит source commit/tree/overlay digest, verifier version, environment, command binding, fixture digest и artifacts.
+- Выполняются только зарегистрированные проверочные операции в согласованной изоляции; scan не запускает код repo.
+- Тесты прежнего PR head не объявляются доказательством более нового release commit без проверки применимости.
+EVO3-011 — Observer и reconciliation сигналов без дублирования
+- Дубли и перестановка событий не создают повторных installs; identity включает repo/case/observation revision.
+- Недоступный источник сохраняет pending с backoff и budget; не выдумывает factual state.
+- Следующий эффект использует заново проверенные изменяемые условия, а не только старый webhook payload.
+EVO3-013 — Связать release с исходниками и точным asset
+- Resolved tag commit, asset ID/digest и build metadata закреплены в ReleaseBinding; target_commitish не используется как proof существующего tag.
+- Artifact digest сравнивается с реально скачанными bytes; отсутствие требуемой подписи/provenance остаётся gap.
+- Release из descendant commit проходит квалификацию собственной ревизии, включая значимые дополнительные изменения.
+EVO3-015 — Stage и репетиция миграции
+- Staged candidate имеет проверенный digest и только свой выделенный root; production data не меняются при rehearsal.
+- Миграция копии проверяет schema, counts и ключевые связи; old scenario и new capability smoke проходят.
+- Stage и cleanup не затрагивают unrelated paths; неизвестные installer effects не получают execution автоматически.
+EVO3-016 — Установка и независимый receipt устройства
+- Один installation lease; event before/after change и recovery marker сохраняются durable.
+- Receipt связывает installation ID/device ID/OS, active artifact digest, host/adapter version и process observation.
+- Restart после переключения до receipt вызывает наблюдение active state, а не второй install.
+- До unattended установки в рабочий экземпляр пройдены baseline local keyboard STOP, действующий scoped grant и qualification существующего predecessor updater на точных device/installation/target. Test builds собирают недостающие receipts только в изолированном bounded_qualification_session с теми же STOP/scope/current-target и effect limits. Post-install qualification новой capability остаётся отдельной стадией.
+EVO3-018 — Qualification capability на конкретном устройстве
+- Испытание выполняется на test target без пользовательских внешних эффектов и связывается с exact device/build/binding.
+- Версия target app и профиль UI учитываются; несовместимость не маскируется зелёными repo tests.
+- Keyboard/STOP/recovery входят в испытание; voice не является prerequisite базовой отмены.
+- Первичная квалификация adapter выполняется в центральном bounded_qualification_session: full qualification не требуется для сбора самой себя, но baseline keyboard STOP, scope, текущий точный target и ограниченные effects обязательны; это не открывает unattended runtime.
+EVO3-020 — Условие usable и привязка существующих workflows
+- Usable вычисляется из registry/binding/install/qualification/grant/revocation; запись enabled из AI отвергается.
+- Workflow фиксирует совместимый contract и разрешённый target; новую capability нельзя применять к другим приложениям по сходству названия.
+- Изменение active build, scope или UI profile инвалидирует только затронутую пригодность до проверки.
+TAB4-09 — Связь второй вкладки с репозиторием и PR
+- Вторая вкладка проверена на зарегистрированный owner/repo и роль REPOSITORY_STATUS.
+- PR number, base branch, head repository и head SHA связаны с задачей и имеют источник наблюдения.
+- Ссылка из ответа разрешается только в рамках профиля; редирект в другой repo/fork требует отдельного разбора.
+- При отсутствии PR остаётся состояние PR_NOT_BOUND, а не автоматически выбранный последний PR.
+TAB4-10 — Проверка merge и итоговой удалённой версии
+- Голосовое или текстовое «merged» инициирует проверку и не устанавливает merge_verified.
+- UI-наблюдение хранит UI_OBSERVED; квалифицированный Git/интеграционный источник хранит отдельную квитанцию происхождения.
+- Подтверждены repo identity, PR/head, способ merge, целевая ветка и точный SHA кандидата; squash/rebase не используют ошибочное равенство head и merge SHA.
+- Изменение ветки после наблюдения не подменяет закреплённую версию; новая версия требует новой квалификации.
+TAB4-11 — Получение точного commit в изолированную область
+- Разрешённый remote выбирается из профиля; URL из AI-ответа не становится источником исполнения.
+- Скачанные исходники сверены с закреплённым SHA/tree; для архива отдельно проверяются полнота и соответствие содержимого.
+- Файлы попадают в уникальный staging; hooks, пакетные scripts и инструкции README не исполняются при получении.
+- Квоты диска/размера и состояние частичного получения отражены в журнале.
+TAB4-12 — Квалификация кандидата зарегистрированными заданиями
+- План запуска выбирает зарегистрированные templates и зависимости окружения; новые команды требуют отдельной регистрации.
+- Проверки относятся к точному итоговому SHA кандидата и зафиксированной версии окружения.
+- Локальные тесты, CI и устройство имеют разные поля доказательств; CI другого SHA не закрывает текущую проверку.
+- Существующая политика Core, лимиты времени и отмена действуют без обхода через новый UI-адаптер.
+TAB4-13 — Сравнение возможностей и инвалидирование старых навыков
+- Capability manifest содержит стабильный ID, версию контракта, входы/выходы, требуемые права, состояние проверки и ссылку на реализацию.
+- Diff различает новое поведение, переименование, удаление и несовместимое изменение.
+- Старые automation skills, зависящие от изменённого контракта, получают REQUALIFICATION_REQUIRED.
+- Права и критерии приёмки не расширяются самим обновлением; изменения проверяющего компонента выделены отдельно.
+TAB4-14 — Пробная миграция и восстанавливаемое состояние
+- Миграция выполняется на копии авторитетного хранилища; исходные данные и их происхождение сохраняются.
+- Проверяется чтение существующих task/review/job/library записей после миграции.
+- Определено, какие записи появляются после переключения и как они сохраняются при возврате версии.
+- Фиксированы схема backup, контроль целостности и способ восстановления после прерывания.
+TAB4-15 — Атомарная активация и проверенный откат
+- Активируется только артефакт квалифицированного SHA с актуальными proof/profile/capability bindings.
+- Переключение версии атомарно; фиксируются old/new version, схема данных и причина.
+- Health check проверяет процесс, библиотеку и зарегистрированные команды; сбой вызывает проверенный откат.
+- Задания старой версии продолжаются только при доказанной совместимости; обновление worker/evaluator имеет отдельную квалификацию.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

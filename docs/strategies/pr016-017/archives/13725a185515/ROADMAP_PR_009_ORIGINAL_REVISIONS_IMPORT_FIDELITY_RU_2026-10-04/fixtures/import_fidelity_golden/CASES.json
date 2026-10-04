@@ -1,0 +1,871 @@
+{
+  "schema": "roadmap.synthetic-import-cases.v1",
+  "implementation_evidence": false,
+  "case_count": 18,
+  "cases": [
+    {
+      "case_id": "F01",
+      "name": "BOM/CRLF + two branches and 2 conversations",
+      "raw_path": "raw/F01.json",
+      "raw_sha256": "c06568fcd058afadec09babf45080abc97f5b8c9d9a0a1f05365d88aba6e6468",
+      "input_bytes": 7456,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F01/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F02",
+      "name": "Same bytes/origin retry",
+      "raw_path": "raw/F02.json",
+      "raw_sha256": "c06568fcd058afadec09babf45080abc97f5b8c9d9a0a1f05365d88aba6e6468",
+      "input_bytes": 7456,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 0,
+        "new_source_versions": 0,
+        "new_extractions": 0,
+        "new_origins": 0
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F02/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F03",
+      "name": "Same bytes via another origin",
+      "raw_path": "raw/F03.json",
+      "raw_sha256": "c06568fcd058afadec09babf45080abc97f5b8c9d9a0a1f05365d88aba6e6468",
+      "input_bytes": 7456,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:second-copy",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 0,
+        "new_source_versions": 0,
+        "new_extractions": 0,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F03/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F04",
+      "name": "Whitespace/key-order revision",
+      "raw_path": "raw/F04.json",
+      "raw_sha256": "7e1d55365bfaa605ed24e5c323b0ff704ad7181314732f7a7050beb078bdb9e3",
+      "input_bytes": 3989,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F04/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F05",
+      "name": "Changed text revision",
+      "raw_path": "raw/F05.json",
+      "raw_sha256": "dd9cf6aac57e571e87e3e7103e262fb6441eb7c404918fadaa6a32340c21a5f5",
+      "input_bytes": 3992,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F05/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F06",
+      "name": "Changed metadata with same text IDs",
+      "raw_path": "raw/F06.json",
+      "raw_sha256": "347509ecfe24fb591ca525c86137ff51d365f417859d9abcba6a7ce18da26f0a",
+      "input_bytes": 3999,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F06/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F07",
+      "name": "Selected B; A untouched",
+      "raw_path": "raw/F07.json",
+      "raw_sha256": "4a9a03f5b0fce62c20cd3c14356e88a19b36258791f14b9e26751d33037a2f5d",
+      "input_bytes": 711,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 2,
+        "text_nodes": 1,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [
+        "conv-a"
+      ],
+      "ledger_path": "expected/F07/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F08",
+      "name": "Missing refs/current/mismatch + parent cycle",
+      "raw_path": "raw/F08.json",
+      "raw_sha256": "5f435a8a0400f2f524dd12e9ac4b6f193aea90e28ed2edd0dd078914eb1ac0cd",
+      "input_bytes": 2886,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "PARTIAL_TOPOLOGY",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 6,
+        "text_nodes": 3,
+        "attachments": 3,
+        "topology_gaps": 7
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a"
+      ],
+      "out_of_scope_unchanged": [
+        "conv-b"
+      ],
+      "ledger_path": "expected/F08/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F09",
+      "name": "Unsupported top-level shape",
+      "raw_path": "raw/F09.json",
+      "raw_sha256": "c2e4d66262a85cdb0b2ac2402702542778f001169b2db45a284a3c1935c5d013",
+      "input_bytes": 41,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "ERROR",
+      "expected_error_reason": "UNSUPPORTED_JSON_SHAPE",
+      "counts": {
+        "nodes": 0,
+        "text_nodes": 0,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F09/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F10",
+      "name": "Duplicate JSON key",
+      "raw_path": "raw/F10.json",
+      "raw_sha256": "7ae932ad35cf4879667668d6648a00d80fa71258183266df086d0a434fdfaa3f",
+      "input_bytes": 44,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "ERROR",
+      "expected_error_reason": "DUPLICATE_JSON_KEY",
+      "counts": {
+        "nodes": 0,
+        "text_nodes": 0,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F10/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F11",
+      "name": "Invalid UTF8 original preserved",
+      "raw_path": "raw/F11.json",
+      "raw_sha256": "6327588e9b6ad76a467d30007bbac64e673bfe60163b8fa99ecb80515c0c3166",
+      "input_bytes": 13,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "ERROR",
+      "expected_error_reason": "INVALID_UTF8",
+      "counts": {
+        "nodes": 0,
+        "text_nodes": 0,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F11/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F12",
+      "name": "Truncated JSON original preserved",
+      "raw_path": "raw/F12.json",
+      "raw_sha256": "d0e2f25d699366d9597c3b00ee7d6fc089da14d5667d87b891e3012f9e1eb9a2",
+      "input_bytes": 26,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "ERROR",
+      "expected_error_reason": "INVALID_JSON",
+      "counts": {
+        "nodes": 0,
+        "text_nodes": 0,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F12/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F13",
+      "name": "Byte budget refuses capture without truncation",
+      "raw_path": "raw/F13.json",
+      "raw_sha256": "c06568fcd058afadec09babf45080abc97f5b8c9d9a0a1f05365d88aba6e6468",
+      "input_bytes": 7456,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 8,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": false,
+      "expected_disposition": "NOT_CAPTURED",
+      "expected_error_reason": "INPUT_BYTE_BUDGET",
+      "counts": {
+        "nodes": 0,
+        "text_nodes": 0,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 0,
+        "new_source_versions": 0,
+        "new_extractions": 0,
+        "new_origins": 0
+      },
+      "selected_conversations": [],
+      "out_of_scope_unchanged": [],
+      "ledger_path": null,
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F14",
+      "name": "Legacy unsupported author preserves original",
+      "raw_path": "raw/F14.json",
+      "raw_sha256": "3d84de88b05016bb85a7fa0a600200ebd10d448278652fd8939c96823e5900a0",
+      "input_bytes": 3929,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "ERROR",
+      "expected_error_reason": "LEGACY_SCHEMA_ERROR",
+      "counts": {
+        "nodes": 0,
+        "text_nodes": 0,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F14/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F15",
+      "name": "Independent namespace with shared raw blob",
+      "raw_path": "raw/F15.json",
+      "raw_sha256": "c06568fcd058afadec09babf45080abc97f5b8c9d9a0a1f05365d88aba6e6468",
+      "input_bytes": 7456,
+      "namespace": "chatgpt:isolated",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 0,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F15/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F16",
+      "name": "Pinned new fidelity adapter on same original",
+      "raw_path": "raw/F16.json",
+      "raw_sha256": "c06568fcd058afadec09babf45080abc97f5b8c9d9a0a1f05365d88aba6e6468",
+      "input_bytes": 7456,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v2.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 5,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 0,
+        "new_source_versions": 0,
+        "new_extractions": 1,
+        "new_origins": 0
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F16/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F17",
+      "name": "Invalid children ledger schema preserves original",
+      "raw_path": "raw/F17.json",
+      "raw_sha256": "bfec63c885a6dcb1f966fdcd75af9d7e593f69c1a681271969a84203288acaa2",
+      "input_bytes": 3973,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "ERROR",
+      "expected_error_reason": "LEDGER_SCHEMA_ERROR",
+      "counts": {
+        "nodes": 0,
+        "text_nodes": 0,
+        "attachments": 0,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F17/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    },
+    {
+      "case_id": "F18",
+      "name": "Text becomes empty without deleting history",
+      "raw_path": "raw/F18.json",
+      "raw_sha256": "ab698aebb6f5bcd1b1c53bfec05dba8f8a0c0038541b8051778ab58645ff77d1",
+      "input_bytes": 3944,
+      "namespace": "chatgpt:selected",
+      "source_key": "export-main",
+      "origin_locator": "selection:primary",
+      "adapter_version": "chatgpt-fidelity.v1.fixture",
+      "policy": {
+        "max_input_bytes": 67108864,
+        "max_conversations": 1000,
+        "max_total_mapping_nodes": 100000,
+        "max_text_item_utf8_bytes": 2200000,
+        "max_extracted_text_bytes": 67108864,
+        "max_attachments": 100000,
+        "max_ledger_utf8_bytes": 67108864,
+        "scope_policy": "SELECTED_CONVERSATIONS_ONLY",
+        "network_fetches_allowed": false
+      },
+      "expected_original_retained": true,
+      "expected_disposition": "LOCAL_NODES_ACCOUNTED",
+      "expected_error_reason": null,
+      "counts": {
+        "nodes": 9,
+        "text_nodes": 4,
+        "attachments": 3,
+        "topology_gaps": 0
+      },
+      "expected_new_records": {
+        "new_raw_blobs": 1,
+        "new_source_versions": 1,
+        "new_extractions": 1,
+        "new_origins": 1
+      },
+      "selected_conversations": [
+        "conv-a",
+        "conv-b"
+      ],
+      "out_of_scope_unchanged": [],
+      "ledger_path": "expected/F18/EXTRACTION.json",
+      "golden_output": "AUTHORED_SYNTHETIC_EXPECTATION_NOT_APP_OUTPUT"
+    }
+  ],
+  "manual_oracle": {
+    "F01": {
+      "nodes": 9,
+      "text_nodes": 5,
+      "structural_nodes": 2,
+      "non_text_nodes": 1,
+      "empty_nodes": 1,
+      "attachments": 3
+    },
+    "F07": {
+      "nodes": 2,
+      "text_nodes": 1,
+      "untouched_conversation": "conv-a"
+    },
+    "F08": {
+      "nodes": 6,
+      "text_nodes": 3,
+      "topology_gaps": [
+        {
+          "conversation_id": "conv-a",
+          "code": "MISSING_CHILD",
+          "node_id": "u1",
+          "target": "a1"
+        },
+        {
+          "conversation_id": "conv-a",
+          "code": "PARENT_CHILD_MISMATCH",
+          "node_id": "u1",
+          "target": "a2"
+        },
+        {
+          "conversation_id": "conv-a",
+          "code": "PARENT_CHILD_MISMATCH",
+          "node_id": "u1",
+          "target": "empty"
+        },
+        {
+          "conversation_id": "conv-a",
+          "code": "MISSING_CHILD",
+          "node_id": "a2",
+          "target": "ghost"
+        },
+        {
+          "conversation_id": "conv-a",
+          "code": "MISSING_PARENT",
+          "node_id": "empty",
+          "target": "missing-parent"
+        },
+        {
+          "conversation_id": "conv-a",
+          "code": "CURRENT_NODE_MISSING",
+          "node_id": null,
+          "target": "ghost"
+        },
+        {
+          "conversation_id": "conv-a",
+          "code": "PARENT_CYCLE",
+          "node_id": null,
+          "members": [
+            "a2",
+            "tool"
+          ]
+        }
+      ]
+    },
+    "F18": {
+      "nodes": 9,
+      "text_nodes": 4
+    },
+    "same_legacy_item_ids": [
+      [
+        "F01",
+        "F04"
+      ],
+      [
+        "F01",
+        "F06"
+      ]
+    ],
+    "changed_legacy_item": [
+      "F01",
+      "F05",
+      "conv-a",
+      "u1"
+    ],
+    "same_raw_new_extractor": [
+      "F01",
+      "F16"
+    ],
+    "do_not_execute_marker": "unknown_node_field.command"
+  }
+}

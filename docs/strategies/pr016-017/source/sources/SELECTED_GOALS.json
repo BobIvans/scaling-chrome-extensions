@@ -1,0 +1,481 @@
+[
+  {
+    "goal_id": "GOAL5-11",
+    "title": "Пакеты для разных AI и точный дозапрос",
+    "user_outcome": "Быстро передать выбранный контекст ChatGPT/Grok/Gemini и вернуть запрос недостающего диапазона.",
+    "feature_ids": [
+      "ACT-005",
+      "ACT-008",
+      "ACT-009",
+      "ACT-010",
+      "ACT-013",
+      "LIB-025",
+      "LIB-026",
+      "LIB-027",
+      "LIB-028",
+      "LIB-037",
+      "LIB-038",
+      "LIB-039",
+      "LIB-040",
+      "LIB-057"
+    ],
+    "acceptance_criteria": [
+      "Один provider-neutral manifest, отдельный qualified transport каждого адресата.",
+      "Пакет имеет goal/source/destination scope и declared gaps.",
+      "NEED_CONTEXT указывает версию и диапазон; supplied не означает read/used."
+    ],
+    "primary_scenario": "Корзина → preview → части → выбранный AI → ответ/NEED_CONTEXT.",
+    "stage": "S2/S5",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-02",
+      "DEC5-03",
+      "DEC5-05",
+      "DEC5-07",
+      "DEC5-13",
+      "DEC5-14",
+      "DEC5-22",
+      "DEC5-23"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-05",
+      "ACTION5-11",
+      "ACTION5-13",
+      "ACTION5-14",
+      "ACTION5-15"
+    ],
+    "milestone_ids": [
+      "M5-02",
+      "M5-03",
+      "M5-04"
+    ],
+    "criterion_ids": [
+      "GOAL5-11-AC1",
+      "GOAL5-11-AC2",
+      "GOAL5-11-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "LIB-025",
+        "status": "PARTIAL",
+        "verified_scope": "TASK и next_request формируются из выбранного контекста/критериев; автоматический semantic retriever не подключён.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "LIB-037",
+        "status": "PARTIAL",
+        "verified_scope": "TASK можно вручную скопировать/скачать для выбранного AI; UI target и auto-send ещё планируются.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-12",
+    "title": "Сохранённая задача и надёжная ручная передача",
+    "user_outcome": "Восстановить задачу и результат после перезапуска без повторной отправки неизвестной попытки.",
+    "feature_ids": [
+      "ACT-015",
+      "ACT-022",
+      "ACT-023",
+      "ACT-024",
+      "ACT-057",
+      "LIB-037"
+    ],
+    "acceptance_criteria": [
+      "Идемпотентные task/event keys и immutable packet сохраняются.",
+      "Unknown outcome требует сверки, cancel сохраняет неопределённость.",
+      "Ответ связан с task/session/packet; DONE не закрывает критерий."
+    ],
+    "primary_scenario": "Task → подготовка → manual transfer → наблюдение → result import.",
+    "stage": "S0/S5",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-02",
+      "DEC5-03",
+      "DEC5-13",
+      "DEC5-18",
+      "DEC5-21"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-03",
+      "ACTION5-14",
+      "ACTION5-21",
+      "ACTION5-25",
+      "ACTION5-26"
+    ],
+    "milestone_ids": [
+      "M5-01",
+      "M5-04"
+    ],
+    "criterion_ids": [
+      "GOAL5-12-AC1",
+      "GOAL5-12-AC2",
+      "GOAL5-12-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-015",
+        "status": "PARTIAL",
+        "verified_scope": "taskKey/eventKey дают устойчивую identity ручных операций; external effect identity впереди.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-022",
+        "status": "PARTIAL",
+        "verified_scope": "SQLite intent/events и reference-only UI cache работают для ручной передачи; автоматический executor не добавлен.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-023",
+        "status": "PARTIAL",
+        "verified_scope": "Unknown/manual observation восстанавливается, включая cancel; remote reconciliation adapter ещё не подключён.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-024",
+        "status": "PARTIAL",
+        "verified_scope": "Задача восстанавливается в новом процессе; полный DAG автоматических эффектов впереди.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-057",
+        "status": "PARTIAL",
+        "verified_scope": "Есть task resume и unknown receipt controls; общая панель кампании дальше.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "LIB-037",
+        "status": "PARTIAL",
+        "verified_scope": "TASK можно вручную скопировать/скачать для выбранного AI; UI target и auto-send ещё планируются.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-13",
+    "title": "Выбранная вкладка Grok и управление её интерфейсом",
+    "user_outcome": "Один раз показать нужный чат и передавать документы в пределах настроенного сценария.",
+    "feature_ids": [
+      "ACT-003",
+      "ACT-004",
+      "ACT-035",
+      "ACT-036",
+      "ACT-037",
+      "ACT-039",
+      "LIB-037"
+    ],
+    "acceptance_criteria": [
+      "Account/chat/session binding перепроверяется перед эффектом.",
+      "Draft/upload/send имеют разные receipts; потеря наблюдения не вызывает blind retry.",
+      "После UI drift adapter теряет qualification до canary/rebinding."
+    ],
+    "primary_scenario": "Показать чат → bind → проверить draft → send → подтвердить появление.",
+    "stage": "S4/S5",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-02",
+      "DEC5-03",
+      "DEC5-04",
+      "DEC5-13",
+      "DEC5-18"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-14",
+      "ACTION5-18",
+      "ACTION5-19",
+      "ACTION5-21",
+      "ACTION5-24"
+    ],
+    "milestone_ids": [
+      "M5-04"
+    ],
+    "criterion_ids": [
+      "GOAL5-13-AC1",
+      "GOAL5-13-AC2",
+      "GOAL5-13-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-004",
+        "status": "PARTIAL",
+        "verified_scope": "Импортированный task result не выбирает команды или profile; полная политика всех будущих adapters отдельно.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "LIB-037",
+        "status": "PARTIAL",
+        "verified_scope": "TASK можно вручную скопировать/скачать для выбранного AI; UI target и auto-send ещё планируются.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-16",
+    "title": "Обновление приложения и новые проверенные возможности",
+    "user_outcome": "Получить обновление из точной версии, установить его и проверить новую capability.",
+    "feature_ids": [
+      "ACT-045",
+      "ACT-046",
+      "ACT-047",
+      "ACT-048",
+      "RND-008"
+    ],
+    "acceptance_criteria": [
+      "Release/source/assets имеют проверяемую связь.",
+      "Staging, schema migration и rollback проходят репетицию.",
+      "Capability registry связан с установленной build и device qualification."
+    ],
+    "primary_scenario": "Merge → staging → tests → install → canary → registry.",
+    "stage": "S7",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-10",
+      "DEC5-19",
+      "DEC5-20"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-16",
+      "ACTION5-24"
+    ],
+    "milestone_ids": [
+      "M5-05",
+      "M5-06"
+    ],
+    "criterion_ids": [
+      "GOAL5-16-AC1",
+      "GOAL5-16-AC2",
+      "GOAL5-16-AC3"
+    ],
+    "known_v4_evidence_scopes": [],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-17",
+    "title": "Текст в зарегистрированные действия и Laya-маршрутизация",
+    "user_outcome": "Сказать или написать цель, получить исполнимый план либо запрос на разработку недостающей функции.",
+    "feature_ids": [
+      "ACT-001",
+      "ACT-002",
+      "ACT-003",
+      "ACT-004",
+      "ACT-006",
+      "ACT-007",
+      "ACT-051",
+      "ACT-054",
+      "RND-009",
+      "RND-010"
+    ],
+    "acceptance_criteria": [
+      "Intent slots, capability version, scope и input references проверяются до enqueue.",
+      "Laya advisory result не расширяет полномочия и может вернуть unknown.",
+      "Неизвестная capability создаёт bounded coding/research request."
+    ],
+    "primary_scenario": "Фраза → IntentSpec → known handler / missing capability → plan preview.",
+    "stage": "S8",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-02",
+      "DEC5-17",
+      "DEC5-19",
+      "DEC5-24"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-01",
+      "ACTION5-03",
+      "ACTION5-18",
+      "ACTION5-19",
+      "ACTION5-20",
+      "ACTION5-27"
+    ],
+    "milestone_ids": [
+      "M5-07"
+    ],
+    "criterion_ids": [
+      "GOAL5-17-AC1",
+      "GOAL5-17-AC2",
+      "GOAL5-17-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-004",
+        "status": "PARTIAL",
+        "verified_scope": "Импортированный task result не выбирает команды или profile; полная политика всех будущих adapters отдельно.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-18",
+    "title": "Голос с исправлением намерения",
+    "user_outcome": "Управлять теми же задачами голосом без потери контроля при ошибке распознавания.",
+    "feature_ids": [
+      "ACT-028",
+      "ACT-029",
+      "ACT-030",
+      "ACT-031",
+      "ACT-034",
+      "ACT-058"
+    ],
+    "acceptance_criteria": [
+      "Capture/ASR/intent отделены; версия намерения меняется при исправлении.",
+      "Неуверенные критические slots не превращаются в тихое действие.",
+      "TTS/background speech и lifecycle микрофона входят в qualification corpus."
+    ],
+    "primary_scenario": "Hotkey → речь → preview slots → correction → тот же text workflow.",
+    "stage": "S8",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-12",
+      "DEC5-17"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-08",
+      "ACTION5-20",
+      "ACTION5-22"
+    ],
+    "milestone_ids": [
+      "M5-07"
+    ],
+    "criterion_ids": [
+      "GOAL5-18-AC1",
+      "GOAL5-18-AC2",
+      "GOAL5-18-AC3"
+    ],
+    "known_v4_evidence_scopes": [],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-19",
+    "title": "Доступное управление PC и независимая остановка",
+    "user_outcome": "Работать текстом, клавиатурой или голосом и остановить исполнение независимо от модели.",
+    "feature_ids": [
+      "ACT-025",
+      "ACT-032",
+      "ACT-033",
+      "ACT-035",
+      "ACT-036",
+      "ACT-038",
+      "ACT-040",
+      "LIB-033"
+    ],
+    "acceptance_criteria": [
+      "Keyboard/text path доступен для каждого важного voice action.",
+      "STOP и отмена не ждут ответа облачной модели; uncertain внешние effects сохраняются.",
+      "Focus ownership и передача управления пользователю проверяются на устройстве."
+    ],
+    "primary_scenario": "Разрешённое действие → наблюдаемый outcome → stop/cancel/recovery.",
+    "stage": "S8",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-03",
+      "DEC5-04",
+      "DEC5-18",
+      "DEC5-21",
+      "DEC5-22"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-03",
+      "ACTION5-11",
+      "ACTION5-21",
+      "ACTION5-26"
+    ],
+    "milestone_ids": [
+      "M5-04",
+      "M5-07"
+    ],
+    "criterion_ids": [
+      "GOAL5-19-AC1",
+      "GOAL5-19-AC2",
+      "GOAL5-19-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-033",
+        "status": "PARTIAL",
+        "verified_scope": "Текстовый UI/aria labels/состояния добавлены; установленный Windows screen-reader путь не проверялся.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-22",
+    "title": "Навыки из демонстраций и их устаревание",
+    "user_outcome": "Повторять показанный сценарий и переставать использовать его после несовместимого обновления.",
+    "feature_ids": [
+      "ACT-039",
+      "ACT-041",
+      "ACT-042",
+      "ACT-043",
+      "ACT-044",
+      "RND-043"
+    ],
+    "acceptance_criteria": [
+      "Demonstration сохраняет inputs, scope, preconditions и outcome evidence.",
+      "Навык проходит тесты normal/fault cases перед регистрацией.",
+      "UI/code/policy changes инвалидируют затронутую версию навыка."
+    ],
+    "primary_scenario": "Показать → record → contract → qualification → reusable skill.",
+    "stage": "S11",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-04",
+      "DEC5-19"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-23",
+      "ACTION5-24",
+      "ACTION5-30"
+    ],
+    "milestone_ids": [
+      "M5-06",
+      "M5-07",
+      "M5-10"
+    ],
+    "criterion_ids": [
+      "GOAL5-22-AC1",
+      "GOAL5-22-AC2",
+      "GOAL5-22-AC3"
+    ],
+    "known_v4_evidence_scopes": [],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  }
+]
