@@ -17,7 +17,8 @@ Primary owners: WS-018 (F004–F006/F009), WS-022 (F031/F039/F040), WS-020 (F050
 ## Сначала проверить prerequisites
 
 - `main`, PR #49, #50 и #51: какие контракты действительно доступны/merged?
-- `content-lab/occ_v5/context.py` и canonical packet owner, если доступны:
+- `content-lab/context_packets.py`, `context_library.py`, `context_runtime.py`
+  и recovery owner из merged PR #50 (финальная интеграция b0a06f2):
   immutable snapshot/manifest/all-parts cursor, source versions, hashes и scope.
 - Existing `repo_context.py`/scan owner и jobs: долгий scan должен сохранять
   checkpoint и heartbeat. Native timeout не становится общим corpus ceiling.
@@ -27,6 +28,9 @@ Primary owners: WS-018 (F004–F006/F009), WS-022 (F031/F039/F040), WS-020 (F050
 BLOCKED_DEPENDENCY для его adapter. Typed proposal validation и pure planning
 выполнять независимо. Не создавать несовместимую вторую packet library или
 подставлять mocks как activation evidence.
+В этой передаче owner code уже доступен; проверить его version/API и
+scope-matched receipts перед новым adapter. Сам merge #50 не закрывает все
+source criteria PR-014/015.
 
 ## Изменения
 

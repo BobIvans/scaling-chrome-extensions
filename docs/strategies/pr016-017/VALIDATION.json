@@ -85,5 +85,76 @@
   "full_strategy_completed": false,
   "source_criteria_open": 220,
   "device_ui_qualification": "NOT_RUN",
-  "final_exact_head_ci": "Observe GitHub PR49 current-head run; historical run is not authority for changed head"
+  "final_exact_head_ci": "Observe GitHub PR49 current-head run; historical run is not authority for changed head",
+  "final_integration_main": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+  "followup_results": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -q",
+      "status": "PASS",
+      "test_executions": 481,
+      "skipped": 0,
+      "scope": "Full merged Core regression including shared STOP/capacity cases; shipping manifest change separately validated below",
+      "log_sha256": "501eff6ee48701b1edfd04fc377425a7c2fa80d536f0ad447088385c3db75420"
+    },
+    {
+      "command": "python -m unittest discover -s desktop/tests -p 'test_*.py' -q",
+      "status": "PASS",
+      "test_executions": 45,
+      "skipped": 3,
+      "scope": "Final combined Desktop install/library/actions/history regression; Linux has no Tk display",
+      "log_sha256": "d703b4e7a58dacf971ae3aedf6be52c01bb2a802d168c0f384cc59ca0c226e98"
+    },
+    {
+      "command": "python -m unittest discover -s desktop/tests -p test_context_workflow.py -q",
+      "status": "PASS",
+      "test_executions": 6,
+      "skipped": 1,
+      "scope": "Real standalone installed actions + library + shared STOP + backend hash drift",
+      "log_sha256": "9f726222acb100e0ccab02292e600371429a52ffecfd76533310d04b7891a883"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "status": "PASS",
+      "test_executions": 47,
+      "skipped": 0,
+      "scope": "Final native bridge",
+      "log_sha256": "127c8fd3b07eaddf69dcb297c2135f09c7049c6614da172cfd2226f37d41c0d9"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "status": "PASS",
+      "test_executions": 121,
+      "skipped": 0,
+      "scope": "Final extension",
+      "log_sha256": "1d3dd70266ec1866289a4db1393e7dfd328ee531a7b3a939805f3f35d161459b"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p test_action_runtime.py -q",
+      "status": "PASS",
+      "test_executions": 32,
+      "skipped": 0,
+      "scope": "Final installed-layout and action/Core shared STOP, capacity, unknown-worker Resume"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p test_context_services.py -q",
+      "status": "PASS",
+      "test_executions": 34,
+      "skipped": 0,
+      "scope": "Final shipping manifest and context service local contracts"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p test_context_workflow_interop.py -q",
+      "status": "PASS",
+      "test_executions": 2,
+      "skipped": 0,
+      "scope": "Context/campaign integration"
+    },
+    {
+      "command": "python -m unittest discover -s agent-bridge -p test_qualification_adapter.py -q",
+      "status": "PASS",
+      "test_executions": 8,
+      "skipped": 0,
+      "scope": "Final qualification adapter"
+    }
+  ]
 }

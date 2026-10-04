@@ -34,14 +34,50 @@ permissions:
   contents: read
 
 jobs:
+  context-platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact event head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - name: Exact context, recovery, fences and reconciliation
+        run: python -I -X utf8 content-lab/test_context_services.py
+      - name: Context and campaigns share operator scope and Core STOP
+        run: python -m unittest discover -s content-lab -p 'test_context_workflow_interop.py' -v
+      - name: Installed context workflow and independent STOP
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run -a python -m unittest discover -s desktop/tests -p 'test_context_workflow.py' -v
+          else
+            python -m unittest discover -s desktop/tests -p 'test_context_workflow.py' -v
+          fi
+      - name: Verify desktop owned files
+        run: python -I -X utf8 desktop/package.py verify --shell desktop
+
   core:
+    needs: context-platform
     strategy:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
     # Full real-Git/SQLite scale fixtures take longer on Windows/NTFS.
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         # checkout temporarily overrides HOME; command-scope config also works

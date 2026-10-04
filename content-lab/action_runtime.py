@@ -12,7 +12,7 @@ from pathlib import Path
 import time
 import uuid
 
-from automation_core import connection, digest, encoded, event, identifier
+from automation_core import connection, digest, encoded, event, identifier, enqueue_in_transaction
 from action_intent import compile_intent, exact, registry, text
 
 
@@ -71,8 +71,8 @@ class ActionRuntime:
         row = self._intent(db, intent_id)
         if type(revision) is not int or row['revision'] != revision or row['state'] != 'COMPILED':
             raise ValueError('ACTION_REVISION_FENCED')
-        if db.execute('SELECT stopped FROM action_control WHERE id=1').fetchone()[0]:
-            raise ValueError('ACTION_STOPPED')
+        if db.execute('SELECT stopped FROM core_control WHERE singleton=1').fetchone()[0]:
+            raise ValueError('CORE_STOPPED')
         if job:
             current = db.execute('SELECT * FROM jobs WHERE id=?', (job['id'],)).fetchone()
             if (not current or current['state'] != 'RUNNING' or current['cancel_requested'] or
@@ -122,30 +122,23 @@ class ActionRuntime:
             compiled = self._admit(db, key, revision)
             payload = {'kind':'action_plan','intent_id':key,'revision':revision}
             task_key = 'action-' + digest(payload)
-            old = db.execute('SELECT id,state FROM jobs WHERE task_key=?', (task_key,)).fetchone()
-            if old:
-                return {'id':old['id'],'state':old['state'],'reused':True}
-            job_id, now = uuid.uuid4().hex, time.time()
-            db.execute("INSERT INTO jobs VALUES (?,?,?,?,?,'QUEUED',0,1,?,0,NULL,0,'{}','{}',?,?)",
-                       (job_id,task_key,encoded(payload),digest(payload),digest(self.core.policy),now,now,now))
-            event(db,job_id,'QUEUED',{'intent_id':key,'revision':revision,'semantic_hash':compiled['semantic_hash']})
-        return {'id':job_id,'state':'QUEUED','reused':False}
+            result = enqueue_in_transaction(db, self.core.policy, task_key, payload)
+            if not result['reused']:
+                event(db,result['id'],'QUEUED',{'intent_id':key,'revision':revision,'semantic_hash':compiled['semantic_hash']})
+        return result
 
     def stop(self):
+        # Use the same durable admission fence as library/campaign jobs. The
+        # legacy action_control table is retained as data, not a second authority.
+        receipt = self.core.stop(uuid.uuid4().hex)
         with self.transaction() as db:
-            db.execute('UPDATE action_control SET stopped=1,epoch=epoch+1 WHERE id=1')
-            for row in db.execute("SELECT id,state FROM jobs WHERE state NOT IN ('SUCCEEDED','FAILED','CANCELLED','BLOCKED')").fetchall():
-                state = row['state'] if row['state'] in {'RUNNING','NEEDS_RECONCILIATION'} else 'CANCELLED'
-                db.execute('UPDATE jobs SET cancel_requested=1,state=? WHERE id=?',(state,row['id']))
-                event(db,row['id'],state,{'reason':'INDEPENDENT_STOP'})
             db.execute("UPDATE action_attempts SET state='EFFECT_UNKNOWN' WHERE state='SEND_ARMED'")
-        return {'state':'STOPPED','remote_cancellation':'NOT_ASSERTED'}
+        return {'state':'STOPPED','epoch':receipt['epoch'],'remote_cancellation':'NOT_ASSERTED'}
 
     def resume(self):
         # Resume admission, never resurrect cancelled jobs or unknown sends.
-        with self.transaction() as db:
-            db.execute('UPDATE action_control SET stopped=0,epoch=epoch+1 WHERE id=1')
-        return {'state':'READY','unknown_attempts':'RECONCILIATION_REQUIRED'}
+        receipt = self.core.resume_control(self.core.control_status()['epoch'])
+        return {'state':'READY','epoch':receipt['epoch'],'unknown_attempts':'RECONCILIATION_REQUIRED'}
 
     def bind(self, handle):
         adapter = self.browser()

@@ -76,6 +76,8 @@ def connection(store, *, configure=None):
 def read_connection(store):
     """Open the existing owner without creating files, tables or migrations."""
     path = Path(store) / 'content.sqlite3'
+    if (Path(store) / 'STORE_MAINTENANCE.json').exists():
+        raise ValueError('STORE_MAINTENANCE_REQUIRED')
     if path.is_symlink() or not path.is_file():
         raise ValueError('DESKTOP_SETUP_REQUIRED')
     db = sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True, timeout=1)
@@ -105,7 +107,16 @@ def _initialize_connection(db):
         CREATE TABLE IF NOT EXISTS job_events(
           seq INTEGER PRIMARY KEY AUTOINCREMENT, job_id TEXT,
           state TEXT, detail TEXT, observed REAL);
+        CREATE TABLE IF NOT EXISTS core_control(
+          singleton INTEGER PRIMARY KEY CHECK(singleton=1),
+          epoch INTEGER NOT NULL, stopped INTEGER NOT NULL);
+        CREATE TABLE IF NOT EXISTS core_stop_requests(
+          request_id TEXT PRIMARY KEY, policy_hash TEXT NOT NULL,
+          receipt TEXT NOT NULL);
     """)
+    if db.execute('SELECT 1 FROM core_control WHERE singleton=1').fetchone() is None:
+        db.execute('INSERT OR IGNORE INTO core_control VALUES(1,0,0)')
+        db.commit()
     return db
 
 
@@ -240,6 +251,9 @@ def validate_job(payload, policy):
         if type(payload['revision']) is not int or payload['revision'] < 1:
             raise ValueError('ACTION_REVISION_REQUIRED')
         return 1
+    if payload.get('kind') == 'context_service':
+        from context_runtime import validate_job as validate_context_job
+        return validate_context_job(payload, policy)
     if payload.get('kind') == 'workflow_operation':
         from workflow_runtime import validate_operation_job
         validate_operation_job(payload, policy)
@@ -334,6 +348,8 @@ def enqueue_in_transaction(db, policy, task_key, payload):
         if row["payload_hash"] != digest(payload) or row["policy_hash"] != digest(policy):
             raise ValueError("TASK_KEY_CONTENT_CONFLICT")
         return {"id": row["id"], "state": row["state"], "reused": True}
+    if db.execute('SELECT stopped FROM core_control WHERE singleton=1').fetchone()[0]:
+        raise ValueError('CORE_STOPPED')
     # Optional operator capacity is admission, never a corpus/file ceiling.
     limit = policy.get("max_queued")
     if limit is not None:
@@ -378,6 +394,76 @@ class Core:
         finally:
             db.close()
 
+    def stop(self, request_id):
+        """Independent durable fence; no model, worker slot, ASR or browser.
+
+        Completed effects remain completed; running effects are only requested
+        cancelled. An ambiguous/expired effect remains reconciliation-required.
+        """
+        identifier(request_id)
+        started = time.monotonic()
+        db = connection(self.store,configure=lambda db:db.execute('PRAGMA busy_timeout=1000'))
+        try:
+            db.execute('PRAGMA busy_timeout=1000')
+            db.execute('BEGIN IMMEDIATE')
+            old = db.execute('SELECT policy_hash,receipt FROM core_stop_requests WHERE request_id=?',
+                             (request_id,)).fetchone()
+            if old:
+                if old['policy_hash'] != digest(self.policy):
+                    raise ValueError('STOP_REQUEST_SCOPE_CHANGED')
+                db.commit()
+                return json.loads(old['receipt'])
+            db.execute('UPDATE core_control SET stopped=1,epoch=epoch+1 WHERE singleton=1')
+            epoch = db.execute('SELECT epoch FROM core_control WHERE singleton=1').fetchone()[0]
+            observed = []
+            for row in db.execute("SELECT id,state FROM jobs WHERE policy_hash=? AND state NOT IN ('SUCCEEDED','FAILED','CANCELLED','BLOCKED')", (digest(self.policy),)).fetchall():
+                state = row['state']
+                if state in {'RUNNING', 'NEEDS_RECONCILIATION'}:
+                    outcome = ('UNKNOWN_EFFECT' if state == 'NEEDS_RECONCILIATION'
+                               else 'CANCELLATION_REQUESTED')
+                else:
+                    state, outcome = 'CANCELLED', 'CANCELLED_BEFORE_DISPATCH'
+                db.execute('UPDATE jobs SET cancel_requested=1,state=?,updated=? WHERE id=?',
+                           (state, time.time(), row['id']))
+                event(db, row['id'], state, {'stop_epoch': epoch, 'outcome': outcome})
+                observed.append({'job_id': row['id'], 'outcome': outcome})
+            result = {'schema': 'occ.core-stop.v1', 'request_id': request_id,
+                      'control_ack': 'DURABLE_FENCED', 'epoch': epoch,
+                      'new_dispatch_allowed': False, 'observations': observed,
+                      'local_fence_ms': round((time.monotonic() - started) * 1000, 3)}
+            db.execute('INSERT INTO core_stop_requests VALUES (?,?,?)',
+                       (request_id, digest(self.policy), encoded(result)))
+            db.commit()
+            return result
+        finally:
+            db.close()
+
+    def control_status(self):
+        db = connection(self.store)
+        try:
+            row = db.execute('SELECT epoch,stopped FROM core_control WHERE singleton=1').fetchone()
+            return {'epoch': row[0], 'stopped': bool(row[1]),
+                    'new_dispatch_allowed': not bool(row[1])}
+        finally:
+            db.close()
+
+    def resume_control(self, expected_epoch):
+        strict_int(expected_epoch, 0, 9_007_199_254_740_991)
+        db = connection(self.store)
+        try:
+            db.execute('BEGIN IMMEDIATE')
+            # Never reactivate an old worker or cancelled intent by clearing its flag.
+            if db.execute("SELECT 1 FROM jobs WHERE state IN ('RUNNING','NEEDS_RECONCILIATION') LIMIT 1").fetchone():
+                raise ValueError('RECONCILIATION_REQUIRED')
+            changed = db.execute('UPDATE core_control SET stopped=0 WHERE singleton=1 AND epoch=?',
+                                 (expected_epoch,)).rowcount
+            if not changed:
+                raise ValueError('CONTROL_EPOCH_CHANGED')
+            db.commit()
+            return {'epoch': expected_epoch, 'stopped': False, 'cancelled_intents_restarted': False}
+        finally:
+            db.close()
+
     def cancel(self, job_id):
         db = connection(self.store)
         try:
@@ -413,6 +499,9 @@ class Core:
         db, now = connection(self.store), time.time()
         try:
             db.execute("BEGIN IMMEDIATE")
+            if db.execute('SELECT stopped FROM core_control WHERE singleton=1').fetchone()[0]:
+                db.commit()
+                return None
             for row in db.execute("SELECT id FROM jobs WHERE state='RUNNING' AND lease_until<?", (now,)).fetchall():
                 db.execute("UPDATE jobs SET state='NEEDS_RECONCILIATION',lease_token=NULL,updated=? WHERE id=?", (now, row[0]))
                 event(db, row[0], "NEEDS_RECONCILIATION", {"reason": "expired_lease_unknown_process_outcome"})
@@ -472,12 +561,80 @@ class Core:
             db.close()
         return self.get(job_id)
 
+    def reconcile_context(self, job_id, process_stopped, *, resume_local=False):
+        """Resolve only registered local effects after an actual process-stop check.
+
+        A completed owner receipt is verified independently; unfinished capture,
+        packet or projection may resume under its original identity and epoch.
+        Unknown other effects remain blocked, never blindly retried.
+        """
+        if process_stopped is not True:
+            raise ValueError('OPERATOR_PROCESS_STOP_CONFIRMATION_REQUIRED')
+        if type(resume_local) is not bool:
+            raise ValueError('LOCAL_RESUME_BOOLEAN_REQUIRED')
+        from context_runtime import validate_job as validate_context_job, config
+        import context_library as library
+        import context_recovery as recovery
+        job = self.get(job_id)
+        payload = job['payload']
+        if (job['state'] != 'NEEDS_RECONCILIATION'
+                or job['policy_hash'] != digest(self.policy)
+                or job['payload_hash'] != digest(payload)
+                or payload.get('kind') != 'context_service'):
+            raise ValueError('CONTEXT_RECONCILIATION_SCOPE')
+        validate_context_job(payload, self.policy)
+        service = config(self.policy, payload['service'])
+        namespace, operation = service['namespace'], payload['operation_id']
+        receipt = library.intent_status(self.store, namespace, operation)
+        result = None
+        if receipt['state'] == 'COMPLETED':
+            # Verify immutable SQLite objects before accepting a persisted receipt.
+            recovery.verify_database(self.store / 'content.sqlite3')
+            result = receipt['result']
+            if payload['action'] == 'EXPORT':
+                import context_packets
+                context_packets.verify_export(Path(payload['arguments']['output']),
+                    expected_digest=result['projection_digest'])
+            elif payload['action'] == 'BACKUP':
+                verified = recovery.verify_backup(Path(payload['arguments']['output']))
+                if verified['sha256'] != result['sha256']:
+                    raise ValueError('RECONCILIATION_ARTIFACT_CHANGED')
+            elif payload['action'] == 'RESTORE_COPY':
+                recovery.verify_database(Path(payload['arguments']['output']) / 'content.sqlite3')
+        elif not resume_local or payload['action'] not in {'CAPTURE', 'BUILD_PACKET', 'PROJECT'}:
+            raise ValueError('LOCAL_EFFECT_RECONCILIATION_REQUIRED')
+        db = connection(self.store)
+        try:
+            db.execute('BEGIN IMMEDIATE')
+            row = db.execute('SELECT * FROM jobs WHERE id=?', (job_id,)).fetchone()
+            if row['state'] != 'NEEDS_RECONCILIATION' or row['payload_hash'] != job['payload_hash']:
+                raise ValueError('CONTEXT_RECONCILIATION_CHANGED')
+            if result is not None:
+                state = 'CANCELLED' if row['cancel_requested'] else 'SUCCEEDED'
+                outcome = {'effect': result, 'independent_verification': 'LOCAL_OWNER_BYTES_AND_RECEIPT',
+                           'criterion_verified': False, 'dispatch_allowed': False}
+            else:
+                if row['cancel_requested']:
+                    raise ValueError('CANCELLED_INTENT_CANNOT_RESUME')
+                library.ensure_running(db, operation, namespace)
+                state = 'QUEUED'
+                outcome = {'reason': 'OPERATOR_VERIFIED_LOCAL_RESUME', 'operation_id': operation}
+            db.execute('UPDATE jobs SET state=?,lease_token=NULL,lease_until=NULL,available=?,result=?,updated=? WHERE id=?',
+                       (state, time.time(), encoded(outcome), time.time(), job_id))
+            event(db, job_id, state, outcome)
+            db.commit()
+        finally:
+            db.close()
+        return self.get(job_id)
+
     def heartbeat(self, job):
         from campaign_runtime import worker_guard
         worker_guard(self.store, job['id'], job=job)
         db = connection(self.store)
         try:
             with db:
+                if db.execute('SELECT stopped FROM core_control WHERE singleton=1').fetchone()[0]:
+                    raise Cancelled()
                 row = db.execute("SELECT cancel_requested,state,lease_token,lease_until FROM jobs WHERE id=?", (job["id"],)).fetchone()
                 if not row or row[0] or row[1] != "RUNNING" or row[2] != job["lease_token"] or row[3] < time.time():
                     raise Cancelled()
@@ -694,7 +851,11 @@ class Core:
         if not job:
             return {"state": "IDLE", "ci_observations": observed}
         try:
-            if job["payload"]["kind"] == "sync":
+            if job['payload']['kind'] == 'context_service':
+                from context_runtime import run_job
+                result = run_job(self, job)
+                self.transition(job, 'SUCCEEDED', result=result)
+            elif job["payload"]["kind"] == "sync":
                 profile = self.policy["sources"][job["payload"]["source_profile"]]
                 self.heartbeat(job)
                 result = sync(self.store, profile["namespace"], Path(profile["root"]),

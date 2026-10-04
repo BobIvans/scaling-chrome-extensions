@@ -75,6 +75,14 @@ remote effect; уже начатый внешний вызов невозмож�
 Resume admission не воскрешает старые jobs. Закрытие панели прекращает capture,
 но не является Core STOP — нажмите STOP для остановки Core.
 
+После интеграции PR-014/015 actions и context/campaign jobs используют общий
+`core_control` STOP fence и canonical queue capacity. Action STOP запрещает новые
+Core admissions; library/Core STOP также запрещает action admissions. Resume
+использует текущий epoch CAS и блокируется при RUNNING/NEEDS_RECONCILIATION worker.
+Legacy `action_control` сохраняется в store как историческая таблица, но не является
+вторым control owner. Standalone Desktop installer включает обе панели/actions
+и закрепляет action modules в backend build digest.
+
 UI_OBSERVED подтверждает видимость отправленного сообщения, не использование
 контекста моделью. IMPORT_RESULT принимает проверяемую корреляцию task/attempt/
 packet/conversation и точные part hashes. Его `revision` — revision импортируемого

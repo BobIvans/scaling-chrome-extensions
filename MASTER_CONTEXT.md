@@ -42,6 +42,11 @@ GitHub implementation PR: <https://github.com/BobIvans/scaling-chrome-extensions
 В этой передаче интегрирован main с PR #47 (history/delta/scan) и #48
 (release/campaigns), исходный integration main:
 `d897598af6064d174bcd0df73f8b00cc79a4490e`.
+Во время финальной проверки main продвинулся до
+`b0a06f26106cb4739d8cf3465a4ad8941c328f40`: PR #50 (014/015 context/recovery/
+Desktop) merged и также интегрирован. Action admission/STOP теперь используют
+канонический `core_control` и общий queue capacity. Обе Desktop панели и оба
+installers сохраняются; backend build digest включает action modules.
 Финальное состояние и head брать из Git/GitHub, а не предполагать по этим SHAs.
 
 | Область | Реализация | Граница |
@@ -77,7 +82,10 @@ receipts; merge implementation baseline не закрывает полную с�
   unseen/fault qualification, selective dependency requalification/repair.
 - Проверка фактических контрактов PR-013/014/015; component presence не закрывает
   prerequisite. На момент исходной сверки #50 (014/015) и #51 (012/013 continuation)
-  draft/open. Повторно проверить их refs перед зависимой реализацией.
+  были draft/open. #50 subsequently merged и интегрирован; actual packet owners:
+  `content-lab/context_library.py`, `context_packets.py`, `context_runtime.py`,
+  `context_recovery.py`. Его полные strategy criteria всё ещё открыты.
+  Повторно проверить refs и #51 перед зависимой реализацией.
 - Все broad goals/downstream criteria, R&D и product closure из полного backlog:
   160 tasks, 164 features, 24 decisions, 28 goals. Не удалять deferred/revisit cards.
 

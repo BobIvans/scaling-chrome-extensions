@@ -22,6 +22,9 @@ HASH = re.compile(r'^[0-9a-f]{64}$')
 NAME = re.compile(r'^[A-Za-z0-9_.:-]{1,100}$')
 READS = {
     'durable.action': ({'type', 'action', 'payload'}, set()),
+    'durable.library': ({'type','namespace','action','arguments'}, {'operationId'}),
+    'durable.stop': ({'type','requestId'}, set()),
+    'durable.control.resume': ({'type','expectedEpoch'}, set()),
     'durable.info': ({'type'}, set()),
     'durable.repo.list': ({'type'}, set()),
     'durable.repo.history': ({'type', 'repository'}, {'limit', 'cursor'}),
@@ -189,6 +192,13 @@ def validate_request(request):
         require(request['action'] in {'INFO','CREATE','GET','CORRECT','ENQUEUE','STOP','RESUME','BIND',
                 'PACKET_START','PACKET_APPEND','PACKET_SEAL','PACKET_PAGE','RECONCILE','IMPORT_RESULT','SKILL_RECORD','SKILL_INVOKE','CONTINUE'})
         require(isinstance(request['payload'], dict))
+    if request['type']=='durable.library':
+        require(isinstance(request['action'],str) and isinstance(request['arguments'],dict))
+        if 'operationId' in request:require(isinstance(request['operationId'],str) and NAME.fullmatch(request['operationId']))
+    elif request['type']=='durable.stop':
+        require(isinstance(request['requestId'],str) and NAME.fullmatch(request['requestId']))
+    elif request['type']=='durable.control.resume':
+        number(request['expectedEpoch'])
     elif request['type'] == 'durable.search':
         require(len(text_value(request['query'])) <= 1000)
         number(request.get('limit', 10), 1, 20)
@@ -487,7 +497,8 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
             and result.get('operation') == operation, 'DESKTOP_OPERATION_MISMATCH')
     field = {'durable.info': 'info', 'durable.repo.list': 'repositories',
              'durable.search': 'items', 'durable.context': 'context',
-             'durable.repo.manifest': 'manifest', 'durable.action': 'action',
+             'durable.repo.manifest': 'manifest', 'durable.action':'action', 'durable.library':'library',
+             'durable.stop':'library','durable.control.resume':'library',
              'durable.repo.history': 'page', 'durable.repo.delta': 'page',
              'durable.repo.scanRun': 'scan_run'}[operation]
     exact(result, {'schema', 'operation', field})
@@ -495,6 +506,13 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
         require(isinstance(result[field], dict), 'DESKTOP_ACTION_SCHEMA')
         # This is typed data from the installed Core owner. It is never used as
         # argv, local paths or authority for a subsequent action.
+    elif field=='library':
+        dto=result[field]
+        exact(dto,{'schema','namespace','action','data','authority'})
+        require(dto['schema']=='occ.context-service-result.v1' and dto['authority']=='DATA_ONLY')
+        require(dto['action']==request.get('action',operation) and isinstance(dto['data'],dict))
+        if 'namespace' in request:require(dto['namespace']==request['namespace'],'DESKTOP_CONTEXT_BINDING')
+        require(len(json.dumps(dto).encode())<=96_000,'DESKTOP_OUTPUT_LIMIT')
     elif operation == 'durable.info':
         validate_info(result[field])
     elif operation == 'durable.context':
@@ -615,6 +633,16 @@ class DesktopClient:
             with self._state:
                 self._cancel = None
             self._gate.release()
+
+    def verify_backend_bundle(self):
+        require(self.identity is not None and self.identity['backend_bundle_sha256'] is not None,
+                'DESKTOP_BACKEND_BUNDLE_REQUIRED')
+        from desktop.install import BACKEND_FILES
+        base=Path(self.connection.adapter_path).parent
+        files={name:sha_file(base/name) for name in BACKEND_FILES}
+        raw=json.dumps(files,ensure_ascii=False,sort_keys=True,separators=(',',':'),allow_nan=False).encode()
+        require(hashlib.sha256(raw).hexdigest()==self.identity['backend_bundle_sha256'],
+                'DESKTOP_BACKEND_CHANGED')
 
     def _exchange(self, raw, cancel, limit, timeout_ms):
         """Drain both pipes concurrently and retain at most a single frame."""

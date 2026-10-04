@@ -14,7 +14,7 @@ import tempfile
 import time
 import unittest
 
-from automation_core import Core, connection, digest
+from automation_core import Core, connection, digest, enqueue
 from action_intent import compile_intent, LayaAdapter, permission_diff, review_roles
 from action_runtime import ActionRuntime
 from content_lab import save_item
@@ -158,6 +158,38 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(first['id'],self.runtime.enqueue(intent['intent_id'],1)['id'])
         self.assertEqual(self.core.run_once()['state'],'SUCCEEDED')
         self.assertEqual(len(self.read_db('SELECT * FROM jobs')),1)
+
+    def test_action_and_other_core_jobs_share_stop_and_capacity(self):
+        self.policy['sources'] = {'local': {'namespace': 'code', 'root': self.temp.name}}
+        self.policy['max_queued'] = 1
+        first = self.runtime.create(input_value())
+        job = self.runtime.enqueue(first['intent_id'], 1)
+        second = self.runtime.create(input_value())
+        with self.assertRaisesRegex(ValueError, 'QUEUE_CAPACITY_WAIT'):
+            self.runtime.enqueue(second['intent_id'], 1)
+        with self.assertRaisesRegex(ValueError, 'QUEUE_CAPACITY_WAIT'):
+            enqueue(self.store, self.policy, 'sync-one', {'kind': 'sync', 'source_profile': 'local'})
+        self.runtime.stop()
+        self.assertTrue(self.core.control_status()['stopped'])
+        self.assertEqual(self.core.get(job['id'])['state'], 'CANCELLED')
+        with self.assertRaisesRegex(ValueError, 'CORE_STOPPED'):
+            enqueue(self.store, self.policy, 'sync-one', {'kind': 'sync', 'source_profile': 'local'})
+        self.runtime.resume()
+        other = enqueue(self.store, self.policy, 'sync-one', {'kind': 'sync', 'source_profile': 'local'})
+        self.core.stop('library-stop')
+        self.assertEqual(self.core.get(other['id'])['state'], 'CANCELLED')
+        with self.assertRaisesRegex(ValueError, 'CORE_STOPPED'):
+            self.runtime.enqueue(second['intent_id'], 1)
+
+    def test_action_resume_cannot_release_unknown_core_worker(self):
+        intent = self.runtime.create(input_value())
+        job = self.runtime.enqueue(intent['intent_id'], 1)
+        claimed = self.core.claim()
+        self.assertEqual(claimed['id'], job['id'])
+        self.core.stop('independent-stop')
+        with self.assertRaisesRegex(ValueError, 'RECONCILIATION_REQUIRED'):
+            self.runtime.resume()
+        self.assertTrue(self.core.control_status()['stopped'])
 
     def test_installer_layout_runs_isolated_native_cli_and_worker(self):
         lab = Path(__file__).resolve().parent

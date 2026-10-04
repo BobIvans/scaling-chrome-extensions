@@ -54,3 +54,5 @@
 Личные вложения и контекст торгового проекта в этот репозиторий не включены.
 
 [Подробная инструкция и разрешения](one-click-context/README.md) · [Отчёт проверок](one-click-context/evidence/REVIEW_STATUS.txt)
+
+- [Unified roadmap PR-014 + PR-015: local context, recovery and desktop Core workflow](docs/automation/pr014-015/README.md)

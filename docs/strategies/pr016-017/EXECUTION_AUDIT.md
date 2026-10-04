@@ -35,6 +35,12 @@ Owner audit сохраняет все 50 функций и paths в `FUNCTION_AU
 - Windows CI checkout включает `core.longpaths` через command-scope Git config:
   полный nested corpus превышает legacy Windows path length. CI на обеих OS
   дополнительно проверяет сохранённые source/archive bytes и 220 критериев.
+- Main вновь продвинулся: #50 merged at `b0a06f26106cb4739d8cf3465a4ad8941c328f40`.
+  Интеграция сохраняет обе Desktop панели, context/library/history/action DTOs,
+  installer-owned files и общий Core worker. Actions используют canonical queue
+  capacity и `core_control` STOP/resume; unknown worker не допускает Resume.
+  Native и standalone Desktop installers копируют action modules, а SHIPPING
+  build digest совпадает с фактически установленным backend file set.
 
 ## Проверки
 
@@ -54,7 +60,8 @@ Next stage: `NEXT_IMPLEMENTATION.md`. Полные исходные criteria и 
 Нет actual device/UI receipts: Windows microphone/ASR/hotkey/Narrator,
 Grok selected account canary/upload/history/finalization, Laya installed API.
 Parameterization/mixed-effect plans/full roles пока частичны.
-PR-013/014/015 final contracts надо проверить по актуальному main и #50/#51.
+PR-013/014/015 final contracts надо проверить по актуальному main и #50/#51;
+#50 уже merged и интегрирован, но criterion-level product closure не заявлен.
 
 Полный отдельный master ZIP 387402728 bytes не предоставлен в текущем attachment.
 Его SHA и exact выбранные members сохранены; полный исторический охват не заявлен.
