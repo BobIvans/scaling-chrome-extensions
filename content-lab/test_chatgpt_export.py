@@ -118,19 +118,19 @@ class ChatGPTExportTests(unittest.TestCase):
         )[0]
         self.assertEqual(row, ("conversation-1", "Renamed synthetic fixture"))
 
-    def test_removed_conversation_is_marked_missing_with_its_messages(self):
+    def test_unselected_conversation_keeps_its_heads(self):
         first = self.conversation()
         second = json.loads(json.dumps(first).replace("conversation-1", "conversation-2"))
         self.write([first, second])
         lab.import_chatgpt_export(self.store, self.export, "selected")
         self.write([first])
         result = lab.import_chatgpt_export(self.store, self.export, "selected")
-        self.assertEqual((result["missing_conversations"], result["missing"]), (1, 2))
+        self.assertEqual((result["missing_conversations"], result["missing"]), (0, 0))
         present = self.sql(
             "SELECT present FROM chatgpt_conversations WHERE conversation_id=?",
             ("conversation-2",),
         )[0][0]
-        self.assertEqual(present, 0)
+        self.assertEqual(present, 1)
 
     def test_non_text_parts_are_reported_and_never_become_instructions(self):
         value = [self.conversation()]
@@ -203,20 +203,21 @@ class ChatGPTExportTests(unittest.TestCase):
         self.assertEqual(self.sql("SELECT count(*) FROM attachment_versions")[0][0], 1)
         self.assertEqual(self.sql("SELECT present FROM attachment_heads")[0][0], 0)
 
-    def test_duplicate_ids_and_duplicate_json_keys_fail_before_store_write(self):
+    def test_duplicate_ids_and_duplicate_json_keys_retain_original_without_heads(self):
         value = [self.conversation()]
         value[0]["mapping"]["node-copy"] = {
             **value[0]["mapping"]["node-2"], "id": "node-copy"}
         self.write(value)
-        with self.assertRaisesRegex(ValueError, "duplicate ChatGPT message id"):
-            lab.import_chatgpt_export(self.store, self.export, "selected")
-        self.assertFalse((self.store / "content.sqlite3").exists())
+        first = lab.import_chatgpt_export(self.store, self.export, "selected")
+        self.assertEqual(first["state"], "ORIGINAL_RETAINED_EXTRACTION_ERROR")
+        self.assertEqual(self.sql("SELECT count(*) FROM items")[0][0], 0)
         self.export.write_text(
             '[{"id":"one","id":"two","mapping":{},"current_node":null}]',
             encoding="utf-8")
-        with self.assertRaisesRegex(ValueError, "duplicate JSON key"):
-            lab.import_chatgpt_export(self.store, self.export, "selected")
-        self.assertFalse((self.store / "content.sqlite3").exists())
+        second = lab.import_chatgpt_export(self.store, self.export, "selected")
+        self.assertEqual(second["state"], "ORIGINAL_RETAINED_EXTRACTION_ERROR")
+        self.assertEqual(self.sql("SELECT count(*) FROM import_raw_blobs")[0][0], 2)
+        self.assertEqual(self.sql("SELECT count(*) FROM sync_heads")[0][0], 0)
 
     def test_cli_receipt_contains_counts_and_hashes_but_no_chat_text(self):
         value = [self.conversation()]

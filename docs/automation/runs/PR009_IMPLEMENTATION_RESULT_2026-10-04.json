@@ -1,0 +1,221 @@
+{
+  "schema": "occ.pr009-implementation-result.v1",
+  "base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
+  "source_package_sha256": "13725a185515a5a409c80e60cc4046aeec01bbb774f87bae6125b51652d5ec14",
+  "scope": "selected local ChatGPT JSON in existing content.sqlite3",
+  "local_validation": {
+    "python": "256 tests passed (full suite, loopback-enabled)",
+    "native": "4 test files passed",
+    "extension": "11 test files passed",
+    "qualification_adapter": "8 tests passed",
+    "synthetic_fixtures": "18 supplied raw cases run through real importer",
+    "git_diff_check": "passed"
+  },
+  "device_qualification": "NOT_RUN",
+  "exact_head_ci": "PENDING",
+  "cases": [
+    {
+      "id": "A009-01",
+      "name": "RAW_ROUNDTRIP",
+      "expected": "Actual original read preserves SHA256/bytes/BOM/CRLF/RU/EN/emoji exactly.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-02",
+      "name": "REPEAT_IDEMPOTENCY",
+      "expected": "Same bytes/source/key/adapter create no duplicate blob/source/extraction/item.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-03",
+      "name": "MULTI_ORIGIN",
+      "expected": "Same raw revision via distinct origin adds origin; original/extraction not duplicated.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-04",
+      "name": "FORMATTING_REVISION",
+      "expected": "Whitespace/key-order change => new raw/extraction; unchanged text IDs reused.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-05",
+      "name": "TEXT_REVISION",
+      "expected": "Changed text => new legacy item; previous item/source/extraction immutable.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-06",
+      "name": "METADATA_REVISION",
+      "expected": "Message time/title/author name change survives new extraction even if item ID unchanged.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-07",
+      "name": "ADAPTER_KEY",
+      "expected": "Same raw with new pinned adapter/options key creates separate extraction, old retained.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-08",
+      "name": "NODE_COVERAGE",
+      "expected": "Both branches + structural/non-text/empty nodes each accounted exactly once.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-09",
+      "name": "TOPOLOGY_GAPS",
+      "expected": "Missing parent/child, inconsistent links/current node/cycles explicit; no guessed repair.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-10",
+      "name": "ATTACHMENT_TRUTH",
+      "expected": "Pointer present, missing/unsupported parts distinct; payload bytes false; no fetch.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-11",
+      "name": "SELECTED_SCOPE",
+      "expected": "Import B leaves A message/attachment/conversation heads unchanged; missing != remote deletion.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-12",
+      "name": "ERROR_RETAINED",
+      "expected": "Invalid captured JSON/UTF8/duplicate keys/legacy schema => raw+ERROR, derived heads unchanged.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-13",
+      "name": "READ_REJECTION",
+      "expected": "Symlink/input-change/I/O/byte-budget => NOT_CAPTURED with no fabricated original.",
+      "status": "PARTIAL",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ],
+      "limitation": "Symlink, byte-budget and mocked I/O checked; concurrent file mutation is guarded by fstat/lstat but not deterministically injected."
+    },
+    {
+      "id": "A009-14",
+      "name": "LEDGER_BUDGET",
+      "expected": "Total nodes/ledger bytes guard includes non-text; raw retained, no prefix success.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-15",
+      "name": "TRANSACTION_FAULTS",
+      "expected": "Disk-full/process interruption before commit roll back original/derived/head writes.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ],
+      "limitation": "Subprocess death and injected SQLite OperationalError checked; physical ENOSPC/device crash not run."
+    },
+    {
+      "id": "A009-16",
+      "name": "RECEIPT_FAULT",
+      "expected": "After commit item JSON receipt failure returns warning; retry restores without duplicates.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-17",
+      "name": "MIGRATION",
+      "expected": "Existing populated SQLite additive rehearsal twice; old data/IDs/FTS retained, one owner.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-18",
+      "name": "CLI_BOUNDARIES",
+      "expected": "Paged inspection and atomic hash-verified original file read; stale/tampered ID rejected.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-19",
+      "name": "INERT_AUTHOR_TIME",
+      "expected": "Unknown fields/text remain data; quote not inferred user speech; source/capture times separate.",
+      "status": "LOCAL_PASS",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ]
+    },
+    {
+      "id": "A009-20",
+      "name": "CURRENT_GATES",
+      "expected": "Focused actual importer tests + current AGENTS/CI; packaging module include if №8 consumes helper.",
+      "status": "LOCAL_PASS_CI_PENDING",
+      "evidence": [
+        "content-lab/test_import_fidelity.py",
+        "content-lab/test_chatgpt_export.py"
+      ],
+      "limitation": "Exact published-head Ubuntu/Windows GitHub Actions pending."
+    }
+  ]
+}

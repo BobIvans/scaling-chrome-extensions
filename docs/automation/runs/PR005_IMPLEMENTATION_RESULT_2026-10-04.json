@@ -22,7 +22,23 @@
       "failure": "A02/A03 generated a real Git fixture named nul.txt, a reserved Windows device filename; git add failed before the source eligibility assertions.",
       "correction": "Rename the generated fixture and both path references to controls.txt. Preserve the NUL byte payload and assertions. Production code and golden fixture bytes are unchanged.",
       "correction_verification": "All 16 test_source_eligibility.py tests passed locally in 7.362 seconds with the portable fixture name.",
-      "final_head_ci": "PENDING; exact updated-head checks must pass before merge."
+      "final_head_ci": "PASS at corrected head 74221737c6234da75ec1a74c89e94a5f080dba35; run 37203174365. A later main advance requires fresh integrated-head CI."
+    },
+    {
+      "head_sha": "74221737c6234da75ec1a74c89e94a5f080dba35",
+      "run_id": 37203174365,
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37203174365",
+      "ubuntu": "PASS",
+      "windows": "PASS",
+      "exact_event_head_verified": true,
+      "suites": {
+        "content_lab": 266,
+        "native_bridge": 47,
+        "qualification_adapter": 8,
+        "extension": 116
+      },
+      "windows_existing_skips": 3,
+      "note": "Both platforms passed after the generated fixture rename. This tree precedes integration of concurrent PR009 main changes."
     }
   ],
   "windows_installed": "NOT_RUN",
@@ -388,9 +404,34 @@
       "fixture_files": 66,
       "raw_bytes_identical": true,
       "scope": "Simulated checkout line-ending conversion; installed Windows qualification remains NOT_RUN"
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "state": "PASS",
+      "tests": 272,
+      "scope": "Integrated PR005 + main 8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+      "seconds": 166.655
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "state": "PASS",
+      "tests": 47,
+      "scope": "Integrated PR005 + main 8414ce4bda6618e58dea64093bc9a22a7161c5e7"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "state": "PASS",
+      "tests": 116,
+      "scope": "Integrated PR005 + main 8414ce4bda6618e58dea64093bc9a22a7161c5e7"
+    },
+    {
+      "command": "python -B -m unittest discover -s agent-bridge -p 'test_qualification_adapter.py' -v",
+      "state": "PASS",
+      "tests": 8,
+      "scope": "Integrated PR005 + main 8414ce4bda6618e58dea64093bc9a22a7161c5e7"
     }
   ],
-  "local_tests_total": 437,
+  "local_tests_total": 443,
   "acceptance": [
     {
       "id": "A01",
@@ -593,7 +634,7 @@
     "one-click-context/library.html": "bee06eca2dde83d86073cc6294967f569fda204653a0e05c3f6077df056d2cbe",
     "one-click-context/library/durable-ui.mjs": "3584dae4383cb72731009427245bda7ce0af68b3d9ca1b6cc785c8255e89b02d",
     "one-click-context/library/repo-review-ui.mjs": "da77ea8887885ba461940ad2c37ed4722d368ebddba6060c667e406db80c1cdc",
-    ".gitattributes": "e84d9715cba4566f8c4853cc462c609bcfb9b757f92630bbf484a2ba24b18cfc"
+    ".gitattributes": "9b53236d4cf650eacd367ca07f7d92aa226a05674cf8d110645673baf02762ca"
   },
   "actual_checkout_qualification": {
     "snapshot_id": "627fca38d626cf2957932940796a89b1e331f6b226c24e9f0eed13a231c3885e",
@@ -705,5 +746,24 @@
     "policy": "content-lab/fixtures/pr005/** -text",
     "checked_files": 66,
     "autocrlf_true_bytes_identical": true
-  }
+  },
+  "main_integration": {
+    "main_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+    "main_pr": "https://github.com/BobIvans/scaling-chrome-extensions/pull/44",
+    "reason": "Main advanced during PR005 CI with PR009 original import fidelity support. Preserve it and qualify the integrated tree.",
+    "resolution": "Keep both PR005 and import_fidelity_golden raw byte preservation attributes. All 24 other incoming files retain the exact main blob.",
+    "incoming_files_verified": 24,
+    "pr005_production_code_modified": false,
+    "local_validation": "PASS",
+    "final_head_ci": "REQUIRED_BEFORE_MERGE",
+    "local_tests": {
+      "content_lab": 272,
+      "native_bridge": 47,
+      "qualification_adapter": 8,
+      "extension": 116,
+      "total": 443
+    }
+  },
+  "base_sha_scope": "Initial implementation base. The final merge also includes the concurrent main commit identified in main_integration.main_sha.",
+  "initial_local_tests_total": 437
 }
