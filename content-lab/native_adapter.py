@@ -6,6 +6,7 @@ templates. This adapter never claims a job or starts a worker/test/AI process.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 from pathlib import Path
 import re
@@ -17,7 +18,7 @@ import time
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from automation_core import (Core, context_pack, digest, enqueue, identifier,
                              load_json, search, strict_int, validate_job,
-                             validate_policy)
+                             validate_policy, read_connection)
 from content_lab import apply_library_record
 from context_review import create_session, get_session, import_review, list_sessions, strict_json
 import repo_context
@@ -25,6 +26,7 @@ import repo_context
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 FIELDS = {
+    "durable.info": ({"type"}, set()),
     "durable.search": ({"type", "namespace", "query"}, {"limit"}),
     "durable.context": ({"type", "namespace", "ids"}, {"maxBytes"}),
     "durable.enqueue": ({"type", "template", "taskKey"}, set()),
@@ -48,6 +50,56 @@ FIELDS = {
 }
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
+DESKTOP_PROTOCOL = 'occ.desktop-stdio.v1'
+DESKTOP_READS = frozenset({'durable.info', 'durable.repo.list', 'durable.search',
+                           'durable.context', 'durable.repo.manifest'})
+
+
+def adapter_context(profile, policy):
+    """Bind the reply to the exact loaded objects used by the dispatcher."""
+    root = Path(profile['store']).resolve()
+    database = root / 'content.sqlite3'
+    identity = {'store': str(root), 'database': None}
+    if database.is_file():
+        stat = database.stat()
+        identity['database'] = [stat.st_dev, stat.st_ino]
+    return {'protocol': DESKTOP_PROTOCOL, 'profile_digest': digest([profile, policy]),
+            'store_identity': digest(identity),
+            'adapter_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
+            'backend_bundle_sha256': None}
+
+
+def ready_store(store, *, manifest=False):
+    """Inspect existing schema through a read-only connection, never initialize."""
+    columns = {'items': {'id', 'payload'}, 'content_fts': {'id', 'text'},
+               'sync_heads': {'namespace', 'source_key', 'item_id', 'present'}}
+    if manifest:
+        columns.update({'repo_snapshots': {'id', 'namespace', 'alias', 'profile', 'head', 'tree', 'cursor', 'total'},
+                        'repo_entries': {'snapshot_id', 'ordinal', 'path', 'mode', 'kind', 'oid', 'size', 'state', 'reason', 'file_hash', 'analysis'},
+                        'repo_chunks': {'snapshot_id', 'path', 'ordinal', 'revision', 'raw', 'item_id', 'logical_id', 'byte_start', 'byte_end'}})
+    try:
+        db = read_connection(store)
+        try:
+            return all(required.issubset({r['name'] for r in db.execute('PRAGMA table_info(' + table + ')')})
+                       for table, required in columns.items())
+        finally:
+            db.close()
+    except (OSError, ValueError, sqlite3.Error):
+        return False
+
+
+def info(profile):
+    store = Path(profile['store'])
+    capabilities = sorted((DESKTOP_READS - {'durable.repo.manifest'}) & FIELDS.keys())
+    if 'durable.repo.manifest' in FIELDS and ready_store(store, manifest=True):
+        import repo_manifest
+        if callable(getattr(repo_manifest, 'page', None)):
+            capabilities.append('durable.repo.manifest')
+    return {'protocol': DESKTOP_PROTOCOL, 'native_input_bytes': INPUT_BYTES,
+            'native_combined_output_bytes': OUTPUT_BYTES, 'native_timeout_ms': 10_000,
+            'capabilities': capabilities, 'namespaces': list(profile['namespaces']),
+            'store_path': str(store.resolve()), 'store_ready': ready_store(store),
+            'backend_build_status': 'UNKNOWN_BUNDLE', 'migration_performed': False}
 
 
 def operator_profile(path):
@@ -117,8 +169,8 @@ def scoped_job(core, profile, policy, job_id):
     return job
 
 
-def dispatch(request, profile_path):
-    if not isinstance(request, dict) or request.get("type") not in FIELDS:
+def validate_request(request):
+    if not isinstance(request, dict) or not isinstance(request.get('type'), str) or request['type'] not in FIELDS:
         raise ValueError("DURABLE_SCHEMA")
     required, optional = FIELDS[request["type"]]
     if not required.issubset(request) or set(request) - required - optional:
@@ -132,14 +184,27 @@ def dispatch(request, profile_path):
         if 'fileOrdinal' in request:
             strict_int(request['fileOrdinal'], 0, 9_007_199_254_740_991)
     if request['type'] == 'durable.repo.coverage':
-        from repo_coverage import validate_request
+        from repo_coverage import validate_request as validate_coverage_request
         fields = {'query', 'limit', 'cursor'}
         if request['action'] == 'PAGE' and not fields.issubset(request):
             raise ValueError('DURABLE_SCHEMA')
-        validate_request(request['action'], query=request.get('query'), limit=request.get('limit'),
-                         cursor=request.get('cursor'), page_fields=bool(fields.intersection(request)))
+        validate_coverage_request(request['action'], query=request.get('query'), limit=request.get('limit'),
+                                  cursor=request.get('cursor'), page_fields=bool(fields.intersection(request)))
+    return request
+
+
+def dispatch(request, profile_path):
+    validate_request(request)
     profile, policy = operator_profile(profile_path)
+    return dispatch_loaded(request, profile, policy)
+
+
+def dispatch_loaded(request, profile, policy, *, desktop=False):
+    validate_request(request)
     store, operation = Path(profile["store"]), request["type"]
+    value = {"schema": "occ.native-durable-result.v1", "operation": operation}
+    if desktop and operation not in DESKTOP_READS:
+        raise ValueError('DESKTOP_READ_ONLY')
     if operation == 'durable.repo.coverage':
         # This operation must not initialize the writer/Core/schema owners.
         from repo_coverage import query
@@ -149,9 +214,14 @@ def dispatch(request, profile_path):
             raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
         coverage = query(store, source['namespace'], request['snapshotId'], alias, source, request['action'],
                          **{k: request[k] for k in ('query', 'limit', 'cursor') if k in request})
-        return {'schema': 'occ.native-durable-result.v1', 'operation': operation, 'coverage': coverage}
-    core = Core(store, policy)
-    value = {"schema": "occ.native-durable-result.v1", "operation": operation}
+        value['coverage'] = coverage
+        return value
+    if operation == 'durable.info':
+        value['info'] = info(profile)
+        return value
+    if desktop and not ready_store(store, manifest=operation == 'durable.repo.manifest'):
+        raise ValueError('DESKTOP_SETUP_REQUIRED')
+    core = None if desktop else Core(store, policy)
     if operation.startswith('durable.repo.'):
         repositories = profile.get('repositories', {})
         if operation == 'durable.repo.list':
@@ -170,7 +240,7 @@ def dispatch(request, profile_path):
             snapshot_id = request.get('snapshotId')
             if operation == 'durable.repo.scan' and snapshot_id is None:
                 snapshot_id = repo_context.start_scan(store, alias, source)
-            db = repo_context.db_for(store)
+            db = read_connection(store) if desktop else repo_context.db_for(store)
             try:
                 snapshot = repo_context.load_snapshot(db, namespace, snapshot_id)
                 if snapshot['alias'] != alias or json.loads(snapshot['profile']) != source:
@@ -185,7 +255,7 @@ def dispatch(request, profile_path):
                 import repo_manifest
                 value['manifest'] = repo_manifest.page(store, namespace, snapshot_id, alias, source,
                     request['action'], offset=request.get('offset', 0), limit=request.get('limit', 20),
-                    file_ordinal=request.get('fileOrdinal'))
+                    file_ordinal=request.get('fileOrdinal'), read_only=desktop)
             else:
                 value['export'] = repo_context.export_request(store, namespace, snapshot_id, request['paths'],
                     request['goal'], request['scope'], request['acceptance'], request.get('maxBytes', 24_000), request.get('sourceOffset', 0))
@@ -243,12 +313,12 @@ def dispatch(request, profile_path):
         if namespace not in profile["namespaces"]:
             raise ValueError("DURABLE_NAMESPACE_OUTSIDE_SCOPE")
         if operation == "durable.search":
-            value["items"] = search(store, namespace, request["query"], strict_int(request.get("limit", 10), 1, 20))
+            value["items"] = search(store, namespace, request["query"], strict_int(request.get("limit", 10), 1, 20), read_only=desktop)
         else:
             ids = request["ids"]
             if not isinstance(ids, list) or not 1 <= len(ids) <= 10 or not all(isinstance(item_id, str) and ITEM_ID.fullmatch(item_id) for item_id in ids):
                 raise ValueError("DURABLE_ITEM_IDS_REQUIRED")
-            value["context"] = context_pack(store, namespace, ids, strict_int(request.get("maxBytes", 48_000), 1, 48_000))
+            value["context"] = context_pack(store, namespace, ids, strict_int(request.get("maxBytes", 48_000), 1, 48_000), read_only=desktop)
     elif operation == "durable.record":
         mutation = request["mutation"]
         namespace = mutation.get("namespace") if isinstance(mutation, dict) else None
@@ -270,9 +340,32 @@ def dispatch(request, profile_path):
     return value
 
 
+def dispatch_desktop(request, profile_path):
+    """A single loaded profile/policy supplies both reply binding and dispatch."""
+    context = None
+    try:
+        validate_request(request)
+        if request['type'] not in DESKTOP_READS:
+            raise ValueError('DESKTOP_READ_ONLY')
+        profile, policy = operator_profile(profile_path)
+        context = adapter_context(profile, policy)
+        result = dispatch_loaded(request, profile, policy, desktop=True)
+        return {'schema': 'occ.desktop-stdio-result.v1', 'ok': True,
+                'adapter_context': context, 'result': result}
+    except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
+        return {'schema': 'occ.desktop-stdio-result.v1', 'ok': False,
+                'adapter_context': context, 'error': error_code(exc)}
+
+
+def error_code(exc):
+    message = str(exc)
+    return message if re.fullmatch(r'[A-Z_]{1,100}', message) else 'DURABLE_OPERATION_FAILED'
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--profile", required=True, type=Path)
+    parser.add_argument('--desktop-stdio', action='store_true')
     args = parser.parse_args(argv)
     try:
         if not args.profile.is_absolute():
@@ -290,14 +383,16 @@ def main(argv=None):
                     sys.stderr.buffer.flush()
                     last[0] = now
             repo_context._progress_callback = progress
-        value = {"ok": True, "result": dispatch(request, args.profile)}
+        value = (dispatch_desktop(request, args.profile) if args.desktop_stdio else
+                 {"ok": True, "result": dispatch(request, args.profile)})
         output = json.dumps(value, ensure_ascii=False, allow_nan=False).encode("utf-8")
         if len(output) > OUTPUT_BYTES:
             raise ValueError("DURABLE_OUTPUT_LIMIT")
     except (OSError, ValueError, KeyError, TypeError, sqlite3.Error) as exc:
-        message = str(exc)
-        code = message if re.fullmatch(r"[A-Z_]{1,100}", message) else "DURABLE_OPERATION_FAILED"
-        output = json.dumps({"ok": False, "error": code}).encode("utf-8")
+        value = {'ok': False, 'error': error_code(exc)}
+        if args.desktop_stdio:
+            value.update(schema='occ.desktop-stdio-result.v1', adapter_context=None)
+        output = json.dumps(value).encode('utf-8')
     sys.stdout.buffer.write(output)
     return 0
 

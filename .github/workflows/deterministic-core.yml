@@ -4,19 +4,23 @@ on:
   pull_request:
     paths:
       - 'content-lab/**'
+      - 'desktop/**'
       - 'agent-bridge/**'
       - 'one-click-context/**'
       - 'docs/automation/**'
       - 'README.md'
+      - '.gitattributes'
       - '.github/workflows/deterministic-core.yml'
   push:
     branches: ['main', 'codex/durable-automation-core-20261001']
     paths:
       - 'content-lab/**'
+      - 'desktop/**'
       - 'agent-bridge/**'
       - 'one-click-context/**'
       - 'docs/automation/**'
       - 'README.md'
+      - '.gitattributes'
       - '.github/workflows/deterministic-core.yml'
   workflow_dispatch:
 
@@ -51,6 +55,16 @@ jobs:
           package-manager-cache: false
       - name: Content and durable automation contracts
         run: python -m unittest discover -s content-lab -p 'test_*.py' -v
+      - name: Desktop transport, draft and package contracts
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run -a python -m unittest discover -s desktop/tests -p 'test_*.py' -v
+          else
+            python -m unittest discover -s desktop/tests -p 'test_*.py' -v
+          fi
+      - name: Verify desktop owned files
+        run: python -I -X utf8 desktop/package.py verify --shell desktop
       - name: Existing native bridge regression
         run: node --test agent-bridge/*.test.mjs
       - name: Qualification adapter regression
