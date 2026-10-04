@@ -29,6 +29,8 @@ READS = {
     'durable.context': ({'type', 'namespace', 'ids'}, {'maxBytes'}),
     'durable.repo.manifest': ({'type', 'repository', 'snapshotId', 'action'},
                              {'offset', 'limit', 'fileOrdinal'}),
+    'durable.repo.scanRun': ({'type', 'repository', 'action'},
+                             {'intentKey', 'runId', 'expectedCursor', 'expectedRevision'}),
 }
 IDENTITY_KEYS = {'protocol', 'profile_digest', 'store_identity', 'adapter_sha256',
                  'backend_bundle_sha256'}
@@ -209,6 +211,25 @@ def validate_request(request):
         if 'cursor' in request:
             require(isinstance(request['cursor'], str) and
                     re.fullmatch(r'[A-Za-z0-9_-]{1,4096}', request['cursor']))
+    elif request['type'] == 'durable.repo.scanRun':
+        action = request['action']
+        actions = {'START': ({'intentKey'}, set()), 'STATUS': (set(), {'runId'}),
+                   'STEP': ({'runId', 'expectedCursor', 'expectedRevision'}, set()),
+                   'PAUSE': ({'runId', 'expectedRevision'}, set()),
+                   'CONTINUE': ({'runId', 'expectedRevision'}, set()),
+                   'CANCEL': ({'runId', 'expectedRevision'}, set())}
+        require(isinstance(action, str) and action in actions)
+        required, optional = actions[action]
+        fields = set(request) - {'type', 'repository', 'action'}
+        require(required <= fields <= required | optional)
+        if 'intentKey' in request:
+            require(isinstance(request['intentKey'], str) and
+                    re.fullmatch(r'[0-9a-f]{32}', request['intentKey']))
+        if 'runId' in request:
+            hash_value(request['runId'])
+        for key in ('expectedCursor', 'expectedRevision'):
+            if key in request:
+                number(request[key])
     return request
 
 
@@ -401,6 +422,40 @@ def validate_delta_page(value, request):
     _validate_page_cursor(value, rows)
 
 
+def validate_scan_run(value, request):
+    require(isinstance(value, dict) and {'schema', 'run_id', 'intent_key', 'repository',
+            'namespace', 'snapshot_id', 'repo_sha', 'state', 'run_revision', 'reason',
+            'cursor', 'total', 'ledger_entries', 'processed', 'pending', 'indexed',
+            'excluded', 'errors', 'inventory_complete', 'exact_for_indexed',
+            'all_tracked_bytes_exportable', 'files', 'authority',
+            'execution_authorized'}.issubset(value))
+    require(value['schema'] == 'occ.repo-scan-run.v1' and
+            value['repository'] == request['repository'] and
+            isinstance(value['namespace'], str) and NAME.fullmatch(value['namespace']))
+    hash_value(value['run_id'])
+    require(isinstance(value['intent_key'], str) and re.fullmatch(r'[0-9a-f]{32}', value['intent_key']))
+    hash_value(value['snapshot_id'])
+    require(isinstance(value['repo_sha'], str) and re.fullmatch(r'[0-9a-f]{40,64}', value['repo_sha']))
+    require(value['state'] in {'RUNNING', 'PAUSED', 'COMPLETE', 'CANCELLED', 'BLOCKED', 'FAILED'})
+    if 'runId' in request:
+        require(value['run_id'] == request['runId'], 'DESKTOP_SCAN_BINDING')
+    if request['action'] == 'START':
+        require(value['intent_key'] == request['intentKey'], 'DESKTOP_SCAN_BINDING')
+    for key in ('run_revision', 'cursor', 'total', 'ledger_entries', 'processed',
+                'pending', 'indexed', 'excluded', 'errors'):
+        number(value[key])
+    require(value['cursor'] <= value['total'] == value['ledger_entries'] and
+            value['processed'] + value['pending'] == value['total'] and
+            value['indexed'] + value['excluded'] + value['errors'] + value['pending'] == value['total'],
+            'DESKTOP_SCAN_BINDING')
+    require(value['reason'] is None or isinstance(value['reason'], str) and
+            re.fullmatch(r'[A-Z_]{1,100}', value['reason']))
+    for key in ('inventory_complete', 'exact_for_indexed', 'all_tracked_bytes_exportable'):
+        require(type(value[key]) is bool)
+    require(isinstance(value['files'], list) and len(value['files']) <= 20)
+    require(value['authority'] == 'DATA_ONLY' and value['execution_authorized'] is False)
+
+
 def validate_reply(raw, request, adapter_sha, expected_identity=None):
     value = strict_json(raw)
     require(isinstance(value, dict) and type(value.get('ok')) is bool)
@@ -424,7 +479,8 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
     field = {'durable.info': 'info', 'durable.repo.list': 'repositories',
              'durable.search': 'items', 'durable.context': 'context',
              'durable.repo.manifest': 'manifest',
-             'durable.repo.history': 'page', 'durable.repo.delta': 'page'}[operation]
+             'durable.repo.history': 'page', 'durable.repo.delta': 'page',
+             'durable.repo.scanRun': 'scan_run'}[operation]
     exact(result, {'schema', 'operation', field})
     if operation == 'durable.info':
         validate_info(result[field])
@@ -436,6 +492,11 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
         validate_history_page(result[field], request)
     elif operation == 'durable.repo.delta':
         validate_delta_page(result[field], request)
+    elif operation == 'durable.repo.scanRun':
+        require(result[field] is None and request['action'] == 'STATUS' or
+                result[field] is not None, 'DESKTOP_SCAN_BINDING')
+        if result[field] is not None:
+            validate_scan_run(result[field], request)
     else:
         rows = result[field]
         require(isinstance(rows, list))
@@ -519,7 +580,8 @@ class DesktopClient:
             request = strict_json(raw)
             input_limit = min(INPUT_BYTES, self.info['native_input_bytes']) if self.info else INPUT_BYTES
             output_limit = min(OUTPUT_BYTES, self.info['native_combined_output_bytes']) if self.info else OUTPUT_BYTES
-            timeout = min(TIMEOUT_MS, self.info['native_timeout_ms']) if self.info else TIMEOUT_MS
+            operation_limit = 120_000 if operation == 'durable.repo.scanRun' else TIMEOUT_MS
+            timeout = min(operation_limit, self.info['native_timeout_ms']) if self.info else TIMEOUT_MS
             require(len(raw) <= input_limit, 'DESKTOP_INPUT_LIMIT')
             reply = self._exchange(raw, cancel, output_limit, timeout)
             value = validate_reply(reply, request, self.connection.expected_adapter_sha256,
@@ -611,9 +673,9 @@ class DesktopClient:
             require(not io_fault.is_set(), 'DESKTOP_PIPE_FAILED')
             return bytes(stdout)
         finally:
-            # Only this isolated read adapter is owned here; it cannot start jobs.
-            # On POSIX also close its process group if an unexpected child inherited
-            # pipes. Windows read owners launch no descendants; device QA is separate.
+            # The adapter owns only this request process. Scan pages commit in
+            # SQLite; killing an in-flight page rolls it back, not the run.
+            # POSIX also closes the process group if a child inherited pipes.
             if os.name != 'nt':
                 try:
                     os.killpg(child.pid, signal.SIGKILL)

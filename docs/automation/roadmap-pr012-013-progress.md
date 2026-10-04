@@ -25,10 +25,19 @@ Existing Desktop transport tests and package manifest verification passed
 locally; Tk UI needs a Windows/Xvfb run. Device and CI
 qualification are separate from this local test.
 
+An operator opt-in (`desktop_scan_enabled`) exposes the existing `repo_scan_runs`
+ledger to Desktop when its schema is already installed. The UI offers START,
+STATUS, STEP, PAUSE, CONTINUE and CANCEL with revision/cursor fencing; an
+installed client can reopen and recover status. This is manual page stepping,
+not a background scheduler. The Native adapter refuses Desktop mutation by
+default, and no Desktop schema migration occurs. A deadline or window close
+may interrupt the active page, which must be retried from the committed cursor.
+
 ## Open stages from the combined package
 
-- WS-002: integrate every repo job with the Core lifecycle and UI on the
-  installed Windows host; existing scan run controls remain the owner.
+- WS-002: finish Core job integration, background execution/progress on the
+  installed Windows host, and installed-device qualification. Desktop currently
+  controls the existing scan ledger one page at a time.
 - WS-003: migrate existing summary and selection/export consumers to bounded
   traversal; the old `snapshot_changes` summary still materializes graph data.
 - WS-006: content addressed derived cache, full delta ranges, and selective
