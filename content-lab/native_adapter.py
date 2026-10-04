@@ -26,6 +26,11 @@ import repo_context
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 FIELDS = {
+    'durable.campaign.inspect': ({'type','campaign'}, {'offset','limit'}),
+    'durable.campaign.advance': ({'type','campaign'}, set()),
+    'durable.campaign.pause': ({'type','campaign'}, set()),
+    'durable.campaign.resume': ({'type','campaign'}, set()),
+    'durable.campaign.cancel': ({'type','campaign'}, set()),
     "durable.info": ({"type"}, set()),
     "durable.search": ({"type", "namespace", "query"}, {"limit"}),
     "durable.context": ({"type", "namespace", "ids"}, {"maxBytes"}),
@@ -105,7 +110,7 @@ def info(profile):
 def operator_profile(path):
     profile = load_json(path)
     required = {"schema", "store", "policy_file", "namespaces", "templates"}
-    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories'} or profile["schema"] != "occ.native-durable-profile.v1":
+    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories','campaigns'} or profile["schema"] != "occ.native-durable-profile.v1":
         raise ValueError("DURABLE_OPERATOR_PROFILE_REQUIRED")
     for field in ("store", "policy_file"):
         value = profile[field]
@@ -124,7 +129,7 @@ def operator_profile(path):
         identifier(name)
         validate_job(payload, policy)
     repositories = profile.get('repositories', {})
-    if not isinstance(repositories, dict) or len(repositories) > 20:
+    if not isinstance(repositories, dict):
         raise ValueError('REPO_OPERATOR_PROFILE_REQUIRED')
     for alias, source in repositories.items():
         identifier(alias)
@@ -137,6 +142,9 @@ def operator_profile(path):
             if (report['namespace'] not in namespaces
                     or repositories.get(report['repository']) != report['repository_profile']):
                 raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+    campaigns=profile.get('campaigns',[])
+    if not isinstance(campaigns,list) or len(campaigns)!=len(set(campaigns)) or not all(isinstance(x,str) and x in policy.get('campaigns',{}) for x in campaigns):
+        raise ValueError('CAMPAIGN_OUTSIDE_OPERATOR_SCOPE')
     return profile, policy
 
 
@@ -153,6 +161,10 @@ def summary(job):
     if job['payload'].get('kind') == 'review_report':
         allowed = ('state', 'sha256', 'bytes', 'filename', 'verified_property', 'findings_closed', 'reused')
         result['outcome'].update({k: receipt[k] for k in allowed if k in receipt})
+    if job['payload'].get('kind') == 'workflow_operation':
+        allowed=('state','source_commit','result_commit','result_tree','artifact_digest',
+                 'device_qualified','usable','brief_id','loop_state','loop_stop_reason','scope')
+        result['outcome'].update({k:receipt[k] for k in allowed if k in receipt})
     result['next_step'] = ('RUN_REGISTERED_LOCAL_WORKER' if job['state'] in {'QUEUED', 'RETRY_READY'} else
                            'RECONCILE_AFTER_PROCESS_STOP_CHECK' if job['state'] == 'NEEDS_RECONCILIATION' else
                            'CHECK_OUTPUT_RECEIPT' if job['state'] == 'SUCCEEDED' else
@@ -175,6 +187,10 @@ def validate_request(request):
     required, optional = FIELDS[request["type"]]
     if not required.issubset(request) or set(request) - required - optional:
         raise ValueError("DURABLE_SCHEMA")
+    if request['type'].startswith('durable.campaign.'):
+        identifier(request['campaign'])
+        if 'offset' in request:strict_int(request['offset'],0,9_007_199_254_740_991)
+        if 'limit' in request:strict_int(request['limit'],1,100)
     if request['type'] == 'durable.repo.manifest':
         action = request['action']
         if (not isinstance(action, str) or action not in {'INFO', 'ENTRIES', 'PARTS'}
@@ -205,6 +221,17 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
     if desktop and operation not in DESKTOP_READS:
         raise ValueError('DESKTOP_READ_ONLY')
+    if operation.startswith('durable.campaign.'):
+        from campaign_runtime import inspect, advance, cancel, set_admission
+        alias=identifier(request['campaign'])
+        if alias not in profile.get('campaigns',[]):raise ValueError('CAMPAIGN_OUTSIDE_OPERATOR_SCOPE')
+        if operation=='durable.campaign.inspect':
+            value['campaign']=inspect(store,policy,alias,offset=request.get('offset',0),limit=request.get('limit',20))
+        elif operation in {'durable.campaign.pause','durable.campaign.resume'}:
+            value['campaign']=set_admission(store,policy,alias,operation.endswith('pause'))
+        else:
+            value['campaign']=(advance if operation.endswith('advance') else cancel)(store,policy,alias)
+        return value
     if operation == 'durable.repo.coverage':
         # This operation must not initialize the writer/Core/schema owners.
         from repo_coverage import query
