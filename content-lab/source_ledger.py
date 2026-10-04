@@ -59,14 +59,18 @@ def _schema(db):
       CREATE TABLE IF NOT EXISTS source_heads(
         namespace TEXT NOT NULL, source_id TEXT NOT NULL, version_id TEXT NOT NULL,
         PRIMARY KEY(namespace,source_id));
+      CREATE TABLE IF NOT EXISTS source_ledger_migrations(id INTEGER PRIMARY KEY);
     ''')
     columns = {r['name'] for r in db.execute('PRAGMA table_info(source_origins)')}
     if 'source_key' not in columns:
         with db:
             db.execute('ALTER TABLE source_origins ADD COLUMN source_key TEXT')
+    if not db.execute('SELECT 1 FROM source_ledger_migrations WHERE id=1').fetchone():
+        with db:
             db.execute('UPDATE source_origins SET source_key=origin WHERE source_key IS NULL')
             db.execute('''INSERT OR IGNORE INTO source_aliases
                 SELECT namespace,source_id,origin,created FROM source_origins''')
+            db.execute('INSERT OR IGNORE INTO source_ledger_migrations VALUES (1)')
     db.execute('CREATE UNIQUE INDEX IF NOT EXISTS source_origin_keys ON source_origins(namespace,kind,source_key)')
 
 

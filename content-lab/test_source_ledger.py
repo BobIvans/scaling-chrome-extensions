@@ -2,6 +2,7 @@
 import hashlib
 from pathlib import Path
 import json
+import sqlite3
 import subprocess
 import sys
 import tempfile
@@ -141,6 +142,27 @@ class SourceLedgerTests(unittest.TestCase):
             self.assertEqual(db.execute('SELECT count(*) FROM source_aliases').fetchone()[0], 2)
         finally:
             db.close()
+
+    def test_additive_old_origin_schema_migration(self):
+        self.store.mkdir()
+        db = sqlite3.connect(self.store / 'content.sqlite3')
+        db.execute('''CREATE TABLE source_origins(namespace TEXT,source_id TEXT,kind TEXT,
+                   origin TEXT,created REAL,PRIMARY KEY(namespace,source_id),
+                   UNIQUE(namespace,kind,origin))''')
+        db.execute('INSERT INTO source_origins VALUES (?,?,?,?,?)',
+                   ('docs', 'a' * 64, 'FILE', 'file:///old', 1.0))
+        db.commit()
+        db.close()
+        writer = ledger._db(self.store)
+        try:
+            self.assertEqual(writer.execute('SELECT source_key FROM source_origins').fetchone()[0],
+                             'file:///old')
+            self.assertEqual(writer.execute('SELECT count(*) FROM source_aliases').fetchone()[0], 1)
+        finally:
+            writer.close()
+        writer = ledger._db(self.store)
+        self.assertEqual(writer.execute('SELECT count(*) FROM source_ledger_migrations').fetchone()[0], 1)
+        writer.close()
 
 
 if __name__ == '__main__':
