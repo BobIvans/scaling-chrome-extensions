@@ -73,6 +73,7 @@ class App:
         ttk.Button(toolbar, text='Настройки', command=self.configure).pack(side='left')
         ttk.Button(toolbar, text='Подключиться', command=self.connect).pack(side='left', padx=6)
         ttk.Button(toolbar, text='Отмена (Esc)', command=self.cancel).pack(side='left')
+        ttk.Button(toolbar, text='Контекст и задания', command=self.open_library).pack(side='right', padx=6)
         ttk.Button(toolbar, text='Диагностика', command=self.diagnostics).pack(side='right')
         ttk.Label(body, textvariable=self.status, wraplength=940).grid(row=1, column=0, columnspan=3, sticky='w', pady=(8, 3))
         ttk.Label(body, textvariable=self.location, wraplength=940).grid(row=2, column=0, columnspan=3, sticky='w')
@@ -213,6 +214,13 @@ class App:
             self.snapshot.set(current['snapshot_id'])
             self.status.set('Состояние сканирования записано в backend; закрытие окна не отменяет запуск.')
         self.start('durable.repo.scanRun', lambda _cancel, _progress: client.request(request), apply)
+
+    def open_library(self):
+        if self.connection is None:
+            self.status.set('Сначала подключитесь к библиотеке.')
+            return
+        from desktop.library import LibraryWindow
+        LibraryWindow(self.root,self.connection,self.namespace.get(),existing_ids=[self.items[i]['id'] for i in self.results.curselection()])
 
     def clear_context(self):
         self.context = None
