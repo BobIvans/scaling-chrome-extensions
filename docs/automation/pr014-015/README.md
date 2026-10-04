@@ -126,3 +126,13 @@ under the same job ID, payload, grant/build qualification and STOP epoch. Other
 unknown effects remain unresolved. The process-stop flag represents an actual
 operator check, not a model assertion. The desktop background Core process has
 no corpus-size timeout; closing the UI does not imply cancelling that process.
+
+Integration with PR #48 retains workflow/campaign job handlers in the same Core.
+Campaign and scheduled admissions use the canonical enqueue transaction and
+respect the global Core STOP fence. Repeated committed operations keep their
+identity; resume never restarts cancelled jobs. Operator profiles can carry
+`campaigns`, `desktop_scan_enabled` and `context_service` together. Installed
+context bundles include all current workflow dependencies and hash them.
+`test_context_workflow_interop.py` exercises STOP/resume across campaign admission
+and the combined native profile. Physical-device and individual criterion
+qualification above remain open after repository merge.

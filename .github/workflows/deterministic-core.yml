@@ -50,6 +50,8 @@ jobs:
           python-version: '3.13'
       - name: Exact context, recovery, fences and reconciliation
         run: python -I -X utf8 content-lab/test_context_services.py
+      - name: Context and campaigns share operator scope and Core STOP
+        run: python -m unittest discover -s content-lab -p 'test_context_workflow_interop.py' -v
       - name: Installed context workflow and independent STOP
         shell: bash
         run: |
@@ -87,6 +89,8 @@ jobs:
         with:
           node-version: '24'
           package-manager-cache: false
+      - name: IANA timezone database for Windows daily schedules
+        run: python -m pip install tzdata==2025.2
       - name: Content and durable automation contracts
         run: python -m unittest discover -s content-lab -p 'test_*.py' -v
       - name: Desktop transport, draft and package contracts
