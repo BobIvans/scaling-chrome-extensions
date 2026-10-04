@@ -581,6 +581,8 @@ def transcribe_file(
 
 
 def _database(store: Path, *, configure=None) -> sqlite3.Connection:
+    if (store / 'STORE_MAINTENANCE.json').exists():
+        raise ValueError('STORE_MAINTENANCE_REQUIRED')
     store.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(store / "content.sqlite3", timeout=10)
     try:
