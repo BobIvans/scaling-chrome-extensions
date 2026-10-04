@@ -26,6 +26,9 @@ import repo_context
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 FIELDS = {
+    "durable.library": ({"type", "namespace", "action", "arguments"}, {"operationId"}),
+    "durable.stop": ({"type", "requestId"}, set()),
+    "durable.control.resume": ({"type", "expectedEpoch"}, set()),
     "durable.info": ({"type"}, set()),
     "durable.search": ({"type", "namespace", "query"}, {"limit"}),
     "durable.context": ({"type", "namespace", "ids"}, {"maxBytes"}),
@@ -66,7 +69,7 @@ def adapter_context(profile, policy):
     return {'protocol': DESKTOP_PROTOCOL, 'profile_digest': digest([profile, policy]),
             'store_identity': digest(identity),
             'adapter_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-            'backend_bundle_sha256': None}
+            'backend_bundle_sha256': (__import__('context_runtime').build_digest() if profile.get('context_service') else None)}
 
 
 def ready_store(store, *, manifest=False):
@@ -95,6 +98,8 @@ def info(profile):
         import repo_manifest
         if callable(getattr(repo_manifest, 'page', None)):
             capabilities.append('durable.repo.manifest')
+    if profile.get('context_service'):
+        capabilities.extend(['durable.library','durable.stop','durable.control.resume'])
     return {'protocol': DESKTOP_PROTOCOL, 'native_input_bytes': INPUT_BYTES,
             'native_combined_output_bytes': OUTPUT_BYTES, 'native_timeout_ms': 10_000,
             'capabilities': capabilities, 'namespaces': list(profile['namespaces']),
@@ -105,7 +110,7 @@ def info(profile):
 def operator_profile(path):
     profile = load_json(path)
     required = {"schema", "store", "policy_file", "namespaces", "templates"}
-    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories'} or profile["schema"] != "occ.native-durable-profile.v1":
+    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories','context_service'} or profile["schema"] != "occ.native-durable-profile.v1":
         raise ValueError("DURABLE_OPERATOR_PROFILE_REQUIRED")
     for field in ("store", "policy_file"):
         value = profile[field]
@@ -137,6 +142,10 @@ def operator_profile(path):
             if (report['namespace'] not in namespaces
                     or repositories.get(report['repository']) != report['repository_profile']):
                 raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+    if 'context_service' in profile:
+        import context_runtime
+        c=context_runtime.config(policy,profile['context_service'])
+        if c['namespace'] not in namespaces:raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
     return profile, policy
 
 
@@ -203,8 +212,26 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     validate_request(request)
     store, operation = Path(profile["store"]), request["type"]
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
-    if desktop and operation not in DESKTOP_READS:
+    if desktop and operation not in DESKTOP_READS and not (profile.get('context_service') and operation in {'durable.library','durable.stop','durable.control.resume'}):
         raise ValueError('DESKTOP_READ_ONLY')
+    if operation in {'durable.library','durable.stop','durable.control.resume'}:
+        import context_runtime as runtime
+        service=profile.get('context_service')
+        if service is None:raise ValueError('CONTEXT_SERVICE_NOT_CONFIGURED')
+        c=runtime.config(policy,service)
+        if operation=='durable.stop':result=Core(store,policy).stop(request['requestId'])
+        elif operation=='durable.control.resume':result=Core(store,policy).resume_control(request['expectedEpoch'])
+        else:
+            if request['namespace']!=c['namespace']:raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
+            action=request['action'];args=request['arguments']
+            if action in runtime.READS:
+                if 'operationId' in request:raise ValueError('DURABLE_SCHEMA')
+                result=runtime.query(store,policy,service,action,args)
+            else:
+                result=runtime.submit(store,policy,service,action,args,request.get('operationId'))
+        value['library']={'schema':'occ.context-service-result.v1','namespace':c['namespace'],
+                          'action':request.get('action',operation),'data':result,'authority':'DATA_ONLY'}
+        return value
     if operation == 'durable.repo.coverage':
         # This operation must not initialize the writer/Core/schema owners.
         from repo_coverage import query
@@ -345,9 +372,11 @@ def dispatch_desktop(request, profile_path):
     context = None
     try:
         validate_request(request)
-        if request['type'] not in DESKTOP_READS:
+        if request['type'] not in DESKTOP_READS | {'durable.library','durable.stop','durable.control.resume'}:
             raise ValueError('DESKTOP_READ_ONLY')
         profile, policy = operator_profile(profile_path)
+        if request['type'] not in DESKTOP_READS and not (profile.get('context_service') and request['type'] in {'durable.library','durable.stop','durable.control.resume'}):
+            raise ValueError('DESKTOP_READ_ONLY')
         context = adapter_context(profile, policy)
         result = dispatch_loaded(request, profile, policy, desktop=True)
         return {'schema': 'occ.desktop-stdio-result.v1', 'ok': True,
