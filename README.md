@@ -12,6 +12,7 @@
 [Полный scan без общего лимита числа файлов/размера дерева/blob; Pause, Continue, Stop](docs/automation/roadmap-pr001-full-repo-scan.md).
 
 [Потоковый inventory без corpus caps: operator CLI, atomic publication и resource receipts](docs/automation/pr004-streaming-inventory.md).
+[Python SCC-группы, связанные tests/contracts и полная карта частей контекста](docs/automation/repo-groups.md).
 
 [Настройка, команды и границы context foundation](docs/automation/context-foundation.md).
 Локальные regression tests выполнены на Linux; workflow проверяет Ubuntu и Windows
