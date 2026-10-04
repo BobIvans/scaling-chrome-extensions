@@ -14,7 +14,7 @@ from pathlib import Path
 from automation_core import identifier, read_connection, strict_int
 import repo_context
 
-MAX_PAGE = 100
+MAX_PAGE = 50
 
 
 def _encode(value):

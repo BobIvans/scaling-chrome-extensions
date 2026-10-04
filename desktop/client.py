@@ -203,7 +203,7 @@ def validate_request(request):
             require(request['action'] == 'PARTS')
             number(request['fileOrdinal'])
     elif request['type'] in {'durable.repo.history', 'durable.repo.delta'}:
-        number(request.get('limit', 20), 1, 100)
+        number(request.get('limit', 20), 1, 50)
         if request['type'] == 'durable.repo.delta':
             hash_value(request['snapshotId'])
         if 'cursor' in request:
@@ -662,7 +662,7 @@ class DesktopClient:
         while True:
             if cancel is not None and cancel.is_set():
                 raise DesktopError('DESKTOP_CANCELLED')
-            request = {'type': 'durable.repo.history', 'repository': repository, 'limit': 100}
+            request = {'type': 'durable.repo.history', 'repository': repository, 'limit': 50}
             if cursor is not None:
                 request['cursor'] = cursor
             page = self.request(request)['result']['page']
@@ -680,7 +680,7 @@ class DesktopClient:
             if cancel is not None and cancel.is_set():
                 raise DesktopError('DESKTOP_CANCELLED')
             request = {'type': 'durable.repo.delta', 'repository': repository,
-                       'snapshotId': snapshot_id, 'limit': 100}
+                       'snapshotId': snapshot_id, 'limit': 50}
             if cursor is not None:
                 request['cursor'] = cursor
             page = self.request(request)['result']['page']

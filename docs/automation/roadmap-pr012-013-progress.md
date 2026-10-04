@@ -3,7 +3,7 @@
 This change adds an independent, bounded read path for repository history and
 path delta. `durable.repo.history` and `durable.repo.delta` use keyset cursors
 over the existing SQLite `repo_snapshots` and `repo_entries` owner. A frame
-contains at most 100 records; `next_cursor` continues until explicit `eof`.
+contains at most 50 records; `next_cursor` continues until explicit `eof`.
 The cursor binds namespace or exact head/base snapshot identities, and the
 delta reports additions, deletions, modifications, and uniquely provable
 same-byte rename peers. No total snapshot/path count is configured.
