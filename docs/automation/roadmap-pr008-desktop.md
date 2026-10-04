@@ -3,7 +3,8 @@
 Вход: `ROADMAP_PR_008_DESKTOP_STDIO_WINDOWS_RU_2026-10-04(1).zip`, SHA-256
 `04e4182c262d40683d25ba3af6db249b53a5500a9c7a73ca5738ce825ca112dc`.
 Проверенная база: `9fbadef2714fae92e516a80b52d29cb9824b0e44`. AGENTS.md в checkout нет.
-Пакет №8 адаптирован к текущим owners после merges №1–4; archived sources не
+Дополнительно интегрирован main `8414ce4bda6618e58dea64093bc9a22a7161c5e7`.
+Пакет №8 адаптирован к текущим owners после merges №1–4 и PR009 original-source fidelity; archived sources не
 заменяют текущий код. Номер пакета не является GitHub PR number.
 
 ## Результат
@@ -60,14 +61,15 @@ empty folder, survive. A failed write/cancel leaves no published successful draf
 
 ## Проверки
 
-Repository gates before publication: 250 Content Lab, 46 Native Bridge, 8
-qualification adapter, 112 extension tests passed. Desktop: 21 tests discovered,
-20 passed locally, 1 Tk display test skipped locally. CI runs that Tk test through
+Repository gates after integrating current main: 256 Content Lab, 46 Native Bridge, 8
+qualification adapter, 112 extension tests passed. Desktop: 22 tests discovered,
+21 passed locally, 1 Tk display test skipped locally. CI runs that Tk test through
 Xvfb on Ubuntu and directly on Windows, and verifies owned-file hashes.
 
 New real fixture: 76 tracked files, including binary data, EN/RU/CRLF text; all
 entry/part pages saved to EOF; context and manifest domain DTOs equal legacy
-browser dispatcher DTOs. Corpus hash/schema retained through read/startup/uninstall.
+browser dispatcher DTOs. The owner namespace grammar includes `chatgpt:code`; retained ChatGPT original
+imports project through the same read owner without migration. Corpus hash/schema retained through read/startup/uninstall.
 Independent wire fixtures from the input ZIP cover malformed encoding/framing,
 operation/protocol/profile changes and exact owner digest. Fault helpers exercise
 stdout/stderr floods, combined-budget overflow, timeout, cancellation and one

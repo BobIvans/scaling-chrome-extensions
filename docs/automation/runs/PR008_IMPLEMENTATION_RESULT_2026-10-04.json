@@ -2,8 +2,8 @@
   "schema": "occ.pr008-implementation-receipt.v1",
   "repository": "BobIvans/scaling-chrome-extensions",
   "package_id": "PR-008",
-  "actual_base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
-  "actual_head_sha": "67f0f4c1f7f7109260797f62e824a86df431960c",
+  "actual_base_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+  "actual_head_sha": "7a2cf10c92055da4bf73be5dc57812ee7761a247",
   "pr_url": null,
   "merge_sha": null,
   "implementation": "IMPLEMENTED_LOCAL_TESTS_PASS",
@@ -21,7 +21,8 @@
     "atomic selected-context draft export",
     "complete manifest/parts stream to EOF without total cap",
     "Windows launcher/runtime/Tk preflight",
-    "verified shell stage/uninstall retaining external data"
+    "verified shell stage/uninstall retaining external data",
+    "existing ChatGPT prefixed namespace/source-fidelity compatibility"
   ],
   "changed_files": [
     ".github/workflows/deterministic-core.yml",
@@ -65,7 +66,7 @@
   "tests_and_results": [
     {
       "suite": "content-lab",
-      "passed": 250,
+      "passed": 256,
       "failed": 0
     },
     {
@@ -85,7 +86,7 @@
     },
     {
       "suite": "desktop",
-      "passed": 20,
+      "passed": 21,
       "failed": 0,
       "skipped": 1,
       "skip_reason": "Local display absent; real Tk test enabled in Ubuntu/Windows CI"
@@ -145,7 +146,7 @@
     {
       "id": "A11",
       "status": "PASS_LOCAL",
-      "evidence": "Exact owner digest/BOM/CRLF preserved, tampering and stale source IDs rejected."
+      "evidence": "Exact owner digest/BOM/CRLF preserved, tampering and stale source IDs rejected. Current PR009 retained ChatGPT originals also project exact derived items through Desktop."
     },
     {
       "id": "A12",
@@ -203,7 +204,8 @@
       "elapsed_seconds": 4.516,
       "max_child_rss_kib": 27612,
       "returncode": 0,
-      "windows_device": "NOT_RUN"
+      "windows_device": "NOT_RUN",
+      "measured_implementation_sha": "67f0f4c1f7f7109260797f62e824a86df431960c"
     },
     "synthetic_handshake_transport": {
       "elapsed_ms": 51,
@@ -225,5 +227,7 @@
   "head_sha_scope": "Implementation commit before this receipt/manifest-only commit; final exact CI head is in PR metadata",
   "input_zip_sha256": "04e4182c262d40683d25ba3af6db249b53a5500a9c7a73ca5738ce825ca112dc",
   "observed_os": "Linux-6.18.44-x86_64-with-glibc2.39",
-  "shell_manifest_sha256": "0d1692c9eab0bf09550b4d6756fbfa634818cf16ce1926d7b437099e94f548d5"
+  "shell_manifest_sha256": "4221828a7309c33319e361f49c41960190815e0ce5fbb2e5ab68bfaf2d46f960",
+  "initial_base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
+  "integration": "Current main PR009 original-source fidelity preserved. Namespace grammar matches existing owner, including chatgpt:code."
 }
