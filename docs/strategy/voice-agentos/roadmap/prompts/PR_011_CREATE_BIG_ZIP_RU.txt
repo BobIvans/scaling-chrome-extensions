@@ -1,0 +1,87 @@
+Создай большой подробный ZIP ROADMAP-PR-011: «Полный граф кода: JS/TS resolver, Python SCC, owners, tests, contracts и code smells».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Довести №6/7 до единого provenance graph, расширить aliases/workspaces/CommonJS и сохранить большие связанные группы без потери raw bytes.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: LAYA4-005, LAYA4-006, LAYA4-007, LAYA4-008
+Feature cards: RND-001, RND-003, RND-004
+Decisions: DEC5-06, DEC5-07
+Goals: GOAL5-04
+Dependencies: PR-005, PR-006, PR-007
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-004 — Полный статический JS/TS resolver: aliases, workspaces, exports и CommonJS
+Scope:
+- Версионированные resolution modes и pinned конфигурации
+- TS extensions, aliases/workspaces/package exports
+- Scope-aware CommonJS и явные dynamic/ambiguous/external outcomes
+Граница: №7 даёт AST и ограниченные relations. №13 расширяет resolver; mixed-language graph и UI owners остаются №14.
+Приёмка:
+- Parser/resolver не исполняет код исследуемого repo
+- Каждый resolved edge имеет source span и правило разрешения
+- Unresolved не выдаётся за отсутствие зависимости
+- Независимый holdout дополняет synthetic corpus №7
+- Parser pin/install проверены на выбранной Windows сборке
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-005 — Единый граф Python/JS/TS, owners, tests, contracts и подтверждаемые code smells
+Scope:
+- Адаптация двух relation dialects №6/7 в один provenance graph
+- Стабильные SCC/groups, continuation и mixed-language queries
+- Owners/tests/contracts picker и кандидаты code smells с доказательствами
+Граница: Переиспользовать Python SCC/planner №6. Автоматическое объединение JS relations с Python topology в №7 отсутствовало. Capability становится доступной только через №26/33.
+Приёмка:
+- Старые raw chunk hashes/IDs не меняются
+- Declared, static, heuristic и observed связи различаются
+- Unrelated addition не перенумеровывает группы
+- Большой SCC имеет полный membership и все части
+- Каждый smell содержит source range, проверку и контрпример
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+LAYA4-005 — Квалифицировать статический JS/TS parser и resolver
+- ADR сравнивает parser candidates по JS/TS/JSX/TSX, offline packaging, Windows memory, pins и лицензии; package выбран по измерению.
+- Parser извлекает symbols/ranges и imports; resolver поддерживает явно перечисленные ESM/CommonJS/relative/workspace/alias правила.
+- Computed imports, unsupported exports, dynamic require и runtime injection представлены unresolved, не guessed exact edges.
+- Ни import scanned module, ни install scripts, ни repository hooks во время анализа не запускаются.
+- Размеченный corpus достигает предложенного precision gate LX4-03; recall и неподдерживаемые формы публикуются отдельно.
+LAYA4-006 — Объединить Python и JS/TS связи в provenance graph
+- Edge хранит type, source range/hash, parser/resolver version и evidence class.
+- Python static, JS/TS static, declared contract и heuristic candidate не смешиваются в один unqualified relation.
+- Unresolved/dynamic/ambiguous links доступны в graph query и packet gaps.
+- Graph построен детерминированно из pinned snapshot; SCC не зависит от directory enumeration order.
+- Rebuild на одинаковых inputs даёт одинаковый graph digest; цикл не вызывает unbounded traversal.
+LAYA4-007 — Связать owners, tests, contracts и capability candidates
+- Name heuristic, declared mapping и observed test coverage имеют разные relation types.
+- Тесты/контракты разрешаются только внутри выбранного snapshot/scope; внешний missing contract остаётся gap.
+- У registration/API/schema adapters есть owner mapping, уменьшающий риск изменения только одной стороны интерфейса.
+- Capability candidate из parser не получает статус enabled/installed; для него показано missing qualification.
+- UI позволяет открыть источник связи и явно включить tests/contracts в packet.
+LAYA4-008 — Планировать связанные группы и bounded chunks
+- MVP работает с текущим Python graph и честно отмечает JS/TS gaps; новый resolver не блокирует первый release.
+- SCC рассматривается как logical group; oversized SCC делится на bounded parts с neighbour references.
+- Каждый group имеет reason/owner/source refs; эвристики явно отмечены.
+- Raw byte coverage проверяется отдельно от повторных explanatory snippets в нескольких docs.
+- Порядок и IDs детерминированы snapshot/planner version; добавление несвязанного файла не перенумеровывает все logical source IDs.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

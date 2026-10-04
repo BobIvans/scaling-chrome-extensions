@@ -1,0 +1,56 @@
+РЕАЛИЗУЙ ОДИН SCOPED PR: ROADMAP-PR-003 / LAYA4-010
+Repo: BobIvans/scaling-chrome-extensions.
+Пакет — implementation input; не считай его fixture или архивный source новым
+кодом приложения. ~60 минут — оценка, продолжай до coherent scope и проверки.
+
+1. Прочитай actual AGENTS.md/CI, зафиксируй base SHA и branch. Найди actual
+   repo_context/repo_manifest/export owners и реальный PR-002 result. Сверь
+   BATCH binding/digest, entry/part fields и его global proof. Подготовленные
+   ZIP-001/002 не означают merged implementation. При отсутствии prerequisites
+   сохрани конкретный dependency gap, не переписывай весь №2 в этом PR.
+2. Расширь actual existing writer или добавь небольшой pure sibling
+   content-lab/repo_archive.py к тому же store. Foreground CLI получает trusted
+   --profile, --repository, --manifest, --output; --resume, --status, --new-run
+   строго по contracts/CLI_REQUEST.schema.json. CLI draft reconcile с actual
+   symbols перед build. Из UI нельзя задавать arbitrary output/root/argv.
+3. Прочитай frozen metadata №2 и BATCH identity, проверь их hashes. Получай
+   payload из existing repo_chunks.raw по exact snapshot/path/ordinal/revision.
+   Не перечитывай working-tree, не вызывай Git/hooks/imports анализируемого repo.
+   Нет whole-corpus raw fetchall и общего потолка 20/39/любого числа parts.
+4. Один process lock на export identity/output. Пиши каждый raw chunk через
+   .tmp, stream hash/byte count, flush/fsync, atomic same-filesystem replace.
+   Лишь затем публикуй rebuildable checkpoint. Resume заново проверяет staged
+   parts и копирует только недостающие/испорченные parts из exact captured data.
+   Disk-full/interrupt сохраняют completed parts. Cancelled tombstone не
+   снимается --resume; явный --new-run создаёт другую run identity.
+5. Создай static paged offline HTML (без network/fetch dependencies), manifest
+   каждого output и scoped reconstruction proof. Source paths — escaped data;
+   payload filenames generated from part_id, исходные пути не извлекаются.
+   Binary и empty chunks сохраняют exact bytes; excluded/protected bytes не
+   добавлять. NOT_GENERATED graph/goal-null не выдавать за готовые зависимости.
+6. Собирай ZIP64 в .partial, stream copy, closed archive CRC/member hashes,
+   ranges/revisions/source SHA/Git OID проверяются до atomic final rename.
+   Не делать append-to-damaged ZIP. После сбоя заново собери ZIP из staged parts.
+   Archive SHA/receipt — внешние sidecars; self-referential ZIP hash внутри ZIP
+   не нужен. Rename-before-receipt crash reconcile проверкой exact archive.
+7. Проверь 16 cases, real SQLite/CLI subprocess integration, legacy manifest
+   и repo-context tests, required actual CI. Fixture proof не заменяет exporter
+   integration/crash tests. Windows/device claims только с реальным receipt.
+   Доставь actual diff, PR description, implementation result, unmet criteria.
+
+Required user-facing increment: один локальный запуск → verified portable ZIP;
+restart → explicit --resume без новых chunks/потери хвоста; offline source↔parts.
+Часовой scope: foreground CLI, durable stage artifacts, final ZIP, offline index.
+Не добавляй Native START/worker/desktop/Grok send/voice/новые parsers или Web3
+execution. Native metadata budgets №2 остаются прежними. Автоматический единый
+scan→manifest→ZIP desktop путь требует отдельного квалифицированного transport.
+
+Проверки и исправления actual code продолжай в авторизованном пользователем
+scope. Создание/merge PR выполнять только по инструкции implementation-чата;
+это приглашение на подготовку и реализацию, а не evidence уже созданного PR.
+
+Read order: brief → contracts/EXPORT_CONTRACT.json → plan/PR_PLAN.json →
+acceptance → previous/PR_002_MANIFEST_CONTRACT.json → actual source.
+Не переносить archived da6abf4 поверх более нового кода. Сохранённые исходники
+только reference. Ни broad LAYA4-010/M5-02, ни остальные 159 tasks не закрываются
+самим пакетом. Все claims должны называть observed SHA и proof scope.

@@ -1,0 +1,123 @@
+{
+  "number": 11,
+  "package_id": "ROADMAP-PR-011",
+  "title": "Полный граф кода: JS/TS resolver, Python SCC, owners, tests, contracts и code smells",
+  "user_outcome": "Довести №6/7 до единого provenance graph, расширить aliases/workspaces/CommonJS и сохранить большие связанные группы без потери raw bytes.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    5,
+    6,
+    7
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Полный статический JS/TS resolver: aliases, workspaces, exports и CommonJS",
+      "lane": "Репозиторий",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Версионированные resolution modes и pinned конфигурации",
+        "TS extensions, aliases/workspaces/package exports",
+        "Scope-aware CommonJS и явные dynamic/ambiguous/external outcomes"
+      ],
+      "acceptance": [
+        "Parser/resolver не исполняет код исследуемого repo",
+        "Каждый resolved edge имеет source span и правило разрешения",
+        "Unresolved не выдаётся за отсутствие зависимости",
+        "Независимый holdout дополняет synthetic corpus №7",
+        "Parser pin/install проверены на выбранной Windows сборке",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "№7 даёт AST и ограниченные relations. №13 расширяет resolver; mixed-language graph и UI owners остаются №14.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "LAYA4-005"
+      ],
+      "feature_ids": [],
+      "decision_ids": [
+        "DEC5-06"
+      ],
+      "goal_ids": [
+        "GOAL5-04"
+      ],
+      "workstream_id": "WS-004",
+      "parent_package": "ROADMAP-PR-011",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [],
+      "original_package_inputs": [
+        5,
+        7
+      ]
+    },
+    {
+      "title": "Единый граф Python/JS/TS, owners, tests, contracts и подтверждаемые code smells",
+      "lane": "Репозиторий",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Адаптация двух relation dialects №6/7 в один provenance graph",
+        "Стабильные SCC/groups, continuation и mixed-language queries",
+        "Owners/tests/contracts picker и кандидаты code smells с доказательствами"
+      ],
+      "acceptance": [
+        "Старые raw chunk hashes/IDs не меняются",
+        "Declared, static, heuristic и observed связи различаются",
+        "Unrelated addition не перенумеровывает группы",
+        "Большой SCC имеет полный membership и все части",
+        "Каждый smell содержит source range, проверку и контрпример",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Переиспользовать Python SCC/planner №6. Автоматическое объединение JS relations с Python topology в №7 отсутствовало. Capability становится доступной только через №26/33.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "LAYA4-006",
+        "LAYA4-007",
+        "LAYA4-008"
+      ],
+      "feature_ids": [
+        "RND-001",
+        "RND-003",
+        "RND-004"
+      ],
+      "decision_ids": [
+        "DEC5-07"
+      ],
+      "goal_ids": [
+        "GOAL5-04"
+      ],
+      "workstream_id": "WS-005",
+      "parent_package": "ROADMAP-PR-011",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-004"
+      ],
+      "original_package_inputs": [
+        6
+      ]
+    }
+  ],
+  "source_task_ids": [
+    "LAYA4-005",
+    "LAYA4-006",
+    "LAYA4-007",
+    "LAYA4-008"
+  ],
+  "feature_ids": [
+    "RND-001",
+    "RND-003",
+    "RND-004"
+  ],
+  "decision_ids": [
+    "DEC5-06",
+    "DEC5-07"
+  ],
+  "goal_ids": [
+    "GOAL5-04"
+  ]
+}

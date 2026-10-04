@@ -1,0 +1,89 @@
+{
+  "schema": "roadmap.request-fixtures.v1",
+  "valid": [
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "START",
+      "intentKey": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "STATUS"
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "STATUS",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "STEP",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedCursor": 0,
+      "expectedRevision": 0
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "PAUSE",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedRevision": 0
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "CONTINUE",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedRevision": 0
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "CANCEL",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedRevision": 0
+    }
+  ],
+  "invalid": [
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "START",
+      "intentKey": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "root": "/arbitrary/path"
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "STEP",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedCursor": -1,
+      "expectedRevision": 0
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "STEP",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedRevision": 0
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "EXECUTE_SHELL",
+      "runId": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "expectedRevision": 0
+    },
+    {
+      "type": "durable.repo.scanRun",
+      "repository": "sce",
+      "action": "STATUS",
+      "runId": "not-a-hash"
+    }
+  ],
+  "note": "Examples exercise proposed request schema, not installed handler existence or profile authorization."
+}

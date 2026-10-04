@@ -1,0 +1,291 @@
+{
+  "number": 19,
+  "package_id": "ROADMAP-PR-019",
+  "title": "Долгие параллельные кампании и R&D: scheduler, leases, budgets, resume и next briefs",
+  "user_outcome": "Развить текущий scheduler/Core, измерить concurrency, связывать источники с экспериментами и продолжать кампанию по checkpoints без повторных effects.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    11,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Durable расписания и долгие кампании: offline, sleep, restart и budgets",
+      "lane": "Автоматизация",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Versioned schedules, occurrence identity и Europe/Riga DST",
+        "Skip/latest/bounded catch-up и resource/cost admission",
+        "Checkpoint resume, deadlines, retries, cancellation и no-progress stop"
+      ],
+      "acceptance": [
+        "DST/sleep/clock drift не дублируют occurrence",
+        "Cancelled intent не оживает",
+        "Unknown external effect сначала сверяется",
+        "Policy/source drift инвалидирует нужный checkpoint",
+        "Перегрузка ставит работу в очередь без отбрасывания corpus",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "В main уже существуют schedule_tick/supervisor/Core: сначала gap audit и reuse. Это развитие существующего scheduler, не новый runtime.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "PAR3-014",
+        "ACTION5-25",
+        "ACTION5-26"
+      ],
+      "feature_ids": [
+        "LIB-034",
+        "ACT-024",
+        "ACT-025",
+        "ACT-049",
+        "ACT-055",
+        "RND-024"
+      ],
+      "decision_ids": [
+        "DEC5-21"
+      ],
+      "goal_ids": [
+        "GOAL5-20"
+      ],
+      "workstream_id": "WS-025",
+      "parent_package": "ROADMAP-PR-019",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-017",
+        "WS-018"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Ресурсные конфликты, leases, fencing и управляемая параллельность Dell",
+      "lane": "Автоматизация",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Canonical identities для DB/UI/repo/files/provider/capital resources",
+        "Conflict graph, atomic leases и fencing",
+        "Admission по измеренным CPU/RAM/IO/quotas и foreground priority"
+      ],
+      "acceptance": [
+        "Истёкший worker не может commit результат как новый owner",
+        "Два alias одного ресурса распознаются",
+        "UI focus и DB writer остаются согласованными",
+        "Измерения на Dell определяют concurrency profile",
+        "Общий baseline и ресурсы не учитываются дважды",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Production Core остаётся serial до доказанной qualification. Worktree integration №32 и updater №33 сохраняют единственного владельца.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "UI3-015",
+        "PAR3-004",
+        "PAR3-006",
+        "PAR3-007",
+        "PAR3-008",
+        "PAR3-019"
+      ],
+      "feature_ids": [
+        "ACT-016",
+        "ACT-020",
+        "ACT-021",
+        "ACT-027",
+        "RND-026"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-21"
+      ],
+      "workstream_id": "WS-026",
+      "parent_package": "ROADMAP-PR-019",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-005",
+        "WS-017",
+        "WS-025"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Параллельные campaign DAG: общий контекст, ветви, resume и журнал решений",
+      "lane": "Автоматизация",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Immutable campaign manifest и общие доказательства/cache",
+        "Branch compare/join semantics, deferred fallback и aging",
+        "Resume DAG, selective invalidation и доступная панель"
+      ],
+      "acceptance": [
+        "Все ветви сравниваются на одном замороженном input",
+        "Повтор derived data не считается независимым evidence",
+        "Restart продолжает только валидный остаток DAG",
+        "Применяется один итоговый effect к target",
+        "Fault pilot проверяет leases, STOP, updater и UI writer вместе",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Это интеграция №34/35 и существующих owners. Независимая подготовка документов не служит доказательством параллельного PC execution.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "PAR3-002",
+        "PAR3-011",
+        "PAR3-016",
+        "PAR3-020",
+        "PAR3-021",
+        "PAR3-023",
+        "EVO3-022"
+      ],
+      "feature_ids": [
+        "ACT-017",
+        "ACT-018",
+        "ACT-019",
+        "ACT-040",
+        "RND-025"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-20",
+        "GOAL5-21"
+      ],
+      "workstream_id": "WS-027",
+      "parent_package": "ROADMAP-PR-019",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-020",
+        "WS-022",
+        "WS-023",
+        "WS-024",
+        "WS-025",
+        "WS-026"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Автоматический R&D цикл: источники → гипотеза → эксперимент → следующий PR brief",
+      "lane": "Исследования",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Claim→primary source→experiment и technology/media scout",
+        "Next brief из unmet criterion, negative trial и data gap",
+        "Ограниченный improvement loop и портфель экспериментов по информационной пользе"
+      ],
+      "acceptance": [
+        "Каждый claim имеет provenance либо UNKNOWN",
+        "Пересказы одного источника группируются",
+        "Новые aims не теряют прежние goal IDs",
+        "Brief содержит owner/input/acceptance/recovery",
+        "Loop останавливается при no-progress/budget/unknown effect и сохраняет попытку",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Использует проверенные merge/update/qualification пути. Публикация контента и произвольный live execution не добавляются автоматически из R&D предложения.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-010",
+        "EVO3-021",
+        "TAB4-17",
+        "LAYA4-028"
+      ],
+      "feature_ids": [
+        "LIB-049",
+        "ACT-045",
+        "RND-036",
+        "RND-038",
+        "RND-044",
+        "RND-045"
+      ],
+      "decision_ids": [
+        "DEC5-22"
+      ],
+      "goal_ids": [
+        "GOAL5-10",
+        "GOAL5-24",
+        "GOAL5-26"
+      ],
+      "workstream_id": "WS-028",
+      "parent_package": "ROADMAP-PR-019",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-010",
+        "WS-011",
+        "WS-012",
+        "WS-013",
+        "WS-015",
+        "WS-018",
+        "WS-024",
+        "WS-025"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "G3-010",
+    "UI3-015",
+    "PAR3-002",
+    "PAR3-004",
+    "PAR3-006",
+    "PAR3-007",
+    "PAR3-008",
+    "PAR3-011",
+    "PAR3-014",
+    "PAR3-016",
+    "PAR3-019",
+    "PAR3-020",
+    "PAR3-021",
+    "PAR3-023",
+    "EVO3-021",
+    "EVO3-022",
+    "TAB4-17",
+    "LAYA4-028",
+    "ACTION5-25",
+    "ACTION5-26"
+  ],
+  "feature_ids": [
+    "LIB-034",
+    "LIB-049",
+    "ACT-016",
+    "ACT-017",
+    "ACT-018",
+    "ACT-019",
+    "ACT-020",
+    "ACT-021",
+    "ACT-024",
+    "ACT-025",
+    "ACT-027",
+    "ACT-040",
+    "ACT-045",
+    "ACT-049",
+    "ACT-055",
+    "RND-024",
+    "RND-025",
+    "RND-026",
+    "RND-036",
+    "RND-038",
+    "RND-044",
+    "RND-045"
+  ],
+  "decision_ids": [
+    "DEC5-21",
+    "DEC5-22"
+  ],
+  "goal_ids": [
+    "GOAL5-10",
+    "GOAL5-20",
+    "GOAL5-21",
+    "GOAL5-24",
+    "GOAL5-26"
+  ]
+}

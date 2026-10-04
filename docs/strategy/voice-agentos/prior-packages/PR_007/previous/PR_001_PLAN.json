@@ -1,0 +1,148 @@
+{
+  "schema": "roadmap.pr-input.v1",
+  "package_id": "ROADMAP-PR-001",
+  "created_date": "2026-10-04",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "local_sequence": 1,
+  "github_pr_number": null,
+  "github_pr_url": null,
+  "status": "PREPARED_IMPLEMENTATION_BRIEF",
+  "application_code_changed": false,
+  "current_head_verified": false,
+  "current_head": null,
+  "historical_archived_source_sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+  "historical_reference_local_v4_sha": "5574ab768b39605d4631651a1e8f2451483344db",
+  "estimate_minutes": 60,
+  "estimate_is_guarantee": false,
+  "completion_rule": "Finish coherent required controller scope and actual acceptance; never mark PASS because a timer expired.",
+  "source_milestone": "M5-02",
+  "milestone_closed_by_this_package": false,
+  "selected_task_ids": [
+    "LAYA4-001",
+    "LAYA4-002",
+    "LAYA4-004"
+  ],
+  "out_of_scope_task_ids": [
+    "LAYA4-003",
+    "LAYA4-005",
+    "LAYA4-006",
+    "LAYA4-007",
+    "LAYA4-008",
+    "LAYA4-009",
+    "LAYA4-010"
+  ],
+  "tasks": [
+    {
+      "id": "P001-01",
+      "title": "Baseline и owner preflight",
+      "budget_minutes": 5,
+      "depends_on": [],
+      "deliverables": [
+        "actual base/head and current owner/API map",
+        "existing controller gap list"
+      ],
+      "source_task_ids": [
+        "LAYA4-001"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P001-02",
+      "title": "Persisted control и guarded page",
+      "budget_minutes": 15,
+      "depends_on": [
+        "P001-01"
+      ],
+      "deliverables": [
+        "additive scan control state in same SQLite",
+        "atomic expectedCursor/state/revision guard"
+      ],
+      "source_task_ids": [
+        "LAYA4-002"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P001-03",
+      "title": "Native typed action endpoint",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P001-02"
+      ],
+      "deliverables": [
+        "strict conditional field validation",
+        "hello/bridge/UI capability negotiation",
+        "legacy compatibility"
+      ],
+      "source_task_ids": [
+        "LAYA4-002"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P001-04",
+      "title": "Sequential UI pump и controls",
+      "budget_minutes": 15,
+      "depends_on": [
+        "P001-03"
+      ],
+      "deliverables": [
+        "one start intent to terminal state",
+        "keyboard-accessible controls/progress",
+        "STATUS restore without automatic restart"
+      ],
+      "source_task_ids": [
+        "LAYA4-002",
+        "LAYA4-004"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P001-05",
+      "title": "Fault и integration acceptance",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P001-04"
+      ],
+      "deliverables": [
+        "actual case evidence",
+        "real SQLite/Git/native roundtrip",
+        "old-schema compatibility"
+      ],
+      "source_task_ids": [
+        "LAYA4-001",
+        "LAYA4-002"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P001-06",
+      "title": "Required gates и handoff",
+      "budget_minutes": 5,
+      "depends_on": [
+        "P001-05"
+      ],
+      "deliverables": [
+        "coherent diff/PR description",
+        "actual result receipt",
+        "unmet broad criteria and next ZIP"
+      ],
+      "source_task_ids": [
+        "LAYA4-001",
+        "LAYA4-002"
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "existing_owner": "Content Lab content.sqlite3/repo_context + typed Native Host + existing RepoReviewSession",
+  "new_runtime": false,
+  "new_database": false,
+  "new_background_scheduler": false,
+  "artifact_paths": {
+    "brief": "01_PR_001_IMPLEMENTATION_RU.md",
+    "prompt": "EXECUTE_THIS_PR_RU.txt",
+    "contract": "contracts/SCAN_RUN_CONTRACT.json",
+    "acceptance": "plan/ACCEPTANCE_CASES.json",
+    "result_template": "receipts/IMPLEMENTATION_RESULT_TEMPLATE.json"
+  }
+}

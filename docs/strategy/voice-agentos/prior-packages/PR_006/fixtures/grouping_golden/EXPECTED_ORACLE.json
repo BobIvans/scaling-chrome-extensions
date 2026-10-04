@@ -1,0 +1,859 @@
+{
+  "schema": "roadmap.pr006-labelled-expectations.v1",
+  "scope": "EXPLICIT_MANUAL_GRAPH_AND_COMPONENT_LABELS",
+  "components": [
+    [
+      "pkg/a.py",
+      "pkg/b.py",
+      "pkg/c.py"
+    ],
+    [
+      "binary_source.py"
+    ],
+    [
+      "contracts/task.schema.json"
+    ],
+    [
+      "dangerous.py"
+    ],
+    [
+      "empty.txt"
+    ],
+    [
+      "importers/ambiguous.py"
+    ],
+    [
+      "importers/dynamic.py"
+    ],
+    [
+      "importers/forbidden_target.py"
+    ],
+    [
+      "importers/missing.py"
+    ],
+    [
+      "lfs_code.py"
+    ],
+    [
+      "libA/shared.py"
+    ],
+    [
+      "libB/shared.py"
+    ],
+    [
+      "links/current"
+    ],
+    [
+      "loose/item_000.py"
+    ],
+    [
+      "loose/item_001.py"
+    ],
+    [
+      "loose/item_002.py"
+    ],
+    [
+      "loose/item_003.py"
+    ],
+    [
+      "loose/item_004.py"
+    ],
+    [
+      "loose/item_005.py"
+    ],
+    [
+      "loose/item_006.py"
+    ],
+    [
+      "loose/item_007.py"
+    ],
+    [
+      "loose/item_008.py"
+    ],
+    [
+      "loose/item_009.py"
+    ],
+    [
+      "loose/item_010.py"
+    ],
+    [
+      "loose/item_011.py"
+    ],
+    [
+      "loose/item_012.py"
+    ],
+    [
+      "loose/item_013.py"
+    ],
+    [
+      "loose/item_014.py"
+    ],
+    [
+      "loose/item_015.py"
+    ],
+    [
+      "loose/item_016.py"
+    ],
+    [
+      "loose/item_017.py"
+    ],
+    [
+      "loose/item_018.py"
+    ],
+    [
+      "loose/item_019.py"
+    ],
+    [
+      "loose/item_020.py"
+    ],
+    [
+      "loose/item_021.py"
+    ],
+    [
+      "loose/item_022.py"
+    ],
+    [
+      "loose/item_023.py"
+    ],
+    [
+      "loose/item_024.py"
+    ],
+    [
+      "loose/item_025.py"
+    ],
+    [
+      "loose/item_026.py"
+    ],
+    [
+      "loose/item_027.py"
+    ],
+    [
+      "loose/item_028.py"
+    ],
+    [
+      "loose/item_029.py"
+    ],
+    [
+      "loose/item_030.py"
+    ],
+    [
+      "loose/item_031.py"
+    ],
+    [
+      "loose/item_032.py"
+    ],
+    [
+      "loose/item_033.py"
+    ],
+    [
+      "loose/item_034.py"
+    ],
+    [
+      "loose/item_035.py"
+    ],
+    [
+      "loose/item_036.py"
+    ],
+    [
+      "loose/item_037.py"
+    ],
+    [
+      "loose/item_038.py"
+    ],
+    [
+      "loose/item_039.py"
+    ],
+    [
+      "loose/item_040.py"
+    ],
+    [
+      "loose/item_041.py"
+    ],
+    [
+      "loose/item_042.py"
+    ],
+    [
+      "loose/item_043.py"
+    ],
+    [
+      "loose/item_044.py"
+    ],
+    [
+      "notes/русский_<tag>.txt"
+    ],
+    [
+      "operator-excluded.txt"
+    ],
+    [
+      "oversize.dat"
+    ],
+    [
+      "parse_failed.py"
+    ],
+    [
+      "pkg/__init__.py"
+    ],
+    [
+      "service.py"
+    ],
+    [
+      "tests/test_a.py"
+    ],
+    [
+      "tests/test_c.py"
+    ],
+    [
+      "ui/widget.ts"
+    ],
+    [
+      "vendor/module"
+    ]
+  ],
+  "topology_edges": [
+    {
+      "from": "pkg/a.py",
+      "to": "pkg/b.py",
+      "line": 1
+    },
+    {
+      "from": "pkg/b.py",
+      "to": "pkg/c.py",
+      "line": 1
+    },
+    {
+      "from": "pkg/c.py",
+      "to": "pkg/a.py",
+      "line": 1
+    },
+    {
+      "from": "service.py",
+      "to": "pkg/a.py",
+      "line": 1
+    },
+    {
+      "from": "tests/test_a.py",
+      "to": "pkg/a.py",
+      "line": 1
+    },
+    {
+      "from": "pkg/a.py",
+      "to": "pkg/__init__.py",
+      "line": 1
+    },
+    {
+      "from": "pkg/b.py",
+      "to": "pkg/__init__.py",
+      "line": 1
+    },
+    {
+      "from": "pkg/c.py",
+      "to": "pkg/__init__.py",
+      "line": 1
+    },
+    {
+      "from": "tests/test_a.py",
+      "to": "pkg/__init__.py",
+      "line": 1
+    }
+  ],
+  "expected_related_types": [
+    "STATIC_TEST_IMPORT",
+    "OPERATOR_DECLARED_CONTRACT",
+    "HEURISTIC_TEST_CANDIDATE"
+  ],
+  "expected_unresolved": [
+    {
+      "path": "importers/missing.py",
+      "status": "EXTERNAL_OR_UNRESOLVED"
+    },
+    {
+      "path": "importers/dynamic.py",
+      "status": "DYNAMIC_UNRESOLVED"
+    },
+    {
+      "path": "importers/ambiguous.py",
+      "status": "AMBIGUOUS"
+    },
+    {
+      "path": "importers/forbidden_target.py",
+      "status": "TARGET_INELIGIBLE"
+    },
+    {
+      "path": "parse_failed.py",
+      "status": "PYTHON_PARSE_FAILED"
+    },
+    {
+      "path": "ui/widget.ts",
+      "status": "JS_DEPENDENCIES_NOT_PARSED"
+    },
+    {
+      "path": "binary_source.py",
+      "status": "SOURCE_CODE_INELIGIBLE"
+    },
+    {
+      "path": "lfs_code.py",
+      "status": "LFS_POINTER_NOT_CODE"
+    },
+    {
+      "path": "pkg/a.py",
+      "status": "DECLARED_TARGET_UNAVAILABLE"
+    }
+  ],
+  "must_not_code_parse": [
+    "binary_source.py",
+    "lfs_code.py"
+  ],
+  "unrelated_addition": "aaa_unrelated.txt",
+  "common_ids_after_addition": {
+    "sources": {
+      "binary_source.py": "c0a901887be2910a0fc2fc567bd57e1cad3ed77f19a774ebb61b39ef027fffc4",
+      "contracts/task.schema.json": "722ea58b0e309a25790627a3d12be3de1b8aa343c41adb5232c2d837a4d9c250",
+      "dangerous.py": "82a544b1a49444d4615e6d1e916788c2a68dbe80df17502c0aea7c884e7fbec7",
+      "empty.txt": "df43c4dbae7a248d4e505e8dd44e5a0a72e5513c770a0c256ee7b195f9eb4cee",
+      "importers/ambiguous.py": "ee36f8071ada628f0f67a88f0192c1954a225eec80a2b824e8abd63acd9f2c6b",
+      "importers/dynamic.py": "a29f84ce34ccc24bda57f5d3df1558e84269a7464a0333b548029ce41a430d81",
+      "importers/forbidden_target.py": "596d59f4dd018a012951207bc8e681023e8a96f55184ff782db8da7596cfe14d",
+      "importers/missing.py": "a2f5eaa006cd3f70f7f9af73174b68a104751c66ff08c5d9b5993ec5f0a2e502",
+      "lfs_code.py": "090c37f7bb93ee2d0b798f276761ebecf286ff8c4c77c21e98fb51d566f3c96c",
+      "libA/shared.py": "7b5f1fe4773e2de9b7154352ca98d5f17f3c07915d5c1f28fe314e1bb87d4d9b",
+      "libB/shared.py": "31614fb9f5114fe29804a799261753760f11ad3f471c43767b4a3183ce155973",
+      "links/current": "c8fc25e75b9859e3322526cd0cfbf6e0c3f45a8bd4485631b18a4e00df7265f1",
+      "loose/item_000.py": "009ee8469227a3a7fe3b866d4db460b596d68e7738b2eb4338f9f2383f22a1ea",
+      "loose/item_001.py": "b6ecbe03c6c6490b247104d50be04f7c1ab30a27edc018102bffd0a536a69010",
+      "loose/item_002.py": "e09e2cdfd188bd0a0b0049a8d8d95e26d1115d668c30da13c47c43c2977d844a",
+      "loose/item_003.py": "b1890fd8d681cab210929f0dd83ed7f40f8f313d7ae22e07d198a5c78010139c",
+      "loose/item_004.py": "11778a187b020e1891249e766ef18c2e878ddd92b4462855c7e3fae4212a539c",
+      "loose/item_005.py": "f06a0d32523f3c7fcb8a1dfa8eaa89c02c5426acd54517ec0a3c21be712e75e1",
+      "loose/item_006.py": "08163b5d9db4b61dc961bee8669bbd5bb1a0dfbe481dcb3086fd381b97b51c21",
+      "loose/item_007.py": "ac01b3cdbe4f7322ce0c3bef4af523dded0c89eb06eedb01cad55f42195d95d6",
+      "loose/item_008.py": "c2a9a44ea6befe5b12c9454ef15b0afeb361244a622d1f38de371618cc3ce612",
+      "loose/item_009.py": "089fb91dcd23c986b0ceb60411b2ba59998bcf1f8045554c176e844d78b3a127",
+      "loose/item_010.py": "55ccbaa96f76a651dbdce41101de904ec7e1924aac4d72fce8b110e8bde149ee",
+      "loose/item_011.py": "2778cfb563ef597f96ebb05fe6bd7984f64c09877f413ce8b7a45602bd18509d",
+      "loose/item_012.py": "2851295eed9929c7ef560672043757502cda8fe2abb6702eb0d50e03db89253f",
+      "loose/item_013.py": "278969c88419bc7c10271e0d0c80dad591da39872374ab136427ffc57faff090",
+      "loose/item_014.py": "483e2c3a289ee571bb97cafbfe366caf6b9e945d9566b10f8e4225474ac70457",
+      "loose/item_015.py": "60c1888c3268fde7cab26b674d13f1ddb261fd9a0f6bfea5d4939e517469d305",
+      "loose/item_016.py": "60ef2838c1c4d9911a08e7a7ca5f8346d73ef9d266f3797021611d2b87a96c42",
+      "loose/item_017.py": "9a0c3389147d2aca12b8fae712da6c220b5c8676175181ef22ca25ea3228d568",
+      "loose/item_018.py": "b34fb54c514d064c04214a3644faa95ced087e5fb81bb4f8547671c54bac9e75",
+      "loose/item_019.py": "67cac26d17563f6cdc96db3dfa3377fcef3c47f52ba830d5a8eaaedf3be9a758",
+      "loose/item_020.py": "6193dc8ef40aa0bd79209f072ee0a345f99592236e52c82c0385dc6d66d5be53",
+      "loose/item_021.py": "c2ebe635410cb7da812c8a7ba80300c84cf52f153c65d01b0ffe058bf3b4f91d",
+      "loose/item_022.py": "6908163a19016531d746d3db9ae96812baaf9551aced1cd8b61972f2f92e0049",
+      "loose/item_023.py": "ea517553174c8e694db234fe3ae82606ec497f31d248655d298b05653cdb809e",
+      "loose/item_024.py": "5c2a8fc1c8f9d7b8883add7cc04f0088b5f8efa132366b3f676df7e3bdc359da",
+      "loose/item_025.py": "3adc1355788e70fed8d115dec2d4fbcce63b1dcb77527e50bffaabc58af7a05c",
+      "loose/item_026.py": "4197c392d67df65e0135cc24141f66efa8ede340a22a6ff1063b642e70f792b2",
+      "loose/item_027.py": "69b50c9d3924fbf01b10a784983eeaf677fb3c9c0eb6b4424f8212e1cffe2e1a",
+      "loose/item_028.py": "b5ca8731eb7f57ababb7615872721e58cd4a4991146f8dbd802c69b23e48b61b",
+      "loose/item_029.py": "df67287587f9a022fffc6d05ddd8d6f10c47102001c990b4b288eaa154449df5",
+      "loose/item_030.py": "d8a096ec5f6f95681746ca8a2e3606b058f74c39336412cc3706162b77feb700",
+      "loose/item_031.py": "9acddb3de3084cf538654845d9a017ceeb7b384378174c18121d37dfef99906d",
+      "loose/item_032.py": "e5d25fa736f8d8b9dc57768708568723435def943dcf21b682035141b65829e5",
+      "loose/item_033.py": "6f06d2a4865629d9000f1bf81a9b79d6e89b8989bd5fef213659fbe3f5ff96c1",
+      "loose/item_034.py": "f55e62f21841eef86f467a03a037af92395660b905937bc37d32ee49a6147719",
+      "loose/item_035.py": "3fc02c380df10352be04fb43eaabfeb09a2c345a0b444f42e00a5a3d4f285f94",
+      "loose/item_036.py": "e7c4e061e20a5390552602e15ab1cc660cf160e5f0cb641bbf851760975f14d7",
+      "loose/item_037.py": "828c4ee2b364e94cc5a61fd32c644646c2a46c6e8b604d8acd6e6dcc518fa96a",
+      "loose/item_038.py": "217d34056b8fa64d7520a91e9d56acca44c81a2f49f0ea7fd96814fb8a0b988b",
+      "loose/item_039.py": "e1eaf33e080554d5e8d89ffa7afe8a467d5454e6a2339be10879f38730710c14",
+      "loose/item_040.py": "c30474067b6e22de502da3f3a2f53cd798a36957ea412d428ebf81560e49343b",
+      "loose/item_041.py": "abae5aa09572541b172c53b6effdc63680a72d3c57e37ae7a890dd7fe6411e80",
+      "loose/item_042.py": "6938dc039d32e0a62545d7c58b5b7935104a3414e2ebccc7b5d6557a7b8a378f",
+      "loose/item_043.py": "45f56ebbb5503f727621e30b50860f5ac3f99e5f9abc1b04378f85e3d22c8b6f",
+      "loose/item_044.py": "75b93f7ebe7f8821e0bbd305914b66524c53a604f94755e1777410c28536f742",
+      "notes/русский_<tag>.txt": "b0bf8b2a504f7dc1961949b500cc1b7504445c779341a26058d16426a965ac39",
+      "operator-excluded.txt": "ae63d3fe7ad338aec99b0017b0999afc924f2f67d8a2808b84fbc2fdfb8b065b",
+      "oversize.dat": "e7dd92bfe2d0b85974580d2903a3f891f7af885bbd72de97374ba82ffdc99626",
+      "parse_failed.py": "276a20e83fe4e68cc6e254c5cbad3a29122650d9614c27f1837bb604ef074ac2",
+      "pkg/__init__.py": "b04aa89b47faa5f05f8b9cc8fe97d5b7cf1300092b530e3d11b3f38c142811f9",
+      "pkg/a.py": "656bd191d3e4f24421058e1d002790890f44f6e0faca8762403da8bbc9be238c",
+      "pkg/b.py": "bdf1155ceb1760c08a61ed94e71cd7281ffe543898f4ad008082a19d2f3c33a2",
+      "pkg/c.py": "19c2bc294acc0b29cae68d2bc6cf19dc81dc715d0a36f24292ff89ea1a600b81",
+      "service.py": "4c78640c1e0e3cc664f8f4531e604e3d39df2d6445e3b7680e49e39f4cd8a7b6",
+      "tests/test_a.py": "cffb9230c95c68ef18e60d6435ddad4fa995e26100e29f10a8a8ae067efda406",
+      "tests/test_c.py": "379d98141997564168cf31ee362c48fd2ab569b97a015651b04f10025605a887",
+      "ui/widget.ts": "bfb605ffe9416eeb5fd601b179d581432f8f3fd229b9196239e0e0147ddee761",
+      "vendor/module": "40db9ea24a0cfa49fa54e186e190f18a44f3ba940c7ebfef8e76e77dc68f2092"
+    },
+    "groups": {
+      "pkg/a.py": "00d5279643cfb4854ad0e2d0779c7b1e5889b097ae5d3830b1df44ffa27cf644",
+      "pkg/b.py": "00d5279643cfb4854ad0e2d0779c7b1e5889b097ae5d3830b1df44ffa27cf644",
+      "pkg/c.py": "00d5279643cfb4854ad0e2d0779c7b1e5889b097ae5d3830b1df44ffa27cf644",
+      "binary_source.py": "7e2c55c58b01343d9b2d4f338c678e49ba2f27e9b8bc9c2ea0b7fe5c31acd167",
+      "contracts/task.schema.json": "51531cb61d2214344976e382f726583cc737335f444e33c12573777a6c355839",
+      "dangerous.py": "6d0d53bb62399650144ba2f3b081970d52d00b68e544e995dddb5197eb37fb50",
+      "empty.txt": "f2d11b712f0bdd1535f3663c28e4404c64adff3b01d33b06bd25742506af5d35",
+      "importers/ambiguous.py": "c79b5c238a93e9177b5740198ac629cd708039f94c8c5bf781d20f8795e799b5",
+      "importers/dynamic.py": "3943747b57b46eafcbb12217dadc01be870d90beb72aae7c7df476fb0610461d",
+      "importers/forbidden_target.py": "dfb1ea7b4d1fb38d63a26db1c2f0178307c0fc70faa85cc52b3dfe6967edc2d2",
+      "importers/missing.py": "2d7c7745bbd721332dfb420cfcc8eed98b109044f9b0fda75a534645282cf0a5",
+      "lfs_code.py": "af4a5f7b524fd52681d08145e4c87dcddc19a64f3bd8c9fa78cf1aa9337f1513",
+      "libA/shared.py": "ad4544bf097ebb262c4d41cdf334ee9f59e5305975a85cffc345e307c1d77ff8",
+      "libB/shared.py": "699b5de42c5867aa3ee23387ecef36bde82f2a05347c4c9663be714137a073d2",
+      "links/current": "4ca940af253d1f6f4c5f8c83e9de3abc017bb9df8cc781448d04e0347753a88a",
+      "loose/item_000.py": "5a14c6143310cbf01271d864ed124b05cce8226b982c5f4eadb6786e97e6586a",
+      "loose/item_001.py": "807156e636193b17a14e9fc71ae816dc8983f95113daebd5f02cdc2eff86e62b",
+      "loose/item_002.py": "092b9bfee3da3ad49dead692b5ea90d2794cc78b23b0d513762dca2716aa93c4",
+      "loose/item_003.py": "324b52110e42d92673b96cf6b7f13b4be5587759156b907a6b69d6e35da1ad4e",
+      "loose/item_004.py": "7d6af40f3f6490011535abf723cadc8fa0989fc1b6905cd112145f1b468d6d8a",
+      "loose/item_005.py": "608d6a1c31763761acc0628db3084e1b9e1cbe91c59858c121090ea004f5d0a8",
+      "loose/item_006.py": "fd3bf87b965f5104030d9fe8aad1ccfac301474e27ae9fa4fe089847e126ee91",
+      "loose/item_007.py": "1f188c0fed77575237b8dd67eb92bf2deaabc73c244879bd49ab4eb11de4b7e2",
+      "loose/item_008.py": "d0e9b2f0c76ed47a43533f0896b3eeec6757cd7e28935b03d63797349ce34631",
+      "loose/item_009.py": "b951e21b6b7d640d821f3fccf25240c5e10b357766a07419b5a90dca9b532e6f",
+      "loose/item_010.py": "2eac60301a170e9ca0d908b3b3ca19f9a0251d65e44c1236761ceb2e9047fdce",
+      "loose/item_011.py": "8e60b4d0f6c784f562d0d72dcba77d61295b2fc1a16df9f997c7d3a23647764a",
+      "loose/item_012.py": "1cf56c1657a966f8f9204e5649ae8665a918a3589785309e65d12e01fced8f6f",
+      "loose/item_013.py": "c52516ac43f5ac68ad55d6a6eacb3b637c748b500a6ba7b5f8da4672c4246359",
+      "loose/item_014.py": "35a8f60a10de2326f95d90dccdef304b82db2d2f579a28cc0b55505ed30f7c5e",
+      "loose/item_015.py": "672a07a48173d0733bee041d5b21c0b913252aa0821a6b210097001e00e4ddc0",
+      "loose/item_016.py": "10ec59f9aa9048385969d2cc09e7fa0d331de1f59353854f34904b583a4f4d21",
+      "loose/item_017.py": "eaa8ae3dddf5ee60f2b2bc037a9dcf7fd2d603e4f9fec7525ac91ac12bf420e2",
+      "loose/item_018.py": "7f65b2a72769f588dcc6c20015451f7c958362e1cb39c41eeb81eb562f477c24",
+      "loose/item_019.py": "07d03383830c90c5b154fc9e439c624fc2e619b6544c2fffb8baec15d2b90f8f",
+      "loose/item_020.py": "9bf1e019637c293c5f0a1b54396cc2558ec1c92c1fea5a8dd0cb87a2a427571c",
+      "loose/item_021.py": "177fd1a391e42170e1a37e653a65d395a60efd2b8b7eabe4f335b16f87a68b80",
+      "loose/item_022.py": "ec1f6c901877e5aa4a1716d0dbe508c585f0e1230a48429f5d5038ba23956d3c",
+      "loose/item_023.py": "dcd1133d01870aecfd48eb4c227802c5f245f07449a15d0566cefc61b5398622",
+      "loose/item_024.py": "1bd924715146e41aaa4c16986204d0a82ff822cf120a8881dcc160af4169c645",
+      "loose/item_025.py": "a7cd41479d2cdfbb40101b417068d5b34e2e6285c31fd8fee99331157232fc32",
+      "loose/item_026.py": "a98767f4b2eaf9253a5bbef99075ddceeef1eaa8613f6feda1afa8c34b8a49dd",
+      "loose/item_027.py": "538bbff14ba1a607a83e09b263ca8a580d9776bb53cbde5593276135f76c35c8",
+      "loose/item_028.py": "9d9ac3db0b11621be073b88b3461463224b52402aec8d216da85d5723f6de388",
+      "loose/item_029.py": "73a906ba3023606d9d74dc5df985a1a2d2871b75910db7a7235474007262ec5f",
+      "loose/item_030.py": "f6ec4cc865480e782083699a71c3ada07e994222d2536c3197f8d146fabccdc9",
+      "loose/item_031.py": "2146c165ad98331af78c6d759981c572e313d929a9deab195c7babe221073416",
+      "loose/item_032.py": "8c9ce09133d13076c6efacf758c185a8dd04d5e60b711952b98ee933e75871fc",
+      "loose/item_033.py": "7b72665c6d68a37ccf563d62fac38b8981fc06cec61dfdd4a054b742823f5f06",
+      "loose/item_034.py": "55a558064d6674aeacd2278042fade7072cc947634d3480d0d53dc078f13ddad",
+      "loose/item_035.py": "e4f6b3e4cff58a1cd1c2767a44772ac7248782f8ac8bb64e7190be50e943679e",
+      "loose/item_036.py": "7c79621016e97977d2206af54c58720e0f1a4db13c5c1b9dd178dddf6f82c3d2",
+      "loose/item_037.py": "58edcc24c2ba555b6519de1e2c09c3cf08bc22b0d7f055c40b3be11fbedb5245",
+      "loose/item_038.py": "a6388a9bd3017a7c6fb88ec7a1353b5e52502d4807e6245e7d668486a2be1d65",
+      "loose/item_039.py": "ed52ffbb27f2e1c75ae54939256836f4246b0fa84816f1754f4b15bf4f0d8a1f",
+      "loose/item_040.py": "eedeed8bc832169b06efb4e0e58f56acd6df5a609c628293a3b231df321d0b45",
+      "loose/item_041.py": "69dc1bd6ad7824aa81158deeddc047401d99cc726b0a07be35ab80b82ffae4d5",
+      "loose/item_042.py": "77fa36848dda654d8c832a06c97159444f092ea0b5239ab82b4a317b9bd904a3",
+      "loose/item_043.py": "ab31add322ba915f10ebacc967976ccfb98b047b55c8335bd8bc267705f834e4",
+      "loose/item_044.py": "3a5b3b448118c011bc0f8af98da82717f24218397a569632a32fe4915d851eaa",
+      "notes/русский_<tag>.txt": "e80191db540677e9d78edba40cfcdece62c427ed7d7e3eb32c39ddfa0c2a7b9d",
+      "operator-excluded.txt": "9bdc004d7a2f32b00257f0d459a3707b371e95927d1b7efd7789680927df840c",
+      "oversize.dat": "9e6f2a1d52dc310dd448df7330c5c22ca0b410d683c7a0443ff2c5ceb436b3c8",
+      "parse_failed.py": "1863337521928bb02a4000cb21be4d6e481f181e8a3a038d04035c15beb69145",
+      "pkg/__init__.py": "bb263ac652a51808e5dd6bac23012c571f3c7c1173aa503e0034db5970c31986",
+      "service.py": "11dd18013ff9563ee8573cc0b5dbf735818221e7873f62c1d09c999d09546009",
+      "tests/test_a.py": "6c95a541746ab0d5143790548e7ecb4d1780564a185c6851668c32beabc25d25",
+      "tests/test_c.py": "7a23e854e8360a6a18a4a44c4ed13e4f1410231f6d2489ef128d776f09a5686f",
+      "ui/widget.ts": "9ddb6bd07b7abf7a80665fe2c21fb3bc80c9b884cc2a6529b51d050f49773790",
+      "vendor/module": "9a2625e88f49c4fc8c0c4b17209eda8dd12887e66a4c7befdeacc489ab5c00e6"
+    }
+  },
+  "raw_sources": [
+    {
+      "path": "binary_source.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_000.bin",
+      "bytes": 5028,
+      "sha256": "c74dcc7f05b7b393bd14841ab6ac62d4a4ba7955b3d6210affc9161f4ec6bd97"
+    },
+    {
+      "path": "contracts/task.schema.json",
+      "raw_path": "fixtures/grouping_golden/raw/source_001.bin",
+      "bytes": 43,
+      "sha256": "ee8567d92551ff281c8b76c52c2f5a9e5360a006c19913337f59410a1efc0a04"
+    },
+    {
+      "path": "dangerous.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_002.bin",
+      "bytes": 52,
+      "sha256": "8318204673a6bd8b0b7497a3495e285c25fd605abb2d0fa577a7ff7b200b7512"
+    },
+    {
+      "path": "empty.txt",
+      "raw_path": "fixtures/grouping_golden/raw/source_003.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "importers/ambiguous.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_004.bin",
+      "bytes": 14,
+      "sha256": "45fd7db6c506033c35b568807331194d34d3605d98e716b15b284e0bf9ea540a"
+    },
+    {
+      "path": "importers/dynamic.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_005.bin",
+      "bytes": 32,
+      "sha256": "920fe2ec4790e8ebd80dd7c066ce7f0d23b6d51fc991cdd85e34855d6af584be"
+    },
+    {
+      "path": "importers/forbidden_target.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_006.bin",
+      "bytes": 21,
+      "sha256": "e6228591d1567a7996e0d8d1b0aeec04ee4a547ba0624037352e2270dd614c43"
+    },
+    {
+      "path": "importers/missing.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_007.bin",
+      "bytes": 20,
+      "sha256": "64bf43a0d7f2b562341b8eb8bcf4f441b6be2a7908a0e080c9d40017c1d83be9"
+    },
+    {
+      "path": "lfs_code.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_008.bin",
+      "bytes": 131,
+      "sha256": "0ebfa2a3d7de32b0fdd7adda57bb74a74a82d4e58c1f05c139926a0e7840ad8a"
+    },
+    {
+      "path": "libA/shared.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_009.bin",
+      "bytes": 12,
+      "sha256": "50255bb560c22871fda3eb92da65cea7ac15a0eb8f624b47e2fcc40afccc5ef1"
+    },
+    {
+      "path": "libB/shared.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_010.bin",
+      "bytes": 12,
+      "sha256": "ed4d202c27aaa2e0018e07c83fc4aed8394ffccbb0b7c2f1bff33b7038a90805"
+    },
+    {
+      "path": "loose/item_000.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_012.bin",
+      "bytes": 10,
+      "sha256": "f40984649caa6bf7bc818863f0e210b68e3b00f16dfc99997f1bd226c34b9c34"
+    },
+    {
+      "path": "loose/item_001.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_013.bin",
+      "bytes": 10,
+      "sha256": "e13df8c44af5dea1e412403910b99cc5a48f2ccbf68a66b3374d6ab9cef9fc65"
+    },
+    {
+      "path": "loose/item_002.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_014.bin",
+      "bytes": 10,
+      "sha256": "3da6c4b355804b265ecef19dfe5945fe2790a8cc38dc9d0547fb1634c94cbbe7"
+    },
+    {
+      "path": "loose/item_003.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_015.bin",
+      "bytes": 10,
+      "sha256": "b7286676d4708b372b1aa8922455b9070ca83d565120add116ceb6d3a1272314"
+    },
+    {
+      "path": "loose/item_004.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_016.bin",
+      "bytes": 10,
+      "sha256": "0b7f2af2cefe42be399646e5425f921a34d703504e0720f702f2747eace5ff40"
+    },
+    {
+      "path": "loose/item_005.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_017.bin",
+      "bytes": 10,
+      "sha256": "d732ea776c80bfb7bd33ae016cf3ada47ae1f4775fe63435ad744dd34e054a74"
+    },
+    {
+      "path": "loose/item_006.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_018.bin",
+      "bytes": 10,
+      "sha256": "39a440e51a2774fc5d5b65a695e631e922762dd4b8e59c457007fd426a1c69a2"
+    },
+    {
+      "path": "loose/item_007.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_019.bin",
+      "bytes": 10,
+      "sha256": "76b26c40fd1de8995c9a5457c2bd4cf363c42d1f88a66f4d583bc10295f2062a"
+    },
+    {
+      "path": "loose/item_008.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_020.bin",
+      "bytes": 10,
+      "sha256": "e7faa5ee5d11631d710fae733219ade28305ad5beb5d5ee607fc586792f744bf"
+    },
+    {
+      "path": "loose/item_009.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_021.bin",
+      "bytes": 10,
+      "sha256": "382ff38e2f7ae4f5b1ff2773d1d9e3481ca62264bc60061c60142e9ef20a3026"
+    },
+    {
+      "path": "loose/item_010.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_022.bin",
+      "bytes": 11,
+      "sha256": "240e87a09cd5f710c6402878a198696080e0ee4d183db76d714a4981fb31f295"
+    },
+    {
+      "path": "loose/item_011.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_023.bin",
+      "bytes": 11,
+      "sha256": "4d411a302a03aae11d89bbaf1e57eaf4713fc802752316eb0082c4c6016690f0"
+    },
+    {
+      "path": "loose/item_012.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_024.bin",
+      "bytes": 11,
+      "sha256": "7358c04974fc4086fd6e35d875a737a13d468d49737aecb932836b6165258c64"
+    },
+    {
+      "path": "loose/item_013.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_025.bin",
+      "bytes": 11,
+      "sha256": "4e50eef146fd0ee9147a749220b38cd82745872a5b3ea7af5cabe79de4a094cf"
+    },
+    {
+      "path": "loose/item_014.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_026.bin",
+      "bytes": 11,
+      "sha256": "81caeeb1652707cbf799160d49a0d9faec37c65c18828acb95ff6d73b69c3989"
+    },
+    {
+      "path": "loose/item_015.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_027.bin",
+      "bytes": 11,
+      "sha256": "9f777d26c649d1658a32a1e3eb4ba836dec1e466cca764990678d3194b24d821"
+    },
+    {
+      "path": "loose/item_016.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_028.bin",
+      "bytes": 11,
+      "sha256": "6e84455cb3145670c5175c74be18eef16cfe0b07a2ca1a381cf30ce6e8f8e107"
+    },
+    {
+      "path": "loose/item_017.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_029.bin",
+      "bytes": 11,
+      "sha256": "3e29430f1f5190ce5b49d92306ff0a807804a34c425ce0eca201f29817ad5015"
+    },
+    {
+      "path": "loose/item_018.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_030.bin",
+      "bytes": 11,
+      "sha256": "b9b0da1cf6040aa041cc4a7d643e4dde36c958c944b362b36978885483c9acdb"
+    },
+    {
+      "path": "loose/item_019.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_031.bin",
+      "bytes": 11,
+      "sha256": "b2a8f1c1adee8b7d0b1ce6e0658f47eb241672007871e5ec524544522c8f2aef"
+    },
+    {
+      "path": "loose/item_020.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_032.bin",
+      "bytes": 11,
+      "sha256": "6d96b523bbec1ba8743416b618e4953e9e798de7282a2fe076e65167cc15d4ee"
+    },
+    {
+      "path": "loose/item_021.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_033.bin",
+      "bytes": 11,
+      "sha256": "4f10869d4cc3c0a77f2f6a70537d0ba6f63d92c2ba1995f19cc333a81c88adc1"
+    },
+    {
+      "path": "loose/item_022.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_034.bin",
+      "bytes": 11,
+      "sha256": "3250a5540fe7c314b5ae2314820200a71906d268dd862c4f13c7b712db7b7420"
+    },
+    {
+      "path": "loose/item_023.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_035.bin",
+      "bytes": 11,
+      "sha256": "5efe1b3a3461403f31ca93e6e873d0ca93c8c5ad627f0bb2b1c3f533b70c74cf"
+    },
+    {
+      "path": "loose/item_024.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_036.bin",
+      "bytes": 11,
+      "sha256": "7d3316346d786f635e929086b99e1ffcb25d6db4da6cb75195d69fd042dfd7c6"
+    },
+    {
+      "path": "loose/item_025.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_037.bin",
+      "bytes": 11,
+      "sha256": "12d32428f3d3d4bd032d68689bcbd6a417f8a0d5617a82022451e71ebd74d155"
+    },
+    {
+      "path": "loose/item_026.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_038.bin",
+      "bytes": 11,
+      "sha256": "4a5ddc03c1f89587fd1ab207e4e682136a334bbd788995283685159e9a3e2302"
+    },
+    {
+      "path": "loose/item_027.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_039.bin",
+      "bytes": 11,
+      "sha256": "c24fca0b8d9335673c8b7e5aefc3d083cad0eb218d369008c98456eaa0fea45c"
+    },
+    {
+      "path": "loose/item_028.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_040.bin",
+      "bytes": 11,
+      "sha256": "3a330faadcba34545af3faaff92f5f067b604b5be9aa2369eff9576dd9d4c63f"
+    },
+    {
+      "path": "loose/item_029.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_041.bin",
+      "bytes": 11,
+      "sha256": "4bf91e44430bf94cd306ab36eaa6e93a4f55607ef4a10a78a114be030ace9fe5"
+    },
+    {
+      "path": "loose/item_030.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_042.bin",
+      "bytes": 11,
+      "sha256": "74a26c965f08e492bcc26d61fe24878c36a1cfe5f19d1f7a4883a719479e64a4"
+    },
+    {
+      "path": "loose/item_031.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_043.bin",
+      "bytes": 11,
+      "sha256": "d3e3571d68a1d60d852b4ee4a9cc49f54d7f7b299e7f07e37c35df73a198dfbf"
+    },
+    {
+      "path": "loose/item_032.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_044.bin",
+      "bytes": 11,
+      "sha256": "cfcca21484dad603220c3b46e24a8fa51050d4b7f8a28bd628bb77e71e603a9b"
+    },
+    {
+      "path": "loose/item_033.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_045.bin",
+      "bytes": 11,
+      "sha256": "c8bd7aa5e3e98ca11b2432ee623bd412fb5c49e4e2c66cd1371d4a7b55be871c"
+    },
+    {
+      "path": "loose/item_034.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_046.bin",
+      "bytes": 11,
+      "sha256": "8ac990c28562e5d0d845d5bcc0c43b588ed57abdcbd0aa78f6fbe66e89c0021a"
+    },
+    {
+      "path": "loose/item_035.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_047.bin",
+      "bytes": 11,
+      "sha256": "ec1cdfdb3a237a91f2ca1bafd9a42d772363f5ecf59c0672f138b0f13a3d0d8d"
+    },
+    {
+      "path": "loose/item_036.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_048.bin",
+      "bytes": 11,
+      "sha256": "9e6efacdf2eca782deb00518d126fc0a35e7c4558828bfeec5ce4f59f94ad112"
+    },
+    {
+      "path": "loose/item_037.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_049.bin",
+      "bytes": 11,
+      "sha256": "baef91346d0a2b557617a9dda2b3f905661437f58297423dc71896a79c05b4e5"
+    },
+    {
+      "path": "loose/item_038.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_050.bin",
+      "bytes": 11,
+      "sha256": "6c1f3394adf793e4e0998d8b0a99d4b9afacb00cdf7e2e004d23aa17db0bf5b5"
+    },
+    {
+      "path": "loose/item_039.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_051.bin",
+      "bytes": 11,
+      "sha256": "49a791ece56340afbbeedbe4eaf5402cbc1ce8c1664b694c31ef97873ae301d3"
+    },
+    {
+      "path": "loose/item_040.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_052.bin",
+      "bytes": 11,
+      "sha256": "ee24ef7f34299ec7954aa9ffe1bd4ce846ce83e2a2766f45dcb131a1564f1cbd"
+    },
+    {
+      "path": "loose/item_041.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_053.bin",
+      "bytes": 11,
+      "sha256": "466627a18b456612e348d1a47a5c3351061d0e133f56ca12feb14e3e235c7810"
+    },
+    {
+      "path": "loose/item_042.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_054.bin",
+      "bytes": 11,
+      "sha256": "09cbf5ae13a643a9b023da1035c60c5018731d5d9633a86d61b19b4e3f3aa7eb"
+    },
+    {
+      "path": "loose/item_043.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_055.bin",
+      "bytes": 11,
+      "sha256": "710cacf32a6010d321c2def933e9a86727eee566ca19fe90e9b9840c2704d6b1"
+    },
+    {
+      "path": "loose/item_044.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_056.bin",
+      "bytes": 11,
+      "sha256": "63d011101dd12ef7b42525ef94f16df9aa05751596397134c4bc3437f08b62d9"
+    },
+    {
+      "path": "notes/русский_<tag>.txt",
+      "raw_path": "fixtures/grouping_golden/raw/source_057.bin",
+      "bytes": 59,
+      "sha256": "fc88b8485093b550427442025bf25ad66db360caec54dc439d6d84e1bac6d08d"
+    },
+    {
+      "path": "parse_failed.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_060.bin",
+      "bytes": 29,
+      "sha256": "1448fba8a03c5516c1c0bad1119b7f0610d6f5a3d4ef0817cff73f081ffe3dfb"
+    },
+    {
+      "path": "pkg/__init__.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_061.bin",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "pkg/a.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_062.bin",
+      "bytes": 162548,
+      "sha256": "942e3f3cbf509b3d757e9c740e19aacb08cdc31815210cac8b18d9e6d0c8a217"
+    },
+    {
+      "path": "pkg/b.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_063.bin",
+      "bytes": 44,
+      "sha256": "090ef00caf07868b7e36deab19c0df7ea0251cb3bac6592b15438fc14391b6a0"
+    },
+    {
+      "path": "pkg/c.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_064.bin",
+      "bytes": 45,
+      "sha256": "9fc3d2ad1a27345c516591a683ba813acdee3f895263061c9deab93e14f797dd"
+    },
+    {
+      "path": "service.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_065.bin",
+      "bytes": 50,
+      "sha256": "9e7a405bb9c301a2eec5d6a59a01d37048e8fbb9dd5bec042456ffa201e9a283"
+    },
+    {
+      "path": "tests/test_a.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_066.bin",
+      "bytes": 65,
+      "sha256": "d1a3748f94bde6ea7f0928392de44ecc071edea7e7761be0185f3785fe2a6f97"
+    },
+    {
+      "path": "tests/test_c.py",
+      "raw_path": "fixtures/grouping_golden/raw/source_067.bin",
+      "bytes": 40,
+      "sha256": "f4e054e275adbb4aeb276542e9a752144476e34e618695553074ed7acefc40e7"
+    },
+    {
+      "path": "ui/widget.ts",
+      "raw_path": "fixtures/grouping_golden/raw/source_068.bin",
+      "bytes": 34,
+      "sha256": "ad4a84cabfee79819b4646e215b8dea6d160581df9591ca07e6a5388eec3a4f6"
+    }
+  ],
+  "cycle_group_id": "00d5279643cfb4854ad0e2d0779c7b1e5889b097ae5d3830b1df44ffa27cf644",
+  "expected_cycle_members": [
+    "pkg/a.py",
+    "pkg/b.py",
+    "pkg/c.py"
+  ],
+  "minimum_cycle_segments": 21,
+  "qualification": "ACTUAL_PLANNER_COMPARISON_NOT_RUN"
+}

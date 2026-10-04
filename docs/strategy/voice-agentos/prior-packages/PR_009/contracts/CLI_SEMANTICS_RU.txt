@@ -1,0 +1,20 @@
+PROPOSED CLI SEMANTICS, EXACT COMMAND NAMES FREEZE ON ACTUAL OWNER
+Existing route: content_lab.py ingest-chatgpt --file selected.json --store STORE
+               --namespace selected --source-key export-main
+source-key is optional for existing callers; explicit key recommended for lineage.
+Compatibility key = file:SHA256(canonical absolute local path UTF8); path rename
+means new source identity unless explicit key supplied. Raw blob still deduplicated.
+
+Inspect metadata by source version/extraction ID, paginated ≤100 rows; raw bytes
+do not appear in stdout/Native message. Return original hash/size/disposition,
+extractor key, observed-node/attachment counts/gaps, selected scope, remote UNKNOWN.
+
+Read original to explicit local destination by source-version identity. Verify raw
+hash+length before publish. Write temporary file on target volume, fsync, atomic
+replace; existing destination requires explicit overwrite. Failure preserves
+previous destination and returns explicit failure. No source-key-derived path.
+
+Captured invalid input: state=ORIGINAL_RETAINED_EXTRACTION_ERROR, original_retained=true,
+derived_heads_changed=false. Storage rollback: state=IMPORT_STORAGE_ERROR,
+original_retained=false. Post-commit receipt failure: state=COMMITTED_WITH_RECEIPT_WARNING.
+No identity/store migration baked into Windows/Native transport in this package.
