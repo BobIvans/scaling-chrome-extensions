@@ -1,0 +1,49 @@
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-21",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Записывай мою работу с AI и репозиторием",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "voice intent transcript",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "visible DOM or UIA text",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "file/Git events",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_4",
+      "description": "terminal test receipts",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Per-channel source/version/sequence; не терять late events",
+  "materialization_contract_ru": "Наблюдения в отдельных append keys; общий контекст — отдельная derived view",
+  "failure_injection_ru": "Один канал теряет связь после первых событий",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}

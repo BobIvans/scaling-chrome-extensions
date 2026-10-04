@@ -1,0 +1,187 @@
+{
+  "number": 12,
+  "package_id": "ROADMAP-PR-012",
+  "title": "Repo engine до конца: Core jobs, streaming, полные страницы, delta, CAS и resume",
+  "user_outcome": "Свести №1–4 в устойчивый repo lifecycle, закрыть paging/delta/history ограничения и добавить reuse/invalidation, сохранив готовый exporter и inventory.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    1,
+    2,
+    3,
+    4,
+    11
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Долгие repo-задания через существующий Core: прогресс, отмена и resume",
+      "lane": "Репозиторий",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Registered scan/inventory job в текущем Core",
+        "START/STATUS/PAUSE/RESUME/CANCEL возвращают job identity",
+        "Перезапуск клиента/процесса и проверяемые checkpoints"
+      ],
+      "acceptance": [
+        "UI остаётся отзывчивым при долгом Git tree",
+        "Disconnect не теряет job identity",
+        "Cancel не оживает после restart",
+        "Повтор START не создаёт второй job",
+        "Inventory/capture используют владельцев №1/4",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Native progress и streaming START уже есть в main; проверить недостающий durable lifecycle. Не создавать второй scheduler/executor и не переделывать inventory.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "LAYA4-002"
+      ],
+      "feature_ids": [],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-02"
+      ],
+      "workstream_id": "WS-002",
+      "parent_package": "ROADMAP-PR-012",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [],
+      "original_package_inputs": [
+        1,
+        4
+      ]
+    },
+    {
+      "title": "Полная выдача repo, delta и истории без скрытых общих лимитов",
+      "lane": "Репозиторий",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Полная пагинация snapshots, selections и delta paths",
+        "Потоковые проверки всего manifest и экспорт через №2/3",
+        "Аудит всех entrypoints на cap, потерю хвоста и накопление памяти"
+      ],
+      "acceptance": [
+        "Более 20 snapshots и более 20 delta paths доступны до EOF",
+        "Точное восстановление последнего source и последнего chunk",
+        "Размер page/frame ограничивает порцию, а не корпус",
+        "Fault/disk-full не публикует частичный успех",
+        "Нет повторной реализации уже потоковых blob/index/proof путей",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "В main уже потоковые blobs, index_matches_head и verify_roundtrip_db. Реальные остатки: list_snapshots LIMIT 20 и snapshot_changes с массивами и [:20]. Инвалидация производных и CAS — №15.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "LAYA4-003",
+        "LAYA4-009",
+        "LAYA4-010"
+      ],
+      "feature_ids": [
+        "LIB-002",
+        "LIB-003",
+        "LIB-004",
+        "LIB-024"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-02",
+        "GOAL5-03"
+      ],
+      "workstream_id": "WS-003",
+      "parent_package": "ROADMAP-PR-012",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-002"
+      ],
+      "original_package_inputs": [
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "title": "Инкрементальные snapshots, CAS, delta-context и инвалидация доказательств",
+      "lane": "Репозиторий",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Переиспользование immutable blobs без потери нескольких origins",
+        "Версии commit/dirty/history и rename/delete semantics",
+        "Dependency-based stale graph для extraction, packet, tests и skills"
+      ],
+      "acceptance": [
+        "Неизменившиеся bytes переиспользуются по hash",
+        "Изменения сохраняют предыдущие версии",
+        "Delta перечисляет added/replaced/deleted ranges полностью",
+        "Инвалидируются зависимые evidence, независимые сохраняются",
+        "Dirty/LFS/submodule scope объявлен отдельно от HEAD",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "№12 отвечает за полную выдачу и потоковую обработку; здесь — semantics reuse и invalidation. Получение специальных payloads принадлежит №16.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "EVO3-010",
+        "TAB4-18",
+        "LAYA4-011",
+        "LAYA4-012"
+      ],
+      "feature_ids": [
+        "LIB-008",
+        "LIB-011",
+        "LIB-023",
+        "LIB-028"
+      ],
+      "decision_ids": [
+        "DEC5-08",
+        "DEC5-09"
+      ],
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-15"
+      ],
+      "workstream_id": "WS-006",
+      "parent_package": "ROADMAP-PR-012",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-003",
+        "WS-005"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "EVO3-010",
+    "TAB4-18",
+    "LAYA4-002",
+    "LAYA4-003",
+    "LAYA4-009",
+    "LAYA4-010",
+    "LAYA4-011",
+    "LAYA4-012"
+  ],
+  "feature_ids": [
+    "LIB-002",
+    "LIB-003",
+    "LIB-004",
+    "LIB-008",
+    "LIB-011",
+    "LIB-023",
+    "LIB-024",
+    "LIB-028"
+  ],
+  "decision_ids": [
+    "DEC5-08",
+    "DEC5-09"
+  ],
+  "goal_ids": [
+    "GOAL5-02",
+    "GOAL5-03",
+    "GOAL5-05",
+    "GOAL5-15"
+  ]
+}

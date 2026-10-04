@@ -1,0 +1,35 @@
+{
+  "schema": "agentos.parallel-policy/0.3",
+  "capture": {
+    "mode": "COMPLEMENTARY_UNION",
+    "producers": "multiple",
+    "cancel_on_first": false,
+    "raw_history": "immutable_with_user_controlled_retention",
+    "dedup": "bytes_only_preserve_all_provenance"
+  },
+  "retrieval": {
+    "mode": "REQUIRED_EVIDENCE_JOIN",
+    "allow_early_ready": true,
+    "late_updates": "versioned_delta"
+  },
+  "same_answer_lookup": {
+    "mode": "FIRST_VERIFIED",
+    "hedge": "adaptive_after_observed_threshold",
+    "verifier": "independent_source_bound_checks"
+  },
+  "independent_actions": {
+    "mode": "PARTITIONED_INDEPENDENT_EFFECTS",
+    "requires": "canonical_disjoint_read_write_scopes"
+  },
+  "shared_effect": {
+    "mode": "PREPARE_COMMIT",
+    "writers_per_effect_target": 1,
+    "unknown_response": "reconcile_before_retry"
+  },
+  "laya": {
+    "role": "advisory",
+    "may_grant_permissions": false
+  },
+  "external_writes_enabled": false,
+  "native_laya_import_format": false
+}

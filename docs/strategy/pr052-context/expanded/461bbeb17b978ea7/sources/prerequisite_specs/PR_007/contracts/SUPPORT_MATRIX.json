@@ -1,0 +1,119 @@
+{
+  "schema": "roadmap.js-ts-support-matrix.v1",
+  "status": "PROPOSED_NOT_IMPLEMENTED",
+  "source_extensions": [
+    ".js",
+    ".mjs",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".mts",
+    ".cts",
+    ".cjs"
+  ],
+  "resolver": "RELATIVE_SOURCE_EXACT_V1",
+  "resolution_scope": "MANIFEST_SOURCE_PATH_ONLY",
+  "node_or_typescript_resolution_claim": false,
+  "forms": [
+    {
+      "form": "ESM_IMPORT",
+      "support": "EXTRACT_SUPPORTED",
+      "note": "Relative explicit source path; runtime/compiler/symbol binding not asserted"
+    },
+    {
+      "form": "ESM_SIDE_EFFECT",
+      "support": "EXTRACT_SUPPORTED",
+      "note": "Same conservative resolver"
+    },
+    {
+      "form": "ESM_REEXPORT",
+      "support": "EXTRACT_SUPPORTED",
+      "note": "File reference only; exported symbol unverified"
+    },
+    {
+      "form": "TS_IMPORT_TYPE",
+      "support": "EXTRACT_SUPPORTED",
+      "note": "TYPE_ONLY; excluded from runtime SCC"
+    },
+    {
+      "form": "TS_EXPORT_TYPE",
+      "support": "EXTRACT_SUPPORTED",
+      "note": "TYPE_ONLY; exported symbol unverified"
+    },
+    {
+      "form": "TS_RUNTIME_EXTENSION",
+      "support": "UNRESOLVED",
+      "note": "TYPE_RESOLUTION_POLICY_REQUIRED; no .js->.ts guess"
+    },
+    {
+      "form": "COMMONJS_REQUIRE",
+      "support": "UNRESOLVED",
+      "note": "COMMONJS_NOT_QUALIFIED; includes shadowed require"
+    },
+    {
+      "form": "IMPORT_EQUALS",
+      "support": "UNRESOLVED",
+      "note": "COMMONJS_NOT_QUALIFIED"
+    },
+    {
+      "form": "DYNAMIC_IMPORT",
+      "support": "UNRESOLVED",
+      "note": "DYNAMIC_IMPORT_UNRESOLVED even literal"
+    },
+    {
+      "form": "COMPUTED_IMPORT",
+      "support": "UNRESOLVED",
+      "note": "DYNAMIC_IMPORT_UNRESOLVED"
+    },
+    {
+      "form": "ALIAS_IMPORT",
+      "support": "UNRESOLVED",
+      "note": "NON_RELATIVE_POLICY_NOT_QUALIFIED"
+    },
+    {
+      "form": "WORKSPACE_PACKAGE",
+      "support": "UNRESOLVED",
+      "note": "NON_RELATIVE_POLICY_NOT_QUALIFIED"
+    },
+    {
+      "form": "EXTENSIONLESS",
+      "support": "UNRESOLVED",
+      "note": "EXTENSION_RULE_NOT_QUALIFIED"
+    },
+    {
+      "form": "DIRECTORY_IMPORT",
+      "support": "UNRESOLVED",
+      "note": "EXTENSION_RULE_NOT_QUALIFIED"
+    },
+    {
+      "form": "QUERY_OR_FRAGMENT",
+      "support": "UNRESOLVED",
+      "note": "SPECIFIER_FORM_UNSUPPORTED"
+    },
+    {
+      "form": "ASSET_JSON",
+      "support": "UNRESOLVED",
+      "note": "TARGET_EXTENSION_UNSUPPORTED"
+    },
+    {
+      "form": "SCOPE_ESCAPE",
+      "support": "UNRESOLVED",
+      "note": "SOURCE_SCOPE_ESCAPE"
+    },
+    {
+      "form": "TARGET_INELIGIBLE",
+      "support": "UNRESOLVED",
+      "note": "TARGET_NOT_ELIGIBLE"
+    },
+    {
+      "form": "SYNTAX_ERROR",
+      "support": "FILE_FALLBACK",
+      "note": "PARSER_FAILED; no provisional exact edges"
+    },
+    {
+      "form": "COMMENT_OR_STRING",
+      "support": "NO_REFERENCE",
+      "note": "AST rejects lexical fake import matches"
+    }
+  ]
+}

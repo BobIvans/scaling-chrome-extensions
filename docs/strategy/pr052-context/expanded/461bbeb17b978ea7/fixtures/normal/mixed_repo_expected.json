@@ -1,0 +1,55 @@
+{
+  "interpretation": "Starter oracle for explicit bundler+workspace map fixture; not an independent 200-case holdout",
+  "expected_relations": [
+    {
+      "source": "src/main.ts",
+      "specifier": "@local/value",
+      "target": "src/value.ts",
+      "outcome": "RESOLVED_LOCAL"
+    },
+    {
+      "source": "src/main.ts",
+      "specifier": "@fixture/core",
+      "target": "packages/core/index.mjs",
+      "outcome": "RESOLVED_LOCAL"
+    },
+    {
+      "source": "src/main.ts",
+      "specifier": "./shape",
+      "target": "src/shape.ts",
+      "outcome": "RESOLVED_LOCAL",
+      "role": "TYPE_ONLY_IMPORT"
+    },
+    {
+      "source": "src/main.ts",
+      "specifier": null,
+      "target": null,
+      "outcome": "DYNAMIC"
+    },
+    {
+      "source": "src/cjs.cjs",
+      "specifier": "./value.ts",
+      "target": "src/value.ts",
+      "outcome": "RESOLVED_LOCAL"
+    },
+    {
+      "source": "src/cjs.cjs",
+      "specifier": "not-a-module",
+      "target": null,
+      "outcome": "SHADOWED_REQUIRE_NOT_MODULE_DEPENDENCY"
+    },
+    {
+      "source": "src/cjs.cjs",
+      "specifier": null,
+      "target": null,
+      "outcome": "DYNAMIC"
+    }
+  ],
+  "python_cycle": [
+    "py/a.py",
+    "py/b.py",
+    "py/c.py"
+  ],
+  "contract_links_evidence": "DECLARED",
+  "test_coverage": "NOT_MEASURED"
+}

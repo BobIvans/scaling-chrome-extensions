@@ -1,0 +1,152 @@
+[
+  {
+    "id": "DEC5-01",
+    "title": "Desktop transport, упаковка и владелец процесса",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Для прототипа: per-user desktop shell с typed stdio IPC к существующему Core; bootstrap и store-path едины; shell выбирается отдельным packaging spike без миграции DB owner.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Desktop/runtime owner",
+    "decision_acceptance": [
+      "Зафиксированы shell/runtime versions, IPC schema, process ownership и пути профиля/данных.",
+      "Установка и повторный запуск проверены на конкретной Windows сборке; второй клиент не создаёт второго writer.",
+      "Показаны offline режим и восстановление после crash без потери task references."
+    ],
+    "next_experiment": "Сравнить два минимальных кандидата shell на Dell: install/uninstall, closed-Chrome start, reconnect после crash, один writer и открытие большого каталога; опубликовать фактические boot/RAM результаты.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-02",
+    "title": "Версия scope/auth и отделение контекста от полномочий",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Typed immutable profile revision: зарегистрированные sources/targets/effects, budget/time ceilings, revocation; изменение доверенного profile доступно пользователю/оператору, а не imported context.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Policy/trust owner",
+    "decision_acceptance": [
+      "Schema и canonical digest policy version зафиксированы.",
+      "Разрешённый повтор в неизменном scope не требует нового решения; новая цель/данные/права не получают старый grant.",
+      "Revocation semantics покрывают pending intent, completed remote effect и queued remaining work."
+    ],
+    "next_experiment": "Прогнать profile checker на разрешённых повторных действиях, смене repo/account, stale grants, отозванном scope и текстовой инструкции из исходника расширить права.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-05",
+    "title": "Envelope многотомного контекста и бюджет транспорта",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Immutable manifest part IDs/hashes/ranges/order; byte budget строгий, token estimate явно приблизительный; provider profiles получают limits из qualification; prepared/sent/received/claimed_used различаются.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Context/transport contract owner",
+    "decision_acceptance": [
+      "Schema manifest и continuation request заданы; packet identity не зависит от mutable UI поля.",
+      "Все исходные selected bytes восстановимы либо имеют explicit reason отсутствия.",
+      "Для каждого provider указаны measured/unknown limits и сила каждого receipt вида."
+    ],
+    "next_experiment": "В corpus изменить размер parts, прервать загрузку, повторить/пропустить том, дать wrong packet ID; реконструировать selected originals по manifests и запросить конкретный missing range.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-10",
+    "title": "Версионирование схем, migration rehearsal и rollback",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Migrations принадлежит существующему store owner; copy/rehearsal до активации; snapshot/journal для recovery; job и evidence pinned к schema/profile revisions; unknown source fields сохраняются.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Store migration owner",
+    "decision_acceptance": [
+      "Зафиксированы min/max schema compatibility, migration steps, recovery point и irreversible cases.",
+      "Репетиция не изменяет production store; interrupted migration имеет однозначное recovery state.",
+      "После восстановления ссылки goals/tasks/evidence валидны; incompatible job не возобновляется silently."
+    ],
+    "next_experiment": "Fixture store с tasks, history, aliases и unfinished jobs: interrupted migration, newer schema opening old app, unknown importer field, restore и resumable state checks.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-11",
+    "title": "Согласованный backup и полное восстановление",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Локальный независимый backup artifact из consistent SQLite snapshot и referenced objects с hashes/schema versions; destination явный; encryption profile отдельно проверяется; restore сначала в новый каталог.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Backup/recovery owner",
+    "decision_acceptance": [
+      "Backup manifest перечисляет DB revision, objects, schemas, state boundary и проверенные hashes.",
+      "Restore обнаруживает отсутствующий/повреждённый object и не выдаёт partial restore за complete.",
+      "Политика ключей/destination/access явна; проверенный restore имеет receipt."
+    ],
+    "next_experiment": "Сделать backup при import/job writes, восстановить на clean path, намеренно удалить один blob и повредить manifest; при encrypted profile отдельно проверить восстановление ключа без секретов в report.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-12",
+    "title": "Retention, tombstones и пределы удаления",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Originals сохраняются до явного правила/выбора удаления; caches/extractions/audio temp имеют отдельные policies. Alias удаляется отдельно от общего blob; tombstone учитывается в derivation/search/restore.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Data lifecycle owner",
+    "decision_acceptance": [
+      "Retention classes, inheritance, TTL conditions и delete semantics versioned.",
+      "Reachable shared blob сохраняется; удалённые source/derivatives не участвуют в обычном retrieval.",
+      "UI перечисляет external/backups copies и известные ограничения удаления."
+    ],
+    "next_experiment": "Удалить source с shared identical blob, transcripts/chunks/search entries и backed-up copy; restore после tombstone и убедиться, что data не resurrected silently.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-13",
+    "title": "Share projection, redaction и recipient binding",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "ShareProjection выбирает sources/ranges и recipient scope; placeholders/redaction mapping принадлежат derived export; raw originals локальны; document/recipient diff invalidates preview approval.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Privacy/context export owner",
+    "decision_acceptance": [
+      "Projection/redaction/recipient schemas и dry-run preview зафиксированы.",
+      "Original fidelity не меняется; export показывает omissions и преобразования.",
+      "Изменившийся recipient/document не использует preview прежней версии; secret references не разворачиваются из context автоматически."
+    ],
+    "next_experiment": "Corpus вложенных quotations/secrets, числа/единицы/таблицы, смена recipient после preview и stale source revision; проверить projection hashes и leak/fidelity report.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-14",
+    "title": "Lifetime retrieval, временные версии и противоречия",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Deterministic FTS/path/ID/time/project filters; bounded ranges и WHY_THIS_PACKET; optional model/rerank отдельно измеряется; conflicts и validity periods показываются рядом, не стираются.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Retrieval/knowledge owner",
+    "decision_acceptance": [
+      "Retrieval policy задаёт tie-breaks, temporal rules, filters и provenance/exclusion explanations.",
+      "Ответ приводит exact source spans и known gaps; contradiction не скрыта единственным уверенным summary.",
+      "Публикуются scope/corpus и actual retrieval measurements без обещания unlimited context."
+    ],
+    "next_experiment": "Заморозить пользовательские вопросы на выбранном корпусе: older preference/newer correction, project collision, duplicate quote, hard negative и missing source. Сравнить manual/FTS/model modes.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-18",
+    "title": "Доступность, focus и независимый STOP",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Все основные действия доступны клавиатурой/текстом и semantic controls; локальный STOP отдельным каналом; реальный input пользователя уступает focus и приостанавливает UI automation.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Accessibility/device qualification owner",
+    "decision_acceptance": [
+      "Control/focus/stop contracts и поддерживаемые assistive modes заданы.",
+      "Нельзя остаться без работающего stop/text пути при сбое ASR или браузера.",
+      "Receipt фиксирует приложение/устройство/assistive mode и известные ограничения."
+    ],
+    "next_experiment": "На Windows выполнить keyboard-only и screen-reader task creation/recovery, потерю focus, user typing во время draft, зависший ASR/worker и local STOP; измерить stop/recovery, не утверждать непроверенные timings.",
+    "receipt": null
+  },
+  {
+    "id": "DEC5-19",
+    "title": "Capability registry и связь с installed build",
+    "source_status": "PROPOSED_NOT_DECIDED",
+    "proposed_default": "Stable capability ID/version, typed arguments/effects/resources/profile/verifier и installed artifact digest; discovery -> candidate -> qualified -> enabled. Наличие файла и AI описание не включает execution.",
+    "status": "OPEN_PENDING_CODE_OR_DEVICE_EVIDENCE",
+    "owner_role": "Capability/runtime owner",
+    "decision_acceptance": [
+      "Capability/skill schemas и compatibility transitions описаны.",
+      "Новая capability не расширяет полномочия старого profile; missing dependency/qualification видны.",
+      "Execution receipt связан с actual installed artifact и зарегистрированным verifier."
+    ],
+    "next_experiment": "Изменить args/permissions/dependency и installed digest; попробовать old skill и declared-but-unimplemented capability; сверить registry diff, invalidate/requalify и execution owner.",
+    "receipt": null
+  }
+]

@@ -1,0 +1,61 @@
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W06",
+  "title_ru": "Собрать текущий план дня",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "selected projects and day"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "load_active_goals",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "resolve_blockers",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "respect_dependencies",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "suggest_time_slots",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "record_operator_edits",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "daily_plan.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}

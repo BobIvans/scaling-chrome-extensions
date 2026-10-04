@@ -1,0 +1,136 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 14,
+  "job_id": "occ-f14-ui-20261001T0736Z",
+  "recorded_at_utc": "2026-10-01T07:59:37.930Z",
+  "state": "DONE",
+  "completion_scope": "F14 code and deterministic local/exact-head CI contracts, not installed Windows qualification",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f14-durable-library-ui",
+  "base_branch": "codex/native-durable-host-20261001",
+  "base_sha": "898f067bb0fabc2447caac45354b68b2f22cd5e7",
+  "base_pr": 14,
+  "default_branch_sha": "5a2c0c52635ccc549f18031c7b00635e573a7119",
+  "head_sha": "561d7f30bb95541d2404f011201f948cb846c8cf",
+  "tested_tree_sha": "2ffb69b05e32a35062718837abc9554c0688c960",
+  "code_diff_sha256": "dd3e5f3195f7ff3ff473cb86e2f07219c4d348c957549114487c67fcb3a6bc5b",
+  "head_semantics": "head_sha is the exact code commit attested by this receipt. The containing receipt commit is its descendant and needs its own exact-head CI. No self-referential commit SHA is fabricated.",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/15",
+  "pr_number": 15,
+  "draft": true,
+  "merged": false,
+  "preflight": {
+    "open_prs_checked": 13,
+    "remote_baseline_blobs_verified": 78,
+    "agents_files_present": false,
+    "parent_exact_head_ci": "PASS",
+    "overlapping_f14_prs": 0,
+    "prior_runs_at_parent": 0
+  },
+  "existing_owners": [
+    "content-lab/content_lab.py",
+    "content-lab/automation_core.py",
+    "content-lab/native_adapter.py",
+    "agent-bridge/host.mjs"
+  ],
+  "tests": [
+    {
+      "command": "node --test one-click-context/tests/durable-ui.test.mjs",
+      "result": "PASS",
+      "checks": 14,
+      "phase": "initial focused verification before adding two connection regression tests"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 34,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 34,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 68,
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "result": "PASS",
+      "exit_code": 0
+    },
+    {
+      "command": "python one-click-context/scripts/package_chrome_ready.py <temporary-output>",
+      "result": "PASS",
+      "archive_files": 32,
+      "new_module_present": true
+    }
+  ],
+  "final_regression_checks": 136,
+  "new_f14_checks": 16,
+  "checks_overlap_warning": "The initial focused run is included in the later extension regression; do not add 14 to 136.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "561d7f30bb95541d2404f011201f948cb846c8cf",
+    "runs": [
+      {
+        "id": 36833248489,
+        "head_sha": "561d7f30bb95541d2404f011201f948cb846c8cf",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36833248489"
+      }
+    ],
+    "checks": [
+      {
+        "id": 110274480518,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36833248489/job/110274480518"
+      },
+      {
+        "id": 110274480769,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36833248489/job/110274480769"
+      }
+    ]
+  },
+  "verified_behaviors": [
+    "optional v1 capability fallback",
+    "persist intent before enqueue",
+    "same template/taskKey replay after unknown commit",
+    "real SQLite scoped search/current context",
+    "host restart preserves job; cancellation persists",
+    "stale/disconnect/cancel/selection reply rejection",
+    "production attachAgent negotiation and reconnect",
+    "trusted user actions and text-only rendering"
+  ],
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 1,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "Node DOM harness, not a real installed Chrome device test.",
+    "No Windows Chrome installation/nativeMessaging device qualification.",
+    "At most20 known references per profile label, manual refresh, no durable.list.",
+    "Profile label partitions local references but does not attest host/profile identity.",
+    "No voice/ASR/Laya/API/OpenShell/market campaign.",
+    "Legacy renew_windows.ps1 remains pinned to an older revision.",
+    "No CAND card automatically closed; only one verified F14 gap implemented."
+  ],
+  "next_function_number": 15,
+  "next_job": "Audit current head and owners, then implement one bounded local scheduler gap over Core.work; preserve lease/reconciliation and explicit operator setup."
+}

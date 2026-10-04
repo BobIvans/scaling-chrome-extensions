@@ -1,0 +1,194 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed source facts wire record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "snapshot_id",
+    "ordinal",
+    "path",
+    "mode",
+    "kind",
+    "git_oid",
+    "git_size",
+    "disposition",
+    "legacy_reason",
+    "file_sha256",
+    "classifier_version",
+    "format_kind",
+    "text_eligibility",
+    "raw_capture",
+    "raw_integrity",
+    "reasons",
+    "parser",
+    "lfs"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.format-eligibility.v1"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "ordinal": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)$"
+    },
+    "path": {
+      "type": "string"
+    },
+    "mode": {
+      "type": "string"
+    },
+    "kind": {
+      "enum": [
+        "blob",
+        "commit"
+      ]
+    },
+    "git_oid": {
+      "type": "string",
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "git_size": {
+      "oneOf": [
+        {
+          "type": "string",
+          "pattern": "^(0|[1-9][0-9]*)$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "disposition": {
+      "enum": [
+        "INDEXED",
+        "EXCLUDED",
+        "ERROR",
+        "PENDING"
+      ]
+    },
+    "legacy_reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "file_sha256": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "classifier_version": {
+      "const": "utf8-controls-strict-lfs3.v1"
+    },
+    "format_kind": {
+      "enum": [
+        "UTF8_TEXT_CANDIDATE",
+        "EMPTY",
+        "BINARY_CONTROL_HEURISTIC",
+        "NON_UTF8",
+        "LFS_POINTER_V1",
+        "LFS_POINTER_MALFORMED",
+        "LFS_POINTER_UNSUPPORTED",
+        "SYMLINK_METADATA",
+        "SUBMODULE_METADATA",
+        "UNSUPPORTED_PATH_METADATA",
+        "NOT_CLASSIFIED",
+        "LEGACY_UNKNOWN",
+        "CORRUPT_CAPTURE"
+      ]
+    },
+    "text_eligibility": {
+      "enum": [
+        "ELIGIBLE",
+        "INELIGIBLE",
+        "METADATA_ONLY",
+        "UNKNOWN"
+      ]
+    },
+    "raw_capture": {
+      "enum": [
+        "RECORDED",
+        "NOT_CAPTURED",
+        "CORRUPT",
+        "UNKNOWN"
+      ]
+    },
+    "raw_integrity": {
+      "enum": [
+        "NOT_RUN",
+        "PASS",
+        "FAIL"
+      ]
+    },
+    "reasons": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true
+    },
+    "parser": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "lfs": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "payload_sha256",
+            "payload_size",
+            "descriptor_evidence",
+            "payload_availability",
+            "payload_verification"
+          ],
+          "properties": {
+            "payload_sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "payload_size": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "pattern": "^(0|[1-9][0-9]*)$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "descriptor_evidence": {
+              "enum": [
+                "DECLARED_IN_POINTER",
+                "UNPARSED"
+              ]
+            },
+            "payload_availability": {
+              "const": "NOT_CHECKED"
+            },
+            "payload_verification": {
+              "const": "NOT_RUN"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

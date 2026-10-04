@@ -1,0 +1,25 @@
+{
+  "execution_status": "NOT_RUN",
+  "points": [
+    "before Core transaction commit",
+    "after commit before writer lease",
+    "after attach before send intent",
+    "after SEND_ARMED before possible click",
+    "after possible click before observation",
+    "after observation before local receipt commit",
+    "during streaming response",
+    "after result import before acknowledgement",
+    "during correction/admission race",
+    "after lost writer lease",
+    "mic disconnect during capture",
+    "ASR stuck while STOP pressed",
+    "during skill dependency drift"
+  ],
+  "required_results": [
+    "persisted exact revision/attempt/packet identity",
+    "at most one local Send invocation per attempt",
+    "unknown preserved if remote effect possible",
+    "independent keyboard control",
+    "no duplicate imports or old head rollback"
+  ]
+}

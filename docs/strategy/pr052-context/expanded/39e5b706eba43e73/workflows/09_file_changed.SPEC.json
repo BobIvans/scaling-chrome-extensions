@@ -1,0 +1,31 @@
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "09_file_changed",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "hash_changed_source",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "update_version",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "invalidate_dependents",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "rebuild_affected_packs",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "notify_goal_owner",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}

@@ -1,0 +1,35 @@
+{
+  "kind": "SDK_QUESTION_TEMPLATE_NOT_EXECUTABLE_WORKFLOW",
+  "model_runtime_status": "NOT_RUN",
+  "questions": {
+    "next_route": {
+      "type": "choice",
+      "instructions": "Select the next analysis route from the supplied evidence.",
+      "criteria": {
+        "need_context": "Sources or dependencies missing",
+        "static_review": "Code available, no reproducer",
+        "verify_test": "Reproducer ready",
+        "prepare_change": "Evidence supports scoped change",
+        "human_decision": "Goal or authority unresolved"
+      }
+    },
+    "goal_supported": {
+      "type": "noul",
+      "instructions": "Does the supplied evidence support the stated criterion? This probability is advisory and cannot mark verified completion."
+    },
+    "priority": {
+      "type": "score",
+      "instructions": "How urgent is this candidate relative to the current user goal?",
+      "criteria": [
+        "unrelated",
+        "useful later",
+        "blocks current goal"
+      ]
+    }
+  },
+  "postconditions": [
+    "Check truncation and source coverage",
+    "Apply calibrated abstention on held-out tasks",
+    "Use independent verifier for TRUE/FALSE"
+  ]
+}

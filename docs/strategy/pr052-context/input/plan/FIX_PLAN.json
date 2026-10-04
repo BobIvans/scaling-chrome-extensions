@@ -1,0 +1,395 @@
+{
+  "schema": "sce.pr001-021.repair-plan.v1",
+  "status": "READY_FOR_CODEX_IMPLEMENTATION_NOT_EXECUTED",
+  "work_items": [
+    {
+      "id": "FIX-001",
+      "title": "Fresh audit and navigation reconciliation",
+      "type": "DOCUMENTATION_REPAIR",
+      "requires": [],
+      "roadmap_packages": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "owners": [
+        "MASTER_CONTEXT.md",
+        "CODEX_START_HERE.md",
+        "docs/strategy/voice-agentos/handoff",
+        "docs/strategy/pr012-013"
+      ],
+      "work": [
+        "Record merged #49/#51, open conflicting #52 and exact main SHA in a current index.",
+        "Point next-stage navigation to remaining SourceAddress adapters instead of redoing source ledger or checking out a closed #51.",
+        "Keep all dated snapshots and original source wording unchanged."
+      ],
+      "acceptance": [
+        "All 21 roadmap rows and all original 160/164/28/24 IDs survive.",
+        "Current navigation identifies a concrete remaining code checkpoint and existing PR ownership."
+      ]
+    },
+    {
+      "id": "FIX-002",
+      "title": "Resolve PR #52 against current main without losing existing owners",
+      "type": "CONFIRMED_MERGE_BLOCKER",
+      "requires": [
+        "FIX-001"
+      ],
+      "roadmap_packages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21
+      ],
+      "owners": [
+        "agent-bridge/Install.ps1",
+        "agent-bridge/durable.mjs",
+        "content-lab/automation_core.py",
+        "content-lab/context_runtime.py",
+        "content-lab/native_adapter.py",
+        "desktop/OWNED_FILES.json",
+        "desktop/app.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "work": [
+        "Integrate current main into existing branch codex/pr020-021-research-qualification.",
+        "Resolve all nine files by plan/PR52_CONFLICT_RESOLUTIONS.json; include automatically merged files in review.",
+        "Pin Studious #565 exact owner; companion deployment or disabled dependency remains explicit.",
+        "Run shared STOP/action/context/campaign/research tests and installed source-layout checks; refresh both owner CI."
+      ],
+      "acceptance": [
+        "No merge markers and all action/context/campaign/research routes retained.",
+        "Final Core can validate and run both action_plan and studious_research without a second queue or database.",
+        "Generated shipping hashes match installed files and all required current-head checks pass.",
+        "A successful partial offline slice does not change broad OPEN criteria to DONE."
+      ]
+    },
+    {
+      "id": "FIX-003",
+      "title": "Complete PR-010/011 original-first library and provenance graph",
+      "type": "FOUNDATION_IMPLEMENTATION_GAP",
+      "requires": [
+        "FIX-001"
+      ],
+      "roadmap_packages": [
+        10,
+        11
+      ],
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/source_ledger.py",
+        "content-lab/context_library.py",
+        "content-lab/repo_groups.py",
+        "content-lab/repo_js.py",
+        "existing Core/Native/Desktop owners"
+      ],
+      "work": [
+        "Implement a versioned SourceAddress with adapters for ChatGPT originals, context raw spans and FILE/MEDIA ledger; explicitly map repository raw references when consumed.",
+        "Separate source identity/raw object/version/extraction/observation/derived text; preserve old IDs and byte references additively.",
+        "Complete WS-001/007/008/012 importer registry, TXT/folders/archive provenance, scoped historical search, labels/views and goal overlays.",
+        "Complete WS-004/005 alias/workspace/exports/CommonJS resolver and unified Python/JS/TS graph with stable SCC/groups and evidenced smells.",
+        "Use the original PR010_011 plan and criterion matrix; check any compatible SourceAddress work already merged before adding code."
+      ],
+      "acceptance": [
+        "Exact BOM/CRLF/RU/emoji/binary ranges remain readable after restart and migration.",
+        "Namespace/range/hash/version/extraction drift is rejected without returning another source.",
+        "Raw bytes remain addressable even when extraction is unsupported.",
+        "All versions/parts/search/group members traverse to EOF without total-corpus limits.",
+        "Resolver does not execute imported repository code; unknown/dynamic/ambiguous edges remain explicit.",
+        "Every original criterion stays listed and is closed only with its applicable evidence."
+      ]
+    },
+    {
+      "id": "FIX-004",
+      "title": "Finish PR-012/013 lifecycle, full traversal and importers",
+      "type": "DEPENDENT_IMPLEMENTATION_GAP",
+      "requires": [
+        "FIX-003"
+      ],
+      "roadmap_packages": [
+        12,
+        13
+      ],
+      "owners": [
+        "content-lab/repo_scan.py",
+        "content-lab/repo_inventory.py",
+        "content-lab/repo_history.py",
+        "content-lab/source_ledger.py",
+        "canonical Core"
+      ],
+      "work": [
+        "Replace manual Desktop page stepping with registered durable background Core scan/capture where required.",
+        "Persist checkpoints/leases, same-operation acknowledgement recovery and STOP/cancel reconciliation.",
+        "Migrate remaining summary/selection consumers to full traversal; add selective graph-aware derived cache invalidation.",
+        "Add PDF/Office/OCR/media/web/RSS/GitHub importers with exact original and extraction lineage.",
+        "Keep existing source ledger and bounded history/delta code rather than recreating them."
+      ],
+      "acceptance": [
+        "No prefix success; interrupted capture and changed source have explicit states.",
+        "Restart resumes the committed cursor and does not create duplicate effects.",
+        "PDF page/table cell/media time ranges have independent numeric or byte oracles.",
+        "Original 101 combined criteria are retained with actual evidence and named gaps."
+      ]
+    },
+    {
+      "id": "FIX-005",
+      "title": "Qualify downstream contracts on the integrated build",
+      "type": "INTEGRATION_ACCEPTANCE_GAP",
+      "requires": [
+        "FIX-002",
+        "FIX-003",
+        "FIX-004"
+      ],
+      "roadmap_packages": [
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20
+      ],
+      "owners": [
+        "context recovery/packets",
+        "action intent/runtime",
+        "release/campaign owners",
+        "SCE #52",
+        "Studious #565"
+      ],
+      "work": [
+        "Rebind context packets, backup/restore, outbox and campaign inputs to common source identities.",
+        "Exercise mixed actions, context jobs, research and campaign admission with one SQLite/Core STOP fence.",
+        "Verify Laya/ASR/selected Grok-tab contracts only on actual configured adapters; retain unavailable adapters as named gaps.",
+        "Run linked SCE→Studious replay against exact current source/dataset/config bindings, preserving negative and unknown trials.",
+        "Keep real acquisition/PAPER/runtime evidence separate from offline fixture arithmetic."
+      ],
+      "acceptance": [
+        "No new database/worker/STOP authority appears.",
+        "Lost ack/restart/unknown-send does not retry an external effect blindly.",
+        "Final build and both owner source SHAs match replay receipts.",
+        "Original 322/220/147/1133 source ledgers remain scoped and are not summed as unique completed criteria."
+      ]
+    },
+    {
+      "id": "FIX-006",
+      "title": "Windows/Dell qualification and criterion-specific product closure",
+      "type": "DEVICE_AND_PRODUCT_EVIDENCE_GAP",
+      "requires": [
+        "FIX-005"
+      ],
+      "roadmap_packages": [
+        21
+      ],
+      "owners": [
+        "desktop installer",
+        "original WS-034/035/036",
+        "criterion evidence owners"
+      ],
+      "work": [
+        "Run actual Windows 11/Dell install, upgrade, uninstall, crash/sleep/restart/restore/STOP and microphone/hotkey/focus scenarios.",
+        "Measure increasing corpus sizes, memory/backpressure, all tails and exact versions without arbitrary total-document caps.",
+        "Compare frozen manual/no-action baselines and context ablations, counting every started attempt.",
+        "Reconcile all 160 tasks, 164 feature cards, 28 goals and 24 decisions against independently applicable receipts."
+      ],
+      "acceptance": [
+        "Hosted Windows CI is recorded separately from actual installed-device evidence.",
+        "NOT_RUN/BLOCKED/DEFERRED remain visible.",
+        "Each required criterion has a verifier or a precise open blocker; no model DONE label closes semantic acceptance.",
+        "Product completion is asserted only for the verified scope."
+      ]
+    }
+  ],
+  "source_delivery_dag": {
+    "note": "Package integration readiness. Internal WS dependencies and original task DAG remain authoritative for criterion closure. Past inputs #5–9 must be checked against actual implementation.",
+    "waves": [
+      [
+        10,
+        11
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        14
+      ],
+      [
+        15
+      ],
+      [
+        16
+      ],
+      [
+        17
+      ],
+      [
+        18
+      ],
+      [
+        19
+      ],
+      [
+        20
+      ],
+      [
+        21
+      ]
+    ],
+    "nodes": [
+      {
+        "number": 10,
+        "requires": [
+          5,
+          9
+        ]
+      },
+      {
+        "number": 11,
+        "requires": [
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "number": 12,
+        "requires": [
+          1,
+          2,
+          3,
+          4,
+          11
+        ]
+      },
+      {
+        "number": 13,
+        "requires": [
+          10
+        ]
+      },
+      {
+        "number": 14,
+        "requires": [
+          2,
+          3,
+          10,
+          11,
+          13
+        ]
+      },
+      {
+        "number": 15,
+        "requires": [
+          8,
+          9,
+          10,
+          12,
+          14
+        ]
+      },
+      {
+        "number": 16,
+        "requires": [
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        "number": 17,
+        "requires": [
+          14,
+          15,
+          16
+        ]
+      },
+      {
+        "number": 18,
+        "requires": [
+          11,
+          12,
+          14,
+          15,
+          17
+        ]
+      },
+      {
+        "number": 19,
+        "requires": [
+          11,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ]
+      },
+      {
+        "number": 20,
+        "requires": [
+          13,
+          14,
+          15,
+          16,
+          19
+        ]
+      },
+      {
+        "number": 21,
+        "requires": [
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      }
+    ]
+  },
+  "execution_lanes": [
+    [
+      "FIX-001",
+      "FIX-002"
+    ],
+    [
+      "FIX-001",
+      "FIX-003",
+      "FIX-004"
+    ]
+  ],
+  "join": [
+    "FIX-005",
+    "FIX-006"
+  ],
+  "note": "These are work items, not a promise of six new GitHub PRs. Prefer existing #52 for its integration; combine coherent foundation work into a scoped PR."
+}

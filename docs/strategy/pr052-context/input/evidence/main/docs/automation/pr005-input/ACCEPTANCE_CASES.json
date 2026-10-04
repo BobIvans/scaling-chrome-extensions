@@ -1,0 +1,133 @@
+{
+  "schema": "occ.pr-acceptance.v1",
+  "count": 18,
+  "implementation_results": "NOT_RUN",
+  "cases": [
+    {
+      "id": "A01",
+      "title": "64 entries, включая хвост после 20",
+      "expected": "Page union equals expected ordinal set; 56/6/2 state counts; EOF only after last entry",
+      "layer": "Python/native",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A02",
+      "title": "Бинарный source с printable fragments",
+      "expected": "All fragments remain raw-only/ineligible; no current repository text hits",
+      "layer": "Python/SQLite/export",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A03",
+      "title": "UTF8 with NUL/C0 controls",
+      "expected": "Strict decode alone does not enable text; BINARY_CONTROL_HEURISTIC reason",
+      "layer": "Python",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A04",
+      "title": "Empty/BOM/CRLF/long UTF8 lines",
+      "expected": "Exact bytes, empty [0,0), hashes and text eligibility; no normalization",
+      "layer": "Python",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A05",
+      "title": "Invalid Python syntax",
+      "expected": "Text fallback ELIGIBLE, parser failure shown without AST/source execution claim",
+      "layer": "Python",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A06",
+      "title": "Canonical LFS pointer",
+      "expected": "Pointer SHA/size recorded as declared; external availability NOT_CHECKED; no payload capture claim",
+      "layer": "Python/native/export",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A07",
+      "title": "Malformed/extended/legacy LFS",
+      "expected": "Distinct malformed/unsupported reasons; raw kept; no guessed payload status",
+      "layer": "Python",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A08",
+      "title": "README с примером pointer",
+      "expected": "Ordinary UTF8 content does not become LFS pointer due to embedded URL",
+      "layer": "Python",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A09",
+      "title": "Link/submodule/unsupported path",
+      "expected": "Every metadata row retained; reversible path token; no target traversal",
+      "layer": "Python/native",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A10",
+      "title": "Protected/excluded и wallet false positive",
+      "expected": "Three policy reasons remain distinct; wallet_logic.py eligible; protected bytes not in output",
+      "layer": "Python/export",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A11",
+      "title": "Oversize/missing Git blob",
+      "expected": "ERROR rows/gaps retained with original reason/known budget; no fabricated hash or fetch",
+      "layer": "Python",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A12",
+      "title": "Legacy store + replay/crash backfill",
+      "expected": "UNKNOWN before backfill; atomic per-source commit; replay reuses same binding; raw revisions unchanged",
+      "layer": "SQLite/CLI",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A13",
+      "title": "Incremental UTF8 across chunk boundary",
+      "expected": "Split multi-byte codepoint validates whole source; truncated codepoint fails; independent expected bytes",
+      "layer": "Python/backfill",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A14",
+      "title": "Damaged raw/ranges/revision/hash",
+      "expected": "CORRUPT_CAPTURE; no ELIGIBLE/ready projection; unaffected valid entries preserved",
+      "layer": "SQLite",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A15",
+      "title": "Read-only Native scope",
+      "expected": "Unknown field/cross-namespace/alias/profile/cursor mismatch rejected; query does not invoke Git/backfill/proof",
+      "layer": "native",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A16",
+      "title": "Byte budget и changed filter",
+      "expected": "Whole envelope <=32,768; exact continuation; one oversized row explicit error; old numeric offset cap absent",
+      "layer": "native/bridge",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A17",
+      "title": "UI stale replies + malicious labels",
+      "expected": "Snapshot/filter navigation rejects stale reply; textContent; ineligible text choices disabled; paging responsive",
+      "layer": "Node/UI",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A18",
+      "title": "Manifest/ZIP compatibility",
+      "expected": "Old raw hashes/revision/formats valid; binary raw retained; format extension version bound; unknown proofs stay NOT_RUN",
+      "layer": "PR002/003 integration",
+      "status": "NOT_RUN"
+    }
+  ]
+}

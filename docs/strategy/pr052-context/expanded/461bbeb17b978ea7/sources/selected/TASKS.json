@@ -1,0 +1,1001 @@
+[
+  {
+    "task_id": "G3-002",
+    "title": "GoalRequest с исходной формулировкой и требованиями",
+    "dependencies": [
+      "G3-001"
+    ],
+    "acceptance_criteria": [
+      "Сохраняется точный original_text; интерпретации имеют автора.",
+      "Неизвестный target не заменяется догадкой; исправление голоса меняет revision."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-002",
+      "title": "GoalRequest с исходной формулировкой и требованиями",
+      "depends_on": [
+        "G3-001"
+      ],
+      "refines_v2": [
+        "V2-016",
+        "V2-017"
+      ],
+      "owner": "context_review + UI",
+      "acceptance": [
+        "Сохраняется точный original_text; интерпретации имеют автора.",
+        "Неизвестный target не заменяется догадкой; исправление голоса меняет revision."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-002",
+        "title": "GoalRequest с исходной формулировкой и требованиями",
+        "depends_on": [
+          "G3-001"
+        ],
+        "refines_v2": [
+          "V2-016",
+          "V2-017"
+        ],
+        "owner_layer": "context_review + UI",
+        "artifact": "GoalRequest revision",
+        "acceptance": [
+          "Сохраняется точный original_text; интерпретации имеют автора.",
+          "Неизвестный target не заменяется догадкой; исправление голоса меняет revision."
+        ],
+        "failure_behavior": "Недостающие поля блокируют только зависящий от них внешний эффект.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "G3-008",
+    "title": "Поддержать метки состояния и пользовательские исправления",
+    "dependencies": [
+      "G3-002"
+    ],
+    "acceptance_criteria": [
+      "Rule/model/user provenance различимы.",
+      "Переиндексация сохраняет пользовательское исправление и инвалидирует stale derived label."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-008",
+      "title": "Поддержать метки состояния и пользовательские исправления",
+      "depends_on": [
+        "G3-002"
+      ],
+      "refines_v2": [
+        "V2-011",
+        "V2-015"
+      ],
+      "owner": "library label/search owner",
+      "acceptance": [
+        "Rule/model/user provenance различимы.",
+        "Переиндексация сохраняет пользовательское исправление и инвалидирует stale derived label."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-008",
+        "title": "Поддержать метки состояния и пользовательские исправления",
+        "depends_on": [
+          "G3-002"
+        ],
+        "refines_v2": [
+          "V2-011",
+          "V2-015"
+        ],
+        "owner_layer": "library label/search owner",
+        "artifact": "Versioned label overlays",
+        "acceptance": [
+          "Rule/model/user provenance различимы.",
+          "Переиндексация сохраняет пользовательское исправление и инвалидирует stale derived label."
+        ],
+        "failure_behavior": "Неизвестная классификация остаётся unknown; candidate не становится enabled.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "G3-009",
+    "title": "Собрать панель целей и непокрытых требований",
+    "dependencies": [
+      "G3-006",
+      "G3-008"
+    ],
+    "acceptance_criteria": [
+      "Каждый активный requirement имеет источник, статус и следующую проверку.",
+      "Противоречащие данные отображаются; число повторений AI не повышает evidence level."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-009",
+      "title": "Собрать панель целей и непокрытых требований",
+      "depends_on": [
+        "G3-006",
+        "G3-008"
+      ],
+      "refines_v2": [
+        "V2-016",
+        "V2-046"
+      ],
+      "owner": "library goal graph + UI",
+      "acceptance": [
+        "Каждый активный requirement имеет источник, статус и следующую проверку.",
+        "Противоречащие данные отображаются; число повторений AI не повышает evidence level."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-009",
+        "title": "Собрать панель целей и непокрытых требований",
+        "depends_on": [
+          "G3-006",
+          "G3-008"
+        ],
+        "refines_v2": [
+          "V2-016",
+          "V2-046"
+        ],
+        "owner_layer": "library goal graph + UI",
+        "artifact": "Coverage views",
+        "acceptance": [
+          "Каждый активный requirement имеет источник, статус и следующую проверку.",
+          "Противоречащие данные отображаются; число повторений AI не повышает evidence level."
+        ],
+        "failure_behavior": "Цель без evidence остаётся открытой, а не silently omitted.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-002",
+    "title": "Реестр целей и покрытия без потери пользовательских формулировок",
+    "dependencies": [
+      "EVO3-001"
+    ],
+    "acceptance_criteria": [
+      "Оригинальная формулировка и её digest сохранены; интерпретация, приоритет и критерии представлены отдельно.",
+      "Каждый критерий связан с source/implementation/device evidence или имеет явный gap/deferred reason.",
+      "Метрика покрытия публикует знаменатель; критический незакрытый критерий исключает общий статус цели achieved."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-002",
+      "title": "Реестр целей и покрытия без потери пользовательских формулировок",
+      "depends_on": [
+        "EVO3-001"
+      ],
+      "refines_v2": [
+        "V2-016",
+        "V2-019"
+      ],
+      "owner": "Content Lab goal ledger",
+      "acceptance": [
+        "Оригинальная формулировка и её digest сохранены; интерпретация, приоритет и критерии представлены отдельно.",
+        "Каждый критерий связан с source/implementation/device evidence или имеет явный gap/deferred reason.",
+        "Метрика покрытия публикует знаменатель; критический незакрытый критерий исключает общий статус цели achieved."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-002",
+        "title": "Реестр целей и покрытия без потери пользовательских формулировок",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-001"
+        ],
+        "owner": "Content Lab goal ledger",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Связать исходные слова, критерии и решения с версиями.",
+        "acceptance": [
+          "Оригинальная формулировка и её digest сохранены; интерпретация, приоритет и критерии представлены отдельно.",
+          "Каждый критерий связан с source/implementation/device evidence или имеет явный gap/deferred reason.",
+          "Метрика покрытия публикует знаменатель; критический незакрытый критерий исключает общий статус цели achieved."
+        ],
+        "deliverables": [
+          "goal_revision_contract.json",
+          "coverage_projection.json"
+        ],
+        "verification_fixture": "20 целей, 5 изменённых формулировок, 3 конфликта приоритетов, 4 deferred.",
+        "failure_behavior": "Не затирать оригинал; конфликт записать и исключить зависимые переходы до разрешения.",
+        "refines_v2": [
+          "V2-016",
+          "V2-019"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-012",
+    "title": "Проекция статуса и объяснимые guards",
+    "dependencies": [
+      "EVO3-004",
+      "EVO3-005",
+      "EVO3-006",
+      "EVO3-008",
+      "EVO3-009",
+      "EVO3-010",
+      "EVO3-011"
+    ],
+    "acceptance_criteria": [
+      "Для каждого guard видны pass/fail/unknown/stale и ссылки на основания.",
+      "AI response, user merged assertion, integration verified и capability usable не сводятся к одному ready.",
+      "Проекция воспроизводится из тех же events/evidence детерминированно; её UI-переключатель не обходит policy."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-012",
+      "title": "Проекция статуса и объяснимые guards",
+      "depends_on": [
+        "EVO3-004",
+        "EVO3-005",
+        "EVO3-006",
+        "EVO3-008",
+        "EVO3-009",
+        "EVO3-010",
+        "EVO3-011"
+      ],
+      "refines_v2": [
+        "V2-036",
+        "V2-046"
+      ],
+      "owner": "context_review.py / UI projection",
+      "acceptance": [
+        "Для каждого guard видны pass/fail/unknown/stale и ссылки на основания.",
+        "AI response, user merged assertion, integration verified и capability usable не сводятся к одному ready.",
+        "Проекция воспроизводится из тех же events/evidence детерминированно; её UI-переключатель не обходит policy."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-012",
+        "title": "Проекция статуса и объяснимые guards",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-004",
+          "EVO3-005",
+          "EVO3-006",
+          "EVO3-008",
+          "EVO3-009",
+          "EVO3-010",
+          "EVO3-011"
+        ],
+        "owner": "context_review.py / UI projection",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Показывать независимые delivery/code/release/device/capability состояния.",
+        "acceptance": [
+          "Для каждого guard видны pass/fail/unknown/stale и ссылки на основания.",
+          "AI response, user merged assertion, integration verified и capability usable не сводятся к одному ready.",
+          "Проекция воспроизводится из тех же events/evidence детерминированно; её UI-переключатель не обходит policy."
+        ],
+        "deliverables": [
+          "UpdateCaseProjection.json",
+          "guard_explanations_ru.json"
+        ],
+        "verification_fixture": "30 mixed-state negative fixtures EX-EVO3-01.",
+        "failure_behavior": "При несогласованности понизить применимость затронутой стадии, сохранив raw evidence.",
+        "refines_v2": [
+          "V2-036",
+          "V2-046"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "LAYA4-004",
+    "title": "Полный ledger форматов, gaps и защищённых данных",
+    "goal": "Каждый tracked file и извлекаемый объект должен иметь явную disposition, даже если его текст нельзя отправить.",
+    "dependencies": [
+      "LAYA4-001"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Для каждого entry есть одна disposition: indexed, excluded, unsupported, missing, error, deferred или pending; pending исключает completion.",
+      "LFS pointer отличается от available payload; submodule/symlink metadata не выдаются за содержимое target.",
+      "Binary/non-UTF8, oversize, parse error, credential heuristic и operator exclusion сохраняют reason и исходный hash, когда он доступен.",
+      "Zero omission проверяет accounted==tracked_total; all_tracked_bytes_exportable имеет отдельное значение.",
+      "Exclusion policy не запрещает обычные исходники по случайной подстроке; секретные bytes не дублируются в diagnostic log."
+    ],
+    "failure_recovery": [
+      "При неизвестном формате сохранить metadata и condition for revisit.",
+      "При missing blob не выполнять скрытый fetch; отдельный acquisition scope нужен для получения данных."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Mixed-format and false-positive fixtures.",
+      "Per-entry count reconciliation.",
+      "Export bytes review for known protected fixtures."
+    ],
+    "stage": "L4-S1",
+    "owner_layer": "repo_context + extraction policy",
+    "source_evidence_refs": [
+      "L4-E01",
+      "L4-E02",
+      "L4-E14"
+    ],
+    "related_v3_tasks": [
+      "G3-003",
+      "PAR3-002"
+    ],
+    "experiments": [
+      "LX4-01",
+      "LX4-09"
+    ],
+    "deliverables": [
+      "GAPS.jsonl schema",
+      "Coverage projection"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-005",
+    "title": "Квалифицировать статический JS/TS parser и resolver",
+    "goal": "Закрыть явный JS/TS text-only gap для связанных repo chunks без запуска исходного кода.",
+    "dependencies": [
+      "LAYA4-001",
+      "LAYA4-004"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "ADR сравнивает parser candidates по JS/TS/JSX/TSX, offline packaging, Windows memory, pins и лицензии; package выбран по измерению.",
+      "Parser извлекает symbols/ranges и imports; resolver поддерживает явно перечисленные ESM/CommonJS/relative/workspace/alias правила.",
+      "Computed imports, unsupported exports, dynamic require и runtime injection представлены unresolved, не guessed exact edges.",
+      "Ни import scanned module, ни install scripts, ни repository hooks во время анализа не запускаются.",
+      "Размеченный corpus достигает предложенного precision gate LX4-03; recall и неподдерживаемые формы публикуются отдельно."
+    ],
+    "failure_recovery": [
+      "При parser crash/time budget сохранить text fallback и PARSER_FAILED.",
+      "Изменение parser/resolver version инвалидирует только затронутые derived outputs и graph interpretation."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "ADR and pinned dependency/package receipt.",
+      "200 labelled resolver fixtures and independent expected edges.",
+      "Windows offline installation receipt."
+    ],
+    "stage": "L4-S1",
+    "owner_layer": "repo_source static parsing; existing packaging",
+    "source_evidence_refs": [
+      "L4-E02",
+      "L4-E14"
+    ],
+    "related_v3_tasks": [
+      "G3-003",
+      "PAR3-002",
+      "PAR3-011"
+    ],
+    "experiments": [
+      "LX4-03",
+      "LX4-06"
+    ],
+    "deliverables": [
+      "JS/TS parser adapter",
+      "Resolver support matrix"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-006",
+    "title": "Объединить Python и JS/TS связи в provenance graph",
+    "goal": "Дать chunk planner проверяемые связи файлов, symbols и unresolved dependencies с источником каждого ребра.",
+    "dependencies": [
+      "LAYA4-001",
+      "LAYA4-004"
+    ],
+    "optional_extensions": [
+      "LAYA4-005"
+    ],
+    "acceptance_criteria": [
+      "Edge хранит type, source range/hash, parser/resolver version и evidence class.",
+      "Python static, JS/TS static, declared contract и heuristic candidate не смешиваются в один unqualified relation.",
+      "Unresolved/dynamic/ambiguous links доступны в graph query и packet gaps.",
+      "Graph построен детерминированно из pinned snapshot; SCC не зависит от directory enumeration order.",
+      "Rebuild на одинаковых inputs даёт одинаковый graph digest; цикл не вызывает unbounded traversal."
+    ],
+    "failure_recovery": [
+      "Неполный parser поддерживает graph с явной coverage границей.",
+      "При повреждённом graph пересобрать derived index из immutable sources, сохраняя предыдущий digest."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Graph schema and edge provenance fixtures.",
+      "SCC/oracle regression plus mixed-language fixture.",
+      "Deterministic rebuild digest receipt."
+    ],
+    "stage": "L4-S1",
+    "owner_layer": "repo_source.import_graph/components + SQLite derived index",
+    "source_evidence_refs": [
+      "L4-E01",
+      "L4-E02",
+      "L4-E14"
+    ],
+    "related_v3_tasks": [
+      "PAR3-002",
+      "PAR3-006"
+    ],
+    "experiments": [
+      "LX4-03",
+      "LX4-04"
+    ],
+    "deliverables": [
+      "RELATIONS.jsonl",
+      "Graph query API"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-007",
+    "title": "Связать owners, tests, contracts и capability candidates",
+    "goal": "При выборе функции показывать проверяемые соседние contracts/tests и происхождение предложения.",
+    "dependencies": [
+      "LAYA4-001",
+      "LAYA4-006"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Name heuristic, declared mapping и observed test coverage имеют разные relation types.",
+      "Тесты/контракты разрешаются только внутри выбранного snapshot/scope; внешний missing contract остаётся gap.",
+      "У registration/API/schema adapters есть owner mapping, уменьшающий риск изменения только одной стороны интерфейса.",
+      "Capability candidate из parser не получает статус enabled/installed; для него показано missing qualification.",
+      "UI позволяет открыть источник связи и явно включить tests/contracts в packet."
+    ],
+    "failure_recovery": [
+      "Если mapping устарел, предложить обновление по новым source refs без переписывания истории.",
+      "Неподтверждённую связь оставить candidate и не закрывать criterion."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Owner-contract integration fixtures.",
+      "Labelled relevant-test set.",
+      "No false enabled capability assertion test."
+    ],
+    "stage": "L4-S1",
+    "owner_layer": "repo selection + graph + capability projection",
+    "source_evidence_refs": [
+      "L4-E01",
+      "L4-E02",
+      "L4-E05",
+      "L4-E07"
+    ],
+    "related_v3_tasks": [
+      "G3-003",
+      "PAR3-003",
+      "EVO3-017"
+    ],
+    "experiments": [
+      "LX4-04"
+    ],
+    "deliverables": [
+      "OWNER_CONTRACT_MAP.json",
+      "Related-source picker"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-008",
+    "title": "Планировать связанные группы и bounded chunks",
+    "goal": "Собрать читаемые группы owner/dependencies/tests/contracts и упорядоченные части без потери raw coverage.",
+    "dependencies": [
+      "LAYA4-001",
+      "LAYA4-004"
+    ],
+    "optional_extensions": [
+      "LAYA4-005",
+      "LAYA4-006",
+      "LAYA4-007"
+    ],
+    "acceptance_criteria": [
+      "MVP работает с текущим Python graph и честно отмечает JS/TS gaps; новый resolver не блокирует первый release.",
+      "SCC рассматривается как logical group; oversized SCC делится на bounded parts с neighbour references.",
+      "Каждый group имеет reason/owner/source refs; эвристики явно отмечены.",
+      "Raw byte coverage проверяется отдельно от повторных explanatory snippets в нескольких docs.",
+      "Порядок и IDs детерминированы snapshot/planner version; добавление несвязанного файла не перенумеровывает все logical source IDs."
+    ],
+    "failure_recovery": [
+      "Если edge неизвестен, сохранить файл в самостоятельной группе с unresolved refs.",
+      "При budget overflow добавить продолжение вместо обрезания tail или исключения обязательного owner."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Cyclic/oversized/missing-edge grouping fixtures.",
+      "Stable-ID comparison.",
+      "Same-budget context usefulness experiment."
+    ],
+    "stage": "L4-S1",
+    "owner_layer": "repo_source + repo_context selection planner",
+    "source_evidence_refs": [
+      "L4-E01",
+      "L4-E02",
+      "L4-E14"
+    ],
+    "related_v3_tasks": [
+      "G3-003",
+      "PAR3-002"
+    ],
+    "experiments": [
+      "LX4-01",
+      "LX4-04"
+    ],
+    "deliverables": [
+      "GROUPS.json",
+      "Deterministic group planner"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-013",
+    "title": "Добавить каталог источников с intent и lifetime policy",
+    "goal": "Сохранять происхождение, project scope, назначение capture и правила хранения личных и проектных материалов.",
+    "dependencies": [
+      "LAYA4-001"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Record отделяет raw/extracted/transcript/summary/claim/evidence и имеет стабильные source/revision IDs.",
+      "Сохраняются original user text, capture intent, source_event_at и captured_at; неизвестное время не выдумывается.",
+      "Project/lifetime scope и share/retention policy закреплены отдельно от auto labels.",
+      "Namespace/profile границы существующего store применяются ко всем каталожным queries.",
+      "Импорт одного материала не делает его автоматически доступным всем future automations."
+    ],
+    "failure_recovery": [
+      "Недостающий locator/time/right записать как unknown; не угадывать личные сведения.",
+      "Изменение intent/policy создаёт revision и инвалидирует готовые share projections."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Catalog schema/migration fixture.",
+      "Source provenance and original text roundtrip.",
+      "Cross-scope query rejection test."
+    ],
+    "stage": "L4-S3",
+    "owner_layer": "Content Lab items/sync_versions/library_record owner",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E04",
+      "L4-E15",
+      "L4-E16"
+    ],
+    "related_v3_tasks": [
+      "G3-002",
+      "G3-008",
+      "EVO3-002"
+    ],
+    "experiments": [
+      "LX4-07",
+      "LX4-09"
+    ],
+    "deliverables": [
+      "Source catalog schema",
+      "Capture intent form"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-014",
+    "title": "Организовать extractor очередь и gap reconciliation",
+    "goal": "Превратить выбранные документы/чаты/логи/аудио в индексируемый текст без потери оригинала и тихих пропусков.",
+    "dependencies": [
+      "LAYA4-004",
+      "LAYA4-013"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Каждый extractor имеет format/version/limits и pure input→derived output contract; output ссылается на raw hash/ranges.",
+      "Existing ChatGPT export/selected record paths используются повторно; raw transcript и исправленный текст не смешиваются.",
+      "PDF/OCR/ASR/image/unsupported inputs имеют явное состояние READY/PENDING/UNSUPPORTED/FAILED/MISSING.",
+      "Bulk import resumable и идемпотентен; network/model invocation обозначен capability и scope, не происходит скрытно.",
+      "Неизвестный attachment учитывается до извлечения; OCR/ASR confidence не объявляется доказанным содержимым."
+    ],
+    "failure_recovery": [
+      "Сбой extractor сохраняет raw и error reason, позволяет retry после изменения версии.",
+      "Reimport не стирает ручные исправления и source lineage."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Per-format corpus and extraction coverage report.",
+      "Restart/reimport fixture.",
+      "Optional local model/device receipt for each activated extractor."
+    ],
+    "stage": "L4-S3",
+    "owner_layer": "Content Lab ingestion + Core registered work",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E04",
+      "L4-E09",
+      "L4-E16"
+    ],
+    "related_v3_tasks": [
+      "G3-003",
+      "PAR3-003"
+    ],
+    "experiments": [
+      "LX4-01",
+      "LX4-02",
+      "LX4-08"
+    ],
+    "deliverables": [
+      "Extractor registry",
+      "Import/gaps panel"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-015",
+    "title": "Автоматические метки с источником и user overlay",
+    "goal": "Упростить сохранение и поиск, не превращая модельные догадки в факты или теряя пользовательскую классификацию.",
+    "dependencies": [
+      "LAYA4-013",
+      "LAYA4-014"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Label хранит dimension/value/source_ref/extractor_version/assigned_at/evidence class.",
+      "Детерминированный path match, keyword rule, AI inference и user label различаются.",
+      "User overlay имеет приоритет и сохраняется после reindex; конфликт виден и откатывается.",
+      "Dimensions включают project/topic/goal/module/capability candidate/evidence/freshness/delivery/next action.",
+      "Implemented/enabled/usable выводятся из evidence owner; слова из исходного чата не устанавливают их напрямую."
+    ],
+    "failure_recovery": [
+      "При неуверенной классификации сохранить candidate/unclassified вместо обязательной категории.",
+      "Обновление модели даёт новую derived label version без переписывания user corrections."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Label provenance and reindex fixtures.",
+      "Conflicting user/model assignment fixture.",
+      "No false completion/capability label test."
+    ],
+    "stage": "L4-S3",
+    "owner_layer": "Catalog projection over existing items and evidence",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E06",
+      "L4-E07",
+      "L4-E09"
+    ],
+    "related_v3_tasks": [
+      "G3-008",
+      "EVO3-012"
+    ],
+    "experiments": [
+      "LX4-07",
+      "LX4-08"
+    ],
+    "deliverables": [
+      "Label schema",
+      "User correction UI"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-016",
+    "title": "Единый поиск, фильтры и timeline с source links",
+    "goal": "Быстро находить цитату, repo symbol, задачу, результат AI и историческое решение в выбранном scope.",
+    "dependencies": [
+      "LAYA4-013",
+      "LAYA4-015"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Namespace/project-aware current search использует existing Core search owner; legacy item shapes не приводят к KeyError/потере результата.",
+      "Есть exact ID/path/quote, FTS, project/type/topic/date/status filters и version selector.",
+      "Каждый hit показывает excerpt, origin, revision/freshness и основание попадания.",
+      "Timeline отличает source_event_at от captured_at и не размещает unknown event time как точную дату.",
+      "Пагинация стабильна; private project фильтр применяется до поиска/reranking, не только после выдачи."
+    ],
+    "failure_recovery": [
+      "При недоступном optional semantic index остаётся exact/FTS path.",
+      "Corrupt derived index можно rebuild без потери raw/catalog versions."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Mixed item-shape fixture.",
+      "100 query relevance set and scope isolation report.",
+      "Warm/cold performance receipt."
+    ],
+    "stage": "L4-S3",
+    "owner_layer": "automation_core.search + shared FTS/catalog UI",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E04",
+      "L4-E15",
+      "L4-E16"
+    ],
+    "related_v3_tasks": [
+      "G3-008",
+      "G3-009"
+    ],
+    "experiments": [
+      "LX4-07"
+    ],
+    "deliverables": [
+      "Search/filter API",
+      "Timeline/source preview"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "ACTION5-04",
+    "title": "CaptureEnvelope сохраняет исходный текст и автора",
+    "goal": "Сохранять оригинал, извлечённый текст и пользовательские правки с самостоятельной идентичностью и точным происхождением.",
+    "refines_existing_task_ids": [
+      "G3-002",
+      "LAYA4-013",
+      "G3-008"
+    ],
+    "related_feature_ids": [
+      "LIB-013",
+      "LIB-014",
+      "LIB-015",
+      "LIB-016",
+      "LIB-058"
+    ],
+    "dependencies": [
+      "ACTION5-01"
+    ],
+    "inputs": [
+      "Bytes или DOM capture; source URI/path; capture permission/scope; наблюдаемое авторство"
+    ],
+    "outputs": [
+      "Raw source version; CaptureEnvelope с content hash, times, author/confidence, extraction version; correction overlay"
+    ],
+    "owner": "Существующий Content Lab source/version owner",
+    "acceptance_criteria": [
+      "Реконструкция raw text совпадает byte-for-byte; нормализованный search text хранит обратные offsets.",
+      "Время сообщения, время захвата и inferred event time не объединяются в одно поле.",
+      "Цитата другого автора внутри сообщения не становится словами пользователя; неизвестное авторство явно UNKNOWN.",
+      "Исправление пользователя создаёт overlay/version, сохраняя исходное написание."
+    ],
+    "failure_recovery": [
+      "Повреждённый или недекодируемый текст остаётся raw artifact с extraction error.",
+      "Конфликт авторства сохраняется вместе с доказательствами; прежний оригинал не переписывается."
+    ],
+    "evidence_required": [
+      "Roundtrip fixture RU/EN/emoji/CRLF/BOM; author/quote fixtures; provenance graph"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-05",
+    "title": "Учитывать full-scroll чат и недоступные ветви",
+    "goal": "Снимать доступные сообщения полностью и отличать capture текущей ветви от полного conversation export.",
+    "refines_existing_task_ids": [
+      "LAYA4-004",
+      "LAYA4-014",
+      "UI3-011",
+      "G3-006"
+    ],
+    "related_feature_ids": [
+      "LIB-012",
+      "LIB-024",
+      "LIB-057"
+    ],
+    "dependencies": [
+      "ACTION5-04"
+    ],
+    "inputs": [
+      "Выбранная conversation identity; видимые сообщения и их IDs; scroll state; доступный export"
+    ],
+    "outputs": [
+      "Message inventory; ветви с known/unknown visibility; capture coverage ledger; resume cursor"
+    ],
+    "owner": "Существующий browser/capture adapter → Content Lab, без нового store",
+    "acceptance_criteria": [
+      "Top/middle/bottom и virtualized-history fixtures дают по одной source version на наблюдаемый message ID.",
+      "Loading/end-of-history подтверждается наблюдением; scroll без новых сообщений сам по себе не означает COMPLETE.",
+      "Недоступная ветвь, удалённое сообщение, вложение и login wall отображаются как конкретный gap.",
+      "Export и DOM capture связываются по происхождению; разные ветви не склеиваются по похожему тексту."
+    ],
+    "failure_recovery": [
+      "После перезагрузки capture продолжает с message IDs и проверяет старые hashes.",
+      "Unknown end-of-history сохраняет PARTIAL и предлагает официальный export/ручной файл."
+    ],
+    "evidence_required": [
+      "Message/branch corpus; capture inventory; restart/virtualized scroll receipts"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-06",
+    "title": "Закрепить общий контракт файлового импортера",
+    "goal": "Каждый файл должен сохраняться как оригинал с disposition и отдельной версией извлечения.",
+    "refines_existing_task_ids": [
+      "LAYA4-014",
+      "LAYA4-004",
+      "LAYA4-017"
+    ],
+    "related_feature_ids": [
+      "LIB-006",
+      "LIB-007",
+      "LIB-041",
+      "LIB-047"
+    ],
+    "dependencies": [
+      "ACTION5-01",
+      "ACTION5-04"
+    ],
+    "inputs": [
+      "Выбранные files/folder scope; MIME/extension; bytes; extractor registry/version"
+    ],
+    "outputs": [
+      "Importer manifest с discovered/imported/unsupported/error; source versions; bounded checkpoints"
+    ],
+    "owner": "Существующие intake/extractor и Content Lab owners",
+    "acceptance_criteria": [
+      "Несовпадение extension/MIME отражается в manifest; extraction не скрывает оригинал.",
+      "У каждого выбранного файла ровно один исход: imported, excluded с причиной, unsupported или error.",
+      "Повторное продолжение создаёт новые версии только для изменённых bytes и сохраняет все origins.",
+      "Unknown importer fields сохраняются в raw envelope, не становятся исполнимыми настройками."
+    ],
+    "failure_recovery": [
+      "Исчерпание диска или crash оставляет committed sources и незавершённый cursor.",
+      "Unsupported формат можно повторно извлечь после появления квалифицированного importer version."
+    ],
+    "evidence_required": [
+      "Fixture manifest; interruption/retry outputs; hashes оригиналов"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-09",
+    "title": "Учитывать архивы, папки и вложения как граф происхождения",
+    "goal": "Сохранять структуру вложенности и все исключения, чтобы импорт архива не терял данные и происхождение.",
+    "refines_existing_task_ids": [
+      "LAYA4-004",
+      "LAYA4-010",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "related_feature_ids": [
+      "LIB-009",
+      "LIB-010",
+      "LIB-041",
+      "LIB-048",
+      "LIB-060"
+    ],
+    "dependencies": [
+      "ACTION5-06"
+    ],
+    "inputs": [
+      "Выбранный folder/archive; архивные member paths; extractor policy; byte/depth budgets"
+    ],
+    "outputs": [
+      "Archive-member graph; disposition каждого entry; dedup origin links; blocked-entry report"
+    ],
+    "owner": "Существующий intake/Content Lab importer",
+    "acceptance_criteria": [
+      "Вложенные ZIP, одинаковые bytes в двух путях, empty entry и missing attachment учтены отдельно по происхождению.",
+      "Traversal path, symlink, compression bomb и budget limit дают явный blocked/error и не записывают вне staging scope.",
+      "Repo LFS pointers/submodules остаются отдельным disposition до фактического получения разрешённых bytes.",
+      "Повторная распаковка не считает копии независимыми подтверждениями."
+    ],
+    "failure_recovery": [
+      "Budget exceed сохраняет исходный архив и список необработанных entries.",
+      "Resume проверяет parent archive hash, изменившийся архив создаёт новый import run."
+    ],
+    "evidence_required": [
+      "Nested/archive edge fixtures; origin graph; accounted-entry report"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P1",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-10",
+    "title": "Версионировать автометки и пользовательские исправления",
+    "goal": "Сделать теги объяснимыми и обратимыми, чтобы автоматизация не переписывала пользовательскую классификацию.",
+    "refines_existing_task_ids": [
+      "LAYA4-015",
+      "G3-008",
+      "EVO3-002"
+    ],
+    "related_feature_ids": [
+      "LIB-018",
+      "LIB-019",
+      "LIB-021",
+      "LIB-050"
+    ],
+    "dependencies": [
+      "ACTION5-04",
+      "ACTION5-06"
+    ],
+    "inputs": [
+      "Source version; taxonomy version; rules/model proposals; user overlays"
+    ],
+    "outputs": [
+      "Labels по независимым facets project/type/topic/status/privacy; label origin/confidence; correction history"
+    ],
+    "owner": "Существующий metadata/catalog owner",
+    "acceptance_criteria": [
+      "Каждый автоматический tag указывает rule/model version и supporting source span либо отмечен inference.",
+      "User correction имеет приоритет в представлении и не удаляет прежнее предложение.",
+      "Разные facets не объединяют source type, цель, статус исполнения и private scope в одну метку.",
+      "Taxonomy upgrade не переименовывает исторические labels без version mapping."
+    ],
+    "failure_recovery": [
+      "Низкая confidence оставляет uncategorized или suggestion, без потери поиска.",
+      "Failed retagging возвращает прежнюю отображаемую версию до atomic activation."
+    ],
+    "evidence_required": [
+      "Размеченный label corpus; correction replay; facet/version mapping"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P1",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-11",
+    "title": "Сделать SourceAddress для точной цитаты и диапазона",
+    "goal": "Любой вывод, найденный фрагмент и packet должен ссылаться на неизменяемую версию и точный range оригинала.",
+    "refines_existing_task_ids": [
+      "G3-003",
+      "LAYA4-016",
+      "LAYA4-009"
+    ],
+    "related_feature_ids": [
+      "LIB-014",
+      "LIB-033",
+      "LIB-040",
+      "RND-011"
+    ],
+    "dependencies": [
+      "ACTION5-04",
+      "ACTION5-06"
+    ],
+    "inputs": [
+      "Source ID/version/hash; byte/text/time/page ranges; derived extraction mappings"
+    ],
+    "outputs": [
+      "Typed SourceAddress; bounded range API; resolver с validity/stale states"
+    ],
+    "owner": "Публичный read API Content Lab и существующий provenance owner",
+    "acceptance_criteria": [
+      "SourceAddress открывает тот же диапазон после restart; изменение оригинала не переносит ссылку молча.",
+      "Derived text указывает исходный range и extraction version; unsupported mapping возвращает UNKNOWN.",
+      "Ошибочные range bounds, namespace и hash отклоняются до чтения.",
+      "Удалённый оригинал возвращает tombstone/missing и не подменяется совпадающей цитатой."
+    ],
+    "failure_recovery": [
+      "Stale address предлагает доступную новую версию и diff как отдельный выбор.",
+      "Повреждённый range отменяет экспорт зависимого packet до проверки."
+    ],
+    "evidence_required": [
+      "Range roundtrip corpus; access-scope tests; deletion/version drift fixtures"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  }
+]

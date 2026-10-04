@@ -1,0 +1,138 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "ok",
+        "adapter_context",
+        "result"
+      ],
+      "properties": {
+        "schema": {
+          "const": "occ.desktop-stdio-result.v1"
+        },
+        "ok": {
+          "const": true
+        },
+        "adapter_context": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "protocol",
+            "profile_digest",
+            "store_identity",
+            "adapter_sha256",
+            "backend_bundle_sha256"
+          ],
+          "properties": {
+            "protocol": {
+              "const": "occ.desktop-stdio.v1"
+            },
+            "profile_digest": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "store_identity": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "adapter_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "backend_bundle_sha256": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        },
+        "result": {
+          "type": "object",
+          "required": [
+            "schema",
+            "operation"
+          ],
+          "properties": {
+            "schema": {
+              "const": "occ.native-durable-result.v1"
+            },
+            "operation": {
+              "type": "string"
+            }
+          },
+          "$comment": "Domain result fields are checked against the negotiated operation schema/DTO; this base is intentionally extensible."
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "ok",
+        "adapter_context",
+        "error"
+      ],
+      "properties": {
+        "schema": {
+          "const": "occ.desktop-stdio-result.v1"
+        },
+        "ok": {
+          "const": false
+        },
+        "adapter_context": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "protocol",
+                "profile_digest",
+                "store_identity",
+                "adapter_sha256",
+                "backend_bundle_sha256"
+              ],
+              "properties": {
+                "protocol": {
+                  "const": "occ.desktop-stdio.v1"
+                },
+                "profile_digest": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "store_identity": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "adapter_sha256": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "backend_bundle_sha256": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^[0-9a-f]{64}$"
+                }
+              }
+            }
+          ]
+        },
+        "error": {
+          "type": "string",
+          "pattern": "^[A-Z_]{1,100}$"
+        }
+      }
+    }
+  ]
+}

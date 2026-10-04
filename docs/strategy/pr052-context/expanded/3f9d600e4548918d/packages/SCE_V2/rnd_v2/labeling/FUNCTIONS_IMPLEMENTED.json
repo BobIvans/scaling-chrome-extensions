@@ -1,0 +1,113 @@
+{
+  "schema": "sce.new.function.catalog.v1",
+  "module": "rnd_v2/labeling/label_context.py",
+  "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+  "functions": [
+    {
+      "id": "LABEL-01",
+      "name_ru": "Адаптер полного экспортированного пакета",
+      "entrypoint": "build_labels",
+      "scope": "sce.desktop.export.v1"
+    },
+    {
+      "id": "LABEL-02",
+      "name_ru": "Проверка SHA-256 оригиналов и TXT до маркировки",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-03",
+      "name_ru": "Стабильные source/content/span IDs и точные локаторы",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-04",
+      "name_ru": "Различение повторных одинаковых путей ZIP",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-05",
+      "name_ru": "Unicode spans без общего лимита документов",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-06",
+      "name_ru": "Метки ASSERTED, SUGGESTED и UNKNOWN с происхождением",
+      "entrypoint": "label"
+    },
+    {
+      "id": "LABEL-07",
+      "name_ru": "Нормализация Unicode и безопасные ключи тегов",
+      "entrypoint": "sanitize_tag"
+    },
+    {
+      "id": "LABEL-08",
+      "name_ru": "Эвристические кандидаты целей, задач, вопросов, тестов и web3",
+      "entrypoint": "infer",
+      "limitation": "not Laya inference, not verified facts"
+    },
+    {
+      "id": "LABEL-09",
+      "name_ru": "Сохранение всех доступных ролей и ветвей messages.jsonl",
+      "entrypoint": "build_labels",
+      "limitation": "mapping is not independently revalidated"
+    },
+    {
+      "id": "LABEL-10",
+      "name_ru": "Граф происхождения и объявленных parent-связей",
+      "entrypoint": "_graph"
+    },
+    {
+      "id": "LABEL-11",
+      "name_ru": "Контекст по цели без top-20/top-k",
+      "entrypoint": "assemble_goal",
+      "limitation": "lexical candidate search"
+    },
+    {
+      "id": "LABEL-12",
+      "name_ru": "Полный учёт включённого, исключённого и неизвестного",
+      "entrypoint": "assemble_goal"
+    },
+    {
+      "id": "LABEL-13",
+      "name_ru": "Режим включить весь доступный текст",
+      "entrypoint": "assemble_goal(include_all=True)"
+    },
+    {
+      "id": "LABEL-14",
+      "name_ru": "Раздельные версии оригинала и пользовательских меток",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-15",
+      "name_ru": "Инвалидация контекста при изменении данных или меток",
+      "entrypoint": "compare_revisions"
+    },
+    {
+      "id": "LABEL-16",
+      "name_ru": "Атомарное создание результатов и кооперативная отмена",
+      "entrypoint": "build_labels / assemble_goal"
+    },
+    {
+      "id": "LABEL-17",
+      "name_ru": "JSON Schema записей и coverage",
+      "entrypoint": "label-record.schema.json / goal-coverage.schema.json"
+    },
+    {
+      "id": "LABEL-18",
+      "name_ru": "Расширенная таксономия жизненного контекста",
+      "entrypoint": "universal-label-facets.SPEC.json",
+      "status": "R_AND_D_SPEC_ONLY"
+    }
+  ],
+  "tests": {
+    "command": "python -m unittest discover -s rnd_v2/labeling -p test_label_context.py -v",
+    "passed": 16
+  },
+  "not_run": [
+    "Windows GUI",
+    "Laya inference",
+    "network connectors",
+    "code execution",
+    "flashloan qualification"
+  ]
+}

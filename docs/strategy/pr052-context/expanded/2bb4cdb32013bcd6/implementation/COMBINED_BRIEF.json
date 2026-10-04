@@ -1,0 +1,492 @@
+{
+  "package_id": "ROADMAP-PR-020-021",
+  "supersedes_packages": [
+    "ROADMAP-PR-020",
+    "ROADMAP-PR-021"
+  ],
+  "status": "DETAILED_IMPLEMENTATION_SPEC_READY",
+  "application_code_changed": false,
+  "primary_repository": "BobIvans/scaling-chrome-extensions",
+  "domain_repository": "BobIvans/studious-pancake",
+  "workstreams": [
+    {
+      "title": "SCE → Studious: каталог реальных функций и qualification bridge",
+      "lane": "Web3",
+      "repository": "BobIvans/scaling-chrome-extensions + BobIvans/studious-pancake",
+      "scope": [
+        "Актуальная карта command/function/test handlers обоих repo",
+        "Typed READ_ONLY/REPLAY/PAPER profiles через существующий qualification owner",
+        "Dataset/config/repo identities и UI результатов в SCE"
+      ],
+      "acceptance": [
+        "Каждый handler найден в actual code либо помечен GAP",
+        "Нет второго trading runtime или market-data owner",
+        "Result сохраняет exact config/dataset/build",
+        "Missing credentials/data показаны отдельным blocker",
+        "Read-only/replay/paper режимы не смешиваются",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "SCE владеет контекстом и orchestration; Studious — рыночными/qualification handlers. Этот аудит не был выполнен текущим документом; #38 должен прочитать оба repo.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-27"
+      ],
+      "feature_ids": [
+        "RND-009",
+        "RND-010"
+      ],
+      "decision_ids": [
+        "DEC5-24"
+      ],
+      "goal_ids": [
+        "GOAL5-24"
+      ],
+      "workstream_id": "WS-029",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-017",
+        "WS-018"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Рыночные datasets: broker, freshness, point-in-time и независимые views",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE adapter",
+      "scope": [
+        "Адаптация существующего market-data owner к research observations",
+        "Raw/provider/version/time/hash и point-in-time anchors",
+        "Backpressure/quotas/completeness, opportunity identity и общий dataset cache"
+      ],
+      "acceptance": [
+        "Missing/stale data не объявляется отсутствием opportunity",
+        "Provider views имеют независимое происхождение",
+        "Look-ahead исключён проверкой времени входов",
+        "Повтор dataset не увеличивает число независимых наблюдений",
+        "Offline fixtures и реальный acquisition имеют разные receipts",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Аудитировать и развивать текущий Studious broker; SCE сохраняет references/receipts. Цены и live APIs изучать заново при создании detailed ZIP.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-28"
+      ],
+      "feature_ids": [
+        "RND-015",
+        "RND-016",
+        "RND-017",
+        "RND-018",
+        "RND-027"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-24"
+      ],
+      "workstream_id": "WS-030",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-011",
+        "WS-025",
+        "WS-029"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Replay/paper qualification: repayment, экономика, holdout и stateful campaigns",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE adapter",
+      "scope": [
+        "Exact dataset/config replay и PAPER/SHADOW outputs",
+        "Repayment/boundary/fuzz/stateful corpus",
+        "Fees/slippage/latency/units, all-trial registry и time/venue holdout"
+      ],
+      "acceptance": [
+        "Replay воспроизводим по hashes/config",
+        "Stateful campaign непустая и проверяет инварианты",
+        "Полная экономика включает заявленные затраты",
+        "Неудачные trials и unknown включены в denominator",
+        "Paper/replay outcome не маркируется live profit",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Переиспользовать реализованные qualification commands Studious. Не добавлять автоматический money-moving маршрут как условие закрытия исследовательского scope.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-29"
+      ],
+      "feature_ids": [
+        "RND-012",
+        "RND-013",
+        "RND-014",
+        "RND-019",
+        "RND-020",
+        "RND-022",
+        "RND-028",
+        "RND-029"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-24",
+        "GOAL5-25"
+      ],
+      "workstream_id": "WS-031",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-013",
+        "WS-029",
+        "WS-030"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Research packs: circular/triangular, liquidation и peg/wrapper opportunities",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE workflow",
+      "scope": [
+        "Atlas рынков/протоколов и eligibility каждого route",
+        "Сопоставимые packs circular/triangular, liquidation+swap, stable peg/wrappers",
+        "Atomic boundary, costs, liquidity/settlement и отрицательные cases"
+      ],
+      "acceptance": [
+        "Каждый pack имеет dataset, hypothesis и verifier contract",
+        "Неподдерживаемый protocol явно GAP",
+        "Route repayment/settlement проверяется в своей модели",
+        "Независимый holdout сохранён",
+        "Opportunity не выдаётся за исполнимую прибыль без evidence",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Это конечный набор research packs текущих feature cards RND-030..033, не обещание всех будущих протоколов. SCE содержит workflows; экономический код принадлежит Studious.",
+      "application_code_changed": false,
+      "source_task_ids": [],
+      "feature_ids": [
+        "RND-021",
+        "RND-030",
+        "RND-031",
+        "RND-032",
+        "RND-033"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-25"
+      ],
+      "workstream_id": "WS-032",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-031"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Research packs: intent/clearing, cross-chain, basis и funding",
+      "lane": "Web3",
+      "repository": "BobIvans/studious-pancake + SCE workflow",
+      "scope": [
+        "Intent/clearing/coincidence-of-wants solver experiment",
+        "Cross-chain/basis/funding с моделью времени, капитала и settlement",
+        "Сравнение с атомарными pack baselines и failure cases"
+      ],
+      "acceptance": [
+        "Atomic и delayed-capital модели разделены",
+        "Capital lock/finality/hedging assumptions заданы явно",
+        "Нет look-ahead в funding/venue данных",
+        "Settlement failure и stale quote входят в corpus",
+        "Результат имеет mode и scope, пригодный для повторной проверки",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Закрывает определения и проверяемые эксперименты RND-034/035. Для реальных protocol execution adapters потребуются подтверждённые отдельные scopes.",
+      "application_code_changed": false,
+      "source_task_ids": [],
+      "feature_ids": [
+        "RND-034",
+        "RND-035"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-25"
+      ],
+      "workstream_id": "WS-033",
+      "parent_package": "ROADMAP-PR-020",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-031"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Сквозная квалификация Windows 11: масштаб, сбои, UI, voice и обновления",
+      "lane": "Качество",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Общий corpus wrong-target/stale/cancel/unknown/restore/mic-denied",
+        "Scale profiles Dell 16 GB и реальные installed receipts",
+        "Вертикали repo→context→AI→change→update и text/voice→research"
+      ],
+      "acceptance": [
+        "Каждый тест связан с exact build/device/config",
+        "Большой корпус не теряет хвосты и origins",
+        "STOP/crash/offline/restart проходят на устройстве",
+        "Установка/rollback/canary подтверждены отдельно от CI",
+        "Отсутствующий device/API receipt остаётся NOT_RUN",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Этот пакет выполняет квалификацию конечных вертикалей и исправляет подтверждённые faults; профильные владельцы сохраняются. CI не подменяет реальный Windows запуск.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-011",
+        "UI3-018",
+        "PAR3-022",
+        "EVO3-024",
+        "TAB4-21",
+        "LAYA4-026"
+      ],
+      "feature_ids": [
+        "LIB-060",
+        "ACT-053",
+        "RND-023"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-01",
+        "GOAL5-02",
+        "GOAL5-03",
+        "GOAL5-04",
+        "GOAL5-05",
+        "GOAL5-06",
+        "GOAL5-07",
+        "GOAL5-09",
+        "GOAL5-12",
+        "GOAL5-13",
+        "GOAL5-14",
+        "GOAL5-15",
+        "GOAL5-16",
+        "GOAL5-17",
+        "GOAL5-18",
+        "GOAL5-19",
+        "GOAL5-20",
+        "GOAL5-21",
+        "GOAL5-22",
+        "GOAL5-23",
+        "GOAL5-26",
+        "GOAL5-28"
+      ],
+      "workstream_id": "WS-034",
+      "parent_package": "ROADMAP-PR-021",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-003",
+        "WS-004",
+        "WS-005",
+        "WS-006",
+        "WS-008",
+        "WS-009",
+        "WS-010",
+        "WS-011",
+        "WS-014",
+        "WS-015",
+        "WS-016",
+        "WS-019",
+        "WS-020",
+        "WS-022",
+        "WS-024",
+        "WS-027",
+        "WS-028",
+        "WS-029",
+        "WS-030",
+        "WS-031",
+        "WS-032",
+        "WS-033"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Полезность и стоимость: benchmarks, ablation, manual baseline и все попытки",
+      "lane": "Качество",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Frozen corpus собственных retrieval/coding/research задач",
+        "Manual/no-action baseline, context ablation и независимые оценки",
+        "Cost/latency/RAM/interventions/unknown/failure accounting"
+      ],
+      "acceptance": [
+        "В знаменатель входят все начатые попытки",
+        "Критерии успеха заморожены до запуска",
+        "Количество PR не подменяет измеренную пользу",
+        "Повторные источники не считаются независимыми оценками",
+        "Отчёт показывает scope, confidence и next missing evidence",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Измеряет пользу реализованных функций; не требует придумывать прибыль или идеальный benchmark. Приёмочные пороги согласуются по данным corpus.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "TAB4-20"
+      ],
+      "feature_ids": [
+        "LIB-055",
+        "ACT-013",
+        "ACT-014",
+        "ACT-026",
+        "RND-039",
+        "RND-040",
+        "RND-041"
+      ],
+      "decision_ids": [
+        "DEC5-23"
+      ],
+      "goal_ids": [
+        "GOAL5-15",
+        "GOAL5-21",
+        "GOAL5-25",
+        "GOAL5-27"
+      ],
+      "workstream_id": "WS-035",
+      "parent_package": "ROADMAP-PR-021",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-015",
+        "WS-027",
+        "WS-028",
+        "WS-031",
+        "WS-032",
+        "WS-033",
+        "WS-034"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Закрытие V5: все 160 задач, 164 карточки, 28 целей и выпуск продукта",
+      "lane": "Качество",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Criterion-level reconciliation всех каталогов и decision records",
+        "Исправление оставшихся integration defects и stale documentation",
+        "Delivery/handoff, release notes, registry и точные named blockers"
+      ],
+      "acceptance": [
+        "Ни один исходный ID не потерян",
+        "У каждого обязательного критерия есть пригодный receipt или открытый blocker",
+        "DEFERRED не считается выполнением",
+        "Delivered/installed/usable различаются",
+        "Полное закрытие объявляется только после фактической приёмки обязательных критериев",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "№45 — финальная сверка и интеграционные исправления. Новые несвязанные продуктовые идеи создают следующую версию roadmap; их нельзя тихо включать или использовать для бесконечного продления V5.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-012",
+        "TAB4-22",
+        "ACTION5-30"
+      ],
+      "feature_ids": [
+        "LIB-053",
+        "LIB-056",
+        "RND-046"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-10",
+        "GOAL5-27",
+        "GOAL5-28"
+      ],
+      "workstream_id": "WS-036",
+      "parent_package": "ROADMAP-PR-021",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-034",
+        "WS-035"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "feature_ids": [
+    "ACT-013",
+    "ACT-014",
+    "ACT-026",
+    "ACT-053",
+    "LIB-053",
+    "LIB-055",
+    "LIB-056",
+    "LIB-060",
+    "RND-009",
+    "RND-010",
+    "RND-012",
+    "RND-013",
+    "RND-014",
+    "RND-015",
+    "RND-016",
+    "RND-017",
+    "RND-018",
+    "RND-019",
+    "RND-020",
+    "RND-021",
+    "RND-022",
+    "RND-023",
+    "RND-027",
+    "RND-028",
+    "RND-029",
+    "RND-030",
+    "RND-031",
+    "RND-032",
+    "RND-033",
+    "RND-034",
+    "RND-035",
+    "RND-039",
+    "RND-040",
+    "RND-041",
+    "RND-046"
+  ],
+  "source_task_ids": [
+    "ACTION5-27",
+    "ACTION5-28",
+    "ACTION5-29",
+    "ACTION5-30",
+    "EVO3-024",
+    "G3-011",
+    "G3-012",
+    "LAYA4-026",
+    "PAR3-022",
+    "TAB4-20",
+    "TAB4-21",
+    "TAB4-22",
+    "UI3-018"
+  ],
+  "decision_ids": [
+    "DEC5-23",
+    "DEC5-24"
+  ],
+  "external_prerequisite_packages": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19
+  ],
+  "code_pr_policy": "ONE_PRIMARY_SCE_PR; companion Studious PR only when actual domain owner code needs changes",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CURRENT_CODE",
+  "proposed_semantic_function_count": 47,
+  "test_case_count": 50
+}

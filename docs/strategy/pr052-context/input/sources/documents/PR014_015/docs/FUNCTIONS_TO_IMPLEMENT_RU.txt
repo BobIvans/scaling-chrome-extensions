@@ -1,0 +1,256 @@
+ПЛАНИРУЕМЫЕ ФУНКЦИИ — это не список уже написанного кода
+
+FN-001 resolve_packet_sources [WS-013]
+Вход: Goal/snapshot/selected refs
+Выход: Pinned exact refs + omissions
+Owner: Content source owner; ошибки: SOURCE_DRIFT/MISSING_SOURCE; проверки: AC-01, AC-07
+
+FN-002 persist_selection_revision [WS-013]
+Вход: Source ranges + reasons
+Выход: Immutable basket revision
+Owner: Context/review owner; ошибки: OUT_OF_SCOPE; проверки: AC-02
+
+FN-003 build_why_this_packet [WS-013]
+Вход: Selection/goal/criteria
+Выход: Explainability ledger
+Owner: Context owner; ошибки: UNBOUND_CRITERION; проверки: AC-02
+
+FN-004 compile_task_document [WS-013]
+Вход: Goal/repo/criteria/sources
+Выход: Immutable provider-neutral task
+Owner: Context/review owner; ошибки: INVALID_SCHEMA; проверки: AC-03
+
+FN-005 plan_packet_parts [WS-013]
+Вход: Source spans + byte budgets
+Выход: Coverage manifest + next parts
+Owner: Existing export owner; ошибки: BUDGET/MISSING_SOURCE; проверки: AC-04
+
+FN-006 create_share_projection [WS-013]
+Вход: Packet + export profile/destination
+Выход: Redacted immutable projection
+Owner: Privacy/context owner; ошибки: OUT_OF_SCOPE/STALE_BINDING; проверки: AC-05, AC-06
+
+FN-007 preview_export_projection [WS-013]
+Вход: Projection ref
+Выход: Same verified bytes/digest
+Owner: Export/UI owner; ошибки: HASH_MISMATCH; проверки: AC-05
+
+FN-008 export_packet_atomic [WS-013]
+Вход: Projection parts
+Выход: Offline indexed artifact
+Owner: PR-003 export owner; ошибки: DISK_FULL/CANCELLED; проверки: AC-04, AC-08
+
+FN-009 validate_need_context [WS-013]
+Вход: Bound request + scope
+Выход: Validated source range request
+Owner: Library gateway owner; ошибки: INVALID_RANGE/OUT_OF_SCOPE; проверки: AC-07
+
+FN-010 build_context_delta [WS-013]
+Вход: Validated request
+Выход: Idempotent immutable delta
+Owner: Context owner; ошибки: SOURCE_DRIFT; проверки: AC-09
+
+FN-011 ingest_bound_ai_result [WS-013]
+Вход: Raw result + exact task refs
+Выход: Proposal/review record
+Owner: Existing result owner; ошибки: STALE/UNBOUND/CONFLICT; проверки: AC-10, AC-11
+
+FN-012 read_scoped_library_span [WS-013]
+Вход: Namespace/version/range
+Выход: Exact bytes + source hash
+Owner: Library owner; ошибки: OUT_OF_SCOPE/MISSING_SOURCE; проверки: AC-07, AC-12
+
+FN-013 pin_backup_generation [WS-014]
+Вход: Namespace/operation
+Выход: Generation/object pin lease
+Owner: Store coordinator; ошибки: LOCK_BUSY; проверки: AC-13
+
+FN-014 build_consistent_backup [WS-014]
+Вход: Pinned DB/blob/event snapshot
+Выход: Verified complete artifact
+Owner: Backup owner; ошибки: MISSING_OBJECT/INCONSISTENT; проверки: AC-13, AC-14
+
+FN-015 verify_restore_artifact [WS-014]
+Вход: Artifact staged path
+Выход: Hash/integrity report
+Owner: Recovery owner; ошибки: HASH_MISMATCH/UNSUPPORTED_SCHEMA; проверки: AC-14, AC-15
+
+FN-016 rehearse_schema_migration [WS-014]
+Вход: Isolated restore+target schema
+Выход: Invariant comparison/journal
+Owner: Migration coordinator; ошибки: INCOMPATIBLE_SCHEMA; проверки: AC-16
+
+FN-017 activate_verified_restore [WS-014]
+Вход: Verified copy+quiescent fence
+Выход: New active descriptor
+Owner: Store coordinator; ошибки: LOCK_BUSY/UNKNOWN_ACTIVATION; проверки: AC-17
+
+FN-018 apply_current_tombstones [WS-014]
+Вход: Restored+current deletion ledgers
+Выход: Current-safe projection
+Owner: Lifecycle owner; ошибки: MISSING_LEDGER; проверки: AC-18
+
+FN-019 preview_retention_impact [WS-014]
+Вход: Source/policy refs
+Выход: Aliases/derived/backups impact
+Owner: Lifecycle owner; ошибки: OUT_OF_SCOPE; проверки: AC-19
+
+FN-020 collect_unreferenced_objects [WS-014]
+Вход: Verified reachability+pins
+Выход: Owned cleanup receipt
+Owner: CAS/lifecycle owner; ошибки: PINNED/REACHABLE; проверки: AC-19, AC-20
+
+FN-021 export_portable_sync [WS-014]
+Вход: Selected snapshot/events
+Выход: Immutable offline sync artifact
+Owner: Sync owner; ошибки: SCOPE/INCONSISTENT; проверки: AC-21
+
+FN-022 import_portable_sync [WS-014]
+Вход: Validated objects/events
+Выход: Replay-safe merge/conflict records
+Owner: Existing source owner; ошибки: EVENT_CONFLICT; проверки: AC-21, AC-22
+
+FN-023 resolve_temporal_scope [WS-015]
+Вход: Query/project/as_of
+Выход: Scope+effective revisions
+Owner: Retrieval owner; ошибки: INVALID_TIME/SCOPE; проверки: AC-23
+
+FN-024 retrieve_exact_candidates [WS-015]
+Вход: Filtered namespace+ID/path/quote
+Выход: Version-bound exact ranges
+Owner: Existing search owner; ошибки: NO_MATCH; проверки: AC-24
+
+FN-025 rank_bounded_context [WS-015]
+Вход: Exact/FTS/graph candidates
+Выход: Stable selected refs+exclusions
+Owner: Retrieval owner; ошибки: MISSING_REQUIRED; проверки: AC-25
+
+FN-026 project_conflicting_evidence [WS-015]
+Вход: Applicable revisions
+Выход: Visible conflict set
+Owner: Goals/source owner; ошибки: UNRESOLVED_CONFLICT; проверки: AC-26
+
+FN-027 persist_manual_correction [WS-015]
+Вход: Source-linked correction intent
+Выход: Append-only revision
+Owner: Existing notes owner; ошибки: IDEMPOTENCY_CONFLICT; проверки: AC-27
+
+FN-028 invalidate_derived_summaries [WS-015]
+Вход: Source/relations change
+Выход: Stale dependency receipts
+Owner: Derived-data owner; ошибки: SOURCE_DRIFT; проверки: AC-28
+
+FN-029 evaluate_frozen_retrieval [WS-015]
+Вход: Frozen oracle+query corpus
+Выход: Recall/version/citation/latency metrics
+Owner: Independent verifier owner; ошибки: NOT_RUN/MISSING_ORACLE; проверки: AC-29, AC-30
+
+FN-030 resolve_installed_profile [WS-016]
+Вход: Trusted installation descriptor
+Выход: Single data root/namespace
+Owner: Bootstrap owner; ошибки: MISSING_PROFILE; проверки: AC-31
+
+FN-031 perform_ipc_handshake [WS-016]
+Вход: Build/protocol/client generation
+Выход: Negotiated command schemas
+Owner: Native/Core transport owner; ошибки: PROTOCOL_MISMATCH; проверки: AC-32
+
+FN-032 decode_bounded_ipc_frame [WS-016]
+Вход: Framed bytes
+Выход: Typed request before dispatch
+Owner: Transport owner; ошибки: OVERSIZE_FRAME/UNKNOWN_COMMAND; проверки: AC-32, AC-33
+
+FN-033 submit_canonical_write_intent [WS-016]
+Вход: Typed operation+stable ID
+Выход: Persisted intent/Core job ref
+Owner: Existing task/Core owner; ошибки: IDEMPOTENCY_CONFLICT; проверки: AC-34
+
+FN-034 reconcile_lost_write_ack [WS-016]
+Вход: Previous operation ID
+Выход: Existing factual status
+Owner: Existing task owner; ошибки: UNKNOWN_EFFECT; проверки: AC-34, AC-35
+
+FN-035 fence_stale_ui_response [WS-016]
+Вход: Connection/query generation
+Выход: Current UI projection
+Owner: Desktop transient UI; ошибки: STALE_GENERATION; проверки: AC-36
+
+FN-036 page_virtual_library [WS-016]
+Вход: Snapshot/cursor/query handle
+Выход: Bounded rows+range preview
+Owner: Search/source owner; ошибки: CURSOR_STALE; проверки: AC-37
+
+FN-037 package_per_user_desktop [WS-016]
+Вход: Qualified shell/backend versions
+Выход: Installable artifact
+Owner: Packaging owner; ошибки: NOT_QUALIFIED; проверки: AC-31, AC-38
+
+FN-038 show_recovery_panel [WS-016]
+Вход: Task/effect/evidence state
+Выход: Accessible next-action view
+Owner: Desktop owner; ошибки: GAP/UNKNOWN; проверки: AC-39, AC-40
+
+FN-039 measure_shell_candidates [WS-016]
+Вход: Identical device fixtures
+Выход: DEC5-01 decision receipt
+Owner: Desktop/device owner; ошибки: NOT_RUN; проверки: AC-41
+
+FN-040 register_capability_binding [WS-017]
+Вход: Known adapter/build/schema/effects
+Выход: Candidate registry revision
+Owner: Registry owner; ошибки: MISSING_ADAPTER; проверки: AC-42
+
+FN-041 compute_capability_availability [WS-017]
+Вход: Registry/build/grant/qualification
+Выход: Enabled/blocked reasons
+Owner: Policy/qualification owner; ошибки: STALE/UNQUALIFIED; проверки: AC-42, AC-43
+
+FN-042 invalidate_qualification_binding [WS-017]
+Вход: Changed input/build/adapter/grant
+Выход: Dependency-local stale evidence
+Owner: Qualification owner; ошибки: DRIFT; проверки: AC-43
+
+FN-043 validate_operator_template [WS-017]
+Вход: Named template+typed slots
+Выход: Known executable plan
+Owner: Core/template owner; ошибки: INVALID_TEMPLATE; проверки: AC-44, AC-45
+
+FN-044 evaluate_reusable_scope_grant [WS-017]
+Вход: Principal/effects/targets/revisions
+Выход: Permit or exact scope diff
+Owner: Current policy owner; ошибки: REVOKED/OUT_OF_SCOPE; проверки: AC-46
+
+FN-045 resolve_execution_credential_ref [WS-017]
+Вход: Authorized opaque ref
+Выход: Transient credential in adapter
+Owner: Existing secret provider; ошибки: MISSING_CREDENTIAL; проверки: AC-47
+
+FN-046 dispatch_registered_operation [WS-017]
+Вход: Qualified template+intent+fence
+Выход: Owned job/effect receipt
+Owner: Existing Core; ошибки: UNKNOWN_EFFECT; проверки: AC-48
+
+FN-047 request_independent_stop [WS-017]
+Вход: Keyboard/local controller+scope
+Выход: Durable cancel epoch/receipt
+Owner: Core control path; ошибки: STOP_UNCONFIRMED; проверки: AC-49, AC-50
+
+FN-048 fence_post_stop_completion [WS-017]
+Вход: Lease/epoch completion
+Выход: Observed historical/fresh outcome
+Owner: Existing job owner; ошибки: STALE_LEASE; проверки: AC-50, AC-51
+
+FN-049 resume_after_reconciliation [WS-017]
+Вход: Stopped task+current bindings
+Выход: Validated continuation same ID
+Owner: Existing Core/task owner; ошибки: NEEDS_RECONCILIATION; проверки: AC-52
+
+FN-050 open_versioned_editor_source [WS-017]
+Вход: Mapped source+configured editor
+Выход: Exact pinned navigation receipt
+Owner: Registered editor adapter; ошибки: SOURCE_DRIFT/DEPENDENCY; проверки: AC-53
+
+FN-051 append_trust_version_receipt [WS-017]
+Вход: Intent/grant/build/outcome
+Выход: Correction-preserving audit event
+Owner: Existing evidence owner; ошибки: CONFLICT; проверки: AC-54

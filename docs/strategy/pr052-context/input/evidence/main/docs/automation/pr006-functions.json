@@ -1,0 +1,221 @@
+{
+  "schema": "occ.pr-function-inventory.v1",
+  "package_id": "ROADMAP-PR-006",
+  "product_module": "content-lab/repo_groups.py",
+  "new_module_level_functions_and_class_methods": 32,
+  "functions": [
+    {
+      "name": "boundary",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Граница fault/visibility проверок."
+    },
+    {
+      "name": "Resources.__init__",
+      "kind": "method",
+      "status": "NEW",
+      "description": "Явные необязательные resource budgets; по умолчанию без corpus/time cap."
+    },
+    {
+      "name": "Resources.check",
+      "kind": "method",
+      "status": "NEW",
+      "description": "Cooperative deadline check."
+    },
+    {
+      "name": "Resources.add",
+      "kind": "method",
+      "status": "NEW",
+      "description": "Учёт нормализованных данных graph/ledger без усечения."
+    },
+    {
+      "name": "policy_view",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Strict frozen policy и roots внутри operator profile."
+    },
+    {
+      "name": "source_id",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Стабильный source ID без snapshot/global ordinal."
+    },
+    {
+      "name": "group_id",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Стабильный SCC/group ID по membership."
+    },
+    {
+      "name": "unmapped_eligibility",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Диагностическая whole-source projection для неизвестных facts."
+    },
+    {
+      "name": "eligibility_view",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Чтение фактического PR005 owner и проверка source binding/version."
+    },
+    {
+      "name": "read_eligibility_input",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Проверка явного normalized operator adapter/schema/hash/scope."
+    },
+    {
+      "name": "verify_eligibility",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Полный ledger/qualification hash/state/type consistency."
+    },
+    {
+      "name": "saved_analysis",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Проверка сохранённого AST по точным whole-source bytes."
+    },
+    {
+      "name": "is_test",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Явная filename rule для evidence type теста."
+    },
+    {
+      "name": "declared_view",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Strict trusted declared links с endpoint hash binding."
+    },
+    {
+      "name": "plan_sources",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Deterministic Python graph/SCC, memberships, revisions, typed relations и gaps."
+    },
+    {
+      "name": "raw_ref",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Reference immutable chunk IDs/hashes/ranges с whole-source text gate."
+    },
+    {
+      "name": "segment",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Logical/revision IDs, raw budgets и prev/next identity одного segment."
+    },
+    {
+      "name": "segments",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Потоковое разбиение references до EOF без total cap."
+    },
+    {
+      "name": "plan_database",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Disposable private disk index с bounded SQLite cache."
+    },
+    {
+      "name": "reference_rows",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Потоковое чтение parts из authoritative SQLite owner."
+    },
+    {
+      "name": "fill_plan",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Полный uniqueness-indexed reference plan на диск."
+    },
+    {
+      "name": "verify_plan",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Независимый readback всех sources/parts/chains/relations."
+    },
+    {
+      "name": "table_rows",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Deterministic JSONL iteration с явным закрытием cursor."
+    },
+    {
+      "name": "write_jsonl",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Streaming fsynced JSONL writer."
+    },
+    {
+      "name": "page_name",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Generated-ID-only local navigation filenames."
+    },
+    {
+      "name": "link",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Escaped HTML link/label."
+    },
+    {
+      "name": "write_navigation",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Полная portable group/source/segment navigation с bounded pages."
+    },
+    {
+      "name": "verify_files",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Readback JSONL против проверенного плана."
+    },
+    {
+      "name": "verify_navigation",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Проверка всех сохранённых HTML hashes."
+    },
+    {
+      "name": "verify_output_proofs",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Повторная проверка terminal artifact hashes перед публикацией."
+    },
+    {
+      "name": "publish",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Scoped CLI owner: verified frozen input, disk staging, atomic directory publication/reuse."
+    },
+    {
+      "name": "main",
+      "kind": "function",
+      "status": "NEW",
+      "description": "Compact receipt CLI и typed failure path."
+    }
+  ],
+  "changed_existing": [
+    {
+      "path": "content-lab/repo_source.py",
+      "name": "import_graph",
+      "change": "Optional cooperative progress checks; existing resolver semantics retained."
+    },
+    {
+      "path": "content-lab/repo_source.py",
+      "name": "components",
+      "change": "Optional cooperative progress checks in iterative SCC traversal."
+    },
+    {
+      "path": "agent-bridge/Install.ps1",
+      "name": "sibling module installation",
+      "change": "Include repo_groups.py alongside installed PR005 siblings."
+    }
+  ],
+  "nested_helpers": "Implementation closures within documented functions; not additional public APIs.",
+  "native_endpoints_added": 0,
+  "background_workers_added": 0,
+  "authoritative_databases_added": 0
+}

@@ -1,0 +1,15 @@
+Проверено 2026-10-04, primary documentation; ссылки для implementation audit.
+
+SQLite Online Backup API
+https://www.sqlite.org/backup.html
+Официальный API создаёт snapshot копию базы. Вывод для проекта: backup DB получать поддерживаемым owner способом; отдельные CAS blobs и event watermark согласовывать собственным coordinator. DB API не является готовым backup всего приложения. Proposed publication barrier/object pins описаны нашим design, а не документацией SQLite.
+
+Microsoft Windows app development best practices
+https://learn.microsoft.com/en-us/windows/apps/get-started/best-practices
+Microsoft рекомендует per-user install, доступные keyboard interactions и accurate accessible names/roles/states через UI Automation; отдельно описывает credential storage. Вывод для проекта: shell/installer выбран только после реального install/accessibility/device run. Эти рекомендации не подтверждают, что Tk или другой кандидат уже прошёл сценарий.
+
+RFC 8785 JSON Canonicalization Scheme
+https://www.rfc-editor.org/rfc/rfc8785.html
+RFC описывает детерминированную сериализацию JSON для стабильных hashable bytes. Proposed wire choice: JCS с cross-language test vectors; обычный Python sort_keys не объявлять реализацией JCS. Blob и package-file SHA256 считают сохранённые bytes и не требуют JSON canonicalization.
+
+Внешние provider attachment/token/API limits в этом ZIP UNKNOWN. Их не подставляли по памяти. Перед real adapter integration проверить официальную документацию выбранного провайдера и измерить observed build/session limits. Приведённые design decisions остаются proposals до owner/device evidence.

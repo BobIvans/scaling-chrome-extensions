@@ -1,0 +1,145 @@
+Создай большой подробный ZIP ROADMAP-PR-015: «Полноценный Windows desktop: installer, единый Core, capabilities, templates и STOP».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Развить desktop pilot №8 в установленный клиент с canonical writes, recovery, keyboard accessibility и исполнением зарегистрированных capabilities.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: G3-001, G3-005, UI3-017, PAR3-001, PAR3-003, PAR3-015, EVO3-001, EVO3-017, EVO3-019, EVO3-023, TAB4-01, TAB4-02, LAYA4-001, ACTION5-01, ACTION5-02, ACTION5-03, ACTION5-18, ACTION5-19, ACTION5-21
+Feature cards: LIB-001, LIB-029, LIB-031, LIB-032, LIB-033, LIB-039, ACT-002, ACT-003, ACT-004, ACT-015, ACT-032, ACT-033, ACT-038, ACT-050, ACT-051, ACT-054, ACT-057, RND-011
+Decisions: DEC5-01, DEC5-02, DEC5-18, DEC5-19
+Goals: GOAL5-01, GOAL5-08, GOAL5-12, GOAL5-15, GOAL5-16, GOAL5-17, GOAL5-19, GOAL5-28
+Dependencies: PR-008, PR-009, PR-010, PR-012, PR-014
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-016 — Полноценный Windows desktop: установка, canonical writes и восстановление
+Scope:
+- Выбор shell/runtime по measurement и самостоятельная per-user установка
+- Typed stdio/API к текущим owners, canonical task/write intents
+- Virtualized library, keyboard/screen reader, status и recovery panel
+Граница: №8 — минимальный Tk/stdio read-only pilot. Переиспользовать его доказанные части; не переносить второй store из архивного prototype. Долгие jobs — №11, updater — №33.
+Приёмка:
+- Приложение запускается с закрытым Chrome без зависимости от cwd
+- Search/import/task/result используют один профиль
+- Unknown write сверяется по прежнему idempotency key
+- Crash/reconnect не теряет задачу и не создаёт второй writer
+- Install/uninstall/upgrade/restore подтверждены на Windows
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-017 — Capabilities, execution templates, scope и независимый STOP
+Scope:
+- Версионированный registry capabilities/effects/resources/evidence
+- Operator templates для API/CLI/terminal/VS Code и credential references
+- Idempotent operation identity, grant checks, read-first tool gateway и STOP
+Граница: Сохраняет существующий Core/policy owner. Laya/planner — №27, real UI bindings — №30, release activation — №33.
+Приёмка:
+- Доступна только capability подходящей build/qualification
+- Document/AI result не задаёт произвольный executable
+- STOP работает без ASR/model/Chrome
+- Повтор intent не удваивает effect
+- Grant/adapter/build drift делает qualification stale
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+G3-001 — Сверить владельцев и связать V3 с текущим кодом
+- SHA фактического checkout записан; переезды путей обнаружены.
+- Ни один новый store/runtime не конкурирует с production owner.
+G3-005 — Отобразить подготовку и доставку частей в UI
+- UI показывает selected/staged/delivered отдельно.
+- Клавиатура проходит подготовку и STOP; tested device указан.
+UI3-017 — Доступный текстовый путь; voice как необязательное расширение
+- Обязательный критерий: пользователь без мыши связывает чат, готовит, отправляет и восстанавливает задачу.
+- Опциональный voice-критерий применяется только при подключении ASR: голос не выдаёт расширенные права. Отсутствие voice не блокирует UI3-018.
+PAR3-001 — Зафиксировать владельца состояния и контракт расширения
+- Зафиксированы текущий SHA и фактические API durable/native/context владельцев; Oct3 baseline не выдан за current main.
+- Каждая новая сущность имеет существующий source of truth и план совместимой миграции.
+- Прототип JSON/read-only planner не создаёт второй production scheduler.
+PAR3-003 — Capability registry с проверенными эффектами и ресурсами
+- Binding имеет version/digest, typed inputs, effects, resource estimates и verifier.
+- Статический discovery не выполняет найденные программы или неизвестный --help.
+- Unknown effects и needs access/version/configuration различаются с причиной.
+PAR3-015 — STOP независимо от голоса и корректная отмена
+- GUI/keyboard STOP доступен до голосовой интеграции и без слота работника.
+- После STOP нет новых lease/dispatch; каждый running node получает observed completed/cancelled/unknown.
+- Компенсация внешнего эффекта — отдельная операция, не стирание receipt.
+- Базовый local keyboard STOP квалифицируется независимо от ASR и без живой отправки: fake adapters проверяют очередь/отмену до активации PAR3-009 и PAR3-018.
+EVO3-001 — Закрепить владельцев и типы UpdateCase/Evidence
+- Свежий snapshot и diff к V2 owner map сохранены; новые tables/DTO имеют одного владельца и migration plan.
+- AI statement, user assertion, repo observation, test evidence, release observation и device observation имеют разные типы.
+- Unknown, failed и stale различимы; импорт документа не может установить verified/usable напрямую.
+EVO3-017 — Регистрация capability и binding к установленной сборке
+- Capability имеет typed arguments/effects/verifier/retry/recovery и binding к известному entrypoint.
+- Manifest не даёт разрешения; found function и registered operation хранятся раздельно.
+- Compatibility diff проверяет не только номер версии, но и target/effects/schema semantics.
+EVO3-019 — Постоянный scope для согласованного цикла обновления
+- Grant включает principal/device/installation/targets/channel/effects/version policy/budgets/revocation.
+- Повторные действия внутри scope выполняются без нового вопроса; policy check сохраняет grant revision.
+- Новый account/destination/destructive effect/денежный эффект или расширение data root требует конкретного нового scope; AI не может его выдать.
+- Grant проверяется до первого соответствующего внешнего эффекта, включая install; само наличие карточки или UI progress не выдаёт scope.
+EVO3-023 — Доступная панель прогресса и прекращения
+- Основные действия доступны клавиатурой и имеют проверенные accessible names; подтверждение и ошибки читаются screen reader.
+- Панель различает «ты сообщил», «репозиторий проверен», «готов релиз», «установлено», «операция доступна».
+- STOP и Resume не зависят от ASR; после отмены видно, какой эффект завершён/неизвестен и что будет проверено перед повтором.
+- Готовность панели EVO3-023 не выдаёт permission и не подменяет ранний baseline STOP/device qualification; external effects проверяют activation_prerequisites отдельно.
+TAB4-01 — Закрепить владельцев данных и версию расширения
+- Зафиксированы контракт и миграция для task ID, packet SHA, attempt ID, наблюдений и execution job ID; существующие ручные операции продолжают работать.
+- Все записи задачи и наблюдений принадлежат существующему SQLite-хранилищу; все исполняемые задания принадлежат Core.
+- Текущие OPERATOR_REPORTED, dispatch_allowed=false и LOCAL_TESTS_VERIFIED не переименованы в подтверждения сервиса или установки.
+- Прочитанная конфигурация max_parallel=1 сохраняется; неподдерживаемые новые job kinds отклоняются до отдельной квалификации.
+TAB4-02 — Сохранённый профиль ограниченной автоматизации
+- Профиль перечисляет точные namespace, репозиторий, допустимые ветки/пути, действия, группы источников, шаблоны заданий и лимиты.
+- Каждая попытка привязана к digest актуальной версии профиля; профиль из документа или ответа AI не принимается.
+- Разрешённое действие выполняется без повторного запроса; действие вне области показывает конкретную разницу требуемой настройки.
+- Отзыв разрешения блокирует новые действия и сохраняет наблюдение об уже начатом внешнем эффекте.
+LAYA4-001 — Закрепить владельцев и контракты Laya/context batch
+- В implementation PR указан точный current HEAD и diff к основанию 5574ab7; все используемые symbols проверены по текущему коду.
+- Таблицы source/batch/labels принадлежат существующему content.sqlite3; executable jobs принадлежат Core, другого runtime/scheduler нет.
+- Для новых DTO определены schema/version, limits, namespace и несовместимые изменения; прежние repo/review/task данные читаются.
+- Фактический Laya/Voice Agent OS interface отмечен AVAILABLE, UNAVAILABLE или UNKNOWN с observed version; пример JSON не принимается за adapter.
+ACTION5-01 — Сверить операции библиотеки и границу транзакции перед desktop
+- Каждая требуемая операция связана с текущим owner; неизвестные операции обозначены GAP с отдельным scope.
+- Импорт, UI и CLI читают один source head; число новых competing stores/executors равно нулю.
+- Для каждой миграции определены schema version, precondition, rollback boundary и writer lock.
+ACTION5-02 — Собрать установочный desktop-сценарий без работающего Chrome
+- На Windows 11 при закрытом Chrome доступны импорт TXT, поиск источника и export task document.
+- First-run показывает путь данных и установленную версию; повторный запуск открывает тот же namespace.
+- Uninstall shell не удаляет пользовательский корпус; backend failure даёт доступный текст ошибки.
+ACTION5-03 — Версионировать локальный IPC и восстановление соединения
+- Desktop и браузер вызывают одну командную реализацию; IPC не принимает произвольные executable, argv или SQL.
+- Unknown command, oversized frame и protocol mismatch отклоняются до изменения состояния.
+- После reconnect поздний ответ прежней generation не меняет UI; повтор операции использует сохранённый intent key.
+ACTION5-18 — Типизировать capabilities по версии, эффекту и qualification
+- Capability недоступна без совпадения installed version, typed input contract и действующего grant.
+- Описание различает read-only, local write, remote send и money-moving effect; hazard влияет на policy, не на маркетинговый title.
+- PLANNED/UNKNOWN/QUALIFIED/STALE не объединяются в available.
+- Изменение grant, adapter или build инвалидирует соответствующую qualification.
+ACTION5-19 — Операторские execution templates без shell из документа
+- Doc/transcript/AI answer не задаёт executable/argv/env; выбирается operator-registered template.
+- Template validation проверяет namespace, repo alias, expected version, allowed paths и bounded resources.
+- Intent replay не создаёт вторую задачу; cancel использует существующий Core semantics.
+- Read-only research template не получает signer, sender или wallet capability через наследование.
+ACTION5-21 — Доступный STOP вне модели и микрофона
+- STOP доступен keyboard-only и без работающего ASR/model/Chrome.
+- Подготовка, queue, active command и unknown send имеют разные наблюдаемые outcomes.
+- После STOP истёкший worker/adapter не возобновляет действие и не меняет task как fresh owner.
+- Screen-reader status объясняет, что остановлено и что требует проверки; предлагаемая задержка реакции измеряется на устройстве.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

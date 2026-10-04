@@ -1,0 +1,621 @@
+{
+  "schema": "sce.desktop.roadmap.v1",
+  "base_sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+  "tasks": [
+    {
+      "id": "D01",
+      "priority": "P0",
+      "title_ru": "Desktop transport без обязательного Chrome",
+      "owner_candidates": "native_adapter.py + desktop adapter",
+      "acceptance": [
+        "Существующие services вызываются из desktop без регистрации extension ID"
+      ],
+      "reuses_previous_task": "SCE-NEXT-01",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D02",
+      "priority": "P0",
+      "title_ru": "Lossless archive inventory и полные пути",
+      "owner_candidates": "content_lab.py + archive_source.py",
+      "acceptance": [
+        "4 MB/333+ entries, duplicate paths, binary и error ledger без пропусков"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D03",
+      "priority": "P0",
+      "title_ru": "Миграция в один canonical store",
+      "owner_candidates": "automation_core.py + migrations",
+      "acceptance": [
+        "Backup, ID map, counts/hashes, rollback; нет двух queue owners"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D04",
+      "priority": "P0",
+      "title_ru": "Полный numbered TXT и originals export",
+      "owner_candidates": "context_handoff.py",
+      "acceptance": [
+        "Все entries accounted; chunk spans, UTF-8, hashes, omissions"
+      ],
+      "reuses_previous_task": "SCE-NEXT-04",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D05",
+      "priority": "P0",
+      "title_ru": "Токенизатор и provider-aware pack",
+      "owner_candidates": "context_handoff.py",
+      "acceptance": [
+        "Exact tokenizer version; output/reasoning reserve; никаких silent truncations"
+      ],
+      "reuses_previous_task": "SCE-NEXT-05",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D06",
+      "priority": "P0",
+      "title_ru": "Импорт user/assistant всех веток chat export",
+      "owner_candidates": "content_lab.py",
+      "acceptance": [
+        "IDs/roles/parent/time/nontext inventory; идемпотентность"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D07",
+      "priority": "P0",
+      "title_ru": "Goal/decision/requirement graph",
+      "owner_candidates": "context_review.py + memory tables",
+      "acceptance": [
+        "User requirement отдельно от assistant proposal; source spans; supersedes"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D08",
+      "priority": "P0",
+      "title_ru": "Context Cart",
+      "owner_candidates": "desktop UI + handoff",
+      "acceptance": [
+        "Код+deps+tests+docs+history; why selected; missing context"
+      ],
+      "reuses_previous_task": "SCE-NEXT-05",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D09",
+      "priority": "P0",
+      "title_ru": "Python + JS/TS AST dependency context",
+      "owner_candidates": "repo_source.py",
+      "acceptance": [
+        "Сохранить Python parser; JS/TS imports; unresolved edges; SCC"
+      ],
+      "reuses_previous_task": "SCE-NEXT-02",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D10",
+      "priority": "P0",
+      "title_ru": "Review coverage ledger",
+      "owner_candidates": "context_review.py",
+      "acceptance": [
+        "Request/source hashes, chunks reviewed, stale invalidation"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D11",
+      "priority": "P0",
+      "title_ru": "Requirement→code→test evidence",
+      "owner_candidates": "context_review.py + verifier registry",
+      "acceptance": [
+        "TRUE только с criterion receipt на нужном SHA; UNKNOWN при gaps"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D12",
+      "priority": "P1",
+      "title_ru": "OpenAI Responses adapter",
+      "owner_candidates": "provider adapter",
+      "acceptance": [
+        "Explicit selected context; response hash; error/incomplete; no retry unknown"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D13",
+      "priority": "P1",
+      "title_ru": "Typed library tools для AI",
+      "owner_candidates": "tool registry",
+      "acceptance": [
+        "search/read/build_pack/create_note с version checks и audit"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D14",
+      "priority": "P1",
+      "title_ru": "VS Code и terminal workspace bridge",
+      "owner_candidates": "desktop + executor",
+      "acceptance": [
+        "cwd/argv без shell interpolation; exact worktree; user controls"
+      ],
+      "reuses_previous_task": "SCE-NEXT-10",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D15",
+      "priority": "P1",
+      "title_ru": "Static smells и duplicate owners",
+      "owner_candidates": "repo analysis",
+      "acceptance": [
+        "Candidate→source→reproducer; файлы не удаляются по similarity"
+      ],
+      "reuses_previous_task": "SCE-NEXT-02",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D16",
+      "priority": "P1",
+      "title_ru": "Git/PR archaeology",
+      "owner_candidates": "repo metadata adapters",
+      "acceptance": [
+        "Closed PR/abandoned branches отдельно от current code; exact refs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D17",
+      "priority": "P1",
+      "title_ru": "Laya real inference adapter",
+      "owner_candidates": "occ_proposal.py + laya adapter",
+      "acceptance": [
+        "Pinned model/runtime, RU cases, truncation/abstention visible"
+      ],
+      "reuses_previous_task": "SCE-NEXT-16",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D18",
+      "priority": "P1",
+      "title_ru": "Laya quality/cost benchmark",
+      "owner_candidates": "evaluation harness",
+      "acceptance": [
+        "Held-out routing, false TRUE, p95 RAM/latency; rules baseline"
+      ],
+      "reuses_previous_task": "SCE-NEXT-13",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D19",
+      "priority": "P1",
+      "title_ru": "Replay/resume job orchestration",
+      "owner_candidates": "automation_core.py",
+      "acceptance": [
+        "Stable task keys, retry effects reconciliation, no duplicate mutation"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D20",
+      "priority": "P1",
+      "title_ru": "Read-only MCP library access",
+      "owner_candidates": "local IPC + tools",
+      "acceptance": [
+        "Scoped IDs, pagination, full cursor completion, no arbitrary fs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D21",
+      "priority": "P1",
+      "title_ru": "Windows installer/device qualification",
+      "owner_candidates": "desktop packaging",
+      "acceptance": [
+        "Clean Dell install/update/uninstall; data survive; signed release plan"
+      ],
+      "reuses_previous_task": "SCE-NEXT-01",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D22",
+      "priority": "P1",
+      "title_ru": "Block notes и представления",
+      "owner_candidates": "desktop editor",
+      "acceptance": [
+        "Ссылки на source; notes separate from originals; revision restore"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D23",
+      "priority": "P1",
+      "title_ru": "PDF/Office/HTML extraction adapters",
+      "owner_candidates": "content_lab.py",
+      "acceptance": [
+        "Original preserved; tables/pages/format limits explicit; parser versions"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D24",
+      "priority": "P1",
+      "title_ru": "Encoding/large JSON/archive streaming",
+      "owner_candidates": "intake adapters",
+      "acceptance": [
+        "Encoding operator choice; recursive inventory; bounded RAM not cap on corpus"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D25",
+      "priority": "P1",
+      "title_ru": "Memory export/backup/restore",
+      "owner_candidates": "store services",
+      "acceptance": [
+        "SQLite online backup + blob manifest; hash checked restore"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D26",
+      "priority": "P1",
+      "title_ru": "Paper qualification bridge",
+      "owner_candidates": "SCE bridge + studious owner",
+      "acceptance": [
+        "Current contract/SHA, real receipts, no live authority inherited"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D27",
+      "priority": "P2",
+      "title_ru": "Paper bot supervisor",
+      "owner_candidates": "studious runtime adapter",
+      "acceptance": [
+        "Start/status/stop, stale data, logs/reconcile, operator config"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D28",
+      "priority": "P2",
+      "title_ru": "Web3 data and experiment library",
+      "owner_candidates": "research adapters",
+      "acceptance": [
+        "Raw observations/slots/units; hypotheses→datasets→receipts"
+      ],
+      "reuses_previous_task": "SCE-NEXT-14",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D29",
+      "priority": "P2",
+      "title_ru": "Voice intent → same TaskSpec",
+      "owner_candidates": "ASR + goal owner",
+      "acceptance": [
+        "RU names/numbers/negation; final only; STOP discard late results"
+      ],
+      "reuses_previous_task": "SCE-NEXT-09",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D30",
+      "priority": "P2",
+      "title_ru": "Authorised web/Telegram/research connectors",
+      "owner_candidates": "source registry",
+      "acceptance": [
+        "Per-source watermark/cursor/rate policies; no fake completeness"
+      ],
+      "reuses_previous_task": "SCE-NEXT-14",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D31",
+      "priority": "P2",
+      "title_ru": "Event-driven incremental rebuild",
+      "owner_candidates": "queue + dependency invalidation",
+      "acceptance": [
+        "Changed blob only; affected packs stale; no endless unchanged loop"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D32",
+      "priority": "P2",
+      "title_ru": "Reusable recipes from verified runs",
+      "owner_candidates": "skill registry",
+      "acceptance": [
+        "Versioned inputs/verifier/rollback, tested before registration"
+      ],
+      "reuses_previous_task": "SCE-NEXT-11",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D33",
+      "priority": "P2",
+      "title_ru": "Adaptive goal UI",
+      "owner_candidates": "desktop schema renderer",
+      "acceptance": [
+        "Buttons reference registered actions; model cannot invent executable IDs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-11",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D34",
+      "priority": "P2",
+      "title_ru": "Optional sync and collaboration",
+      "owner_candidates": "sync adapter",
+      "acceptance": [
+        "Conflict/revision tests; source-level sharing; local offline still works"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D35",
+      "priority": "P2",
+      "title_ru": "Read-only parallel workers, one writer",
+      "owner_candidates": "scheduler",
+      "acceptance": [
+        "Resource budget/RAM backpressure; cancellation; deterministic receipts"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    },
+    {
+      "id": "D36",
+      "priority": "P2",
+      "title_ru": "Model escalation and ROI dashboard",
+      "owner_candidates": "provider router + evals",
+      "acceptance": [
+        "Saved time/cost per verified task, no PR count proxy"
+      ],
+      "reuses_previous_task": "SCE-NEXT-13",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  ],
+  "supersedes": {
+    "mandatory_chrome": "user explicitly chose desktop on 2026-10-03",
+    "SCE-NEXT-01": "desktop device path, Chrome optional"
+  },
+  "existing_16_tasks_retained": "sources/previous_package/NEXT_FUNCTIONS_RU.json"
+}

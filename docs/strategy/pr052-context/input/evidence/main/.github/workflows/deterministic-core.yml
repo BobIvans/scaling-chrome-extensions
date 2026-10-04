@@ -1,0 +1,130 @@
+name: Deterministic OCC core
+
+on:
+  pull_request:
+    paths:
+      - 'content-lab/**'
+      - 'desktop/**'
+      - 'agent-bridge/**'
+      - 'one-click-context/**'
+      - 'docs/automation/**'
+      - 'docs/strategies/pr016-017/**'
+      - 'MASTER_CONTEXT.md'
+      - 'CODEX_START_HERE.md'
+      - 'README.md'
+      - '.gitattributes'
+      - '.github/workflows/deterministic-core.yml'
+  push:
+    branches: ['main', 'codex/durable-automation-core-20261001']
+    paths:
+      - 'content-lab/**'
+      - 'desktop/**'
+      - 'agent-bridge/**'
+      - 'one-click-context/**'
+      - 'docs/automation/**'
+      - 'docs/strategies/pr016-017/**'
+      - 'MASTER_CONTEXT.md'
+      - 'CODEX_START_HERE.md'
+      - 'README.md'
+      - '.gitattributes'
+      - '.github/workflows/deterministic-core.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  context-platform:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.longpaths
+          GIT_CONFIG_VALUE_0: 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact event head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - name: Exact context, recovery, fences and reconciliation
+        run: python -I -X utf8 content-lab/test_context_services.py
+      - name: Context and campaigns share operator scope and Core STOP
+        run: python -m unittest discover -s content-lab -p 'test_context_workflow_interop.py' -v
+      - name: Installed context workflow and independent STOP
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run -a python -m unittest discover -s desktop/tests -p 'test_context_workflow.py' -v
+          else
+            python -m unittest discover -s desktop/tests -p 'test_context_workflow.py' -v
+          fi
+      - name: Verify desktop owned files
+        run: python -I -X utf8 desktop/package.py verify --shell desktop
+
+  core:
+    needs: context-platform
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    # Full real-Git/SQLite scale fixtures take longer on Windows/NTFS.
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        # checkout temporarily overrides HOME; command-scope config also works
+        # there and keeps all original nested strategy paths intact on Windows.
+        env:
+          GIT_CONFIG_COUNT: '1'
+          GIT_CONFIG_KEY_0: core.longpaths
+          GIT_CONFIG_VALUE_0: 'true'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - name: Verify exact event head
+        shell: bash
+        env:
+          EXPECTED_HEAD: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: test "$(git rev-parse HEAD)" = "$EXPECTED_HEAD"
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.13'
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7
+        with:
+          node-version: '24'
+          package-manager-cache: false
+      - name: IANA timezone database for Windows daily schedules
+        run: python -m pip install tzdata==2025.2
+      - name: Verify complete strategy context bytes and original criteria
+        run: python docs/strategies/pr016-017/verify_context.py
+      - name: Content and durable automation contracts
+        run: python -m unittest discover -s content-lab -p 'test_*.py' -v
+      - name: Desktop transport, draft and package contracts
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            xvfb-run -a python -m unittest discover -s desktop/tests -p 'test_*.py' -v
+          else
+            python -m unittest discover -s desktop/tests -p 'test_*.py' -v
+          fi
+      - name: Verify desktop owned files
+        run: python -I -X utf8 desktop/package.py verify --shell desktop
+      - name: Existing native bridge regression
+        run: node --test agent-bridge/*.test.mjs
+      - name: Qualification adapter regression
+        run: python -m unittest discover -s agent-bridge -p 'test_qualification_adapter.py' -v
+      - name: Existing extension regression
+        shell: bash
+        run: node --test one-click-context/tests/*.test.*

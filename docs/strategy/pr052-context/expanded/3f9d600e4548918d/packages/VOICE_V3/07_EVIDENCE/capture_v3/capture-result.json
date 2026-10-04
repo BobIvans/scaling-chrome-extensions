@@ -1,0 +1,79 @@
+{
+  "strategy": "complementary_union",
+  "statuses": {
+    "voice": "STREAM_EXHAUSTED",
+    "dom": "STREAM_EXHAUSTED",
+    "export": "STREAM_EXHAUSTED",
+    "git": "STREAM_EXHAUSTED",
+    "test_log": "STREAM_EXHAUSTED"
+  },
+  "new_events": {
+    "voice": 1,
+    "dom": 1,
+    "export": 1,
+    "git": 1,
+    "test_log": 1
+  },
+  "errors": {},
+  "coverage": {
+    "present": [
+      "dom",
+      "export",
+      "git",
+      "test_log",
+      "voice"
+    ],
+    "missing": [],
+    "partial": [
+      "dom"
+    ],
+    "channel_presence_complete": true,
+    "full_source_history_proven": false,
+    "note": "Channel presence is not semantic completeness or authenticity."
+  },
+  "external_actions": 0,
+  "demo_scope": "SYNTHETIC_ONLY_NOT_DEVICE_BENCHMARK",
+  "stored_observations": 5,
+  "stored_unique_raw_objects": 4,
+  "readiness_example": {
+    "state": "EVIDENCE_READY",
+    "missing": [],
+    "snapshot_current": true,
+    "has_blocking_conflict": false,
+    "execution_authorized": false,
+    "full_archive_complete": false
+  },
+  "independent_action_batches": [
+    [
+      "save_report",
+      "prepare_patch_A",
+      "prepare_patch_B"
+    ],
+    [
+      "foreground_action_A"
+    ],
+    [
+      "foreground_action_B"
+    ]
+  ],
+  "source_lineage_example": [
+    {
+      "subject": "qualification",
+      "predicate": "state",
+      "source_revision": "sha1",
+      "values": [
+        {
+          "value": "blocked",
+          "source_refs": [
+            "dom",
+            "export"
+          ],
+          "declared_lineage_count": 1,
+          "independence_proven": false
+        }
+      ],
+      "status": "UNCONTESTED_CLAIM",
+      "verified_fact": false
+    }
+  ]
+}

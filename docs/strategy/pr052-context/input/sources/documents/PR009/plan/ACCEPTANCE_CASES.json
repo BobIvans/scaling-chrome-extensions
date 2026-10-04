@@ -1,0 +1,147 @@
+{
+  "schema": "roadmap.acceptance.v1",
+  "package_id": "ROADMAP-PR-009",
+  "scope": "FUTURE_APPLICATION_RUNTIME",
+  "cases": [
+    {
+      "id": "A009-01",
+      "name": "RAW_ROUNDTRIP",
+      "expected": "Actual original read preserves SHA256/bytes/BOM/CRLF/RU/EN/emoji exactly.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-02",
+      "name": "REPEAT_IDEMPOTENCY",
+      "expected": "Same bytes/source/key/adapter create no duplicate blob/source/extraction/item.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-03",
+      "name": "MULTI_ORIGIN",
+      "expected": "Same raw revision via distinct origin adds origin; original/extraction not duplicated.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-04",
+      "name": "FORMATTING_REVISION",
+      "expected": "Whitespace/key-order change => new raw/extraction; unchanged text IDs reused.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-05",
+      "name": "TEXT_REVISION",
+      "expected": "Changed text => new legacy item; previous item/source/extraction immutable.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-06",
+      "name": "METADATA_REVISION",
+      "expected": "Message time/title/author name change survives new extraction even if item ID unchanged.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-07",
+      "name": "ADAPTER_KEY",
+      "expected": "Same raw with new pinned adapter/options key creates separate extraction, old retained.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-08",
+      "name": "NODE_COVERAGE",
+      "expected": "Both branches + structural/non-text/empty nodes each accounted exactly once.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-09",
+      "name": "TOPOLOGY_GAPS",
+      "expected": "Missing parent/child, inconsistent links/current node/cycles explicit; no guessed repair.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-10",
+      "name": "ATTACHMENT_TRUTH",
+      "expected": "Pointer present, missing/unsupported parts distinct; payload bytes false; no fetch.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-11",
+      "name": "SELECTED_SCOPE",
+      "expected": "Import B leaves A message/attachment/conversation heads unchanged; missing != remote deletion.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-12",
+      "name": "ERROR_RETAINED",
+      "expected": "Invalid captured JSON/UTF8/duplicate keys/legacy schema => raw+ERROR, derived heads unchanged.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-13",
+      "name": "READ_REJECTION",
+      "expected": "Symlink/input-change/I/O/byte-budget => NOT_CAPTURED with no fabricated original.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-14",
+      "name": "LEDGER_BUDGET",
+      "expected": "Total nodes/ledger bytes guard includes non-text; raw retained, no prefix success.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-15",
+      "name": "TRANSACTION_FAULTS",
+      "expected": "Disk-full/process interruption before commit roll back original/derived/head writes.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-16",
+      "name": "RECEIPT_FAULT",
+      "expected": "After commit item JSON receipt failure returns warning; retry restores without duplicates.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-17",
+      "name": "MIGRATION",
+      "expected": "Existing populated SQLite additive rehearsal twice; old data/IDs/FTS retained, one owner.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-18",
+      "name": "CLI_BOUNDARIES",
+      "expected": "Paged inspection and atomic hash-verified original file read; stale/tampered ID rejected.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-19",
+      "name": "INERT_AUTHOR_TIME",
+      "expected": "Unknown fields/text remain data; quote not inferred user speech; source/capture times separate.",
+      "status": "NOT_RUN",
+      "evidence": []
+    },
+    {
+      "id": "A009-20",
+      "name": "CURRENT_GATES",
+      "expected": "Focused actual importer tests + current AGENTS/CI; packaging module include if №8 consumes helper.",
+      "status": "NOT_RUN",
+      "evidence": []
+    }
+  ]
+}

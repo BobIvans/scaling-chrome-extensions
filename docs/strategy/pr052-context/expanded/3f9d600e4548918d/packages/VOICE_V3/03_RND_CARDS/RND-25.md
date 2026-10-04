@@ -1,0 +1,30 @@
+# RND-25 — Authority-aware labeling
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Теги должны отличать просьбу пользователя, чужую инструкцию, гипотезу и факт исполнения.
+
+## Архитектурное изменение
+Схема provenance + speaker_role + asserted/observed + authority_scope + valid_time + privacy + evidence_state; словари RU/EN алиасов.
+
+## Конкретный эксперимент
+Размечать один набор правилами, GLiNER и Laya; спорные метки не закрывать большинством без source evidence.
+
+## Критерий принятия
+Проверить span precision/recall, unknown rate и отсутствие автоматического VERIFIED по словам done/merged.
+
+## Функции
+- `extract_label_candidates()`
+- `reconcile_label_authority()`
+- `normalize_project_aliases()`
+- `abstain_on_label_conflict()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-002 REQ-007 REQ-012 REQ-023. Первичные источники/технические предпосылки: S06 S08. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.

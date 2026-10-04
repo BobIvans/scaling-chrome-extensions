@@ -1,0 +1,91 @@
+ЗАДАНИЕ ДЛЯ CHATGPT / CODEX: OCC-CONTEXT-FOUNDATION-01
+Статус: готовое техническое задание, не выданный документом доступ.
+
+МОЯ ЦЕЛЬ
+Довести BobIvans/scaling-chrome-extensions до одного завершённого сценария:
+выбрать репозиторий → получить полный проверяемый контекст → создать документ
+для AI → импортировать review → увидеть состояние и следующий шаг.
+После этого связать голос/текст с тем же сценарием и existing durable queue.
+Не начинать со смены всего стека или автоматического запуска торговли.
+
+ИСХОДНЫЕ ДАННЫЕ
+Приложен STUDIOUS_SCE_FULL_CONTEXT_RU_2026-10-03.zip.
+SCE baseline 23d14fa351e56c89b916c6853f955d562335e8f1; Studious baseline 7e83f3b416c3fae2b2ecf8111c7ed0574e7dac44.
+Это baseline, не требование откатить свежий main. Получи current main,
+сверь diff и открытые PR с владельцами ниже; сохрани актуальные улучшения.
+При drift пересобери affected context и назови новые SHA.
+
+ЧТО НУЖНО ПРОЧЕСТЬ
+Сначала 02, 03, 07, 09 и evidence/PROBES.json.
+В SCE: content-lab/content_lab.py, automation_core.py, context_review.py,
+native_adapter.py, occ_local.py; agent-bridge/durable.mjs;
+one-click-context/library/durable-ui.mjs, library.mjs и library.html;
+их текущие тесты; docs/automation/context-review-ledger.md.
+В Studious: src/mega_context_wave3.py и tests/test_mega_context_wave3.py.
+В архиве: tools/repo_workbench.py, build_full_context.py, extract_context.py.
+Они reference-инструменты: адаптировать к существующим owners, не копировать
+вторую библиотеку и отдельный сервер поверх content.sqlite3.
+
+ПЕРВЫЙ VERTICAL SLICE
+1. Git-backed full inventory без исполнения импортируемого кода. Учитывать
+tracked files, явные exclusions, ошибки, pending, deletions и exact SHA.
+Перезапуск продолжает persisted cursor; лимит не теряет хвост репозитория.
+2. Source chunks с file hash, start/end и стабильным logical ID. Byte-preserving
+partition + отдельный revision hash. Огромные функции/строки дробить явно.
+Использовать отдельные source roots SCE для локальных Python imports;
+external/dynamic/ambiguous edges не выдавать за разрешённые зависимости.
+3. Export document: goal, selected sources, relevant contracts/tests,
+coverage, missing dependencies, current SHA, accepted scope, acceptance.
+Большие архивные тома <=300k tokens не отправлять все в один запрос.
+4. Review UI поверх durable.review.create/import/list/get: список сессий,
+просмотр coverage/findings, changed/missing context и следующий запрос.
+Верификация Git HEAD и bytes — отдельный binding, не доверять baseRepoSha
+только потому, что его прислал клиент. Imported DONE не закрывает finding.
+
+ПАРАЛЛЕЛЬНЫЙ МАЛЫЙ REPAIR В STUDIOUS (отдельный PR)
+SP-CTX-001: deletion invalidates previous chunk; additions, renames и affected
+dependents явно обработаны. SP-CTX-002: missing inventory row не проходит
+полноту/roundtrip. Уточнить contracts SP-CTX-003/004: stable numbering только
+внутри snapshot; target_chars сейчас не hard limit и фактически использует bytes.
+Сначала regression tests, затем минимальная правка текущего владельца.
+
+ДОПУСТИМЫЕ ТЕХНОЛОГИЧЕСКИЕ РЕШЕНИЯ
+Сохранять JS extension + Python native adapters + SQLite/FTS/queue.
+Добавление Python AST/stdlib без model calls допустимо в объёме задания.
+Tree-sitter JS и tiktoken — предложенные optional dependencies; pin версии,
+опиши offline/cache/packaging и небольшой ADR перед добавлением в продукт.
+Новый cloud backend, новая DB, generic shell runner или auto trading — отдельное
+изменение области работ. Наличие этого файла их не разрешает.
+
+КАК ДАТЬ ДОСТУП
+Приложи этот документ к ChatGPT/Codex и укажи два GitHub repo. Подключение
+GitHub даёт только фактически предоставленные connector permissions: проверь
+read/write и наличие выполнения тестов. Для Windows нужен установленный local
+native host с operator profile и выбранными директориями. Текст документа
+не устанавливает host, не выдаёт OAuth scope и не открывает весь диск.
+API credential хранится локально в предназначенном secret mechanism, не в
+документе, ZIP, Git, browser content script или model prompt.
+На первом этапе paid_api_budget=0: архивирование и тесты работают локально.
+
+ПРИЁМКА
+A. Все tracked paths accounted; исходники собираются обратно byte-for-byte.
+B. Add/edit/delete/rename и смена HEAD делают связанные review/chunks stale.
+C. Context pack содержит зависимости либо явно missing dependencies.
+D. Restart не теряет progress и не возобновляет неизвестное действие повторно.
+E. Review session видна после restart, одинаковый import идемпотентен,
+   DONE без criterion-specific evidence остаётся открытым.
+F. UI: выбрать repo → scan → выбрать finding → export request → import review.
+G. GitHub Actions включает новый код и нужные paths, проверяет exact PR head.
+H. README сообщает tested platforms и отдельно установленный Windows receipt.
+
+ВЫХОД
+Небольшие coherent commits/PR по зависимостям, не новая волна номерных обещаний.
+Для каждого: owner, diff, regression evidence, current SHA, blockers и next step.
+Merge выполняется только в пределах актуального прямого поручения пользователя
+и после required checks. Этот шаблон не является самостоятельным поручением
+на merge, оплату API, отправку сообщений или финансовые операции.
+
+STOP REASONS
+MISSING_REPO_ACCESS; SOURCE_DRIFT; AMBIGUOUS_OWNER; CONTEXT_INCOMPLETE;
+MISSING_INSTALLED_HOST; REQUIRED_TEST_FAILED; UNKNOWN_EXTERNAL_OUTCOME.
+При blocker заверши доступную offline часть и дай конкретный следующий шаг.

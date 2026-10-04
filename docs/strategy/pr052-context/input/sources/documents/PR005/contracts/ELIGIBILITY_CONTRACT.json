@@ -1,0 +1,107 @@
+{
+  "schema": "occ.pr005-eligibility-design.v1",
+  "status": "PROPOSED_NOT_INTEGRATED",
+  "facts_key": "repo_entries.analysis.format_eligibility",
+  "facts_schema": "occ.format-eligibility.v1",
+  "classifier_version": "utf8-controls-strict-lfs3.v1",
+  "storage_owner": "existing content.sqlite3 / repo_context.py",
+  "legacy_states_preserved": [
+    "INDEXED",
+    "EXCLUDED",
+    "ERROR",
+    "PENDING"
+  ],
+  "raw_capture_states": [
+    "RECORDED",
+    "NOT_CAPTURED",
+    "CORRUPT",
+    "UNKNOWN"
+  ],
+  "text_eligibility": [
+    "ELIGIBLE",
+    "INELIGIBLE",
+    "METADATA_ONLY",
+    "UNKNOWN"
+  ],
+  "format_kinds": [
+    "UTF8_TEXT_CANDIDATE",
+    "EMPTY",
+    "BINARY_CONTROL_HEURISTIC",
+    "NON_UTF8",
+    "LFS_POINTER_V1",
+    "LFS_POINTER_MALFORMED",
+    "LFS_POINTER_UNSUPPORTED",
+    "SYMLINK_METADATA",
+    "SUBMODULE_METADATA",
+    "UNSUPPORTED_PATH_METADATA",
+    "NOT_CLASSIFIED",
+    "LEGACY_UNKNOWN",
+    "CORRUPT_CAPTURE"
+  ],
+  "whole_source_policy": {
+    "strict_utf8": true,
+    "disallowed_controls": "NUL and C0 <32 except TAB/LF/CR/FF",
+    "do_not_normalize": [
+      "BOM",
+      "CRLF",
+      "line length",
+      "empty source"
+    ],
+    "classifier_limit": "Encoding/control-byte policy, not universal semantic binary classification",
+    "ineligible_source_action": "Preserve raw; no new text items; gate current source-backed export/search",
+    "legacy_current_text_action": "Preserve historical items; gate repository paths and report uncovered consumers"
+  },
+  "lfs_scope": {
+    "supported": "exact canonical 3-line v1 pointer, <1024 bytes, sorted version/oid/size, lowercase SHA256, LF",
+    "version_url": "https://git-lfs.github.com/spec/v1",
+    "external_payload_status": "NOT_CHECKED",
+    "payload_verification": "NOT_RUN",
+    "unsupported": [
+      "recognized legacy version",
+      "extension lines",
+      "recognized forms outside supported syntax"
+    ],
+    "readme_embedded_example_is_pointer": false,
+    "payload_acquisition": "outside this slice"
+  },
+  "binding_fields": [
+    "snapshot_id",
+    "entry ordinal/path",
+    "mode/kind/git_oid",
+    "declared size",
+    "recorded file_sha256 or null",
+    "classifier_version"
+  ],
+  "backfill": {
+    "input": "captured chunks only",
+    "commit_unit": "one complete source after byte/range/revision/OID proof",
+    "memory": "bounded chunk iterator + incremental decoder/hash",
+    "resume": "reuse committed same-bound facts",
+    "on_corruption": "CORRUPT_CAPTURE, readiness blocked",
+    "implicit_native_trigger": false
+  },
+  "read_view": {
+    "summary": "one SQLite aggregate read view, no raw verification",
+    "page": "complete inventory and complete supported facts policy only",
+    "cursor_fields": [
+      "snapshotId",
+      "classifierVersion",
+      "query",
+      "afterOrdinal"
+    ],
+    "wire_integers": "canonical decimal strings for counts/ordinal",
+    "keyset": "ordinal > afterOrdinal",
+    "page_row_max": 20,
+    "frame_bytes_max": 32768,
+    "global_file_or_part_cap": null,
+    "raw_integrity_default": "NOT_RUN",
+    "ai_use": "UNKNOWN"
+  },
+  "gaps_projection": {
+    "name": "GAPS.jsonl",
+    "one_row_per_entry": true,
+    "includes": "text-ineligible, uncaptured, unsupported, corrupt and unknown external payload entries",
+    "owner": "derived projection, not another ledger"
+  },
+  "compatibility": "raw manifest/part identity unchanged; extensions require declared version and batch policy binding"
+}

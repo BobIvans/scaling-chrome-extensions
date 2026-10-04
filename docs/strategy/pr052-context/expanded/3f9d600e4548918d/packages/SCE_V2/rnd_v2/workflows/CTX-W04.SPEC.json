@@ -1,0 +1,62 @@
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W04",
+  "title_ru": "Обновить контекст после Git change",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "repo binding and new observed SHA"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "observe_head",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "diff_inventory",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "invalidate_changed_dependencies",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "rebuild_affected_context",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "schedule_required_checks",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "revision_diff.json",
+    "stale_evidence.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}

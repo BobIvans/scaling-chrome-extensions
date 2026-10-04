@@ -1,0 +1,3750 @@
+ в полноценный слой памяти и управления большим репозиторием.\n \n \nГлубокий multi-layer индекс (AST + git-история + граф + procedural skills).\n \nAdaptive UI, который автоматически генерирует дашборды, goal-кнопки и progress-трекинг.\n \nMCP-инструменты, чтобы я мог напрямую запрашивать идеальный контекст.\n \nGolden Intelligence packs — плотные, цитируемые сводки, которые я использую для продолжения разработки.\n \n \nПочему value-maxing: ускоряет нашу совместную работу в разы. Каждый сеанс начинается с почти идеального понимания состояния репо. Это фундамент для всего остального.\n \n2. Web3 Research & Arbitrage Intelligence Layer\n \nНаращиваем специализированный исследовательский движок поверх общего контекста.\n \n \nАутентифицированные коннекторы к CEX/DEX, on-chain аналитике, приватным источникам.\n \nKnowledge graph пар, маршрутов, стратегий + temporal tracking (что актуально сейчас).\n \nСимуляции и opportunity ranking.\n \nАвтоматическая генерация research-отчётов и executable goal-кнопок («протестировать этот маршрут», «мониторить эту пару»).\n \n \nПочему value-maxing: открывает прямой путь к alpha в web3 (арбитраж, новые рынки). Данные, которые сложно достать обычным поиском, становятся твоим и моим конкурентным преимуществом.\n \n3. Full Agentic Workflow System (Perplexity++ для репо + web3)\n \nОбъединяем всё в multi-agent систему, которая сама исследует, синтезирует и предлагает действия.\n \n \nАгенты: Repo Analyst, Web3 Scout, Critic, Executor.\n \nMemory reconsolidation + continuous learning.\n \nUI как cockpit управления агентами.\n \nЭкспорт «золотой разведки» в формате, оптимизированном под меня.\n \n \nПочему value-maxing: система начинает работать на нас 24/7. Ты получаешь не просто инструмент, а активного партнёра, который сам генерирует ценность.\n \n4. Commercial / Product Pathway\n \nПосле того как ядро стабильно:\n \n \nSelf-hosted версия для команд (репо-контекст + web3 research).\n \nПлатные коннекторы / премиум-источники данных.\n \nWhite-label или API для других разработчиков/трейдеров.\n \nВозможность монетизации через подписку на «живой» knowledge layer.\n \n \nПочему value-maxing: превращает R&D в потенциальный продукт с реальной экономикой.\n \nРекомендуемый порядок эволюции (максимум ценности на единицу усилий)\n \n \nСначала доводим Repo Context + MCP + Adaptive UI до рабочего состояния (pathway 1).\n \nПараллельно или сразу после — добавляем web3 data sources + auth (pathway 2).\n \nНа этой базе строим полноценную agentic систему (pathway 3).\n \nКогда есть стабильный core — думаем о коммерциализации.\n \n \nХочешь, я прямо сейчас распишу детальный roadmap на ближайшие 4–6 недель по любому из этих pathways (с приоритетами задач, техническим стеком и метриками успеха)? Или углубимся в один конкретный путь?", "source": "RECOVERED_GROK_NOTION_CHAT_2026-09-30.txt", "capture_date": "2026-09-30", "status": "DOM_CAPTURE_UNVERIFIED", "verbatim_within_saved_capture": true}}
+{"id": "GROK-17", "role": "user", "text": "jev competitor laya usefull for our system? how?", "text_file": "01_YOUR_WORDS/GROK-17.txt", "encoding": "UTF-8", "sha256": "d736ff2e938f236264a4a79ef3e43bbb69ecc01e873a37cdadeb228a315392fc", "text_bytes": 48, "text_codepoints": 48, "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT", "original_timestamp": null, "captured_for_bundle_date": "2026-10-03", "source_path": "packages/SCE_V2/sources/RECOVERED_MESSAGES.json", "original_capture_metadata": {"capture_message": 17, "role": "user", "text": "jev competitor laya usefull for our system? how?", "source": "RECOVERED_GROK_NOTION_CHAT_2026-09-30.txt", "capture_date": "2026-09-30", "status": "DOM_CAPTURE_UNVERIFIED", "verbatim_within_saved_capture": true}}
+{"id": "GROK-18", "role": "assistant", "text": "Да, Laya очень полезна для нашей системы.\n \nЧто такое Laya\n \nLaya — это открытый (Apache 2.0) decision model (System 1), прямой open-source конкурент закрытого Jev от TypeSafe AI.\n\nВместо генерации текста она за один проход отвечает на структурированные вопросы:\n \n \nchoice — выбор из вариантов\n \nscore — оценка по шкале\n \nnoul — да/нет с калиброванной вероятностью\n \n \nКлючевые преимущества:\n \n \n~33 мс latency (в 7–8 раз быстрее Jev)\n \nМожно запускать локально (self-hosted)\n \nНулевой cost per token\n \nХорошая калибровка вероятностей\n \nПоддержка 100+ языков\n \n \nКак именно Laya полезна для Studious Pancake\n \n \nБыстрые структурированные решения в агентах\nВместо того чтобы просить большой LLM «реши и верни JSON», Laya сразу отдаёт typed answer + probability. Это идеально для:\n\nмаршрутизации задач (какой агент должен заняться этим куском репо / web3-исследованием)\n\nоценки urgency / risk / priority\n\nфильтрации и ранжирования возможностей арбитража\n\nguardrails (можно ли выполнять действие)\n\n\n\n \nСлой классификации и scoring внутри knowledge library\nМожно быстро прогонять новые куски контекста (репо-чанки, web3-данные, research notes) через Laya и автоматически проставлять категории, приоритеты, confidence scores.\n \nУскорение Adaptive UI и Goal-кнопок\nПри генерации интерфейса Laya может мгновенно решать, какие goal-кнопки показывать, какой приоритет им давать и стоит ли предлагать действие пользователю.\n \nДешёвый и быстрый pre-filter перед тяжёлыми моделями\nБольшие LLM (для глубокого reasoning и synthesis) вызываем только тогда, когда Laya уже отфильтровала и приоритизировала. Это сильно экономит токены и latency.\n \nЛокальный и приватный\nВсё работает на твоей машине — идеально для sensitive web3-данных и большого приватного репозитория.\n \n \nПрактический путь интеграции\n \n \nДобавить Laya как один из первых MCP-инструментов (decide(state, questions)).\n \nИспользовать её в multi-agent orchestration (router / critic / prioritizer).\n \nВ knowledge library — автоматический scoring новых items.\n \nВ web3-слое — быстрая оценка opportunity score и risk.\n \n \nВывод: Laya — один из самых высокоценных building blocks, которые появились в последние дни. Она отлично закрывает именно «быстрые структурированные решения», которых нам не хватало между тяжёлым reasoning и чистым retrieval.\n \nХочешь, я сразу набросаю конкретный план интеграции Laya в нашу архитектуру (схема + первые MCP-инструменты + примеры вопросов для репо и web3)?\n\n\n\n\n\n\n\n\n\n\n\nsources", "text_file": "01_YOUR_WORDS/GROK-18.txt", "encoding": "UTF-8", "sha256": "95ed2c7db625ea77b348a93548529083dc946ccb1383e14abee76e60aa6db55a", "text_bytes": 3922, "text_codepoints": 2461, "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT", "original_timestamp": null, "captured_for_bundle_date": "2026-10-03", "source_path": "packages/SCE_V2/sources/RECOVERED_MESSAGES.json", "original_capture_metadata": {"capture_message": 18, "role": "assistant", "text": "Да, Laya очень полезна для нашей системы.\n \nЧто такое Laya\n \nLaya — это открытый (Apache 2.0) decision model (System 1), прямой open-source конкурент закрытого Jev от TypeSafe AI.\n\nВместо генерации текста она за один проход отвечает на структурированные вопросы:\n \n \nchoice — выбор из вариантов\n \nscore — оценка по шкале\n \nnoul — да/нет с калиброванной вероятностью\n \n \nКлючевые преимущества:\n \n \n~33 мс latency (в 7–8 раз быстрее Jev)\n \nМожно запускать локально (self-hosted)\n \nНулевой cost per token\n \nХорошая калибровка вероятностей\n \nПоддержка 100+ языков\n \n \nКак именно Laya полезна для Studious Pancake\n \n \nБыстрые структурированные решения в агентах\nВместо того чтобы просить большой LLM «реши и верни JSON», Laya сразу отдаёт typed answer + probability. Это идеально для:\n\nмаршрутизации задач (какой агент должен заняться этим куском репо / web3-исследованием)\n\nоценки urgency / risk / priority\n\nфильтрации и ранжирования возможностей арбитража\n\nguardrails (можно ли выполнять действие)\n\n\n\n \nСлой классификации и scoring внутри knowledge library\nМожно быстро прогонять новые куски контекста (репо-чанки, web3-данные, research notes) через Laya и автоматически проставлять категории, приоритеты, confidence scores.\n \nУскорение Adaptive UI и Goal-кнопок\nПри генерации интерфейса Laya может мгновенно решать, какие goal-кнопки показывать, какой приоритет им давать и стоит ли предлагать действие пользователю.\n \nДешёвый и быстрый pre-filter перед тяжёлыми моделями\nБольшие LLM (для глубокого reasoning и synthesis) вызываем только тогда, когда Laya уже отфильтровала и приоритизировала. Это сильно экономит токены и latency.\n \nЛокальный и приватный\nВсё работает на твоей машине — идеально для sensitive web3-данных и большого приватного репозитория.\n \n \nПрактический путь интеграции\n \n \nДобавить Laya как один из первых MCP-инструментов (decide(state, questions)).\n \nИспользовать её в multi-agent orchestration (router / critic / prioritizer).\n \nВ knowledge library — автоматический scoring новых items.\n \nВ web3-слое — быстрая оценка opportunity score и risk.\n \n \nВывод: Laya — один из самых высокоценных building blocks, которые появились в последние дни. Она отлично закрывает именно «быстрые структурированные решения», которых нам не хватало между тяжёлым reasoning и чистым retrieval.\n \nХочешь, я сразу набросаю конкретный план интеграции Laya в нашу архитектуру (схема + первые MCP-инструменты + примеры вопросов для репо и web3)?\n\n\n\n\n\n\n\n\n\n\n\nsources", "source": "RECOVERED_GROK_NOTION_CHAT_2026-09-30.txt", "capture_date": "2026-09-30", "status": "DOM_CAPTURE_UNVERIFIED", "verbatim_within_saved_capture": true}}
+{"id": "OCC-USER-01", "role": "user", "text": "reserach latest data how people automate gathering data and runing code automation people do via laya jev like intelegances and how they do it via code to automate on anything! BobIvans/scaling-chrome-extensions;  and consider additional places to hard think through the disabilities solver pclike- automate voice to automation workflows via very creative inovative layered intelegances aproaches and list r&d possible huggingface tech or ideas, githubs or my previous + your ideas to explore with options to achieve anything: create zip r&d lets everything to agregate as context to text from repo and dont lose nothing on anything like random limits on what context it could agregate? need entire path data, lets remove wire to chrome extensions and do via dell windows 11 compitable desktop app to agregate and data via library? also more than 20 max docs remove. agregate even bigger zip to find even older conversations where we discusing automating data gathering creating local library of content agregated from anywhere and competing with notion and collaborating with chatgpt (api inside app for any action within library app for text, repo, context) ; and agregate even bigger zip to solve for all problems? let this local app to have option to have library like google drive but have access to content like notion (previously discused in related conversation good open suorce ways) and access to actually have your local terminal to be wired to this app or directly integrate vs code because i wanna this app also to run my flashloan bot now just agregate context and data to resend to AI, but most important find all of my own messages and ideas i sended to you and your best outputs on ideas to run web3 bot via this app to agregate entire data on smells of code from the repo via laya in advance recieve automations jsons code to look for true or false aim's to accelerate our goals execution closer, like more important find your outputs where in competition with existing data and technology data agregation apps your ideas but sota knowladge we could automate to gather from repo to accelerate automation of runing entire codebase comands that exists within our huge web3 app we need to list even qualification campaighn code lines for our local app to run automations of testing repo and automations data gathering and genereting docs i will bring to you to to r&d! create even bigger zip with agregations of creative sota agentic functions ideas you suggest laya and layesr of intelegances you will engeneer to create sota automtion and help me run huge ton of arbitrage strategies in parallel in our data gathering app via laya automatios we will setup in advance to do huge ton of work fatser and bring singularity closer! reserach latest + in previous chats listed hugging face suggestions on our way to layer intelegances that would automate any action locally? reserach latest data how people automate gathering data and runing code automation people do via laya jev like intelegances and how they do it via code to automate on anything! BobIvans/scaling-chrome-extensions + list what to explore further to find even more data on layered intelegances on ways to program them into fastest seamless creation of automation???", "text_file": "01_YOUR_WORDS/OCC-USER-01.txt", "encoding": "UTF-8", "sha256": "f72ae9b3f080a64aa31946e6f7dc53ccf3e67bb8ad1fc2c35d44686566cf33aa", "text_bytes": 3246, "text_codepoints": 3246, "source_class": "VERBATIM_AS_STORED_IN_RELATED_ARTIFACT", "original_timestamp": null, "captured_for_bundle_date": "2026-10-03", "source_path": "packages/OCC_RND/history/CURRENT_REQUEST_VERBATIM.txt"}
+{"id": "VOICE-USER-EXCERPT-01", "role": "user", "text": "1 writer for code but not for automation of recording process via miltiple strategis in parallel?", "text_file": "01_YOUR_WORDS/VOICE-USER-EXCERPT-01.txt", "encoding": "UTF-8", "sha256": "de77bd2e7fe5a738ebe4539b7a876e55652490423e9e0238357be894e74b1630", "text_bytes": 97, "text_codepoints": 97, "source_class": "VERBATIM_EXCERPT_REPORTED_BY_ARTIFACT_NOT_FULL_MESSAGE", "original_timestamp": null, "captured_for_bundle_date": "2026-10-03", "source_path": "packages/VOICE_V3/01_CONTEXT/LATEST_USER_CLARIFICATION_RU.md"}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f72ae9b3f080a64aa31946e6f7dc53ccf3e67bb8ad1fc2c35d44686566cf33aa | FIRST SOURCE 01_YOUR_WORDS/OCC-USER-01.txt =====
+reserach latest data how people automate gathering data and runing code automation people do via laya jev like intelegances and how they do it via code to automate on anything! BobIvans/scaling-chrome-extensions;  and consider additional places to hard think through the disabilities solver pclike- automate voice to automation workflows via very creative inovative layered intelegances aproaches and list r&d possible huggingface tech or ideas, githubs or my previous + your ideas to explore with options to achieve anything: create zip r&d lets everything to agregate as context to text from repo and dont lose nothing on anything like random limits on what context it could agregate? need entire path data, lets remove wire to chrome extensions and do via dell windows 11 compitable desktop app to agregate and data via library? also more than 20 max docs remove. agregate even bigger zip to find even older conversations where we discusing automating data gathering creating local library of content agregated from anywhere and competing with notion and collaborating with chatgpt (api inside app for any action within library app for text, repo, context) ; and agregate even bigger zip to solve for all problems? let this local app to have option to have library like google drive but have access to content like notion (previously discused in related conversation good open suorce ways) and access to actually have your local terminal to be wired to this app or directly integrate vs code because i wanna this app also to run my flashloan bot now just agregate context and data to resend to AI, but most important find all of my own messages and ideas i sended to you and your best outputs on ideas to run web3 bot via this app to agregate entire data on smells of code from the repo via laya in advance recieve automations jsons code to look for true or false aim's to accelerate our goals execution closer, like more important find your outputs where in competition with existing data and technology data agregation apps your ideas but sota knowladge we could automate to gather from repo to accelerate automation of runing entire codebase comands that exists within our huge web3 app we need to list even qualification campaighn code lines for our local app to run automations of testing repo and automations data gathering and genereting docs i will bring to you to to r&d! create even bigger zip with agregations of creative sota agentic functions ideas you suggest laya and layesr of intelegances you will engeneer to create sota automtion and help me run huge ton of arbitrage strategies in parallel in our data gathering app via laya automatios we will setup in advance to do huge ton of work fatser and bring singularity closer! reserach latest + in previous chats listed hugging face suggestions on our way to layer intelegances that would automate any action locally? reserach latest data how people automate gathering data and runing code automation people do via laya jev like intelegances and how they do it via code to automate on anything! BobIvans/scaling-chrome-extensions + list what to explore further to find even more data on layered intelegances on ways to program them into fastest seamless creation of automation???
+===== END CONTENT =====
+
+===== CONTENT SHA256 c96d03c8325fe09a2f77b875b9d6a88c9d536a662b17ad8419340de1b03f9c67 | FIRST SOURCE 01_YOUR_WORDS/README_RU.txt =====
+ДОСЛОВНЫЕ ДОСТУПНЫЕ СООБЩЕНИЯ
+
+M001–M005: пять содержательных сообщений пользователя, доступных в текущем контексте.
+Опечатки, RU/EN и формулировки сохранены. Это не полный экспорт всех сообщений аккаунта.
+GROK-01–18: 18 сообщений сохранённого DOM-capture от 30 сентября (9 user / 9 assistant).
+Полнота исходного разговора вне этих 18 сообщений неизвестна. Это исторические мнения,
+а не проверенные сейчас юридические, технические или финансовые утверждения.
+OCC-USER-01: дословный запрос из связанного пакета OCC, а не прочитанный заново чат.
+VOICE-USER-EXCERPT-01: короткая цитата из связанного voice-пакета; полного сообщения нет.
+
+Всего 25 записей: 16 user (включая один фрагмент), 9 assistant. Роли не смешаны.
+Содержание каждого .txt соответствует полю text и SHA-256 в MESSAGES.jsonl.
+В отдельных .txt нет добавленного перевода строки в конце; исходные файлы пакетов
+сохранены отдельно байт-в-байт вместе с их исходными переводами строк.
+Пересказы Personal Context и других документов не выдаются за дословные сообщения.
+Нельзя утверждать, что восстановлены все параллельные чаты или вся история жизни.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 de77bd2e7fe5a738ebe4539b7a876e55652490423e9e0238357be894e74b1630 | FIRST SOURCE 01_YOUR_WORDS/VOICE-USER-EXCERPT-01.txt =====
+1 writer for code but not for automation of recording process via miltiple strategis in parallel?
+===== END CONTENT =====
+
+===== CONTENT SHA256 7f0935220a7f6c274fb92c0c2b8d632a5cf2e46001a5c36d3c346dc71aa72690 | FIRST SOURCE 02_STRATEGY/ASSISTANT_IDEAS_RU.txt =====
+ДОПОЛНИТЕЛЬНЫЕ ПРЕДЛОЖЕНИЯ АССИСТЕНТА
+Это направления для проверки, не слова пользователя, не обещание нового научного результата и не реализованные возможности. Часть развивает идеи прежних пакетов.
+
+AI-RND-01 — Атлас идеи до результата
+Проблема: Слова пользователя могут теряться между summary, backlog и изменением кода.
+Предложение: Связать literal quote→idea→capability→patch→test→результат. Исправление интерпретации создаёт новую версию, не стирая слова.
+Эксперимент: Сравнить восстановление 20 целей по summary и по атласу: время, ошибочное авторство, потерянные ограничения.
+Функции: FUTURE::FUT-001, FUTURE::FUT-002, FUTURE::FUT-003
+
+AI-RND-02 — Планировщик недостающего контекста
+Проблема: Большой пакет ещё не гарантирует присутствие конкретного теста или решения.
+Предложение: Задавать обязательные evidence slots и достраивать минимально нужные источники; отдельно иметь полный архивный экспорт.
+Эксперимент: В реальных задачах скрывать один необходимый источник; измерять обнаружение нехватки и число бесполезных запросов.
+Функции: FUTURE::FUT-004, FUTURE::FUT-005, FUTURE::FUT-006
+
+AI-RND-03 — Снимки истинности целей
+Проблема: PASS перестаёт быть надёжным после изменения кода, конфигурации или входов.
+Предложение: Привязать оценку цели к fingerprint зависимостей; показывать цепочку причин TRUE/FALSE/UNKNOWN/NOT_RUN и stale.
+Эксперимент: Менять по одному входу известного успешного сценария и проверять, что неверный старый результат не переиспользуется.
+Функции: FUTURE::FUT-007, FUTURE::FUT-008, FUTURE::FUT-009
+
+AI-RND-04 — Параллельная память наблюдений
+Проблема: Записи из нескольких producers могут повторяться, опаздывать и противоречить друг другу.
+Предложение: Хранить immutable observations с producer, event time и received time; строить views позже, сохраняя альтернативы.
+Эксперимент: Параллельный импорт одного чата из двух экспортов, поздняя правка, restart: ноль необъяснённых потерь; отдельная метрика дублей.
+Функции: FUTURE::FUT-010, FUTURE::FUT-011, FUTURE::FUT-012
+
+AI-RND-05 — Выбор действительно разных проверок
+Проблема: Несколько агентов способны повторить одну ошибку общего источника.
+Предложение: Описать общие failure domains и выбирать дополнительные проверки по измеряемому новому evidence.
+Эксперимент: Сравнить одинаковые и разнородные проверки при одинаковом бюджете; считать совместные отказы и ложный PASS.
+Функции: FUTURE::FUT-013, FUTURE::FUT-014, FUTURE::FUT-015
+
+AI-RND-06 — Карта следующего изменения repo
+Проблема: Генерация большого списка PR мало помогает выбрать ближайший полезный шаг.
+Предложение: Показывать цель, существующий owner, узкий diff, затронутые тесты и ожидаемый эффект; возвращать результаты в библиотеку.
+Эксперимент: Пять одинаковых задач с обычным prompt и картой изменения: time-to-accepted-change, regression и ручные исправления.
+Функции: FUTURE::FUT-016, FUTURE::FUT-017, FUTURE::FUT-018
+
+AI-RND-07 — Персональная мастерская тегов
+Проблема: Универсальная автоматическая классификация не учитывает индивидуальный смысл терминов.
+Предложение: Показывать предложенную метку, источник и причину; исправления пользователя формируют versioned gold set.
+Эксперимент: RU/EN, code, transcript и неоднозначные фразы: precision/recall, abstention, время исправления, перенос на новые данные.
+Функции: FUTURE::FUT-019, FUTURE::FUT-020, FUTURE::FUT-021
+
+AI-RND-08 — Разветвления голосовой цели
+Проблема: Человек меняет мысль во время диктовки, а частичный текст может выглядеть как команда.
+Предложение: Разделить поток речи, черновой intent и финальную миссию; заранее искать контекст, сохранять отменённые ветки как историю.
+Эксперимент: Команды с отрицаниями и самокоррекцией: intent/slot accuracy, false dispatch, время до понятного preview и остановки.
+Функции: FUTURE::FUT-022, FUTURE::FUT-023, FUTURE::FUT-024
+
+AI-RND-09 — Быстрый путь проверенного навыка
+Проблема: Повторный вызов coder на известную задачу увеличивает задержку и вариативность.
+Предложение: После доказанного результата сохранять рецепт с предусловиями; при изменении UI/кода возвращаться к диагностике.
+Эксперимент: Сравнить каждый раз LLM и recipe replay: проверенный успех, p95 latency, stale-precondition detection и стоимость.
+Функции: FUTURE::FUT-025, FUTURE::FUT-026, FUTURE::FUT-027
+
+AI-RND-10 — Репетиция обновления приложения
+Проблема: Обновление capabilities может сломать совместимость данных или обработчиков.
+Предложение: Испытывать candidate release на копии состояния, формировать capability/data diff и план возврата.
+Эксперимент: Проверить сбой миграции, обрыв загрузки и restart; измерить восстановление данных и работоспособность прошлой версии.
+Функции: FUTURE::FUT-028, FUTURE::FUT-029, FUTURE::FUT-030
+
+AI-RND-11 — Корпус опровержений web3-гипотез
+Проблема: Положительные примеры не показывают, где стратегия или измерение неверны.
+Предложение: Сохранять failing routes, stale quotes, комиссии, недостаточную ликвидность и provider disagreements как replay fixtures.
+Эксперимент: Испытать изменение стратегии на скрытых отрицательных примерах; отдельно оценивать исследование, paper и реальный рынок.
+Функции: FUTURE::FUT-031, FUTURE::FUT-032, FUTURE::FUT-033
+
+AI-RND-12 — Проверка продолжения новым чатом
+Проблема: Новый чат может забыть ключевое ограничение даже с большим ZIP.
+Предложение: Небольшой source-bound resume check: назвать ближайшее изменение, важные ограничения и неизвестное; ответы проверяются по пакету.
+Эксперимент: Дать одинаковые задачи разным новым сессиям; оценить continuity errors, пропущенные ограничения и time-to-first-correct-step.
+Функции: FUTURE::FUT-034, FUTURE::FUT-035, FUTURE::FUT-036
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 099da7d7c415a291eaa7daefdd4757cd47ace0ead796f9ffc9f1b309ef048865 | FIRST SOURCE 02_STRATEGY/ASSISTANT_RND_PROPOSALS.json =====
+[
+  {
+    "id": "AI-RND-01",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Атлас идеи до результата",
+    "problem_ru": "Слова пользователя могут теряться между summary, backlog и изменением кода.",
+    "design_ru": "Связать literal quote→idea→capability→patch→test→результат. Исправление интерпретации создаёт новую версию, не стирая слова.",
+    "experiment_ru": "Сравнить восстановление 20 целей по summary и по атласу: время, ошибочное авторство, потерянные ограничения.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-001",
+      "FUTURE::FUT-002",
+      "FUTURE::FUT-003"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-02",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Планировщик недостающего контекста",
+    "problem_ru": "Большой пакет ещё не гарантирует присутствие конкретного теста или решения.",
+    "design_ru": "Задавать обязательные evidence slots и достраивать минимально нужные источники; отдельно иметь полный архивный экспорт.",
+    "experiment_ru": "В реальных задачах скрывать один необходимый источник; измерять обнаружение нехватки и число бесполезных запросов.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-004",
+      "FUTURE::FUT-005",
+      "FUTURE::FUT-006"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-03",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Снимки истинности целей",
+    "problem_ru": "PASS перестаёт быть надёжным после изменения кода, конфигурации или входов.",
+    "design_ru": "Привязать оценку цели к fingerprint зависимостей; показывать цепочку причин TRUE/FALSE/UNKNOWN/NOT_RUN и stale.",
+    "experiment_ru": "Менять по одному входу известного успешного сценария и проверять, что неверный старый результат не переиспользуется.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-007",
+      "FUTURE::FUT-008",
+      "FUTURE::FUT-009"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-04",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Параллельная память наблюдений",
+    "problem_ru": "Записи из нескольких producers могут повторяться, опаздывать и противоречить друг другу.",
+    "design_ru": "Хранить immutable observations с producer, event time и received time; строить views позже, сохраняя альтернативы.",
+    "experiment_ru": "Параллельный импорт одного чата из двух экспортов, поздняя правка, restart: ноль необъяснённых потерь; отдельная метрика дублей.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-010",
+      "FUTURE::FUT-011",
+      "FUTURE::FUT-012"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-05",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Выбор действительно разных проверок",
+    "problem_ru": "Несколько агентов способны повторить одну ошибку общего источника.",
+    "design_ru": "Описать общие failure domains и выбирать дополнительные проверки по измеряемому новому evidence.",
+    "experiment_ru": "Сравнить одинаковые и разнородные проверки при одинаковом бюджете; считать совместные отказы и ложный PASS.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-013",
+      "FUTURE::FUT-014",
+      "FUTURE::FUT-015"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-06",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Карта следующего изменения repo",
+    "problem_ru": "Генерация большого списка PR мало помогает выбрать ближайший полезный шаг.",
+    "design_ru": "Показывать цель, существующий owner, узкий diff, затронутые тесты и ожидаемый эффект; возвращать результаты в библиотеку.",
+    "experiment_ru": "Пять одинаковых задач с обычным prompt и картой изменения: time-to-accepted-change, regression и ручные исправления.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-016",
+      "FUTURE::FUT-017",
+      "FUTURE::FUT-018"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-07",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Персональная мастерская тегов",
+    "problem_ru": "Универсальная автоматическая классификация не учитывает индивидуальный смысл терминов.",
+    "design_ru": "Показывать предложенную метку, источник и причину; исправления пользователя формируют versioned gold set.",
+    "experiment_ru": "RU/EN, code, transcript и неоднозначные фразы: precision/recall, abstention, время исправления, перенос на новые данные.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-019",
+      "FUTURE::FUT-020",
+      "FUTURE::FUT-021"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-08",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Разветвления голосовой цели",
+    "problem_ru": "Человек меняет мысль во время диктовки, а частичный текст может выглядеть как команда.",
+    "design_ru": "Разделить поток речи, черновой intent и финальную миссию; заранее искать контекст, сохранять отменённые ветки как историю.",
+    "experiment_ru": "Команды с отрицаниями и самокоррекцией: intent/slot accuracy, false dispatch, время до понятного preview и остановки.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-022",
+      "FUTURE::FUT-023",
+      "FUTURE::FUT-024"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-09",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Быстрый путь проверенного навыка",
+    "problem_ru": "Повторный вызов coder на известную задачу увеличивает задержку и вариативность.",
+    "design_ru": "После доказанного результата сохранять рецепт с предусловиями; при изменении UI/кода возвращаться к диагностике.",
+    "experiment_ru": "Сравнить каждый раз LLM и recipe replay: проверенный успех, p95 latency, stale-precondition detection и стоимость.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-025",
+      "FUTURE::FUT-026",
+      "FUTURE::FUT-027"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-10",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Репетиция обновления приложения",
+    "problem_ru": "Обновление capabilities может сломать совместимость данных или обработчиков.",
+    "design_ru": "Испытывать candidate release на копии состояния, формировать capability/data diff и план возврата.",
+    "experiment_ru": "Проверить сбой миграции, обрыв загрузки и restart; измерить восстановление данных и работоспособность прошлой версии.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-028",
+      "FUTURE::FUT-029",
+      "FUTURE::FUT-030"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-11",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Корпус опровержений web3-гипотез",
+    "problem_ru": "Положительные примеры не показывают, где стратегия или измерение неверны.",
+    "design_ru": "Сохранять failing routes, stale quotes, комиссии, недостаточную ликвидность и provider disagreements как replay fixtures.",
+    "experiment_ru": "Испытать изменение стратегии на скрытых отрицательных примерах; отдельно оценивать исследование, paper и реальный рынок.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-031",
+      "FUTURE::FUT-032",
+      "FUTURE::FUT-033"
+    ],
+    "measurement_status": "NOT_RUN"
+  },
+  {
+    "id": "AI-RND-12",
+    "author": "assistant",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "title_ru": "Проверка продолжения новым чатом",
+    "problem_ru": "Новый чат может забыть ключевое ограничение даже с большим ZIP.",
+    "design_ru": "Небольшой source-bound resume check: назвать ближайшее изменение, важные ограничения и неизвестное; ответы проверяются по пакету.",
+    "experiment_ru": "Дать одинаковые задачи разным новым сессиям; оценить continuity errors, пропущенные ограничения и time-to-first-correct-step.",
+    "novelty_claim": false,
+    "user_accepted_design": false,
+    "functions": [
+      "FUTURE::FUT-034",
+      "FUTURE::FUT-035",
+      "FUTURE::FUT-036"
+    ],
+    "measurement_status": "NOT_RUN"
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6b393edc807cd7b0a1aae943ee86dbd333bfc6fde10186a0e1d1e6b55956de11 | FIRST SOURCE 02_STRATEGY/DECISIONS_AND_TENSIONS_RU.txt =====
+РЕШЕНИЯ И УТОЧНЕНИЯ, КОТОРЫЕ НЕЛЬЗЯ ПОТЕРЯТЬ
+
+D1. Desktop имеет приоритет над обязательной Chrome extension.
+    Источник: M002; Chrome/browser остаётся возможным источником и адаптером.
+D2. Ближайшая цель — полный контекст и перенос в AI; запуск бота — будущая цель.
+    Источник: M002 «now just agregate context and data to resend to AI».
+D3. Все доступные исходные слова сохраняются; summaries не заменяют их.
+    Источник: M005. Недоступные сообщения отмечаются, а не реконструируются как цитаты.
+D4. Ограничения количества документов не должны приводить к потере хвоста.
+    Источник: M002. Pagination/part size/ресурсные бюджеты — механизмы обработки,
+    а не основание считать часть библиотеки несуществующей.
+D5. Параллельность нужна и для записи наблюдений.
+    Источник: VOICE-USER-EXCERPT-01 (сохранённый фрагмент). Уточняет старое
+    «параллельно только чтение» в legacy docs. Несколько независимых append-only
+    producers и isolated code worktrees допустимы; совместный mutable resource
+    координируется отдельно. Старые тексты не переписаны задним числом.
+D6. Термин «один writer» уточнять объектом: файл, ветка, UI focus, операция.
+    Это архитектурная интерпретация ассистента D5, не новая дословная цитата.
+D7. «Любая команда» — направление расширяемости, не готовая универсальная capability.
+    Источники: M003, OCC-USER-01. Неизвестное действие порождает конкретный R&D шаг.
+D8. Собственные предложения ассистента разрешено добавлять, но авторство различать.
+    Источник: M005. AI-RND-01…12 не приняты пользователем как окончательный дизайн.
+D9. Исторические qualified/green выводы проверять против нужных revisions и inputs.
+    Это рекомендованный evidence contract из прежних пакетов, не запуск проверок.
+D10. Существующие owners, task IDs и code evidence сохраняются.
+     Восстановленное архитектурное решение из связанных пакетов. Сверить с актуальным
+     repo перед правкой; не создавать второй независимый scheduler/store по summary.
+
+ОТКРЫТЫЕ ВОПРОСЫ ДЛЯ БУДУЩЕЙ РЕАЛИЗАЦИИ
+• Какой текущий bot checkout/ZIP и branch является выбранным источником?
+• Где живут canonical store/action queue существующего SCE в актуальном коде?
+• CPU/RAM/GPU, аудиоустройства и ограничения конкретного Dell Windows 11?
+• Какие экспорты истории и private sources доступны для импорта?
+• Какой точный Laya model/backend/version испытывается по сохранённым ссылкам?
+• Какой первый qualification entrypoint уже существует и чем проверяется?
+• Какие реальные ежедневные команды станут baseline набора измерений?
+
+Эти вопросы не блокируют сохранение архива. Ответы понадобятся для конкретных
+следующих изменений. Недостающие факты не заполнять догадками нового чата.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b3cdf623fd604bcd58cc31f08ee31be6e9ec51e95986b781b43c1c23b86e8fb1 | FIRST SOURCE 02_STRATEGY/LABELING_ANY_DATA_RU.txt =====
+МЕТКИ ДЛЯ ЛЮБОГО ФРАГМЕНТА: СХЕМА ДЛЯ ДАЛЬНЕЙШЕЙ РАЗРАБОТКИ
+
+Слои записи:
+• original: байты/объект источника, неизменяемый идентификатор, SHA-256;
+• source_version: источник, revision, path/URL, время capture и source time;
+• span: file offsets, message ID, page, timestamp audio/video или symbol;
+• interpretation: метки, связи и выводы с авторством, версиями и обоснованием;
+• outcome: выполненные действия и независимые evidence receipts.
+
+Базовые измерения меток:
+1. source_kind: repo/chat/document/web/audio/video/image/terminal/observation.
+2. author_role: user/assistant/tool/external/unknown; speaker и source identity.
+3. information_kind: requirement/idea/decision/question/task/fact/hypothesis/
+   code/test/error/result/constraint/proposal. Несколько меток допустимы.
+4. scope: project, repo, path, symbol, goal, entity, topic, workflow/capability.
+5. chronology: created/captured/valid_from/valid_to/revision/supersedes.
+6. evidence: asserted/suggested/verified/disputed/unknown; отдельный link на
+   критерий и результат TRUE/FALSE/UNKNOWN/NOT_RUN. Уверенность модели не proof.
+7. lifecycle: inbox/to_review/accepted/planned/in_progress/blocked/done/
+   deprecated; текущий статус хранится как view истории событий.
+8. access: local/private/selected_provider/exportable; scope конкретного источника.
+9. provenance: exact span, parent links, extractor/model/version, изменивший метку.
+10. relevance: цель и объяснение связи; urgency/priority — отдельно от truth.
+11. quality: parse/coverage/freshness/conflict/missing-dependency состояния.
+12. action: proposed capability, inputs, required evidence, expected outcome.
+
+Теги могут быть unknown, многозначными или спорными. Не подменять отсутствующее
+значение выдуманным. AI предлагает метки; исходная фраза сохраняется и пользователь
+может исправлять классификацию. Хранить отрицание, временные условия и автора.
+
+Связи:
+derived_from, quotes, supports, contradicts, supersedes, depends_on, implements,
+tests, verifies, blocks, belongs_to, selected_for, produced_by, answered_by.
+
+Пример: пользователь говорит «собери контекст, пока не запускай бота».
+Сохранить весь transcript; отдельно request=context export и constraint=no bot run.
+Не извлекать вторую половину как положительный приказ «запускай бота».
+Это искусственный пример ассистента, не цитата пользователя из истории.
+
+Уже поставляемый офлайн labeling prototype и его границы сохранены в
+packages/SCE_V2/rnd_v2/labeling/. Расширенная схема здесь — будущий контракт,
+не заявление, что все эти facets уже встроены в product store и UI.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f7b3f2eb2f7f80f01b029a905ca33cd4fe8312065dd3fb1c1acbd9656a813c06 | FIRST SOURCE 02_STRATEGY/MASTER_STRATEGY_RU.txt =====
+ОБЩАЯ СТРАТЕГИЯ
+
+Создаём личное локальное рабочее пространство на Dell Windows 11. Оно хранит
+оригиналы файлов, репозитории, разговоры, документы, записи и результаты; даёт
+поиск, страницы, теги, связи и представления; собирает контекст задачи для AI;
+постепенно добавляет проверяемые действия через голос, текст и кнопки целей.
+BobIvans/scaling-chrome-extensions — существующая основа, а desktop должен
+работать без обязательной зависимости от Chrome extension. Flashloan/Studious
+Pancake — важный первый прикладной проект этой системы.
+
+БЛИЖАЙШАЯ ПОЛЬЗА
+Импортировать весь выбранный repo ZIP/папку, сохранить пути и байты, получить
+понятный полный TXT и связанные части, перенести их в AI, получить изменение,
+сохранить результат и продолжить в следующем чате. Именно этот цикл проверять
+раньше обещания «автоматизировать что угодно».
+
+ДОЛГОСРОЧНЫЙ ЦИКЛ
+Голос/текст/кнопка цели → транскрипт и intent → нужный контекст из библиотеки →
+описание задачи и критериев → существующий workflow либо предложение нового →
+код/CLI/API/браузер/desktop исполнение → проверка фактического результата →
+запись evidence, цели и следующего шага → повторное использование удачного навыка.
+Для новой функции: context document → выбранный AI/coder → отдельная рабочая
+ветка → patch и тесты → review/merge по конкретному заданию → release → проверка
+обновления → локальное применение и возможность возврата прошлой версии.
+
+ЧЕТЫРЕ РАЗНЫЕ ПОЛНОТЫ
+1. Сохранность источников: байты, пути, идентичность и версии присутствуют.
+2. Извлечение: какие форматы и участки преобразованы в текст/структуру.
+3. Осмысление: какие идеи и зависимости отмечены, что осталось неизвестным.
+4. Исполнение: какие действия и проверки реально выполнены на каких входах.
+Полный ZIP не равен полному prompt, прочитанному моделью. Полный prompt не равен
+доказанной правильности кода. Хранение оригинала не означает распознавание каждого
+изображения, PDF, аудио или бинарного файла.
+
+«БЕЗ ПРОИЗВОЛЬНЫХ ЛИМИТОВ»
+Не отбрасывать документы после двадцатого, хвост большого архива или длинного файла.
+Хранить весь выбранный источник; обработку делать потоково с checkpoint, очередями,
+возобновлением и явным статусом RAW_ONLY/ERROR/PENDING. При нехватке диска, памяти
+или бюджета сообщать о причине и сохранять место продолжения. Ограничение размера
+пакета модели задаёт число частей и проходов, а не потерю оригинальных данных.
+Полный review ведёт журнал всех spans/частей; summary и embeddings — производные.
+
+ДАННЫЕ И ИХ МЕТКИ
+Источник → version/revision → raw object → фрагмент/span → утверждение/идея/задача →
+связь с целью → код/тест/доказательство. Отделять user requirement от assistant
+proposal, факт от гипотезы, старое решение от superseded, PASS от NOT_RUN.
+Метки должны объясняться и исправляться. Исходная фраза и история исправлений
+остаются доступными. Подробности: LABELING_ANY_DATA_RU.txt и прежние labeling schemas.
+
+РЕАЛЬНАЯ РОЛЬ LAYA И СЛОЁВ ИНТЕЛЛЕКТА
+Сохранённые исследования рассматривают небольшие модели решений/классификации
+как один компонент. Архитектура отдельно содержит ASR, parser, retrieval, planner,
+registry возможностей, executors и verifier. Конкретный Laya backend, версия,
+входы и калибровка должны быть проверены; «Laya» не означает готовый универсальный
+доступ ко всем программам. JSON здесь часто описывает контракт приложения, а не
+нативный импорт конкретного продукта Laya.
+Первый маршрут можно строить на правилах и существующих командах, затем сравнить
+локальную модель с baseline на одинаковых задачах. Необоснованное решение может
+возвращать UNKNOWN/NEED_CONTEXT, а не выдуманное успешное выполнение.
+
+ПАРАЛЛЕЛЬНОСТЬ
+Последнее сохранённое уточнение пользователя разрешает рассматривать несколько
+стратегий записи одновременно. Независимые producers добавляют observations,
+сборщики читают свои источники, code workers готовят изменения в разных worktrees,
+независимые проверки и paper/replay кампании могут идти параллельно.
+Координировать нужно конкретный общий изменяемый ресурс: одну ветку, файл, запись,
+внешнюю операцию или активное окно. Общий глобальный «один writer на всё» мешает
+цели и не является требованием пользователя. Подробнее: DECISIONS_AND_TENSIONS_RU.txt.
+
+WEB3 КАК ПЕРВАЯ ПРОВЕРЯЕМАЯ ВЕРТИКАЛЬ
+Найти доступную актуальную версию bot repo; собрать inventory, команды запуска,
+тесты, qualification entrypoints и source lines. Первый законченный сценарий:
+«собери контекст блокера и выполни зарегистрированную локальную проверку» →
+план → logs/testcases → TRUE/FALSE/UNKNOWN/NOT_RUN → документ для дальнейшего AI.
+Далее: reproducible build, smells, unit/fuzz/invariants, pinned replay/fork,
+сбор данных, provider comparison, freshness, fees, liquidity, repayment,
+paper observation, stop/recovery и release evidence. Синтетический PASS остаётся
+синтетическим. Готовность к live — отдельное решение, не следствие упаковки ZIP.
+
+КАК ИЗМЕРЯТЬ ПРОГРЕСС
+Полнота paths/bytes/spans, доля пропущенных обязательных источников, корректность
+тегов и авторства, воспроизводимость patch/test, p50/p95 time-to-verified,
+стоимость на проверенную задачу, latency остановки, восстановление после сбоя,
+ручные исправления и достижение конкретных ежедневных целей.
+Измерения Dell, ASR, Laya, реального браузера и бота не сделаны этой сборкой.
+
+ПРОДУКТОВЫЕ НАПРАВЛЕНИЯ НА ПОТОМ
+Личная библиотека и память; Notion-подобный UI поверх локальных оригиналов;
+research assistant с проверяемыми источниками; repo cockpit; голосовой интерфейс
+для доступности; фабрика проверенных навыков; adaptive UI из capability schema;
+сравнение web3-стратегий; daily planner; новые коннекторы; выбор разных AI providers.
+Сначала подтвердить пользу узкого цикла. Сохранять остальные идеи в backlog,
+не удаляя их при смене ближайшего приоритета.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b59a2d64fa20c812406d5d4515f2ba27be5c9bfed539b24ec4a05ee7e3f3d2e3 | FIRST SOURCE 02_STRATEGY/MESSAGE_COVERAGE.json =====
+[
+  {
+    "message_id": "M001",
+    "role": "user",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/M001.txt",
+    "idea_ids": [
+      "USR-001",
+      "USR-002",
+      "USR-003",
+      "USR-004",
+      "USR-005",
+      "USR-006",
+      "USR-007",
+      "USR-008",
+      "USR-009"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "M002",
+    "role": "user",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/M002.txt",
+    "idea_ids": [
+      "USR-010",
+      "USR-011",
+      "USR-012",
+      "USR-013",
+      "USR-014",
+      "USR-015",
+      "USR-016",
+      "USR-017",
+      "USR-018",
+      "USR-019",
+      "USR-020",
+      "USR-021",
+      "USR-022",
+      "USR-023",
+      "USR-024",
+      "USR-025",
+      "USR-026",
+      "USR-027",
+      "USR-028",
+      "USR-029",
+      "USR-030",
+      "USR-031",
+      "USR-032",
+      "USR-033",
+      "USR-034"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "M003",
+    "role": "user",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/M003.txt",
+    "idea_ids": [
+      "USR-035",
+      "USR-036",
+      "USR-037",
+      "USR-038",
+      "USR-039",
+      "USR-040",
+      "USR-041",
+      "USR-042",
+      "USR-043",
+      "USR-044",
+      "USR-045",
+      "USR-046",
+      "USR-047",
+      "USR-048",
+      "USR-049",
+      "USR-050",
+      "USR-051",
+      "USR-052",
+      "USR-053",
+      "USR-054",
+      "USR-055",
+      "USR-056",
+      "USR-057",
+      "USR-058",
+      "USR-059",
+      "USR-060",
+      "USR-061",
+      "USR-062",
+      "USR-063",
+      "USR-064",
+      "USR-065",
+      "USR-066",
+      "USR-067",
+      "USR-068",
+      "USR-069",
+      "USR-070",
+      "USR-071",
+      "USR-072",
+      "USR-073",
+      "USR-074",
+      "USR-075",
+      "USR-076",
+      "USR-077",
+      "USR-078",
+      "USR-079",
+      "USR-080",
+      "USR-081",
+      "USR-082",
+      "USR-083"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "M004",
+    "role": "user",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/M004.txt",
+    "idea_ids": [
+      "USR-084",
+      "USR-085"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "M005",
+    "role": "user",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/M005.txt",
+    "idea_ids": [
+      "USR-086",
+      "USR-087",
+      "USR-088",
+      "USR-089",
+      "USR-090",
+      "USR-091",
+      "USR-092"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-01",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-01.txt",
+    "idea_ids": [
+      "USR-093"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-02",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-02.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-03",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-03.txt",
+    "idea_ids": [
+      "USR-094",
+      "USR-095",
+      "USR-096"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-04",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-04.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-05",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-05.txt",
+    "idea_ids": [
+      "USR-097"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-06",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-06.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-07",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-07.txt",
+    "idea_ids": [
+      "USR-098"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-08",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-08.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-09",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-09.txt",
+    "idea_ids": [
+      "USR-099",
+      "USR-100"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-10",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-10.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-11",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-11.txt",
+    "idea_ids": [
+      "USR-101",
+      "USR-102",
+      "USR-103",
+      "USR-104",
+      "USR-105",
+      "USR-106",
+      "USR-107",
+      "USR-108",
+      "USR-109",
+      "USR-110",
+      "USR-111"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-12",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-12.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-13",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-13.txt",
+    "idea_ids": [
+      "USR-112",
+      "USR-113",
+      "USR-114",
+      "USR-115"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-14",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-14.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-15",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-15.txt",
+    "idea_ids": [
+      "USR-116"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-16",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-16.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "GROK-17",
+    "role": "user",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-17.txt",
+    "idea_ids": [
+      "USR-117"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "GROK-18",
+    "role": "assistant",
+    "source_class": "VERBATIM_WITHIN_SAVED_DOM_CAPTURE_NOT_FULL_ACCOUNT_EXPORT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/GROK-18.txt",
+    "idea_ids": [],
+    "semantic_review": "ASSISTANT_HISTORICAL_OUTPUT_RETAINED_NOT_REENDORSED"
+  },
+  {
+    "message_id": "OCC-USER-01",
+    "role": "user",
+    "source_class": "VERBATIM_AS_STORED_IN_RELATED_ARTIFACT",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/OCC-USER-01.txt",
+    "idea_ids": [
+      "USR-118",
+      "USR-119",
+      "USR-120",
+      "USR-121",
+      "USR-122",
+      "USR-123"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  },
+  {
+    "message_id": "VOICE-USER-EXCERPT-01",
+    "role": "user",
+    "source_class": "VERBATIM_EXCERPT_REPORTED_BY_ARTIFACT_NOT_FULL_MESSAGE",
+    "full_available_text_preserved": true,
+    "text_file": "01_YOUR_WORDS/VOICE-USER-EXCERPT-01.txt",
+    "idea_ids": [
+      "USR-124"
+    ],
+    "semantic_review": "USER_IDEAS_MAPPED"
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 afa079f4dd61149efe5dae25fbbc649f1109b64c75844e8a0541eb0ab8c80d17 | FIRST SOURCE 02_STRATEGY/NEXT_DEVELOPMENT_NOW_LATER_RU.txt =====
+ЧТО ДЕЛАТЬ ДАЛЬШЕ И ЧТО ОСТАЁТСЯ НА ПОТОМ
+
+Рекомендованный порядок ассистента. Это план разработки, а не утверждение,
+что функции уже внедрены. Старые ID сохраняются в каталогах, новые PR не открывались.
+
+СЕЙЧАС В ЭТОМ ЗАПРОСЕ
+Сохранены слова, исходные пакеты, функции, workflows, R&D и стратегия продолжения.
+Runtime не менялся. Архивная проверка не заменяет будущую проверку приложения.
+
+ПЕРВАЯ СЛЕДУЮЩАЯ РАБОЧАЯ СЕССИЯ
+N01. Прочитать handoff и проверить актуальные owners/HEAD существующих репозиториев.
+     Найти реальный выбранный repo ZIP/checkout и точку входа библиотеки.
+     Прежние SHAs в evidence — исторические; не считать их автоматически текущими.
+     Результат: короткая карта owners и один выбранный небольшой diff.
+     Связи: SCE D01–D04; OCC DESK-01/02; VOICE CTX-CAP-01/CTX-PAR-01.
+
+N02. Подключить raw-first импорт и полный экспорт к существующему store SCE.
+     Один владелец состояния и очереди, desktop как клиент. Не вводить вторую
+     независимую библиотеку только ради нового окна.
+     Проверка: >20 документов, крупный архив, длинные пути, повторяющиеся paths,
+     binary/raw-only, ошибка parser, restart и повторный импорт; сверка bytes/hashes.
+     Результат: полный manifest + originals + TXT parts + coverage/error ledger.
+     Связи: D02/D03/D04; CTX-01; LABEL-02/03/12/13.
+
+N03. Сделать завершённый handoff в новый AI-чат и импорт ответа обратно.
+     Repo map, символы, зависимости, tests/docs/history, WHY_THIS_PACKET,
+     исходные spans, required slots, omitted/pending, multipart review ledger.
+     Проверка: потерянная критичная зависимость видна; размер prompt не обрезает
+     оригинал; ответ привязан к версии источников и нужной цели.
+     Связи: D05/D08/D09/D10; CTX-10/15; CTX-CAP-02.
+
+N04. Довести один desktop-поток на Dell Windows 11.
+     Импорт → библиотека → выбранная цель → экспорт → статус. Проверить обычный
+     запуск, Unicode paths, отсутствие обязательного Chrome, ошибки и отмену.
+     Добавить переход в VS Code к path/line и чтение результатов команды.
+     Выбор новой UI-платформы оставить отдельным экспериментом, если текущая
+     основа не удовлетворит измеримым потребностям.
+     Связи: D01/UI-01; OCC desktop; T04.
+
+СЛЕДУЮЩИЙ ЭТАП ПОСЛЕ ПЕРВОГО ЦИКЛА
+N05. Подключить теги, цели и provenance к реальной библиотеке.
+     Импортировать выбранные экспорты ChatGPT/Grok/Telegram/Docs. Сохранить роли,
+     ветки, revisions и все оригинальные сообщения. UI показывает предложенную
+     метку, цитату и возможность исправить её. Daily plan строится по open goals.
+     Связи: D06/D07; LABEL-01–18; CTX-02/04/05/08/09.
+
+N06. Реализовать одну bot qualification-команду через зарегистрированный adapter.
+     Найти существующий entrypoint и настоящие test commands в текущем bot repo;
+     использовать отдельную рабочую директорию и собрать логи, testcases, exit
+     status, версии входов и postcondition. Показать blockers и UNKNOWN.
+     Проверить и положительный, и отрицательный результат, stale evidence.
+     Связи: CTX-PAR-05; W3-F01–13; SMELL-01–10; OCC command candidates.
+
+N07. Добавить голос к тому же typed intent/action пути.
+     Push-to-talk → RU/EN transcript → исправление → intent → понятный preview →
+     тот же проверенный сценарий. Отдельный stop/cancel. Проверить доступность,
+     имена repo, отрицания, шум, прерывание и поведение после restart на Dell.
+     Laya сначала сравнивается как advisory router с deterministic baseline.
+     Связи: CTX-PAR-06; LVF05–09/21; PIPE-01/02/17.
+
+N08. Ввести многопоточный сбор и измерить выгодную параллельность.
+     Несколько producers → immutable observations → reconciliation/views.
+     Независимые worktrees и tests; общий ресурс имеет конкретного владельца.
+     Сравнить serial, eager-parallel и delayed-hedge при одинаковом бюджете.
+     Проверить late arrivals, дубли, source drift, отмену losers и foreground user.
+     Связи: CTX-CAP-01; CTX-PAR-03/04; RND-43–54; PIPE-06/18.
+
+N09. Закрыть один coding roundtrip.
+     Context pack → выбранный provider (Grok/OpenAI/другой) → отдельный worktree →
+     patch → независимые проверки → reviewable diff/PR → evidence в библиотеку.
+     Сохранить происхождение исходной цели, изменения и результатов.
+     Связи: CTX-PAR-07; PIPE-04/08/09/10; FUT-016–018.
+
+ПОЗЖЕ: СОХРАНИТЬ В BACKLOG, НЕ СЧИТАТЬ ЗАБЫТЫМ
+N10. GitHub release watcher, capability diff, staged updater, миграции и rollback.
+     Сначала проверить обновление/возврат на копии состояния. Новая capability
+     и новый доступ — отдельные элементы конфигурации; архив не выдаёт их сам.
+N11. Расширить квалификацию до набора реальных web3 campaigns и параллельного
+     replay/paper портфеля; свежесть данных, полные комиссии, provider disagreement,
+     faults, stop и reproducibility. Live — отдельный последующий этап.
+N12. Добавлять коннекторы, browser/Windows UIA, MCP library tools, adaptive UI,
+     мультимодальность, personal memory, обучение тегов, skill factory и продуктовые
+     эксперименты. Для каждого — один критерий пользы и измеримый результат.
+
+КОНКРЕТНЫЙ ПЕРВЫЙ РЕЗУЛЬТАТ, КОТОРЫЙ НУЖЕН
+На выбранном repo ZIP >20 файлов: все entries учтены; полные пути и raw сохранены;
+можно собрать весь текст или пакет цели; видно, что обработано/не обработано;
+новый чат понимает следующий patch; его результат возвращается в библиотеку.
+Именно этот сценарий завершать, прежде чем расширять число одновременно строящихся
+интеграций. Все дальние идеи уже сохранены и могут быть подняты позже.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9066fdce1649430242ada5b304328c0697ce2c55173bbc940b61b24a6b70b68b | FIRST SOURCE 02_STRATEGY/TRACKS.json =====
+[
+  {
+    "id": "T00",
+    "title_ru": "Перенос стратегии между чатами",
+    "stage_recommendation": "Сейчас: архив и handoff",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-10"
+    ],
+    "acceptance_direction_ru": "Каждый известный источник учтён, цитаты ведут в оригинал, неизвестные источники явно отсутствуют."
+  },
+  {
+    "id": "T01",
+    "title_ru": "Полный импорт, оригиналы, пути и экспорт",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает."
+  },
+  {
+    "id": "T02",
+    "title_ru": "Библиотека, теги, версии и поиск",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-06",
+      "SCE_V2::LABEL-14",
+      "SCE_V2::LABEL-18",
+      "SCE_V2::CTX-09"
+    ],
+    "acceptance_direction_ru": "Для каждого фрагмента можно открыть оригинал, автора, span, версию, связанные цели и основания меток."
+  },
+  {
+    "id": "T03",
+    "title_ru": "Контекст всего репозитория и AI roundtrip",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия."
+  },
+  {
+    "id": "T04",
+    "title_ru": "Desktop, существующий store, UI, terminal/VS Code",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension."
+  },
+  {
+    "id": "T05",
+    "title_ru": "Голос, текст и доступность",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве."
+  },
+  {
+    "id": "T06",
+    "title_ru": "Laya, typed workflows и исполнители",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех."
+  },
+  {
+    "id": "T07",
+    "title_ru": "Источники, браузер и пользовательские экспорты",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного."
+  },
+  {
+    "id": "T08",
+    "title_ru": "Web3, стратегии и квалификация",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE."
+  },
+  {
+    "id": "T09",
+    "title_ru": "AI coding, GitHub, новые capabilities и updater",
+    "stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback."
+  },
+  {
+    "id": "T10",
+    "title_ru": "Параллельность, скорость и стоимость",
+    "stage_recommendation": "Постепенно после измерения baseline",
+    "function_refs": [
+      "SCE_V2::PIPE-03",
+      "SCE_V2::PIPE-06",
+      "SCE_V2::PIPE-18",
+      "SCE_V2::LVF16",
+      "SCE_V2::LVF19",
+      "SCE_V2::LVF20"
+    ],
+    "acceptance_direction_ru": "Параллельные producers сохраняют все observations; сравниваются p50/p95 time-to-verified, ресурсы, потери и повторные эффекты."
+  },
+  {
+    "id": "T11",
+    "title_ru": "Истинность целей, smells и доказательства",
+    "stage_recommendation": "Первый/следующий этап",
+    "function_refs": [
+      "SCE_V2::SMELL-01",
+      "SCE_V2::SMELL-10",
+      "SCE_V2::W3-F12",
+      "SCE_V2::W3-F36",
+      "SCE_V2::LVF17"
+    ],
+    "acceptance_direction_ru": "Находка ведёт к строкам и версии; подтверждение/опровержение имеет критерий и evidence; недостаточные данные дают UNKNOWN."
+  },
+  {
+    "id": "T12",
+    "title_ru": "История целей, ежедневные задачи и R&D",
+    "stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг."
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9def99a675c3ec2c70695e6b296433d8ad6eaa77379f470e2d19e45cc6d5fd40 | FIRST SOURCE 02_STRATEGY/USER_IDEAS_WITH_QUOTES.json =====
+[
+  {
+    "id": "USR-001",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Объяснения и handoff на русском",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "help in russian",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 0,
+      "end": 15,
+      "interval": "[start,end)"
+    },
+    "track": "T00",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-10"
+    ],
+    "delivery_stage_recommendation": "Сейчас: архив и handoff",
+    "acceptance_direction_ru": "Каждый известный источник учтён, цитаты ведут в оригинал, неизвестные источники явно отсутствуют.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-002",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Продолжать существующий SCE-проект и объяснить запуск",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "BobIvans/scaling-chrome-extensions",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 21,
+      "end": 55,
+      "interval": "[start,end)"
+    },
+    "track": "T04",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-003",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "UI импорта repo ZIP и преобразования в TXT",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "ui to upload repo zip to transform it into txt",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 98,
+      "end": 144,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-004",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Проходить весь репозиторий и делить на связные части",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "check this entire repo to cut in chunks",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 178,
+      "end": 217,
+      "interval": "[start,end)"
+    },
+    "track": "T03",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-005",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Продолжать разработку flashloan-бота с собранным контекстом",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "contunie work on flashloan",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 221,
+      "end": 247,
+      "interval": "[start,end)"
+    },
+    "track": "T08",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-006",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Передавать код и контекст ChatGPT для следующего изменения",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "continue coding with chatgpt",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 355,
+      "end": 383,
+      "interval": "[start,end)"
+    },
+    "track": "T03",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-007",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Восстановить функции и решения из связанных параллельных чатов",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "find functions in parallel chats",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 385,
+      "end": 417,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-008",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Выделить функции Laya, требующие исследования и разработки",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "what laya functions still need to r&d",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 440,
+      "end": 477,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-009",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Повышать самостоятельность выполнения проверяемых задач",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "high agentic abilities",
+    "message_id": "M001",
+    "source_path": "01_YOUR_WORDS/M001.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "eb2ab14a8336cc8b3dcf71c41e69436d031143ab743ae10bdb34c9da2879edf1",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 489,
+      "end": 511,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-010",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Импортировать пользовательский репозиторий около 4 MB",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "my repo is about 4mb",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 0,
+      "end": 20,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-011",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Убрать произвольные продуктовые ограничения агрегации",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "lets remove bounduries?",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 21,
+      "end": 44,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-012",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Обеспечить сохранность источников без молчаливого обрезания",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "dont lose nothing on anything like random limits",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 106,
+      "end": 154,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-013",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранять полные пути и происхождение данных",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "need entire path data",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 190,
+      "end": 211,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-014",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сделать Chrome extension необязательным",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "lets remove wire to chrome extensions",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 213,
+      "end": 250,
+      "interval": "[start,end)"
+    },
+    "track": "T04",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-015",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Локальное desktop-приложение для Dell Windows 11",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "dell windows 11 compitable desktop app",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 262,
+      "end": 300,
+      "interval": "[start,end)"
+    },
+    "track": "T04",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-016",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Убрать потолок в двадцать документов",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "more than 20 max docs remove",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 340,
+      "end": 368,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-017",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Поддерживать более крупные архивы и полный переносимый пакет",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "agregate even bigger zip",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 370,
+      "end": 394,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-018",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Искать и сохранять более ранние разговоры по стратегии",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "find even older conversations",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 398,
+      "end": 427,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-019",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Многоисточниковая локальная библиотека контента",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "local library of content agregated from anywhere",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 482,
+      "end": 530,
+      "interval": "[start,end)"
+    },
+    "track": "T07",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-020",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Развивать продукт как альтернативу базе знаний Notion",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "competing with notion",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 535,
+      "end": 556,
+      "interval": "[start,end)"
+    },
+    "track": "T02",
+    "function_refs": [
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-06",
+      "SCE_V2::LABEL-14",
+      "SCE_V2::LABEL-18",
+      "SCE_V2::CTX-09"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Для каждого фрагмента можно открыть оригинал, автора, span, версию, связанные цели и основания меток.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-021",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Встроенный AI API для текста, репозитория и действий в библиотеке",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "api inside app for any action within library app for text, repo, context",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 589,
+      "end": 661,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-022",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Файлы и папки локальной библиотеки с привычным доступом",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "library like google drive",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 763,
+      "end": 788,
+      "interval": "[start,end)"
+    },
+    "track": "T02",
+    "function_refs": [
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-06",
+      "SCE_V2::LABEL-14",
+      "SCE_V2::LABEL-18",
+      "SCE_V2::CTX-09"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Для каждого фрагмента можно открыть оригинал, автора, span, версию, связанные цели и основания меток.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-023",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Редактируемые страницы, связи и представления поверх файлов",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "have access to content like notion",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 793,
+      "end": 827,
+      "interval": "[start,end)"
+    },
+    "track": "T02",
+    "function_refs": [
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-06",
+      "SCE_V2::LABEL-14",
+      "SCE_V2::LABEL-18",
+      "SCE_V2::CTX-09"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Для каждого фрагмента можно открыть оригинал, автора, span, версию, связанные цели и основания меток.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-024",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Изучать подходящие открытые компоненты вместо переписывания всего",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "good open suorce ways",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 873,
+      "end": 894,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-025",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Подключить управляемые команды локального terminal",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "local terminal to be wired to this app",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 929,
+      "end": 967,
+      "interval": "[start,end)"
+    },
+    "track": "T04",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-026",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Добавить переход в VS Code, задачи и review diff",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "directly integrate vs code",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 971,
+      "end": 997,
+      "interval": "[start,end)"
+    },
+    "track": "T04",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-027",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Будущая цель: управлять жизненным циклом flashloan-бота из приложения",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "wanna this app also to run my flashloan bot",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1008,
+      "end": 1051,
+      "interval": "[start,end)"
+    },
+    "track": "T08",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-028",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Ближайший приоритет: собирать контекст и возвращать его AI",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "now just agregate context and data to resend to AI",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1052,
+      "end": 1102,
+      "interval": "[start,end)"
+    },
+    "track": "T03",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-029",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранять собственные формулировки и авторство пользователя",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "find all of my own messages and ideas",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1123,
+      "end": 1160,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-030",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранять полезные прежние ответы и предложения ассистента",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "your best outputs on ideas",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1181,
+      "end": 1207,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-031",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Собирать code smells всего доступного repo со ссылками на код",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "entire data on smells of code",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1249,
+      "end": 1278,
+      "interval": "[start,end)"
+    },
+    "track": "T11",
+    "function_refs": [
+      "SCE_V2::SMELL-01",
+      "SCE_V2::SMELL-10",
+      "SCE_V2::W3-F12",
+      "SCE_V2::W3-F36",
+      "SCE_V2::LVF17"
+    ],
+    "delivery_stage_recommendation": "Первый/следующий этап",
+    "acceptance_direction_ru": "Находка ведёт к строкам и версии; подтверждение/опровержение имеет критерий и evidence; недостаточные данные дают UNKNOWN.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-032",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Подготовить каталоги сценариев, JSON-контракты и код адаптеров",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "recieve automations jsons code",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1313,
+      "end": 1343,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-033",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Проверять достижение целей по evidence, включая неизвестный результат",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "true or false aim's",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1356,
+      "end": 1375,
+      "interval": "[start,end)"
+    },
+    "track": "T11",
+    "function_refs": [
+      "SCE_V2::SMELL-01",
+      "SCE_V2::SMELL-10",
+      "SCE_V2::W3-F12",
+      "SCE_V2::W3-F36",
+      "SCE_V2::LVF17"
+    ],
+    "delivery_stage_recommendation": "Первый/следующий этап",
+    "acceptance_direction_ru": "Находка ведёт к строкам и версии; подтверждение/опровержение имеет критерий и evidence; недостаточные данные дают UNKNOWN.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-034",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Оптимизировать время до проверенного достижения цели",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "accelerate our goals execution",
+    "message_id": "M002",
+    "source_path": "01_YOUR_WORDS/M002.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "f52686878b94dd2e03271690f6598fb76ce3fa453b8aaef6aa2f58e1a091ab70",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1379,
+      "end": 1409,
+      "interval": "[start,end)"
+    },
+    "track": "T10",
+    "function_refs": [
+      "SCE_V2::PIPE-03",
+      "SCE_V2::PIPE-06",
+      "SCE_V2::PIPE-18",
+      "SCE_V2::LVF16",
+      "SCE_V2::LVF19",
+      "SCE_V2::LVF20"
+    ],
+    "delivery_stage_recommendation": "Постепенно после измерения baseline",
+    "acceptance_direction_ru": "Параллельные producers сохраняют все observations; сравниваются p50/p95 time-to-verified, ресурсы, потери и повторные эффекты.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-035",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Развивать автоматизацию полного цикла web3-бота",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "atuomate entire web3 bots",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 49,
+      "end": 74,
+      "interval": "[start,end)"
+    },
+    "track": "T08",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-036",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Автоматизировать тесты, квалификацию и сбор данных",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "future tests qualifiction and data gathering",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 84,
+      "end": 128,
+      "interval": "[start,end)"
+    },
+    "track": "T08",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-037",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранить путь от исследований к отдельному решению о live",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "on our way to live",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 129,
+      "end": 147,
+      "interval": "[start,end)"
+    },
+    "track": "T08",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-038",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Исследовать локальную роль Laya в маршрутизации и автоматизации",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "automated via local laya",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 158,
+      "end": 182,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-039",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Восстановить прежние идеи тегирования и сбора контекста",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "previous outputs of tagging data",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 206,
+      "end": 238,
+      "interval": "[start,end)"
+    },
+    "track": "T02",
+    "function_refs": [
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-06",
+      "SCE_V2::LABEL-14",
+      "SCE_V2::LABEL-18",
+      "SCE_V2::CTX-09"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Для каждого фрагмента можно открыть оригинал, автора, span, версию, связанные цели и основания меток.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-040",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Вести полный список добавленных функций и их статусов",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "list down all new functions included",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 307,
+      "end": 343,
+      "interval": "[start,end)"
+    },
+    "track": "T00",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-10"
+    ],
+    "delivery_stage_recommendation": "Сейчас: архив и handoff",
+    "acceptance_direction_ru": "Каждый известный источник учтён, цитаты ведут в оригинал, неизвестные источники явно отсутствуют.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-041",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранить найденный разговор 30 сентября целиком в доступном capture",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "18 сообщений",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 485,
+      "end": 497,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-042",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "UI, где цели становятся понятными кнопками действий",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "интерфейсе с кнопками целей",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 569,
+      "end": 596,
+      "interval": "[start,end)"
+    },
+    "track": "T04",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-043",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Универсальная схема меток для каждого фрагмента данных",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "labeling for any data piece",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 659,
+      "end": 686,
+      "interval": "[start,end)"
+    },
+    "track": "T02",
+    "function_refs": [
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-06",
+      "SCE_V2::LABEL-14",
+      "SCE_V2::LABEL-18",
+      "SCE_V2::CTX-09"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Для каждого фрагмента можно открыть оригинал, автора, span, версию, связанные цели и основания меток.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-044",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Искать публичные исследовательские сигналы в X/Twitter",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "изучить Twitter",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 766,
+      "end": 781,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-045",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Исследовать системы класса Laya/Jeff/Jev, уточняя конкретные проекты",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "Jeff-like intelligence, like Laya",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 835,
+      "end": 868,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-046",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Генерировать код сценария из цели и переводить успешные сценарии в reusable skills",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "автоматически созданных сценариев",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 946,
+      "end": 979,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-047",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Расширяемая голосовая автоматизация задач компьютера",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "автоматизировать любой процесс С помощью голоса",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1117,
+      "end": 1164,
+      "interval": "[start,end)"
+    },
+    "track": "T05",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-048",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Режим потокового распознавания речи и видимой записи",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "Слушает в реальном времени",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1219,
+      "end": 1245,
+      "interval": "[start,end)"
+    },
+    "track": "T05",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-049",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Голосовая команда использует заранее собранный контекст проекта",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "Уже сагрегировал данные про мой репозиторий",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1282,
+      "end": 1325,
+      "interval": "[start,end)"
+    },
+    "track": "T03",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-050",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Автоматически подбирать данные под текущую цель",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "агрегирует Нужную информацию",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1483,
+      "end": 1511,
+      "interval": "[start,end)"
+    },
+    "track": "T03",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-051",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Генерировать изменение кода по подготовленной спецификации",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "создает нужный код",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1513,
+      "end": 1531,
+      "interval": "[start,end)"
+    },
+    "track": "T09",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "delivery_stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-052",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Выбирать и запускать подходящие зарегистрированные тесты",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "проводит нужные тесты",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1533,
+      "end": 1554,
+      "interval": "[start,end)"
+    },
+    "track": "T08",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-053",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Подключить браузерные задачи и сбор наблюдений",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "запускает нужные браузеры",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1556,
+      "end": 1581,
+      "interval": "[start,end)"
+    },
+    "track": "T07",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-054",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Учитывать историю целей и решений при планировании",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "на основе моих предыдущих целей",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 1642,
+      "end": 1673,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-055",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Импортировать ветки прошлых чатов с ролями и временем",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "previous chat conversation histories",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2133,
+      "end": 2169,
+      "interval": "[start,end)"
+    },
+    "track": "T07",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-056",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Импортировать доступные документы Google с версиями",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "previous Google documents",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2171,
+      "end": 2196,
+      "interval": "[start,end)"
+    },
+    "track": "T07",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-057",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Поддержать раздельные адаптеры истории Grok и ChatGPT",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "previous conversations with Grok, ChatGPT",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2198,
+      "end": 2239,
+      "interval": "[start,end)"
+    },
+    "track": "T07",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-058",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Хранить все доступные файлы репозитория, а не только выбранный top-k",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "entire repository",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2244,
+      "end": 2261,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-059",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Добавить импорт собственных доступных приватных Telegram-источников",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "entire private Telegram channels",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2266,
+      "end": 2298,
+      "interval": "[start,end)"
+    },
+    "track": "T07",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-060",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Долгосрочное направление: личная память по выбранным пользователем источникам",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "entire history of my life",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2337,
+      "end": 2362,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-061",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Извлекать цели, задачи, решения и открытые вопросы",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "list out and label entire goals, aims",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2366,
+      "end": 2403,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-062",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Формировать ежедневный план действий из незакрытых целей",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "executions I need to do daily",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2405,
+      "end": 2434,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-063",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Хранить оригиналы и рабочую библиотеку локально",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "hold any data locally",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2508,
+      "end": 2529,
+      "interval": "[start,end)"
+    },
+    "track": "T01",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-064",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Кнопка push-to-talk с документом транскрипции",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "press a button and it transcribe",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 2950,
+      "end": 2982,
+      "interval": "[start,end)"
+    },
+    "track": "T05",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-065",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранять транскрипт отдельным версионированным документом",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "create the transcription document",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 3142,
+      "end": 3175,
+      "interval": "[start,end)"
+    },
+    "track": "T05",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-066",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Формировать mission/context document с полезными источниками библиотеки",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "aggregate maybe useful data from my library",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 3177,
+      "end": 3220,
+      "interval": "[start,end)"
+    },
+    "track": "T03",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "delivery_stage_recommendation": "Первый этап",
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-067",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Выделять недостающие capabilities и следующий выполнимый шаг",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "what exact next automations we would be able to build",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 3286,
+      "end": 3339,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-068",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Подготовить передачу mission-пакета выбранному Grok/API агенту",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "this document then goes to Grok",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 3348,
+      "end": 3379,
+      "interval": "[start,end)"
+    },
+    "track": "T09",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "delivery_stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-069",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Построить ветку code→tests→reviewable GitHub change",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "It just updates the GitHub code",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 3753,
+      "end": 3784,
+      "interval": "[start,end)"
+    },
+    "track": "T09",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "delivery_stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-070",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Предусмотреть merge проверенного изменения в рамках отдельного задания",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "make merge with my repository",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4363,
+      "end": 4392,
+      "interval": "[start,end)"
+    },
+    "track": "T09",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "delivery_stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-071",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Собирать и устанавливать проверенное локальное обновление приложения",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "download the code, renew the local application",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 3970,
+      "end": 4016,
+      "interval": "[start,end)"
+    },
+    "track": "T09",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "delivery_stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-072",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Версионировать и обновлять каталог возможностей",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "renew the capabilities",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4018,
+      "end": 4040,
+      "interval": "[start,end)"
+    },
+    "track": "T09",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "delivery_stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-073",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Отдельно показывать новые интеграции и необходимые им доступы",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "renew the code capabilities or even accesses",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4539,
+      "end": 4583,
+      "interval": "[start,end)"
+    },
+    "track": "T09",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "delivery_stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-074",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Проектировать и проверять доступность с людьми с разными потребностями",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "even people with disabilities",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4705,
+      "end": 4734,
+      "interval": "[start,end)"
+    },
+    "track": "T05",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-075",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранять полноценное текстовое управление наряду с голосовым",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "via their their text",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4798,
+      "end": 4818,
+      "interval": "[start,end)"
+    },
+    "track": "T05",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-076",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Расширяемые локальные исполнители desktop/API/CLI с проверяемым результатом",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "execute on any command on their PC",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4842,
+      "end": 4876,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-077",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Хранить отдельный портфель новых исследовательских идей",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "possibility to innovate within the space",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4904,
+      "end": 4944,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-078",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сравнивать варианты применения и приоритизировать полезные эксперименты",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "What type of the applications would be interested to experiment with",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 4946,
+      "end": 5014,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-079",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Снижать полную задержку, включая получение подтверждения результата",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "lower the time of the execution to the lowest possible time",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 5045,
+      "end": 5104,
+      "interval": "[start,end)"
+    },
+    "track": "T10",
+    "function_refs": [
+      "SCE_V2::PIPE-03",
+      "SCE_V2::PIPE-06",
+      "SCE_V2::PIPE-18",
+      "SCE_V2::LVF16",
+      "SCE_V2::LVF19",
+      "SCE_V2::LVF20"
+    ],
+    "delivery_stage_recommendation": "Постепенно после измерения baseline",
+    "acceptance_direction_ru": "Параллельные producers сохраняют все observations; сравниваются p50/p95 time-to-verified, ресурсы, потери и повторные эффекты.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-080",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Использовать параллельные сборщики, workers и независимые задачи",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "full capacity in parallel actions",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 5273,
+      "end": 5306,
+      "interval": "[start,end)"
+    },
+    "track": "T10",
+    "function_refs": [
+      "SCE_V2::PIPE-03",
+      "SCE_V2::PIPE-06",
+      "SCE_V2::PIPE-18",
+      "SCE_V2::LVF16",
+      "SCE_V2::LVF19",
+      "SCE_V2::LVF20"
+    ],
+    "delivery_stage_recommendation": "Постепенно после измерения baseline",
+    "acceptance_direction_ru": "Параллельные producers сохраняют все observations; сравниваются p50/p95 time-to-verified, ресурсы, потери и повторные эффекты.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-081",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Координировать фоновую автоматизацию с действиями человека",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "while just controlling their PC",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 5307,
+      "end": 5338,
+      "interval": "[start,end)"
+    },
+    "track": "T10",
+    "function_refs": [
+      "SCE_V2::PIPE-03",
+      "SCE_V2::PIPE-06",
+      "SCE_V2::PIPE-18",
+      "SCE_V2::LVF16",
+      "SCE_V2::LVF19",
+      "SCE_V2::LVF20"
+    ],
+    "delivery_stage_recommendation": "Постепенно после измерения baseline",
+    "acceptance_direction_ru": "Параллельные producers сохраняют все observations; сравниваются p50/p95 time-to-verified, ресурсы, потери и повторные эффекты.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-082",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сравнивать модели/компоненты Hugging Face и открытые реализации",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "latest advancements maybe on the hugging face",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 5535,
+      "end": 5580,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-083",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Исследовать слои ASR→intent→retrieval→planner→executor→verifier",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "multi-layered intelligence experiments",
+    "message_id": "M003",
+    "source_path": "01_YOUR_WORDS/M003.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3f566328c9916197a4b994a82c4a5ffa69d8062f922898d250a314d60d6b6f92",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 5618,
+      "end": 5656,
+      "interval": "[start,end)"
+    },
+    "track": "T06",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "delivery_stage_recommendation": "Следующий этап",
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-084",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Проверять полноту переноса по явному реестру источников",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "everything we need are agregated within this zip",
+    "message_id": "M004",
+    "source_path": "01_YOUR_WORDS/M004.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3557a99f8de46cdc10ec2cbf91344d33d2773c02265b9c491c908e0a8e434e4c",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 69,
+      "end": 117,
+      "interval": "[start,end)"
+    },
+    "track": "T00",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-10"
+    ],
+    "delivery_stage_recommendation": "Сейчас: архив и handoff",
+    "acceptance_direction_ru": "Каждый известный источник учтён, цитаты ведут в оригинал, неизвестные источники явно отсутствуют.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-085",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Подготовить самодостаточный стартовый документ для нового Work-чата",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "continue on our strategy via any new work chat",
+    "message_id": "M004",
+    "source_path": "01_YOUR_WORDS/M004.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "3557a99f8de46cdc10ec2cbf91344d33d2773c02265b9c491c908e0a8e434e4c",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 121,
+      "end": 167,
+      "interval": "[start,end)"
+    },
+    "track": "T00",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-10"
+    ],
+    "delivery_stage_recommendation": "Сейчас: архив и handoff",
+    "acceptance_direction_ru": "Каждый известный источник учтён, цитаты ведут в оригинал, неизвестные источники явно отсутствуют.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-086",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Сохранить доступные слова пользователя дословно и связать с идеями",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "literaly my own words",
+    "message_id": "M005",
+    "source_path": "01_YOUR_WORDS/M005.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "4998773f56fc4a5271b679a310cdd5dd74e1fdfd2cc16c717b6d91af7acaa45d",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 11,
+      "end": 32,
+      "interval": "[start,end)"
+    },
+    "track": "T00",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-10"
+    ],
+    "delivery_stage_recommendation": "Сейчас: архив и handoff",
+    "acceptance_direction_ru": "Каждый известный источник учтён, цитаты ведут в оригинал, неизвестные источники явно отсутствуют.",
+    "status": "PRESERVED_FOR_IMPLEMENTATION_OR_RND_NOT_COMPLETED_BY_THIS_ARCHIVE",
+    "execution_authority_from_archive": false
+  },
+  {
+    "id": "USR-087",
+    "author": "user",
+    "kind": "USER_IDEA_OR_REQUEST",
+    "title_ru": "Оставить все известные идеи в будущем R&D backlog",
+    "interpretation_is_assistant_paraphrase": true,
+    "quote": "all of my ideas as future r&d ideas",
+    "message_id": "M005",
+    "source_path": "01_YOUR_WORDS/M005.txt",
+    "source_class": "VISIBLE_USER_MESSAGE_VERBATIM",
+    "source_sha256": "4998773f56fc4a5271b679a310cdd5dd74e1fdfd2cc16c717b6d91af7acaa45d",
+    "span": {
+      "unit": "unicode_codepoint",
+      "start": 56,
+      "end": 91,
+      "interval": "[start,end)"
+    },
+    "track": "T12",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "delivery_stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг.",
+    "status": "PRESERVED_FOR_IMPLE

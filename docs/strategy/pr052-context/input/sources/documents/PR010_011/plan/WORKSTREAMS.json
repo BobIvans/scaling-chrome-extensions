@@ -1,0 +1,316 @@
+[
+  {
+    "title": "Точные ссылки на источники, поиск и ручные метки",
+    "lane": "Библиотека",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "SourceAddress: source/version/extraction/range/hash",
+      "ID/path/exact-quote/FTS с фильтрами namespace/project/time",
+      "Версии автоматических меток, ручные overrides, сохранённые представления"
+    ],
+    "acceptance": [
+      "Цитата открывает ту же версию после restart",
+      "Ошибочные bounds/hash/namespace отклоняются",
+      "Нет утечки snippets за пределы scope",
+      "Ручная метка переживает повторную extraction",
+      "Все страницы выдачи доступны, включая хвост",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "№9 хранит оригиналы ChatGPT JSON; здесь добавляются точные адреса и поисковый контракт. Семантическая lifetime retrieval — №24; полные importer adapters — №16–20.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "G3-008",
+      "LAYA4-015",
+      "LAYA4-016",
+      "ACTION5-10",
+      "ACTION5-11"
+    ],
+    "feature_ids": [
+      "LIB-014",
+      "LIB-017",
+      "LIB-018",
+      "LIB-050"
+    ],
+    "decision_ids": [
+      "DEC5-15"
+    ],
+    "goal_ids": [
+      "GOAL5-06",
+      "GOAL5-09"
+    ],
+    "workstream_id": "WS-001",
+    "parent_package": "ROADMAP-PR-010",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [],
+    "original_package_inputs": [
+      9
+    ],
+    "combined_parent": "ROADMAP-PR-010-011",
+    "owner_role": "Canonical library/search/metadata owner",
+    "current_code_status": "NOT_REVERIFIED",
+    "runtime_acceptance_status": "NOT_RUN",
+    "source_boundary_note": "Original boundary may contain obsolete 36-PR numbering; use plan/NUMBERING_RECONCILIATION.json."
+  },
+  {
+    "title": "Общий импорт файлов: TXT, папки, архивы, кодировки и специальные Git payloads",
+    "lane": "Библиотека",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Importer registry и extractor queue в canonical store",
+      "Streamed TXT/folder checkpoints/encodings и archive provenance graph",
+      "Raw unsupported originals, attachments, local LFS payload verification и submodule identities"
+    ],
+    "acceptance": [
+      "Каждый entry имеет outcome/reason без молчаливого пропуска",
+      "Повтор/rename/delete/resume сохраняют source lineage",
+      "Archive traversal/cycle/resource cases дают явный результат",
+      "LFS pointer и payload имеют отдельные hash/size identities",
+      "TXT и кодировки возвращают точные оригинальные bytes",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Закрывает оставшийся TXT scope №8: итоговый №9 реализует план ChatGPT JSON, а не TXT. PDF/Office — №18, media — №19; retrieval — №10/24. Acquisition выполняется только в выбранном source scope.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "LAYA4-004",
+      "LAYA4-013",
+      "LAYA4-014",
+      "ACTION5-06",
+      "ACTION5-09"
+    ],
+    "feature_ids": [
+      "LIB-006",
+      "LIB-007",
+      "LIB-009",
+      "LIB-010",
+      "LIB-015",
+      "LIB-016",
+      "LIB-041",
+      "LIB-047"
+    ],
+    "decision_ids": [
+      "DEC5-16"
+    ],
+    "goal_ids": [
+      "GOAL5-03",
+      "GOAL5-08"
+    ],
+    "workstream_id": "WS-007",
+    "parent_package": "ROADMAP-PR-010",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-001"
+    ],
+    "original_package_inputs": [
+      9
+    ],
+    "combined_parent": "ROADMAP-PR-010-011",
+    "owner_role": "Canonical intake/source/extractor owner",
+    "current_code_status": "NOT_REVERIFIED",
+    "runtime_acceptance_status": "NOT_RUN",
+    "source_boundary_note": "Original boundary may contain obsolete 36-PR numbering; use plan/NUMBERING_RECONCILIATION.json."
+  },
+  {
+    "title": "Полная история чатов и Telegram: scroll, ветви, правки, авторы и вложения",
+    "lane": "Библиотека",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "CaptureEnvelope для автора, цитат, времени и edit revisions",
+      "Продолжение virtualized/full-scroll capture после restart",
+      "ChatGPT/Telegram export adapters, attachments и unknown-branch ledger"
+    ],
+    "acceptance": [
+      "Повторные DOM fragments не дублируют сообщения",
+      "Обе наблюдаемые ветви и структурные nodes сохранены",
+      "Цитата не становится репликой другого автора",
+      "Payload missing и недоступные ветви видны",
+      "UI capture сравнивается с доступным export без заявления о невидимой истории",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Расширяет source fidelity №9. Передача в AI chat — №31; не смешивать reading capture с отправкой.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "ACTION5-04",
+      "ACTION5-05"
+    ],
+    "feature_ids": [
+      "LIB-012",
+      "LIB-013",
+      "LIB-042"
+    ],
+    "decision_ids": [],
+    "goal_ids": [
+      "GOAL5-06"
+    ],
+    "workstream_id": "WS-008",
+    "parent_package": "ROADMAP-PR-010",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-007"
+    ],
+    "original_package_inputs": [],
+    "combined_parent": "ROADMAP-PR-010-011",
+    "owner_role": "Capture/export adapter + source owner",
+    "current_code_status": "NOT_REVERIFIED",
+    "runtime_acceptance_status": "NOT_RUN",
+    "source_boundary_note": "Original boundary may contain obsolete 36-PR numbering; use plan/NUMBERING_RECONCILIATION.json."
+  },
+  {
+    "title": "Реестр целей, противоречий, заметок и покрытия требований",
+    "lane": "Библиотека",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "GoalRequest и RU/EN goal revisions с exact user sources",
+      "Questions/terms/contradictions/notes как отдельные overlays",
+      "Goal→source→code→test→result dashboard и устойчивые namespaces"
+    ],
+    "acceptance": [
+      "Новая редакция цели сохраняет предыдущую",
+      "Assistant proposal не маркируется user quote",
+      "Противоречащие источники видны вместе с временем",
+      "Редактирование заметки не меняет импортный оригинал",
+      "Proposed/implemented/tested/installed/usable различаются",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Ручные labels принадлежат №10; automated next brief — №37. Финальный no-goal-left-behind audit — №45.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "G3-002",
+      "G3-009",
+      "EVO3-002",
+      "EVO3-012"
+    ],
+    "feature_ids": [
+      "LIB-019",
+      "LIB-020",
+      "LIB-021",
+      "LIB-022",
+      "LIB-048",
+      "LIB-052",
+      "LIB-058",
+      "ACT-056",
+      "RND-002"
+    ],
+    "decision_ids": [],
+    "goal_ids": [
+      "GOAL5-09",
+      "GOAL5-10"
+    ],
+    "workstream_id": "WS-012",
+    "parent_package": "ROADMAP-PR-010",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-001"
+    ],
+    "original_package_inputs": [],
+    "combined_parent": "ROADMAP-PR-010-011",
+    "owner_role": "Goal/review/evidence owner",
+    "current_code_status": "NOT_REVERIFIED",
+    "runtime_acceptance_status": "NOT_RUN",
+    "source_boundary_note": "Original boundary may contain obsolete 36-PR numbering; use plan/NUMBERING_RECONCILIATION.json."
+  },
+  {
+    "title": "Полный статический JS/TS resolver: aliases, workspaces, exports и CommonJS",
+    "lane": "Репозиторий",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Версионированные resolution modes и pinned конфигурации",
+      "TS extensions, aliases/workspaces/package exports",
+      "Scope-aware CommonJS и явные dynamic/ambiguous/external outcomes"
+    ],
+    "acceptance": [
+      "Parser/resolver не исполняет код исследуемого repo",
+      "Каждый resolved edge имеет source span и правило разрешения",
+      "Unresolved не выдаётся за отсутствие зависимости",
+      "Независимый holdout дополняет synthetic corpus №7",
+      "Parser pin/install проверены на выбранной Windows сборке",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "№7 даёт AST и ограниченные relations. №13 расширяет resolver; mixed-language graph и UI owners остаются №14.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "LAYA4-005"
+    ],
+    "feature_ids": [],
+    "decision_ids": [
+      "DEC5-06"
+    ],
+    "goal_ids": [
+      "GOAL5-04"
+    ],
+    "workstream_id": "WS-004",
+    "parent_package": "ROADMAP-PR-011",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [],
+    "original_package_inputs": [
+      5,
+      7
+    ],
+    "combined_parent": "ROADMAP-PR-010-011",
+    "owner_role": "Repository JS/TS analysis owner",
+    "current_code_status": "NOT_REVERIFIED",
+    "runtime_acceptance_status": "NOT_RUN",
+    "source_boundary_note": "Original boundary may contain obsolete 36-PR numbering; use plan/NUMBERING_RECONCILIATION.json."
+  },
+  {
+    "title": "Единый граф Python/JS/TS, owners, tests, contracts и подтверждаемые code smells",
+    "lane": "Репозиторий",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "scope": [
+      "Адаптация двух relation dialects №6/7 в один provenance graph",
+      "Стабильные SCC/groups, continuation и mixed-language queries",
+      "Owners/tests/contracts picker и кандидаты code smells с доказательствами"
+    ],
+    "acceptance": [
+      "Старые raw chunk hashes/IDs не меняются",
+      "Declared, static, heuristic и observed связи различаются",
+      "Unrelated addition не перенумеровывает группы",
+      "Большой SCC имеет полный membership и все части",
+      "Каждый smell содержит source range, проверку и контрпример",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "boundary": "Переиспользовать Python SCC/planner №6. Автоматическое объединение JS relations с Python topology в №7 отсутствовало. Capability становится доступной только через №26/33.",
+    "application_code_changed": false,
+    "source_task_ids": [
+      "LAYA4-006",
+      "LAYA4-007",
+      "LAYA4-008"
+    ],
+    "feature_ids": [
+      "RND-001",
+      "RND-003",
+      "RND-004"
+    ],
+    "decision_ids": [
+      "DEC5-07"
+    ],
+    "goal_ids": [
+      "GOAL5-04"
+    ],
+    "workstream_id": "WS-005",
+    "parent_package": "ROADMAP-PR-011",
+    "status": "PLANNED_INTERNAL_STAGE",
+    "prerequisite_workstreams": [
+      "WS-004"
+    ],
+    "original_package_inputs": [
+      6
+    ],
+    "combined_parent": "ROADMAP-PR-010-011",
+    "owner_role": "Repository graph/group/selection owner",
+    "current_code_status": "NOT_REVERIFIED",
+    "runtime_acceptance_status": "NOT_RUN",
+    "source_boundary_note": "Original boundary may contain obsolete 36-PR numbering; use plan/NUMBERING_RECONCILIATION.json."
+  }
+]

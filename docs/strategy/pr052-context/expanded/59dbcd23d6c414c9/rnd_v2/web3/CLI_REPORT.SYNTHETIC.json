@@ -1,0 +1,112 @@
+{
+  "schema": "web3-qualification/v1/report",
+  "evaluated_at": "2026-10-03T17:00:00+00:00",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "plan_sha256": "d47c90e91671bf437982d67d5a9478608039f298364bfb4a400ab848cd4541e1",
+  "binding_sha256": "d6e0f03e2c2b0e072529d61fdd29242afc4b8f853c2f359f2d45ce9a40d28849",
+  "stages": [
+    {
+      "id": "inventory",
+      "adapter": "inventory_diff.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "expected_entries": 1,
+        "observed_entries": 1,
+        "missing": 0,
+        "extra": 0
+      },
+      "live_authorized": false,
+      "dependencies": {},
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "unit",
+      "adapter": "junit_xml.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "cases": 3,
+        "failed": 0,
+        "suite_errors": 0,
+        "skipped": 0,
+        "missing_name_fragments": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "inventory": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "cost",
+      "adapter": "economics_samples.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "samples": 1,
+        "accepted": 1,
+        "minimum_accepted_net_minor": 15,
+        "breach_sample_ids": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "unit": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "observation",
+      "adapter": "observation_window.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "samples": 2,
+        "first_observed_at": "2026-10-03T16:58:00+00:00",
+        "last_observed_at": "2026-10-03T16:59:00+00:00",
+        "duration_seconds": 60.0,
+        "max_gap_seconds": 60.0,
+        "provider_ids": [
+          "synthetic-provider"
+        ],
+        "breach_sample_ids": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "cost": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "stop",
+      "adapter": "stop_latency.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "probes": 1,
+        "max_stop_latency_ms": 10.0,
+        "forbidden_dispatches": 0,
+        "missing_faults": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "unit": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    }
+  ],
+  "ignored_unknown_stage_receipts": [],
+  "live_authorized": false,
+  "ready_for_live": false,
+  "actual_bot_execution": "NOT_RUN",
+  "producer_authenticity": "UNKNOWN",
+  "attestation_authenticated": false,
+  "external_chain_truth": "UNKNOWN",
+  "trust_statement": "TRUE only verifies configured predicates on supplied artifacts; hashes do not prove producer honesty or chain truth.",
+  "configured_predicates": "TRUE"
+}

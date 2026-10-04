@@ -1,0 +1,47 @@
+{
+  "task_id": "LAYA4-003",
+  "title": "Масштабировать inventory без скрытого усечения",
+  "goal": "Обработать repositories, превышающие текущий 32 MiB enumeration output, сохраняя полный manifest и bounded memory.",
+  "dependencies": [
+    "LAYA4-001"
+  ],
+  "optional_extensions": [],
+  "acceptance_criteria": [
+    "Текущий предел остаётся явной ошибкой, пока streaming reader не прошёл отдельную квалификацию.",
+    "Streaming Git enumeration сохраняет NUL-safe пути, mode/OID/size и exact HEAD; частичный inventory не публикуется COMPLETE.",
+    "Поток имеет bounded buffer, timeout, stderr budget и temp-stage до atomic publish; subprocess завершён перед restart.",
+    "Неоднозначные/неподдерживаемые paths представлены metadata с причиной и исходным reversible path encoding.",
+    "Cold/warm resource measurements включают большой tree; введён configurable budget вместо безлимитного считывания."
+  ],
+  "failure_recovery": [
+    "Сбой stream удаляет незавершённый staging inventory, оставляя прежний complete snapshot.",
+    "Превышение configured budget возвращает конкретный limit reason без усечённого success."
+  ],
+  "implementation_status": "PLANNED",
+  "evidence_required": [
+    "Large-tree fixture above previous limit.",
+    "Interrupted stream fault injection.",
+    "Peak memory/device receipt."
+  ],
+  "stage": "L4-S1",
+  "owner_layer": "repo_context Git read/inventory owner",
+  "source_evidence_refs": [
+    "L4-E01",
+    "L4-E14"
+  ],
+  "related_v3_tasks": [
+    "PAR3-002",
+    "PAR3-007"
+  ],
+  "experiments": [
+    "LX4-01",
+    "LX4-02",
+    "LX4-06"
+  ],
+  "deliverables": [
+    "Streaming enumeration ADR",
+    "Bounded inventory implementation"
+  ],
+  "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+  "source_file": "laya/TASKS_LAYA4.json"
+}

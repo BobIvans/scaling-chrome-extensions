@@ -1,0 +1,200 @@
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W02",
+  "name_ru": "Grok → patch → локальные проверки → PR",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-04",
+    "PIPE-07",
+    "PIPE-08",
+    "PIPE-09",
+    "PIPE-10"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "pin",
+      "operation": "repo.resolve_commit",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "context",
+      "operation": "context.build_handoff",
+      "depends_on": [
+        "pin"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "proposal",
+      "operation": "provider.grok.propose_patch",
+      "depends_on": [
+        "context"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "worktree",
+      "operation": "repo.create_worktree",
+      "depends_on": [
+        "pin"
+      ],
+      "resource_locks": [
+        "repo_worktree_admin"
+      ],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "apply",
+      "operation": "patch.validate_and_apply",
+      "depends_on": [
+        "proposal",
+        "worktree"
+      ],
+      "resource_locks": [
+        "worktree:${worktree.id}"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "tests",
+      "operation": "runner.run_declared_checks",
+      "depends_on": [
+        "apply"
+      ],
+      "resource_locks": [
+        "worktree:${worktree.id}"
+      ],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "evidence",
+      "operation": "verifier.bind_evidence_to_head",
+      "depends_on": [
+        "tests"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "checks.actual_head == patch.result_head AND required_checks_pass",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "pr",
+      "operation": "github.push_branch_open_pr",
+      "depends_on": [
+        "evidence"
+      ],
+      "resource_locks": [
+        "github_branch:${repo}:${branch}"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "ci",
+      "operation": "github.collect_required_checks",
+      "depends_on": [
+        "pr"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "merge",
+      "operation": "github.merge_if_policy_allows",
+      "depends_on": [
+        "ci"
+      ],
+      "resource_locks": [
+        "github_branch:${repo}:main"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "merge_request.expected_head == verified_head AND rules_pass",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN",
+      "run_if": "mission.policy.merge_policy == existing_scoped_grant AND policy_broker.authorized"
+    },
+    {
+      "id": "confirm",
+      "operation": "github.reconcile_merge",
+      "depends_on": [
+        "merge"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "PR.merged == true AND merged_commit_recorded",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN",
+      "run_if": "merge.dispatched"
+    }
+  ],
+  "invariants": [
+    "No arbitrary shell supplied through tool arguments.",
+    "Any changed head invalidates check applicability.",
+    "Merge step is skipped unless already authorized by mission policy.",
+    "Enqueued/Pending is not Merged."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ],
+  "otherwise_result": "PR_READY_WITH_EVIDENCE"
+}

@@ -1,0 +1,376 @@
+{
+  "schema": "function-catalog/v1",
+  "implemented_offline_count": 13,
+  "spec_only_count": 28,
+  "functions": [
+    {
+      "id": "W3-F01",
+      "function": "evidence.validate_plan",
+      "title_ru": "Проверка типизированного плана и DAG этапов",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F02",
+      "function": "evidence.bind_revision",
+      "title_ru": "Сравнение exact repo/config/input/environment/network/anchor/provider/model/toolchain",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F03",
+      "function": "evidence.verify_artifacts",
+      "title_ru": "Потоковая проверка bytes/SHA256 и contained paths",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F04",
+      "function": "evidence.invalidate_stale",
+      "title_ru": "Срок актуальности, будущие timestamps и несовпадение plan hash",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F05",
+      "function": "evidence.require_machine_receipt",
+      "title_ru": "Проверка pinned runner identity вместо текста/успешного boolean",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F06",
+      "function": "evidence.inventory_diff",
+      "title_ru": "Сверка полного path+ordinal manifest",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F07",
+      "function": "evidence.junit_cases",
+      "title_ru": "Проверка реальных записей testcase, failure/error/skipped и требуемых названий",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F08",
+      "function": "evidence.economic_predicates",
+      "title_ru": "Пересчёт net cost в integer atomic units и freshness accepted candidates",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F09",
+      "function": "evidence.observation_window",
+      "title_ru": "Длительность/gaps/provider ids/paper-only/source freshness по журналу",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F10",
+      "function": "evidence.stop_latency",
+      "title_ru": "Проверка записанных stop latency и запрещённых dispatch после trigger",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F11",
+      "function": "evidence.propagate_dependencies",
+      "title_ru": "Раздельный own status и readiness с учётом зависимостей",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F12",
+      "function": "evidence.four_states",
+      "title_ru": "TRUE/FALSE/UNKNOWN/NOT_RUN, причины и неизменное live_authorized=false",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F13",
+      "function": "evidence.refuse_ambiguous_receipts",
+      "title_ru": "Отказ от скрытого выбора между несколькими receipts",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F14",
+      "function": "web3.repo_inventory",
+      "title_ru": "Сверка полного репозитория и входных данных",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF01",
+      "path": "workflows/01_repo_inventory.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F15",
+      "function": "web3.toolchain_build",
+      "title_ru": "Воспроизводимая сборка",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF02",
+      "path": "workflows/02_toolchain_build.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F16",
+      "function": "web3.static_smells",
+      "title_ru": "Детерминированные code smells и проверка гипотез",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF03",
+      "path": "workflows/03_static_smells.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F17",
+      "function": "web3.unit_contracts",
+      "title_ru": "Unit и boundary regression",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF04",
+      "path": "workflows/04_unit_contracts.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F18",
+      "function": "web3.fuzz_campaign",
+      "title_ru": "Fuzz с corpus и seed",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF05",
+      "path": "workflows/05_fuzz_campaign.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F19",
+      "function": "web3.stateful_invariants",
+      "title_ru": "Stateful invariants",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF06",
+      "path": "workflows/06_stateful_invariants.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F20",
+      "function": "web3.pinned_fork",
+      "title_ru": "Fork или local validator pinned state",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF07",
+      "path": "workflows/07_pinned_fork.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F21",
+      "function": "web3.offline_replay",
+      "title_ru": "Детерминированный replay",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF08",
+      "path": "workflows/08_offline_replay.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F22",
+      "function": "web3.market_collect",
+      "title_ru": "Сбор рыночных данных без подписи",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF09",
+      "path": "workflows/09_market_collect.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F23",
+      "function": "web3.provider_compare",
+      "title_ru": "Сравнение независимых provider views",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF10",
+      "path": "workflows/10_provider_compare.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F24",
+      "function": "web3.oracle_freshness",
+      "title_ru": "Oracle и quote freshness",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF11",
+      "path": "workflows/11_oracle_freshness.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F25",
+      "function": "web3.fees_and_costs",
+      "title_ru": "Полная стоимость opportunity",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF12",
+      "path": "workflows/12_fees_and_costs.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F26",
+      "function": "web3.route_atomicity",
+      "title_ru": "Маршрут и атомарность",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF13",
+      "path": "workflows/13_route_atomicity.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F27",
+      "function": "web3.slippage_stress",
+      "title_ru": "Slippage, liquidity и adverse timing",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF14",
+      "path": "workflows/14_slippage_stress.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F28",
+      "function": "web3.lender_repayment",
+      "title_ru": "Lender-neutral repayment contract",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF15",
+      "path": "workflows/15_lender_repayment.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F29",
+      "function": "web3.paper_observation",
+      "title_ru": "Реальное paper-наблюдение",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF16",
+      "path": "workflows/16_paper_observation.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F30",
+      "function": "web3.fault_injection",
+      "title_ru": "Operational faults",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF17",
+      "path": "workflows/17_fault_injection.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F31",
+      "function": "web3.windows_device",
+      "title_ru": "Dell Windows 11 qualification",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF18",
+      "path": "workflows/18_windows_device.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F32",
+      "function": "web3.stop_and_pause",
+      "title_ru": "Пауза и остановка по голосу/кнопке",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF19",
+      "path": "workflows/19_stop_and_pause.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F33",
+      "function": "web3.release_artifact",
+      "title_ru": "Release, digest и rollback",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF20",
+      "path": "workflows/20_release_artifact.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F34",
+      "function": "web3.canary_plan",
+      "title_ru": "План ограниченного canary",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF21",
+      "path": "workflows/21_canary_plan.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F35",
+      "function": "web3.live_monitoring",
+      "title_ru": "Мониторинг уже разрешённого live",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF22",
+      "path": "workflows/22_live_monitoring.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F36",
+      "function": "web3.stale_invalidation",
+      "title_ru": "Инвалидация по изменению inputs",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF23",
+      "path": "workflows/23_stale_invalidation.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F37",
+      "function": "web3.incident_replay",
+      "title_ru": "Incident→regression",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF24",
+      "path": "workflows/24_incident_replay.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F38",
+      "function": "web3.qualification_packet",
+      "title_ru": "Пакет решения readiness",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF25",
+      "path": "workflows/25_qualification_packet.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F39",
+      "function": "web3.coverage_holes",
+      "title_ru": "Поиск непроверенных требований",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF26",
+      "path": "workflows/26_coverage_holes.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F40",
+      "function": "web3.experiment_scheduler",
+      "title_ru": "Очередь R&D экспериментов",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF27",
+      "path": "workflows/27_experiment_scheduler.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F41",
+      "function": "web3.voice_goal_binding",
+      "title_ru": "Голосовая цель→проверяемый Web3 план",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF28",
+      "path": "workflows/28_voice_goal_binding.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    }
+  ]
+}

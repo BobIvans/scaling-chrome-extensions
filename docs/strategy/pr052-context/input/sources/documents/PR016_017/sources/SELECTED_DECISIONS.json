@@ -1,0 +1,112 @@
+[
+  {
+    "id": "DEC5-03",
+    "title": "Долговременная идентичность вкладки и чата",
+    "related_feature_ids": [
+      "ACT-037",
+      "ACT-036",
+      "LIB-037"
+    ],
+    "related_task_ids": [
+      "TAB4-03",
+      "UI3-002",
+      "PAR3-009"
+    ],
+    "what_is_undefined": "V4 запрещает полагаться только на tab ID, но не задаёт достаточное наблюдаемое identity для реального Grok окружения и алгоритм rebind после рестарта, изменения URL или аккаунта.",
+    "options": [
+      "Conversation identity + account/workspace + origin, tab ID только transient handle",
+      "URL/заголовок как единственный ключ",
+      "Ручная повторная привязка при любом открытии"
+    ],
+    "recommended_default": "TargetBinding version с qualified provider/account/workspace/conversation identity; если часть identity нельзя наблюдать надёжно, явно rebind_required; не выбирать похожий чат.",
+    "rationale": "Смысл сообщения определяется адресатом, поэтому невозможность отличить чат должна оставаться видимой. Этот default не предполагает конкретные текущие поля UI сервиса.",
+    "validation_experiment": "На выбранной пользователем вкладке провести restart, reused tab ID, account switch, duplicate title, navigation и закрытие вкладки; записать, какие identity реально доступны.",
+    "decision_acceptance": [
+      "Версия TargetBinding и capabilities наблюдения задокументированы.",
+      "Wrong-target corpus не разрешает Send и не заменяет адресат похожим URL/title.",
+      "Rebind сохраняет связь task/packet с прежним target и создаёт новую binding revision."
+    ],
+    "owner_role": "Browser adapter owner",
+    "blocking_milestones": [
+      "V4:S4",
+      "V4:S5"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-04",
+    "title": "Контракт и qualification corpus реального Grok UI",
+    "related_feature_ids": [
+      "ACT-035",
+      "ACT-039",
+      "ACT-044",
+      "ACT-053"
+    ],
+    "related_task_ids": [
+      "TAB4-04",
+      "TAB4-06",
+      "TAB4-07",
+      "TAB4-08",
+      "UI3-006",
+      "UI3-018",
+      "UI3-019"
+    ],
+    "what_is_undefined": "Есть состояния draft/send/reconcile, но не выбраны selectors/accessible controls, supported upload mode, наблюдение remote draft/message и критерий quarantine при DOM drift; пределы текущего сервиса не измерены.",
+    "options": [
+      "Версионированный DOM/semantic adapter с canary и quarantine",
+      "Координатный macro без проверки адресата/черновика",
+      "Manual transport до qualification UI"
+    ],
+    "recommended_default": "Сначала bind/read/draft adapter и controlled canary; при неквалифицированном UI ручная передача остаётся рабочим маршрутом. Send включается только для наблюдаемого contract.",
+    "rationale": "Нельзя вывести фактические UI controls и upload limits из roadmap. Corpus должен отличать локальный intent от наблюдения результата и сохранять unknown после обрыва.",
+    "validation_experiment": "В согласованном тестовом чате: проверить draft bytes/attachment metadata, один Send, сбой до/после Send, offline/relogin и изменение controls; без обещания exactly-once от чужого сервиса.",
+    "decision_acceptance": [
+      "Документированы adapter version, environment, supported controls и ограничения наблюдения.",
+      "Unknown не создаёт автоматическую повторную отправку; reconciliation имеет реальный путь или explicit unresolved state.",
+      "Canary/drift снимают qualification до новых внешних действий."
+    ],
+    "owner_role": "Browser qualification owner",
+    "blocking_milestones": [
+      "V4:S5"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-17",
+    "title": "Voice capture, ASR и критические intent slots",
+    "related_feature_ids": [
+      "ACT-001",
+      "ACT-028",
+      "ACT-029",
+      "ACT-030",
+      "ACT-031",
+      "ACT-034",
+      "ACT-058"
+    ],
+    "related_task_ids": [
+      "TAB4-16",
+      "LAYA4-023",
+      "PAR3-005"
+    ],
+    "what_is_undefined": "Voice parity и push-to-talk заданы, но не выбраны ASR provider/local runtime, device capture, latency budget, critical slot confidence, correction window и retry после device loss.",
+    "options": [
+      "Push-to-talk + typed slot schema с uncertain",
+      "Always-listening с raw transcript как executable command",
+      "Отдельный voice executor с собственными workflows"
+    ],
+    "recommended_default": "Один capture stream; ASR adapter interchangeable; intent/schema общий с текстом; repo/chat/action/path/amount slots uncertain до проверки; stop не зависит от ASR и TTS.",
+    "rationale": "Голос — способ ввода. Ошибка критического slot должна исправлять версию intent, а не давать другой repo или внешний эффект.",
+    "validation_experiment": "Dell corpus RU/EN/code-switch, похожие имена repo/chat, шум/собственный TTS, microphone disconnect, transcript correction перед/после task start; сравнить выбранные ASR options по actual measurements.",
+    "decision_acceptance": [
+      "Capture/device/ASR versions, slot schema, uncertainty и intent revision semantics зафиксированы.",
+      "Неверный critical slot не исполняется guessed; text path остаётся полностью рабочим.",
+      "Raw audio retention согласовано с lifecycle policy; device loss имеет recoverable state."
+    ],
+    "owner_role": "Voice/intent owner",
+    "blocking_milestones": [
+      "V4:S8",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  }
+]

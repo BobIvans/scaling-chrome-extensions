@@ -1,0 +1,42 @@
+SCE DESKTOP CONTEXT — R&D V2 / 03.10.2026
+
+Распакуйте ZIP в новую папку. Нужен Python3.11+ с Tcl/Tk. Сторонних pip-зависимостей для поставляемого прототипа нет.
+Запуск Windows11: START_DESKTOP.cmd. Папку библиотеки выберите вне репозитория.
+Импорт ZIP/папки → Экспорт ВСЕГО snapshot → новая кнопка «R&D: разметка / контекст цели / code smells / evidence».
+R&D-инструменты можно открыть отдельно: START_RND_TOOLS.cmd.
+
+Первые действия:
+1. Импортируйте собственный ZIP или папку. Оригиналы и полные пути сохраняются; бинарные неподдержанные форматы отмечаются RAW_ONLY.
+2. Для ChatGPT conversations.json выберите запись и «Разобрать ChatGPT JSON». Экспорт учитывает все mapping branches.
+3. Экспортируйте context pack. В R&D нажмите «Разметить context pack». Задайте стабильный namespace (например flashloan), одинаковый для следующих версий того же repo.
+4. Нажмите «Контекст по цели». Это лексический подбор кандидатов; включение всего текста доступно отдельным флажком. Читайте coverage.jsonl и report.json.
+5. Для Python проекта запустите «Python code smells» и сохраните JSON вне проекта. Исходный код не исполняется.
+6. «Проверить receipts» принимает план, корень артефактов и receipts. Это проверка предоставленных данных; происхождение runner ещё не криптографически удостоверяется.
+
+КУДА СМОТРЕТЬ
+NEW_FUNCTIONS_V2_RU.txt — полный список новых карточек функций и статусов.
+WORKFLOW_INDEX_V2.json — 42 новых SPEC workflow:28 Web3,8 context/R&D,6 Grok/update.
+rnd_v2/01_PRODUCT_LOOP_RU.txt — связь всей архитектуры.
+rnd_v2/02_RECOVERED_TAGGING_AND_HISTORY_RU.txt — найденные прошлые идеи и степень полноты истории.
+rnd_v2/03_LABEL_EVERY_DATA_PIECE_RU.txt — универсальные поля и provenance.
+rnd_v2/research_laya_voice.txt — проверенные проекты Laya/Jev/ASR и ограничения X поиска.
+rnd_v2/04_EXPERIMENTS_AND_BUILD_ORDER_RU.txt — порядок внедрения и эксперименты.
+rnd_v2/pipeline/ — Grok→patch→tests→PR→release→update, schemas/examples.
+rnd_v2/web3/ — offline verifier, synthetic demo,28 сценариев, experiments.
+rnd_v2/labeling/ — маркировка, graph, goal packs, revision diff.
+rnd_v2/smells/ — Python AST candidates и import graph.
+evidence/VALIDATION_V2.json — что реально запускалось в этой поставке.
+INDEX.html — локальный каталог файлов, не веб-приложение.
+
+СТАТУС
+Реализованы офлайн CLI, запускающее их окно и прежний desktop prototype. Windows GUI ещё не проверен на Dell.
+Новые JSON с .SPEC.json не являются исполняемыми recipes. Старый app/run_recipe.py принимает только прежний import→export рецепт.
+Настоящие ASR/Laya/Grok/browser/updater/bot integrations — SPEC/NOT_RUN. Они не включаются от распаковки ZIP.
+Никаких авто-merge, платных provider-запросов, отправки транзакций или бесконечного прослушивания эта поставка не запускала.
+
+ОГРАНИЧЕНИЯ
+Архив не ограничен20 документами; модели и RAM имеют реальные пределы. No silent loss означает явные состояния и остаток работы, а не бесконечную память.
+Некоторые индексные структуры/AST/JSON загружаются в RAM; экстремально большие источники требуют следующего этапа streaming/storage R&D.
+Разметка хранит ссылки на originals в export pack — не удаляйте его после labeling. Изменения source/labels могут инвалидировать контекст.
+Резкое STOP дочернего CLI может оставить временную папку; наличие временных файлов не означает COMPLETE. Читайте итоговый manifest/report.
+Прототип использует отдельный desktop-prototype.sqlite3. Производственную интеграцию выполнять через существующие SCE owners/store/queue.

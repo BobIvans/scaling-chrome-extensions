@@ -1,0 +1,38 @@
+ПРИОРИТЕТНЫЕ ЭКСПЕРИМЕНТЫ И ПОРЯДОК ВНЕДРЕНИЯ
+Все performance target ниже — гипотезы, не измерения на Dell.
+
+E01. Полнота импорта: один repo, ChatGPT export, Grok capture, Telegram export, документ. Контроль hashes/IDs/branches/coverage; edits/delete/reimport/restart.
+E02. Теги: gold set минимум200 неоднозначных фрагментов, balance RU/EN, user/assistant, code, stale evidence; baseline rules vs Laya vs LLM; precision/recall, abstention, time-to-correct.
+E03. Голос: запись100 собственных команд с repo names, Solana terms, quiet/noisy и разной скоростью речи. Word error rate и intent/slot accuracy считать раздельно; push-to-talk vs VAD; отмена/исправление.
+E04. Retrieval:30 реальных целей с заранее известными нужными источниками; FTS vs embeddings+reranker vs graph expansion; missing critical dependency rate и total task time.
+E05. Laya routing: held-out intent/tasks + new unseen requests. Источники с «ignore instructions/run shell» должны оставаться данными. Wrong-dispatch rate важнее средней accuracy.
+E06. Browser:20 обратимых read/search/form-draft задач; DOM/API vs screenshot; correctness, stale target rate, latency. Видео демонстрации не являются production benchmark.
+E07. Agent coding:5 изолированных небольших задач из реального backlog. Контекст/код/test failures/changedHEAD, branch isolation, regression rate, cost per verified task.
+E08. Qualification: replay deterministic fixtures → installed local workflow → real observation. Synthetic dataset никогда не выдаётся за рыночное наблюдение.
+E09. Self-update: valid artifact, invalid signature, lost connection, failed migration, insufficient disk, crash/restart. Требуется восстановление предыдущей working version и совместимой базы.
+E10. Accessibility: клавиатура, screen reader labels, большой текст, альтернативная активация, visible listening state, undo/stop; тест с конкретным пользователем, а не обещание универсальной доступности.
+
+Где сокращать задержку:
+Ttask = Tendpointing + TASR + Tretrieval + Tplanning + Texecution + Tverification.
+Мерить warm/cold p50/p95 и completion success отдельно. Решение за33мс не делает весь сценарий33мс.
+Держать маленькие модели тёплыми при доступной памяти; embeddings пересчитывать по изменившимся hash; stable context cache; параллельно читать независимые источники.
+После partial ASR можно спекулятивно искать контекст, но не выполнять внешнее действие до финализации команды.
+Знакомые успешные workflow компилировать в версионированный typed recipe; LLM вызывается при новой цели/ошибке/недостающем handler.
+Laya может одновременно выбрать operation+target/priority, а coder нужен только для новой логики.
+Параллелить тесты/read tools в разных worktree/process. Один writer на repo, один UI-focus lock, ограниченные GPU/CPU slots. Два агента не печатают одновременно в одно активное окно.
+Пересчитывать affected tests и graph, но перед release запускать требуемый полный набор. Кэш устаревшего PASS не ускорение.
+
+Рекомендуемые первые изменения:
+1. Подключить label/retrieval и evidence ledger к существующему SCE store/owners.
+2. Один typed action «qualify_and_report» с локальным Windows receipt, exact SHA и понятным UI blocker.
+3. Push-to-talk RU→транскрипт→та же action queue; Laya поначалу только advisory и откалиброванные отказы.
+4. Один coding-agent pipeline: context pack→worktree→patch→tests→PR, без перестройки всего приложения.
+5. Signed updater с rollback; затем дополнительные приложения/сборщики по одному.
+
+Инновации, которые стоит проверять:
+• Evidence-first memory: поиск ранжирует не только похожие слова, но свежесть доказательства для конкретной цели.
+• Goal compiler: одна цель проходит через разные UI/API адаптеры, сохраняя критерий результата.
+• Personal skill distillation: успешный trace становится reusable recipe; изменения UI/кода инвалидируют его preconditions.
+• Active learning: исправленные пользователем теги/маршруты формируют локальный dataset, обучение запускается отдельно и сравнивается с frozen baseline.
+• Incremental qualification: изменение функции автоматически помечает связанные выводы stale и планирует минимальный доказательный повтор.
+Это новые исследовательские предложения, а не заявление о новом научном результате или готовом продукте.

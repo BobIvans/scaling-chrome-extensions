@@ -1,0 +1,2144 @@
+[
+  {
+    "task_id": "G3-001",
+    "title": "Сверить владельцев и связать V3 с текущим кодом",
+    "dependencies": [],
+    "acceptance_criteria": [
+      "SHA фактического checkout записан; переезды путей обнаружены.",
+      "Ни один новый store/runtime не конкурирует с production owner."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-001",
+      "title": "Сверить владельцев и связать V3 с текущим кодом",
+      "depends_on": [],
+      "refines_v2": [
+        "V2-001"
+      ],
+      "owner": "content-lab + durable owners",
+      "acceptance": [
+        "SHA фактического checkout записан; переезды путей обнаружены.",
+        "Ни один новый store/runtime не конкурирует с production owner."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-001",
+        "title": "Сверить владельцев и связать V3 с текущим кодом",
+        "depends_on": [],
+        "refines_v2": [
+          "V2-001"
+        ],
+        "owner_layer": "content-lab + durable owners",
+        "artifact": "Карта pinned owner → API → таблица/работа → изменение",
+        "acceptance": [
+          "SHA фактического checkout записан; переезды путей обнаружены.",
+          "Ни один новый store/runtime не конкурирует с production owner."
+        ],
+        "failure_behavior": "Устаревшая карта переводится в rebase_needed; локальный документ остаётся доступен.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "G3-003",
+    "title": "Скомпилировать проверяемый пакет из существующего snapshot",
+    "dependencies": [
+      "G3-002"
+    ],
+    "acceptance_criteria": [
+      "Все selected parts имеют hashes/ranges; omitted sources перечислены.",
+      "Старый V2 handoff импортируется явным адаптером; новый digest учитывает task и source revision."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-003",
+      "title": "Скомпилировать проверяемый пакет из существующего snapshot",
+      "depends_on": [
+        "G3-002"
+      ],
+      "refines_v2": [
+        "V2-008",
+        "V2-013",
+        "V2-018",
+        "V2-019"
+      ],
+      "owner": "repo_source + context_review",
+      "acceptance": [
+        "Все selected parts имеют hashes/ranges; omitted sources перечислены.",
+        "Старый V2 handoff импортируется явным адаптером; новый digest учитывает task и source revision."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-003",
+        "title": "Скомпилировать проверяемый пакет из существующего snapshot",
+        "depends_on": [
+          "G3-002"
+        ],
+        "refines_v2": [
+          "V2-008",
+          "V2-013",
+          "V2-018",
+          "V2-019"
+        ],
+        "owner_layer": "repo_source + context_review",
+        "artifact": "ContextPacket compiler",
+        "acceptance": [
+          "Все selected parts имеют hashes/ranges; omitted sources перечислены.",
+          "Старый V2 handoff импортируется явным адаптером; новый digest учитывает task и source revision."
+        ],
+        "failure_behavior": "Неполный пакет хранится с причиной; статус ready не выставляется.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "G3-004",
+    "title": "Связать пакет, попытки и журнал без потери provenance",
+    "dependencies": [
+      "G3-003"
+    ],
+    "acceptance_criteria": [
+      "Один operation ID не принимает другой payload.",
+      "Неопределённый send отличается от failed-before-send и требует reconciliation."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-004",
+      "title": "Связать пакет, попытки и журнал без потери provenance",
+      "depends_on": [
+        "G3-003"
+      ],
+      "refines_v2": [
+        "V2-004",
+        "V2-028",
+        "V2-029"
+      ],
+      "owner": "existing durable job owner",
+      "acceptance": [
+        "Один operation ID не принимает другой payload.",
+        "Неопределённый send отличается от failed-before-send и требует reconciliation."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-004",
+        "title": "Связать пакет, попытки и журнал без потери provenance",
+        "depends_on": [
+          "G3-003"
+        ],
+        "refines_v2": [
+          "V2-004",
+          "V2-028",
+          "V2-029"
+        ],
+        "owner_layer": "existing durable job owner",
+        "artifact": "Packet/outbox linkage",
+        "acceptance": [
+          "Один operation ID не принимает другой payload.",
+          "Неопределённый send отличается от failed-before-send и требует reconciliation."
+        ],
+        "failure_behavior": "Не перезапускать эффект, если исход предыдущей попытки неизвестен.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "G3-005",
+    "title": "Отобразить подготовку и доставку частей в UI",
+    "dependencies": [
+      "G3-004"
+    ],
+    "acceptance_criteria": [
+      "UI показывает selected/staged/delivered отдельно.",
+      "Клавиатура проходит подготовку и STOP; tested device указан."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-005",
+      "title": "Отобразить подготовку и доставку частей в UI",
+      "depends_on": [
+        "G3-004"
+      ],
+      "refines_v2": [
+        "V2-012",
+        "V2-021",
+        "V2-030"
+      ],
+      "owner": "existing repo UI + desktop shell",
+      "acceptance": [
+        "UI показывает selected/staged/delivered отдельно.",
+        "Клавиатура проходит подготовку и STOP; tested device указан."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-005",
+        "title": "Отобразить подготовку и доставку частей в UI",
+        "depends_on": [
+          "G3-004"
+        ],
+        "refines_v2": [
+          "V2-012",
+          "V2-021",
+          "V2-030"
+        ],
+        "owner_layer": "existing repo UI + desktop shell",
+        "artifact": "Delivery panel",
+        "acceptance": [
+          "UI показывает selected/staged/delivered отдельно.",
+          "Клавиатура проходит подготовку и STOP; tested device указан."
+        ],
+        "failure_behavior": "Ошибочная часть сохраняет свой статус; целый packet не становится delivered.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "G3-006",
+    "title": "Импортировать типизированный ответ и запрос следующего контекста",
+    "dependencies": [
+      "G3-004"
+    ],
+    "acceptance_criteria": [
+      "Reply связан с request/packet/target; неизвестные IDs помещаются в review.",
+      "Запрос части разрешается только в выбранном snapshot; ссылка за его пределы не читается."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "G3-006",
+      "title": "Импортировать типизированный ответ и запрос следующего контекста",
+      "depends_on": [
+        "G3-004"
+      ],
+      "refines_v2": [
+        "V2-021",
+        "V2-036"
+      ],
+      "owner": "context_review result owner",
+      "acceptance": [
+        "Reply связан с request/packet/target; неизвестные IDs помещаются в review.",
+        "Запрос части разрешается только в выбранном snapshot; ссылка за его пределы не читается."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "catalogs/CORE_TASKS_V3.json",
+      "source_status": "DESIGN_ONLY",
+      "original_card": {
+        "id": "G3-006",
+        "title": "Импортировать типизированный ответ и запрос следующего контекста",
+        "depends_on": [
+          "G3-004"
+        ],
+        "refines_v2": [
+          "V2-021",
+          "V2-036"
+        ],
+        "owner_layer": "context_review result owner",
+        "artifact": "AIResult ingest",
+        "acceptance": [
+          "Reply связан с request/packet/target; неизвестные IDs помещаются в review.",
+          "Запрос части разрешается только в выбранном snapshot; ссылка за его пределы не читается."
+        ],
+        "failure_behavior": "Ответ сохраняется как unbound/raw, не запускает код.",
+        "implementation_status": "DESIGN_ONLY",
+        "attribution": "assistant proposal derived from REQ3-01..07; not user quotation"
+      }
+    }
+  },
+  {
+    "task_id": "UI3-003",
+    "title": "Скомпилировать неизменяемый task document с возвратным контрактом",
+    "dependencies": [
+      "UI3-001"
+    ],
+    "acceptance_criteria": [
+      "Каждое требование имеет источник или явно авторство системы.",
+      "Изменение цели/байтов создаёт новую ревизию; старая очередь неизменна."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-003",
+      "title": "Скомпилировать неизменяемый task document с возвратным контрактом",
+      "depends_on": [
+        "UI3-001"
+      ],
+      "refines_v2": [
+        "V2-018",
+        "V2-019",
+        "V2-021"
+      ],
+      "owner": "content-lab/context_review.py",
+      "acceptance": [
+        "Каждое требование имеет источник или явно авторство системы.",
+        "Изменение цели/байтов создаёт новую ревизию; старая очередь неизменна."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-003",
+        "title_ru": "Скомпилировать неизменяемый task document с возвратным контрактом",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-001"
+        ],
+        "v2_continuation_refs": [
+          "V2-018",
+          "V2-019",
+          "V2-021"
+        ],
+        "implementation_ru": [
+          "Включить исходную цель, acceptance, commit, owner map, omissions и task/bundle IDs.",
+          "Сериализовать одинаковые данные детерминированно; хэшировать файлы."
+        ],
+        "acceptance_ru": [
+          "Каждое требование имеет источник или явно авторство системы.",
+          "Изменение цели/байтов создаёт новую ревизию; старая очередь неизменна."
+        ],
+        "failure_behavior_ru": "Неполная source ссылка сохраняется как gap и блокирует только соответствующий claim.",
+        "deliverables": [
+          "TASK.txt",
+          "REPO_BASELINE.json",
+          "REQUIREMENTS.json",
+          "SOURCES.json",
+          "PARTS_INDEX.json",
+          "EXCLUSIONS.json",
+          "RETURN_CONTRACT.json"
+        ],
+        "owner_extension": "content-lab/context_review.py",
+        "live_connection_required_for_completion": false
+      }
+    }
+  },
+  {
+    "task_id": "UI3-004",
+    "title": "Планировать части по ограничениям наблюдаемого UI",
+    "dependencies": [
+      "UI3-003"
+    ],
+    "acceptance_criteria": [
+      "Отклонённая большая часть делится без потери исходного диапазона.",
+      "Никакая очередь не объявляется полной при неотправленных частях."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-004",
+      "title": "Планировать части по ограничениям наблюдаемого UI",
+      "depends_on": [
+        "UI3-003"
+      ],
+      "refines_v2": [
+        "V2-008",
+        "V2-013",
+        "V2-022"
+      ],
+      "owner": "context compiler + provider capability matrix",
+      "acceptance": [
+        "Отклонённая большая часть делится без потери исходного диапазона.",
+        "Никакая очередь не объявляется полной при неотправленных частях."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-004",
+        "title_ru": "Планировать части по ограничениям наблюдаемого UI",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-003"
+        ],
+        "v2_continuation_refs": [
+          "V2-008",
+          "V2-013",
+          "V2-022"
+        ],
+        "implementation_ru": [
+          "Строить batch план с chunk IDs, dependency bridges и измеренными bytes.",
+          "Сохранять discovered limit, дату и evidence; без лимита числа частей корпуса."
+        ],
+        "acceptance_ru": [
+          "Отклонённая большая часть делится без потери исходного диапазона.",
+          "Никакая очередь не объявляется полной при неотправленных частях."
+        ],
+        "failure_behavior_ru": "Неизвестный лимит требует bounded probe только при разрешённой отправке; офлайн возможен план.",
+        "deliverables": [
+          "TRANSFER_PLAN.json",
+          "chunk_batch_coverage_report"
+        ],
+        "owner_extension": "context compiler + provider capability matrix",
+        "live_connection_required_for_completion": false
+      }
+    }
+  },
+  {
+    "task_id": "UI3-017",
+    "title": "Доступный текстовый путь; voice как необязательное расширение",
+    "dependencies": [
+      "UI3-007",
+      "UI3-012",
+      "UI3-016"
+    ],
+    "acceptance_criteria": [
+      "Обязательный критерий: пользователь без мыши связывает чат, готовит, отправляет и восстанавливает задачу.",
+      "Опциональный voice-критерий применяется только при подключении ASR: голос не выдаёт расширенные права. Отсутствие voice не блокирует UI3-018."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "UI3-017",
+      "title": "Доступный текстовый путь; voice как необязательное расширение",
+      "depends_on": [
+        "UI3-007",
+        "UI3-012",
+        "UI3-016"
+      ],
+      "refines_v2": [
+        "V2-030",
+        "V2-031",
+        "V2-034"
+      ],
+      "owner": "desktop UI/GoalRequest owner",
+      "acceptance": [
+        "Обязательный критерий: пользователь без мыши связывает чат, готовит, отправляет и восстанавливает задачу.",
+        "Опциональный voice-критерий применяется только при подключении ASR: голос не выдаёт расширенные права. Отсутствие voice не блокирует UI3-018."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "grok_ui/UI_TASKS_V3.json",
+      "source_status": "proposed_not_implemented_by_this_document",
+      "original_card": {
+        "id": "UI3-017",
+        "title_ru": "Доступный текстовый путь; voice как необязательное расширение",
+        "status": "proposed_not_implemented_by_this_document",
+        "depends_on": [
+          "UI3-007",
+          "UI3-012",
+          "UI3-016"
+        ],
+        "v2_continuation_refs": [
+          "V2-030",
+          "V2-031",
+          "V2-034"
+        ],
+        "implementation_ru": [
+          "Обязательно: проверить весь цикл с клавиатурой и screen reader; дать статусы без цвета.",
+          "Опционально после текстового пути: voice подаёт тот же GoalRequest с исправляемой расшифровкой; отсутствие ASR не блокирует live qualification."
+        ],
+        "acceptance_ru": [
+          "Обязательный критерий: пользователь без мыши связывает чат, готовит, отправляет и восстанавливает задачу.",
+          "Опциональный voice-критерий применяется только при подключении ASR: голос не выдаёт расширенные права. Отсутствие voice не блокирует UI3-018."
+        ],
+        "failure_behavior_ru": "Доступен текстовый вариант и сохранённый draft; не заявлять accessibility passed без пользователя/устройства.",
+        "deliverables": [
+          "windows_accessibility_report"
+        ],
+        "owner_extension": "desktop UI/GoalRequest owner",
+        "live_connection_required_for_completion": true,
+        "optional_deliverables": [
+          "voice_intent_examples"
+        ],
+        "voice_required_for_completion": false,
+        "completion_scope": "keyboard_and_screen_reader_path",
+        "optional_continuation_refs": [
+          "V2-031"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "PAR3-001",
+    "title": "Зафиксировать владельца состояния и контракт расширения",
+    "dependencies": [],
+    "acceptance_criteria": [
+      "Зафиксированы текущий SHA и фактические API durable/native/context владельцев; Oct3 baseline не выдан за current main.",
+      "Каждая новая сущность имеет существующий source of truth и план совместимой миграции.",
+      "Прототип JSON/read-only planner не создаёт второй production scheduler."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "PAR3-001",
+      "title": "Зафиксировать владельца состояния и контракт расширения",
+      "depends_on": [],
+      "refines_v2": [
+        "V2-001",
+        "V2-026",
+        "V2-028"
+      ],
+      "owner": "existing SCE Core + Content Lab",
+      "acceptance": [
+        "Зафиксированы текущий SHA и фактические API durable/native/context владельцев; Oct3 baseline не выдан за current main.",
+        "Каждая новая сущность имеет существующий source of truth и план совместимой миграции.",
+        "Прототип JSON/read-only planner не создаёт второй production scheduler."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "parallel/TASKS_PARALLEL_V3.json",
+      "source_status": "production_extension_not_implemented",
+      "original_card": {
+        "id": "PAR3-001",
+        "title": "Зафиксировать владельца состояния и контракт расширения",
+        "depends_on": [],
+        "refines_v2": [
+          "V2-001",
+          "V2-026",
+          "V2-028"
+        ],
+        "related_core_tasks": [
+          "G3-001",
+          "G3-011"
+        ],
+        "slice": "S3-C",
+        "owner_layer": "existing SCE Core + Content Lab",
+        "status": "proposed",
+        "implementation_status": "production_extension_not_implemented",
+        "acceptance": [
+          "Зафиксированы текущий SHA и фактические API durable/native/context владельцев; Oct3 baseline не выдан за current main.",
+          "Каждая новая сущность имеет существующий source of truth и план совместимой миграции.",
+          "Прототип JSON/read-only planner не создаёт второй production scheduler."
+        ],
+        "failure_cases": [
+          "Несовпадение API останавливает интеграцию и сохраняет конкретный diff.",
+          "Существующие данные и jobs остаются читаемыми после миграции."
+        ],
+        "failure_behavior": "Сохранить наблюдаемые данные и причину; не обозначать незавершённый или неизвестный эффект как success.",
+        "artifact": "qualification/parallel_v3/OWNER_AND_MIGRATION_MAP.json",
+        "source_or_rationale": "Запрос пользователя 2026-10-04: развивать сценарий context app → UI Grok Build → технологическое обновление и параллельное выполнение.",
+        "reference_implementation_note": null
+      }
+    }
+  },
+  {
+    "task_id": "PAR3-003",
+    "title": "Capability registry с проверенными эффектами и ресурсами",
+    "dependencies": [
+      "PAR3-001"
+    ],
+    "acceptance_criteria": [
+      "Binding имеет version/digest, typed inputs, effects, resource estimates и verifier.",
+      "Статический discovery не выполняет найденные программы или неизвестный --help.",
+      "Unknown effects и needs access/version/configuration различаются с причиной."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "PAR3-003",
+      "title": "Capability registry с проверенными эффектами и ресурсами",
+      "depends_on": [
+        "PAR3-001"
+      ],
+      "refines_v2": [
+        "V2-023",
+        "V2-024"
+      ],
+      "owner": "native_adapter.py + existing capability registry",
+      "acceptance": [
+        "Binding имеет version/digest, typed inputs, effects, resource estimates и verifier.",
+        "Статический discovery не выполняет найденные программы или неизвестный --help.",
+        "Unknown effects и needs access/version/configuration различаются с причиной."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "parallel/TASKS_PARALLEL_V3.json",
+      "source_status": "production_extension_not_implemented",
+      "original_card": {
+        "id": "PAR3-003",
+        "title": "Capability registry с проверенными эффектами и ресурсами",
+        "depends_on": [
+          "PAR3-001"
+        ],
+        "refines_v2": [
+          "V2-023",
+          "V2-024"
+        ],
+        "related_core_tasks": [
+          "G3-001",
+          "G3-011"
+        ],
+        "slice": "S3-C",
+        "owner_layer": "native_adapter.py + existing capability registry",
+        "status": "proposed",
+        "implementation_status": "production_extension_not_implemented",
+        "acceptance": [
+          "Binding имеет version/digest, typed inputs, effects, resource estimates и verifier.",
+          "Статический discovery не выполняет найденные программы или неизвестный --help.",
+          "Unknown effects и needs access/version/configuration различаются с причиной."
+        ],
+        "failure_cases": [
+          "Неизвестная capability не заменяется универсальной shell-командой.",
+          "Изменение digest делает binding stale до повторной проверки."
+        ],
+        "failure_behavior": "Сохранить наблюдаемые данные и причину; не обозначать незавершённый или неизвестный эффект как success.",
+        "artifact": "qualification/parallel_v3/VERIFIED_EFFECT_PROFILES.json",
+        "source_or_rationale": "Запрос пользователя 2026-10-04: развивать сценарий context app → UI Grok Build → технологическое обновление и параллельное выполнение.",
+        "reference_implementation_note": null
+      }
+    }
+  },
+  {
+    "task_id": "PAR3-015",
+    "title": "STOP независимо от голоса и корректная отмена",
+    "dependencies": [
+      "PAR3-008",
+      "PAR3-010"
+    ],
+    "acceptance_criteria": [
+      "GUI/keyboard STOP доступен до голосовой интеграции и без слота работника.",
+      "После STOP нет новых lease/dispatch; каждый running node получает observed completed/cancelled/unknown.",
+      "Компенсация внешнего эффекта — отдельная операция, не стирание receipt.",
+      "Базовый local keyboard STOP квалифицируется независимо от ASR и без живой отправки: fake adapters проверяют очередь/отмену до активации PAR3-009 и PAR3-018."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "PAR3-015",
+      "title": "STOP независимо от голоса и корректная отмена",
+      "depends_on": [
+        "PAR3-008",
+        "PAR3-010"
+      ],
+      "refines_v2": [
+        "V2-028",
+        "V2-030",
+        "V2-032"
+      ],
+      "owner": "desktop host + existing Core",
+      "acceptance": [
+        "GUI/keyboard STOP доступен до голосовой интеграции и без слота работника.",
+        "После STOP нет новых lease/dispatch; каждый running node получает observed completed/cancelled/unknown.",
+        "Компенсация внешнего эффекта — отдельная операция, не стирание receipt.",
+        "Базовый local keyboard STOP квалифицируется независимо от ASR и без живой отправки: fake adapters проверяют очередь/отмену до активации PAR3-009 и PAR3-018."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "parallel/TASKS_PARALLEL_V3.json",
+      "source_status": "production_extension_not_implemented",
+      "original_card": {
+        "id": "PAR3-015",
+        "title": "STOP независимо от голоса и корректная отмена",
+        "depends_on": [
+          "PAR3-008",
+          "PAR3-010"
+        ],
+        "refines_v2": [
+          "V2-028",
+          "V2-030",
+          "V2-032"
+        ],
+        "related_core_tasks": [
+          "G3-001",
+          "G3-011"
+        ],
+        "slice": "S3-C",
+        "owner_layer": "desktop host + existing Core",
+        "status": "proposed",
+        "implementation_status": "production_extension_not_implemented",
+        "acceptance": [
+          "GUI/keyboard STOP доступен до голосовой интеграции и без слота работника.",
+          "После STOP нет новых lease/dispatch; каждый running node получает observed completed/cancelled/unknown.",
+          "Компенсация внешнего эффекта — отдельная операция, не стирание receipt.",
+          "Базовый local keyboard STOP квалифицируется независимо от ASR и без живой отправки: fake adapters проверяют очередь/отмену до активации PAR3-009 и PAR3-018."
+        ],
+        "failure_cases": [
+          "Отмена не объявляет уже отправленное сообщение неотправленным.",
+          "Зависший provider request не блокирует доступ к остановке очереди."
+        ],
+        "failure_behavior": "Сохранить наблюдаемые данные и причину; не обозначать незавершённый или неизвестный эффект как success.",
+        "artifact": "qualification/parallel_v3/STOP_EFFECTS_RECEIPT.json",
+        "source_or_rationale": "Запрос пользователя 2026-10-04: развивать сценарий context app → UI Grok Build → технологическое обновление и параллельное выполнение.",
+        "reference_implementation_note": null
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-001",
+    "title": "Закрепить владельцев и типы UpdateCase/Evidence",
+    "dependencies": [],
+    "acceptance_criteria": [
+      "Свежий snapshot и diff к V2 owner map сохранены; новые tables/DTO имеют одного владельца и migration plan.",
+      "AI statement, user assertion, repo observation, test evidence, release observation и device observation имеют разные типы.",
+      "Unknown, failed и stale различимы; импорт документа не может установить verified/usable напрямую."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-001",
+      "title": "Закрепить владельцев и типы UpdateCase/Evidence",
+      "depends_on": [],
+      "refines_v2": [
+        "V2-001",
+        "V2-004"
+      ],
+      "owner": "Content Lab / content.sqlite3 + context_review.py",
+      "acceptance": [
+        "Свежий snapshot и diff к V2 owner map сохранены; новые tables/DTO имеют одного владельца и migration plan.",
+        "AI statement, user assertion, repo observation, test evidence, release observation и device observation имеют разные типы.",
+        "Unknown, failed и stale различимы; импорт документа не может установить verified/usable напрямую."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-001",
+        "title": "Закрепить владельцев и типы UpdateCase/Evidence",
+        "status": "proposed_not_implemented",
+        "depends_on": [],
+        "owner": "Content Lab / content.sqlite3 + context_review.py",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Сопоставить текущий код и новый контракт без второго ledger.",
+        "acceptance": [
+          "Свежий snapshot и diff к V2 owner map сохранены; новые tables/DTO имеют одного владельца и migration plan.",
+          "AI statement, user assertion, repo observation, test evidence, release observation и device observation имеют разные типы.",
+          "Unknown, failed и stale различимы; импорт документа не может установить verified/usable напрямую."
+        ],
+        "deliverables": [
+          "owner_diff.json",
+          "update_case_migration_plan.md",
+          "evidence_type_contract.json"
+        ],
+        "verification_fixture": "Типовые JSON каждого evidence + неподдерживаемый тип + попытка импортом присвоить verified.",
+        "failure_behavior": "Неизвестный тип сохранить как untrusted attachment; проекции пригодности не менять.",
+        "refines_v2": [
+          "V2-001",
+          "V2-004"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-003",
+    "title": "Связать ContextPack с ожидаемым результатом AI",
+    "dependencies": [
+      "EVO3-001",
+      "EVO3-002"
+    ],
+    "acceptance_criteria": [
+      "Manifest включает repo identity, snapshot commit/overlay, chunk hashes, omissions, goal IDs и acceptance version.",
+      "RETURN_CONTRACT требует изменённые пути, критерии, подтверждения и оставшиеся gaps; отсутствие поля не заменяется успехом.",
+      "Изменение manifest создаёт новую revision; receipt относится только к точному digest переданного пакета."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-003",
+      "title": "Связать ContextPack с ожидаемым результатом AI",
+      "depends_on": [
+        "EVO3-001",
+        "EVO3-002"
+      ],
+      "refines_v2": [
+        "V2-018",
+        "V2-019",
+        "V2-021"
+      ],
+      "owner": "content-lab/context_review.py + repo_context.py",
+      "acceptance": [
+        "Manifest включает repo identity, snapshot commit/overlay, chunk hashes, omissions, goal IDs и acceptance version.",
+        "RETURN_CONTRACT требует изменённые пути, критерии, подтверждения и оставшиеся gaps; отсутствие поля не заменяется успехом.",
+        "Изменение manifest создаёт новую revision; receipt относится только к точному digest переданного пакета."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-003",
+        "title": "Связать ContextPack с ожидаемым результатом AI",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-001",
+          "EVO3-002"
+        ],
+        "owner": "content-lab/context_review.py + repo_context.py",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Ввести один request ID от context до результата и update case.",
+        "acceptance": [
+          "Manifest включает repo identity, snapshot commit/overlay, chunk hashes, omissions, goal IDs и acceptance version.",
+          "RETURN_CONTRACT требует изменённые пути, критерии, подтверждения и оставшиеся gaps; отсутствие поля не заменяется успехом.",
+          "Изменение manifest создаёт новую revision; receipt относится только к точному digest переданного пакета."
+        ],
+        "deliverables": [
+          "ContextPackBinding.json",
+          "AIResultBinding.json"
+        ],
+        "verification_fixture": "Модифицированная часть после сборки manifest, missing part, чужой request ID.",
+        "failure_behavior": "Не отправлять повреждённый pack; уже полученный ответ хранить, но не связывать с несовпавшей версией.",
+        "refines_v2": [
+          "V2-018",
+          "V2-019",
+          "V2-021"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-006",
+    "title": "Импорт AI claims и артефактов без доверенного исполнения",
+    "dependencies": [
+      "EVO3-001",
+      "EVO3-003",
+      "EVO3-004"
+    ],
+    "acceptance_criteria": [
+      "Каждый claim ссылается на request ID и criterion; цитата AI доступна без переатрибуции пользователю.",
+      "Команды/инструкции из ответа и исходников хранятся как данные, пока не зарегистрированы точным adapter.",
+      "Повреждённый, частичный или дублирующий ответ не закрывает критерии; все приложения содержат hashes."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-006",
+      "title": "Импорт AI claims и артефактов без доверенного исполнения",
+      "depends_on": [
+        "EVO3-001",
+        "EVO3-003",
+        "EVO3-004"
+      ],
+      "refines_v2": [
+        "V2-036"
+      ],
+      "owner": "content-lab/context_review.py",
+      "acceptance": [
+        "Каждый claim ссылается на request ID и criterion; цитата AI доступна без переатрибуции пользователю.",
+        "Команды/инструкции из ответа и исходников хранятся как данные, пока не зарегистрированы точным adapter.",
+        "Повреждённый, частичный или дублирующий ответ не закрывает критерии; все приложения содержат hashes."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-006",
+        "title": "Импорт AI claims и артефактов без доверенного исполнения",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-001",
+          "EVO3-003",
+          "EVO3-004"
+        ],
+        "owner": "content-lab/context_review.py",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Отдельно индексировать заявления, patch и evidence references.",
+        "acceptance": [
+          "Каждый claim ссылается на request ID и criterion; цитата AI доступна без переатрибуции пользователю.",
+          "Команды/инструкции из ответа и исходников хранятся как данные, пока не зарегистрированы точным adapter.",
+          "Повреждённый, частичный или дублирующий ответ не закрывает критерии; все приложения содержат hashes."
+        ],
+        "deliverables": [
+          "AIClaim.json",
+          "import_report.json"
+        ],
+        "verification_fixture": "AI утверждает tests passed без лога; patch отсутствует; документ просит расширить полномочия.",
+        "failure_behavior": "Записать proposal_received/needs_evidence; не запускать присланные commands.",
+        "refines_v2": [
+          "V2-036"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-014",
+    "title": "Точка восстановления и политика данных",
+    "dependencies": [
+      "EVO3-001",
+      "EVO3-010"
+    ],
+    "acceptance_criteria": [
+      "Checkpoint связывает build, data schema, backup manifest и проверяемые hashes; restore rehearsal пройден.",
+      "Политика различает обратимую схему, совместимый rollback и восстановление данных с оценкой последующих записей.",
+      "Отозванная/несовместимая старая сборка не выбирается автоматически; failure plan фиксируется заранее."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-014",
+      "title": "Точка восстановления и политика данных",
+      "depends_on": [
+        "EVO3-001",
+        "EVO3-010"
+      ],
+      "refines_v2": [
+        "V2-014",
+        "V2-040"
+      ],
+      "owner": "Content Lab migrations + installation lifecycle owner",
+      "acceptance": [
+        "Checkpoint связывает build, data schema, backup manifest и проверяемые hashes; restore rehearsal пройден.",
+        "Политика различает обратимую схему, совместимый rollback и восстановление данных с оценкой последующих записей.",
+        "Отозванная/несовместимая старая сборка не выбирается автоматически; failure plan фиксируется заранее."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-014",
+        "title": "Точка восстановления и политика данных",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-001",
+          "EVO3-010"
+        ],
+        "owner": "Content Lab migrations + installation lifecycle owner",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Подготовить tested rollback до auto-update.",
+        "acceptance": [
+          "Checkpoint связывает build, data schema, backup manifest и проверяемые hashes; restore rehearsal пройден.",
+          "Политика различает обратимую схему, совместимый rollback и восстановление данных с оценкой последующих записей.",
+          "Отозванная/несовместимая старая сборка не выбирается автоматически; failure plan фиксируется заранее."
+        ],
+        "deliverables": [
+          "RollbackPlan.json",
+          "backup_restore_fixture_report.json"
+        ],
+        "verification_fixture": "Locked backup file, corrupted backup, incompatible schema, new records after checkpoint.",
+        "failure_behavior": "Не переключать active version, пока нет допустимого recovery path.",
+        "refines_v2": [
+          "V2-014",
+          "V2-040"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-017",
+    "title": "Регистрация capability и binding к установленной сборке",
+    "dependencies": [
+      "EVO3-001",
+      "EVO3-009",
+      "EVO3-013"
+    ],
+    "acceptance_criteria": [
+      "Capability имеет typed arguments/effects/verifier/retry/recovery и binding к известному entrypoint.",
+      "Manifest не даёт разрешения; found function и registered operation хранятся раздельно.",
+      "Compatibility diff проверяет не только номер версии, но и target/effects/schema semantics."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-017",
+      "title": "Регистрация capability и binding к установленной сборке",
+      "depends_on": [
+        "EVO3-001",
+        "EVO3-009",
+        "EVO3-013"
+      ],
+      "refines_v2": [
+        "V2-023",
+        "V2-024",
+        "V2-041"
+      ],
+      "owner": "Capability registry / native_adapter.py",
+      "acceptance": [
+        "Capability имеет typed arguments/effects/verifier/retry/recovery и binding к известному entrypoint.",
+        "Manifest не даёт разрешения; found function и registered operation хранятся раздельно.",
+        "Compatibility diff проверяет не только номер версии, но и target/effects/schema semantics."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-017",
+        "title": "Регистрация capability и binding к установленной сборке",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-001",
+          "EVO3-009",
+          "EVO3-013"
+        ],
+        "owner": "Capability registry / native_adapter.py",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Ввести версионированный исполняемый контракт и manifest без auto-enable.",
+        "acceptance": [
+          "Capability имеет typed arguments/effects/verifier/retry/recovery и binding к известному entrypoint.",
+          "Manifest не даёт разрешения; found function и registered operation хранятся раздельно.",
+          "Compatibility diff проверяет не только номер версии, но и target/effects/schema semantics."
+        ],
+        "deliverables": [
+          "CapabilityRegistration.json",
+          "binding_diff_report.json"
+        ],
+        "verification_fixture": "Same capability ID now sends data externally; renamed executable; ordinary helper function.",
+        "failure_behavior": "Сохранить candidate registration; execution binding не активировать.",
+        "refines_v2": [
+          "V2-023",
+          "V2-024",
+          "V2-041"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-019",
+    "title": "Постоянный scope для согласованного цикла обновления",
+    "dependencies": [
+      "EVO3-001",
+      "EVO3-002",
+      "EVO3-017"
+    ],
+    "acceptance_criteria": [
+      "Grant включает principal/device/installation/targets/channel/effects/version policy/budgets/revocation.",
+      "Повторные действия внутри scope выполняются без нового вопроса; policy check сохраняет grant revision.",
+      "Новый account/destination/destructive effect/денежный эффект или расширение data root требует конкретного нового scope; AI не может его выдать.",
+      "Grant проверяется до первого соответствующего внешнего эффекта, включая install; само наличие карточки или UI progress не выдаёт scope."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-019",
+      "title": "Постоянный scope для согласованного цикла обновления",
+      "depends_on": [
+        "EVO3-001",
+        "EVO3-002",
+        "EVO3-017"
+      ],
+      "refines_v2": [
+        "V2-025",
+        "V2-028"
+      ],
+      "owner": "Operator scope / grant owner + native_adapter.py",
+      "acceptance": [
+        "Grant включает principal/device/installation/targets/channel/effects/version policy/budgets/revocation.",
+        "Повторные действия внутри scope выполняются без нового вопроса; policy check сохраняет grant revision.",
+        "Новый account/destination/destructive effect/денежный эффект или расширение data root требует конкретного нового scope; AI не может его выдать.",
+        "Grant проверяется до первого соответствующего внешнего эффекта, включая install; само наличие карточки или UI progress не выдаёт scope."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-019",
+        "title": "Постоянный scope для согласованного цикла обновления",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-001",
+          "EVO3-002",
+          "EVO3-017"
+        ],
+        "owner": "Operator scope / grant owner + native_adapter.py",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Автоматически повторять согласованный сценарий без повторных подтверждений.",
+        "acceptance": [
+          "Grant включает principal/device/installation/targets/channel/effects/version policy/budgets/revocation.",
+          "Повторные действия внутри scope выполняются без нового вопроса; policy check сохраняет grant revision.",
+          "Новый account/destination/destructive effect/денежный эффект или расширение data root требует конкретного нового scope; AI не может его выдать.",
+          "Grant проверяется до первого соответствующего внешнего эффекта, включая install; само наличие карточки или UI progress не выдаёт scope."
+        ],
+        "deliverables": [
+          "UpdateScopeGrant.json",
+          "scope_diff_report.json"
+        ],
+        "verification_fixture": "25 in-scope repeats and 15 out-of-scope mutations EX-EVO3-05.",
+        "failure_behavior": "Показать только отсутствующий scope; не терять текущий полезный read-only progress.",
+        "refines_v2": [
+          "V2-025",
+          "V2-028"
+        ]
+      }
+    }
+  },
+  {
+    "task_id": "EVO3-023",
+    "title": "Доступная панель прогресса и прекращения",
+    "dependencies": [
+      "EVO3-005",
+      "EVO3-012",
+      "EVO3-020"
+    ],
+    "acceptance_criteria": [
+      "Основные действия доступны клавиатурой и имеют проверенные accessible names; подтверждение и ошибки читаются screen reader.",
+      "Панель различает «ты сообщил», «репозиторий проверен», «готов релиз», «установлено», «операция доступна».",
+      "STOP и Resume не зависят от ASR; после отмены видно, какой эффект завершён/неизвестен и что будет проверено перед повтором.",
+      "Готовность панели EVO3-023 не выдаёт permission и не подменяет ранний baseline STOP/device qualification; external effects проверяют activation_prerequisites отдельно."
+    ],
+    "implementation_status": "DESIGN_ONLY",
+    "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+    "original_card": {
+      "id": "EVO3-023",
+      "title": "Доступная панель прогресса и прекращения",
+      "depends_on": [
+        "EVO3-005",
+        "EVO3-012",
+        "EVO3-020"
+      ],
+      "refines_v2": [
+        "V2-030",
+        "V2-032",
+        "V2-046"
+      ],
+      "owner": "Desktop shell / repo-review-ui.mjs + durable cancel",
+      "acceptance": [
+        "Основные действия доступны клавиатурой и имеют проверенные accessible names; подтверждение и ошибки читаются screen reader.",
+        "Панель различает «ты сообщил», «репозиторий проверен», «готов релиз», «установлено», «операция доступна».",
+        "STOP и Resume не зависят от ASR; после отмены видно, какой эффект завершён/неизвестен и что будет проверено перед повтором.",
+        "Готовность панели EVO3-023 не выдаёт permission и не подменяет ранний baseline STOP/device qualification; external effects проверяют activation_prerequisites отдельно."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "evolution/TASKS_EVO3.json",
+      "source_status": "proposed_not_implemented",
+      "original_card": {
+        "id": "EVO3-023",
+        "title": "Доступная панель прогресса и прекращения",
+        "status": "proposed_not_implemented",
+        "depends_on": [
+          "EVO3-005",
+          "EVO3-012",
+          "EVO3-020"
+        ],
+        "owner": "Desktop shell / repo-review-ui.mjs + durable cancel",
+        "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+        "change_mode": "extend_existing_owner_or_add_owned_adapter",
+        "scope": "Объяснить человеку текущее состояние и следующий шаг без технической перегрузки. Это позднее расширение панели; базовая квалифицированная локальная keyboard STOP требуется до внешних эффектов независимо от этой карточки.",
+        "acceptance": [
+          "Основные действия доступны клавиатурой и имеют проверенные accessible names; подтверждение и ошибки читаются screen reader.",
+          "Панель различает «ты сообщил», «репозиторий проверен», «готов релиз», «установлено», «операция доступна».",
+          "STOP и Resume не зависят от ASR; после отмены видно, какой эффект завершён/неизвестен и что будет проверено перед повтором.",
+          "Готовность панели EVO3-023 не выдаёт permission и не подменяет ранний baseline STOP/device qualification; external effects проверяют activation_prerequisites отдельно."
+        ],
+        "deliverables": [
+          "accessible_update_panel_spec.md",
+          "windows_accessibility_qualification.json"
+        ],
+        "verification_fixture": "Keyboard-only, screen reader, lost voice transcript, restart while pending install.",
+        "failure_behavior": "Оставить текстовый ручной путь; не сообщать успешную доступность без испытания устройства.",
+        "refines_v2": [
+          "V2-030",
+          "V2-032",
+          "V2-046"
+        ],
+        "is_activation_authority": false
+      }
+    }
+  },
+  {
+    "task_id": "TAB4-01",
+    "title": "Закрепить владельцев данных и версию расширения",
+    "goal": "Связать будущую автоматизацию вкладок с существующими context_tasks, context_review, Content Lab и Core без второго журнала и исполнителя.",
+    "dependencies": [],
+    "acceptance_criteria": [
+      "Зафиксированы контракт и миграция для task ID, packet SHA, attempt ID, наблюдений и execution job ID; существующие ручные операции продолжают работать.",
+      "Все записи задачи и наблюдений принадлежат существующему SQLite-хранилищу; все исполняемые задания принадлежат Core.",
+      "Текущие OPERATOR_REPORTED, dispatch_allowed=false и LOCAL_TESTS_VERIFIED не переименованы в подтверждения сервиса или установки.",
+      "Прочитанная конфигурация max_parallel=1 сохраняется; неподдерживаемые новые job kinds отклоняются до отдельной квалификации."
+    ],
+    "failure_recovery": [
+      "При несовместимой версии контракта остаётся ручная передача через существующую задачу.",
+      "Миграция сохраняет предыдущие записи и имеет проверенный путь восстановления из копии."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Тест совместимости старых task create/event/import/get.",
+      "Схема владельцев таблиц и команд; запись исходного commit и версии схемы.",
+      "Проверка отсутствия скрытого второго worker."
+    ],
+    "stage": "A — основание",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-02",
+    "title": "Сохранённый профиль ограниченной автоматизации",
+    "goal": "Позволить один раз настроить адресата, репозиторий, действия, источники и лимиты, затем выполнять подходящие шаги без повторных вопросов.",
+    "dependencies": [
+      "TAB4-01"
+    ],
+    "acceptance_criteria": [
+      "Профиль перечисляет точные namespace, репозиторий, допустимые ветки/пути, действия, группы источников, шаблоны заданий и лимиты.",
+      "Каждая попытка привязана к digest актуальной версии профиля; профиль из документа или ответа AI не принимается.",
+      "Разрешённое действие выполняется без повторного запроса; действие вне области показывает конкретную разницу требуемой настройки.",
+      "Отзыв разрешения блокирует новые действия и сохраняет наблюдение об уже начатом внешнем эффекте."
+    ],
+    "failure_recovery": [
+      "Изменение scope приостанавливает несовместимые попытки; оно не расширяет права старой попытки.",
+      "После перезапуска разрешение перечитывается из авторитетного хранилища; клиентский кеш не восстанавливает отозванное разрешение."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Матрица разрешённых и запрещённых действий.",
+      "Тест отзыва, replay старого профиля и подмены профиля через результат AI.",
+      "Проверка отсутствия повторных подтверждений внутри неизменённой области."
+    ],
+    "stage": "A — основание",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-05",
+    "title": "Документ изменения с происхождением и покрытием",
+    "goal": "Скомпилировать пригодный для технического обновления документ из задачи, связанных исходников и выбранного личного контекста.",
+    "dependencies": [
+      "TAB4-01",
+      "TAB4-02"
+    ],
+    "acceptance_criteria": [
+      "В документ входят точные goal/scope/criteria, repo SHA, packet SHA, ID частей, связи, известные пробелы и шаблон связанного ответа.",
+      "Полный snapshot и частичный пакет различимы; неприсутствующие части не считаются прочитанными AI.",
+      "Передаваемые группы личных данных соответствуют профилю; невыбранные источники и найденные секреты исключены с видимым отчётом.",
+      "Многочастная передача имеет manifest и продолжение; ограничение размера не приводит к молчаливому обрезанию."
+    ],
+    "failure_recovery": [
+      "Новая версия источника требует нового packet SHA и делает прежний документ устаревшим.",
+      "При превышении размера создаётся несколько связанных частей либо явное состояние NEEDS_CONTEXT."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Проверка byte/hash roundtrip выбранных исходников.",
+      "Фикстуры частичного репозитория, Unicode, секретного файла и лимита вложения.",
+      "Пример документа с объяснённой неполнотой."
+    ],
+    "stage": "A — основание",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "TAB4-19",
+    "title": "Единый пакет для других выбранных AI",
+    "goal": "Сохранить ручной и автоматизированный обмен с ChatGPT/Gemini как независимые квалифицированные назначения.",
+    "dependencies": [
+      "TAB4-04",
+      "TAB4-05",
+      "TAB4-08"
+    ],
+    "acceptance_criteria": [
+      "Основной packet/result contract не содержит обязательного Grok-only поля.",
+      "Каждое назначение имеет собственные target binding, profile и квалификацию UI/API; права Grok не переносятся автоматически.",
+      "Различия лимитов, вложений и получения ответа видимы до передачи.",
+      "Ручная загрузка того же проверяемого пакета остаётся доступной при неподдержанном адаптере."
+    ],
+    "failure_recovery": [
+      "Недоступность одного назначения не перенаправляет личные данные в другой сервис без предусмотренного профиля.",
+      "Смена AI создаёт новую доставку со ссылкой на исходную задачу и сохраняет обе истории."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Контрактные тесты пакета для нескольких адаптеров.",
+      "Отдельная таблица реально квалифицированных операций каждого назначения.",
+      "Тест запрета неявного reroute."
+    ],
+    "stage": "D — помощник",
+    "source_file": "two_tabs/TASKS_TAB4.json"
+  },
+  {
+    "task_id": "LAYA4-001",
+    "title": "Закрепить владельцев и контракты Laya/context batch",
+    "goal": "Уточнить текущие API, данные и migration boundary до изменения scan/catalog UI; связать Laya с существующим владельцем состояния.",
+    "dependencies": [],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "В implementation PR указан точный current HEAD и diff к основанию 5574ab7; все используемые symbols проверены по текущему коду.",
+      "Таблицы source/batch/labels принадлежат существующему content.sqlite3; executable jobs принадлежат Core, другого runtime/scheduler нет.",
+      "Для новых DTO определены schema/version, limits, namespace и несовместимые изменения; прежние repo/review/task данные читаются.",
+      "Фактический Laya/Voice Agent OS interface отмечен AVAILABLE, UNAVAILABLE или UNKNOWN с observed version; пример JSON не принимается за adapter."
+    ],
+    "failure_recovery": [
+      "При смене API сохранить owner diff и остановить только зависящие изменения; прежние источники и jobs остаются доступны."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Owner/API map pinned to implementation SHA.",
+      "Migration compatibility fixture and rollback description.",
+      "Local Laya interface observation, если adapter заявлен доступным."
+    ],
+    "stage": "L4-S0",
+    "owner_layer": "Content Lab + Core + native adapter",
+    "source_evidence_refs": [
+      "L4-E01",
+      "L4-E04",
+      "L4-E06",
+      "L4-E10",
+      "L4-E12"
+    ],
+    "related_v3_tasks": [
+      "G3-001",
+      "PAR3-001",
+      "EVO3-001"
+    ],
+    "experiments": [],
+    "deliverables": [
+      "OWNER_MAP.json",
+      "BATCH_CONTRACT_PROPOSAL.json"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-017",
+    "title": "Dedup, версии, tombstones и управляемое хранение",
+    "goal": "Хранить большой архив без потери разных источников и не воскрешать удалённые данные после reimport.",
+    "dependencies": [
+      "LAYA4-013",
+      "LAYA4-014"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Exact raw dedup может объединять physical bytes, сохраняя все origin refs и индивидуальные policies.",
+      "Semantic similarity создаёт duplicate candidate; разные решения/версии не сливаются автоматически.",
+      "Current head, deleted/tombstoned и historical versions имеют разные projections.",
+      "Retention/delete распространяется на raw/derived/cache/backups по явному manifest; shared blobs удаляются только при отсутствии допустимых refs.",
+      "Local deletion не заявляет удаление внешней копии; external delivery receipt остаётся объяснимым и минимальным."
+    ],
+    "failure_recovery": [
+      "Stale import после tombstone не восстанавливает source без новой явно выбранной revision.",
+      "Неудалённая backup copy отмечается pending expiration, а не falsely erased."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Dedup multi-origin fixture.",
+      "Tombstone and replay regression.",
+      "Retention/refcount/backup policy report."
+    ],
+    "stage": "L4-S3",
+    "owner_layer": "Existing items/sync_versions/library_record lineage",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E15",
+      "L4-E16"
+    ],
+    "related_v3_tasks": [
+      "G3-008",
+      "EVO3-014"
+    ],
+    "experiments": [
+      "LX4-12"
+    ],
+    "deliverables": [
+      "Retention/lineage policy",
+      "Dedup and deletion projections"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-018",
+    "title": "Bounded retrieval из архива всей жизни",
+    "goal": "Собирать нужный working set для конкретной цели, сохраняя пути к исходникам вместо обещания infinite model memory.",
+    "dependencies": [
+      "LAYA4-016",
+      "LAYA4-017"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Pipeline применяет goal/project/time scope, exact/FTS retrieval, graph neighbours и budget selection перед optional semantic rerank.",
+      "Project/episode/lifetime summaries имеют source refs и expand-to-original; изменение источника помечает summary stale.",
+      "Conflicts, uncertainty и missing facts переносятся в ответ и packet; summary не удаляет альтернативные свидетельства.",
+      "Budget, selected refs и excluded reasons видны пользователю; запрос дополнительных частей ограничен текущим scope.",
+      "Quality evaluation проверяет source recall и evidence correctness, а не только stylistic AI judgement."
+    ],
+    "failure_recovery": [
+      "Если нужных данных нет, показать missing source request вместо inferred personal facts.",
+      "При budget exhaustion продолжить multipart/session plan с manifest, не обрезая незаметно tail."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "50-question labelled lifetime corpus.",
+      "Summary citation resolution and stale tests.",
+      "Memory/budget selection receipt."
+    ],
+    "stage": "L4-S3",
+    "owner_layer": "Catalog/FTS/graph retrieval + context pack",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E04",
+      "L4-E05"
+    ],
+    "related_v3_tasks": [
+      "G3-003",
+      "G3-010",
+      "EVO3-021"
+    ],
+    "experiments": [
+      "LX4-08"
+    ],
+    "deliverables": [
+      "Bounded retrieval planner",
+      "Summary-to-source navigation"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-019",
+    "title": "Provider-neutral packet и профили Grok/ChatGPT/Gemini",
+    "goal": "Использовать один immutable source/goal manifest для разных AI и явно ограниченных document parts.",
+    "dependencies": [
+      "LAYA4-009"
+    ],
+    "optional_extensions": [
+      "LAYA4-018"
+    ],
+    "acceptance_criteria": [
+      "Core packet содержит goal/scope/criteria/source refs/gaps/result contract независимо от provider UI.",
+      "Provider profile задаёт observed input/attachment limits и version; неизвестный лимит не выдаётся за факт.",
+      "Bytes, exact tokens при наличии qualified tokenizer и token estimate method различаются.",
+      "Передача части не меняет source identity; provider projection имеет собственный digest.",
+      "Carry-over в новую session содержит decisions/open issues/source refs; не утверждает прежнее чтение моделью."
+    ],
+    "failure_recovery": [
+      "При изменении provider limit пересобрать projection с новыми part IDs/digest, сохранив source batch.",
+      "Unsupported attachment route предлагает разрешённый local download/copy без фиктивного send."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "One manifest across three provider profile fixtures.",
+      "Boundary budget and multipart reassembly test.",
+      "Result contract binding test."
+    ],
+    "stage": "L4-S4",
+    "owner_layer": "Existing context pack/review/task + provider projection",
+    "source_evidence_refs": [
+      "L4-E04",
+      "L4-E05",
+      "L4-E06",
+      "L4-E12"
+    ],
+    "related_v3_tasks": [
+      "G3-003",
+      "UI3-003",
+      "UI3-004",
+      "EVO3-003"
+    ],
+    "experiments": [
+      "LX4-11"
+    ],
+    "deliverables": [
+      "Provider-neutral packet schema",
+      "Provider profile contract"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-020",
+    "title": "Preview share projection и быстрый локальный экспорт",
+    "goal": "Показать какие данные и части уходят выбранному получателю, затем сохранить/copy/download проверяемый документ.",
+    "dependencies": [
+      "LAYA4-004",
+      "LAYA4-019"
+    ],
+    "optional_extensions": [
+      "LAYA4-013",
+      "LAYA4-015"
+    ],
+    "acceptance_criteria": [
+      "Preview показывает goal/source projects/data categories/destination binding revision/parts/bytes/gaps.",
+      "Raw archive и share projection имеют разные IDs; redaction не меняет оригинал и меняет share digest.",
+      "Explicit scope и protected fields проверяются вместе с heuristic scan; heuristic не обещает полного нахождения секретов.",
+      "Смена recipient/account/chat или расширение scope инвалидирует old ready projection, не удаляя локальный archive.",
+      "После одной настройки routine export в прежнем scope не требует повторной настройки; send остаётся отдельным UI adapter эффектом."
+    ],
+    "failure_recovery": [
+      "Несовпадение projection hash блокирует передачу и даёт regenerate action.",
+      "Unknown destination оставляет доступными local copy/download, без статуса connected/sent."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Known protected-byte fixture report.",
+      "Policy/recipient change invalidation test.",
+      "Accessible preview/copy/download receipt."
+    ],
+    "stage": "L4-S4",
+    "owner_layer": "Task packet + export policy + existing UI",
+    "source_evidence_refs": [
+      "L4-E01",
+      "L4-E06",
+      "L4-E08",
+      "L4-E12"
+    ],
+    "related_v3_tasks": [
+      "G3-005",
+      "UI3-002",
+      "UI3-007",
+      "UI3-008"
+    ],
+    "experiments": [
+      "LX4-09",
+      "LX4-10",
+      "LX4-11"
+    ],
+    "deliverables": [
+      "Share projection preview",
+      "Export receipt"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-021",
+    "title": "Следующие части и bounded запрос missing context",
+    "goal": "По запросу AI находить дополнительные source parts из того же snapshot и вести общий coverage ledger.",
+    "dependencies": [
+      "LAYA4-009",
+      "LAYA4-019"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "AI request принимает part/source identifiers из manifest, reason и критерий; произвольный filesystem path не открывается.",
+      "Следующая часть привязана к той же goal/source revision или явно supersedes её.",
+      "Inventory/captured/selected/delivered/model-declared-reviewed/criterion-verified ведутся раздельно.",
+      "Out-of-scope/missing/stale запросы показывают конкретный blocker и не запускают скрытый gather.",
+      "Repeated request возвращает прежний immutable part при совпадающих inputs, не создаёт новую delivery attempt."
+    ],
+    "failure_recovery": [
+      "При смене HEAD предложение продолжения отмечается stale и требует new source packet.",
+      "После unknown send parts не пересылаются вслепую; delivery reconciliation остаётся у UI owner."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Valid/unknown/out-of-scope part request fixtures.",
+      "Cross-part result coverage test.",
+      "Replay and stale snapshot integration receipt."
+    ],
+    "stage": "L4-S4",
+    "owner_layer": "repo continuation + review/task owner",
+    "source_evidence_refs": [
+      "L4-E01",
+      "L4-E05",
+      "L4-E06",
+      "L4-E08"
+    ],
+    "related_v3_tasks": [
+      "G3-006",
+      "UI3-010",
+      "UI3-011",
+      "UI3-012"
+    ],
+    "experiments": [
+      "LX4-11"
+    ],
+    "deliverables": [
+      "Context request contract",
+      "Batch coverage view"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-025",
+    "title": "Объяснимое «найди нужный контекст для этой цели»",
+    "goal": "Дать пользователю быстрый answer-to-source путь с явными пробелами и возможностью добрать выбранные данные.",
+    "dependencies": [
+      "LAYA4-016",
+      "LAYA4-019",
+      "LAYA4-021"
+    ],
+    "optional_extensions": [
+      "LAYA4-018"
+    ],
+    "acceptance_criteria": [
+      "Каждый factual answer указывает source revision/range или явно unknown; model-generated citation валидируется на существование.",
+      "Панель why-selected показывает exact match/filter/graph/summary reason.",
+      "Запрос дополнительных данных предлагает конкретные missing source categories и ожидаемую пользу для критерия.",
+      "Goal/source conflict не скрывается summary; пользователь может открыть обе версии и изменить scope.",
+      "Ответ сам по себе не вызывает repo execution/provider send и не помечает цель achieved."
+    ],
+    "failure_recovery": [
+      "Broken citation блокирует verified projection ответа и сохраняет unverified draft.",
+      "При отсутствии необходимых источников возвращается source collection task без выдуманного содержимого."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Citation existence/range corruption fixtures.",
+      "50-question retrieval evaluation.",
+      "Goal conflict and missing-source UI receipt."
+    ],
+    "stage": "L4-S4",
+    "owner_layer": "Catalog/FTS/graph + task next_request projection",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E04",
+      "L4-E05",
+      "L4-E06"
+    ],
+    "related_v3_tasks": [
+      "G3-009",
+      "G3-010",
+      "EVO3-021"
+    ],
+    "experiments": [
+      "LX4-08"
+    ],
+    "deliverables": [
+      "Why-selected/source navigator",
+      "Missing-context brief"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "LAYA4-027",
+    "title": "Backup, restore и миграции личного каталога",
+    "goal": "Сделать накопленный lifetime corpus переносимым и восстанавливаемым без потери provenance и пользовательских corrections.",
+    "dependencies": [
+      "LAYA4-013",
+      "LAYA4-017"
+    ],
+    "optional_extensions": [],
+    "acceptance_criteria": [
+      "Backup manifest связывает SQLite snapshot, raw blobs, derived indexes policy, schema versions и hashes.",
+      "Consistent snapshot не смешивает поколения DB/blob publication; backup проверяется до отметки complete.",
+      "Restore сверяет hashes/lineage/tombstones/user labels; никаких stale source resurrection.",
+      "Migration имеет preflight/free-space/rollback point; старый archive читается или даёт явный unsupported schema.",
+      "Restore не восстанавливает grants, credentials или active external sends автоматически; data continuity отделена от execution state."
+    ],
+    "failure_recovery": [
+      "Повреждённый blob локализуется в restore report; валидные источники остаются доступны с gaps.",
+      "Неуспешная migration откатывается к проверенному snapshot без двойных DB owners."
+    ],
+    "implementation_status": "PLANNED",
+    "evidence_required": [
+      "Backup-under-import consistency fixture.",
+      "Corruption/migration/rollback drill.",
+      "Portable restore receipt on Windows."
+    ],
+    "stage": "L4-S3",
+    "owner_layer": "Existing content.sqlite3 and artifact ownership",
+    "source_evidence_refs": [
+      "L4-E03",
+      "L4-E04",
+      "L4-E15",
+      "L4-E16"
+    ],
+    "related_v3_tasks": [
+      "EVO3-014",
+      "EVO3-015",
+      "PAR3-016"
+    ],
+    "experiments": [
+      "LX4-12"
+    ],
+    "deliverables": [
+      "Backup manifest/restore tool contract",
+      "Migration qualification report"
+    ],
+    "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+    "source_file": "laya/TASKS_LAYA4.json"
+  },
+  {
+    "task_id": "ACTION5-01",
+    "title": "Сверить операции библиотеки и границу транзакции перед desktop",
+    "goal": "Определить публичные source/version/search/task/job операции, чтобы desktop, импорт и браузер использовали существующие SQLite и Core.",
+    "refines_existing_task_ids": [
+      "G3-001",
+      "LAYA4-001",
+      "PAR3-001",
+      "EVO3-001"
+    ],
+    "related_feature_ids": [
+      "LIB-001",
+      "LIB-052",
+      "ACT-054"
+    ],
+    "dependencies": [
+      "G3-001"
+    ],
+    "inputs": [
+      "Фактический SCE SHA; схема существующей SQLite; список native-команд и операторских профилей"
+    ],
+    "outputs": [
+      "Карта operation → owner → table/transaction → DTO; план совместимой schema migration"
+    ],
+    "owner": "Существующие Content Lab, review/task owners и Core",
+    "acceptance_criteria": [
+      "Каждая требуемая операция связана с текущим owner; неизвестные операции обозначены GAP с отдельным scope.",
+      "Импорт, UI и CLI читают один source head; число новых competing stores/executors равно нулю.",
+      "Для каждой миграции определены schema version, precondition, rollback boundary и writer lock."
+    ],
+    "failure_recovery": [
+      "Изменившийся SHA блокирует использование старой карты; повторная сверка сохраняет прежнюю версию.",
+      "Невозможный rollback миграции требует restore из проверенного backup до активной записи."
+    ],
+    "evidence_required": [
+      "Owner matrix с pinned SHA; SQL/schema diff; fixture одного импорта через два клиента"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-02",
+    "title": "Собрать установочный desktop-сценарий без работающего Chrome",
+    "goal": "Получить локальный Windows UI для поиска, импорта и подготовки пакета на Dell, сохранив существующий backend.",
+    "refines_existing_task_ids": [
+      "LAYA4-023",
+      "EVO3-016",
+      "UI3-017"
+    ],
+    "related_feature_ids": [
+      "LIB-029",
+      "LIB-031",
+      "ACT-050"
+    ],
+    "dependencies": [
+      "ACTION5-01"
+    ],
+    "inputs": [
+      "Owner matrix; существующий UI; выбранный desktop-host и версия Python/native bundle"
+    ],
+    "outputs": [
+      "Установочный manifest; один desktop entrypoint; инструкция first-run и uninstall без удаления данных"
+    ],
+    "owner": "Desktop shell использует публичный Content Lab API; Core остаётся владельцем jobs",
+    "acceptance_criteria": [
+      "На Windows 11 при закрытом Chrome доступны импорт TXT, поиск источника и export task document.",
+      "First-run показывает путь данных и установленную версию; повторный запуск открывает тот же namespace.",
+      "Uninstall shell не удаляет пользовательский корпус; backend failure даёт доступный текст ошибки."
+    ],
+    "failure_recovery": [
+      "Невозможная установка сохраняет диагностику и позволяет открыть offline index.",
+      "Неудачная новая shell-версия запускается рядом с прежней до подтверждённой активации."
+    ],
+    "evidence_required": [
+      "Installed-device receipt; версии runtime/host; журнал трёх действий без Chrome"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-03",
+    "title": "Версионировать локальный IPC и восстановление соединения",
+    "goal": "Подключить desktop к существующему native dispatcher через bounded типизированный протокол вместо Chrome-посредника.",
+    "refines_existing_task_ids": [
+      "G3-004",
+      "UI3-001",
+      "PAR3-004"
+    ],
+    "related_feature_ids": [
+      "LIB-029",
+      "ACT-015",
+      "ACT-038",
+      "ACT-051"
+    ],
+    "dependencies": [
+      "ACTION5-01",
+      "ACTION5-02"
+    ],
+    "inputs": [
+      "Текущие команды, schema/byte limits, namespace policy; desktop lifecycle"
+    ],
+    "outputs": [
+      "Handshake с protocol/capability versions; request_id и generation fence; typed error DTO"
+    ],
+    "owner": "Существующие native adapter и agent bridge; desktop является клиентом",
+    "acceptance_criteria": [
+      "Desktop и браузер вызывают одну командную реализацию; IPC не принимает произвольные executable, argv или SQL.",
+      "Unknown command, oversized frame и protocol mismatch отклоняются до изменения состояния.",
+      "После reconnect поздний ответ прежней generation не меняет UI; повтор операции использует сохранённый intent key."
+    ],
+    "failure_recovery": [
+      "При потере IPC read возвращается как RETRYABLE; возможный write остаётся UNKNOWN до get по прежнему key.",
+      "Handshake mismatch предлагает совместимую версию без автоматического переноса данных."
+    ],
+    "evidence_required": [
+      "IPC fixtures oversized/mismatch/reconnect; журнал same-key replay; owner matrix"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-12",
+    "title": "Квалифицировать поиск по точным источникам и областям",
+    "goal": "Предоставить быстрый локальный поиск без модели, с project/time/source/version filters.",
+    "refines_existing_task_ids": [
+      "LAYA4-016",
+      "LAYA4-018",
+      "LAYA4-025"
+    ],
+    "related_feature_ids": [
+      "LIB-017",
+      "LIB-032",
+      "LIB-050",
+      "LIB-052"
+    ],
+    "dependencies": [
+      "ACTION5-10",
+      "ACTION5-11"
+    ],
+    "inputs": [
+      "FTS/index существующей библиотеки; labels; source heads; operator namespace scope"
+    ],
+    "outputs": [
+      "QuerySpec exact-ID/path/quote/FTS; result ranges; explainable filters; saved views"
+    ],
+    "owner": "Существующий Content Lab search owner",
+    "acceptance_criteria": [
+      "ID/path/exact quote возвращают правильный source version или явный no-match; выдача включает ranges.",
+      "Namespace/project/time filters применяются до построения packet и не раскрывают cross-scope snippets.",
+      "Saved view хранит запрос, а не копии источников; deleted source исчезает из current view.",
+      "Latency и relevance измерены на corpus отдельно для cold/warm; пороги описаны как proposed до измерения."
+    ],
+    "failure_recovery": [
+      "FTS corruption предлагает rebuild из источников, не теряя оригиналы.",
+      "Модельная подсказка не заменяет deterministic exact-source route."
+    ],
+    "evidence_required": [
+      "Query golden set; filtered-result receipts; measured benchmark с device/corpus metadata"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-13",
+    "title": "Зафиксировать WHY_THIS_PACKET и управляемую корзину контекста",
+    "goal": "Показать, почему выбраны источники для цели и какие необходимые части ещё не помещены.",
+    "refines_existing_task_ids": [
+      "G3-003",
+      "G3-009",
+      "LAYA4-018",
+      "LAYA4-021",
+      "LAYA4-025"
+    ],
+    "related_feature_ids": [
+      "LIB-025",
+      "LIB-026",
+      "LIB-027",
+      "LIB-028",
+      "ACT-009"
+    ],
+    "dependencies": [
+      "ACTION5-11",
+      "ACTION5-12"
+    ],
+    "inputs": [
+      "Дословная goal revision; scope; frozen criteria; retrieval results; byte/part budgets"
+    ],
+    "outputs": [
+      "Selection plan с criterion→source links; exclusions/missing dependencies; editable basket; frozen packet digest"
+    ],
+    "owner": "Существующие repo/context selection и task owner",
+    "acceptance_criteria": [
+      "Для каждого включённого range указана связь с goal/criterion либо user choice.",
+      "Обязательный источник вне budget попадает в next-part/missing ledger; количество частей не имеет скрытого общего потолка.",
+      "User removal меняет selection revision и packet digest; старый пакет остаётся auditable.",
+      "Неизвестное утверждение создаёт bounded NEXT_CONTEXT_REQUEST, а не fabricated evidence."
+    ],
+    "failure_recovery": [
+      "Source drift возвращает RESCAN/RESELECT с конкретными affected criteria.",
+      "Retrieval model failure оставляет exact-source search и ручную корзину доступны."
+    ],
+    "evidence_required": [
+      "Selection fixtures; goal coverage report; packet/range digest checks"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-14",
+    "title": "Сделать быстрый переносимый share projection",
+    "goal": "Экспортировать только выбранные версии и диапазоны, с provenance и машинным index для другого AI.",
+    "refines_existing_task_ids": [
+      "LAYA4-019",
+      "LAYA4-020",
+      "G3-005",
+      "TAB4-19"
+    ],
+    "related_feature_ids": [
+      "LIB-005",
+      "LIB-037",
+      "LIB-038",
+      "ACT-005",
+      "ACT-010"
+    ],
+    "dependencies": [
+      "ACTION5-11",
+      "ACTION5-13"
+    ],
+    "inputs": [
+      "Frozen selection; destination profile; private field exclusions; provider-neutral task schema"
+    ],
+    "outputs": [
+      "TXT/MD/JSON/ZIP projection; manifest/digests; preview; result template; optional delta"
+    ],
+    "owner": "Существующие context/task export и share projection owners",
+    "acceptance_criteria": [
+      "Preview и export имеют один projection digest; все omissions отмечены и доступны для продолжения.",
+      "Private overlay/excluded source не попадает в share bytes; эвристика секретов не выдаётся за гарантию.",
+      "После export offline index позволяет найти исходный range без сети.",
+      "Grok/ChatGPT/Gemini profile меняет transport formatting, сохраняя source/goal identity; фактические лимиты требуют qualification."
+    ],
+    "failure_recovery": [
+      "Disk/write error оставляет прежний законченный artifact; partial ZIP не отмечается ready.",
+      "Policy или source change инвалидирует readiness прежнего projection."
+    ],
+    "evidence_required": [
+      "Export reconstruction; forbidden-byte fixtures; offline index scenario"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-15",
+    "title": "Резервировать библиотеку согласованным snapshot",
+    "goal": "Получать проверяемый backup базы и blobs вместе с версией схемы и происхождением.",
+    "refines_existing_task_ids": [
+      "LAYA4-027",
+      "EVO3-014",
+      "LAYA4-017"
+    ],
+    "related_feature_ids": [
+      "LIB-035",
+      "LIB-036",
+      "LIB-039"
+    ],
+    "dependencies": [
+      "ACTION5-01",
+      "ACTION5-06"
+    ],
+    "inputs": [
+      "Existing DB/blob stores; active jobs/leases; selected backup scope; schema/version manifest"
+    ],
+    "outputs": [
+      "Atomic backup manifest; DB snapshot; referenced blobs; integrity receipt; secret reference inventory"
+    ],
+    "owner": "Существующий Content Lab data owner; Core координирует maintenance intent",
+    "acceptance_criteria": [
+      "Backup во время допустимых операций даёт согласованный source-head/event/blob snapshot.",
+      "Каждый blob и DB artifact проходит hash/integrity check; missing bytes не скрываются.",
+      "Ключи не копируются из credential storage в архив; сохраняются ссылки и шаги повторного подключения.",
+      "Пользователь видит расположение, размер, время и последний проверенный restore status."
+    ],
+    "failure_recovery": [
+      "Недостаток места отменяет ready backup и сохраняет старый проверенный snapshot.",
+      "Crash до manifest commit оставляет staging removable, без promotion."
+    ],
+    "evidence_required": [
+      "Backup manifest; concurrent-write fixture; integrity receipt"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P1",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-16",
+    "title": "Проверить restore и миграцию на копии до активации",
+    "goal": "Восстанавливать личный каталог и переносить схему без второй базы в рабочем режиме.",
+    "refines_existing_task_ids": [
+      "LAYA4-027",
+      "EVO3-015",
+      "TAB4-14",
+      "TAB4-15"
+    ],
+    "related_feature_ids": [
+      "LIB-030",
+      "LIB-035",
+      "ACT-047"
+    ],
+    "dependencies": [
+      "ACTION5-15",
+      "ACTION5-03"
+    ],
+    "inputs": [
+      "Verified backup; target schema/migration version; installed build binding"
+    ],
+    "outputs": [
+      "Dry-run migrated copy; validation report; activation checkpoint; rollback/restore plan"
+    ],
+    "owner": "Существующий data owner и updater; копия только staging",
+    "acceptance_criteria": [
+      "Restore восстанавливает hashes, source heads, overlays, tombstones и task state; старое UNKNOWN не превращается в sent.",
+      "Schema migration rehearsal сравнивает record/relationship counts и exact-source queries до/после.",
+      "Активен один canonical DB path; activation выполняется при закрытых writer leases.",
+      "Downgrade, не совместимый с новой схемой, использует проверенный pre-migration backup."
+    ],
+    "failure_recovery": [
+      "Corrupt/missing backup part предотвращает activation и показывает affected sources.",
+      "Validation failure оставляет предыдущую active library и staging report."
+    ],
+    "evidence_required": [
+      "Restore/migration fixture receipts; before/after invariants; installed-device activation receipt"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P1",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-17",
+    "title": "Определить tombstone, retention и очистку производных данных",
+    "goal": "Удалять выбранные данные предсказуемо и не возвращать их из cache, backup или старого packet.",
+    "refines_existing_task_ids": [
+      "LAYA4-017",
+      "LAYA4-027",
+      "EVO3-010"
+    ],
+    "related_feature_ids": [
+      "LIB-023",
+      "LIB-051",
+      "ACT-052"
+    ],
+    "dependencies": [
+      "ACTION5-11",
+      "ACTION5-15"
+    ],
+    "inputs": [
+      "Source versions; dependents; user retention policy; active context leases; backup inventory"
+    ],
+    "outputs": [
+      "Deletion impact preview; tombstone event; cache/retrieval invalidation; retention receipt"
+    ],
+    "owner": "Существующий Content Lab provenance/data owner",
+    "acceptance_criteria": [
+      "До удаления показаны зависимые packets/reviews и данные, ещё находящиеся в snapshots.",
+      "Current retrieval не возвращает tombstoned source; lease завершение не resurrect data.",
+      "Raw original, transcript, derived index и external projection имеют отдельные retention states.",
+      "Restore old backup применяет текущие tombstones либо явно предлагает отдельный recovery namespace."
+    ],
+    "failure_recovery": [
+      "Частичная cleanup сохраняет tombstone и pending cleanup task; не показывает erasure completed.",
+      "Уже отправленную внешнюю копию помечают remote retention unknown, без ложного удаления."
+    ],
+    "evidence_required": [
+      "Deletion/restore/cache corpus; impact graph; retention receipts"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P1",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-18",
+    "title": "Типизировать capabilities по версии, эффекту и qualification",
+    "goal": "Показать реально доступные действия, их область, ограничения и установленную сборку.",
+    "refines_existing_task_ids": [
+      "PAR3-003",
+      "EVO3-017",
+      "TAB4-13",
+      "LAYA4-022"
+    ],
+    "related_feature_ids": [
+      "ACT-002",
+      "ACT-003",
+      "ACT-012",
+      "ACT-054",
+      "RND-009"
+    ],
+    "dependencies": [
+      "ACTION5-01",
+      "ACTION5-03"
+    ],
+    "inputs": [
+      "Registered commands/templates; installed build receipt; policy grants; capability test corpus"
+    ],
+    "outputs": [
+      "CapabilityDescriptor с inputs/outputs/effects/resources/grant revision/version/stop semantics; status catalog"
+    ],
+    "owner": "Существующие Core, native dispatcher и qualification owner",
+    "acceptance_criteria": [
+      "Capability недоступна без совпадения installed version, typed input contract и действующего grant.",
+      "Описание различает read-only, local write, remote send и money-moving effect; hazard влияет на policy, не на маркетинговый title.",
+      "PLANNED/UNKNOWN/QUALIFIED/STALE не объединяются в available.",
+      "Изменение grant, adapter или build инвалидирует соответствующую qualification."
+    ],
+    "failure_recovery": [
+      "Unknown command возвращает small scoped development proposal; не исполняет guessed code.",
+      "Qualification fail переводит capability в disabled/stale и сохраняет reason."
+    ],
+    "evidence_required": [
+      "Registry schema; installed-version fixtures; grant/qualification drift receipts"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-19",
+    "title": "Операторские execution templates без shell из документа",
+    "goal": "Разрешить известные действия через заранее зарегистрированные команды и существующий job owner.",
+    "refines_existing_task_ids": [
+      "PAR3-003",
+      "LAYA4-022",
+      "LAYA4-024",
+      "TAB4-02"
+    ],
+    "related_feature_ids": [
+      "ACT-004",
+      "ACT-006",
+      "ACT-011",
+      "RND-010"
+    ],
+    "dependencies": [
+      "ACTION5-18"
+    ],
+    "inputs": [
+      "Operator profile/policy; registered template; typed slot values; pinned repository context"
+    ],
+    "outputs": [
+      "Validated execution request; scope/budget preflight; Core job reference; evidence receipt"
+    ],
+    "owner": "Существующие automation Core и qualification adapter",
+    "acceptance_criteria": [
+      "Doc/transcript/AI answer не задаёт executable/argv/env; выбирается operator-registered template.",
+      "Template validation проверяет namespace, repo alias, expected version, allowed paths и bounded resources.",
+      "Intent replay не создаёт вторую задачу; cancel использует существующий Core semantics.",
+      "Read-only research template не получает signer, sender или wallet capability через наследование."
+    ],
+    "failure_recovery": [
+      "Precondition drift отменяет admission и требует fresh request.",
+      "Невозможно доказать external effect — UNKNOWN и reconciliation, без повторного запуска."
+    ],
+    "evidence_required": [
+      "Profile/template validation corpus; same-key job replay; forbidden-param fixtures"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  },
+  {
+    "task_id": "ACTION5-21",
+    "title": "Доступный STOP вне модели и микрофона",
+    "goal": "Предоставить локальную остановку из каждого длительного состояния и различать прекращение подготовки и уже возможный внешний эффект.",
+    "refines_existing_task_ids": [
+      "UI3-016",
+      "PAR3-015",
+      "PAR3-021",
+      "TAB4-16"
+    ],
+    "related_feature_ids": [
+      "ACT-032",
+      "ACT-033",
+      "ACT-036",
+      "ACT-057"
+    ],
+    "dependencies": [
+      "ACTION5-03",
+      "ACTION5-19"
+    ],
+    "inputs": [
+      "Existing Core cancel API; UI pending states; active resource leases; accessible controls"
+    ],
+    "outputs": [
+      "Всегда доступная кнопка/keyboard STOP; cancel request; stopped/unknown reconciliation projection"
+    ],
+    "owner": "Existing Core cancellation owner; desktop/browser accessible controls",
+    "acceptance_criteria": [
+      "STOP доступен keyboard-only и без работающего ASR/model/Chrome.",
+      "Подготовка, queue, active command и unknown send имеют разные наблюдаемые outcomes.",
+      "После STOP истёкший worker/adapter не возобновляет действие и не меняет task как fresh owner.",
+      "Screen-reader status объясняет, что остановлено и что требует проверки; предлагаемая задержка реакции измеряется на устройстве."
+    ],
+    "failure_recovery": [
+      "Непрерываемый внешний процесс остаётся CANCEL_REQUESTED/UNKNOWN с recovery path.",
+      "Resume создаёт проверку checkpoints, а не автоматически продолжает uncertain effect."
+    ],
+    "evidence_required": [
+      "Keyboard/screen-reader device scenarios; late-callback fixtures; cancellation receipt"
+    ],
+    "implementation_status": "PLANNED",
+    "priority": "P0",
+    "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+  }
+]

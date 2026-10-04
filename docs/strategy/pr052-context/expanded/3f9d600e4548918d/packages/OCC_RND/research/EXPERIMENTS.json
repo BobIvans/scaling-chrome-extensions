@@ -1,0 +1,1890 @@
+[
+  {
+    "id": "EXP-001",
+    "area": "archive",
+    "title_ru": "Полный корпус >20 / >1000 документов",
+    "hypothesis_ru": "Потоковый manifest убирает пропуски без роста RAM пропорционально total text.",
+    "baseline_ru": "Текущий single context_pack против multipart",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G03",
+      "G05"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-002",
+    "area": "archive",
+    "title_ru": "Большой blob без 8 MiB потолка",
+    "hypothesis_ru": "Raw streaming сохраняет large objects, даже когда parser временно отложен.",
+    "baseline_ru": "Текущий MAX_FILE против raw-first",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G05"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-003",
+    "area": "archive",
+    "title_ru": "Точный путь через разные ОС",
+    "hypothesis_ru": "Raw path bytes + display alias позволяют переносить inventory без коллизий Unicode/case.",
+    "baseline_ru": "Только строковый нормализованный path",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G05"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-004",
+    "area": "archive",
+    "title_ru": "LFS/submodule completeness",
+    "hypothesis_ru": "Раздельные scope flags предотвращают ложное полное покрытие при pointer-only архиве.",
+    "baseline_ru": "Один общий complete=true",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G05"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-005",
+    "area": "archive",
+    "title_ru": "Прерывание на каждом checkpoint",
+    "hypothesis_ru": "Durable cursor и atomic objects позволяют продолжить сбор без потерь или двойного head update.",
+    "baseline_ru": "Повтор full scan без persisted cursor",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G03",
+      "G05"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-006",
+    "area": "archive",
+    "title_ru": "Ветки прошлых чатов",
+    "hypothesis_ru": "Branch-aware importer сохраняет идеи из альтернативных ответов, которые теряет линейный export.",
+    "baseline_ru": "Только current branch transcript",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-007",
+    "area": "archive",
+    "title_ru": "Вложения и сообщения-ссылки",
+    "hypothesis_ru": "Attachment manifest с missing-state лучше защищает полноту, чем markdown с недоступной ссылкой.",
+    "baseline_ru": "Отсутствие отдельного attachment inventory",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-008",
+    "area": "archive",
+    "title_ru": "Байт-контекст vs token budget",
+    "hypothesis_ru": "Отдельный prompt compiler сохраняет raw полноту и предотвращает скрытый model-side cutoff.",
+    "baseline_ru": "Деление только по символам или размерам файла",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S03",
+      "G03"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-009",
+    "area": "archive",
+    "title_ru": "Повторные ZIP и version lineage",
+    "hypothesis_ru": "CAS dedup сокращает хранение одинаковых bytes, сохраняя все source paths/versions.",
+    "baseline_ru": "Удаление дубликатов целых документов по похожему title",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-010",
+    "area": "archive",
+    "title_ru": "Dirty workspace vs commit",
+    "hypothesis_ru": "Два явных snapshot scope предотвращают ошибки анализа незакоммиченных изменений как части SHA.",
+    "baseline_ru": "Чтение working tree с прежним commit label",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G05"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "source_byte_coverage",
+        "path_inventory_coverage",
+        "reconstruction_hash_match",
+        "explicit_missing_count",
+        "peak_RSS",
+        "recovery_success"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-011",
+    "area": "routing",
+    "title_ru": "Нужна ли вообще модель",
+    "hypothesis_ru": "Точные aliases/registry покрывают частые команды дешевле LLM без ухудшения результата.",
+    "baseline_ru": "Always-LLM",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S02",
+      "S30"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-012",
+    "area": "routing",
+    "title_ru": "Калибровка на собственных outcomes",
+    "hypothesis_ru": "Held-out calibration снижает cost-weighted routing errors по сравнению с raw confidence.",
+    "baseline_ru": "Исходный confidence без calibration",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S03",
+      "S04"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-013",
+    "area": "routing",
+    "title_ru": "Иерархическое пространство действий",
+    "hypothesis_ru": "Family→skill routing надёжнее плоского выбора из сотен labels при одинаковом бюджете.",
+    "baseline_ru": "Flat action catalog",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S03",
+      "S04"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-014",
+    "area": "routing",
+    "title_ru": "Чувствительность к именам labels",
+    "hypothesis_ru": "Перестановка/переименование опций обнаруживает label bias до выдачи реальных capabilities.",
+    "baseline_ru": "Одна фиксированная форма вопроса",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S03"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-015",
+    "area": "routing",
+    "title_ru": "Эскалация по цене ошибки",
+    "hypothesis_ru": "Cost-aware abstention уменьшает вредные вызовы без always-expensive reasoning.",
+    "baseline_ru": "Единый confidence threshold для всех задач",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S01",
+      "S02"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-016",
+    "area": "routing",
+    "title_ru": "Unknown не становится False",
+    "hypothesis_ru": "Многозначная evidence-логика уменьшает ложные решения при missing/stale данных.",
+    "baseline_ru": "Булевое ready/not-ready без причины",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G04",
+      "G06"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-017",
+    "area": "routing",
+    "title_ru": "Distillation успешного trace",
+    "hypothesis_ru": "Повторяемый workflow после компиляции в проверенный skill требует меньше модельных вызовов.",
+    "baseline_ru": "Каждый запуск планируется заново",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S06"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-018",
+    "area": "routing",
+    "title_ru": "Независимый verifier",
+    "hypothesis_ru": "Проверка реальных postconditions ловит больше ложных успехов, чем self-report исполнителя.",
+    "baseline_ru": "Только exit0 или ответ LLM",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S06",
+      "G07"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-019",
+    "area": "routing",
+    "title_ru": "Budgeted model disagreement",
+    "hypothesis_ru": "Выборочный critic полезнее постоянного model parliament по cost per verified outcome.",
+    "baseline_ru": "Всегда один агент и всегда несколько агентов",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S02"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-020",
+    "area": "routing",
+    "title_ru": "Prompt injection из источника",
+    "hypothesis_ru": "Effect/policy boundary блокирует инструкции из imported text независимо от router confidence.",
+    "baseline_ru": "Смешивание документа и системных инструкций",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S30",
+      "S31"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "intent_macro_F1",
+        "cost_weighted_wrong_action_rate",
+        "Brier_score",
+        "risk_coverage_curve",
+        "latency_p95",
+        "API_cost_per_verified_outcome"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-021",
+    "area": "voice",
+    "title_ru": "Финализация ASR перед действием",
+    "hypothesis_ru": "Ожидание stable transcript уменьшает неверные действия при самокоррекции.",
+    "baseline_ru": "Действие по первому partial transcript",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S18",
+      "S19"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-022",
+    "area": "voice",
+    "title_ru": "Отрицание и исправление суммы",
+    "hypothesis_ru": "Slot-aware подтверждение критичных параметров сокращает ошибки команд с «не» и числами.",
+    "baseline_ru": "Только средний WER",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S18",
+      "S19"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-023",
+    "area": "voice",
+    "title_ru": "Repo/API entity lexicon",
+    "hypothesis_ru": "Локальный словарь aliases улучшает intent parsing RU+English без изменения оригинальной транскрипции.",
+    "baseline_ru": "Общий ASR текст без entity mapping",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S18",
+      "S19"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-024",
+    "area": "voice",
+    "title_ru": "Feedback loop от собственного TTS",
+    "hypothesis_ru": "Изоляция playback/capture предотвращает повторные команды, услышанные от самого агента.",
+    "baseline_ru": "Один постоянно активный микрофонный поток",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-025",
+    "area": "voice",
+    "title_ru": "Контроль без голоса и мыши",
+    "hypothesis_ru": "Общий typed API позволяет выполнить ту же задачу клавиатурой/switch input без отдельной логики.",
+    "baseline_ru": "Voice-only control",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S12",
+      "S15"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-026",
+    "area": "voice",
+    "title_ru": "NVDA task completion",
+    "hypothesis_ru": "Semantic labels и управляемый focus уменьшают число вмешательств на реальной задаче библиотеки.",
+    "baseline_ru": "Визуально исправный UI без screen-reader test",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S15"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-027",
+    "area": "voice",
+    "title_ru": "UIA перед координатным кликом",
+    "hypothesis_ru": "Семантический locator устойчивее к размеру/положению окна для поддерживаемого приложения.",
+    "baseline_ru": "Абсолютные screenshot coordinates",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S12",
+      "S13",
+      "S14"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-028",
+    "area": "voice",
+    "title_ru": "Minimal locator repair",
+    "hypothesis_ru": "Локальный repair с postcondition безопаснее полного перепланирования при UI drift.",
+    "baseline_ru": "Свободный повторный обход desktop",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S05",
+      "S06",
+      "S08"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "critical_slot_accuracy",
+        "intent_accuracy",
+        "end_of_utterance_to_verified_action_latency",
+        "false_command_count",
+        "corrections",
+        "keyboard_screen_reader_completion"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-029",
+    "area": "library",
+    "title_ru": "Lexical + semantic retrieval",
+    "hypothesis_ru": "Hybrid retrieval улучшает recall без потери exact path/SHA матчей.",
+    "baseline_ru": "FTS-only и embedding-only",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S23"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "retrieval_recall_at_k",
+        "exact_path_recall",
+        "correct_revision_rate",
+        "duplicate_work_avoided",
+        "private_span_leaks",
+        "citation_coverage"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-030",
+    "area": "library",
+    "title_ru": "Старое предложение vs свежий код",
+    "hypothesis_ru": "Version-bound requirement graph уменьшает повторные PR по уже реализованной функции.",
+    "baseline_ru": "Поиск только по текстовой похожести",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G01",
+      "G04"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "retrieval_recall_at_k",
+        "exact_path_recall",
+        "correct_revision_rate",
+        "duplicate_work_avoided",
+        "private_span_leaks",
+        "citation_coverage"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-031",
+    "area": "library",
+    "title_ru": "Память отрицательных попыток",
+    "hypothesis_ru": "Retrieval прошлых failed traces сокращает повтор одинакового неудачного исправления.",
+    "baseline_ru": "Хранение только удачных outputs",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "retrieval_recall_at_k",
+        "exact_path_recall",
+        "correct_revision_rate",
+        "duplicate_work_avoided",
+        "private_span_leaks",
+        "citation_coverage"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-032",
+    "area": "library",
+    "title_ru": "Evidence debt next-query",
+    "hypothesis_ru": "Выбор следующего запроса по ожидаемой ценности даёт больше решённых blockers на единицу данных.",
+    "baseline_ru": "Просто максимальный объём нового контекста",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "retrieval_recall_at_k",
+        "exact_path_recall",
+        "correct_revision_rate",
+        "duplicate_work_avoided",
+        "private_span_leaks",
+        "citation_coverage"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-033",
+    "area": "library",
+    "title_ru": "Качество document extraction",
+    "hypothesis_ru": "Raw-backed converters лучше выявляют missing tables/sections, чем только готовый Markdown.",
+    "baseline_ru": "Plain text extraction без coverage ledger",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S24",
+      "S25",
+      "S26"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "retrieval_recall_at_k",
+        "exact_path_recall",
+        "correct_revision_rate",
+        "duplicate_work_avoided",
+        "private_span_leaks",
+        "citation_coverage"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-034",
+    "area": "library",
+    "title_ru": "Приватность при cross-source search",
+    "hypothesis_ru": "ACL-aware retrieval не возвращает private spans в публичный context bundle.",
+    "baseline_ru": "Фильтр только после генерации ответа",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S30"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "retrieval_recall_at_k",
+        "exact_path_recall",
+        "correct_revision_rate",
+        "duplicate_work_avoided",
+        "private_span_leaks",
+        "citation_coverage"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-035",
+    "area": "web3",
+    "title_ru": "Installed package identity",
+    "hypothesis_ru": "Проверка source/installed hashes обнаруживает ложные квалификации другого кода.",
+    "baseline_ru": "Совпадает только package name/version",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G09",
+      "G10"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-036",
+    "area": "web3",
+    "title_ru": "Канонический qualification loop",
+    "hypothesis_ru": "Desktop adapter к существующему owner уменьшает расхождение verdicts по сравнению со вторым runner.",
+    "baseline_ru": "Новый собственный qualification engine",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G07",
+      "G08",
+      "G09"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-037",
+    "area": "web3",
+    "title_ru": "PIT shared feed fanout",
+    "hypothesis_ru": "Общий point-in-time feed уменьшает дублирование RPC и inconsistent state между workers.",
+    "baseline_ru": "Каждая стратегия собирает state сама",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S33",
+      "G06"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-038",
+    "area": "web3",
+    "title_ru": "Unit-safe net edge",
+    "hypothesis_ru": "Явная модель единиц и embedded costs обнаруживает ложноположительный arbitrage PnL.",
+    "baseline_ru": "Сложение fee/slippage из разнородных источников",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G06"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-039",
+    "area": "web3",
+    "title_ru": "Conflict-aware candidate scheduling",
+    "hypothesis_ru": "Координатор учитывает shared accounts/capital и уменьшает бесполезную конкуренцию своих workers.",
+    "baseline_ru": "Независимая отправка всех кандидатов",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S33",
+      "S34"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-040",
+    "area": "web3",
+    "title_ru": "Holdout после выбора стратегии",
+    "hypothesis_ru": "Time-separated frozen holdout отсеивает случайные победы среди множества trials.",
+    "baseline_ru": "Выбирать лучший replay без нового теста",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G06"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-041",
+    "area": "web3",
+    "title_ru": "CLI capability coverage",
+    "hypothesis_ru": "Static candidates + installed tests дают более точную карту реальных команд, чем список функций.",
+    "baseline_ru": "Все definitions считаются доступными командами",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G10"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-042",
+    "area": "web3",
+    "title_ru": "Observation vs realized fill",
+    "hypothesis_ru": "Отдельные labels исключают объявление modeled edge реализованной прибылью.",
+    "baseline_ru": "Один общий pnl field",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G06",
+      "S34"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "point_in_time_consistency",
+        "duplicate_RPC_ratio",
+        "cost_accounting_error",
+        "observed_vs_modeled_label_integrity",
+        "holdout_stability",
+        "transactions_sent"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-043",
+    "area": "operations",
+    "title_ru": "Неизвестный side effect и retry",
+    "hypothesis_ru": "Reconciliation-state предотвращает двойное действие после timeout.",
+    "baseline_ru": "Автоматический повтор любого failed task",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G07"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "duplicate_side_effect_count",
+        "recovery_time",
+        "policy_violations",
+        "resource_budget_overrun",
+        "evidence_integrity",
+        "verified_completion_rate"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-044",
+    "area": "operations",
+    "title_ru": "Windows sleep/crash recovery",
+    "hypothesis_ru": "Leases и повторная проверка evidence позволяют восстановиться без ложного DONE.",
+    "baseline_ru": "Только process status in memory",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "G03"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "duplicate_side_effect_count",
+        "recovery_time",
+        "policy_violations",
+        "resource_budget_overrun",
+        "evidence_integrity",
+        "verified_completion_rate"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-045",
+    "area": "operations",
+    "title_ru": "Least-privilege process boundary",
+    "hypothesis_ru": "Reviewed profiles и sandbox блокируют запись/сеть вне разрешённой области даже при неверном плане.",
+    "baseline_ru": "shell=False как единственная защита",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S31",
+      "G03"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "duplicate_side_effect_count",
+        "recovery_time",
+        "policy_violations",
+        "resource_budget_overrun",
+        "evidence_integrity",
+        "verified_completion_rate"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-046",
+    "area": "operations",
+    "title_ru": "Sanitized export reproducibility",
+    "hypothesis_ru": "Две manifests raw/share сохраняют проверяемую полноту без отправки secret contents.",
+    "baseline_ru": "Публично отправлять raw ради полноты",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "duplicate_side_effect_count",
+        "recovery_time",
+        "policy_violations",
+        "resource_budget_overrun",
+        "evidence_integrity",
+        "verified_completion_rate"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-047",
+    "area": "operations",
+    "title_ru": "Token/API cost admission",
+    "hypothesis_ru": "Предварительный budget и reserved output allowance предотвращают незаметный перерасход на R&D.",
+    "baseline_ru": "Непрерывные запросы по наличию API key",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S30",
+      "S32"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "duplicate_side_effect_count",
+        "recovery_time",
+        "policy_violations",
+        "resource_budget_overrun",
+        "evidence_integrity",
+        "verified_completion_rate"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  },
+  {
+    "id": "EXP-048",
+    "area": "operations",
+    "title_ru": "Версионирование learned skills",
+    "hypothesis_ru": "Pinned adapter/tests с rollback переживают dependency/UI update лучше mutable latest skill.",
+    "baseline_ru": "Автообновление production по свежему release",
+    "status": "NOT_RUN_RND_HYPOTHESIS",
+    "source_ids": [
+      "S04",
+      "S05"
+    ],
+    "protocol": {
+      "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+      "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+      "metrics": [
+        "duplicate_side_effect_count",
+        "recovery_time",
+        "policy_violations",
+        "resource_budget_overrun",
+        "evidence_integrity",
+        "verified_completion_rate"
+      ],
+      "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+      "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+    },
+    "required_evidence": [
+      "source_or_dataset_hash",
+      "config_and_code_revision",
+      "raw_logs",
+      "independent_verifier_result",
+      "negative_cases",
+      "heldout_outcome"
+    ],
+    "unknowns": [
+      "Dell/Windows performance",
+      "real user task distribution",
+      "domain calibration"
+    ],
+    "money_or_signer_allowed": false
+  }
+]

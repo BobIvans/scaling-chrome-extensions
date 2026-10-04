@@ -1,0 +1,1303 @@
+{
+  "schema": "occ.action-refinements.v5",
+  "count": 30,
+  "date": "2026-10-04",
+  "note": "30 новых уточняющих карточек развивают реальные 130 V4 tasks и 164 product features. Все PLANNED; это не runtime qualification и не добавление независимого store/executor. Рекомендации, сценарии и критерии — предложения ассистента, не пользовательские дословные слова.",
+  "source_catalogs": [
+    "strategy_v4/catalogs/ALL_TASKS_V4.json",
+    "catalogs/PRODUCT_FEATURES.json",
+    "strategy_v4/implementation/STATUS.json"
+  ],
+  "tasks": [
+    {
+      "task_id": "ACTION5-01",
+      "title": "Сверить операции библиотеки и границу транзакции перед desktop",
+      "goal": "Определить публичные source/version/search/task/job операции, чтобы desktop, импорт и браузер использовали существующие SQLite и Core.",
+      "refines_existing_task_ids": [
+        "G3-001",
+        "LAYA4-001",
+        "PAR3-001",
+        "EVO3-001"
+      ],
+      "related_feature_ids": [
+        "LIB-001",
+        "LIB-052",
+        "ACT-054"
+      ],
+      "dependencies": [
+        "G3-001"
+      ],
+      "inputs": [
+        "Фактический SCE SHA; схема существующей SQLite; список native-команд и операторских профилей"
+      ],
+      "outputs": [
+        "Карта operation → owner → table/transaction → DTO; план совместимой schema migration"
+      ],
+      "owner": "Существующие Content Lab, review/task owners и Core",
+      "acceptance_criteria": [
+        "Каждая требуемая операция связана с текущим owner; неизвестные операции обозначены GAP с отдельным scope.",
+        "Импорт, UI и CLI читают один source head; число новых competing stores/executors равно нулю.",
+        "Для каждой миграции определены schema version, precondition, rollback boundary и writer lock."
+      ],
+      "failure_recovery": [
+        "Изменившийся SHA блокирует использование старой карты; повторная сверка сохраняет прежнюю версию.",
+        "Невозможный rollback миграции требует restore из проверенного backup до активной записи."
+      ],
+      "evidence_required": [
+        "Owner matrix с pinned SHA; SQL/schema diff; fixture одного импорта через два клиента"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-02",
+      "title": "Собрать установочный desktop-сценарий без работающего Chrome",
+      "goal": "Получить локальный Windows UI для поиска, импорта и подготовки пакета на Dell, сохранив существующий backend.",
+      "refines_existing_task_ids": [
+        "LAYA4-023",
+        "EVO3-016",
+        "UI3-017"
+      ],
+      "related_feature_ids": [
+        "LIB-029",
+        "LIB-031",
+        "ACT-050"
+      ],
+      "dependencies": [
+        "ACTION5-01"
+      ],
+      "inputs": [
+        "Owner matrix; существующий UI; выбранный desktop-host и версия Python/native bundle"
+      ],
+      "outputs": [
+        "Установочный manifest; один desktop entrypoint; инструкция first-run и uninstall без удаления данных"
+      ],
+      "owner": "Desktop shell использует публичный Content Lab API; Core остаётся владельцем jobs",
+      "acceptance_criteria": [
+        "На Windows 11 при закрытом Chrome доступны импорт TXT, поиск источника и export task document.",
+        "First-run показывает путь данных и установленную версию; повторный запуск открывает тот же namespace.",
+        "Uninstall shell не удаляет пользовательский корпус; backend failure даёт доступный текст ошибки."
+      ],
+      "failure_recovery": [
+        "Невозможная установка сохраняет диагностику и позволяет открыть offline index.",
+        "Неудачная новая shell-версия запускается рядом с прежней до подтверждённой активации."
+      ],
+      "evidence_required": [
+        "Installed-device receipt; версии runtime/host; журнал трёх действий без Chrome"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-03",
+      "title": "Версионировать локальный IPC и восстановление соединения",
+      "goal": "Подключить desktop к существующему native dispatcher через bounded типизированный протокол вместо Chrome-посредника.",
+      "refines_existing_task_ids": [
+        "G3-004",
+        "UI3-001",
+        "PAR3-004"
+      ],
+      "related_feature_ids": [
+        "LIB-029",
+        "ACT-015",
+        "ACT-038",
+        "ACT-051"
+      ],
+      "dependencies": [
+        "ACTION5-01",
+        "ACTION5-02"
+      ],
+      "inputs": [
+        "Текущие команды, schema/byte limits, namespace policy; desktop lifecycle"
+      ],
+      "outputs": [
+        "Handshake с protocol/capability versions; request_id и generation fence; typed error DTO"
+      ],
+      "owner": "Существующие native adapter и agent bridge; desktop является клиентом",
+      "acceptance_criteria": [
+        "Desktop и браузер вызывают одну командную реализацию; IPC не принимает произвольные executable, argv или SQL.",
+        "Unknown command, oversized frame и protocol mismatch отклоняются до изменения состояния.",
+        "После reconnect поздний ответ прежней generation не меняет UI; повтор операции использует сохранённый intent key."
+      ],
+      "failure_recovery": [
+        "При потере IPC read возвращается как RETRYABLE; возможный write остаётся UNKNOWN до get по прежнему key.",
+        "Handshake mismatch предлагает совместимую версию без автоматического переноса данных."
+      ],
+      "evidence_required": [
+        "IPC fixtures oversized/mismatch/reconnect; журнал same-key replay; owner matrix"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-04",
+      "title": "CaptureEnvelope сохраняет исходный текст и автора",
+      "goal": "Сохранять оригинал, извлечённый текст и пользовательские правки с самостоятельной идентичностью и точным происхождением.",
+      "refines_existing_task_ids": [
+        "G3-002",
+        "LAYA4-013",
+        "G3-008"
+      ],
+      "related_feature_ids": [
+        "LIB-013",
+        "LIB-014",
+        "LIB-015",
+        "LIB-016",
+        "LIB-058"
+      ],
+      "dependencies": [
+        "ACTION5-01"
+      ],
+      "inputs": [
+        "Bytes или DOM capture; source URI/path; capture permission/scope; наблюдаемое авторство"
+      ],
+      "outputs": [
+        "Raw source version; CaptureEnvelope с content hash, times, author/confidence, extraction version; correction overlay"
+      ],
+      "owner": "Существующий Content Lab source/version owner",
+      "acceptance_criteria": [
+        "Реконструкция raw text совпадает byte-for-byte; нормализованный search text хранит обратные offsets.",
+        "Время сообщения, время захвата и inferred event time не объединяются в одно поле.",
+        "Цитата другого автора внутри сообщения не становится словами пользователя; неизвестное авторство явно UNKNOWN.",
+        "Исправление пользователя создаёт overlay/version, сохраняя исходное написание."
+      ],
+      "failure_recovery": [
+        "Повреждённый или недекодируемый текст остаётся raw artifact с extraction error.",
+        "Конфликт авторства сохраняется вместе с доказательствами; прежний оригинал не переписывается."
+      ],
+      "evidence_required": [
+        "Roundtrip fixture RU/EN/emoji/CRLF/BOM; author/quote fixtures; provenance graph"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-05",
+      "title": "Учитывать full-scroll чат и недоступные ветви",
+      "goal": "Снимать доступные сообщения полностью и отличать capture текущей ветви от полного conversation export.",
+      "refines_existing_task_ids": [
+        "LAYA4-004",
+        "LAYA4-014",
+        "UI3-011",
+        "G3-006"
+      ],
+      "related_feature_ids": [
+        "LIB-012",
+        "LIB-024",
+        "LIB-057"
+      ],
+      "dependencies": [
+        "ACTION5-04"
+      ],
+      "inputs": [
+        "Выбранная conversation identity; видимые сообщения и их IDs; scroll state; доступный export"
+      ],
+      "outputs": [
+        "Message inventory; ветви с known/unknown visibility; capture coverage ledger; resume cursor"
+      ],
+      "owner": "Существующий browser/capture adapter → Content Lab, без нового store",
+      "acceptance_criteria": [
+        "Top/middle/bottom и virtualized-history fixtures дают по одной source version на наблюдаемый message ID.",
+        "Loading/end-of-history подтверждается наблюдением; scroll без новых сообщений сам по себе не означает COMPLETE.",
+        "Недоступная ветвь, удалённое сообщение, вложение и login wall отображаются как конкретный gap.",
+        "Export и DOM capture связываются по происхождению; разные ветви не склеиваются по похожему тексту."
+      ],
+      "failure_recovery": [
+        "После перезагрузки capture продолжает с message IDs и проверяет старые hashes.",
+        "Unknown end-of-history сохраняет PARTIAL и предлагает официальный export/ручной файл."
+      ],
+      "evidence_required": [
+        "Message/branch corpus; capture inventory; restart/virtualized scroll receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-06",
+      "title": "Закрепить общий контракт файлового импортера",
+      "goal": "Каждый файл должен сохраняться как оригинал с disposition и отдельной версией извлечения.",
+      "refines_existing_task_ids": [
+        "LAYA4-014",
+        "LAYA4-004",
+        "LAYA4-017"
+      ],
+      "related_feature_ids": [
+        "LIB-006",
+        "LIB-007",
+        "LIB-041",
+        "LIB-047"
+      ],
+      "dependencies": [
+        "ACTION5-01",
+        "ACTION5-04"
+      ],
+      "inputs": [
+        "Выбранные files/folder scope; MIME/extension; bytes; extractor registry/version"
+      ],
+      "outputs": [
+        "Importer manifest с discovered/imported/unsupported/error; source versions; bounded checkpoints"
+      ],
+      "owner": "Существующие intake/extractor и Content Lab owners",
+      "acceptance_criteria": [
+        "Несовпадение extension/MIME отражается в manifest; extraction не скрывает оригинал.",
+        "У каждого выбранного файла ровно один исход: imported, excluded с причиной, unsupported или error.",
+        "Повторное продолжение создаёт новые версии только для изменённых bytes и сохраняет все origins.",
+        "Unknown importer fields сохраняются в raw envelope, не становятся исполнимыми настройками."
+      ],
+      "failure_recovery": [
+        "Исчерпание диска или crash оставляет committed sources и незавершённый cursor.",
+        "Unsupported формат можно повторно извлечь после появления квалифицированного importer version."
+      ],
+      "evidence_required": [
+        "Fixture manifest; interruption/retry outputs; hashes оригиналов"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-07",
+      "title": "Разделить PDF/Office текст, таблицы и OCR",
+      "goal": "Предоставить точные page/sheet/cell ranges и указать качество извлечения для документов.",
+      "refines_existing_task_ids": [
+        "LAYA4-014",
+        "LAYA4-016",
+        "G3-003"
+      ],
+      "related_feature_ids": [
+        "LIB-045",
+        "LIB-059",
+        "LIB-014"
+      ],
+      "dependencies": [
+        "ACTION5-06"
+      ],
+      "inputs": [
+        "PDF/DOCX/XLSX/PPTX originals; extractor version; OCR policy"
+      ],
+      "outputs": [
+        "Text spans с page/paragraph/slide/cell refs; table structure; OCR confidence; extraction gaps"
+      ],
+      "owner": "Версионируемые extraction adapters существующего Content Lab",
+      "acceptance_criteria": [
+        "Клик по найденному тексту открывает исходную страницу/ячейку и версию файла.",
+        "Числа, единицы, отрицательные значения и merged cells сверены на размеченном corpus; потеря структуры помечена.",
+        "Scanned PDF имеет OCR-derived label и сохраняет original page; OCR не выдаётся за точный imported text.",
+        "Password-protected/unsupported embedded object остаётся конкретным gap."
+      ],
+      "failure_recovery": [
+        "Ошибка одной страницы не переводит весь файл в COMPLETE.",
+        "Повтор extraction новым движком сохраняет старую версию и invalidate зависимый packet."
+      ],
+      "evidence_required": [
+        "Golden tables/numbers corpus; extraction coverage; page/range screenshots"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-08",
+      "title": "Импортировать audio/video с проверяемым transcript",
+      "goal": "Связать transcript с временными участками оригинала и отдельно хранить ASR и ручные исправления.",
+      "refines_existing_task_ids": [
+        "LAYA4-014",
+        "LAYA4-013",
+        "LAYA4-023"
+      ],
+      "related_feature_ids": [
+        "LIB-046",
+        "LIB-016",
+        "ACT-029",
+        "ACT-034"
+      ],
+      "dependencies": [
+        "ACTION5-06",
+        "ACTION5-04"
+      ],
+      "inputs": [
+        "Выбранное audio/video; модель ASR/version; язык; политика retention"
+      ],
+      "outputs": [
+        "Media source hash; timed transcript; model/config receipt; correction overlay"
+      ],
+      "owner": "Существующий extraction owner; ASR только адаптер извлечения",
+      "acceptance_criteria": [
+        "Фрагмент transcript открывает соответствующий time range оригинала.",
+        "Unintelligible segment обозначен UNKNOWN; speaker identity не выводится без evidence.",
+        "RU/EN/code-switch corrections не изменяют ASR оригинал; модель/версия сохранены.",
+        "Без разрешённого внешнего profile медиа остаётся локальным."
+      ],
+      "failure_recovery": [
+        "Длинный файл обрабатывается частями с checkpoints; соседние overlap segments дедуплицируются по времени.",
+        "Неудачный ASR оставляет media available и позволяет вручную внести timed note."
+      ],
+      "evidence_required": [
+        "Timed golden corpus; transcript/source hash receipts; restart and correction fixtures"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-09",
+      "title": "Учитывать архивы, папки и вложения как граф происхождения",
+      "goal": "Сохранять структуру вложенности и все исключения, чтобы импорт архива не терял данные и происхождение.",
+      "refines_existing_task_ids": [
+        "LAYA4-004",
+        "LAYA4-010",
+        "LAYA4-014",
+        "LAYA4-017"
+      ],
+      "related_feature_ids": [
+        "LIB-009",
+        "LIB-010",
+        "LIB-041",
+        "LIB-048",
+        "LIB-060"
+      ],
+      "dependencies": [
+        "ACTION5-06"
+      ],
+      "inputs": [
+        "Выбранный folder/archive; архивные member paths; extractor policy; byte/depth budgets"
+      ],
+      "outputs": [
+        "Archive-member graph; disposition каждого entry; dedup origin links; blocked-entry report"
+      ],
+      "owner": "Существующий intake/Content Lab importer",
+      "acceptance_criteria": [
+        "Вложенные ZIP, одинаковые bytes в двух путях, empty entry и missing attachment учтены отдельно по происхождению.",
+        "Traversal path, symlink, compression bomb и budget limit дают явный blocked/error и не записывают вне staging scope.",
+        "Repo LFS pointers/submodules остаются отдельным disposition до фактического получения разрешённых bytes.",
+        "Повторная распаковка не считает копии независимыми подтверждениями."
+      ],
+      "failure_recovery": [
+        "Budget exceed сохраняет исходный архив и список необработанных entries.",
+        "Resume проверяет parent archive hash, изменившийся архив создаёт новый import run."
+      ],
+      "evidence_required": [
+        "Nested/archive edge fixtures; origin graph; accounted-entry report"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-10",
+      "title": "Версионировать автометки и пользовательские исправления",
+      "goal": "Сделать теги объяснимыми и обратимыми, чтобы автоматизация не переписывала пользовательскую классификацию.",
+      "refines_existing_task_ids": [
+        "LAYA4-015",
+        "G3-008",
+        "EVO3-002"
+      ],
+      "related_feature_ids": [
+        "LIB-018",
+        "LIB-019",
+        "LIB-021",
+        "LIB-050"
+      ],
+      "dependencies": [
+        "ACTION5-04",
+        "ACTION5-06"
+      ],
+      "inputs": [
+        "Source version; taxonomy version; rules/model proposals; user overlays"
+      ],
+      "outputs": [
+        "Labels по независимым facets project/type/topic/status/privacy; label origin/confidence; correction history"
+      ],
+      "owner": "Существующий metadata/catalog owner",
+      "acceptance_criteria": [
+        "Каждый автоматический tag указывает rule/model version и supporting source span либо отмечен inference.",
+        "User correction имеет приоритет в представлении и не удаляет прежнее предложение.",
+        "Разные facets не объединяют source type, цель, статус исполнения и private scope в одну метку.",
+        "Taxonomy upgrade не переименовывает исторические labels без version mapping."
+      ],
+      "failure_recovery": [
+        "Низкая confidence оставляет uncategorized или suggestion, без потери поиска.",
+        "Failed retagging возвращает прежнюю отображаемую версию до atomic activation."
+      ],
+      "evidence_required": [
+        "Размеченный label corpus; correction replay; facet/version mapping"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-11",
+      "title": "Сделать SourceAddress для точной цитаты и диапазона",
+      "goal": "Любой вывод, найденный фрагмент и packet должен ссылаться на неизменяемую версию и точный range оригинала.",
+      "refines_existing_task_ids": [
+        "G3-003",
+        "LAYA4-016",
+        "LAYA4-009"
+      ],
+      "related_feature_ids": [
+        "LIB-014",
+        "LIB-033",
+        "LIB-040",
+        "RND-011"
+      ],
+      "dependencies": [
+        "ACTION5-04",
+        "ACTION5-06"
+      ],
+      "inputs": [
+        "Source ID/version/hash; byte/text/time/page ranges; derived extraction mappings"
+      ],
+      "outputs": [
+        "Typed SourceAddress; bounded range API; resolver с validity/stale states"
+      ],
+      "owner": "Публичный read API Content Lab и существующий provenance owner",
+      "acceptance_criteria": [
+        "SourceAddress открывает тот же диапазон после restart; изменение оригинала не переносит ссылку молча.",
+        "Derived text указывает исходный range и extraction version; unsupported mapping возвращает UNKNOWN.",
+        "Ошибочные range bounds, namespace и hash отклоняются до чтения.",
+        "Удалённый оригинал возвращает tombstone/missing и не подменяется совпадающей цитатой."
+      ],
+      "failure_recovery": [
+        "Stale address предлагает доступную новую версию и diff как отдельный выбор.",
+        "Повреждённый range отменяет экспорт зависимого packet до проверки."
+      ],
+      "evidence_required": [
+        "Range roundtrip corpus; access-scope tests; deletion/version drift fixtures"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-12",
+      "title": "Квалифицировать поиск по точным источникам и областям",
+      "goal": "Предоставить быстрый локальный поиск без модели, с project/time/source/version filters.",
+      "refines_existing_task_ids": [
+        "LAYA4-016",
+        "LAYA4-018",
+        "LAYA4-025"
+      ],
+      "related_feature_ids": [
+        "LIB-017",
+        "LIB-032",
+        "LIB-050",
+        "LIB-052"
+      ],
+      "dependencies": [
+        "ACTION5-10",
+        "ACTION5-11"
+      ],
+      "inputs": [
+        "FTS/index существующей библиотеки; labels; source heads; operator namespace scope"
+      ],
+      "outputs": [
+        "QuerySpec exact-ID/path/quote/FTS; result ranges; explainable filters; saved views"
+      ],
+      "owner": "Существующий Content Lab search owner",
+      "acceptance_criteria": [
+        "ID/path/exact quote возвращают правильный source version или явный no-match; выдача включает ranges.",
+        "Namespace/project/time filters применяются до построения packet и не раскрывают cross-scope snippets.",
+        "Saved view хранит запрос, а не копии источников; deleted source исчезает из current view.",
+        "Latency и relevance измерены на corpus отдельно для cold/warm; пороги описаны как proposed до измерения."
+      ],
+      "failure_recovery": [
+        "FTS corruption предлагает rebuild из источников, не теряя оригиналы.",
+        "Модельная подсказка не заменяет deterministic exact-source route."
+      ],
+      "evidence_required": [
+        "Query golden set; filtered-result receipts; measured benchmark с device/corpus metadata"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-13",
+      "title": "Зафиксировать WHY_THIS_PACKET и управляемую корзину контекста",
+      "goal": "Показать, почему выбраны источники для цели и какие необходимые части ещё не помещены.",
+      "refines_existing_task_ids": [
+        "G3-003",
+        "G3-009",
+        "LAYA4-018",
+        "LAYA4-021",
+        "LAYA4-025"
+      ],
+      "related_feature_ids": [
+        "LIB-025",
+        "LIB-026",
+        "LIB-027",
+        "LIB-028",
+        "ACT-009"
+      ],
+      "dependencies": [
+        "ACTION5-11",
+        "ACTION5-12"
+      ],
+      "inputs": [
+        "Дословная goal revision; scope; frozen criteria; retrieval results; byte/part budgets"
+      ],
+      "outputs": [
+        "Selection plan с criterion→source links; exclusions/missing dependencies; editable basket; frozen packet digest"
+      ],
+      "owner": "Существующие repo/context selection и task owner",
+      "acceptance_criteria": [
+        "Для каждого включённого range указана связь с goal/criterion либо user choice.",
+        "Обязательный источник вне budget попадает в next-part/missing ledger; количество частей не имеет скрытого общего потолка.",
+        "User removal меняет selection revision и packet digest; старый пакет остаётся auditable.",
+        "Неизвестное утверждение создаёт bounded NEXT_CONTEXT_REQUEST, а не fabricated evidence."
+      ],
+      "failure_recovery": [
+        "Source drift возвращает RESCAN/RESELECT с конкретными affected criteria.",
+        "Retrieval model failure оставляет exact-source search и ручную корзину доступны."
+      ],
+      "evidence_required": [
+        "Selection fixtures; goal coverage report; packet/range digest checks"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-14",
+      "title": "Сделать быстрый переносимый share projection",
+      "goal": "Экспортировать только выбранные версии и диапазоны, с provenance и машинным index для другого AI.",
+      "refines_existing_task_ids": [
+        "LAYA4-019",
+        "LAYA4-020",
+        "G3-005",
+        "TAB4-19"
+      ],
+      "related_feature_ids": [
+        "LIB-005",
+        "LIB-037",
+        "LIB-038",
+        "ACT-005",
+        "ACT-010"
+      ],
+      "dependencies": [
+        "ACTION5-11",
+        "ACTION5-13"
+      ],
+      "inputs": [
+        "Frozen selection; destination profile; private field exclusions; provider-neutral task schema"
+      ],
+      "outputs": [
+        "TXT/MD/JSON/ZIP projection; manifest/digests; preview; result template; optional delta"
+      ],
+      "owner": "Существующие context/task export и share projection owners",
+      "acceptance_criteria": [
+        "Preview и export имеют один projection digest; все omissions отмечены и доступны для продолжения.",
+        "Private overlay/excluded source не попадает в share bytes; эвристика секретов не выдаётся за гарантию.",
+        "После export offline index позволяет найти исходный range без сети.",
+        "Grok/ChatGPT/Gemini profile меняет transport formatting, сохраняя source/goal identity; фактические лимиты требуют qualification."
+      ],
+      "failure_recovery": [
+        "Disk/write error оставляет прежний законченный artifact; partial ZIP не отмечается ready.",
+        "Policy или source change инвалидирует readiness прежнего projection."
+      ],
+      "evidence_required": [
+        "Export reconstruction; forbidden-byte fixtures; offline index scenario"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-15",
+      "title": "Резервировать библиотеку согласованным snapshot",
+      "goal": "Получать проверяемый backup базы и blobs вместе с версией схемы и происхождением.",
+      "refines_existing_task_ids": [
+        "LAYA4-027",
+        "EVO3-014",
+        "LAYA4-017"
+      ],
+      "related_feature_ids": [
+        "LIB-035",
+        "LIB-036",
+        "LIB-039"
+      ],
+      "dependencies": [
+        "ACTION5-01",
+        "ACTION5-06"
+      ],
+      "inputs": [
+        "Existing DB/blob stores; active jobs/leases; selected backup scope; schema/version manifest"
+      ],
+      "outputs": [
+        "Atomic backup manifest; DB snapshot; referenced blobs; integrity receipt; secret reference inventory"
+      ],
+      "owner": "Существующий Content Lab data owner; Core координирует maintenance intent",
+      "acceptance_criteria": [
+        "Backup во время допустимых операций даёт согласованный source-head/event/blob snapshot.",
+        "Каждый blob и DB artifact проходит hash/integrity check; missing bytes не скрываются.",
+        "Ключи не копируются из credential storage в архив; сохраняются ссылки и шаги повторного подключения.",
+        "Пользователь видит расположение, размер, время и последний проверенный restore status."
+      ],
+      "failure_recovery": [
+        "Недостаток места отменяет ready backup и сохраняет старый проверенный snapshot.",
+        "Crash до manifest commit оставляет staging removable, без promotion."
+      ],
+      "evidence_required": [
+        "Backup manifest; concurrent-write fixture; integrity receipt"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-16",
+      "title": "Проверить restore и миграцию на копии до активации",
+      "goal": "Восстанавливать личный каталог и переносить схему без второй базы в рабочем режиме.",
+      "refines_existing_task_ids": [
+        "LAYA4-027",
+        "EVO3-015",
+        "TAB4-14",
+        "TAB4-15"
+      ],
+      "related_feature_ids": [
+        "LIB-030",
+        "LIB-035",
+        "ACT-047"
+      ],
+      "dependencies": [
+        "ACTION5-15",
+        "ACTION5-03"
+      ],
+      "inputs": [
+        "Verified backup; target schema/migration version; installed build binding"
+      ],
+      "outputs": [
+        "Dry-run migrated copy; validation report; activation checkpoint; rollback/restore plan"
+      ],
+      "owner": "Существующий data owner и updater; копия только staging",
+      "acceptance_criteria": [
+        "Restore восстанавливает hashes, source heads, overlays, tombstones и task state; старое UNKNOWN не превращается в sent.",
+        "Schema migration rehearsal сравнивает record/relationship counts и exact-source queries до/после.",
+        "Активен один canonical DB path; activation выполняется при закрытых writer leases.",
+        "Downgrade, не совместимый с новой схемой, использует проверенный pre-migration backup."
+      ],
+      "failure_recovery": [
+        "Corrupt/missing backup part предотвращает activation и показывает affected sources.",
+        "Validation failure оставляет предыдущую active library и staging report."
+      ],
+      "evidence_required": [
+        "Restore/migration fixture receipts; before/after invariants; installed-device activation receipt"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-17",
+      "title": "Определить tombstone, retention и очистку производных данных",
+      "goal": "Удалять выбранные данные предсказуемо и не возвращать их из cache, backup или старого packet.",
+      "refines_existing_task_ids": [
+        "LAYA4-017",
+        "LAYA4-027",
+        "EVO3-010"
+      ],
+      "related_feature_ids": [
+        "LIB-023",
+        "LIB-051",
+        "ACT-052"
+      ],
+      "dependencies": [
+        "ACTION5-11",
+        "ACTION5-15"
+      ],
+      "inputs": [
+        "Source versions; dependents; user retention policy; active context leases; backup inventory"
+      ],
+      "outputs": [
+        "Deletion impact preview; tombstone event; cache/retrieval invalidation; retention receipt"
+      ],
+      "owner": "Существующий Content Lab provenance/data owner",
+      "acceptance_criteria": [
+        "До удаления показаны зависимые packets/reviews и данные, ещё находящиеся в snapshots.",
+        "Current retrieval не возвращает tombstoned source; lease завершение не resurrect data.",
+        "Raw original, transcript, derived index и external projection имеют отдельные retention states.",
+        "Restore old backup применяет текущие tombstones либо явно предлагает отдельный recovery namespace."
+      ],
+      "failure_recovery": [
+        "Частичная cleanup сохраняет tombstone и pending cleanup task; не показывает erasure completed.",
+        "Уже отправленную внешнюю копию помечают remote retention unknown, без ложного удаления."
+      ],
+      "evidence_required": [
+        "Deletion/restore/cache corpus; impact graph; retention receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-18",
+      "title": "Типизировать capabilities по версии, эффекту и qualification",
+      "goal": "Показать реально доступные действия, их область, ограничения и установленную сборку.",
+      "refines_existing_task_ids": [
+        "PAR3-003",
+        "EVO3-017",
+        "TAB4-13",
+        "LAYA4-022"
+      ],
+      "related_feature_ids": [
+        "ACT-002",
+        "ACT-003",
+        "ACT-012",
+        "ACT-054",
+        "RND-009"
+      ],
+      "dependencies": [
+        "ACTION5-01",
+        "ACTION5-03"
+      ],
+      "inputs": [
+        "Registered commands/templates; installed build receipt; policy grants; capability test corpus"
+      ],
+      "outputs": [
+        "CapabilityDescriptor с inputs/outputs/effects/resources/grant revision/version/stop semantics; status catalog"
+      ],
+      "owner": "Существующие Core, native dispatcher и qualification owner",
+      "acceptance_criteria": [
+        "Capability недоступна без совпадения installed version, typed input contract и действующего grant.",
+        "Описание различает read-only, local write, remote send и money-moving effect; hazard влияет на policy, не на маркетинговый title.",
+        "PLANNED/UNKNOWN/QUALIFIED/STALE не объединяются в available.",
+        "Изменение grant, adapter или build инвалидирует соответствующую qualification."
+      ],
+      "failure_recovery": [
+        "Unknown command возвращает small scoped development proposal; не исполняет guessed code.",
+        "Qualification fail переводит capability в disabled/stale и сохраняет reason."
+      ],
+      "evidence_required": [
+        "Registry schema; installed-version fixtures; grant/qualification drift receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-19",
+      "title": "Операторские execution templates без shell из документа",
+      "goal": "Разрешить известные действия через заранее зарегистрированные команды и существующий job owner.",
+      "refines_existing_task_ids": [
+        "PAR3-003",
+        "LAYA4-022",
+        "LAYA4-024",
+        "TAB4-02"
+      ],
+      "related_feature_ids": [
+        "ACT-004",
+        "ACT-006",
+        "ACT-011",
+        "RND-010"
+      ],
+      "dependencies": [
+        "ACTION5-18"
+      ],
+      "inputs": [
+        "Operator profile/policy; registered template; typed slot values; pinned repository context"
+      ],
+      "outputs": [
+        "Validated execution request; scope/budget preflight; Core job reference; evidence receipt"
+      ],
+      "owner": "Существующие automation Core и qualification adapter",
+      "acceptance_criteria": [
+        "Doc/transcript/AI answer не задаёт executable/argv/env; выбирается operator-registered template.",
+        "Template validation проверяет namespace, repo alias, expected version, allowed paths и bounded resources.",
+        "Intent replay не создаёт вторую задачу; cancel использует существующий Core semantics.",
+        "Read-only research template не получает signer, sender или wallet capability через наследование."
+      ],
+      "failure_recovery": [
+        "Precondition drift отменяет admission и требует fresh request.",
+        "Невозможно доказать external effect — UNKNOWN и reconciliation, без повторного запуска."
+      ],
+      "evidence_required": [
+        "Profile/template validation corpus; same-key job replay; forbidden-param fixtures"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-20",
+      "title": "Один IntentSpec для текста, голоса и Laya proposal",
+      "goal": "Разбирать разные входы в одну ревизию цели с критическими slots и явными неизвестностями.",
+      "refines_existing_task_ids": [
+        "PAR3-005",
+        "LAYA4-022",
+        "LAYA4-023",
+        "G3-002"
+      ],
+      "related_feature_ids": [
+        "ACT-001",
+        "ACT-007",
+        "ACT-030",
+        "ACT-031"
+      ],
+      "dependencies": [
+        "ACTION5-18",
+        "ACTION5-19"
+      ],
+      "inputs": [
+        "Text или transcript source ref; corrected input; target aliases; capability registry"
+      ],
+      "outputs": [
+        "IntentSpec goal revision/slots/scope; ambiguity report; deterministic plan proposal"
+      ],
+      "owner": "Существующий intent compiler; Laya/ASR advisory adapters, Core executor",
+      "acceptance_criteria": [
+        "Одинаковый исправленный text и voice transcript компилируются в одинаковый typed plan при одинаковых версиях.",
+        "Repo, destination, effect kind и amount не угадываются при неоднозначности.",
+        "Correction создаёт новую intent revision и отзывает неисполненный old intent.",
+        "Из Laya принят только типизированный proposal; неизвестные instructions не обходят template/grant validation."
+      ],
+      "failure_recovery": [
+        "Ambiguous critical slot остаётся NEEDS_INPUT и сохраняет подготовленный контекст.",
+        "Исправление после возможного эффекта требует reconciliation прежнего intent до нового action."
+      ],
+      "evidence_required": [
+        "Text/voice parity corpus; RU/EN critical-slot cases; correction/replay receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-21",
+      "title": "Доступный STOP вне модели и микрофона",
+      "goal": "Предоставить локальную остановку из каждого длительного состояния и различать прекращение подготовки и уже возможный внешний эффект.",
+      "refines_existing_task_ids": [
+        "UI3-016",
+        "PAR3-015",
+        "PAR3-021",
+        "TAB4-16"
+      ],
+      "related_feature_ids": [
+        "ACT-032",
+        "ACT-033",
+        "ACT-036",
+        "ACT-057"
+      ],
+      "dependencies": [
+        "ACTION5-03",
+        "ACTION5-19"
+      ],
+      "inputs": [
+        "Existing Core cancel API; UI pending states; active resource leases; accessible controls"
+      ],
+      "outputs": [
+        "Всегда доступная кнопка/keyboard STOP; cancel request; stopped/unknown reconciliation projection"
+      ],
+      "owner": "Existing Core cancellation owner; desktop/browser accessible controls",
+      "acceptance_criteria": [
+        "STOP доступен keyboard-only и без работающего ASR/model/Chrome.",
+        "Подготовка, queue, active command и unknown send имеют разные наблюдаемые outcomes.",
+        "После STOP истёкший worker/adapter не возобновляет действие и не меняет task как fresh owner.",
+        "Screen-reader status объясняет, что остановлено и что требует проверки; предлагаемая задержка реакции измеряется на устройстве."
+      ],
+      "failure_recovery": [
+        "Непрерываемый внешний процесс остаётся CANCEL_REQUESTED/UNKNOWN с recovery path.",
+        "Resume создаёт проверку checkpoints, а не автоматически продолжает uncertain effect."
+      ],
+      "evidence_required": [
+        "Keyboard/screen-reader device scenarios; late-callback fixtures; cancellation receipt"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-22",
+      "title": "Квалифицировать voice capture и исправление критических slots",
+      "goal": "Сделать голос альтернативным входом в локальное приложение, сохраняя текстовый путь и жизненный цикл аудио.",
+      "refines_existing_task_ids": [
+        "UI3-017",
+        "LAYA4-023",
+        "TAB4-16",
+        "PAR3-021"
+      ],
+      "related_feature_ids": [
+        "ACT-028",
+        "ACT-029",
+        "ACT-030",
+        "ACT-034",
+        "ACT-058"
+      ],
+      "dependencies": [
+        "ACTION5-08",
+        "ACTION5-20",
+        "ACTION5-21"
+      ],
+      "inputs": [
+        "Mic device choice; push-to-talk policy; ASR adapter; RU/EN/code-switch corpus"
+      ],
+      "outputs": [
+        "Capture session identity; audio retention choice; transcript/revision; slot correction UI; qualification receipt"
+      ],
+      "owner": "Существующий voice intake → intent compiler; ASR не executor",
+      "acceptance_criteria": [
+        "Повтор hotkey не открывает второй capture stream; микрофон освобождён после stop/crash recovery.",
+        "TTS/background speech и ошибочная фраза не получают готового execution grant.",
+        "До action пользователь может исправить repo/destination/effect slots текстом; correction сохраняет provenance.",
+        "Latency/accuracy/critical-slot error измерены на выбранном Windows mic и отмечены как qualification данного устройства."
+      ],
+      "failure_recovery": [
+        "Mic denied/model unavailable оставляет text input и показывает конкретный fallback.",
+        "ASR failure не удаляет выбранный audio source вопреки retention policy."
+      ],
+      "evidence_required": [
+        "Mic lifecycle fixtures; RU/EN ASR corpus; installed-device receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-23",
+      "title": "Преобразовать показанную автоматизацию в тестируемый skill",
+      "goal": "Записывать демонстрацию в ограниченный навык с typed slots, preconditions и expected outcomes.",
+      "refines_existing_task_ids": [
+        "PAR3-024",
+        "LAYA4-024",
+        "G3-010"
+      ],
+      "related_feature_ids": [
+        "ACT-041",
+        "ACT-042",
+        "ACT-043"
+      ],
+      "dependencies": [
+        "ACTION5-18",
+        "ACTION5-19",
+        "ACTION5-20",
+        "ACTION5-21"
+      ],
+      "inputs": [
+        "User-selected demonstration scope; observed steps; capability versions; source refs"
+      ],
+      "outputs": [
+        "Skill draft; typed step graph; parameter slots; required grants; replay qualification cases"
+      ],
+      "owner": "Existing skill catalog/projected metadata; Core executes registered steps",
+      "acceptance_criteria": [
+        "Skill включает только наблюдаемые и разрешённые steps; пароль/secret values заменены credential references.",
+        "Recorded tab/focus координаты не считаются переносимой identity без adapter binding.",
+        "Skill replay проходит sandbox fixture и device scenario с независимым outcome receipt.",
+        "Оптимизация лишних steps сохраняет preconditions, STOP и expected effect invariants."
+      ],
+      "failure_recovery": [
+        "Необъяснимый шаг остаётся manual/NEEDS_CONTEXT и блокирует autonomous qualification.",
+        "Replay failure сохраняется как failure capsule с applicability conditions."
+      ],
+      "evidence_required": [
+        "Demo-source refs; skill schema; sandbox/device replay receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P2"
+    },
+    {
+      "task_id": "ACTION5-24",
+      "title": "Инвалидировать skills при drift и permission diff",
+      "goal": "Связать работоспособность навыка с build/adapter/template/grant и своевременно требовать повторную qualification.",
+      "refines_existing_task_ids": [
+        "UI3-019",
+        "EVO3-010",
+        "TAB4-13",
+        "PAR3-023"
+      ],
+      "related_feature_ids": [
+        "ACT-039",
+        "ACT-044",
+        "ACT-048",
+        "RND-042"
+      ],
+      "dependencies": [
+        "ACTION5-18",
+        "ACTION5-23"
+      ],
+      "inputs": [
+        "Skill dependency manifest; installed version changes; grant diff; adapter canary results"
+      ],
+      "outputs": [
+        "Affected-skill graph; stale reason; repair brief; requalification receipt"
+      ],
+      "owner": "Existing qualification/provenance owner; updater сообщает version change",
+      "acceptance_criteria": [
+        "Изменившийся adapter/critical permission помечает зависимый skill STALE до execution admission.",
+        "Не затронутые навыки сохраняют valid receipt только при доказанной dependency independence.",
+        "Permission growth отображается как новый scope; прежний grant не расширяется молча.",
+        "Repaired skill имеет новую version; failure capsules не исчезают."
+      ],
+      "failure_recovery": [
+        "Canary failure помещает capability/skill в quarantine, текстовый/manual fallback остаётся доступен.",
+        "Отсутствующие dependency hashes дают UNKNOWN вместо optimistic reuse."
+      ],
+      "evidence_required": [
+        "Drift/permission corpus; affected graph; repaired skill qualification"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P2"
+    },
+    {
+      "task_id": "ACTION5-25",
+      "title": "Зафиксировать durable расписание и offline catch-up",
+      "goal": "Запускать согласованные повторяемые задачи через existing Core с расписанием, missed-run policy и идентичностью occurrence.",
+      "refines_existing_task_ids": [
+        "PAR3-016",
+        "PAR3-019",
+        "LAYA4-024",
+        "EVO3-019"
+      ],
+      "related_feature_ids": [
+        "ACT-049",
+        "ACT-024",
+        "RND-024"
+      ],
+      "dependencies": [
+        "ACTION5-19",
+        "ACTION5-21"
+      ],
+      "inputs": [
+        "ScheduleSpec timezone/trigger/window; capability/template; scope; catch-up policy; budget"
+      ],
+      "outputs": [
+        "Saved schedule revision; occurrence key; missed-run ledger; Core job linkage; pause/edit controls"
+      ],
+      "owner": "Existing Core job/scheduler owner; Windows launch mechanism только будит owner",
+      "acceptance_criteria": [
+        "Timezone Europe/Riga, DST, sleep/offline и clock change fixtures не создают duplicate occurrence.",
+        "Для missed runs явно выбран skip/latest/bounded catch-up; нет неконтролируемого backlog.",
+        "После policy/version drift schedule paused до revalidation.",
+        "Schedule edit создаёт новую revision и не переписывает результаты старых occurrences."
+      ],
+      "failure_recovery": [
+        "Wake failure фиксируется при следующем запуске; catch-up следует прежней policy.",
+        "Interactive UI или unresolved external effect не повторяются автоматически в фоне."
+      ],
+      "evidence_required": [
+        "Schedule/DST/offline corpus; occurrence/job references; device wake receipt"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-26",
+      "title": "Продолжать work после restart с resource и checkpoint checks",
+      "goal": "Обеспечить предсказуемое восстановление очереди, когда Windows закрывает приложение, усыпляет ПК или меняется контекст.",
+      "refines_existing_task_ids": [
+        "PAR3-007",
+        "PAR3-014",
+        "PAR3-016",
+        "PAR3-022",
+        "TAB4-22"
+      ],
+      "related_feature_ids": [
+        "ACT-024",
+        "ACT-027",
+        "ACT-040",
+        "ACT-057"
+      ],
+      "dependencies": [
+        "ACTION5-03",
+        "ACTION5-19",
+        "ACTION5-21",
+        "ACTION5-25"
+      ],
+      "inputs": [
+        "Existing Core checkpoints/leases; source/target revisions; resource budget; queued intents"
+      ],
+      "outputs": [
+        "Resume eligibility report; bounded queue projection; foreground/background admission"
+      ],
+      "owner": "Existing Core scheduler/lease owner; UI отображает состояние",
+      "acceptance_criteria": [
+        "Restart не оживляет cancelled intent и не возобновляет unknown send до reconciliation.",
+        "Changed HEAD/source/grant инвалидирует затронутый checkpoint; unaffected read-only work может продолжаться.",
+        "Foreground user input сохраняет приоритет; пределы RAM/CPU и concurrency измерены на Dell, не заявлены заранее.",
+        "Queue перегрузка показывается как waiting/budget blocker, исходный корпус не обрезается."
+      ],
+      "failure_recovery": [
+        "Corrupt checkpoint сохраняет failure capsule и безопасно начинает разрешённую immutable подготовку заново.",
+        "Suspend во время possible write оставляет uncertainty и точную следующую проверку."
+      ],
+      "evidence_required": [
+        "Kill/suspend/restart corpus; lease/fence receipts; measured Dell resource profile"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-27",
+      "title": "Сверить SCE→Studious read-only capability bridge",
+      "goal": "Связать библиотеку контекста с фактическими research/qualification owners studious-pancake без второй торговой системы.",
+      "refines_existing_task_ids": [
+        "LAYA4-007",
+        "PAR3-003",
+        "G3-001",
+        "LAYA4-028"
+      ],
+      "related_feature_ids": [
+        "RND-001",
+        "RND-002",
+        "RND-009",
+        "RND-010"
+      ],
+      "dependencies": [
+        "ACTION5-18",
+        "ACTION5-19"
+      ],
+      "inputs": [
+        "Фактические pinned SCE и Studious SHA; CLI/qualification contracts; registered operator profiles"
+      ],
+      "outputs": [
+        "Двухрепозиторная owner matrix; read-only command inventory; DTO mapping; missing-capability ledger"
+      ],
+      "owner": "SCE existing Core/qualification bridge; Studious existing data/replay/qualification owners",
+      "acceptance_criteria": [
+        "Каждая предлагаемая команда подтверждена code entrypoint и текущим test/contract либо отмечена GAP.",
+        "Bridge сохраняет repo/build identity и явный режим READ_ONLY/REPLAY/PAPER; данные не становятся live permission.",
+        "Signer/sender/wallet/grants не создаются через context importer или Laya proposal.",
+        "Нет второго market-data owner, trading runtime или независимого job executor."
+      ],
+      "failure_recovery": [
+        "API/CLI drift ставит bridge STALE; пакет исследования остаётся доступным offline.",
+        "Missing command создаёт небольшой source-linked implementation brief."
+      ],
+      "evidence_required": [
+        "Pinned owner/entrypoint matrix; fixture DTO mapping; forbidden-live-capability corpus"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    },
+    {
+      "task_id": "ACTION5-28",
+      "title": "Собрать research observations с freshness и provenance",
+      "goal": "Автоматизировать разрешённый сбор данных для R&D через существующий Studious data owner и сохранять проверяемый контекст результатов.",
+      "refines_existing_task_ids": [
+        "LAYA4-024",
+        "LAYA4-028",
+        "PAR3-011",
+        "PAR3-017"
+      ],
+      "related_feature_ids": [
+        "RND-015",
+        "RND-016",
+        "RND-017",
+        "RND-018",
+        "LIB-049"
+      ],
+      "dependencies": [
+        "ACTION5-27",
+        "ACTION5-25",
+        "ACTION5-11"
+      ],
+      "inputs": [
+        "Registered read-only gathering template; chosen provider scope; capture window; quota policy"
+      ],
+      "outputs": [
+        "Dataset manifest; provider/source timestamps; missing/stale/error ledger; source refs; bounded research packet"
+      ],
+      "owner": "Existing Studious gathering/data owner; SCE индексирует references/observations",
+      "acceptance_criteria": [
+        "Каждое observation связано с provider/version/time and raw hash; отсутствующая информация остаётся UNKNOWN.",
+        "Quota/backpressure/partial capture отражаются отдельно от отсутствия opportunity.",
+        "Повторное использование одного dataset исследователями не считается независимым provider evidence.",
+        "Offline fixture run воспроизводим; реальный сетевой run требует установленного adapter и его scope."
+      ],
+      "failure_recovery": [
+        "Provider outage сохраняет checkpoint и gap; retries bounded policy, не создают бесконечный loop.",
+        "Point-in-time/freshness drift инвалидирует зависимый analysis, сохраняя raw observations."
+      ],
+      "evidence_required": [
+        "Gathering fixture; dataset/freshness manifest; bounded-retry receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-29",
+      "title": "Привязать replay/paper гипотезу к замороженным критериям",
+      "goal": "Дать воспроизводимый исследовательский цикл: гипотеза → dataset → existing replay/paper command → независимая оценка → следующий brief.",
+      "refines_existing_task_ids": [
+        "PAR3-017",
+        "PAR3-022",
+        "EVO3-009",
+        "LAYA4-028"
+      ],
+      "related_feature_ids": [
+        "RND-012",
+        "RND-019",
+        "RND-022",
+        "RND-028",
+        "RND-029",
+        "RND-041"
+      ],
+      "dependencies": [
+        "ACTION5-27",
+        "ACTION5-28",
+        "ACTION5-13"
+      ],
+      "inputs": [
+        "Hypothesis/version; immutable dataset; existing qualification templates; cost/unit definitions; holdout policy"
+      ],
+      "outputs": [
+        "ExperimentCase; exact run/config/result refs; pass/fail/unknown evaluation; counterexamples; next R&D request"
+      ],
+      "owner": "Existing Studious replay/paper/qualification owners; SCE task/evidence layer",
+      "acceptance_criteria": [
+        "Paper/replay output имеет свой mode label и не выдаётся за on-chain execution или measured real profit.",
+        "Стоимость, комиссии, slippage и delay assumptions указаны с units и coverage gaps.",
+        "Criteria/holdout frozen до запуска; неудачные trials сохраняются в реестре.",
+        "Итог привязан к exact dataset/config/repo revision; source drift переводит evidence в stale."
+      ],
+      "failure_recovery": [
+        "Empty/invalid dataset даёт BLOCKED_EMPTY_DATA, не успешную campaign.",
+        "Failed trial сохраняет replay capsule и конкретный source/data запрос следующего шага."
+      ],
+      "evidence_required": [
+        "Exact experiment receipt; frozen criteria/config; counterexample/holdout corpus"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1"
+    },
+    {
+      "task_id": "ACTION5-30",
+      "title": "Вести общий qualification corpus и next brief из незакрытых aims",
+      "goal": "Определить наблюдаемые пользовательские результаты и не терять требования при следующем обновлении ZIP или кода.",
+      "refines_existing_task_ids": [
+        "G3-009",
+        "G3-010",
+        "G3-011",
+        "G3-012",
+        "EVO3-021",
+        "EVO3-024",
+        "LAYA4-026",
+        "TAB4-20",
+        "TAB4-21"
+      ],
+      "related_feature_ids": [
+        "LIB-053",
+        "LIB-055",
+        "LIB-056",
+        "ACT-053",
+        "ACT-056",
+        "RND-043",
+        "RND-044",
+        "RND-046"
+      ],
+      "dependencies": [
+        "ACTION5-13",
+        "ACTION5-14",
+        "ACTION5-18",
+        "ACTION5-21",
+        "ACTION5-27"
+      ],
+      "inputs": [
+        "Saved exact goals; all task statuses; source/version bindings; deterministic and device receipts; open decisions"
+      ],
+      "outputs": [
+        "Aim→task→case→evidence matrix; golden/fault/accessibility corpus; prioritized next implementation brief; deferred register update"
+      ],
+      "owner": "Existing task/review/qualification owners; roadmap является проекцией evidence",
+      "acceptance_criteria": [
+        "Каждая цель имеет реализованный результат с scope/evidence либо named gap/decision/deferred condition.",
+        "Corpus покрывает wrong repo/tab, stale source, unsupported input, cancelled job, unknown send, restore и denied mic.",
+        "Linux fixture pass не повышает Windows/Grok/Laya qualification; model claim не закрывает criterion.",
+        "Next brief выбирает конкретный gap, owners, input artifacts, acceptance, recovery и verification scope.",
+        "Публикация кода, внешняя отправка и live-money permissions остаются отдельным фактическим scope; roadmap не расширяет их."
+      ],
+      "failure_recovery": [
+        "Missing evidence оставляет критерий open и предлагает самый небольшой полезный test/source request.",
+        "Master update сохраняет прежние IDs/versions и проверяет coverage всех исходных aim refs."
+      ],
+      "evidence_required": [
+        "Coverage matrix; fixture/device receipt manifests; no-goal-left-behind diff; next brief"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0"
+    }
+  ]
+}

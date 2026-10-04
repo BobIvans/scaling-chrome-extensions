@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:web3-qualification:receipt:v1",
+  "title": "Offline qualification receipt envelope; runtime performs semantic checks",
+  "type": "object",
+  "required": [
+    "schema",
+    "campaign_id",
+    "plan_sha256",
+    "stage_id",
+    "adapter",
+    "binding",
+    "producer",
+    "started_at",
+    "completed_at",
+    "process",
+    "artifacts"
+  ],
+  "properties": {
+    "schema": {
+      "const": "web3-qualification/v1/receipt"
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "stage_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter": {
+      "enum": [
+        "inventory_diff.v1",
+        "junit_xml.v1",
+        "economics_samples.v1",
+        "observation_window.v1",
+        "stop_latency.v1"
+      ]
+    },
+    "binding": {
+      "type": "object"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "binary_sha256"
+      ],
+      "properties": {
+        "kind": {
+          "const": "machine_runner"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "binary_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "process": {
+      "type": "object",
+      "required": [
+        "state",
+        "exit_code"
+      ],
+      "properties": {
+        "state": {
+          "const": "EXITED"
+        },
+        "exit_code": {
+          "type": "integer"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  }
+}

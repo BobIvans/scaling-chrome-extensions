@@ -1,0 +1,21 @@
+ЕДИНЫЙ ROADMAP-PR-014-015 — контекстная библиотека и установленный Windows-клиент
+Дата: 2026-10-04. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Это подробный пакет задания на один итоговый implementation PR, объединяющий номера 014 и 015. Внутри пять workstreams WS-013..017; это внутренние этапы, а не пять новых PR. После реализации оба номера учитываются через alias одного PR, а номера 016..021 сохраняются.
+
+Результат для пользователя: открыть установленное приложение при закрытом Chrome; импортировать и найти точную версию источника; составить объяснимую корзину; экспортировать проверяемый AI-пакет; вернуть RESULT или NEED_CONTEXT; продолжить после сбоя; восстановить библиотеку; запускать только зарегистрированные операции и остановить их клавиатурой.
+
+Читать в таком порядке:
+1. 01_PR_DESCRIPTION_RU.txt — цель, состав и формат PR.
+2. 02_IMPLEMENTATION_RU.txt — подробная реализация и порядок интеграции.
+3. docs/CONTRACTS_AND_STATE_RU.txt и contracts/*.schema.json — proposed DTO v1.
+4. docs/DATA_RECOVERY_RU.txt — согласованность, tombstones, миграции и sync.
+5. docs/WINDOWS_CAPABILITIES_STOP_RU.txt — установка, IPC, execution и STOP.
+6. acceptance/ACCEPTANCE_CASES.json, coverage/CRITERION_COVERAGE.json.
+7. EXECUTE_THIS_PR_RU.txt — вставить в новый coding-чат вместе с этим ZIP.
+
+Статус: SPEC_READY_FOR_CODE_AUDIT. Код приложения здесь не изменён. Current HEAD, CI, merge, installation, runtime и Dell qualification: NOT_RUN/UNKNOWN. Упакованные схемы, fixtures и validation script проверяют документацию, а не работающий продукт.
+
+Внешние prerequisites: PR-002,003,008,009,010,011,012,013. Их specs не доказывают merge или готовность handlers. Сначала проверить current checkout и зависимости; внутри единого PR сначала построить контекстные сервисы, затем подключить desktop.
+
+Пакет содержит полные исходные каталоги V5, backlog, исходный roadmap ZIP и PR-008/009 specs. Большой master ZIP не вложен повторно: его имя, SHA256, размер и карта использованных файлов записаны в provenance. Его полный исторический корпус остаётся в исходном приложении; этот пакет не является полной копией всего 387-MB master.

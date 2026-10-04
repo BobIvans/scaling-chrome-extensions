@@ -1,0 +1,887 @@
+[
+  {
+    "function_id": "FN-001",
+    "proposed_symbol": "resolve_packet_sources",
+    "workstream_id": "WS-013",
+    "inputs": "Goal/snapshot/selected refs",
+    "outputs": "Pinned exact refs + omissions",
+    "owner_role": "Content source owner",
+    "error_contract": "SOURCE_DRIFT/MISSING_SOURCE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-01",
+      "AC-07"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-002",
+    "proposed_symbol": "persist_selection_revision",
+    "workstream_id": "WS-013",
+    "inputs": "Source ranges + reasons",
+    "outputs": "Immutable basket revision",
+    "owner_role": "Context/review owner",
+    "error_contract": "OUT_OF_SCOPE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-02"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-003",
+    "proposed_symbol": "build_why_this_packet",
+    "workstream_id": "WS-013",
+    "inputs": "Selection/goal/criteria",
+    "outputs": "Explainability ledger",
+    "owner_role": "Context owner",
+    "error_contract": "UNBOUND_CRITERION",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-02"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-004",
+    "proposed_symbol": "compile_task_document",
+    "workstream_id": "WS-013",
+    "inputs": "Goal/repo/criteria/sources",
+    "outputs": "Immutable provider-neutral task",
+    "owner_role": "Context/review owner",
+    "error_contract": "INVALID_SCHEMA",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-03"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-005",
+    "proposed_symbol": "plan_packet_parts",
+    "workstream_id": "WS-013",
+    "inputs": "Source spans + byte budgets",
+    "outputs": "Coverage manifest + next parts",
+    "owner_role": "Existing export owner",
+    "error_contract": "BUDGET/MISSING_SOURCE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-04"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-006",
+    "proposed_symbol": "create_share_projection",
+    "workstream_id": "WS-013",
+    "inputs": "Packet + export profile/destination",
+    "outputs": "Redacted immutable projection",
+    "owner_role": "Privacy/context owner",
+    "error_contract": "OUT_OF_SCOPE/STALE_BINDING",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-05",
+      "AC-06"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-007",
+    "proposed_symbol": "preview_export_projection",
+    "workstream_id": "WS-013",
+    "inputs": "Projection ref",
+    "outputs": "Same verified bytes/digest",
+    "owner_role": "Export/UI owner",
+    "error_contract": "HASH_MISMATCH",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-05"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-008",
+    "proposed_symbol": "export_packet_atomic",
+    "workstream_id": "WS-013",
+    "inputs": "Projection parts",
+    "outputs": "Offline indexed artifact",
+    "owner_role": "PR-003 export owner",
+    "error_contract": "DISK_FULL/CANCELLED",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-04",
+      "AC-08"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-009",
+    "proposed_symbol": "validate_need_context",
+    "workstream_id": "WS-013",
+    "inputs": "Bound request + scope",
+    "outputs": "Validated source range request",
+    "owner_role": "Library gateway owner",
+    "error_contract": "INVALID_RANGE/OUT_OF_SCOPE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-07"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-010",
+    "proposed_symbol": "build_context_delta",
+    "workstream_id": "WS-013",
+    "inputs": "Validated request",
+    "outputs": "Idempotent immutable delta",
+    "owner_role": "Context owner",
+    "error_contract": "SOURCE_DRIFT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-09"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-011",
+    "proposed_symbol": "ingest_bound_ai_result",
+    "workstream_id": "WS-013",
+    "inputs": "Raw result + exact task refs",
+    "outputs": "Proposal/review record",
+    "owner_role": "Existing result owner",
+    "error_contract": "STALE/UNBOUND/CONFLICT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-10",
+      "AC-11"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-012",
+    "proposed_symbol": "read_scoped_library_span",
+    "workstream_id": "WS-013",
+    "inputs": "Namespace/version/range",
+    "outputs": "Exact bytes + source hash",
+    "owner_role": "Library owner",
+    "error_contract": "OUT_OF_SCOPE/MISSING_SOURCE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-07",
+      "AC-12"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-013",
+    "proposed_symbol": "pin_backup_generation",
+    "workstream_id": "WS-014",
+    "inputs": "Namespace/operation",
+    "outputs": "Generation/object pin lease",
+    "owner_role": "Store coordinator",
+    "error_contract": "LOCK_BUSY",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-13"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-014",
+    "proposed_symbol": "build_consistent_backup",
+    "workstream_id": "WS-014",
+    "inputs": "Pinned DB/blob/event snapshot",
+    "outputs": "Verified complete artifact",
+    "owner_role": "Backup owner",
+    "error_contract": "MISSING_OBJECT/INCONSISTENT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-13",
+      "AC-14"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-015",
+    "proposed_symbol": "verify_restore_artifact",
+    "workstream_id": "WS-014",
+    "inputs": "Artifact staged path",
+    "outputs": "Hash/integrity report",
+    "owner_role": "Recovery owner",
+    "error_contract": "HASH_MISMATCH/UNSUPPORTED_SCHEMA",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-14",
+      "AC-15"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-016",
+    "proposed_symbol": "rehearse_schema_migration",
+    "workstream_id": "WS-014",
+    "inputs": "Isolated restore+target schema",
+    "outputs": "Invariant comparison/journal",
+    "owner_role": "Migration coordinator",
+    "error_contract": "INCOMPATIBLE_SCHEMA",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-16"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-017",
+    "proposed_symbol": "activate_verified_restore",
+    "workstream_id": "WS-014",
+    "inputs": "Verified copy+quiescent fence",
+    "outputs": "New active descriptor",
+    "owner_role": "Store coordinator",
+    "error_contract": "LOCK_BUSY/UNKNOWN_ACTIVATION",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-17"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-018",
+    "proposed_symbol": "apply_current_tombstones",
+    "workstream_id": "WS-014",
+    "inputs": "Restored+current deletion ledgers",
+    "outputs": "Current-safe projection",
+    "owner_role": "Lifecycle owner",
+    "error_contract": "MISSING_LEDGER",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-18"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-019",
+    "proposed_symbol": "preview_retention_impact",
+    "workstream_id": "WS-014",
+    "inputs": "Source/policy refs",
+    "outputs": "Aliases/derived/backups impact",
+    "owner_role": "Lifecycle owner",
+    "error_contract": "OUT_OF_SCOPE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-19"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-020",
+    "proposed_symbol": "collect_unreferenced_objects",
+    "workstream_id": "WS-014",
+    "inputs": "Verified reachability+pins",
+    "outputs": "Owned cleanup receipt",
+    "owner_role": "CAS/lifecycle owner",
+    "error_contract": "PINNED/REACHABLE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-19",
+      "AC-20"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-021",
+    "proposed_symbol": "export_portable_sync",
+    "workstream_id": "WS-014",
+    "inputs": "Selected snapshot/events",
+    "outputs": "Immutable offline sync artifact",
+    "owner_role": "Sync owner",
+    "error_contract": "SCOPE/INCONSISTENT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-21"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-022",
+    "proposed_symbol": "import_portable_sync",
+    "workstream_id": "WS-014",
+    "inputs": "Validated objects/events",
+    "outputs": "Replay-safe merge/conflict records",
+    "owner_role": "Existing source owner",
+    "error_contract": "EVENT_CONFLICT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-21",
+      "AC-22"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-023",
+    "proposed_symbol": "resolve_temporal_scope",
+    "workstream_id": "WS-015",
+    "inputs": "Query/project/as_of",
+    "outputs": "Scope+effective revisions",
+    "owner_role": "Retrieval owner",
+    "error_contract": "INVALID_TIME/SCOPE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-23"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-024",
+    "proposed_symbol": "retrieve_exact_candidates",
+    "workstream_id": "WS-015",
+    "inputs": "Filtered namespace+ID/path/quote",
+    "outputs": "Version-bound exact ranges",
+    "owner_role": "Existing search owner",
+    "error_contract": "NO_MATCH",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-24"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-025",
+    "proposed_symbol": "rank_bounded_context",
+    "workstream_id": "WS-015",
+    "inputs": "Exact/FTS/graph candidates",
+    "outputs": "Stable selected refs+exclusions",
+    "owner_role": "Retrieval owner",
+    "error_contract": "MISSING_REQUIRED",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-25"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-026",
+    "proposed_symbol": "project_conflicting_evidence",
+    "workstream_id": "WS-015",
+    "inputs": "Applicable revisions",
+    "outputs": "Visible conflict set",
+    "owner_role": "Goals/source owner",
+    "error_contract": "UNRESOLVED_CONFLICT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-26"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-027",
+    "proposed_symbol": "persist_manual_correction",
+    "workstream_id": "WS-015",
+    "inputs": "Source-linked correction intent",
+    "outputs": "Append-only revision",
+    "owner_role": "Existing notes owner",
+    "error_contract": "IDEMPOTENCY_CONFLICT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-27"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-028",
+    "proposed_symbol": "invalidate_derived_summaries",
+    "workstream_id": "WS-015",
+    "inputs": "Source/relations change",
+    "outputs": "Stale dependency receipts",
+    "owner_role": "Derived-data owner",
+    "error_contract": "SOURCE_DRIFT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-28"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-029",
+    "proposed_symbol": "evaluate_frozen_retrieval",
+    "workstream_id": "WS-015",
+    "inputs": "Frozen oracle+query corpus",
+    "outputs": "Recall/version/citation/latency metrics",
+    "owner_role": "Independent verifier owner",
+    "error_contract": "NOT_RUN/MISSING_ORACLE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-29",
+      "AC-30"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-030",
+    "proposed_symbol": "resolve_installed_profile",
+    "workstream_id": "WS-016",
+    "inputs": "Trusted installation descriptor",
+    "outputs": "Single data root/namespace",
+    "owner_role": "Bootstrap owner",
+    "error_contract": "MISSING_PROFILE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-31"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-031",
+    "proposed_symbol": "perform_ipc_handshake",
+    "workstream_id": "WS-016",
+    "inputs": "Build/protocol/client generation",
+    "outputs": "Negotiated command schemas",
+    "owner_role": "Native/Core transport owner",
+    "error_contract": "PROTOCOL_MISMATCH",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-32"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-032",
+    "proposed_symbol": "decode_bounded_ipc_frame",
+    "workstream_id": "WS-016",
+    "inputs": "Framed bytes",
+    "outputs": "Typed request before dispatch",
+    "owner_role": "Transport owner",
+    "error_contract": "OVERSIZE_FRAME/UNKNOWN_COMMAND",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-32",
+      "AC-33"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-033",
+    "proposed_symbol": "submit_canonical_write_intent",
+    "workstream_id": "WS-016",
+    "inputs": "Typed operation+stable ID",
+    "outputs": "Persisted intent/Core job ref",
+    "owner_role": "Existing task/Core owner",
+    "error_contract": "IDEMPOTENCY_CONFLICT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-34"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-034",
+    "proposed_symbol": "reconcile_lost_write_ack",
+    "workstream_id": "WS-016",
+    "inputs": "Previous operation ID",
+    "outputs": "Existing factual status",
+    "owner_role": "Existing task owner",
+    "error_contract": "UNKNOWN_EFFECT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-34",
+      "AC-35"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-035",
+    "proposed_symbol": "fence_stale_ui_response",
+    "workstream_id": "WS-016",
+    "inputs": "Connection/query generation",
+    "outputs": "Current UI projection",
+    "owner_role": "Desktop transient UI",
+    "error_contract": "STALE_GENERATION",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-36"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-036",
+    "proposed_symbol": "page_virtual_library",
+    "workstream_id": "WS-016",
+    "inputs": "Snapshot/cursor/query handle",
+    "outputs": "Bounded rows+range preview",
+    "owner_role": "Search/source owner",
+    "error_contract": "CURSOR_STALE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-37"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-037",
+    "proposed_symbol": "package_per_user_desktop",
+    "workstream_id": "WS-016",
+    "inputs": "Qualified shell/backend versions",
+    "outputs": "Installable artifact",
+    "owner_role": "Packaging owner",
+    "error_contract": "NOT_QUALIFIED",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-31",
+      "AC-38"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-038",
+    "proposed_symbol": "show_recovery_panel",
+    "workstream_id": "WS-016",
+    "inputs": "Task/effect/evidence state",
+    "outputs": "Accessible next-action view",
+    "owner_role": "Desktop owner",
+    "error_contract": "GAP/UNKNOWN",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-39",
+      "AC-40"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-039",
+    "proposed_symbol": "measure_shell_candidates",
+    "workstream_id": "WS-016",
+    "inputs": "Identical device fixtures",
+    "outputs": "DEC5-01 decision receipt",
+    "owner_role": "Desktop/device owner",
+    "error_contract": "NOT_RUN",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-41"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-040",
+    "proposed_symbol": "register_capability_binding",
+    "workstream_id": "WS-017",
+    "inputs": "Known adapter/build/schema/effects",
+    "outputs": "Candidate registry revision",
+    "owner_role": "Registry owner",
+    "error_contract": "MISSING_ADAPTER",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-42"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-041",
+    "proposed_symbol": "compute_capability_availability",
+    "workstream_id": "WS-017",
+    "inputs": "Registry/build/grant/qualification",
+    "outputs": "Enabled/blocked reasons",
+    "owner_role": "Policy/qualification owner",
+    "error_contract": "STALE/UNQUALIFIED",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-42",
+      "AC-43"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-042",
+    "proposed_symbol": "invalidate_qualification_binding",
+    "workstream_id": "WS-017",
+    "inputs": "Changed input/build/adapter/grant",
+    "outputs": "Dependency-local stale evidence",
+    "owner_role": "Qualification owner",
+    "error_contract": "DRIFT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-43"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-043",
+    "proposed_symbol": "validate_operator_template",
+    "workstream_id": "WS-017",
+    "inputs": "Named template+typed slots",
+    "outputs": "Known executable plan",
+    "owner_role": "Core/template owner",
+    "error_contract": "INVALID_TEMPLATE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-44",
+      "AC-45"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-044",
+    "proposed_symbol": "evaluate_reusable_scope_grant",
+    "workstream_id": "WS-017",
+    "inputs": "Principal/effects/targets/revisions",
+    "outputs": "Permit or exact scope diff",
+    "owner_role": "Current policy owner",
+    "error_contract": "REVOKED/OUT_OF_SCOPE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-46"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-045",
+    "proposed_symbol": "resolve_execution_credential_ref",
+    "workstream_id": "WS-017",
+    "inputs": "Authorized opaque ref",
+    "outputs": "Transient credential in adapter",
+    "owner_role": "Existing secret provider",
+    "error_contract": "MISSING_CREDENTIAL",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-47"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-046",
+    "proposed_symbol": "dispatch_registered_operation",
+    "workstream_id": "WS-017",
+    "inputs": "Qualified template+intent+fence",
+    "outputs": "Owned job/effect receipt",
+    "owner_role": "Existing Core",
+    "error_contract": "UNKNOWN_EFFECT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-48"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-047",
+    "proposed_symbol": "request_independent_stop",
+    "workstream_id": "WS-017",
+    "inputs": "Keyboard/local controller+scope",
+    "outputs": "Durable cancel epoch/receipt",
+    "owner_role": "Core control path",
+    "error_contract": "STOP_UNCONFIRMED",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-49",
+      "AC-50"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-048",
+    "proposed_symbol": "fence_post_stop_completion",
+    "workstream_id": "WS-017",
+    "inputs": "Lease/epoch completion",
+    "outputs": "Observed historical/fresh outcome",
+    "owner_role": "Existing job owner",
+    "error_contract": "STALE_LEASE",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-50",
+      "AC-51"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-049",
+    "proposed_symbol": "resume_after_reconciliation",
+    "workstream_id": "WS-017",
+    "inputs": "Stopped task+current bindings",
+    "outputs": "Validated continuation same ID",
+    "owner_role": "Existing Core/task owner",
+    "error_contract": "NEEDS_RECONCILIATION",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-52"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-050",
+    "proposed_symbol": "open_versioned_editor_source",
+    "workstream_id": "WS-017",
+    "inputs": "Mapped source+configured editor",
+    "outputs": "Exact pinned navigation receipt",
+    "owner_role": "Registered editor adapter",
+    "error_contract": "SOURCE_DRIFT/DEPENDENCY",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-53"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  },
+  {
+    "function_id": "FN-051",
+    "proposed_symbol": "append_trust_version_receipt",
+    "workstream_id": "WS-017",
+    "inputs": "Intent/grant/build/outcome",
+    "outputs": "Correction-preserving audit event",
+    "owner_role": "Existing evidence owner",
+    "error_contract": "CONFLICT",
+    "actual_path": null,
+    "implementation_status": "PLANNED_NOT_BUILT",
+    "acceptance_case_ids": [
+      "AC-54"
+    ],
+    "state_rule": "Existing canonical owner; identities/fences pinned; no competing store",
+    "checkpoint_rule": "Durable immutable input ref; logical retry retains operation_id",
+    "resource_rule": "Bounded page/frame/part/work queue; no hidden total corpus cap"
+  }
+]

@@ -1,0 +1,208 @@
+{
+  "number": 15,
+  "package_id": "ROADMAP-PR-015",
+  "title": "Полноценный Windows desktop: installer, единый Core, capabilities, templates и STOP",
+  "user_outcome": "Развить desktop pilot №8 в установленный клиент с canonical writes, recovery, keyboard accessibility и исполнением зарегистрированных capabilities.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    8,
+    9,
+    10,
+    12,
+    14
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Полноценный Windows desktop: установка, canonical writes и восстановление",
+      "lane": "Desktop",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Выбор shell/runtime по measurement и самостоятельная per-user установка",
+        "Typed stdio/API к текущим owners, canonical task/write intents",
+        "Virtualized library, keyboard/screen reader, status и recovery panel"
+      ],
+      "acceptance": [
+        "Приложение запускается с закрытым Chrome без зависимости от cwd",
+        "Search/import/task/result используют один профиль",
+        "Unknown write сверяется по прежнему idempotency key",
+        "Crash/reconnect не теряет задачу и не создаёт второй writer",
+        "Install/uninstall/upgrade/restore подтверждены на Windows",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "№8 — минимальный Tk/stdio read-only pilot. Переиспользовать его доказанные части; не переносить второй store из архивного prototype. Долгие jobs — №11, updater — №33.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-001",
+        "G3-005",
+        "UI3-017",
+        "EVO3-023",
+        "TAB4-01",
+        "ACTION5-01",
+        "ACTION5-02",
+        "ACTION5-03"
+      ],
+      "feature_ids": [
+        "LIB-001",
+        "LIB-029",
+        "LIB-031",
+        "LIB-032",
+        "ACT-033",
+        "ACT-050",
+        "ACT-057"
+      ],
+      "decision_ids": [
+        "DEC5-01"
+      ],
+      "goal_ids": [
+        "GOAL5-01",
+        "GOAL5-08",
+        "GOAL5-12",
+        "GOAL5-19",
+        "GOAL5-28"
+      ],
+      "workstream_id": "WS-016",
+      "parent_package": "ROADMAP-PR-015",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-001",
+        "WS-002",
+        "WS-013",
+        "WS-014"
+      ],
+      "original_package_inputs": [
+        8,
+        9
+      ]
+    },
+    {
+      "title": "Capabilities, execution templates, scope и независимый STOP",
+      "lane": "Автоматизация",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Версионированный registry capabilities/effects/resources/evidence",
+        "Operator templates для API/CLI/terminal/VS Code и credential references",
+        "Idempotent operation identity, grant checks, read-first tool gateway и STOP"
+      ],
+      "acceptance": [
+        "Доступна только capability подходящей build/qualification",
+        "Document/AI result не задаёт произвольный executable",
+        "STOP работает без ASR/model/Chrome",
+        "Повтор intent не удваивает effect",
+        "Grant/adapter/build drift делает qualification stale",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Сохраняет существующий Core/policy owner. Laya/planner — №27, real UI bindings — №30, release activation — №33.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "PAR3-001",
+        "PAR3-003",
+        "PAR3-015",
+        "EVO3-001",
+        "EVO3-017",
+        "EVO3-019",
+        "TAB4-02",
+        "LAYA4-001",
+        "ACTION5-18",
+        "ACTION5-19",
+        "ACTION5-21"
+      ],
+      "feature_ids": [
+        "LIB-033",
+        "LIB-039",
+        "ACT-002",
+        "ACT-003",
+        "ACT-004",
+        "ACT-015",
+        "ACT-032",
+        "ACT-038",
+        "ACT-051",
+        "ACT-054",
+        "RND-011"
+      ],
+      "decision_ids": [
+        "DEC5-02",
+        "DEC5-18",
+        "DEC5-19"
+      ],
+      "goal_ids": [
+        "GOAL5-01",
+        "GOAL5-15",
+        "GOAL5-16",
+        "GOAL5-17",
+        "GOAL5-19"
+      ],
+      "workstream_id": "WS-017",
+      "parent_package": "ROADMAP-PR-015",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-016"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "G3-001",
+    "G3-005",
+    "UI3-017",
+    "PAR3-001",
+    "PAR3-003",
+    "PAR3-015",
+    "EVO3-001",
+    "EVO3-017",
+    "EVO3-019",
+    "EVO3-023",
+    "TAB4-01",
+    "TAB4-02",
+    "LAYA4-001",
+    "ACTION5-01",
+    "ACTION5-02",
+    "ACTION5-03",
+    "ACTION5-18",
+    "ACTION5-19",
+    "ACTION5-21"
+  ],
+  "feature_ids": [
+    "LIB-001",
+    "LIB-029",
+    "LIB-031",
+    "LIB-032",
+    "LIB-033",
+    "LIB-039",
+    "ACT-002",
+    "ACT-003",
+    "ACT-004",
+    "ACT-015",
+    "ACT-032",
+    "ACT-033",
+    "ACT-038",
+    "ACT-050",
+    "ACT-051",
+    "ACT-054",
+    "ACT-057",
+    "RND-011"
+  ],
+  "decision_ids": [
+    "DEC5-01",
+    "DEC5-02",
+    "DEC5-18",
+    "DEC5-19"
+  ],
+  "goal_ids": [
+    "GOAL5-01",
+    "GOAL5-08",
+    "GOAL5-12",
+    "GOAL5-15",
+    "GOAL5-16",
+    "GOAL5-17",
+    "GOAL5-19",
+    "GOAL5-28"
+  ]
+}

@@ -1,0 +1,406 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed native response, requestId added by host wrapper",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "operation",
+    "coverage"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.native-durable-result.v1"
+    },
+    "operation": {
+      "const": "durable.repo.coverage"
+    },
+    "coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "snapshot_id",
+        "classifier_version",
+        "action",
+        "query",
+        "summary",
+        "rows",
+        "next_cursor"
+      ],
+      "properties": {
+        "schema": {
+          "const": "occ.repo-coverage.v1"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "classifier_version": {
+          "const": "utf8-controls-strict-lfs3.v1"
+        },
+        "action": {
+          "enum": [
+            "SUMMARY",
+            "PAGE"
+          ]
+        },
+        "query": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "ALL",
+            "GAPS",
+            null
+          ]
+        },
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "state",
+            "total",
+            "ledger_rows",
+            "terminal_entries",
+            "pending_entries",
+            "facts_entries",
+            "indexed",
+            "excluded",
+            "error",
+            "text_eligible",
+            "raw_recorded",
+            "gaps",
+            "inventory_complete",
+            "facts_complete",
+            "all_tracked_bytes_exportable",
+            "external_payloads_complete",
+            "raw_integrity",
+            "ai_delivery",
+            "ai_read"
+          ],
+          "properties": {
+            "state": {
+              "enum": [
+                "READY",
+                "SCAN_PENDING",
+                "FORMAT_FACTS_PENDING",
+                "CORRUPT_FACTS"
+              ]
+            },
+            "total": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "ledger_rows": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "terminal_entries": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "pending_entries": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "facts_entries": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "indexed": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "excluded": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "error": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "text_eligible": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "raw_recorded": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "gaps": {
+              "type": "string",
+              "pattern": "^(0|[1-9][0-9]*)$"
+            },
+            "inventory_complete": {
+              "type": "boolean"
+            },
+            "facts_complete": {
+              "type": "boolean"
+            },
+            "all_tracked_bytes_exportable": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "external_payloads_complete": {
+              "type": [
+                "boolean",
+                "null"
+              ]
+            },
+            "raw_integrity": {
+              "enum": [
+                "NOT_RUN",
+                "PASS",
+                "FAIL"
+              ]
+            },
+            "ai_delivery": {
+              "const": "NOT_PERFORMED"
+            },
+            "ai_read": {
+              "const": "UNKNOWN"
+            }
+          }
+        },
+        "rows": {
+          "type": "array",
+          "maxItems": 20,
+          "items": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "title": "Proposed source facts wire record",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "schema",
+              "snapshot_id",
+              "ordinal",
+              "path",
+              "mode",
+              "kind",
+              "git_oid",
+              "git_size",
+              "disposition",
+              "legacy_reason",
+              "file_sha256",
+              "classifier_version",
+              "format_kind",
+              "text_eligibility",
+              "raw_capture",
+              "raw_integrity",
+              "reasons",
+              "parser",
+              "lfs"
+            ],
+            "properties": {
+              "schema": {
+                "const": "occ.format-eligibility.v1"
+              },
+              "snapshot_id": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "ordinal": {
+                "type": "string",
+                "pattern": "^(0|[1-9][0-9]*)$"
+              },
+              "path": {
+                "type": "string"
+              },
+              "mode": {
+                "type": "string"
+              },
+              "kind": {
+                "enum": [
+                  "blob",
+                  "commit"
+                ]
+              },
+              "git_oid": {
+                "type": "string",
+                "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+              },
+              "git_size": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^(0|[1-9][0-9]*)$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "disposition": {
+                "enum": [
+                  "INDEXED",
+                  "EXCLUDED",
+                  "ERROR",
+                  "PENDING"
+                ]
+              },
+              "legacy_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "file_sha256": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "classifier_version": {
+                "const": "utf8-controls-strict-lfs3.v1"
+              },
+              "format_kind": {
+                "enum": [
+                  "UTF8_TEXT_CANDIDATE",
+                  "EMPTY",
+                  "BINARY_CONTROL_HEURISTIC",
+                  "NON_UTF8",
+                  "LFS_POINTER_V1",
+                  "LFS_POINTER_MALFORMED",
+                  "LFS_POINTER_UNSUPPORTED",
+                  "SYMLINK_METADATA",
+                  "SUBMODULE_METADATA",
+                  "UNSUPPORTED_PATH_METADATA",
+                  "NOT_CLASSIFIED",
+                  "LEGACY_UNKNOWN",
+                  "CORRUPT_CAPTURE"
+                ]
+              },
+              "text_eligibility": {
+                "enum": [
+                  "ELIGIBLE",
+                  "INELIGIBLE",
+                  "METADATA_ONLY",
+                  "UNKNOWN"
+                ]
+              },
+              "raw_capture": {
+                "enum": [
+                  "RECORDED",
+                  "NOT_CAPTURED",
+                  "CORRUPT",
+                  "UNKNOWN"
+                ]
+              },
+              "raw_integrity": {
+                "enum": [
+                  "NOT_RUN",
+                  "PASS",
+                  "FAIL"
+                ]
+              },
+              "reasons": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "uniqueItems": true
+              },
+              "parser": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "lfs": {
+                "oneOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "required": [
+                      "payload_sha256",
+                      "payload_size",
+                      "descriptor_evidence",
+                      "payload_availability",
+                      "payload_verification"
+                    ],
+                    "properties": {
+                      "payload_sha256": {
+                        "type": [
+                          "string",
+                          "null"
+                        ],
+                        "pattern": "^[0-9a-f]{64}$"
+                      },
+                      "payload_size": {
+                        "oneOf": [
+                          {
+                            "type": "string",
+                            "pattern": "^(0|[1-9][0-9]*)$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "descriptor_evidence": {
+                        "enum": [
+                          "DECLARED_IN_POINTER",
+                          "UNPARSED"
+                        ]
+                      },
+                      "payload_availability": {
+                        "const": "NOT_CHECKED"
+                      },
+                      "payload_verification": {
+                        "const": "NOT_RUN"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "next_cursor": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "snapshotId",
+                "classifierVersion",
+                "query",
+                "afterOrdinal"
+              ],
+              "properties": {
+                "snapshotId": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{64}$"
+                },
+                "classifierVersion": {
+                  "const": "utf8-controls-strict-lfs3.v1"
+                },
+                "query": {
+                  "enum": [
+                    "ALL",
+                    "GAPS"
+                  ]
+                },
+                "afterOrdinal": {
+                  "type": "string",
+                  "pattern": "^(0|[1-9][0-9]*)$"
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

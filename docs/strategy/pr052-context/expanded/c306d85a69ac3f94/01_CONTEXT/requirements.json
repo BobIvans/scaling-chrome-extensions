@@ -1,0 +1,322 @@
+[
+  {
+    "id": "REQ-001",
+    "title": "Локальное личное приложение",
+    "requirement": "Windows 11; библиотека и control plane локальны, не обязательный SaaS.",
+    "anchor": "local application",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-002",
+    "title": "Голос и текст равноправны",
+    "requirement": "Оба входа формируют один IntentSpec; фоновые голоса не считаются приказом.",
+    "anchor": "via text or or via your voice",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-003",
+    "title": "Любой выбранный AI",
+    "requirement": "Provider-neutral пакет + adapters; не привязывать память к Grok/OpenAI.",
+    "anchor": "for your AI of choice",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-004",
+    "title": "Сохранение исходников",
+    "requirement": "Raw bytes не заменяются summary/chunks; пути, IDs, время и источник сохраняются.",
+    "anchor": "entire history of my life",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-005",
+    "title": "Нет лимита двадцати документов",
+    "requirement": "Порции и бюджеты регулируют обработку; не скрывают хвост библиотеки.",
+    "anchor": "more than 20 max docs remove",
+    "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-006",
+    "title": "Семантический repo context",
+    "requirement": "Repo map, symbols, dependencies, tests и history вместо ручной нарезки пользователем.",
+    "anchor": "this application could to chunk it",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-007",
+    "title": "Несколько источников",
+    "requirement": "ChatGPT/Grok exports, Google Docs exports, разрешённые private Telegram exports, Git.",
+    "anchor": "entire private Telegram channels",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-008",
+    "title": "Library UI",
+    "requirement": "Поиск, теги, граф целей, timeline, выбор исходников, completeness/omissions.",
+    "anchor": "library like Notion local application",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-009",
+    "title": "Терминал и VS Code",
+    "requirement": "Только зарегистрированные операции с рабочим проектом и областью файлов.",
+    "anchor": "local terminal ... vs code",
+    "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-010",
+    "title": "Документы для передачи AI",
+    "requirement": "Короткое объяснение WHY_THIS_PACKET + полные ссылки на evidence + ожидаемый patch/test response.",
+    "anchor": "why this document should be passed to another AI",
+    "source_class": "CURRENT_CHAT_RU_PARAPHRASE",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-011",
+    "title": "Продолжение Studious",
+    "requirement": "Qualification/evidence/patch triage для BobIvans/studious-pancake. Не считать план действующим ботом.",
+    "anchor": "continue to work on our Studio Spancake flashloan bot",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-012",
+    "title": "Восстановление решений",
+    "requirement": "Старое предложение != новая команда; decision lineage/supersedes и даты.",
+    "anchor": "previous goals ... aggregated",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-013",
+    "title": "Новая способность через код",
+    "requirement": "Voice → context → AutomationSpec → coding agent → branch → tests → GitHub review → local skill update.",
+    "anchor": "renew the local application, renew the capabilities",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-014",
+    "title": "Параллельные пути одной задачи",
+    "requirement": "Диверсифицированные read/draft candidates; одна точка эффектов, independent verification.",
+    "anchor": "parallel actions would execute on same automation",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-015",
+    "title": "Скорость и стоимость",
+    "requirement": "Короткий fast path, delayed hedges, caching, budgets; не безусловный запуск всех моделей.",
+    "anchor": "fastest route to those aims",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-016",
+    "title": "Подготовка во время речи",
+    "requirement": "Только разрешённый read-only prefetch по устойчивой части транскрипта.",
+    "anchor": "lowest possible time",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-017",
+    "title": "Измеряемая успешность",
+    "requirement": "Verified completed / attempted, false-success отдельно; никаких обещаний 100% arbitrary GUI.",
+    "anchor": "highest sucess rate on execution",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-018",
+    "title": "Безопасные маршруты",
+    "requirement": "Не дублировать публикации/merge/удаления/trading; unknown effect требует reconciliation.",
+    "anchor": "multiple safe routes",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-019",
+    "title": "Права не выдаёт модель",
+    "requirement": "Typed route/LLM plan не расширяет scope; секреты остаются вне handoff.",
+    "anchor": "safely ... permissions",
+    "source_class": "ASSISTANT_PROPOSED_SAFETY_BOUNDARY",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-020",
+    "title": "Accessibility-first",
+    "requirement": "Stop/undo/correction/voice status; пользователь имеет приоритет над GUI worker.",
+    "anchor": "people with disabilities",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-021",
+    "title": "Приватность",
+    "requirement": "Локальный capture opt-in; public/private/sensitive, field-level cloud-export approval.",
+    "anchor": "hold any data locally",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-022",
+    "title": "API budget",
+    "requirement": "Провайдеры настраиваются по key references и явному лимиту расходов; ключи не включать в ZIP.",
+    "anchor": "use my api key",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-023",
+    "title": "Evidence truth",
+    "requirement": "Не путать source_fact, model_claim, implementation, tests, installed qualification, real market evidence.",
+    "anchor": "highest successful ... execution",
+    "source_class": "DERIVED_ACCEPTANCE_CRITERION",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-024",
+    "title": "Без обязательного расширения",
+    "requirement": "Desktop — основной интерфейс; Chrome может быть управляемым приложением/optional adapter.",
+    "anchor": "remove wire to chrome extensions",
+    "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-025",
+    "title": "Daily workflows",
+    "requirement": "Повторяемые планы/исследования/документы/квитанции; расписания не стартуют от импорта.",
+    "anchor": "executions I need to do daily",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-026",
+    "title": "R&D технологий",
+    "requirement": "GitHub/Hugging Face/X разведка, первичные источники и локальные сравнения.",
+    "anchor": "new technologies ... hugging face",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-027",
+    "title": "Вопрос о каталоге ChatGPT",
+    "requirement": "Отдельный опциональный путь публикации; точная иконка неизвестна.",
+    "anchor": "insert a link to your service",
+    "source_class": "CURRENT_CHAT_RU_PARAPHRASE",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-028",
+    "title": "Пакет продолжения",
+    "requirement": "Два стартовых RU документа, JSON work items/workflows, tested offline reference.",
+    "anchor": "agregate bigger zip",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-029",
+    "title": "Сохранить предыдущие идеи",
+    "requirement": "18 прежних R&D и 129 функций остаются в legacy с происхождением и статусом.",
+    "anchor": "this entire chat aims and goals you outlined",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-030",
+    "title": "Не заявлять недоступные данные",
+    "requirement": "Исходный ZIP сохранён; более ранние архивы/полные приватные истории не получены здесь.",
+    "anchor": "go thourgh our ideas and my inputs",
+    "source_class": "SCOPE_BOUNDARY",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-031",
+    "title": "Один владелец runtime",
+    "requirement": "SCE Core/content.sqlite остаются owners; Studious владеет qualification, voice/Laya advisory.",
+    "anchor": "one evolving context/automation library",
+    "source_class": "RETRIEVED_PRIOR_DECISION_UNVERIFIED_IMPLEMENTATION",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-032",
+    "title": "Прогрессивная полнота",
+    "requirement": "Inventory/cursor/coverage/explicit exclusions; retrieval budget не ограничивает хранение.",
+    "anchor": "aggregate any context, any data",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-033",
+    "title": "Параллельные регистраторы",
+    "requirement": "Несколько методов записи одного процесса сохраняют отдельные наблюдения одновременно; не превращать single-effect broker в запрет multi-capture.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-034",
+    "title": "Независимые реальные действия",
+    "requirement": "Действия над разными ресурсами могут исполняться параллельно; конфликтующие операции над одним объектом требуют arbitration.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-035",
+    "title": "Разные режимы объединения",
+    "requirement": "Union для дополняющих источников; first-verified для альтернатив; join для обязательных доказательств; prepare/commit для эффектов.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-036",
+    "title": "Прогноз до benchmark",
+    "requirement": "Предсказать наиболее быстрые маршруты, обозначить ожидания и не подменять их вымышленными процентами успеха на Dell.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-037",
+    "title": "ZIP и текст как совместный вход",
+    "requirement": "Импортировать архив, сообщения и исходники как один граф требований с происхождением; копии не становятся независимым evidence.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-038",
+    "title": "Ранний полезный handoff",
+    "requirement": "Отдавать достаточный проверенный пакет выбранному AI до завершения полной индексации, с freeze snapshot и последующими delta.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-039",
+    "title": "Практики X/Laya/JeV",
+    "requirement": "Искать реальные примеры и первичные реализации; недоступность X и vendor benchmarks указывать явно.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-040",
+    "title": "Адаптивное дополнение контекста",
+    "requirement": "Запрашивать недостающий источник или символ вместо повторной отправки всей библиотеки; связывать evidence с конкретной задачей.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  }
+]

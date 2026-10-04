@@ -1,0 +1,43 @@
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-30",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Восстанови недостающие логи",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "durable process stdout receipt",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "test framework result file",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "approved CI job log download",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Distinct source completeness, timestamp and run ID binding",
+  "materialization_contract_ru": "Не перезапускать исходную работу лишь ради получения логов",
+  "failure_injection_ru": "Один log source пуст, второй содержит error tail",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}

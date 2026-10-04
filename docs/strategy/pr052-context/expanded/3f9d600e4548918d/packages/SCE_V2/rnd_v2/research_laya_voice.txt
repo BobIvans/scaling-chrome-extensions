@@ -1,0 +1,105 @@
+LAYA + ГОЛОС + АГЕНТЫ: R&D, 03.10.2026
+Проверено веб-поиском: первичные репозитории, model cards и документация. Это проектные рекомендации, а не результаты локального бенчмарка. Никакие модели, браузерные агенты или торговые операции в этой работе не запускались.
+
+1. ЧТО РЕАЛЬНО ДЕЛАЕТ LAYA
+
+Laya возвращает типизированные решения choice/score/noul по текстовому или JSON состоянию. Это подходящий кандидат для выбора workflow, оценки релевантности, тегов и маршрутизации. Модель не пишет код и не управляет ОС сама. Генерация программы — отдельная coding LLM; запуск — executor; доказательство результата — проверки. Точность на нашей русской истории, коде и Web3 данных пока NOT_RUN.
+
+В актуальном README перечислены Router, predict_batch, predict_long, ONNX и интеграции с MCP/LangGraph. Multilingual по умолчанию ограничен 1024 токенами, допускает max_len=8192; вопросы/варианты тоже занимают бюджет. Native HTTP ограничивает choice100 вариантами, а описания вариантов делят отдельный head budget. Полный архив нельзя просто подать одним запросом. Нужны полное сохранение, реестр окон, span offsets и отдельная проверка покрытия. Наличие всех окон не доказывает понимание всех межфайловых связей. Источник LV01.
+
+Практический быстрый путь: официальный Unsloth Desktop документирует локальный Laya Decision API для Windows и других ОС. Его интерфейс совместим с Jev, но формула confidence отличается; пороги Jev нельзя переносить механически. Сравнить Unsloth backend с Python/ONNX backend на нашем железе. Не копировать между ними транспортные лимиты: API-обёртки различаются. Источник LV03.
+
+«Убрать границы» в архиве означает отсутствие скрытых отбрасываний. Ограничения RAM, диска, контекста и размера запроса остаются измеримыми ресурсами. При их достижении — очередь/пауза/разбиение с журналом, а не потеря данных.
+
+2. ЧТО НАЙДЕНО ЧЕРЕЗ X/TWITTER
+
+Проведены запросы site:x.com и site:twitter.com по Jev, Laya, TypeSafe, Nandakishor и конкретным ссылкам. Прямое чтение найденных постов блокировалось 403/ошибкой загрузки. Поэтому социальные ссылки ниже — зацепки DISCOVERED_NOT_DIRECTLY_VERIFIED; сообщения и цифры из агрегаторов не принимаются за проверенные результаты. Технические выводы опираются на открытые первичные проекты авторов.
+
+• tamara, контекстная выборка: https://x.com/tamarajtran/status/2100694549362553153 — прямая загрузка 403. Подтверждённый первичный проект fast-jev-compaction оценивает tool calls/results и сохраняет выбранные элементы verbatim; часть состояния для самой модели может сокращаться. README прямо говорит, что вероятность не доказывает безопасность удаления, а native demo анимирован скриптом без API. Для нашей библиотеки брать идею отбора активного контекста, сохраняя полный оригинал отдельно. LV04, SX01.
+• codila, Jev перед GrokBot: https://x.com/0xCodila/status/2101433560796467348 — прямая загрузка 403. Это кандидат для дальнейшего чтения, а не доказательство «автоматизации всей жизни». SX02.
+• Browser Use: первичный jev-ultrafast показывает разделение decision model и text helper. Jev выбирает операцию и совместимую цель из свежей таблицы DOM; отдельная LLM вводимый текст. Исполнитель повторно проверяет цель и состояние. Model output не превращается в произвольный JavaScript/selector/shell. Их demo и скорость относятся к одному сценарию, не к нашему Windows-компьютеру. LV05.
+
+Дата доступа — 03.10.2026. Источники с будущей относительно этой даты публикацией не использованы. У страниц main/current без pinned SHA дата доступа не означает неизменяемую версию. Перед реализацией фиксировать commit/model revision и license hash.
+
+3. АРХИТЕКТУРА ГОЛОСОВОГО WINDOWS-ПРИЛОЖЕНИЯ
+
+Рекомендуемый pipeline (наше проектное предложение):
+микрофон → VAD/ASR → черновая и финальная транскрипции → явная цель → локальный поиск доказательств → Laya выбирает известный recipe/необходимое уточнение → planner/coding LLM при отсутствии рецепта → типизированный план → executor → независимые проверки → результат и сохранение опыта.
+
+Транскрипция и запись исполнения — разные артефакты: сохранить audio/source ID, временные отметки, ASR/model revision, raw_text, исправления пользователя, final_goal и отдельную связь goal→plan→run→evidence. Предварительный ASR можно использовать для read-only prefetch, но финальные действия должны ссылаться на финальную версию цели. Команда «стоп» отменяет новые шаги и показывает уже выполненные.
+
+ASR-кандидаты:
+• whisper.cpp: локальный C/C++ runtime, microphone stream и basic command примеры. Потоковый пример обрабатывает обновления аудио периодически, это не обещание мгновенной точной речи. Для RU использовать multilingual веса, а не .en. Windows и доступные ускорители выбирать после hardware probe. LV06.
+• faster-whisper: Python/CTranslate2, CPU/GPU режимы, word timestamps, Silero VAD. Базовая библиотека транскрибирует сегменты; для непрерывного разговора нужен streaming wrapper/собственная очередь. Сравнить int8 CPU с доступным GPU, не переносить авторский benchmark на Dell. LV07.
+• sherpa-onnx: локальная обработка, инструкции Windows, online/offline модели; документируется streaming Russian T-one, русские Zipformer/GigaAM и другие варианты. Отличать настоящий streaming checkpoint от offline checkpoint с VAD вокруг него. LV08.
+• Qwen3-ASR0.6B/1.7B: официальный toolkit включает русский и streaming; на проверенной странице streaming доступен через vLLM и не возвращает timestamps/batch. Windows packaging/backend потребует отдельного прототипа. Для точных временных отметок — отдельный aligner после финализации. LV09.
+• Parakeet-TDT0.6B-v3: model card включает русский и латышский, timestamps; дополнительный кандидат для RU/LV/EN библиотеки и больших записей. Throughput сервера не равен задержке окончания одной голосовой команды. LV10.
+• Pipecat: готовая оркестрация аудио, STT/LLM/TTS, streaming frames и прерывания. Использовать, если необходим диалог с голосовым ответом; для первой кнопки «записать цель» достаточно меньшего локального pipeline. LV11.
+
+Accessibility — обязательные продуктовые требования, а не обещание медицинского эффекта: клавиатура, screen-reader labels, текстовая альтернатива микрофону, регулируемое ожидание пауз, большие controls, видимое состояние записи, настраиваемая команда остановки, отсутствие обязательного удерживания кнопки, исправление транскрипции голосом/текстом. Длинные паузы и особенности речи должны быть отдельными тестовыми группами с согласия участников.
+
+Для Windows desktop использовать UI Automation: Microsoft документирует программный доступ к UI и поддержку assistive technology/testing. Надёжность зависит от того, что конкретное приложение раскрывает в accessibility tree. LV12. Для веба предпочитать API, а затем DOM/Playwright с проверками готовности элементов и результата. Playwright auto-waiting проверяет видимость/доступность/стабильность, но не смысловой успех цели. LV13.
+
+4. КАК УСКОРИТЬ, НЕ ТЕРЯЯ КОНТЕКСТ
+
+Предложения для нашего приложения:
+• Держать ASR/router прогретыми; idle-unload настраивать с учётом памяти. Записывать cold/warm отдельно.
+• Индексировать при импорте и изменениях; SHA dedup и delta tagging вместо пересчёта всей истории.
+• FTS/BM25 для точных путей/символов + embeddings для смысла + metadata-фильтры для ролей/дат/проектов; ранжирование после shortlist.
+• EmbeddingGemma — компактный multilingual кандидат с2048token входом и выбираемой размерностью вектора; BGE-M3 — multilingual dense/sparse/multivector кандидат до8192token. Это модели поиска, не гарантия полноты. LV14,LV15.
+• Пакетировать независимые типизированные вопросы к одному состоянию. В текущем UI state сразу предложить совместимые операции и цели; проверять свежесть перед исполнением.
+• Изолированные read-only retrieval и независимые тесты выполнять параллельно. Один writer на worktree/файл; один владелец активного окна; отдельный координатор зависимых действий.
+• Часто успешный validated workflow превращать в версионированный recipe. Не генерировать заново код для каждого «покажи результаты вчерашнего теста».
+• Кэшировать по source hash + model revision + ontology version + question pack hash; изменение любого компонента инвалидирует результат.
+• Вести ledger какие куски обработаны, какие запрошены и какие не вошли в активный prompt. Полный архив не подменять кратким ответом AI.
+• Локальный Laya выбирать первым только после измерений. Возможны дешёвые правила, embeddings и Laya; избыточный нейросетевой вызов для точной команды может замедлять.
+
+5. НОВЫЕ R&D ЭКСПЕРИМЕНТЫ
+
+Все строки ниже PROPOSED/NOT_RUN. Числовые значения — проект испытания, а не результаты или доказанные пороги.
+
+E01 ASR: 150 согласованных команд RU,50EN,50 смешанных RU/EN с путями/адресами/именами библиотек; тихо/шум/длинные паузы. Сравнить whisper.cpp, faster-whisper, sherpa streaming, затем Qwen/Parakeet. Метрики WER/CER, exact match важных entities, end-of-speech→final transcript p50/p95, RAM/VRAM, RTF, ложные команды на тишине. Делить train/calibration/test по говорящему и сессии.
+E02 Router: минимум300 вручную размеченных реальных целей; baselines rules, embeddings, Laya, coding LLM. Метрики macro-F1, recall редких целей, Brier/ECE, risk-coverage, p50/p95. Пороги определять calibration split; окончательная оценка на heldout.
+E03 Context:100 задач с заранее известными evidence spans в чатах/репо/доках. FTS vs FTS+dense vs hybrid+rerank. Метрики evidence recall@budget, точность source links, failure на старых/противоречивых версиях. Полный путь и роль автора обязательны.
+E04 Long source: вопрос в начале/середине/конце, RU и код,12/50/100 кандидатов тегов. Проверять потреблённые token spans и head truncation; coarse→fine/shortlist сравнить с predict_long. Не приравнивать агрегированные вероятности к междокументному доказательству.
+E05 Voice execution:40 реальных read-only/обратимых сценариев app/API/UI. Метрики время до первого полезного действия, end-to-end completion, ошибочные действия, действия после отмены, корректность восстановления. Замерять повторные warm/cold запуски.
+E06 Concurrency: workers1/2/4/8 для импорта, поиска, тестов. Сначала resource probe, затем выбирать по p95 foreground latency и peak memory. Больший параллелизм не считается автоматически лучше.
+E07 Script reuse: сравнить каждый раз LLM planner против validated recipes + Laya router. Считать completion, число LLM вызовов, стоимость, latency, repair rate, число новых dependencies.
+E08 Prompt injection: вредные указания внутри README/чата/страницы остаются данными. Проверить, что они не расширяют capability scope и не запускают новые инструменты; тесты с canary markers, без реального внешнего действия.
+E09 Goal clarification: LAVOIR от25.09.2026 исследует выбор вопроса по ожидаемой ценности информации. Это свежая исследовательская гипотеза для минимизации лишних уточнений; опубликованные результаты не воспроизведены на нашей задаче. Сравнить always-ask, never-ask, threshold, VOI на неполных/противоречивых целях. LV16.
+E10 Layered policies: вдохновиться vLLM Semantic Router — комбинация быстрых правил и нейронных сигналов в явной политике. Для Dell начать с маленького локального dispatcher; большой gateway не обязателен. Сравнить single LLM против rule→embed→Laya→LLM каскада по качеству и p95. LV17.
+E11 Accessibility: отдельные настройки endpointing, speech correction и cancellation. Успех — выполненная цель и возможность остановить/исправить; меньше кликов само по себе недостаточно.
+
+Начальный engineering target: текстовый feedback о принятой команде менее200мс после финальной транскрипции, первый read-only результат p95≤2с на прогретой системе. Это желаемые бюджеты, не обещание. Кодогенерация, запуск браузера, RPC/блокчейн и тестовые кампании измеряются отдельно и могут занимать минуты/часы.
+
+6. ЧТО ДОБАВИТЬ В РЕЕСТР ФУНКЦИЙ
+
+LVF01 hardware_probe — CPU/RAM/GPU/backend capabilities без предположений о Dell.
+LVF02 local_decision_backend — Unsloth/native Laya/ONNX adapter с revision и loopback endpoint.
+LVF03 question_pack_registry — versioned choice/score/noul schemas и classifier calibration.
+LVF04 lossless_inference_ledger — окна, span offsets, ошибки и повторение до покрытия.
+LVF05 voice_capture_session — opt-in запись, состояние, локальные audio/text links.
+LVF06 partial_transcript_prefetch — speculative read-only поиск без запуска действий.
+LVF07 finalize_goal — неизменяемая финальная версия цели и исправления.
+LVF08 voice_stop_resume — cancel token, журнал уже сделанного, продолжение с checkpoint.
+LVF09 asr_entity_dictionary — проектные имена/пути и проверка важных сущностей.
+LVF10 multimodal_local_search — FTS+embeddings+metadata, ссылки на spans.
+LVF11 recipe_router — выбор существующего tested workflow с abstain/fallback.
+LVF12 adaptive_clarification — минимальный полезный уточняющий вопрос; R&D.
+LVF13 typed_action_registry — observed target/args/preconditions/postconditions.
+LVF14 windows_uia_adapter — доступ к опубликованным UIA elements/patterns.
+LVF15 browser_dom_adapter — snapshot, target freshness, semantic completion checks.
+LVF16 worker_resource_scheduler — параллельные read-only jobs, locks для writers/UI.
+LVF17 outcome_verifier — TRUE/FALSE/UNKNOWN/NOT_RUN по независимым проверкам.
+LVF18 validated_recipe_compiler — успешные traces→проект рецепта→тесты→version.
+LVF19 warm_model_manager — load/unload/cache keyed по revisions.
+LVF20 latency_eval_harness — timestamps по стадиям, p50/p95, качество/ресурсы.
+LVF21 accessibility_profiles — keyboard/text/voice/pauses/labels/cancellation.
+LVF22 source_aware_context_compaction — ограничение active prompt при полном archive.
+LVF23 social_claim_verification_queue — X claim→первоисточник→код→reproduction status.
+LVF24 model_change_regression_suite — upgrade inference backend не меняет решения молча.
+
+Все24 — новые функции спецификации/R&D, не заявление о готовой реализации в desktop prototype. Перед включением runtime нужны реализация, тесты на Windows и предметные данные пользователя.
+
+ИСТОЧНИКИ
+Точные URL, ID, статус проверки и ограничения — research_laya_voice_sources.json. Числа чужих benchmarks намеренно не используются как прогноз нашего приложения.

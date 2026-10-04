@@ -1,0 +1,1696 @@
+{
+  "source_task_ids": [
+    "ACTION5-27",
+    "ACTION5-28",
+    "ACTION5-29",
+    "ACTION5-30",
+    "EVO3-024",
+    "G3-011",
+    "G3-012",
+    "LAYA4-026",
+    "PAR3-022",
+    "TAB4-20",
+    "TAB4-21",
+    "TAB4-22",
+    "UI3-018"
+  ],
+  "feature_ids": [
+    "ACT-013",
+    "ACT-014",
+    "ACT-026",
+    "ACT-053",
+    "LIB-053",
+    "LIB-055",
+    "LIB-056",
+    "LIB-060",
+    "RND-009",
+    "RND-010",
+    "RND-012",
+    "RND-013",
+    "RND-014",
+    "RND-015",
+    "RND-016",
+    "RND-017",
+    "RND-018",
+    "RND-019",
+    "RND-020",
+    "RND-021",
+    "RND-022",
+    "RND-023",
+    "RND-027",
+    "RND-028",
+    "RND-029",
+    "RND-030",
+    "RND-031",
+    "RND-032",
+    "RND-033",
+    "RND-034",
+    "RND-035",
+    "RND-039",
+    "RND-040",
+    "RND-041",
+    "RND-046"
+  ],
+  "decision_ids": [
+    "DEC5-23",
+    "DEC5-24"
+  ],
+  "workstream_ids": [
+    "WS-029",
+    "WS-030",
+    "WS-031",
+    "WS-032",
+    "WS-033",
+    "WS-034",
+    "WS-035",
+    "WS-036"
+  ],
+  "global_reconciliation": "WS-036 all source criteria",
+  "feature_records": [
+    {
+      "id": "LIB-053",
+      "title": "Проверка «ни одна цель не потеряна» при новом handoff",
+      "domain": "goals",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/03_MASTER_STRATEGY.md",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "01fbfd135cd22b00eb267a9ef8838d1829f05b0fbd5541c75074a0693088931b",
+          "ordinal": 3,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Новая краткая дорожная карта может забыть deferred идеи и редкие ограничения.",
+      "proposed_behavior": "Сравнивать полный goal registry с новым handoff: covered/deferred/superseded/unmapped; каждый прежний goal сохраняет место или явную причину изменения.",
+      "implementation_status": "unverified",
+      "phase": "P2",
+      "dependencies": [
+        "LIB-019",
+        "LIB-020",
+        "LIB-025",
+        "LIB-052"
+      ],
+      "acceptance": [
+        "Идея из конца длинного запроса обнаруживается, если не отражена в handoff.",
+        "Deferred не меняется на rejected без решения."
+      ],
+      "next_experiment": "Намеренно удалить один редкий goal из draft packet и проверить checker.",
+      "metric": "Goal carryover coverage; silent omission count=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-15"
+      ]
+    },
+    {
+      "id": "LIB-055",
+      "title": "Benchmark полезности библиотеки на собственных задачах",
+      "domain": "product_validation",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/07_COMPETITORS_AND_DATA_PIPELINES_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "678986249318de56d482bc914001cebfcd30dec99dfe75176d7be6b4eebe6fc3",
+          "ordinal": 8,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Сравнение с Notion и число функций не измеряют пользу для конкретного рабочего процесса.",
+      "proposed_behavior": "Frozen набор найти решение/собрать repo context/найти missing source/восстановить backup; измерить время, exactness, RAM и ручные corrections до и после изменения.",
+      "implementation_status": "unverified",
+      "phase": "P2",
+      "dependencies": [
+        "LIB-017",
+        "LIB-025",
+        "LIB-032"
+      ],
+      "acceptance": [
+        "Все сравнения используют одинаковый dataset и инструкции.",
+        "Заявление об улучшении сопровождается сырыми результатами, environment и sample size."
+      ],
+      "next_experiment": "10–30 реальных рабочих задач с baseline текущего пути и новой вертикалью.",
+      "metric": "Median/p95 task time, source accuracy, verified completion, maintenance cost.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-056",
+      "title": "Формальные инварианты каталога и coverage отчёта",
+      "domain": "catalog",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "CONTINUATION_V3/READING_AND_ID_NAMESPACES_RU.txt",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "8cb3cd3f7aac285b672d00e0d0e1961816c6108f8a02cb3d67ed58b6d77480d6",
+          "ordinal": 243,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Количество записей разных версий ошибочно выдаётся за уникальные реализованные функции.",
+      "proposed_behavior": "В export report явно считать source records, aliases, canonical proposals, exact raw messages и implementation evidence отдельно; каждое число выводимо из manifest.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-014",
+        "LIB-024",
+        "LIB-052"
+      ],
+      "acceptance": [
+        "Сумма старых catalog counts не становится implemented count.",
+        "Каждый canonical proposal разрешается к оригиналу или отмечен assistant_new."
+      ],
+      "next_experiment": "Пересчитать текущий union и сформировать reproducible count table.",
+      "metric": "Reproducible counts=100%; ambiguous count labels=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-060",
+      "title": "Проверка масштаба архива по семействам, а не повторной распаковке",
+      "domain": "source_preservation",
+      "origin": "assistant_new",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/03_NO_LOSS_AND_LIMITS_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "ce4f3b71f53d30523fba2405391fba0d0fc35021fcb794a7745069b4e5d1b192",
+          "ordinal": 4,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Каждый новый master ZIP повторно вкладывает все старые packages и многократно раздувает обработку.",
+      "proposed_behavior": "Предложить content-addressed archive graph с original container preservation и общими member objects; compact portable package использует manifest aliases и отдельный materialize contract, не теряя возможность вернуть исходные ZIP.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "LIB-008",
+        "LIB-009",
+        "LIB-028",
+        "LIB-056"
+      ],
+      "acceptance": [
+        "Каждый оригинальный архив возвращается с прежним hash.",
+        "Повторно вложенный archive hash сканируется один раз, все nesting paths остаются."
+      ],
+      "next_experiment": "Сравнить naive recursive unpack и archive graph на текущих пяти ZIP.",
+      "metric": "Unique bytes/expanded logical bytes ratio; scan time; original recovery=100%.",
+      "deferred_condition": "После correctness raw preservation; compact format не заменяет original uploads до roundtrip verifier.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-013",
+      "title": "Независимость доказательств и маршрутов",
+      "domain": "evidence",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-24",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/03_RND_CARDS/RND-19.md",
+          "source_record_id": "RND-19",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ebae610d95b08f841bac6347b6c1ab7f477f83cdeb33d99cb1c9682bffc4e4ee",
+          "ordinal": 400,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Несколько оболочек одного теста ошибочно считаются независимыми подтверждениями.",
+      "proposed_behavior": "Сохранять lineage источников, toolchain, model, fixture и shared dependencies; оценивать co-failure, а не количество голосов.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-012"
+      ],
+      "acceptance": [
+        "Три пересказа одного README образуют одну evidence family.",
+        "Разные обёртки одного pytest не повышают independent-evidence count."
+      ],
+      "next_experiment": "Всем маршрутам дать общий неверный snapshot и добавить независимый инвариант.",
+      "metric": "Joint failure; marginal recovery каждого маршрута; false consensus.",
+      "deferred_condition": "Не публиковать проценты надёжности из предположения независимости.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-12"
+      ]
+    },
+    {
+      "id": "ACT-014",
+      "title": "Контрпримеры и замороженные критерии выбора",
+      "domain": "coding",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-27",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Кандидат может пройти слабые или изменённые под себя тесты.",
+      "proposed_behavior": "Фиксировать acceptance до выбора патча; отдельно создавать негативные кейсы, проверять удаление assertions и выполнять held-out случаи в изоляции.",
+      "implementation_status": "unverified",
+      "phase": "P3",
+      "dependencies": [
+        "ACT-008"
+      ],
+      "acceptance": [
+        "Патч, выключивший проверку, не выигрывает по зелёному CI.",
+        "Одинаковый набор обязательных критериев применяется ко всем кандидатам."
+      ],
+      "next_experiment": "Создать намеренно неверный fix, проходящий старый тест, и измерить обнаружение.",
+      "metric": "Mutation detection; regression escape; доля ослабленных gates.",
+      "deferred_condition": "Generated test code тоже требует отдельной среды исполнения.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-026",
+      "title": "Сквозные измерения команды",
+      "domain": "observability",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/00_START/01_MASTER_GOALS_AND_ARCHITECTURE_RU.md",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "40069f65fe9d8843666e848ec2e7934da9b51918af583859602cece3463e5116",
+          "ordinal": 0,
+          "historical_record_links": []
+        },
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-42",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Время ответа модели не равно времени полезного результата.",
+      "proposed_behavior": "Фиксировать speech-end, accepted intent, context-ready, action-start, verified outcome, очередь, retries и стоимость всех ветвей.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "ACT-001",
+        "ACT-012"
+      ],
+      "acceptance": [
+        "Медленный failed candidate учитывается в общей стоимости.",
+        "Отчёт отделяет routing, retrieval, model и execution latency."
+      ],
+      "next_experiment": "Прогнать 20 baseline задач и сохранить сырые timestamps вместе с итогами.",
+      "metric": "p50/p95 time-to-verified; false acceptance; total cost; completion rate.",
+      "deferred_condition": "Не публиковать SLA и миллисекунды до измерения на целевой машине.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-10"
+      ]
+    },
+    {
+      "id": "ACT-053",
+      "title": "Общий корпус отказов и квалификация на Windows",
+      "domain": "qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-42",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/OCC_RND/docs/05_ACCESSIBILITY_RU.md",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "bbbadc393737f98d0dd8cd00668785e68660210323717805ba559e5296e46418",
+          "ordinal": 147,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Offline Linux prototype tests выдаются за проверку всего desktop продукта.",
+      "proposed_behavior": "Сохранять корпус intent errors, stale state, dups, unknown effects, user interruption, audio и interface drift; receipts группировать по OS/runtime/adapter и held-out split. Base qualification covers text/jobs without requiring speech; audio and route-diversity suites apply only to installed optional adapters.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "ACT-012",
+        "ACT-026",
+        "ACT-032",
+        "LIB-048"
+      ],
+      "acceptance": [
+        "Linux algorithm tests и Windows real-device результаты показаны раздельно.",
+        "Success rate всегда связан с corpus, sample size, environment и критериями."
+      ],
+      "next_experiment": "Начать с 20 Windows операторских команд и fault scenarios; размер corpus не является лимитом приложения.",
+      "metric": "Task success; false accept; coverage matrix; platform-specific failures.",
+      "deferred_condition": "Новые adapters не наследуют qualification другого инструмента автоматически.",
+      "optional_enhancements": [
+        "ACT-013",
+        "ACT-029"
+      ],
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-009",
+      "title": "Каталог действительных qualification-команд",
+      "domain": "qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-041",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-a1edd273bc9090a6905ccccfe9deb2111d6c4a0448e2cca8258ec333f3682821"
+          ]
+        },
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-10",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Список Python функций или JSON workflow не равен установленной доступной команде.",
+      "proposed_behavior": "Верифицировать registry по actual CLI/help/schema/profile и owner; Laya adapter допускать после проверки его реального формата.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "RND-001",
+        "RND-008"
+      ],
+      "acceptance": [
+        "Неизвестная команда остаётся candidate и не запускается.",
+        "Пример JSON не помечается native Laya import без проверки."
+      ],
+      "next_experiment": "Сопоставить десять source candidates и реально найденные CLI entrypoints.",
+      "metric": "Доля candidate commands с подтверждённым контрактом и environment binding.",
+      "deferred_condition": "До доступа к установленному профилю показывать только проектную схему.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-07"
+      ]
+    },
+    {
+      "id": "RND-010",
+      "title": "Desktop bridge к существующему qualification owner",
+      "domain": "qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-036",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-ca38ee6199cab1c0acc4e15ff681538598b131410d7afd9f653aaae7ae11124d"
+          ]
+        },
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-12",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Новый универсальный runner может создать второй несовместимый verdict.",
+      "proposed_behavior": "Делегировать установленному owner и импортировать его domain receipt; artifact audit не выдавать за запуск market campaign.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "RND-008",
+        "RND-009"
+      ],
+      "acceptance": [
+        "Exit code=0 и domain BLOCKED отображаются раздельно.",
+        "campaign_executed=false не становится PAPER_OBSERVED."
+      ],
+      "next_experiment": "Пройти один положительный и один отрицательный локальный qualification-сценарий.",
+      "metric": "Agreement adapter/domain verdict; число false success.",
+      "deferred_condition": "После точного command contract и установленной среды.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-07"
+      ]
+    },
+    {
+      "id": "RND-012",
+      "title": "Детерминированный replay рыночных наблюдений",
+      "domain": "web3_data",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F21",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-39917bc549e056d46c1194850528a2b3805bfb19630551a55196b0dc17e68358"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E01",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-29ef56b788f5e1e55d66a2bc02ee456c0086b40b0581a9e7201c4f52c2a26461"
+          ]
+        }
+      ],
+      "problem": "Нельзя сравнивать стратегии на разных незафиксированных входах.",
+      "proposed_behavior": "Фиксировать dataset digest, order, seed, clock, chain anchor и config; записывать decisions и объяснённую nondeterminism.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-011"
+      ],
+      "acceptance": [
+        "Повтор одного replay даёт одинаковые decision/artifact digests либо явно описанное отличие.",
+        "Replay никогда не маркируется как текущее market observation."
+      ],
+      "next_experiment": "Два запуска одной версии и один запуск изменённой версии на одинаковом сохранённом потоке.",
+      "metric": "Replay reproducibility и explained divergence rate.",
+      "deferred_condition": "Нужен набор сохранённых рыночных данных или явно синтетическая fixture.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-013",
+      "title": "Flashloan repayment и boundary/fuzz corpus",
+      "domain": "web3_qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F18",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-6124f30cdea9ddfb2d09903051f3c874c0b5fdb459ac95a6a2e18b7819b0e119"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F28",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-11d7cb72dfdda50c5a949e3a71fe6c4e366e4199cd1440f49dd69453c915f5c1"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E04",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-b546bf578348683e06fe27b38361a70c7e320a9b75edb1e205dfba3f9f793c3b"
+          ]
+        }
+      ],
+      "problem": "Округления, комиссии и границы размера могут нарушить возврат займа.",
+      "proposed_behavior": "Сохранять lender-neutral контракт principal/fee/repay в atomic units и adapter-specific cases; минимизировать failing seed.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-008",
+        "RND-011",
+        "RND-012"
+      ],
+      "acceptance": [
+        "Проверены zero/min/max/rounding и недостающий repayment.",
+        "Неавторизованный callback или неверная сеть не проходит fixture."
+      ],
+      "next_experiment": "Один adapter на pinned local validator/fork; реальная поддержка adapter сначала устанавливается по коду.",
+      "metric": "Количество полезных boundary cases; минимальные воспроизводимые отказы.",
+      "deferred_condition": "После выбранного protocol adapter; реальные транзакции не следуют из этой карточки.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-014",
+      "title": "Непустая stateful invariant campaign",
+      "domain": "web3_qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F19",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-f115908200510fe6fadaf96e410fe4d3081e786e0d9e9b048ea6a63e2c7798e9"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E05",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-37dd54dd26a6b391f1e5f56c2fe85d1125c304ed92e90ed62642547df9868a67"
+          ]
+        }
+      ],
+      "problem": "Зелёный invariant-тест может не вызвать полезных операций из-за постоянных revert.",
+      "proposed_behavior": "Измерять handler calls, depth, covered transitions, reason distribution и сохранённый corpus.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-012",
+        "RND-013"
+      ],
+      "acceptance": [
+        "Нулевые полезные calls дают INVALID_CAMPAIGN.",
+        "Найденный failing seed воспроизводится отдельно."
+      ],
+      "next_experiment": "Включить заведомо vacuous handler и сравнить с рабочим state machine.",
+      "metric": "Полезные transitions и воспроизводимость нарушений.",
+      "deferred_condition": "Не расширять число trials до проверки непустого покрытия.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-015",
+      "title": "Общий брокер рыночных данных для исследователей",
+      "domain": "web3_data",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "OCC_RND::source.shared_pit_feed",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-525b5a01237092cef349ea1e7bbffd27fb6f1b0fe7c2a9700974d513cb89d816"
+          ]
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-029",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-6839085bb1a8279b6a9aa7f7f1331148be2a9b8b7f349229d04165a8ca021914"
+          ]
+        }
+      ],
+      "problem": "Каждый worker отдельно запрашивает одинаковые данные и расходует квоты.",
+      "proposed_behavior": "Один versioned acquisition broker сохраняет immutable observations и выдаёт ссылки независимым strategy workers.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-011"
+      ],
+      "acceptance": [
+        "Четыре подписчика одного snapshot используют один сохранённый объект.",
+        "Запросы, source IDs, ошибки и пробелы отражены в журнале."
+      ],
+      "next_experiment": "Сравнить 1/2/4 replay workers с общим cache и независимым fetch.",
+      "metric": "Duplicate fetch ratio, CPU/RAM и requests per useful observation.",
+      "deferred_condition": "Реальный fetch только после выбора доступного провайдера и его лимитов.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-016",
+      "title": "Point-in-time согласованность и инвалидирование anchors",
+      "domain": "web3_data",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-037",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-b4cf05c4a787cf1e40f479a967648e13b2d38d9f1b1dee401fe1c03146f286b9"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E07",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-92cbc8379c4a5c4719f6d475305dde40c1383633a749351c7fdb2e4171024876"
+          ]
+        }
+      ],
+      "problem": "Смешивание разных моментов рынка создаёт искусственный edge.",
+      "proposed_behavior": "Привязывать признаки к observed/available time, chain/slot/commitment и revision; смена canonical anchor инвалидирует зависимые результаты.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-012",
+        "RND-015"
+      ],
+      "acceptance": [
+        "Будущее значение недоступно replay decision до своего available time.",
+        "Замена anchor делает старый verdict stale."
+      ],
+      "next_experiment": "Подмешать задержанный и будущий snapshot в один route.",
+      "metric": "Point-in-time violations и false edges из-за смешения времени.",
+      "deferred_condition": "До покрытия timestamp semantics внешнего API данные остаются time-uncertain.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-017",
+      "title": "Сравнение независимых provider views",
+      "domain": "web3_data",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F23",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-d9986de3c6e0052e264cbf41c7be40bc286016b2b4654ba1ef05983a43196d1f"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E06",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-af51c74d920fb45e9e255b83ef7f9250d75a1f71eddd5beee1ac5b8f3ae26b6d"
+          ]
+        }
+      ],
+      "problem": "Две разные торговые марки могут зависеть от одного upstream.",
+      "proposed_behavior": "Хранить lineage провайдера и сопоставлять state на совместимом anchor; disagreement даёт UNKNOWN и отдельный incident.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-015",
+        "RND-016"
+      ],
+      "acceptance": [
+        "Несовместимые anchors не сравниваются как равные.",
+        "Общий upstream отмечен, независимость не выводится из имени."
+      ],
+      "next_experiment": "Fixture common-upstream outage и один независимый источник.",
+      "metric": "Disagreement rate, common-failure correlation и marginal recovery.",
+      "deferred_condition": "Дополнительного провайдера подключать после измерения полезности и стоимости.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-12"
+      ]
+    },
+    {
+      "id": "RND-018",
+      "title": "Freshness, completeness и backpressure рыночного потока",
+      "domain": "web3_data",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F24",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-c87d5e44e2eeb0d352aaf0b76a3ecbe991e896eb2625f29fa04608a0331b5feb"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E02",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-0a2daf02054cb524e570c8f894d2c384726edae0c31168f381137c69ab423ad1"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E09",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-6347974fce52a4449c020471d2b6bd4648904ee48bcd6bfaae812e001ece4602"
+          ]
+        }
+      ],
+      "problem": "Устаревшая quote либо пропущенный интервал может выглядеть как доступная возможность.",
+      "proposed_behavior": "Применять версионированные freshness budgets, cursors, explicit gaps, bounded retry и backpressure.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-015",
+        "RND-016"
+      ],
+      "acceptance": [
+        "Stale quote отклоняется на границе настроенного бюджета.",
+        "429/disconnect не теряет cursor и не создаёт бесконечный retry."
+      ],
+      "next_experiment": "Ввести задержку, 429 и потерю сети в сохранённую capture session.",
+      "metric": "Gap duration, stale acceptance count, recovery latency.",
+      "deferred_condition": "Freshness thresholds выбирать из измеренной стратегии, не задавать произвольной общей константой.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-019",
+      "title": "Полная экономика opportunity в совместимых единицах",
+      "domain": "web3_qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F25",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-e705ef93366219cc42c19d6ea020f811c96c35a8301fd018bc6d6b7b1671d00c"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-038",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-cfb864de5c873667ffc22bd05624dbb66beb06af001cb2402f0baf9fc01787f0"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E03",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-5c7ec88e47deb5c32c2afb3e921be711a87e81a646ed00122cbcbfa8bf77467f"
+          ]
+        }
+      ],
+      "problem": "Gross quote spread не учитывает расходы и может оказаться отрицательным net edge.",
+      "proposed_behavior": "Пересчитывать DEX/borrow/priority/tip/failure costs, slippage и fee conversion в integer units с версией assumptions.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-013",
+        "RND-016",
+        "RND-018"
+      ],
+      "acceptance": [
+        "Перестановка decimals выявляет unit mismatch.",
+        "Увеличение каждого cost не повышает net edge.",
+        "Неизвестная обязательная комиссия блокирует экономический PASS."
+      ],
+      "next_experiment": "Независимый пересчёт десяти fixture routes с fee/decimal sweeps.",
+      "metric": "Accounting error и доля false-positive net edges.",
+      "deferred_condition": "Реальные fee schedules получать заново перед будущей campaign.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-020",
+      "title": "Модель liquidity, slippage и задержек исполнения",
+      "domain": "web3_qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F27",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-226752d7800da06ce24a9edda8a18955fc20d129a90cdb8344d9ec75dcb83b42"
+          ]
+        }
+      ],
+      "problem": "Quote для малого объёма и мгновенного времени не подтверждает исполнение нужного размера.",
+      "proposed_behavior": "Строить size/latency sensitivity curves по snapshots, хранить assumptions и неблагоприятные сценарии.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-016",
+        "RND-019"
+      ],
+      "acceptance": [
+        "Sweep размера выявляет liquidity boundary.",
+        "Задержка данных не исчезает из отчёта.",
+        "Modeled fill остаётся modeled."
+      ],
+      "next_experiment": "Матрица трёх размеров и трёх задержек на одинаковых historical routes.",
+      "metric": "Доля net edge, сохранившаяся при adversarial timing, и model uncertainty.",
+      "deferred_condition": "Без глубины/состояния пула выводить недостаточность данных.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-021",
+      "title": "Проверка атомарной границы маршрута",
+      "domain": "web3_qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F26",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-7eea8f6546454da16b5334c83913b8f4c7588504aee0606af542882eb25e82a6"
+          ]
+        },
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/10_PARALLEL_WEB3_RND_RU.txt",
+          "quote": "borrow→swaps→repay",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "9ba629a8a2660e6c86dbdbe9711a4b09660526b71d8ba0a87b56971467a50594",
+          "ordinal": 11,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Идея стратегии может требовать операции вне доступной атомарной транзакции.",
+      "proposed_behavior": "Составлять contract route: chain, supported instructions, borrow/repay, writable accounts, resource constraints и settlement timing.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-013",
+        "RND-019",
+        "RND-020"
+      ],
+      "acceptance": [
+        "Внешняя delayed settlement стадия отмечается non-atomic.",
+        "Отсутствующий adapter или instruction остаётся UNSUPPORTED."
+      ],
+      "next_experiment": "Проверить один circular route и один намеренно non-atomic route на pinned fixture.",
+      "metric": "Доля маршрутов с полностью описанными atomic dependencies.",
+      "deferred_condition": "Сначала подтвердить поддержку конкретного lender и venue в текущем коде.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-022",
+      "title": "Настоящая paper/shadow campaign с честными labels",
+      "domain": "web3_qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-13",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F29",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-88689055f798f4b6413d39fe21222f6c9ec74cfa5796e49e1623f306e0930505"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-042",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-9d0f867ac56c5086869f11cecc3e13c8cc10576ab328b6e27863256cfe2c4ea3"
+          ]
+        }
+      ],
+      "problem": "Синтетический test PASS и реальное наблюдение рынка дают разные доказательства.",
+      "proposed_behavior": "Записывать observed interval, gaps, provider lineage, quotes, hypothetical fills, assumptions и failure costs; realised PnL хранить отдельно только при реальных подтверждённых fills.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-010",
+        "RND-011",
+        "RND-015",
+        "RND-018",
+        "RND-019",
+        "RND-020",
+        "RND-021"
+      ],
+      "acceptance": [
+        "Fixture не закрывает real-observation gate.",
+        "Отчёт содержит фактическую длительность и все gaps.",
+        "Гипотетический PnL не помечен реализованным."
+      ],
+      "next_experiment": "Ограниченная observation campaign после проверки адаптера; длительность выбрать по необходимому покрытию режимов.",
+      "metric": "Coverage regimes, modeled net distribution и доля качественных наблюдений.",
+      "deferred_condition": "Нет данных о реальном profitability; длительность 24h сама по себе ничего не доказывает.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-023",
+      "title": "Fault/stop/recovery qualification на Dell",
+      "domain": "qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F30",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-b2041ff447f032171965600a85d280cf27f27296bc4786df82ab86c95a3e5ff1"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F31",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-463bc344ce509c58dd9d687d6253203c15fcf12b1124fe569ebd3fa9d1f09a85"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "SCE_WEB3::W3-E10",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-3a20714e38248a034f5a367bb081198f92947d0c47c1202bd3bf4163d8c28c83"
+          ]
+        }
+      ],
+      "problem": "Сон Windows, загрузка CPU или неизвестный outcome может ломать unattended кампанию.",
+      "proposed_behavior": "Проверять process tree stop, heartbeat, checkpoints, sleep/restart и effect-specific reconciliation; сохранить независимый от ASR STOP.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-010",
+        "RND-018",
+        "RND-022"
+      ],
+      "acceptance": [
+        "После STOP нет новых запрещённых dispatch.",
+        "Неизвестный effect не повторяется вслепую после restart.",
+        "Измерения сняты на целевом устройстве."
+      ],
+      "next_experiment": "Отмена под indexing/ASR load, отключение сети и restart в трёх контрольных точках.",
+      "metric": "p95/p99 stop latency, recovery success и duplicate effect count.",
+      "deferred_condition": "Без реального устройства результаты остаются device-unverified.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-027",
+      "title": "Единая identity opportunity и защита от двойного учёта",
+      "domain": "web3_scaling",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-031",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-ac08011b8f33321ad89131dfca482d0878e1000376a6609936932505c36a4506"
+          ]
+        }
+      ],
+      "problem": "Одинаковая рыночная возможность может учитываться как прибыль многих стратегий.",
+      "proposed_behavior": "Выдавать candidate identity из route/assets/state, хранить producer lineage и объединять совместимые observations без потери версий.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-015",
+        "RND-016"
+      ],
+      "acceptance": [
+        "Два workers одного route/state дают одну economic opportunity с двумя origins.",
+        "Новый state создаёт новую версию, а не стирает старую."
+      ],
+      "next_experiment": "Обработать три перекрывающихся detector outputs.",
+      "metric": "Duplicate candidate rate и ошибка attribution.",
+      "deferred_condition": "Ключ identity настраивать по фактической protocol semantics.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-028",
+      "title": "Реестр гипотез и всех испытаний стратегии",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "OCC_RND::research.register_trial",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-80aff708de305693350505a20af37bb070b127891a2ed2e561ef06ce6e4e47b8"
+          ]
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-032",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-a3366a289f66b13e688351f06afb9a9a936c7084c5bbdc352c5a76fc6100d1a9"
+          ]
+        }
+      ],
+      "problem": "При множестве экспериментов сохраняются победители и теряется история отбора.",
+      "proposed_behavior": "До запуска фиксировать hypothesis, dataset, baseline, variation, criteria, cost и stop rule; сохранять все outcomes, включая отрицательные.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-011",
+        "RND-012"
+      ],
+      "acceptance": [
+        "Trial ID неизменяем и связан с точной версией config.",
+        "Неудачный trial остаётся в сравнении."
+      ],
+      "next_experiment": "Провести пять synthetic variations с одним случайным победителем.",
+      "metric": "Доля trials с predeclared criteria и сохранённым negative result.",
+      "deferred_condition": "Пороги определять до просмотра holdout.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-029",
+      "title": "Time/venue holdout и защита от look-ahead",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-040",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-6f3f8cdec6b1e120d34e2643d9ae7fe2f4a86d98f532173231468a9071fc9a62"
+          ]
+        }
+      ],
+      "problem": "Большой перебор стратегий легко отбирает случайный выигрыш или использует будущие данные.",
+      "proposed_behavior": "Разделять development/calibration/holdout по времени и источникам, учитывать overlapping windows и сохранять no-action baseline.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-016",
+        "RND-028"
+      ],
+      "acceptance": [
+        "Изменённый после просмотра holdout кандидат получает новый trial.",
+        "Будущий PR/market label не попадает во вход decision."
+      ],
+      "next_experiment": "Tune на одном фиксированном интервале и оценить один раз на отложенном интервале.",
+      "metric": "Out-of-sample stability и leakage violations.",
+      "deferred_condition": "Без достаточного независимого набора не объявлять устойчивость.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-030",
+      "title": "Атлас рынков, протоколов и проверяемых возможностей",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/10_PARALLEL_WEB3_RND_RU.txt",
+          "quote": "Классы гипотез",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "9ba629a8a2660e6c86dbdbe9711a4b09660526b71d8ba0a87b56971467a50594",
+          "ordinal": 11,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_WORKFLOW_CATALOG.json",
+          "source_record_id": "SCE_V2::07_web3_research_to_experiment",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "376a6170460ebfb1598505fc1636606b9c747830eb0203a71fb775471e19db2b",
+          "ordinal": 43,
+          "historical_record_links": [
+            "HIST-4045232e0c05530f386c0ebf27b874a6451da7af8fdc33d25aa1d13facc9460f"
+          ]
+        }
+      ],
+      "problem": "Стремление охватить все деньги/рынки не определяет доступность данных и техническую реализуемость.",
+      "proposed_behavior": "Каталогизировать chain/venue/protocol/pairs, data access, liquidity observations, settlement, adapter support, costs и experiment status; ранжировать следующий пробел.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-015",
+        "RND-028",
+        "RND-029"
+      ],
+      "acceptance": [
+        "Каждый новый рынок имеет источник, дату и missing requirements.",
+        "Объём рынка не помечается доступной прибылью."
+      ],
+      "next_experiment": "Составить source-backed карточки трёх рынков и выбрать один по измеримой доступности данных.",
+      "metric": "Coverage выбранного market universe и cost per evaluated hypothesis.",
+      "deferred_condition": "Расширять после полезного полного цикла на одной вертикали.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-031",
+      "title": "Circular/triangular арбитраж как сравнимый research pack",
+      "domain": "web3_strategy",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/10_PARALLEL_WEB3_RND_RU.txt",
+          "quote": "Circular/triangular DEX",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "9ba629a8a2660e6c86dbdbe9711a4b09660526b71d8ba0a87b56971467a50594",
+          "ordinal": 11,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Наличие цикла цен ещё не означает net executable opportunity.",
+      "proposed_behavior": "Описать borrow→swaps→repay, средства проверки поддержанных инструкций, costs и sensitivity; выводить кандидатов в replay/paper portfolio.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-019",
+        "RND-020",
+        "RND-021",
+        "RND-029",
+        "RND-030"
+      ],
+      "acceptance": [
+        "Fee/size/resource boundary включены в отчёт.",
+        "Unsupported lender/venue не скрывается generic route."
+      ],
+      "next_experiment": "Один трёхшаговый historical route и отрицательный контроль с закрывающими edge fees.",
+      "metric": "Out-of-sample modeled net и accepted/rejected reason distribution.",
+      "deferred_condition": "Profitability неизвестна; live не включается этим roadmap.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-032",
+      "title": "Liquidation+swap как отдельный research pack",
+      "domain": "web3_strategy",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/10_PARALLEL_WEB3_RND_RU.txt",
+          "quote": "Liquidation+swap",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "9ba629a8a2660e6c86dbdbe9711a4b09660526b71d8ba0a87b56971467a50594",
+          "ordinal": 11,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Eligibility, oracle timing и collateral settlement могут разрушить liquidation-гипотезу.",
+      "proposed_behavior": "Проверять eligibility на выбранном state, доступность collateral, обязательный repayment и конкуренцию; хранить actor-specific assumptions.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-013",
+        "RND-019",
+        "RND-021",
+        "RND-029",
+        "RND-030"
+      ],
+      "acceptance": [
+        "Позднее oracle update не используется в раннем решении.",
+        "Неатомарное получение collateral исключается из atomic claim."
+      ],
+      "next_experiment": "Replay одного eligible и одного ineligible liquidation fixture.",
+      "metric": "Eligibility accuracy и modeled net после расходов.",
+      "deferred_condition": "Требуются protocol state и подтверждённый adapter; доходность неизвестна.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-033",
+      "title": "Stable peg и wrapper conversions с settlement-моделью",
+      "domain": "web3_strategy",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/10_PARALLEL_WEB3_RND_RU.txt",
+          "quote": "Stable peg и token wrapper conversions",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "9ba629a8a2660e6c86dbdbe9711a4b09660526b71d8ba0a87b56971467a50594",
+          "ordinal": 11,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Отклонение цены от номинала не означает доступный мгновенный redemption.",
+      "proposed_behavior": "Хранить fee, redemption rights, delay, liquidity, exposure duration и различать atomic conversion от inventory-risk позиции.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-019",
+        "RND-020",
+        "RND-021",
+        "RND-029",
+        "RND-030"
+      ],
+      "acceptance": [
+        "Delayed redemption не проходит flashloan atomic contract.",
+        "Конвертация размера учитывает фактическую доступную ликвидность."
+      ],
+      "next_experiment": "Сравнить мгновенный conversion fixture с отложенным redeem fixture.",
+      "metric": "Ошибка classification atomic/non-atomic и sensitivity net.",
+      "deferred_condition": "После получения актуальных конкретных правил redemption.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-034",
+      "title": "Intent/clearing и coincidence-of-wants solver",
+      "domain": "web3_strategy",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/10_PARALLEL_WEB3_RND_RU.txt",
+          "quote": "Intent/clearing/coincidence of wants",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "9ba629a8a2660e6c86dbdbe9711a4b09660526b71d8ba0a87b56971467a50594",
+          "ordinal": 11,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Концепция solver не подтверждает доступ к intents и возможность settlement.",
+      "proposed_behavior": "Исследовать typed order constraints, matching/clearing, data access и проверяемый settlement proof; сначала offline solver.",
+      "implementation_status": "unverified",
+      "phase": "P8",
+      "dependencies": [
+        "RND-021",
+        "RND-029",
+        "RND-030"
+      ],
+      "acceptance": [
+        "Нарушение limit/expiry constraint отклоняется.",
+        "Неподдержанный settlement отмечается до оценки выгоды."
+      ],
+      "next_experiment": "Небольшой синтетический набор пересекающихся intents и независимый checker clearing.",
+      "metric": "Constraint violations, solved value после modeled costs.",
+      "deferred_condition": "Только после данных/adapter; не заявлять готовый интегрированный solver.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-035",
+      "title": "Cross-chain, basis и funding как отдельные capital/time стратегии",
+      "domain": "web3_strategy",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/10_PARALLEL_WEB3_RND_RU.txt",
+          "quote": "Cross-chain, spot-perp basis и funding",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "9ba629a8a2660e6c86dbdbe9711a4b09660526b71d8ba0a87b56971467a50594",
+          "ordinal": 11,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Задержанные расчёты и будущие выплаты нельзя считать одним мгновенным займом.",
+      "proposed_behavior": "Вести отдельную модель capital exposure, transfer/settlement delays, funding timing, inventory и failure scenarios; не смешивать PASS с atomic routes.",
+      "implementation_status": "unverified",
+      "phase": "P8",
+      "dependencies": [
+        "RND-019",
+        "RND-020",
+        "RND-029",
+        "RND-030"
+      ],
+      "acceptance": [
+        "Каждая стадия имеет time horizon и источник финансирования.",
+        "Отсутствующий future cashflow не идёт в available repayment."
+      ],
+      "next_experiment": "Offline timeline одного cross-chain и одного funding сценария с задержкой/отказом.",
+      "metric": "Capital-at-risk duration и sensitivity к задержкам.",
+      "deferred_condition": "Дальняя R&D ветка; никаких предположений о готовности adapters и доходности.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-039",
+      "title": "Budget admission и цена проверенной полезной задачи",
+      "domain": "economics",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-047",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-7f4e41a17041f3098f62c8398a9f061f3494e19fa9eb033407a06f60ce07ebfd"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "VOICE_V3::LEGACY-F105",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-b4d403840920c130f05a3d32035d52e0af8e1a7f9b7db48c644ef021d974c6da"
+          ]
+        }
+      ],
+      "problem": "Наличие API key не задаёт бюджет, а токены/повторы скрывают реальную цену результата.",
+      "proposed_behavior": "Отдельно учитывать token/API/RPC/compute расходы, reserved output, retries и abandoned work; показывать estimate и actual per verified outcome.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "RND-011"
+      ],
+      "acceptance": [
+        "Параллельные jobs не резервируют один и тот же остаток бюджета дважды.",
+        "Ошибка/отмена не теряет уже понесённый расход.",
+        "Неизвестный тариф остаётся UNKNOWN."
+      ],
+      "next_experiment": "Fixture campaign с двумя конкурирующими запросами и частично выполненным job.",
+      "metric": "Actual cost per verified task и budget overrun.",
+      "deferred_condition": "Тарифы и доступные квоты уточнять при интеграции, не переносить из старых чатов.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-10"
+      ]
+    },
+    {
+      "id": "RND-040",
+      "title": "Ablation качества контекста для coding-задач",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "VOICE_V3::RND-26",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-128c19990e115c4f728dd8003fd69d20d3e1af6985394a0e74267206851e70b7"
+          ]
+        }
+      ],
+      "problem": "Больший prompt может быть дороже и менее полезен для конкретного patch.",
+      "proposed_behavior": "Сравнивать full pack, source-linked slice, slice без выбранного evidence и compact+delta на одном coder/verifier и frozen bug families.",
+      "implementation_status": "unverified",
+      "phase": "P8",
+      "dependencies": [
+        "RND-003",
+        "RND-006",
+        "RND-028",
+        "RND-039"
+      ],
+      "acceptance": [
+        "У всех вариантов одинаковые task/compute условия.",
+        "Будущие исправления исключены из context.",
+        "Результат оценивается исправленным поведением."
+      ],
+      "next_experiment": "Десять сохранённых bug задач с удержанным holdout.",
+      "metric": "Verified patch rate, utility/KB и cost per verified patch.",
+      "deferred_condition": "После стабильного end-to-end coding loop; raw архив никогда не режется ради эксперимента.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-041",
+      "title": "ROI автоматизации против ручного/no-action baseline",
+      "domain": "economics",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-032",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-a3366a289f66b13e688351f06afb9a9a936c7084c5bbdc352c5a76fc6100d1a9"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::PIPE-18",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-9fc37dfabd82dc110b56473f49af4b7285797e8c729488ecda3d50487c8e297e"
+          ]
+        }
+      ],
+      "problem": "Количество jobs, PR или документов не показывает экономию времени и пользу.",
+      "proposed_behavior": "Считать manual baseline time, setup/maintenance/review cost, failures и полезные accepted outputs; отдельно оценивать продуктовый ROI и modeled market PnL.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-028",
+        "RND-039"
+      ],
+      "acceptance": [
+        "Отчёт включает стоимость настройки и ручных исправлений.",
+        "Непринятый результат не считается завершённой полезной задачей."
+      ],
+      "next_experiment": "Одинаковая недельная выборка research/context задач в ручном и автоматизированном режиме.",
+      "metric": "Net minutes saved и cost per accepted outcome.",
+      "deferred_condition": "Порог окупаемости выбрать до расширения масштабов.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-10"
+      ]
+    },
+    {
+      "id": "RND-046",
+      "title": "Карта отсутствующих доказательств до решения о масштабировании",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-014",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-6668a6e6a585325ff07d9e11c1871a4eac4bc34c6c442b35f6525158b709c35c"
+          ]
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-004",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-1bdc24af4fa628949ca0a58deaee32e90d7629fc98827a04a520690df6d91ca0"
+          ]
+        }
+      ],
+      "problem": "Большой каталог и красивый report создают ложное чувство завершённости.",
+      "proposed_behavior": "Показывать отдельные evidence gaps: sources, parser coverage, repo implementation, real device, market regimes, economics и operational recovery; каждый gate имеет владельца и выходной artifact.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-022",
+        "RND-023",
+        "RND-025",
+        "RND-029",
+        "RND-041"
+      ],
+      "acceptance": [
+        "Размер ZIP и число карточек не входят как доказательство готовности.",
+        "Отсутствующий evidence блокирует только соответствующее утверждение.",
+        "Отчёт перечисляет следующий самый полезный сбор данных."
+      ],
+      "next_experiment": "Подать полный архив без device/market receipts и проверить, что readiness остаётся unverified по этим осям.",
+      "metric": "False-readiness claims и время поиска необходимого evidence.",
+      "deferred_condition": "Eventual live readiness требует отдельной текущей программы runtime/risk/signer/settlement; здесь не оценивается.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    }
+  ]
+}

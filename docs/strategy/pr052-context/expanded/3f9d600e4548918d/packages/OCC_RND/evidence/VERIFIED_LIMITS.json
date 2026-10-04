@@ -1,0 +1,72 @@
+[
+  {
+    "owner": "automation_core.sync",
+    "field": "max_files",
+    "observed": "default 100; accepted 1..1000",
+    "source": "G03",
+    "recommended_change": "Replace total cap with durable pages; retain resource admission"
+  },
+  {
+    "owner": "automation_core.sync",
+    "field": "visited entries",
+    "observed": "10000",
+    "source": "G03",
+    "recommended_change": "Persist scan coverage; no silent exclusion"
+  },
+  {
+    "owner": "automation_core.context_pack",
+    "field": "item_ids",
+    "observed": "1..10",
+    "source": "G03",
+    "recommended_change": "Versioned multipart export, preserve old contract"
+  },
+  {
+    "owner": "automation_core.context_pack",
+    "field": "bytes",
+    "observed": "default100000; max1000000",
+    "source": "G03",
+    "recommended_change": "Separate archive/source budget from prompt budget"
+  },
+  {
+    "owner": "context_review.create_session",
+    "field": "context_pack bytes",
+    "observed": "48000",
+    "source": "G04",
+    "recommended_change": "Bundle manifest references"
+  },
+  {
+    "owner": "repo_context.scan_page",
+    "field": "page entries",
+    "observed": "default20; accepted1..100",
+    "source": "G05",
+    "recommended_change": "NOT a global cap; page until cursor complete"
+  },
+  {
+    "owner": "repo_context",
+    "field": "MAX_FILE",
+    "observed": "8388608",
+    "source": "G05",
+    "recommended_change": "Streaming originals; bounded parser with explicit incomplete state"
+  },
+  {
+    "owner": "repo_context",
+    "field": "MAX_TREE",
+    "observed": "33554432",
+    "source": "G05",
+    "recommended_change": "Streaming enumeration"
+  },
+  {
+    "owner": "automation_core.validate_policy",
+    "field": "max_parallel",
+    "observed": "exactly1",
+    "source": "G03",
+    "recommended_change": "Keep writer serialization until reviewed concurrency design"
+  },
+  {
+    "owner": "automation_core.validate_policy",
+    "field": "money_budget",
+    "observed": "exactly0",
+    "source": "G03",
+    "recommended_change": "Keep; outside scope to grant money authority"
+  }
+]

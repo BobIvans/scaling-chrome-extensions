@@ -1,0 +1,784 @@
+[
+  {
+    "goal_id": "GOAL5-01",
+    "title": "Локальное доступное приложение на Windows",
+    "user_outcome": "Открыть библиотеку и управлять задачами без обязательной открытой вкладки Chrome.",
+    "feature_ids": [
+      "ACT-033",
+      "ACT-050",
+      "LIB-001",
+      "LIB-029",
+      "LIB-030",
+      "LIB-031",
+      "LIB-032",
+      "RND-010"
+    ],
+    "acceptance_criteria": [
+      "Desktop shell использует существующие service operations и один canonical store.",
+      "Закрытие Chrome не останавливает локальный поиск и подготовку TASK.",
+      "На Windows сохранён receipt установки, запуска и текстового управления."
+    ],
+    "primary_scenario": "Установка → первое открытие → выбор проекта → восстановление после закрытия.",
+    "stage": "S0/S3",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-10",
+      "DEC5-18",
+      "DEC5-24"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-01",
+      "ACTION5-02",
+      "ACTION5-03",
+      "ACTION5-12",
+      "ACTION5-16",
+      "ACTION5-19",
+      "ACTION5-21",
+      "ACTION5-27"
+    ],
+    "milestone_ids": [
+      "M5-01"
+    ],
+    "criterion_ids": [
+      "GOAL5-01-AC1",
+      "GOAL5-01-AC2",
+      "GOAL5-01-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-033",
+        "status": "PARTIAL",
+        "verified_scope": "Текстовый UI/aria labels/состояния добавлены; установленный Windows screen-reader путь не проверялся.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "LIB-001",
+        "status": "PARTIAL",
+        "verified_scope": "Существующий SQLite/Core и typed native API расширены шестью task-командами; desktop shell без Chrome не квалифицирован.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-04",
+    "title": "Связанные части кода для AI",
+    "user_outcome": "Получить пакеты, где код связан с зависимостями, тестами и контрактами.",
+    "feature_ids": [
+      "ACT-009",
+      "LIB-005",
+      "LIB-014",
+      "LIB-027",
+      "RND-003",
+      "RND-004"
+    ],
+    "acceptance_criteria": [
+      "Group manifest ссылается на pinned paths/revisions/ranges; часть не выдаётся за всё repo.",
+      "Resolved, ambiguous, external и dynamic edges различаются.",
+      "Пакеты сохраняют related tests/contracts и все заявленные gaps."
+    ],
+    "primary_scenario": "Выбрать функцию → граф → группа → многотомный handoff.",
+    "stage": "S2",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-05",
+      "DEC5-06",
+      "DEC5-07",
+      "DEC5-22"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-04",
+      "ACTION5-07",
+      "ACTION5-11",
+      "ACTION5-13",
+      "ACTION5-14"
+    ],
+    "milestone_ids": [
+      "M5-02"
+    ],
+    "criterion_ids": [
+      "GOAL5-04-AC1",
+      "GOAL5-04-AC2",
+      "GOAL5-04-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "LIB-005",
+        "status": "PARTIAL",
+        "verified_scope": "sourceOffset продолжает части; единый delivery manifest всего repo ещё не реализован.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "LIB-014",
+        "status": "PARTIAL",
+        "verified_scope": "Byte-exact Git chunks и source binding проверяются; это не spans всех форматов.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "RND-003",
+        "status": "PARTIAL",
+        "verified_scope": "Python static graph/SCC существует; JS/TS и dynamic edges обозначены gaps.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-08",
+    "title": "Одна библиотека оригиналов, версий и происхождения",
+    "user_outcome": "Повторный импорт не размножает bytes и сохраняет все происхождения.",
+    "feature_ids": [
+      "LIB-001",
+      "LIB-008",
+      "LIB-009",
+      "LIB-016",
+      "LIB-030",
+      "LIB-048",
+      "LIB-052",
+      "LIB-056"
+    ],
+    "acceptance_criteria": [
+      "Source identity, raw object и extraction revision разделены.",
+      "Одинаковые bytes могут иметь несколько provenance refs; это не несколько независимых доказательств.",
+      "Миграция schema и конфликт restore проверяются до изменения canonical heads."
+    ],
+    "primary_scenario": "Импорт разных копий → один объект → несколько ссылок происхождения.",
+    "stage": "S3",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-06",
+      "DEC5-09",
+      "DEC5-10",
+      "DEC5-12",
+      "DEC5-16"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-01",
+      "ACTION5-04",
+      "ACTION5-08",
+      "ACTION5-09",
+      "ACTION5-12",
+      "ACTION5-16",
+      "ACTION5-30"
+    ],
+    "milestone_ids": [
+      "M5-03"
+    ],
+    "criterion_ids": [
+      "GOAL5-08-AC1",
+      "GOAL5-08-AC2",
+      "GOAL5-08-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "LIB-001",
+        "status": "PARTIAL",
+        "verified_scope": "Существующий SQLite/Core и typed native API расширены шестью task-командами; desktop shell без Chrome не квалифицирован.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-09",
+    "title": "Поиск, метки, коллекции и временная применимость",
+    "user_outcome": "Находить нужный контекст по проекту, цели, времени, источнику и исправленным меткам.",
+    "feature_ids": [
+      "ACT-052",
+      "LIB-017",
+      "LIB-018",
+      "LIB-020",
+      "LIB-021",
+      "LIB-048",
+      "LIB-050",
+      "LIB-058"
+    ],
+    "acceptance_criteria": [
+      "Поиск возвращает source/version/range, а не только summary.",
+      "Ручное исправление метки переживает повторную extraction/classification.",
+      "Противоречивые/устаревшие сведения показаны с датой применимости."
+    ],
+    "primary_scenario": "Короткий запрос → результаты → почему выбрано → исправление метки.",
+    "stage": "S3/S10",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-14",
+      "DEC5-15"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-04",
+      "ACTION5-09",
+      "ACTION5-10",
+      "ACTION5-12",
+      "ACTION5-17"
+    ],
+    "milestone_ids": [
+      "M5-03",
+      "M5-10"
+    ],
+    "criterion_ids": [
+      "GOAL5-09-AC1",
+      "GOAL5-09-AC2",
+      "GOAL5-09-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "LIB-017",
+        "status": "PARTIAL",
+        "verified_scope": "Существующий local search/FTS доступен native; полный жизненный каталог требует развития.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-11",
+    "title": "Пакеты для разных AI и точный дозапрос",
+    "user_outcome": "Быстро передать выбранный контекст ChatGPT/Grok/Gemini и вернуть запрос недостающего диапазона.",
+    "feature_ids": [
+      "ACT-005",
+      "ACT-008",
+      "ACT-009",
+      "ACT-010",
+      "ACT-013",
+      "LIB-025",
+      "LIB-026",
+      "LIB-027",
+      "LIB-028",
+      "LIB-037",
+      "LIB-038",
+      "LIB-039",
+      "LIB-040",
+      "LIB-057"
+    ],
+    "acceptance_criteria": [
+      "Один provider-neutral manifest, отдельный qualified transport каждого адресата.",
+      "Пакет имеет goal/source/destination scope и declared gaps.",
+      "NEED_CONTEXT указывает версию и диапазон; supplied не означает read/used."
+    ],
+    "primary_scenario": "Корзина → preview → части → выбранный AI → ответ/NEED_CONTEXT.",
+    "stage": "S2/S5",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-02",
+      "DEC5-03",
+      "DEC5-05",
+      "DEC5-07",
+      "DEC5-13",
+      "DEC5-14",
+      "DEC5-22",
+      "DEC5-23"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-05",
+      "ACTION5-11",
+      "ACTION5-13",
+      "ACTION5-14",
+      "ACTION5-15"
+    ],
+    "milestone_ids": [
+      "M5-02",
+      "M5-03",
+      "M5-04"
+    ],
+    "criterion_ids": [
+      "GOAL5-11-AC1",
+      "GOAL5-11-AC2",
+      "GOAL5-11-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "LIB-025",
+        "status": "PARTIAL",
+        "verified_scope": "TASK и next_request формируются из выбранного контекста/критериев; автоматический semantic retriever не подключён.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "LIB-037",
+        "status": "PARTIAL",
+        "verified_scope": "TASK можно вручную скопировать/скачать для выбранного AI; UI target и auto-send ещё планируются.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-12",
+    "title": "Сохранённая задача и надёжная ручная передача",
+    "user_outcome": "Восстановить задачу и результат после перезапуска без повторной отправки неизвестной попытки.",
+    "feature_ids": [
+      "ACT-015",
+      "ACT-022",
+      "ACT-023",
+      "ACT-024",
+      "ACT-057",
+      "LIB-037"
+    ],
+    "acceptance_criteria": [
+      "Идемпотентные task/event keys и immutable packet сохраняются.",
+      "Unknown outcome требует сверки, cancel сохраняет неопределённость.",
+      "Ответ связан с task/session/packet; DONE не закрывает критерий."
+    ],
+    "primary_scenario": "Task → подготовка → manual transfer → наблюдение → result import.",
+    "stage": "S0/S5",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-02",
+      "DEC5-03",
+      "DEC5-13",
+      "DEC5-18",
+      "DEC5-21"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-03",
+      "ACTION5-14",
+      "ACTION5-21",
+      "ACTION5-25",
+      "ACTION5-26"
+    ],
+    "milestone_ids": [
+      "M5-01",
+      "M5-04"
+    ],
+    "criterion_ids": [
+      "GOAL5-12-AC1",
+      "GOAL5-12-AC2",
+      "GOAL5-12-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-015",
+        "status": "PARTIAL",
+        "verified_scope": "taskKey/eventKey дают устойчивую identity ручных операций; external effect identity впереди.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-022",
+        "status": "PARTIAL",
+        "verified_scope": "SQLite intent/events и reference-only UI cache работают для ручной передачи; автоматический executor не добавлен.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-023",
+        "status": "PARTIAL",
+        "verified_scope": "Unknown/manual observation восстанавливается, включая cancel; remote reconciliation adapter ещё не подключён.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-024",
+        "status": "PARTIAL",
+        "verified_scope": "Задача восстанавливается в новом процессе; полный DAG автоматических эффектов впереди.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "ACT-057",
+        "status": "PARTIAL",
+        "verified_scope": "Есть task resume и unknown receipt controls; общая панель кампании дальше.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "LIB-037",
+        "status": "PARTIAL",
+        "verified_scope": "TASK можно вручную скопировать/скачать для выбранного AI; UI target и auto-send ещё планируются.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-15",
+    "title": "Независимые проверки результата",
+    "user_outcome": "Проверять критерий по подходящему доказательству, сохраняя неизвестное.",
+    "feature_ids": [
+      "ACT-012",
+      "ACT-013",
+      "ACT-014",
+      "ACT-053",
+      "RND-008",
+      "RND-011",
+      "RND-023",
+      "RND-042",
+      "RND-043"
+    ],
+    "acceptance_criteria": [
+      "Local tests, CI, merge, installation и device outcome имеют отдельные bindings.",
+      "Изменение input/template/policy/registry/bytes делает связанные evidence stale.",
+      "Проверка измеряет сам критерий, а не доверяет модели или одному exit code без test binding."
+    ],
+    "primary_scenario": "Критерий → зарегистрированный check → receipt → independent revalidation.",
+    "stage": "S6/S7",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-04",
+      "DEC5-18",
+      "DEC5-20",
+      "DEC5-23",
+      "DEC5-24"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-11",
+      "ACTION5-18",
+      "ACTION5-24",
+      "ACTION5-30"
+    ],
+    "milestone_ids": [
+      "M5-05"
+    ],
+    "criterion_ids": [
+      "GOAL5-15-AC1",
+      "GOAL5-15-AC2",
+      "GOAL5-15-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-012",
+        "status": "PARTIAL",
+        "verified_scope": "Есть narrow local-test receipt с актуальной revalidation; CI/merge/install/device не подтверждаются.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "RND-011",
+        "status": "PARTIAL",
+        "verified_scope": "Схема local-evidence явно отделяет CI/merge/install и semantic claim. Полная UpdateEvidence далее.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-16",
+    "title": "Обновление приложения и новые проверенные возможности",
+    "user_outcome": "Получить обновление из точной версии, установить его и проверить новую capability.",
+    "feature_ids": [
+      "ACT-045",
+      "ACT-046",
+      "ACT-047",
+      "ACT-048",
+      "RND-008"
+    ],
+    "acceptance_criteria": [
+      "Release/source/assets имеют проверяемую связь.",
+      "Staging, schema migration и rollback проходят репетицию.",
+      "Capability registry связан с установленной build и device qualification."
+    ],
+    "primary_scenario": "Merge → staging → tests → install → canary → registry.",
+    "stage": "S7",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-10",
+      "DEC5-19",
+      "DEC5-20"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-16",
+      "ACTION5-24"
+    ],
+    "milestone_ids": [
+      "M5-05",
+      "M5-06"
+    ],
+    "criterion_ids": [
+      "GOAL5-16-AC1",
+      "GOAL5-16-AC2",
+      "GOAL5-16-AC3"
+    ],
+    "known_v4_evidence_scopes": [],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-17",
+    "title": "Текст в зарегистрированные действия и Laya-маршрутизация",
+    "user_outcome": "Сказать или написать цель, получить исполнимый план либо запрос на разработку недостающей функции.",
+    "feature_ids": [
+      "ACT-001",
+      "ACT-002",
+      "ACT-003",
+      "ACT-004",
+      "ACT-006",
+      "ACT-007",
+      "ACT-051",
+      "ACT-054",
+      "RND-009",
+      "RND-010"
+    ],
+    "acceptance_criteria": [
+      "Intent slots, capability version, scope и input references проверяются до enqueue.",
+      "Laya advisory result не расширяет полномочия и может вернуть unknown.",
+      "Неизвестная capability создаёт bounded coding/research request."
+    ],
+    "primary_scenario": "Фраза → IntentSpec → known handler / missing capability → plan preview.",
+    "stage": "S8",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-02",
+      "DEC5-17",
+      "DEC5-19",
+      "DEC5-24"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-01",
+      "ACTION5-03",
+      "ACTION5-18",
+      "ACTION5-19",
+      "ACTION5-20",
+      "ACTION5-27"
+    ],
+    "milestone_ids": [
+      "M5-07"
+    ],
+    "criterion_ids": [
+      "GOAL5-17-AC1",
+      "GOAL5-17-AC2",
+      "GOAL5-17-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-004",
+        "status": "PARTIAL",
+        "verified_scope": "Импортированный task result не выбирает команды или profile; полная политика всех будущих adapters отдельно.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-19",
+    "title": "Доступное управление PC и независимая остановка",
+    "user_outcome": "Работать текстом, клавиатурой или голосом и остановить исполнение независимо от модели.",
+    "feature_ids": [
+      "ACT-025",
+      "ACT-032",
+      "ACT-033",
+      "ACT-035",
+      "ACT-036",
+      "ACT-038",
+      "ACT-040",
+      "LIB-033"
+    ],
+    "acceptance_criteria": [
+      "Keyboard/text path доступен для каждого важного voice action.",
+      "STOP и отмена не ждут ответа облачной модели; uncertain внешние effects сохраняются.",
+      "Focus ownership и передача управления пользователю проверяются на устройстве."
+    ],
+    "primary_scenario": "Разрешённое действие → наблюдаемый outcome → stop/cancel/recovery.",
+    "stage": "S8",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-03",
+      "DEC5-04",
+      "DEC5-18",
+      "DEC5-21",
+      "DEC5-22"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-03",
+      "ACTION5-11",
+      "ACTION5-21",
+      "ACTION5-26"
+    ],
+    "milestone_ids": [
+      "M5-04",
+      "M5-07"
+    ],
+    "criterion_ids": [
+      "GOAL5-19-AC1",
+      "GOAL5-19-AC2",
+      "GOAL5-19-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-033",
+        "status": "PARTIAL",
+        "verified_scope": "Текстовый UI/aria labels/состояния добавлены; установленный Windows screen-reader путь не проверялся.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-23",
+    "title": "Долговременный архив, восстановление и выборочная передача",
+    "user_outcome": "Расти от сотен к тысячам источников, восстанавливать данные и делиться выбранной проекцией.",
+    "feature_ids": [
+      "ACT-052",
+      "LIB-006",
+      "LIB-032",
+      "LIB-035",
+      "LIB-036",
+      "LIB-038",
+      "LIB-039",
+      "LIB-040",
+      "LIB-051",
+      "LIB-060"
+    ],
+    "acceptance_criteria": [
+      "Backup включает schema, bytes, versions и heads; restore проверяет hashes/conflicts.",
+      "Retention/delete учитывает производные и backup scope.",
+      "Размер корпуса не подменяется размером AI packet; retrieval остаётся bounded."
+    ],
+    "primary_scenario": "Добавить источники → поиск/pack → backup → restore → controlled sharing.",
+    "stage": "S10",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-02",
+      "DEC5-09",
+      "DEC5-11",
+      "DEC5-12",
+      "DEC5-13",
+      "DEC5-14"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-06",
+      "ACTION5-09",
+      "ACTION5-11",
+      "ACTION5-12",
+      "ACTION5-14",
+      "ACTION5-15",
+      "ACTION5-16",
+      "ACTION5-17"
+    ],
+    "milestone_ids": [
+      "M5-03",
+      "M5-06",
+      "M5-10"
+    ],
+    "criterion_ids": [
+      "GOAL5-23-AC1",
+      "GOAL5-23-AC2",
+      "GOAL5-23-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "LIB-006",
+        "status": "PARTIAL",
+        "verified_scope": "Существующий repo scan cursor сохраняется в SQLite; произвольные source importers требуют своих контрактов.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  },
+  {
+    "goal_id": "GOAL5-28",
+    "title": "Доставка продукта и понятное продолжение работы",
+    "user_outcome": "Открыть один пакет, понять статус функций, следующий шаг и нужное действие.",
+    "feature_ids": [
+      "ACT-050",
+      "ACT-054",
+      "ACT-057",
+      "LIB-031",
+      "LIB-032",
+      "LIB-053",
+      "RND-001",
+      "RND-011"
+    ],
+    "acceptance_criteria": [
+      "Start page ведёт к актуальной стратегии и preserved history.",
+      "Код, proposal, тест, installed release и пользовательская доступность имеют разные статусы.",
+      "Следующий запрос содержит конкретный unmet goal и evidence gap."
+    ],
+    "primary_scenario": "ZIP → start → status/goal → one next task → verified increment.",
+    "stage": "S0/S11",
+    "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+    "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+    "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+    "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+    "related_decision_ids": [
+      "DEC5-01",
+      "DEC5-02",
+      "DEC5-18",
+      "DEC5-23"
+    ],
+    "related_action_task_ids": [
+      "ACTION5-01",
+      "ACTION5-02",
+      "ACTION5-11",
+      "ACTION5-12",
+      "ACTION5-18",
+      "ACTION5-21",
+      "ACTION5-26",
+      "ACTION5-27",
+      "ACTION5-30"
+    ],
+    "milestone_ids": [
+      "M5-01",
+      "M5-06",
+      "M5-10"
+    ],
+    "criterion_ids": [
+      "GOAL5-28-AC1",
+      "GOAL5-28-AC2",
+      "GOAL5-28-AC3"
+    ],
+    "known_v4_evidence_scopes": [
+      {
+        "feature_id": "ACT-057",
+        "status": "PARTIAL",
+        "verified_scope": "Есть task resume и unknown receipt controls; общая панель кампании дальше.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "RND-001",
+        "status": "IMPLEMENTED_SCOPED",
+        "verified_scope": "Current SCE SHA и owners проверены; иные repo снимки остаются историческими.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      },
+      {
+        "feature_id": "RND-011",
+        "status": "PARTIAL",
+        "verified_scope": "Схема local-evidence явно отделяет CI/merge/install и semantic claim. Полная UpdateEvidence далее.",
+        "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+      }
+    ],
+    "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+    "implementation_verification_changed_in_v5": false
+  }
+]

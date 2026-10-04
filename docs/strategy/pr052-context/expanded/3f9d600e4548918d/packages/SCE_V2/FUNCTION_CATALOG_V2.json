@@ -1,0 +1,902 @@
+{
+  "schema": "sce.rnd.catalog.v2",
+  "note": "Function cards overlap across layers; not a count of unique completed product capabilities or PRs. Prior IDs kept in baseline roadmap.",
+  "functions": [
+    {
+      "id": "CTX-01",
+      "group": "Context R&D",
+      "title_ru": "Реестр источников и checkpoint каждого импортёра",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-02",
+      "group": "Context R&D",
+      "title_ru": "ChatGPT/Grok/Telegram/Google Docs adapters",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-03",
+      "group": "Context R&D",
+      "title_ru": "Revision и tombstone reconciliation",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-04",
+      "group": "Context R&D",
+      "title_ru": "Извлечение целей и принятых решений",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-05",
+      "group": "Context R&D",
+      "title_ru": "Timeline противоречий и supersession",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-06",
+      "group": "Context R&D",
+      "title_ru": "Области личных данных и egress policy",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-07",
+      "group": "Context R&D",
+      "title_ru": "Audio/OCR/video derivatives",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-08",
+      "group": "Context R&D",
+      "title_ru": "План дня из незакрытых целей",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-09",
+      "group": "Context R&D",
+      "title_ru": "Evidence-aware graph retrieval",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-10",
+      "group": "Context R&D",
+      "title_ru": "Полный multi-part AI review ledger",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-11",
+      "group": "Context R&D",
+      "title_ru": "Реестр R&D и сравнение экспериментов",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-12",
+      "group": "Context R&D",
+      "title_ru": "Active learning по исправлениям пользователя",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-13",
+      "group": "Context R&D",
+      "title_ru": "Сбор публичных research signals",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-14",
+      "group": "Context R&D",
+      "title_ru": "Event-driven обновление контекста",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-15",
+      "group": "Context R&D",
+      "title_ru": "Dependency-closed code harvesting",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "CTX-16",
+      "group": "Context R&D",
+      "title_ru": "Оценка полезности automations",
+      "status": "SPEC",
+      "details": "rnd_v2/context_functions.json"
+    },
+    {
+      "id": "PIPE-01",
+      "group": "Grok/update",
+      "title_ru": "Голосовая цель с версиями",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-02",
+      "group": "Grok/update",
+      "title_ru": "Компилятор mission.json",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-03",
+      "group": "Grok/update",
+      "title_ru": "Контекст до конца диктовки",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-04",
+      "group": "Grok/update",
+      "title_ru": "Grok custom tool bridge",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-05",
+      "group": "Grok/update",
+      "title_ru": "Маршрут rules/Laya/escalation",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-06",
+      "group": "Grok/update",
+      "title_ru": "DAG и resource locks",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-07",
+      "group": "Grok/update",
+      "title_ru": "Idempotency и UNKNOWN",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-08",
+      "group": "Grok/update",
+      "title_ru": "Runner в отдельном worktree",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-09",
+      "group": "Grok/update",
+      "title_ru": "Evidence после каждого patch",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-10",
+      "group": "Grok/update",
+      "title_ru": "PR и merge ожидаемого head",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-11",
+      "group": "Grok/update",
+      "title_ru": "Release provenance",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-12",
+      "group": "Grok/update",
+      "title_ru": "Capability diff",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-13",
+      "group": "Grok/update",
+      "title_ru": "Staging updater",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-14",
+      "group": "Grok/update",
+      "title_ru": "Миграция с восстановлением",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-15",
+      "group": "Grok/update",
+      "title_ru": "Rollback версии",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-16",
+      "group": "Grok/update",
+      "title_ru": "Windows semantic automation",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-17",
+      "group": "Grok/update",
+      "title_ru": "Доступный STOP и activity arbitration",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "PIPE-18",
+      "group": "Grok/update",
+      "title_ru": "Измерение реального выигрыша",
+      "status": "SPEC",
+      "details": "rnd_v2/pipeline/FUNCTIONS_PIPELINE.json"
+    },
+    {
+      "id": "W3-F01",
+      "group": "Web3",
+      "title_ru": "Проверка типизированного плана и DAG этапов",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F02",
+      "group": "Web3",
+      "title_ru": "Сравнение exact repo/config/input/environment/network/anchor/provider/model/toolchain",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F03",
+      "group": "Web3",
+      "title_ru": "Потоковая проверка bytes/SHA256 и contained paths",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F04",
+      "group": "Web3",
+      "title_ru": "Срок актуальности, будущие timestamps и несовпадение plan hash",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F05",
+      "group": "Web3",
+      "title_ru": "Проверка pinned runner identity вместо текста/успешного boolean",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F06",
+      "group": "Web3",
+      "title_ru": "Сверка полного path+ordinal manifest",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F07",
+      "group": "Web3",
+      "title_ru": "Проверка реальных записей testcase, failure/error/skipped и требуемых названий",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F08",
+      "group": "Web3",
+      "title_ru": "Пересчёт net cost в integer atomic units и freshness accepted candidates",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F09",
+      "group": "Web3",
+      "title_ru": "Длительность/gaps/provider ids/paper-only/source freshness по журналу",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F10",
+      "group": "Web3",
+      "title_ru": "Проверка записанных stop latency и запрещённых dispatch после trigger",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F11",
+      "group": "Web3",
+      "title_ru": "Раздельный own status и readiness с учётом зависимостей",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F12",
+      "group": "Web3",
+      "title_ru": "TRUE/FALSE/UNKNOWN/NOT_RUN, причины и неизменное live_authorized=false",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F13",
+      "group": "Web3",
+      "title_ru": "Отказ от скрытого выбора между несколькими receipts",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F14",
+      "group": "Web3",
+      "title_ru": "Сверка полного репозитория и входных данных",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F15",
+      "group": "Web3",
+      "title_ru": "Воспроизводимая сборка",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F16",
+      "group": "Web3",
+      "title_ru": "Детерминированные code smells и проверка гипотез",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F17",
+      "group": "Web3",
+      "title_ru": "Unit и boundary regression",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F18",
+      "group": "Web3",
+      "title_ru": "Fuzz с corpus и seed",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F19",
+      "group": "Web3",
+      "title_ru": "Stateful invariants",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F20",
+      "group": "Web3",
+      "title_ru": "Fork или local validator pinned state",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F21",
+      "group": "Web3",
+      "title_ru": "Детерминированный replay",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F22",
+      "group": "Web3",
+      "title_ru": "Сбор рыночных данных без подписи",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F23",
+      "group": "Web3",
+      "title_ru": "Сравнение независимых provider views",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F24",
+      "group": "Web3",
+      "title_ru": "Oracle и quote freshness",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F25",
+      "group": "Web3",
+      "title_ru": "Полная стоимость opportunity",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F26",
+      "group": "Web3",
+      "title_ru": "Маршрут и атомарность",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F27",
+      "group": "Web3",
+      "title_ru": "Slippage, liquidity и adverse timing",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F28",
+      "group": "Web3",
+      "title_ru": "Lender-neutral repayment contract",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F29",
+      "group": "Web3",
+      "title_ru": "Реальное paper-наблюдение",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F30",
+      "group": "Web3",
+      "title_ru": "Operational faults",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F31",
+      "group": "Web3",
+      "title_ru": "Dell Windows 11 qualification",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F32",
+      "group": "Web3",
+      "title_ru": "Пауза и остановка по голосу/кнопке",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F33",
+      "group": "Web3",
+      "title_ru": "Release, digest и rollback",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F34",
+      "group": "Web3",
+      "title_ru": "План ограниченного canary",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F35",
+      "group": "Web3",
+      "title_ru": "Мониторинг уже разрешённого live",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F36",
+      "group": "Web3",
+      "title_ru": "Инвалидация по изменению inputs",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F37",
+      "group": "Web3",
+      "title_ru": "Incident→regression",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F38",
+      "group": "Web3",
+      "title_ru": "Пакет решения readiness",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F39",
+      "group": "Web3",
+      "title_ru": "Поиск непроверенных требований",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F40",
+      "group": "Web3",
+      "title_ru": "Очередь R&D экспериментов",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "W3-F41",
+      "group": "Web3",
+      "title_ru": "Голосовая цель→проверяемый Web3 план",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "details": "rnd_v2/web3/FUNCTIONS_WEB3.json"
+    },
+    {
+      "id": "LABEL-01",
+      "group": "Offline labeling",
+      "title_ru": "Адаптер полного экспортированного пакета",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-02",
+      "group": "Offline labeling",
+      "title_ru": "Проверка SHA-256 оригиналов и TXT до маркировки",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-03",
+      "group": "Offline labeling",
+      "title_ru": "Стабильные source/content/span IDs и точные локаторы",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-04",
+      "group": "Offline labeling",
+      "title_ru": "Различение повторных одинаковых путей ZIP",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-05",
+      "group": "Offline labeling",
+      "title_ru": "Unicode spans без общего лимита документов",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-06",
+      "group": "Offline labeling",
+      "title_ru": "Метки ASSERTED, SUGGESTED и UNKNOWN с происхождением",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-07",
+      "group": "Offline labeling",
+      "title_ru": "Нормализация Unicode и безопасные ключи тегов",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-08",
+      "group": "Offline labeling",
+      "title_ru": "Эвристические кандидаты целей, задач, вопросов, тестов и web3",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-09",
+      "group": "Offline labeling",
+      "title_ru": "Сохранение всех доступных ролей и ветвей messages.jsonl",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-10",
+      "group": "Offline labeling",
+      "title_ru": "Граф происхождения и объявленных parent-связей",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-11",
+      "group": "Offline labeling",
+      "title_ru": "Контекст по цели без top-20/top-k",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-12",
+      "group": "Offline labeling",
+      "title_ru": "Полный учёт включённого, исключённого и неизвестного",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-13",
+      "group": "Offline labeling",
+      "title_ru": "Режим включить весь доступный текст",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-14",
+      "group": "Offline labeling",
+      "title_ru": "Раздельные версии оригинала и пользовательских меток",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-15",
+      "group": "Offline labeling",
+      "title_ru": "Инвалидация контекста при изменении данных или меток",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-16",
+      "group": "Offline labeling",
+      "title_ru": "Атомарное создание результатов и кооперативная отмена",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-17",
+      "group": "Offline labeling",
+      "title_ru": "JSON Schema записей и coverage",
+      "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LABEL-18",
+      "group": "Offline labeling",
+      "title_ru": "Расширенная таксономия жизненного контекста",
+      "status": "R_AND_D_SPEC_ONLY",
+      "details": "rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json"
+    },
+    {
+      "id": "LVF01",
+      "group": "Laya/voice R&D",
+      "title_ru": "hardware_probe — CPU/RAM/GPU/backend capabilities без предположений о Dell.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF02",
+      "group": "Laya/voice R&D",
+      "title_ru": "local_decision_backend — Unsloth/native Laya/ONNX adapter с revision и loopback endpoint.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF03",
+      "group": "Laya/voice R&D",
+      "title_ru": "question_pack_registry — versioned choice/score/noul schemas и classifier calibration.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF04",
+      "group": "Laya/voice R&D",
+      "title_ru": "lossless_inference_ledger — окна, span offsets, ошибки и повторение до покрытия.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF05",
+      "group": "Laya/voice R&D",
+      "title_ru": "voice_capture_session — opt-in запись, состояние, локальные audio/text links.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF06",
+      "group": "Laya/voice R&D",
+      "title_ru": "partial_transcript_prefetch — speculative read-only поиск без запуска действий.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF07",
+      "group": "Laya/voice R&D",
+      "title_ru": "finalize_goal — неизменяемая финальная версия цели и исправления.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF08",
+      "group": "Laya/voice R&D",
+      "title_ru": "voice_stop_resume — cancel token, журнал уже сделанного, продолжение с checkpoint.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF09",
+      "group": "Laya/voice R&D",
+      "title_ru": "asr_entity_dictionary — проектные имена/пути и проверка важных сущностей.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF10",
+      "group": "Laya/voice R&D",
+      "title_ru": "multimodal_local_search — FTS+embeddings+metadata, ссылки на spans.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF11",
+      "group": "Laya/voice R&D",
+      "title_ru": "recipe_router — выбор существующего tested workflow с abstain/fallback.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF12",
+      "group": "Laya/voice R&D",
+      "title_ru": "adaptive_clarification — минимальный полезный уточняющий вопрос; R&D.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF13",
+      "group": "Laya/voice R&D",
+      "title_ru": "typed_action_registry — observed target/args/preconditions/postconditions.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF14",
+      "group": "Laya/voice R&D",
+      "title_ru": "windows_uia_adapter — доступ к опубликованным UIA elements/patterns.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF15",
+      "group": "Laya/voice R&D",
+      "title_ru": "browser_dom_adapter — snapshot, target freshness, semantic completion checks.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF16",
+      "group": "Laya/voice R&D",
+      "title_ru": "worker_resource_scheduler — параллельные read-only jobs, locks для writers/UI.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF17",
+      "group": "Laya/voice R&D",
+      "title_ru": "outcome_verifier — TRUE/FALSE/UNKNOWN/NOT_RUN по независимым проверкам.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF18",
+      "group": "Laya/voice R&D",
+      "title_ru": "validated_recipe_compiler — успешные traces→проект рецепта→тесты→version.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF19",
+      "group": "Laya/voice R&D",
+      "title_ru": "warm_model_manager — load/unload/cache keyed по revisions.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF20",
+      "group": "Laya/voice R&D",
+      "title_ru": "latency_eval_harness — timestamps по стадиям, p50/p95, качество/ресурсы.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF21",
+      "group": "Laya/voice R&D",
+      "title_ru": "accessibility_profiles — keyboard/text/voice/pauses/labels/cancellation.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF22",
+      "group": "Laya/voice R&D",
+      "title_ru": "source_aware_context_compaction — ограничение active prompt при полном archive.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF23",
+      "group": "Laya/voice R&D",
+      "title_ru": "social_claim_verification_queue — X claim→первоисточник→код→reproduction status.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "LVF24",
+      "group": "Laya/voice R&D",
+      "title_ru": "model_change_regression_suite — upgrade inference backend не меняет решения молча.",
+      "status": "SPEC",
+      "details": "rnd_v2/research_laya_voice.txt"
+    },
+    {
+      "id": "SMELL-01",
+      "group": "Offline prototype",
+      "title_ru": "Полный доступный Python inventory и SHA256 исходников",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-02",
+      "group": "Offline prototype",
+      "title_ru": "AST eval/exec/shell=True/bare-except/except-pass candidates",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-03",
+      "group": "Offline prototype",
+      "title_ru": "Большие функции с настраиваемым порогом",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-04",
+      "group": "Offline prototype",
+      "title_ru": "Одинаковые AST bodies функций",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-05",
+      "group": "Offline prototype",
+      "title_ru": "Разрешимые локальные import edges",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-06",
+      "group": "Offline prototype",
+      "title_ru": "Циклические компоненты import graph",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-07",
+      "group": "Offline prototype",
+      "title_ru": "Неразрешённые, wildcard и динамические imports",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-08",
+      "group": "Offline prototype",
+      "title_ru": "Явные ошибки чтения/разбора и пропуски ссылок",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-09",
+      "group": "Offline prototype",
+      "title_ru": "Хеш наблюдаемого inventory и стабильные IDs находок",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "SMELL-10",
+      "group": "Offline prototype",
+      "title_ru": "Отчёт STATIC_CANDIDATE с source spans",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    },
+    {
+      "id": "UI-01",
+      "group": "Offline prototype",
+      "title_ru": "Окно запуска пяти офлайн действий, отдельные журналы и STOP",
+      "status": "IMPLEMENTED_UI_WINDOWS_NOT_RUN",
+      "details": "rnd_v2/labeling; rnd_v2/smells; app/rnd_tools_ui.py"
+    }
+  ]
+}

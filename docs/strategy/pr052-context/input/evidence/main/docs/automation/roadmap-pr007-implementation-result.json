@@ -1,0 +1,354 @@
+{
+  "application_checks": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p test_*.py -v",
+      "passed": 273,
+      "skipped": 1,
+      "source": "Final local adapter, before actual PR005 merge",
+      "total": 274
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "passed": 46
+    },
+    {
+      "command": "python -B -m unittest discover -s agent-bridge -p test_qualification_adapter.py -v",
+      "passed": 8
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "passed": 112
+    },
+    {
+      "command": "git diff --cached --check",
+      "outcome": "PASS"
+    },
+    {
+      "command": "PR007 focused suite with actual PR005 branch owner",
+      "passed": 25,
+      "pr005_head": "4537c773a84474bcb613b3524494388d955552b9",
+      "total": 25
+    },
+    {
+      "command": "Full Content Lab suite on PR007 + PR005 preview",
+      "passed": 290,
+      "pr005_head": "4537c773a84474bcb613b3524494388d955552b9",
+      "total": 290
+    },
+    {
+      "command": "git -c core.autocrlf=true checkout-index; parser_pin()",
+      "outcome": "PASS",
+      "scope": "Byte-identical offline parser/license/metadata with Windows-style checkout policy"
+    },
+    {
+      "command": "Final PR007 focused suite with trusted executable source/store guard",
+      "passed": 24,
+      "skipped": 1,
+      "total": 25
+    },
+    {
+      "command": "Full Content Lab with merged PR005 and PR009",
+      "passed": 297,
+      "total": 297,
+      "seconds": 184.325,
+      "scope": "Before final Windows executable-path normalization; final exact-head CI in PR #43"
+    },
+    {
+      "command": "PR007 focused suite after Windows executable-path normalization",
+      "passed": 25,
+      "total": 25,
+      "seconds": 29.655,
+      "scope": "Merged PR005 owner; unresolved source/store executable paths rejected before invocation"
+    }
+  ],
+  "application_code_changed": true,
+  "windows_executable_path_correction": {
+    "failed_head": "db1954014e8435c5875e41e1c6219e89c29c3339",
+    "failed_run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37205194434",
+    "cause": "Unresolved test-discovered executable used Windows TEMP 8.3 parent alias; validated roots used resolved long paths.",
+    "correction": "Resolve the fixed executable at the build trust boundary before source/store containment checks or any invocation.",
+    "regression": "Unresolved discovered paths inside both source and store must fail before subprocess.run; no source/store execution is allowed."
+  },
+  "base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
+  "integration_base_sha": "1a528efc08f581195375668a5f17f71454ad515b",
+  "pr005_merged_main_owner": {
+    "pr_head": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
+    "source_eligibility_bytes_unchanged_from_tested_preview": true,
+    "installer": "PR005 owner and coverage modules retained alongside PR007 offline parser layout"
+  },
+  "ci_evidence": {
+    "head_sha": "6699e67f89950867aaa90840321e13daeb012c5b",
+    "run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37206109141",
+    "ubuntu": "PASS",
+    "windows": "PASS",
+    "scope": "Verified PR007 with final executable guard, PR005 and PR009 before concurrent PR008 main update. Final combined-head CI is recorded in PR #43."
+  },
+  "corpus_metrics": {
+    "cases": 200,
+    "corpus_sha256": "c8ec0c3ecae7476f8042bebc7b34d3f54e519eba0cbdc75acd6b581e26b22f88",
+    "failed_cases": [],
+    "false_negative": 0,
+    "false_positive": 0,
+    "families": {
+      "ALIAS_TSX": 10,
+      "ASSET_JSON": 10,
+      "COMMENT_FAKE": 10,
+      "COMMONJS_REQUIRE": 10,
+      "DYNAMIC_COMPUTED": 10,
+      "DYNAMIC_LITERAL": 10,
+      "ESM_DEFAULT": 10,
+      "ESM_NAMED_PARENT": 10,
+      "ESM_SIDE_EFFECT_JSX": 10,
+      "EXPORT_TYPE": 10,
+      "EXTENSIONLESS": 10,
+      "IMPORT_TYPE": 10,
+      "REEXPORT_NAMED": 10,
+      "REEXPORT_STAR_TS": 10,
+      "SCOPE_ESCAPE": 10,
+      "STRING_FAKE": 10,
+      "SYNTAX_ERROR": 10,
+      "TARGET_INELIGIBLE": 10,
+      "TS_RUNTIME_EXTENSION": 10,
+      "WORKSPACE_PACKAGE": 10
+    },
+    "known_dynamic_total": 20,
+    "known_dynamic_unresolved": 20,
+    "parent_child_peak_rss_bytes": 74977280,
+    "parser_peak_rss_bytes": 72847360,
+    "platform": "linux",
+    "precision": 1.0,
+    "real_world_holdout": "NOT_PROVIDED",
+    "recall": 1.0,
+    "references": 171,
+    "seconds": 10.835,
+    "status": "PASS",
+    "synthetic": true,
+    "true_positive": 67
+  },
+  "criterion_results": [
+    {
+      "criterion_id": "P007-AC01",
+      "evidence": "LedgerTests: immutable capture/no Git/worktree override + roundtrip and corrupt/pending refusal",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC02",
+      "evidence": "SyntaxTests: trusted parser pin and environment isolation; vendored MIT artifact; installed isolated layout",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC03",
+      "evidence": "Actual corpus 200 JS/TS/JSX/TSX AST files, plus MTS/CTS/type query/import-equals tests",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC04",
+      "evidence": "Corpus exact byte/symbol evidence and BOM/CRLF/RU/astral/escaped literal test",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC05",
+      "evidence": "67 expected exact paths / 171 all syntax references matched; conservative resolver tests",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC06",
+      "evidence": "Type-only exact refs separately counted; symbol_binding NOT_TYPECHECKED; SCC count excludes type/dynamic",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC07",
+      "evidence": "TS .js/.jsx/.mjs/.cjs unresolved policy tests and corpus TS_RUNTIME_EXTENSION",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC08",
+      "evidence": "20/20 known dynamic unresolved; computed/require/shadowed require/import-equals/aliases tested",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC09",
+      "evidence": "50 candidate outcomes, source-root escapes/missing/case/ineligible facts; pending capture blocks",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC10",
+      "evidence": "10 parse failures have zero provisional edges; comments/strings produce no references",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC11",
+      "evidence": "Compact canonical JSON edge ID, repeat deterministic bundle, snapshot/options/target invalidation",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC12",
+      "evidence": "Bounded real parser subprocess, frame/stderr/deadline, Ctrl+C and global cancel cleanup; resource observations",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC13",
+      "evidence": "Actual kill before/after directory rename, corrupt stage/reuse, disk/cancel, profile revoke, second-process kernel lock",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC14",
+      "evidence": "qualify_repo_js.py actual 200-case corpus PASS, positive denominator precision/recall 1.0, synthetic holdout status",
+      "outcome": "PASS"
+    },
+    {
+      "criterion_id": "P007-AC15",
+      "evidence": "PR002 metadata and PR003 ZIP SHA256 unchanged in actual capture/export tests; exact PR005 contract consumed; PR006 dialect boundary retained; actual PR005 capture/projection integration PASS on its published branch, 290 full tests and 2,001-file default facts run",
+      "outcome": "PARTIAL"
+    },
+    {
+      "criterion_id": "P007-AC16",
+      "evidence": "Installed isolated offline parser layout tested locally; Windows exact-head CI required in PR; Dell/device not available",
+      "outcome": "PARTIAL"
+    }
+  ],
+  "default_global_time_limit": null,
+  "default_output_size_limit": null,
+  "package_id": "ROADMAP-PR-007",
+  "parser_adr_measurements": {
+    "babel": {
+      "candidate": "babel",
+      "diagnostic_files": 10,
+      "files": 200,
+      "load_ms": 9.762558999999996,
+      "node": "v24.19.0",
+      "parse_200_ms": 56.019470000000005,
+      "peak_rss_bytes": 56242176,
+      "qualification": "EXACT_LABELS_SEPARATELY_TESTED",
+      "refs": 171,
+      "symbols": 190,
+      "total_ms": 67.66005999999999
+    },
+    "ts": {
+      "candidate": "typescript",
+      "diagnostic_files": 10,
+      "files": 200,
+      "load_ms": 149.778251,
+      "node": "v24.19.0",
+      "parse_200_ms": 30.89501100000001,
+      "peak_rss_bytes": 92336128,
+      "qualification": "AST_COUNTS_ONLY_NOT_EXACT_ADAPTER_QUALIFICATION",
+      "refs": 171,
+      "symbols": 190,
+      "total_ms": 182.590912
+    }
+  },
+  "parser_pin": {
+    "artifact_url": "https://registry.npmjs.org/@babel/parser/-/parser-7.28.5.tgz",
+    "files": {
+      "LICENSE": {
+        "bytes": 1086,
+        "sha256": "2e97627cb278aa7556fb9e8817368302301a595b6c7582512b8d74c57b773652"
+      },
+      "babel-parser.cjs": {
+        "bytes": 512279,
+        "sha256": "4fad5d076afb8c346159a06bb942d6e14c6167d590082b7c3bdebd4c108af201"
+      },
+      "package.json": {
+        "bytes": 1382,
+        "sha256": "06e89556fea2851b071797c63c0565725ba8b889014a07ac6ad62dbde52157de"
+      }
+    },
+    "license": "MIT",
+    "name": "@babel/parser",
+    "runtime_dependencies": [],
+    "schema": "occ.repo-js-parser-pin.v1",
+    "tarball_integrity": "sha512-KKBU1VGYR7ORr3At5HAtUQ+TV3SzRCXmA/8OdDZiLDBIZxVyzXuztPjfLd3BV1PRAQGCMWWSHYhL0F8d5uHBDQ==",
+    "tarball_sha256": "d69b0c78b14cfef7d9ac3e933473839ba61080fdc8c9f0a787ac8bf0ea18bea7",
+    "version": "7.28.5"
+  },
+  "pr003_runtime_integration": "PASS_REAL_GIT_SQLITE_MANIFEST_AND_ZIP_SHA256_UNCHANGED",
+  "pr005_integration": "PASS_SCOPED_ACTUAL_OWNER_PREVIEW_4537c773a84474bcb613b3524494388d955552b9; consumes facts_status/project_facts and private binding; branch not yet merged into base",
+  "pr006_integration": "RECEIVED_PYTHON_POLICY_BOUNDARY_PRESERVED; no automatic JS consumer; actual owner absent from base main",
+  "process_isolation": "Node executable pinned before invocation; executable inside scanned source or data store rejected before --version; child uses that exact path",
+  "remaining": [
+    "Qualified compiler/runtime resolver modes, CommonJS binding, aliases/workspaces",
+    "Mixed-language/planner consumer with versioned topology policy",
+    "Long-run AST checkpoint/cache resume",
+    "Owner/tests/contracts/capability UI",
+    "Independent real-world holdout",
+    "Dell 10k-file / UI Pause-Stop / 2workers / actual Native registration resource qualification"
+  ],
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "result_sha": null,
+  "result_sha_source": "Containing Git commit; exact-head CI and merge evidence recorded in pull request description",
+  "rss_limit_claimed": false,
+  "runtime_environment": {
+    "node": "v24.19.0",
+    "platform": "linux",
+    "python": "3.12.14"
+  },
+  "scale_receipt": {
+    "ai_delivery": "NOT_PERFORMED",
+    "all_tracked_bytes_exportable": true,
+    "analysis_outcomes": {
+      "AST_SYNTAX_ONLY": 2001
+    },
+    "authority": "DATA_ONLY",
+    "candidate_files": 2001,
+    "eligibility_complete": true,
+    "eligibility_policy_verified": true,
+    "execution_authorized": false,
+    "files": {
+      "INTERPRETATION.json": {
+        "bytes": 2716,
+        "sha256": "e56b2a25026f9a8a7594cd621f5115fdbe36d4a898e661fa02082b5cbb533d1b"
+      },
+      "JS_ANALYSIS.jsonl": {
+        "bytes": 1306648,
+        "sha256": "523a6a1202765bfb3ae1aa0542e9c0c6694dbe80e18b165a73fdd2cafbd210a6"
+      },
+      "RELATIONS.jsonl": {
+        "bytes": 2040000,
+        "sha256": "225887eb06a1a3c3caf3c100df3642c17a459dfd0dda0ae58b8fd867f7636db3"
+      }
+    },
+    "fixture": "REAL_GIT_CAPTURE_SYNTHETIC_SOURCES",
+    "group_consumer": "NOT_INTEGRATED_PR006_PYTHON_ONLY",
+    "interpretation_digest": "ee042aa53161af57ea2c7b20ea49db2bd3a0a696337db7b8c081868348c87686",
+    "inventory_complete": true,
+    "legacy_guard": false,
+    "local_static_edges": 2000,
+    "namespace": "code",
+    "other_language_entries": 0,
+    "owner_branch_sha": "4537c773a84474bcb613b3524494388d955552b9",
+    "processed_entries": 2001,
+    "projection_complete": true,
+    "raw_exact_for_indexed": true,
+    "raw_ledger_unchanged": true,
+    "raw_scope": "INDEXED_CAPTURED_BLOBS",
+    "relations": 2000,
+    "repository": "sce",
+    "resolution_complete": true,
+    "reused": false,
+    "runtime": {
+      "parent_child_peak_rss_bytes": 31748096,
+      "parser_peak_rss_bytes": 31281152,
+      "rss_is_observation": true,
+      "seconds": 100.508
+    },
+    "scc_eligible_edges": 2000,
+    "schema": "occ.repo-js-analysis-status.v1",
+    "scope": "LINUX_FOREGROUND_2001_FILES_NOT_DELL",
+    "snapshot_id": "3a04301e774ac373013b0681a59a16c1f196ff1ccd267fa5cdbf16786732a937",
+    "state": "READY",
+    "syntax_complete": true,
+    "type_only_exact_edges": 0,
+    "unresolved_reasons": {}
+  },
+  "schema": "roadmap.implementation-receipt.v1",
+  "source_package_sha256": "c5d0ae46a3792e87b78866a65274bd0c390fae8ccb9b29577182496d13e8f69a",
+  "state": "IMPLEMENTED_LOCAL_VERIFIED",
+  "total_repository_file_limit": null,
+  "whole_task_closed": false,
+  "windows_checkout_correction": "Pinned parser/license/package and schemas retain byte-identical LF payloads via .gitattributes; initial Windows mismatch rejected, never normalized/blessed",
+  "windows_device_receipt": {
+    "reason": "Dell Windows11/16GB device unavailable; CI offline parser/layout is a separate gate",
+    "state": "NOT_RUN"
+  }
+}

@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce-studious:proposed:CriterionEvidence:v1",
+  "title": "CriterionEvidence proposed v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "criterion_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "criterion_text_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "verified_property": {
+      "type": "string",
+      "minLength": 1
+    },
+    "identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "source_revision",
+        "build_digest"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "environment": {
+      "enum": [
+        "PACKAGE_CHECK",
+        "LINUX_FIXTURE",
+        "REPO_INTEGRATION",
+        "CI",
+        "WINDOWS_REAL_DEVICE",
+        "REAL_PROVIDER",
+        "REAL_UI_ADAPTER"
+      ]
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "UNKNOWN",
+        "NOT_RUN",
+        "BLOCKED"
+      ]
+    },
+    "scope_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verifier_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lineage_family_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ref",
+        "sha256",
+        "kind"
+      ],
+      "properties": {
+        "ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "kind": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "schema_version",
+    "receipt_id",
+    "criterion_id",
+    "criterion_text_sha256",
+    "verified_property",
+    "identity",
+    "environment",
+    "result",
+    "scope_ref",
+    "verifier_ref",
+    "lineage_family_ids",
+    "artifact",
+    "observed_at"
+  ]
+}

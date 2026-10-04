@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W05",
+  "name_ru": "Новая capability без автоматической выдачи новых прав",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-12",
+    "PIPE-16"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "old",
+      "operation": "capability.read_installed_manifest",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "new",
+      "operation": "capability.read_candidate_manifest",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "diff",
+      "operation": "capability.compare",
+      "depends_on": [
+        "old",
+        "new"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "evidence",
+      "operation": "capability.collect_regression_results",
+      "depends_on": [
+        "new"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "resolve",
+      "operation": "policy.match_existing_grants",
+      "depends_on": [
+        "diff"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "register",
+      "operation": "capability.register_status",
+      "depends_on": [
+        "evidence",
+        "resolve"
+      ],
+      "resource_locks": [
+        "capability_registry"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "status in [READY,AVAILABLE_NOT_CONFIGURED,BLOCKED,FAILED_TEST]",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    }
+  ],
+  "invariants": [
+    "Package metadata can request scope, never assert it granted.",
+    "New external account consent is distinct from installing new handler.",
+    "Previously authorized compatible actions do not require repeated approval."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}

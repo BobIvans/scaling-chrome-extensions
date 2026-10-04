@@ -1,0 +1,18 @@
+ROADMAP ALIASES И ГРАНИЦЫ
+
+Canonical merged ID ROADMAP-PR-014-015. Aliases ROADMAP-PR-014 и ROADMAP-PR-015 сохраняют source provenance. Пять workstreams WS-013/014/015/016/017 и все task/feature/decision/goal IDs сохранены. External package prerequisite union: 002,003,008,009,010,011,012,013; зависимость 015 ->014 теперь внутренняя, не удалить смысл prerequisite.
+
+Таблица последующих потребителей:
+016 requires merged package +013;
+017 requires merged package +016;
+018 requires merged package +011,012,017;
+019 requires merged package +011,013,016,017,018;
+020 requires merged package +013,016,019;
+021 requires merged package +010,011,012,013,016,017,018,019,020.
+Полный original package DAG в sources/roadmap/plan/DELIVERY_DAG.json. Перенумерации 016..021 нет. Одинаковые aliases не дают двойного прогресса; closure criterion dedup по исходному ID и revision.
+
+В архивных boundary prose встречаются старые номера «№24/27/30/33». Это историческая нумерация, не current numbered PR, и она местами неоднозначна. Новый implementation plan использует явные current package/workstream IDs: planner WS-018 -> PR-016; real UI bindings WS-021/022 -> PR-017; release/updater WS-024 -> PR-018; product qualification WS-034..036 -> PR-021. Старые raw boundary bytes сохранены; coding agent не должен выбирать downstream PR по голому historical number.
+
+Within-package delivery не закрывает широкие goals целиком: live provider transports, voice, updater, campaigns, monetary effects требуют downstream independent receipts. Optional snapshot/event sync локально реализуемый блок; любой внешней cloud sync service статус UNKNOWN до adapter qualification. Encryption status OPEN до key recovery policy. Не удалять deferred/revisit backlog и не превращать невыбранную функцию в DONE.
+
+Рекомендованный ownership handoff: schemas+DTO+state owners координируются здесь; 016 потребляет typed intent/capability/status/STOP; 017 потребляет packet/destination/attempt/reconcile; 018 потребляет installed-build registry/migration rehearsal; 019 использует existing jobs/resources, не вторую очередь. Межчатовые документы не считаются наблюдением чужого actual code. Shared migration code объединяет один integrator после свежего HEAD audit.

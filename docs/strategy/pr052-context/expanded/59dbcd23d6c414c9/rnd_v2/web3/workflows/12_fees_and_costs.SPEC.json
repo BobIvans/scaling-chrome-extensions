@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF12",
+  "name": "fees_and_costs",
+  "title_ru": "Полная стоимость opportunity",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "offline_replay"
+  ],
+  "inputs": [
+    "cost_model",
+    "atomic_accounting_unit",
+    "fee_inputs"
+  ],
+  "steps": [
+    {
+      "id": "fees_and_costs.1",
+      "handler": "PROPOSED.fees_and_costs.1",
+      "instruction": "Record principal, flash/swap/network fees, slippage reserve, other known costs"
+    },
+    {
+      "id": "fees_and_costs.2",
+      "handler": "PROPOSED.fees_and_costs.2",
+      "instruction": "Compute candidate net using integers in same accounting unit"
+    },
+    {
+      "id": "fees_and_costs.3",
+      "handler": "PROPOSED.fees_and_costs.3",
+      "instruction": "Retain conversion source/timestamp and rejection reason"
+    }
+  ],
+  "outputs": [
+    "economics_samples.v1",
+    "cost_assumptions"
+  ],
+  "qualification_criteria": [
+    "Configured predicate only; model completeness and future profit not proven"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,1423 @@
+[
+  {
+    "key": "SCE_V2::D01",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/0",
+    "original_record": {
+      "id": "D01",
+      "priority": "P0",
+      "title_ru": "Desktop transport без обязательного Chrome",
+      "owner_candidates": "native_adapter.py + desktop adapter",
+      "acceptance": [
+        "Существующие services вызываются из desktop без регистрации extension ID"
+      ],
+      "reuses_previous_task": "SCE-NEXT-01",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D02",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/1",
+    "original_record": {
+      "id": "D02",
+      "priority": "P0",
+      "title_ru": "Lossless archive inventory и полные пути",
+      "owner_candidates": "content_lab.py + archive_source.py",
+      "acceptance": [
+        "4 MB/333+ entries, duplicate paths, binary и error ledger без пропусков"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D03",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/2",
+    "original_record": {
+      "id": "D03",
+      "priority": "P0",
+      "title_ru": "Миграция в один canonical store",
+      "owner_candidates": "automation_core.py + migrations",
+      "acceptance": [
+        "Backup, ID map, counts/hashes, rollback; нет двух queue owners"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D04",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/3",
+    "original_record": {
+      "id": "D04",
+      "priority": "P0",
+      "title_ru": "Полный numbered TXT и originals export",
+      "owner_candidates": "context_handoff.py",
+      "acceptance": [
+        "Все entries accounted; chunk spans, UTF-8, hashes, omissions"
+      ],
+      "reuses_previous_task": "SCE-NEXT-04",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D05",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/4",
+    "original_record": {
+      "id": "D05",
+      "priority": "P0",
+      "title_ru": "Токенизатор и provider-aware pack",
+      "owner_candidates": "context_handoff.py",
+      "acceptance": [
+        "Exact tokenizer version; output/reasoning reserve; никаких silent truncations"
+      ],
+      "reuses_previous_task": "SCE-NEXT-05",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D06",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/5",
+    "original_record": {
+      "id": "D06",
+      "priority": "P0",
+      "title_ru": "Импорт user/assistant всех веток chat export",
+      "owner_candidates": "content_lab.py",
+      "acceptance": [
+        "IDs/roles/parent/time/nontext inventory; идемпотентность"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D07",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/6",
+    "original_record": {
+      "id": "D07",
+      "priority": "P0",
+      "title_ru": "Goal/decision/requirement graph",
+      "owner_candidates": "context_review.py + memory tables",
+      "acceptance": [
+        "User requirement отдельно от assistant proposal; source spans; supersedes"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D08",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/7",
+    "original_record": {
+      "id": "D08",
+      "priority": "P0",
+      "title_ru": "Context Cart",
+      "owner_candidates": "desktop UI + handoff",
+      "acceptance": [
+        "Код+deps+tests+docs+history; why selected; missing context"
+      ],
+      "reuses_previous_task": "SCE-NEXT-05",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D09",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/8",
+    "original_record": {
+      "id": "D09",
+      "priority": "P0",
+      "title_ru": "Python + JS/TS AST dependency context",
+      "owner_candidates": "repo_source.py",
+      "acceptance": [
+        "Сохранить Python parser; JS/TS imports; unresolved edges; SCC"
+      ],
+      "reuses_previous_task": "SCE-NEXT-02",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D10",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/9",
+    "original_record": {
+      "id": "D10",
+      "priority": "P0",
+      "title_ru": "Review coverage ledger",
+      "owner_candidates": "context_review.py",
+      "acceptance": [
+        "Request/source hashes, chunks reviewed, stale invalidation"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D11",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/10",
+    "original_record": {
+      "id": "D11",
+      "priority": "P0",
+      "title_ru": "Requirement→code→test evidence",
+      "owner_candidates": "context_review.py + verifier registry",
+      "acceptance": [
+        "TRUE только с criterion receipt на нужном SHA; UNKNOWN при gaps"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D12",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/11",
+    "original_record": {
+      "id": "D12",
+      "priority": "P1",
+      "title_ru": "OpenAI Responses adapter",
+      "owner_candidates": "provider adapter",
+      "acceptance": [
+        "Explicit selected context; response hash; error/incomplete; no retry unknown"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D13",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/12",
+    "original_record": {
+      "id": "D13",
+      "priority": "P1",
+      "title_ru": "Typed library tools для AI",
+      "owner_candidates": "tool registry",
+      "acceptance": [
+        "search/read/build_pack/create_note с version checks и audit"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D14",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/13",
+    "original_record": {
+      "id": "D14",
+      "priority": "P1",
+      "title_ru": "VS Code и terminal workspace bridge",
+      "owner_candidates": "desktop + executor",
+      "acceptance": [
+        "cwd/argv без shell interpolation; exact worktree; user controls"
+      ],
+      "reuses_previous_task": "SCE-NEXT-10",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D15",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/14",
+    "original_record": {
+      "id": "D15",
+      "priority": "P1",
+      "title_ru": "Static smells и duplicate owners",
+      "owner_candidates": "repo analysis",
+      "acceptance": [
+        "Candidate→source→reproducer; файлы не удаляются по similarity"
+      ],
+      "reuses_previous_task": "SCE-NEXT-02",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D16",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/15",
+    "original_record": {
+      "id": "D16",
+      "priority": "P1",
+      "title_ru": "Git/PR archaeology",
+      "owner_candidates": "repo metadata adapters",
+      "acceptance": [
+        "Closed PR/abandoned branches отдельно от current code; exact refs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D17",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/16",
+    "original_record": {
+      "id": "D17",
+      "priority": "P1",
+      "title_ru": "Laya real inference adapter",
+      "owner_candidates": "occ_proposal.py + laya adapter",
+      "acceptance": [
+        "Pinned model/runtime, RU cases, truncation/abstention visible"
+      ],
+      "reuses_previous_task": "SCE-NEXT-16",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D18",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/17",
+    "original_record": {
+      "id": "D18",
+      "priority": "P1",
+      "title_ru": "Laya quality/cost benchmark",
+      "owner_candidates": "evaluation harness",
+      "acceptance": [
+        "Held-out routing, false TRUE, p95 RAM/latency; rules baseline"
+      ],
+      "reuses_previous_task": "SCE-NEXT-13",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D19",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/18",
+    "original_record": {
+      "id": "D19",
+      "priority": "P1",
+      "title_ru": "Replay/resume job orchestration",
+      "owner_candidates": "automation_core.py",
+      "acceptance": [
+        "Stable task keys, retry effects reconciliation, no duplicate mutation"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D20",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/19",
+    "original_record": {
+      "id": "D20",
+      "priority": "P1",
+      "title_ru": "Read-only MCP library access",
+      "owner_candidates": "local IPC + tools",
+      "acceptance": [
+        "Scoped IDs, pagination, full cursor completion, no arbitrary fs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D21",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/20",
+    "original_record": {
+      "id": "D21",
+      "priority": "P1",
+      "title_ru": "Windows installer/device qualification",
+      "owner_candidates": "desktop packaging",
+      "acceptance": [
+        "Clean Dell install/update/uninstall; data survive; signed release plan"
+      ],
+      "reuses_previous_task": "SCE-NEXT-01",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D22",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/21",
+    "original_record": {
+      "id": "D22",
+      "priority": "P1",
+      "title_ru": "Block notes и представления",
+      "owner_candidates": "desktop editor",
+      "acceptance": [
+        "Ссылки на source; notes separate from originals; revision restore"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D23",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/22",
+    "original_record": {
+      "id": "D23",
+      "priority": "P1",
+      "title_ru": "PDF/Office/HTML extraction adapters",
+      "owner_candidates": "content_lab.py",
+      "acceptance": [
+        "Original preserved; tables/pages/format limits explicit; parser versions"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D24",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/23",
+    "original_record": {
+      "id": "D24",
+      "priority": "P1",
+      "title_ru": "Encoding/large JSON/archive streaming",
+      "owner_candidates": "intake adapters",
+      "acceptance": [
+        "Encoding operator choice; recursive inventory; bounded RAM not cap on corpus"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D25",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/24",
+    "original_record": {
+      "id": "D25",
+      "priority": "P1",
+      "title_ru": "Memory export/backup/restore",
+      "owner_candidates": "store services",
+      "acceptance": [
+        "SQLite online backup + blob manifest; hash checked restore"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D26",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/25",
+    "original_record": {
+      "id": "D26",
+      "priority": "P1",
+      "title_ru": "Paper qualification bridge",
+      "owner_candidates": "SCE bridge + studious owner",
+      "acceptance": [
+        "Current contract/SHA, real receipts, no live authority inherited"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D27",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/26",
+    "original_record": {
+      "id": "D27",
+      "priority": "P2",
+      "title_ru": "Paper bot supervisor",
+      "owner_candidates": "studious runtime adapter",
+      "acceptance": [
+        "Start/status/stop, stale data, logs/reconcile, operator config"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D28",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/27",
+    "original_record": {
+      "id": "D28",
+      "priority": "P2",
+      "title_ru": "Web3 data and experiment library",
+      "owner_candidates": "research adapters",
+      "acceptance": [
+        "Raw observations/slots/units; hypotheses→datasets→receipts"
+      ],
+      "reuses_previous_task": "SCE-NEXT-14",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D29",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/28",
+    "original_record": {
+      "id": "D29",
+      "priority": "P2",
+      "title_ru": "Voice intent → same TaskSpec",
+      "owner_candidates": "ASR + goal owner",
+      "acceptance": [
+        "RU names/numbers/negation; final only; STOP discard late results"
+      ],
+      "reuses_previous_task": "SCE-NEXT-09",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D30",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/29",
+    "original_record": {
+      "id": "D30",
+      "priority": "P2",
+      "title_ru": "Authorised web/Telegram/research connectors",
+      "owner_candidates": "source registry",
+      "acceptance": [
+        "Per-source watermark/cursor/rate policies; no fake completeness"
+      ],
+      "reuses_previous_task": "SCE-NEXT-14",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D31",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/30",
+    "original_record": {
+      "id": "D31",
+      "priority": "P2",
+      "title_ru": "Event-driven incremental rebuild",
+      "owner_candidates": "queue + dependency invalidation",
+      "acceptance": [
+        "Changed blob only; affected packs stale; no endless unchanged loop"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D32",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/31",
+    "original_record": {
+      "id": "D32",
+      "priority": "P2",
+      "title_ru": "Reusable recipes from verified runs",
+      "owner_candidates": "skill registry",
+      "acceptance": [
+        "Versioned inputs/verifier/rollback, tested before registration"
+      ],
+      "reuses_previous_task": "SCE-NEXT-11",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D33",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/32",
+    "original_record": {
+      "id": "D33",
+      "priority": "P2",
+      "title_ru": "Adaptive goal UI",
+      "owner_candidates": "desktop schema renderer",
+      "acceptance": [
+        "Buttons reference registered actions; model cannot invent executable IDs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-11",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D34",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/33",
+    "original_record": {
+      "id": "D34",
+      "priority": "P2",
+      "title_ru": "Optional sync and collaboration",
+      "owner_candidates": "sync adapter",
+      "acceptance": [
+        "Conflict/revision tests; source-level sharing; local offline still works"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D35",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/34",
+    "original_record": {
+      "id": "D35",
+      "priority": "P2",
+      "title_ru": "Read-only parallel workers, one writer",
+      "owner_candidates": "scheduler",
+      "acceptance": [
+        "Resource budget/RAM backpressure; cancellation; deterministic receipts"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D36",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/35",
+    "original_record": {
+      "id": "D36",
+      "priority": "P2",
+      "title_ru": "Model escalation and ROI dashboard",
+      "owner_candidates": "provider router + evals",
+      "acceptance": [
+        "Saved time/cost per verified task, no PR count proxy"
+      ],
+      "reuses_previous_task": "SCE-NEXT-13",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-01",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/0",
+    "original_record": {
+      "id": "SCE-NEXT-01",
+      "priority": "P0",
+      "title": "Проверить установленный путь от задачи до отчёта",
+      "owners": [
+        "agent-bridge/Install.ps1",
+        "content-lab/native_adapter.py",
+        "content-lab/review_report.py",
+        "one-click-context/library/repo-review-ui.mjs"
+      ],
+      "depends": [],
+      "value": "Получить первый достоверный результат на пользовательском Windows ПК и найти реальные разрывы установки.",
+      "acceptance": [
+        "На установленном Chrome экспортировать связанный handoff, вернуть review, создать отчёт через existing worker и проверить байты.",
+        "STOP, reconnect и повтор task key не создают второй результат.",
+        "Неправильный или отсутствующий файл отображается как FAILED/BLOCKED с next step; сохранить device receipt."
+      ],
+      "metric": "Доля успешных задач на устройстве и минуты до проверенного отчёта",
+      "status": "DEVICE_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-02",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/1",
+    "original_record": {
+      "id": "SCE-NEXT-02",
+      "priority": "P0",
+      "title": "Завершить выбранные JS и TS зависимости",
+      "owners": [
+        "content-lab/repo_context.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [],
+      "value": "Снять подтверждённый JS_DEPENDENCIES_NOT_PARSED для review кода Chrome расширения.",
+      "acceptance": [
+        "Разбирать статические import/export/re-export закреплённым AST parser и версией resolver.",
+        "Поддержать .js/.mjs/.ts и локальные относительные imports; aliases/config явно описать профилем.",
+        "Dynamic/external/ambiguous edges остаются gaps; изменение dependency делает review stale.",
+        "Не заявлять полный runtime call graph и не игнорировать неполноту."
+      ],
+      "metric": "Доля выбранных code review задач с достаточной closure",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-03",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/2",
+    "original_record": {
+      "id": "SCE-NEXT-03",
+      "priority": "P0",
+      "title": "Реестр подключённых источников и инкрементальный импорт",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/content.js"
+      ],
+      "depends": [],
+      "value": "Перестать повторно собирать одинаковые архивы и путать видимый чат со всей историей.",
+      "acceptance": [
+        "Начать с одного реального ChatGPT JSON/HTML export и выбранной папки документов.",
+        "Стабильные source/message IDs, content hash, версии, deleted/tombstone, checkpoint и coverage.",
+        "Повторный импорт не удваивает записи; прерванный продолжается; parser failures видны.",
+        "Grok/Telegram/почта добавляются отдельными adapters после доступных примеров и проверки доступа."
+      ],
+      "metric": "Минуты ручного сбора и доля источников с известным покрытием",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-04",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/3",
+    "original_record": {
+      "id": "SCE-NEXT-04",
+      "priority": "P0",
+      "title": "Единая спецификация запроса и компилятор документов",
+      "owners": [
+        "one-click-context/library/goal-normalizer.mjs",
+        "content-lab/context_review.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03"
+      ],
+      "value": "Один текстовый запрос создаёт понятное любому AI задание с источниками и проверками.",
+      "acceptance": [
+        "Сохранить verbatim request, goal version, scope, ограничения, acceptance, authority и бюджет.",
+        "Режимы выполнить / подготовить сценарий / подготовить ТЗ используют одну TaskSpec.",
+        "Создавать TXT, DOCX и manifest из одного snapshot; generic contract адаптировать к existing V4/V5.",
+        "Нельзя объявлять пропущенный источник прочитанным; scope/goal/revision drift отклоняет ответ."
+      ],
+      "metric": "Время от запроса до пригодного задания и число уточнений AI",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-05",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/4",
+    "original_record": {
+      "id": "SCE-NEXT-05",
+      "priority": "P0",
+      "title": "Адресный поиск и запрос недостающего контекста",
+      "owners": [
+        "content-lab/repo_context.py",
+        "content-lab/context_handoff.py",
+        "content-lab/occ_v5/context.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03",
+        "SCE-NEXT-04"
+      ],
+      "value": "Давать модели нужные доказательства вместо всей жизни и всех ZIP.",
+      "acceptance": [
+        "FTS + project/time/type filters + source expansion; точные spans и omissions.",
+        "NEXT_CONTEXT_REQUEST указывает конкретный источник, зачем он нужен и бюджет.",
+        "Лимит rounds/bytes; повтор без нового evidence заканчивается BLOCKED.",
+        "Сводки сохраняют ссылки на originals; модель получает возможность дозагрузки."
+      ],
+      "metric": "Recall доказательств при фиксированном бюджете и доля закрытых gaps",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-06",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/5",
+    "original_record": {
+      "id": "SCE-NEXT-06",
+      "priority": "P0",
+      "title": "Проверяемая память целей и решений",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/context_review.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03"
+      ],
+      "value": "Команда продолжить проект восстанавливает реальные решения и незавершённую работу.",
+      "acceptance": [
+        "Goal → decision → task → function → PR → receipt связать stable IDs в existing SQLite.",
+        "Отделять user instruction, source observation, model proposal и verified result.",
+        "Хранить valid_from/valid_to, supersedes, conflicts и исходные spans; старое решение не выигрывает автоматически.",
+        "Явное исправление предпочтения и forget исключают производные записи из retrieval."
+      ],
+      "metric": "Точность ответов что решили и что ещё не сделано",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-07",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/6",
+    "original_record": {
+      "id": "SCE-NEXT-07",
+      "priority": "P0",
+      "title": "Независимые проверки результата и восстановление",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/review_report.py",
+        "content-lab/context_review.py"
+      ],
+      "depends": [
+        "SCE-NEXT-01"
+      ],
+      "value": "Преобразовать успех модели или exit code в проверенный результат каждого типа действия.",
+      "acceptance": [
+        "Registered verifier получает action version, request binding и actual observation.",
+        "Отдельные checks для файла, структурированного результата, Git/CI и UI postcondition.",
+        "Неизвестный эффект после crash означает reconcile до retry.",
+        "Receipt различает PASSED/FAILED/UNKNOWN/BLOCKED/NOT_RUN и доступен в UI."
+      ],
+      "metric": "Ложные SUCCESS и доля recovery без повторного эффекта",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-08",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/7",
+    "original_record": {
+      "id": "SCE-NEXT-08",
+      "priority": "P1",
+      "title": "Переносимый цикл работы с несколькими AI",
+      "owners": [
+        "content-lab/context_handoff.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/library/repo-review-ui.mjs"
+      ],
+      "depends": [
+        "SCE-NEXT-04",
+        "SCE-NEXT-05",
+        "SCE-NEXT-07"
+      ],
+      "value": "Продолжать ту же задачу в ChatGPT/Grok/Claude без потери состояния.",
+      "acceptance": [
+        "Сначала export/manual import; затем отдельный официальный API adapter и read-only MCP.",
+        "Capability profile каждого adapter: input formats, tools, context budget, auth, cost, citations.",
+        "Одинаковый response envelope и import с request/snapshot binding.",
+        "Выбор другого провайдера не расширяет права и не переносит секреты в документы."
+      ],
+      "metric": "Доля успешно импортируемых ответов и цена проверенной задачи",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-09",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/8",
+    "original_record": {
+      "id": "SCE-NEXT-09",
+      "priority": "P1",
+      "title": "Настоящий голосовой ввод в общий goal",
+      "owners": [
+        "one-click-context/library/voice-preview.mjs",
+        "one-click-context/library/goal-normalizer.mjs",
+        "content-lab/asr_cpu_experiment.py"
+      ],
+      "depends": [
+        "SCE-NEXT-01",
+        "SCE-NEXT-04"
+      ],
+      "value": "Говорить задачу и корректировать её без отдельного голосового планировщика.",
+      "acceptance": [
+        "Один local ASR worker; final transcript редактируемый; dictation и command различаются.",
+        "STOP/goal epoch отбрасывают поздний transcript; partial не запускает действия.",
+        "На Dell измерить RU/EN latency p50/p95, RAM и ошибки чисел/отрицаний.",
+        "Проверить реальный микрофон и доступность controls; Qwen/Laya не обязательны."
+      ],
+      "metric": "Минуты до корректной задачи и ошибки смысла транскрипции",
+      "status": "DEVICE_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-10",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/9",
+    "original_record": {
+      "id": "SCE-NEXT-10",
+      "priority": "P1",
+      "title": "Один проверяемый сценарий Windows UIA и DOM",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-01",
+        "SCE-NEXT-07"
+      ],
+      "value": "Начать реальное управление PC с измеримого сохранения документа.",
+      "acceptance": [
+        "Выбранные PID/window/control или tab/origin/frame bind к действию.",
+        "Пример: открыть выбранный editor, вставить заданный текст, сохранить в заданную папку, readback.",
+        "Смена target, неоднозначный selector или STOP блокирует следующие steps.",
+        "DOM/UIA/API предпочтительны; OCR fallback только с explicit target и independent check."
+      ],
+      "metric": "Доля повторов сценария без ручной коррекции",
+      "status": "DEVICE_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-11",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/10",
+    "original_record": {
+      "id": "SCE-NEXT-11",
+      "priority": "P1",
+      "title": "Рецепты и создание новых функций из задачи",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/context_handoff.py",
+        "content-lab/schedule_supervisor.py"
+      ],
+      "depends": [
+        "SCE-NEXT-07",
+        "SCE-NEXT-10"
+      ],
+      "value": "Один успешно исполненный сценарий становится повторяемым навыком.",
+      "acceptance": [
+        "Recipe содержит typed parameters, version, capabilities, preconditions, verifier и effect class.",
+        "Сначала обнаружить existing owner; иначе создать точное ТЗ и staging change.",
+        "Reproducer/focused tests/device canary предшествуют регистрации; rollback версии.",
+        "Запрос новых функций и данные источников не исполняются как shell-команды."
+      ],
+      "metric": "Частота повторного использования и минуты коррекции на запуск",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-12",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/11",
+    "original_record": {
+      "id": "SCE-NEXT-12",
+      "priority": "P1",
+      "title": "Панель открытых задач и событийное продолжение",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/schedule_supervisor.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-06",
+        "SCE-NEXT-07",
+        "SCE-NEXT-11"
+      ],
+      "value": "Не терять задачу при перезапуске, CI blocker или появлении нового файла.",
+      "acceptance": [
+        "Текущие выполнено/blocked/next evidence привязаны к receipts и goal version.",
+        "New-source/CI/file triggers используют existing queue, stop/budget и дедупликацию.",
+        "Нет бесконечного повторения без прогресса; 24/7 требует реально работающего host.",
+        "Проверить restart и гонку двух triggers на одной task."
+      ],
+      "metric": "Закрытые open loops за неделю и ручные напоминания",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-13",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/12",
+    "original_record": {
+      "id": "SCE-NEXT-13",
+      "priority": "P1",
+      "title": "Оценка отдачи и выбор модели на реальных задачах",
+      "owners": [
+        "content-lab/context_review.py",
+        "docs/automation/runs"
+      ],
+      "depends": [
+        "SCE-NEXT-04",
+        "SCE-NEXT-07",
+        "SCE-NEXT-08"
+      ],
+      "value": "Выбирать архитектуру по результатам вместо заявления самый умный агент.",
+      "acceptance": [
+        "30 замороженных задач: память 10, документы/код 10, повторяемые действия 10.",
+        "Одинаковые inputs, budget, acceptance; blinded checks, failures и corrections в итогах.",
+        "Baseline manual/current app; варианты FTS, retrieval, model, router сравнивать по одному изменению.",
+        "Стартовый planning gate: нет ложного SUCCESS в 30 кейсах; это не доказательство отсутствия риска вне выборки."
+      ],
+      "metric": "Чистое сэкономленное время и стоимость одного verified outcome",
+      "status": "EXPERIMENT_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-14",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/13",
+    "original_record": {
+      "id": "SCE-NEXT-14",
+      "priority": "P2",
+      "title": "Исследование X и web с превращением сигнала в эксперимент",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-05",
+        "SCE-NEXT-06",
+        "SCE-NEXT-13"
+      ],
+      "value": "Превращать новые идеи в проверяемый backlog по существующим целям.",
+      "acceptance": [
+        "Официальный/разрешённый источник, source URL/author/time/captured_at и query coverage.",
+        "X post → первичная документация/код → gap в current repo → гипотеза → эксперимент.",
+        "Дата/handles/source filters и watermark; архивы не называются свежим поиском.",
+        "Лайки не являются ROI; кандидат не включает новую функцию автоматически."
+      ],
+      "metric": "Verified полезные изменения на час исследования",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-15",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/14",
+    "original_record": {
+      "id": "SCE-NEXT-15",
+      "priority": "P2",
+      "title": "Recorder действий с генерацией проверяемого навыка",
+      "owners": [
+        "content-lab/automation_core.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-10",
+        "SCE-NEXT-11",
+        "SCE-NEXT-13"
+      ],
+      "value": "Команда повторяй как я уменьшает ручное программирование routine.",
+      "acceptance": [
+        "Запись только выбранного app/task; selectors и state preconditions вместо координат.",
+        "Удалять credentials из trace, параметризовать values; preview recipe.",
+        "Повтор на изменённых inputs и held-out UI state; неуспех не ведёт к слепому click.",
+        "Наблюдение демонстрации создаёт proposal, canary подтверждает навык."
+      ],
+      "metric": "Время создания навыка и устойчивость на новых inputs",
+      "status": "EXPERIMENT_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-16",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/15",
+    "original_record": {
+      "id": "SCE-NEXT-16",
+      "priority": "P2",
+      "title": "Laya advisory и ограниченный критик",
+      "owners": [
+        "content-lab/occ_proposal.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-08",
+        "SCE-NEXT-13"
+      ],
+      "value": "Использовать дополнительный интеллект там, где измерено преимущество.",
+      "acceptance": [
+        "Проверить установленный Laya API; сравнить rules/local/router на одинаковых 30 cases.",
+        "Critic вызывается по конкретному unresolved claim при бюджете rounds/time/cost.",
+        "Agreement не заменяет primary evidence; disagreement порождает узкий проверочный запрос.",
+        "При отсутствии прироста оставить deterministic маршрут."
+      ],
+      "metric": "Прирост verified success относительно затрат",
+      "status": "EXPERIMENT_NOT_RUN"
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-CAP-01",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/0",
+    "original_record": {
+      "work_item_id": "CTX-CAP-01",
+      "title": "Multi-producer capture before global writer assumptions",
+      "scope_ru": "Интегрировать ObservationSession/Producer/coverage с existing SCE store owner; producer-specific immutable event keys; desktop client independent of Chrome extension.",
+      "acceptance_ru": "Читатели/регистраторы параллельны, late arrivals не теряются; scope/retention/stop; 20+ источников; source drift блокирует устаревший context pack.",
+      "rnd_ids": [
+        "RND-43",
+        "RND-44",
+        "RND-45",
+        "RND-51"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-CAP-02",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/1",
+    "original_record": {
+      "work_item_id": "CTX-CAP-02",
+      "title": "Evidence-ready Studious handoff and NEED_CONTEXT loop",
+      "scope_ru": "Build required slots, early pack/deltas, authority lanes and selected-provider output; benchmark LOCAL_FAST/QUALITY_PARALLEL/RECOVERY_HEDGE.",
+      "acceptance_ru": "Source-bound WHY_THIS_PACKET; недостающий источник явно запросить; no signer/sender; тесты реально запускаются только в separately approved sandbox.",
+      "rnd_ids": [
+        "RND-46",
+        "RND-47",
+        "RND-48",
+        "RND-53",
+        "RND-54"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-01",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/2",
+    "original_record": {
+      "work_item_id": "CTX-PAR-01",
+      "title": "Preserve existing owners + trustworthy context intake",
+      "scope_ru": "Подключить desktop client к existing SCE service owner, не создавать вторую queue/database. На pinned current source проверить documented scan/export caps; добавить streaming progress/coverage/error ledger.",
+      "acceptance_ru": "Raw bytes и provenance survive restart; more-than-20 не обрывается; no scanned code execution.",
+      "rnd_ids": [
+        "RND-23",
+        "RND-27",
+        "RND-35"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-02",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/3",
+    "original_record": {
+      "work_item_id": "CTX-PAR-02",
+      "title": "Goal-bound handoff and labeling",
+      "scope_ru": "IntentSpec из текста, evidence requirements, authority-aware tags и provider-neutral HandoffBundle. UI показывает краткое WHY_THIS_PACKET, sources и omissions.",
+      "acceptance_ru": "Required missing evidence возвращает NEEDS_CONTEXT; приватные источники не уходят provider без scope.",
+      "rnd_ids": [
+        "RND-24",
+        "RND-25",
+        "RND-36",
+        "RND-40"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-03",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/4",
+    "original_record": {
+      "work_item_id": "CTX-PAR-03",
+      "title": "Read/candidate races with real diversity",
+      "scope_ru": "Failure-domain registry, serial/eager/hedged comparator, budgets и cancellation receipts. Вначале только чтение и подготовка artifacts.",
+      "acceptance_ru": "First invalid answer rejected; co-failure recorded; loser cancel confirmed; deadline не приводит к effect.",
+      "rnd_ids": [
+        "RND-19",
+        "RND-20",
+        "RND-32"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-04",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/5",
+    "original_record": {
+      "work_item_id": "CTX-PAR-04",
+      "title": "Effect broker and resource ownership",
+      "scope_ru": "Target revision, operation ID, single writer, leases/fencing and unknown-effect reconciliation. Existing Core must remain authority.",
+      "acceptance_ru": "Same intent duplicate produces one local effect; external unknown не повторяется вслепую; foreground user wins.",
+      "rnd_ids": [
+        "RND-21",
+        "RND-22",
+        "RND-30",
+        "RND-33"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-05",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/6",
+    "original_record": {
+      "work_item_id": "CTX-PAR-05",
+      "title": "Studious evidence vertical",
+      "scope_ru": "Registered inspection/test adapter, source-bound failure triage, exact-head evidence, независимые fix criteria. Не интегрировать signer/sender.",
+      "acceptance_ru": "Одна команда создаёт проверяемый failure/context handoff; не выдает fixture/test green за market qualification.",
+      "rnd_ids": [
+        "RND-23",
+        "RND-24",
+        "RND-28",
+        "RND-37"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-06",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/7",
+    "original_record": {
+      "work_item_id": "CTX-PAR-06",
+      "title": "Voice and accessibility adapter",
+      "scope_ru": "Push-to-talk/optional wake + critical-slot checks, separate stop path, live command preview, RU/EN project aliases.",
+      "acceptance_ru": "Same typed input contract as text; false activation/negation errors measured; installed Dell receipt captured.",
+      "rnd_ids": [
+        "RND-29",
+        "RND-30"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-07",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/8",
+    "original_record": {
+      "work_item_id": "CTX-PAR-07",
+      "title": "Safe skill factory and updater",
+      "scope_ru": "Unknown action → isolated candidate code → independent tests → reviewable package → permission diff → staged activation.",
+      "acceptance_ru": "First run may use coder, known replay uses qualified skill; new permissions never auto-granted; no core overwrite while running.",
+      "rnd_ids": [
+        "RND-31",
+        "RND-38",
+        "RND-39",
+        "RND-41"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-08",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/9",
+    "original_record": {
+      "work_item_id": "CTX-PAR-08",
+      "title": "Offline optimization and portfolio learning",
+      "scope_ru": "Контекстные ablations, skill minimization, held-out evaluation DSPy/GEPA candidates. Реальные traces снабжают offline optimizer.",
+      "acceptance_ru": "No holdout leakage; promotion only on verified outcomes and unchanged policy constraints; rollback retained.",
+      "rnd_ids": [
+        "RND-26",
+        "RND-38",
+        "RND-42"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  }
+]

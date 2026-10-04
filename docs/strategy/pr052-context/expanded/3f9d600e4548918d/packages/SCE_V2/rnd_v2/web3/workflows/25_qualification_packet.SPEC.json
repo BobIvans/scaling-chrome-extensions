@@ -1,0 +1,54 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF25",
+  "name": "qualification_packet",
+  "title_ru": "Пакет решения readiness",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts",
+    "offline_replay",
+    "paper_observation",
+    "windows_device",
+    "stop_and_pause"
+  ],
+  "inputs": [
+    "all_explicit_receipts",
+    "reviewed_plan"
+  ],
+  "steps": [
+    {
+      "id": "qualification_packet.1",
+      "handler": "PROPOSED.qualification_packet.1",
+      "instruction": "Evaluate artifact integrity and exact bindings"
+    },
+    {
+      "id": "qualification_packet.2",
+      "handler": "PROPOSED.qualification_packet.2",
+      "instruction": "Report own and dependency status per stage"
+    },
+    {
+      "id": "qualification_packet.3",
+      "handler": "PROPOSED.qualification_packet.3",
+      "instruction": "Render TRUE/FALSE/UNKNOWN/NOT_RUN with reasons and no automatic live authorization"
+    }
+  ],
+  "outputs": [
+    "qualification.py report"
+  ],
+  "qualification_criteria": [
+    "Existing implemented offline verifier checks selected artifact contracts only"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

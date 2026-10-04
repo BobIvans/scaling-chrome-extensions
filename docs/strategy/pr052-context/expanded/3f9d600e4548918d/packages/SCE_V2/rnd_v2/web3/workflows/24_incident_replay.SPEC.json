@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF24",
+  "name": "incident_replay",
+  "title_ru": "Incident→regression",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "fault_injection"
+  ],
+  "inputs": [
+    "incident_bundle",
+    "redacted_logs",
+    "state_anchor"
+  ],
+  "steps": [
+    {
+      "id": "incident_replay.1",
+      "handler": "PROPOSED.incident_replay.1",
+      "instruction": "Snapshot evidence without deleting originals"
+    },
+    {
+      "id": "incident_replay.2",
+      "handler": "PROPOSED.incident_replay.2",
+      "instruction": "Create minimal reproducer and deterministic test from observed failure"
+    },
+    {
+      "id": "incident_replay.3",
+      "handler": "PROPOSED.incident_replay.3",
+      "instruction": "Patch in separate worktree; compare before/after under same scenario"
+    }
+  ],
+  "outputs": [
+    "incident_case",
+    "regression_receipt"
+  ],
+  "qualification_criteria": [
+    "Patch claim linked to failing-before/passing-after evidence"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

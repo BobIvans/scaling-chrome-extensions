@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF07",
+  "name": "pinned_fork",
+  "title_ru": "Fork или local validator pinned state",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build"
+  ],
+  "inputs": [
+    "network_adapter",
+    "anchor",
+    "protocol_addresses"
+  ],
+  "steps": [
+    {
+      "id": "pinned_fork.1",
+      "handler": "PROPOSED.pinned_fork.1",
+      "instruction": "Проверить chain/genesis, block/slot anchor and provider capabilities"
+    },
+    {
+      "id": "pinned_fork.2",
+      "handler": "PROPOSED.pinned_fork.2",
+      "instruction": "EVM: bind blockHash and canonicality where supported; record actual tool support"
+    },
+    {
+      "id": "pinned_fork.3",
+      "handler": "PROPOSED.pinned_fork.3",
+      "instruction": "Solana: record cluster, slot, account snapshots, program versions, commitment; do not call EVM fork equivalent"
+    }
+  ],
+  "outputs": [
+    "fork_or_validator_receipt",
+    "state_snapshot"
+  ],
+  "qualification_criteria": [
+    "Target protocol bytecode/program and state recorded; chain remains repo-dependent"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,80 @@
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-15",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Покажи влияние изменения одной функции",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "AST/local symbol analysis",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "SCIP/LSP references from approved indexer",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Runtime coverage/error trace mapping",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "merge_typed_graph_edges",
+      "contract_ru": "Observed/static/heuristic/unresolved edges разделены; affected tests не заявлены исполненными"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один typed impact graph",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Dynamic import отсутствует в статическом call graph",
+  "requirement_ids": [
+    "REQ-006",
+    "REQ-010"
+  ],
+  "rnd_ids": [
+    "RND-23",
+    "RND-27"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}

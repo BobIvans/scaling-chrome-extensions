@@ -1,0 +1,134 @@
+{
+  "schema": "roadmap.pr-input.v1",
+  "package_id": "ROADMAP-PR-007",
+  "local_sequence": 7,
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "status": "PREPARED_IMPLEMENTATION_BRIEF",
+  "selected_task_ids": [
+    "LAYA4-005",
+    "LAYA4-006"
+  ],
+  "related_followup_task_ids": [
+    "LAYA4-007"
+  ],
+  "source_milestone": "M5-02",
+  "whole_task_closed": false,
+  "application_code_changed": false,
+  "current_head_verified": false,
+  "current_head": null,
+  "github_pr_number": null,
+  "github_pr_url": null,
+  "previous_pr_implementation_verified": false,
+  "pr003_input_received": true,
+  "pr005_artifact_received": true,
+  "pr006_artifact_received": true,
+  "estimate_minutes": 60,
+  "estimate_is_guarantee": false,
+  "parser_pin": null,
+  "parser_benchmark_run": false,
+  "execution_route": "READ_ONLY_CAPTURED_SNAPSHOT_FOREGROUND_CLI",
+  "raw_capture_changed": false,
+  "tasks": [
+    {
+      "id": "P007-01",
+      "title": "Actual owner/profile audit and parser ADR/pin",
+      "budget_minutes": 8,
+      "depends_on": [],
+      "source_task_ids": [
+        "LAYA4-005",
+        "LAYA4-006"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P007-02",
+      "title": "Trusted AST helper and UTF8 spans",
+      "budget_minutes": 14,
+      "depends_on": [
+        "P007-01"
+      ],
+      "source_task_ids": [
+        "LAYA4-005",
+        "LAYA4-006"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P007-03",
+      "title": "Manifest-only resolver and unresolved taxonomy",
+      "budget_minutes": 12,
+      "depends_on": [
+        "P007-02"
+      ],
+      "source_task_ids": [
+        "LAYA4-005",
+        "LAYA4-006"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P007-04",
+      "title": "Derived provenance bundle / CLI publish",
+      "budget_minutes": 12,
+      "depends_on": [
+        "P007-03"
+      ],
+      "source_task_ids": [
+        "LAYA4-005",
+        "LAYA4-006"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P007-05",
+      "title": "Labelled corpus and compatibility cases",
+      "budget_minutes": 6,
+      "depends_on": [
+        "P007-04"
+      ],
+      "source_task_ids": [
+        "LAYA4-005",
+        "LAYA4-006"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P007-06",
+      "title": "Required checks and evidence handoff",
+      "budget_minutes": 8,
+      "depends_on": [
+        "P007-05"
+      ],
+      "source_task_ids": [
+        "LAYA4-005",
+        "LAYA4-006"
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "out_of_scope": [
+    "new capture partition policy",
+    "Python group planner/SCC IDs",
+    "format/eligibility detector",
+    "Native/UI/Core job",
+    "CommonJS qualified binding",
+    "TS extension substitution/aliases/workspaces",
+    "mixed-language graph query",
+    "owner/capability UI",
+    "merge/deployment"
+  ],
+  "outputs": [
+    "JS_ANALYSIS.jsonl",
+    "RELATIONS.jsonl",
+    "ANALYSIS_STATUS.json",
+    "INTERPRETATION.json"
+  ],
+  "read_order": [
+    "EXECUTE_THIS_PR_RU.txt",
+    "01_PR_007_IMPLEMENTATION_RU.md",
+    "contracts/SUPPORT_MATRIX.json",
+    "contracts/RELATIONS_CONTRACT.json",
+    "plan/ACCEPTANCE_CASES.json",
+    "coordination/PARALLEL_PACKAGES_RU.md"
+  ]
+}

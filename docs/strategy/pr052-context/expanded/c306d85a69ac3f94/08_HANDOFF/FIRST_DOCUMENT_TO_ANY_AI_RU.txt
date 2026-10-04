@@ -1,0 +1,37 @@
+V3 УТОЧНЕНИЕ: multi-producer recording и независимые effect resources параллельны. Single writer относится только к одному конфликтующему effect target. Главная схема: 00_START/00_PARALLEL_CAPTURE_DECISION_RU.md.
+
+VOICE AGENTOS — FIRST HANDOFF / 3 OCTOBER 2026
+
+ЦЕЛЬ
+Развить личное Windows 11 приложение-библиотеку для голоса/текста → правильный контекст → выбранный AI → проверяемый artifact/patch → безопасное повторяемое действие. Сохранить исходный пользовательский маршрут self-extension через coding agent/GitHub/local update, но кандидаты готовить параллельно, а эффект фиксировать одним owner.
+
+ИСТОЧНИКИ
+Прочитать 00_START/01_MASTER_PLAN_RU.md, 00_START/02_NEXT_IMPLEMENTATION_RU.md, 01_CONTEXT/requirements.json, 09_UPSTREAM/REUSE_EXISTING_OWNERS_RU.md, 07_EVIDENCE/KNOWN_CORRECTIONS_RU.md.
+Исходный старый ZIP сохранён в 10_LEGACY. Весь этот пакет не является полным source tree репозиториев и не является полным экспортом личных чатов. Отсутствующее запросить как NEEDS_CONTEXT.
+
+ПЕРВОЕ ИЗМЕНЕНИЕ
+CTX-PAR-01 или минимальный вертикальный subset CTX-PAR-01+02. Сначала получить exact current commit и проверить actual code owners SCE/Studious. Не создавать второй content.sqlite3, queue owner или независимо действующий Laya controller.
+Сохранить существующее byte-preserving storage, source binding, review ledger и Core authority. Desktop — новый client к тому же локальному service; Chrome не должен быть обязательной оболочкой.
+
+ТРЕБОВАНИЯ
+1. Нет глобального искусственного max-doc cap; batch/memory budgets и security policies сохраняются. Full inventory + explicit errors/exclusions + cursor.
+2. Source objects сохраняются целиком; transform output имеет exact provenance/version. Full library != one inference request.
+3. Intent/ActionSpec несёт snapshot и criteria; output AI не исполняется как shell.
+4. Parallel read/preparation across different failure domains; one committer per target/resource; user input has foreground priority.
+5. Не использовать большинство моделей как proof. Evidence deficits → targeted retrieval, missing required facts → NEEDS_CONTEXT.
+6. Cancellation != rollback; timeout after external dispatch → UNKNOWN + reconciliation; no duplicate merge/send/payment.
+7. Unknown task may produce code in isolated candidates; permission expansion cannot self-approve. Worktree alone is not sandbox.
+8. Bot authority remains in Studious. No signer/sender/live, no real-market claims from fixtures.
+
+ОЖИДАЕМЫЙ ОТВЕТ
+А) Что реально присутствует в exact source snapshot, с file/symbol refs.
+Б) Minimal patch proposal, миграции только если нужны, влияние на current owners.
+В) Targeted tests + negative cases + source-binding receipts; указать реально выполненное и NOT_RUN.
+Г) Missing context и следующий bounded work item.
+Д) Response in schema 05_CONTRACTS/ai_return.schema.json где применимо. Model tests_reported — утверждение, которое локальный verifier перепроверяет.
+
+НЕ ДЕЛАТЬ
+Не писать сотни empty wrappers ради числа функций. Не выполнять untrusted scanned code. Не запускать фоновые сервисы/сеть/торговлю без отдельного разрешения. Не менять production secrets/permissions. Не объявлять план или этот ZIP полностью внедрённой системой.
+
+REFERENCE LAB
+06_REFERENCE_LAB — работающий stdlib offline example; 41 unit test прошёл в среде сборки. Это не production runtime и не Windows qualification. Его механики можно перенести только после интеграционного анализа.

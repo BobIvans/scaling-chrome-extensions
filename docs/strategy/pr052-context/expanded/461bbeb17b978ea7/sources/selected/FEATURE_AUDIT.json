@@ -1,0 +1,1394 @@
+[
+  {
+    "feature_id": "LIB-006",
+    "title": "Возобновляемый импорт с checkpoints",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-02",
+      "GOAL5-23"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [
+      "ACTION5-06"
+    ],
+    "candidate_inherited_task_ids": [
+      "LAYA4-004",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "PARTIAL",
+    "verified_scope": "Существующий repo scan cursor сохраняется в SQLite; произвольные source importers требуют своих контрактов.",
+    "evidence_refs": [
+      "content-lab/repo_context.py"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "Прерывать worker в трёх стадиях одного большого импорта.",
+    "measurement": "Потерянные/дублированные версии=0; time to resume.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-007",
+    "title": "Оригиналы неподдерживаемых форматов",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-03"
+    ],
+    "new_decision_ids": [
+      "DEC5-08"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-06"
+    ],
+    "candidate_inherited_task_ids": [
+      "LAYA4-002",
+      "LAYA4-003",
+      "LAYA4-004",
+      "LAYA4-014",
+      "LAYA4-017",
+      "TAB4-18"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Импортировать mixed corpus и намеренно сломать один extractor.",
+    "measurement": "Raw byte fidelity=100%; explicit extraction statuses=100%.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-009",
+    "title": "Граф вложенных архивов и контролируемая распаковка",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-03",
+      "GOAL5-08"
+    ],
+    "new_decision_ids": [
+      "DEC5-09"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-09"
+    ],
+    "candidate_inherited_task_ids": [
+      "LAYA4-004",
+      "LAYA4-010",
+      "LAYA4-012",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Fixture nested ZIP с duplicate entry names, traversal, encrypted placeholder и budget exhaustion.",
+    "measurement": "Preserved containers=100%; unexplained members=0; peak expansion resources.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-010",
+    "title": "Отдельный учёт LFS, submodules и symlinks",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-03"
+    ],
+    "new_decision_ids": [
+      "DEC5-08"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-09"
+    ],
+    "candidate_inherited_task_ids": [
+      "LAYA4-002",
+      "LAYA4-003",
+      "LAYA4-004",
+      "LAYA4-010",
+      "LAYA4-014",
+      "LAYA4-017",
+      "TAB4-18"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Экспортировать fixture с отсутствующим payload и затем добавить payload delta.",
+    "measurement": "External-payload coverage; falsely complete=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-012",
+    "title": "Импорт всех ветвей разговоров",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-06"
+    ],
+    "new_decision_ids": [
+      "DEC5-16"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-05"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-006",
+      "LAYA4-004",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017",
+      "UI3-011"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Fixture с разветвлённым диалогом, отсутствующим attachment и повторным импортом.",
+    "measurement": "Node/edge coverage; attachment missing ledger completeness.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-013",
+    "title": "Авторство и вложенные цитаты в сообщениях",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-06"
+    ],
+    "new_decision_ids": [
+      "DEC5-16"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-04"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-002",
+      "G3-008",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Разметить fixture из реальных смешанных RU/EN сообщений и quoted blocks.",
+    "measurement": "Unsupported attribution rate=0; ручные corrections сохраняются.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-014",
+    "title": "Точные spans и дословная реконструкция",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-04",
+      "GOAL5-06"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [
+      "ACTION5-04",
+      "ACTION5-07",
+      "ACTION5-11"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-002",
+      "G3-003",
+      "G3-008",
+      "LAYA4-009",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-016"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "PARTIAL",
+    "verified_scope": "Byte-exact Git chunks и source binding проверяются; это не spans всех форматов.",
+    "evidence_refs": [
+      "content-lab/repo_context.py"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "Проверить Unicode, эмодзи, CRLF и намеренные опечатки на roundtrip.",
+    "measurement": "Quote exactness=100%; unrepresented bytes=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-015",
+    "title": "Раздельные времена создания, захвата и действия",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-06"
+    ],
+    "new_decision_ids": [
+      "DEC5-16"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-04"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-002",
+      "G3-008",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Импортировать старое сообщение сегодня и несколько неоднозначных временных меток.",
+    "measurement": "Invented timestamps=0; time provenance completeness.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-016",
+    "title": "Версионируемые извлечения и обратимые преобразования",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-06",
+      "GOAL5-08"
+    ],
+    "new_decision_ids": [
+      "DEC5-06",
+      "DEC5-16"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-04",
+      "ACTION5-08"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-002",
+      "G3-008",
+      "LAYA4-005",
+      "LAYA4-006",
+      "LAYA4-007",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017",
+      "LAYA4-023"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Прогнать два parser versions на одном документе и сравнить derived diff.",
+    "measurement": "Unbound derived outputs=0; reproducible extraction rate.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-017",
+    "title": "Поиск по ID, путям и FTS без обязательной модели",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-09"
+    ],
+    "new_decision_ids": [
+      "DEC5-14"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-12"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-009",
+      "LAYA4-016",
+      "LAYA4-018",
+      "LAYA4-025"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "PARTIAL",
+    "verified_scope": "Существующий local search/FTS доступен native; полный жизненный каталог требует развития.",
+    "evidence_refs": [
+      "content-lab/automation_core.py"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "Набор 30 реальных запросов на сохранённых источниках: FTS baseline.",
+    "measurement": "Recall@k/time-to-source; p95 latency; model calls=0 для exact lookup.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-018",
+    "title": "Независимые аспекты тегов с происхождением",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-09"
+    ],
+    "new_decision_ids": [
+      "DEC5-15"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-10"
+    ],
+    "candidate_inherited_task_ids": [
+      "EVO3-002",
+      "G3-008",
+      "LAYA4-015",
+      "LAYA4-016",
+      "LAYA4-025"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Разметить stratified corpus детерминированно, затем добавить AI proposals на выбранной части.",
+    "measurement": "Correction rate; cost per accepted useful label; lost unknown tags=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-019",
+    "title": "Версии целей на русском и английском",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-10"
+    ],
+    "new_decision_ids": [
+      "DEC5-15"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-10"
+    ],
+    "candidate_inherited_task_ids": [
+      "EVO3-002",
+      "G3-008",
+      "LAYA4-015",
+      "LAYA4-016",
+      "LAYA4-025"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "PARTIAL",
+    "verified_scope": "Точный goal/scope/criteria заморожен в session/task; общая история версий целей ещё не реализована.",
+    "evidence_refs": [
+      "content-lab/context_tasks.py"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "20 пар RU/EN запросов с corrections и незнакомыми терминами.",
+    "measurement": "Meaning-preservation review; critical slot loss=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-020",
+    "title": "Журнал незакрытых вопросов и терминов",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-09",
+      "GOAL5-10"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [],
+    "candidate_inherited_task_ids": [],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Пройти исходные запросы и сравнить вопросы с существующими ответами.",
+    "measurement": "Open-loop retention=100%; unsupported interpretation=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-021",
+    "title": "Противоречия без удаления прежних решений",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-09"
+    ],
+    "new_decision_ids": [
+      "DEC5-14"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-10"
+    ],
+    "candidate_inherited_task_ids": [
+      "EVO3-002",
+      "G3-008",
+      "G3-009",
+      "LAYA4-015",
+      "LAYA4-016",
+      "LAYA4-018",
+      "LAYA4-025"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Разрешить три известные пары conflicting docs в UI draft.",
+    "measurement": "Unresolved contradictions count; incorrectly discarded history=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-022",
+    "title": "Граф цель → код → проверка → результат",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-10"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [],
+    "candidate_inherited_task_ids": [],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "PARTIAL",
+    "verified_scope": "Task связывает цель, sources, review и registered local evidence; полного UpdateCase graph ещё нет.",
+    "evidence_refs": [
+      "content-lab/context_tasks.py",
+      "content-lab/context_evidence.py"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "На frozen fixture поменять код после receipt и проверить ослабление статуса.",
+    "measurement": "Доля целей с актуальным evidence chain; false implementation claims=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-041",
+    "title": "Инкрементальный импорт выбранных папок",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-05"
+    ],
+    "new_decision_ids": [
+      "DEC5-16"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-06",
+      "ACTION5-09"
+    ],
+    "candidate_inherited_task_ids": [
+      "LAYA4-004",
+      "LAYA4-010",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Обновить folder: добавить, изменить, переименовать и убрать четыре файла.",
+    "measurement": "Incremental accuracy; repeat import cost; missing reason coverage.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-042",
+    "title": "Telegram export с правками и медиа",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-06",
+      "GOAL5-26"
+    ],
+    "new_decision_ids": [
+      "DEC5-16"
+    ],
+    "new_action_task_ids": [],
+    "candidate_inherited_task_ids": [
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Два экспорта одного synthetic чата с edited message и voice placeholder.",
+    "measurement": "Messages/edits/media coverage; duplicate versions=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-047",
+    "title": "Версионируемая схема импортера и неизвестные поля",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-06",
+      "GOAL5-07"
+    ],
+    "new_decision_ids": [
+      "DEC5-10",
+      "DEC5-16"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-06"
+    ],
+    "candidate_inherited_task_ids": [
+      "EVO3-014",
+      "EVO3-015",
+      "LAYA4-004",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017",
+      "LAYA4-027",
+      "TAB4-14"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Изменить fixture export field names и добавить неизвестную вложенную структуру.",
+    "measurement": "Unknown-field retention=100%; silent schema drift=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-048",
+    "title": "Группы происхождения вместо подсчёта копий как доказательств",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-08",
+      "GOAL5-09"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [
+      "ACTION5-09"
+    ],
+    "candidate_inherited_task_ids": [
+      "LAYA4-004",
+      "LAYA4-010",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Fixture original→quote→summary→copied archive и действительно независимый source.",
+    "measurement": "Independent family count accuracy; false corroboration=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-050",
+    "title": "Коллекции и сохранённые представления без копирования",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-09"
+    ],
+    "new_decision_ids": [
+      "DEC5-15"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-10",
+      "ACTION5-12"
+    ],
+    "candidate_inherited_task_ids": [
+      "EVO3-002",
+      "G3-008",
+      "LAYA4-015",
+      "LAYA4-016",
+      "LAYA4-018",
+      "LAYA4-025"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Создать views «мои идеи», «unanswered», «Studious blockers» на одном corpus.",
+    "measurement": "Time-to-find; duplicate storage due to views=0.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-052",
+    "title": "Устойчивые namespaces для старых каталогов",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-08"
+    ],
+    "new_decision_ids": [
+      "DEC5-10"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-01",
+      "ACTION5-12"
+    ],
+    "candidate_inherited_task_ids": [
+      "EVO3-001",
+      "EVO3-014",
+      "EVO3-015",
+      "G3-001",
+      "LAYA4-001",
+      "LAYA4-016",
+      "LAYA4-018",
+      "LAYA4-025",
+      "LAYA4-027",
+      "PAR3-001",
+      "TAB4-14"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Импорт пересекающихся DESK/F/CAP каталогов и проверка namespace collisions.",
+    "measurement": "Unresolved ID collisions=0; historical ID retention=100%.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "LIB-058",
+    "title": "Редактор заметок с неизменным импортным оригиналом",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-09"
+    ],
+    "new_decision_ids": [
+      "DEC5-15"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-04"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-002",
+      "G3-008",
+      "LAYA4-013",
+      "LAYA4-015",
+      "LAYA4-016",
+      "LAYA4-025"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Создать note из трёх source quotes и отредактировать свой текст.",
+    "measurement": "Source mutation errors=0; note restore success.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "ACT-056",
+    "title": "Контроль цели от фразы до проверенного результата",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-10"
+    ],
+    "new_decision_ids": [
+      "DEC5-22"
+    ],
+    "new_action_task_ids": [
+      "ACTION5-30"
+    ],
+    "candidate_inherited_task_ids": [
+      "EVO3-021",
+      "EVO3-024",
+      "G3-009",
+      "G3-010",
+      "G3-011",
+      "G3-012",
+      "LAYA4-026",
+      "LAYA4-028",
+      "TAB4-17",
+      "TAB4-20",
+      "TAB4-21"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Сравнить две команды с одинаковым контекстом и разными конечными результатами.",
+    "measurement": "Premature completions; корректность goal-stage mapping; missing next action.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "RND-001",
+    "title": "Актуальная карта репозитория и владельцев runtime",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-02",
+      "GOAL5-28"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [
+      "ACTION5-27"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-001",
+      "LAYA4-007",
+      "LAYA4-028",
+      "PAR3-003"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "IMPLEMENTED_SCOPED",
+    "verified_scope": "Current SCE SHA и owners проверены; иные repo снимки остаются историческими.",
+    "evidence_refs": [
+      "implementation/STATUS.json"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "Сравнить один сохранённый snapshot с будущим актуальным checkout без выполнения кода.",
+    "measurement": "Доля runtime-утверждений с точной ревизией.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "RND-002",
+    "title": "Матрица требование → код → проверка → результат",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-10"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [
+      "ACTION5-27"
+    ],
+    "candidate_inherited_task_ids": [
+      "G3-001",
+      "LAYA4-007",
+      "LAYA4-028",
+      "PAR3-003"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "PARTIAL",
+    "verified_scope": "Узкая связь requirement/source/task/local job появилась; весь продукт не покрыт матрицей реализации.",
+    "evidence_refs": [
+      "content-lab/context_tasks.py"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "Внести в fixture пять обещанных функций, из которых только две имеют рабочий тест.",
+    "measurement": "Точность обнаружения незавершённых требований.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "RND-003",
+    "title": "Полный dependency graph для контекста и анализа изменений",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-04"
+    ],
+    "new_decision_ids": [
+      "DEC5-06",
+      "DEC5-07"
+    ],
+    "new_action_task_ids": [],
+    "candidate_inherited_task_ids": [
+      "G3-003",
+      "LAYA4-005",
+      "LAYA4-006",
+      "LAYA4-007",
+      "LAYA4-008",
+      "LAYA4-009"
+    ],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "PARTIAL",
+    "verified_scope": "Python static graph/SCC существует; JS/TS и dynamic edges обозначены gaps.",
+    "evidence_refs": [
+      "content-lab/repo_source.py",
+      "content-lab/repo_context.py"
+    ],
+    "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "next_experiment": "Небольшой смешанный Python/JS/TS corpus с циклами, alias и config dispatch.",
+    "measurement": "Recall известных dependency edges и unresolved count.",
+    "implementation_changed_in_v5": false
+  },
+  {
+    "feature_id": "RND-004",
+    "title": "Кандидаты code smells с воспроизводимым подтверждением",
+    "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+    "original_required_fields_present": [
+      "problem",
+      "proposed_behavior",
+      "dependencies",
+      "acceptance",
+      "metric",
+      "next_experiment",
+      "source_refs"
+    ],
+    "original_required_fields_absent": [],
+    "execution_fields_not_in_original_card": [
+      "inputs",
+      "outputs",
+      "owner",
+      "state_contract",
+      "error_contract",
+      "checkpoint_contract",
+      "receipt_schema",
+      "resource_limits"
+    ],
+    "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+    "goal_ids": [
+      "GOAL5-04"
+    ],
+    "new_decision_ids": [],
+    "new_action_task_ids": [],
+    "candidate_inherited_task_ids": [],
+    "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+    "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+    "current_verified_status": "UNVERIFIED_OR_PLANNED",
+    "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+    "evidence_refs": [],
+    "evidence_commit": null,
+    "next_experiment": "Разобрать десять кандидатов и отделить подтверждённые дефекты от ложных срабатываний.",
+    "measurement": "Подтверждённые дефекты на час анализа; false-positive rate.",
+    "implementation_changed_in_v5": false
+  }
+]

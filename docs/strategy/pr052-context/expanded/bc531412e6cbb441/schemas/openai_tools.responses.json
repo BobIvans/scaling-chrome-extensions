@@ -1,0 +1,106 @@
+[
+  {
+    "type": "function",
+    "name": "library_search",
+    "description": "Search only approved indexed sources.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "query",
+        "cursor"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "type": "function",
+    "name": "library_read_span",
+    "description": "Read a bounded span from a permitted exact source revision.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "byte_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_end": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "source_id",
+        "revision",
+        "byte_start",
+        "byte_end"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "type": "function",
+    "name": "jobs_propose",
+    "description": "Create a proposal only. This tool never executes code or grants permissions.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "capability_id": {
+          "type": "string"
+        },
+        "goal": {
+          "type": "string"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "capability_id",
+        "goal",
+        "source_ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "type": "function",
+    "name": "jobs_status",
+    "description": "Read the current job status and independent outcome evidence.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "job_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id"
+      ],
+      "additionalProperties": false
+    }
+  }
+]

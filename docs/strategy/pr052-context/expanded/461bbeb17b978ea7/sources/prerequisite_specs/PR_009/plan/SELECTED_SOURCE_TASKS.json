@@ -1,0 +1,133 @@
+{
+  "tasks": [
+    {
+      "task_id": "ACTION5-04",
+      "title": "CaptureEnvelope сохраняет исходный текст и автора",
+      "goal": "Сохранять оригинал, извлечённый текст и пользовательские правки с самостоятельной идентичностью и точным происхождением.",
+      "refines_existing_task_ids": [
+        "G3-002",
+        "LAYA4-013",
+        "G3-008"
+      ],
+      "related_feature_ids": [
+        "LIB-013",
+        "LIB-014",
+        "LIB-015",
+        "LIB-016",
+        "LIB-058"
+      ],
+      "dependencies": [
+        "ACTION5-01"
+      ],
+      "inputs": [
+        "Bytes или DOM capture; source URI/path; capture permission/scope; наблюдаемое авторство"
+      ],
+      "outputs": [
+        "Raw source version; CaptureEnvelope с content hash, times, author/confidence, extraction version; correction overlay"
+      ],
+      "owner": "Существующий Content Lab source/version owner",
+      "acceptance_criteria": [
+        "Реконструкция raw text совпадает byte-for-byte; нормализованный search text хранит обратные offsets.",
+        "Время сообщения, время захвата и inferred event time не объединяются в одно поле.",
+        "Цитата другого автора внутри сообщения не становится словами пользователя; неизвестное авторство явно UNKNOWN.",
+        "Исправление пользователя создаёт overlay/version, сохраняя исходное написание."
+      ],
+      "failure_recovery": [
+        "Повреждённый или недекодируемый текст остаётся raw artifact с extraction error.",
+        "Конфликт авторства сохраняется вместе с доказательствами; прежний оригинал не переписывается."
+      ],
+      "evidence_required": [
+        "Roundtrip fixture RU/EN/emoji/CRLF/BOM; author/quote fixtures; provenance graph"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0",
+      "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+    },
+    {
+      "task_id": "ACTION5-05",
+      "title": "Учитывать full-scroll чат и недоступные ветви",
+      "goal": "Снимать доступные сообщения полностью и отличать capture текущей ветви от полного conversation export.",
+      "refines_existing_task_ids": [
+        "LAYA4-004",
+        "LAYA4-014",
+        "UI3-011",
+        "G3-006"
+      ],
+      "related_feature_ids": [
+        "LIB-012",
+        "LIB-024",
+        "LIB-057"
+      ],
+      "dependencies": [
+        "ACTION5-04"
+      ],
+      "inputs": [
+        "Выбранная conversation identity; видимые сообщения и их IDs; scroll state; доступный export"
+      ],
+      "outputs": [
+        "Message inventory; ветви с known/unknown visibility; capture coverage ledger; resume cursor"
+      ],
+      "owner": "Существующий browser/capture adapter → Content Lab, без нового store",
+      "acceptance_criteria": [
+        "Top/middle/bottom и virtualized-history fixtures дают по одной source version на наблюдаемый message ID.",
+        "Loading/end-of-history подтверждается наблюдением; scroll без новых сообщений сам по себе не означает COMPLETE.",
+        "Недоступная ветвь, удалённое сообщение, вложение и login wall отображаются как конкретный gap.",
+        "Export и DOM capture связываются по происхождению; разные ветви не склеиваются по похожему тексту."
+      ],
+      "failure_recovery": [
+        "После перезагрузки capture продолжает с message IDs и проверяет старые hashes.",
+        "Unknown end-of-history сохраняет PARTIAL и предлагает официальный export/ручной файл."
+      ],
+      "evidence_required": [
+        "Message/branch corpus; capture inventory; restart/virtualized scroll receipts"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0",
+      "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+    },
+    {
+      "task_id": "ACTION5-06",
+      "title": "Закрепить общий контракт файлового импортера",
+      "goal": "Каждый файл должен сохраняться как оригинал с disposition и отдельной версией извлечения.",
+      "refines_existing_task_ids": [
+        "LAYA4-014",
+        "LAYA4-004",
+        "LAYA4-017"
+      ],
+      "related_feature_ids": [
+        "LIB-006",
+        "LIB-007",
+        "LIB-041",
+        "LIB-047"
+      ],
+      "dependencies": [
+        "ACTION5-01",
+        "ACTION5-04"
+      ],
+      "inputs": [
+        "Выбранные files/folder scope; MIME/extension; bytes; extractor registry/version"
+      ],
+      "outputs": [
+        "Importer manifest с discovered/imported/unsupported/error; source versions; bounded checkpoints"
+      ],
+      "owner": "Существующие intake/extractor и Content Lab owners",
+      "acceptance_criteria": [
+        "Несовпадение extension/MIME отражается в manifest; extraction не скрывает оригинал.",
+        "У каждого выбранного файла ровно один исход: imported, excluded с причиной, unsupported или error.",
+        "Повторное продолжение создаёт новые версии только для изменённых bytes и сохраняет все origins.",
+        "Unknown importer fields сохраняются в raw envelope, не становятся исполнимыми настройками."
+      ],
+      "failure_recovery": [
+        "Исчерпание диска или crash оставляет committed sources и незавершённый cursor.",
+        "Unsupported формат можно повторно извлечь после появления квалифицированного importer version."
+      ],
+      "evidence_required": [
+        "Fixture manifest; interruption/retry outputs; hashes оригиналов"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P0",
+      "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+    }
+  ],
+  "closed_by_package": false
+}

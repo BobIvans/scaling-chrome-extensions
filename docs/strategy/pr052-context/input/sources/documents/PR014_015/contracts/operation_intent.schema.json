@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposed:operation_intent:1",
+  "title": "Proposed operation_intent v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "namespace": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "template_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "template_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registered_input_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "grant_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "installed_build_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "adapter_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "connection_generation": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "cancel_epoch": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "PROPOSED",
+        "PERSISTED",
+        "QUEUED",
+        "RUNNING",
+        "COMPLETED",
+        "CANCELLED_BEFORE_DISPATCH",
+        "CANCELLATION_REQUESTED",
+        "UNKNOWN_EFFECT"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "namespace",
+    "operation_id",
+    "intent_digest",
+    "template_id",
+    "template_revision",
+    "capability_id",
+    "capability_version",
+    "registered_input_ref",
+    "profile_digest",
+    "grant_revision",
+    "installed_build_digest",
+    "adapter_digest",
+    "connection_generation",
+    "cancel_epoch",
+    "state"
+  ],
+  "additionalProperties": false
+}

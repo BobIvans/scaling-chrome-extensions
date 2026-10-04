@@ -1,0 +1,168 @@
+[
+  {
+    "id": "T00",
+    "title_ru": "Перенос стратегии между чатами",
+    "stage_recommendation": "Сейчас: архив и handoff",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-10"
+    ],
+    "acceptance_direction_ru": "Каждый известный источник учтён, цитаты ведут в оригинал, неизвестные источники явно отсутствуют."
+  },
+  {
+    "id": "T01",
+    "title_ru": "Полный импорт, оригиналы, пути и экспорт",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::CTX-01",
+      "SCE_V2::LABEL-02",
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-12",
+      "SCE_V2::LABEL-13"
+    ],
+    "acceptance_direction_ru": "Количество записей и байты сверены, исходные пути/ordinal и ошибки видны; при порционной обработке хвост не исчезает."
+  },
+  {
+    "id": "T02",
+    "title_ru": "Библиотека, теги, версии и поиск",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::LABEL-03",
+      "SCE_V2::LABEL-06",
+      "SCE_V2::LABEL-14",
+      "SCE_V2::LABEL-18",
+      "SCE_V2::CTX-09"
+    ],
+    "acceptance_direction_ru": "Для каждого фрагмента можно открыть оригинал, автора, span, версию, связанные цели и основания меток."
+  },
+  {
+    "id": "T03",
+    "title_ru": "Контекст всего репозитория и AI roundtrip",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::CTX-10",
+      "SCE_V2::CTX-15",
+      "SCE_V2::LABEL-11",
+      "SCE_V2::LABEL-13"
+    ],
+    "acceptance_direction_ru": "Исходники, зависимости, тесты и неизвестные связи учтены; каждый пакет/ответ имеет source hashes, а полный review имеет журнал покрытия."
+  },
+  {
+    "id": "T04",
+    "title_ru": "Desktop, существующий store, UI, terminal/VS Code",
+    "stage_recommendation": "Первый этап",
+    "function_refs": [
+      "SCE_V2::UI-01",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-16"
+    ],
+    "acceptance_direction_ru": "На Dell Windows 11 работает один вертикальный сценарий через существующие owners; desktop не требует Chrome extension."
+  },
+  {
+    "id": "T05",
+    "title_ru": "Голос, текст и доступность",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::LVF05",
+      "SCE_V2::LVF07",
+      "SCE_V2::LVF08",
+      "SCE_V2::LVF09",
+      "SCE_V2::LVF21"
+    ],
+    "acceptance_direction_ru": "RU/EN команда и текст дают одинаковый intent; видны транскрипт, исправления и stop; качество измерено на устройстве."
+  },
+  {
+    "id": "T06",
+    "title_ru": "Laya, typed workflows и исполнители",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::LVF03",
+      "SCE_V2::LVF11",
+      "SCE_V2::LVF13",
+      "SCE_V2::LVF17",
+      "SCE_V2::PIPE-05"
+    ],
+    "acceptance_direction_ru": "Версионированный typed action имеет входы/выходы и проверку результата; неподдержанная цель даёт предложение, а не ложный успех."
+  },
+  {
+    "id": "T07",
+    "title_ru": "Источники, браузер и пользовательские экспорты",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::CTX-02",
+      "SCE_V2::CTX-03",
+      "SCE_V2::CTX-07",
+      "SCE_V2::LVF15"
+    ],
+    "acceptance_direction_ru": "Для каждого подключённого источника есть scope, checkpoint, история изменений и учёт непрочитанного."
+  },
+  {
+    "id": "T08",
+    "title_ru": "Web3, стратегии и квалификация",
+    "stage_recommendation": "Следующий этап",
+    "function_refs": [
+      "SCE_V2::W3-F14",
+      "SCE_V2::W3-F22",
+      "SCE_V2::W3-F29",
+      "SCE_V2::W3-F38",
+      "SCE_V2::W3-F39"
+    ],
+    "acceptance_direction_ru": "Команды найдены в конкретной версии bot repo; отчёт связан с кодом, входами и реальными результатами, NOT_RUN не становится TRUE."
+  },
+  {
+    "id": "T09",
+    "title_ru": "AI coding, GitHub, новые capabilities и updater",
+    "stage_recommendation": "Позже, после первого проверенного roundtrip",
+    "function_refs": [
+      "SCE_V2::PIPE-04",
+      "SCE_V2::PIPE-08",
+      "SCE_V2::PIPE-10",
+      "SCE_V2::PIPE-12",
+      "SCE_V2::PIPE-13",
+      "SCE_V2::PIPE-15"
+    ],
+    "acceptance_direction_ru": "Один patch проходит независимые проверки, даёт reviewable diff, затем проверенное обновление и воспроизводимый rollback."
+  },
+  {
+    "id": "T10",
+    "title_ru": "Параллельность, скорость и стоимость",
+    "stage_recommendation": "Постепенно после измерения baseline",
+    "function_refs": [
+      "SCE_V2::PIPE-03",
+      "SCE_V2::PIPE-06",
+      "SCE_V2::PIPE-18",
+      "SCE_V2::LVF16",
+      "SCE_V2::LVF19",
+      "SCE_V2::LVF20"
+    ],
+    "acceptance_direction_ru": "Параллельные producers сохраняют все observations; сравниваются p50/p95 time-to-verified, ресурсы, потери и повторные эффекты."
+  },
+  {
+    "id": "T11",
+    "title_ru": "Истинность целей, smells и доказательства",
+    "stage_recommendation": "Первый/следующий этап",
+    "function_refs": [
+      "SCE_V2::SMELL-01",
+      "SCE_V2::SMELL-10",
+      "SCE_V2::W3-F12",
+      "SCE_V2::W3-F36",
+      "SCE_V2::LVF17"
+    ],
+    "acceptance_direction_ru": "Находка ведёт к строкам и версии; подтверждение/опровержение имеет критерий и evidence; недостаточные данные дают UNKNOWN."
+  },
+  {
+    "id": "T12",
+    "title_ru": "История целей, ежедневные задачи и R&D",
+    "stage_recommendation": "Сейчас: сохранить; затем реализовать",
+    "function_refs": [
+      "SCE_V2::CTX-04",
+      "SCE_V2::CTX-05",
+      "SCE_V2::CTX-08",
+      "SCE_V2::CTX-11",
+      "SCE_V2::CTX-13",
+      "SCE_V2::CTX-16"
+    ],
+    "acceptance_direction_ru": "Оригинальное пожелание, текущая интерпретация и предложение ассистента разделены; у эксперимента есть baseline, outcome и следующий шаг."
+  }
+]

@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce-studious:proposed:ExperimentSpec:v1",
+  "title": "ExperimentSpec proposed v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "experiment_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "hypothesis": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "enum": [
+        "READ_ONLY",
+        "REPLAY",
+        "PAPER"
+      ]
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "handler_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "source_revision",
+        "build_digest"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "dataset_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "config_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "criteria_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "split_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "seed": {
+      "type": "integer"
+    },
+    "clock_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "order_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "cost_model_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "baseline_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "stop_rule_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "frozen_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  },
+  "required": [
+    "schema_version",
+    "experiment_id",
+    "hypothesis",
+    "mode",
+    "profile",
+    "handler_identity",
+    "dataset_digest",
+    "config_digest",
+    "criteria_digest",
+    "split_digest",
+    "seed",
+    "clock_policy_ref",
+    "order_digest",
+    "cost_model_ref",
+    "baseline_ref",
+    "stop_rule_ref",
+    "frozen_at"
+  ]
+}

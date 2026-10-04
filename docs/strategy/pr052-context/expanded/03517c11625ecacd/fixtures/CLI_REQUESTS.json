@@ -1,0 +1,59 @@
+{
+  "schema": "roadmap.pr003-cli-fixtures.v1",
+  "not_native_commands": true,
+  "valid": [
+    {
+      "schema": "occ.repo-archive-cli-request.v1",
+      "profile": "/operator/native-profile.json",
+      "repository": "sce",
+      "manifest": "/operator/verified-manifest",
+      "output": "/operator/export-parent",
+      "action": "BUILD"
+    },
+    {
+      "schema": "occ.repo-archive-cli-request.v1",
+      "profile": "/operator/native-profile.json",
+      "repository": "sce",
+      "manifest": "/operator/verified-manifest",
+      "output": "/operator/export-parent",
+      "action": "RESUME"
+    },
+    {
+      "schema": "occ.repo-archive-cli-request.v1",
+      "profile": "/operator/native-profile.json",
+      "repository": "sce",
+      "manifest": "/operator/verified-manifest",
+      "output": "/operator/export-parent",
+      "action": "STATUS"
+    },
+    {
+      "schema": "occ.repo-archive-cli-request.v1",
+      "profile": "/operator/native-profile.json",
+      "repository": "sce",
+      "manifest": "/operator/verified-manifest",
+      "output": "/operator/export-parent",
+      "action": "NEW_RUN"
+    }
+  ],
+  "invalid": [
+    {
+      "reason": "NO_UI_ARGV_OVERRIDE",
+      "request": {
+        "schema": "occ.repo-archive-cli-request.v1",
+        "argv": [
+          "arbitrary"
+        ]
+      }
+    },
+    {
+      "reason": "ONE_ACTION_ONLY",
+      "request": {
+        "schema": "occ.repo-archive-cli-request.v1",
+        "action": [
+          "RESUME",
+          "NEW_RUN"
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,994 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:pr018019:records:v1",
+  "$defs": {
+    "operation_intent": {
+      "type": "object",
+      "properties": {
+        "operation_id": {
+          "type": "string"
+        },
+        "intent_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "kind": {
+          "type": "string"
+        },
+        "target_identity": {
+          "type": "string"
+        },
+        "input_digest": {
+          "type": "string"
+        },
+        "policy_digest": {
+          "type": "string"
+        },
+        "idempotency_key": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        },
+        "record_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "lease_epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "operation_id",
+        "intent_revision",
+        "kind",
+        "target_identity",
+        "input_digest",
+        "policy_digest",
+        "idempotency_key",
+        "state",
+        "record_revision",
+        "lease_epoch",
+        "evidence_refs"
+      ],
+      "additionalProperties": false
+    },
+    "verification_receipt": {
+      "type": "object",
+      "properties": {
+        "receipt_id": {
+          "type": "string"
+        },
+        "repository_id": {
+          "type": "string"
+        },
+        "source_commit": {
+          "type": "string"
+        },
+        "source_tree": {
+          "type": "string"
+        },
+        "overlay_digest": {
+          "type": "string"
+        },
+        "verifier_version": {
+          "type": "string"
+        },
+        "template_binding": {
+          "type": "string"
+        },
+        "environment_digest": {
+          "type": "string"
+        },
+        "fixture_digest": {
+          "type": "string"
+        },
+        "criteria_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "artifact_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "result": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "receipt_id",
+        "repository_id",
+        "source_commit",
+        "source_tree",
+        "overlay_digest",
+        "verifier_version",
+        "template_binding",
+        "environment_digest",
+        "fixture_digest",
+        "criteria_ids",
+        "artifact_refs",
+        "result"
+      ],
+      "additionalProperties": false
+    },
+    "merge_observation": {
+      "type": "object",
+      "properties": {
+        "observation_id": {
+          "type": "string"
+        },
+        "repository_id": {
+          "type": "string"
+        },
+        "target_ref": {
+          "type": "string"
+        },
+        "origin_kind": {
+          "type": "string"
+        },
+        "pr_id": {
+          "type": "string"
+        },
+        "head_commit": {
+          "type": "string"
+        },
+        "base_commit": {
+          "type": "string"
+        },
+        "result_commit": {
+          "type": "string"
+        },
+        "result_tree": {
+          "type": "string"
+        },
+        "mapping_evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "observation_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "observed_at_utc": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "observation_id",
+        "repository_id",
+        "target_ref",
+        "origin_kind",
+        "pr_id",
+        "head_commit",
+        "base_commit",
+        "result_commit",
+        "result_tree",
+        "mapping_evidence_refs",
+        "observation_revision",
+        "observed_at_utc",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "release_binding": {
+      "type": "object",
+      "properties": {
+        "binding_id": {
+          "type": "string"
+        },
+        "repository_id": {
+          "type": "string"
+        },
+        "resolved_tag_commit": {
+          "type": "string"
+        },
+        "source_tree": {
+          "type": "string"
+        },
+        "asset_id": {
+          "type": "string"
+        },
+        "asset_sha256": {
+          "type": "string"
+        },
+        "build_manifest_digest": {
+          "type": "string"
+        },
+        "toolchain_digest": {
+          "type": "string"
+        },
+        "dependency_lock_digest": {
+          "type": "string"
+        },
+        "provenance_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reproducibility_state": {
+          "type": "string"
+        },
+        "verification_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "target_profile": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "binding_id",
+        "repository_id",
+        "resolved_tag_commit",
+        "source_tree",
+        "asset_id",
+        "asset_sha256",
+        "build_manifest_digest",
+        "toolchain_digest",
+        "dependency_lock_digest",
+        "provenance_refs",
+        "reproducibility_state",
+        "verification_refs",
+        "target_profile"
+      ],
+      "additionalProperties": false
+    },
+    "installed_receipt": {
+      "type": "object",
+      "properties": {
+        "receipt_id": {
+          "type": "string"
+        },
+        "operation_id": {
+          "type": "string"
+        },
+        "device_id": {
+          "type": "string"
+        },
+        "installation_id": {
+          "type": "string"
+        },
+        "os_build": {
+          "type": "string"
+        },
+        "active_asset_sha256": {
+          "type": "string"
+        },
+        "source_commit": {
+          "type": "string"
+        },
+        "data_schema_version": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "host_version": {
+          "type": "string"
+        },
+        "adapter_version": {
+          "type": "string"
+        },
+        "observed_process_ref": {
+          "type": "string"
+        },
+        "previous_asset_sha256": {
+          "type": "string"
+        },
+        "canary_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rollback_plan_ref": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "receipt_id",
+        "operation_id",
+        "device_id",
+        "installation_id",
+        "os_build",
+        "active_asset_sha256",
+        "source_commit",
+        "data_schema_version",
+        "host_version",
+        "adapter_version",
+        "observed_process_ref",
+        "previous_asset_sha256",
+        "canary_refs",
+        "rollback_plan_ref",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "schedule_spec": {
+      "type": "object",
+      "properties": {
+        "schedule_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "timezone": {
+          "type": "string",
+          "const": "Europe/Riga"
+        },
+        "local_trigger": {
+          "type": "string"
+        },
+        "gap_policy": {
+          "type": "string",
+          "enum": [
+            "SKIP",
+            "SHIFT_FORWARD"
+          ]
+        },
+        "fold_policy": {
+          "type": "string",
+          "enum": [
+            "FIRST",
+            "SECOND",
+            "BOTH"
+          ]
+        },
+        "catch_up": {
+          "type": "string",
+          "enum": [
+            "SKIP",
+            "LATEST",
+            "BOUNDED"
+          ]
+        },
+        "catch_up_limit": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "catch_up_window_seconds": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "template_binding": {
+          "type": "string"
+        },
+        "scope_digest": {
+          "type": "string"
+        },
+        "policy_digest": {
+          "type": "string"
+        },
+        "budget_account": {
+          "type": "string"
+        },
+        "cursor_utc": {
+          "type": "string"
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "schedule_id",
+        "revision",
+        "timezone",
+        "local_trigger",
+        "gap_policy",
+        "fold_policy",
+        "catch_up",
+        "catch_up_limit",
+        "catch_up_window_seconds",
+        "template_binding",
+        "scope_digest",
+        "policy_digest",
+        "budget_account",
+        "cursor_utc",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "lease_receipt": {
+      "type": "object",
+      "properties": {
+        "lease_id": {
+          "type": "string"
+        },
+        "owner_attempt": {
+          "type": "string"
+        },
+        "epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resource_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "resource_modes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "reservation_id": {
+          "type": "string"
+        },
+        "profile_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "expires_at_utc": {
+          "type": "string"
+        },
+        "boot_id": {
+          "type": "string"
+        },
+        "record_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "lease_id",
+        "owner_attempt",
+        "epoch",
+        "resource_ids",
+        "resource_modes",
+        "reservation_id",
+        "profile_revision",
+        "expires_at_utc",
+        "boot_id",
+        "record_revision",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "campaign_manifest": {
+      "type": "object",
+      "properties": {
+        "campaign_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "goal_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "criterion_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "source_snapshot_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "input_digest": {
+          "type": "string"
+        },
+        "omission_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nodes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "edges": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "join_policy": {
+          "type": "string"
+        },
+        "contract_bindings": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "max_iterations": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_elapsed_seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "max_transfers": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "budget_minor_units": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "budget_currency": {
+          "type": "string"
+        },
+        "no_progress_limit": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scope_digest": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "campaign_id",
+        "revision",
+        "goal_ids",
+        "criterion_ids",
+        "source_snapshot_refs",
+        "input_digest",
+        "omission_refs",
+        "nodes",
+        "edges",
+        "join_policy",
+        "contract_bindings",
+        "max_iterations",
+        "max_elapsed_seconds",
+        "max_transfers",
+        "budget_minor_units",
+        "budget_currency",
+        "no_progress_limit",
+        "scope_digest"
+      ],
+      "additionalProperties": false
+    },
+    "checkpoint": {
+      "type": "object",
+      "properties": {
+        "checkpoint_id": {
+          "type": "string"
+        },
+        "campaign_id": {
+          "type": "string"
+        },
+        "node_id": {
+          "type": "string"
+        },
+        "attempt_id": {
+          "type": "string"
+        },
+        "intent_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "input_digest": {
+          "type": "string"
+        },
+        "source_commit": {
+          "type": "string"
+        },
+        "policy_digest": {
+          "type": "string"
+        },
+        "capability_binding": {
+          "type": "string"
+        },
+        "output_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "effect_intent_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "lease_epoch": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "checkpoint_id",
+        "campaign_id",
+        "node_id",
+        "attempt_id",
+        "intent_revision",
+        "input_digest",
+        "source_commit",
+        "policy_digest",
+        "capability_binding",
+        "output_refs",
+        "effect_intent_refs",
+        "lease_epoch",
+        "state"
+      ],
+      "additionalProperties": false
+    },
+    "claim": {
+      "type": "object",
+      "properties": {
+        "claim_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "source_locator": {
+          "type": "string"
+        },
+        "source_digest": {
+          "type": "string"
+        },
+        "span_ref": {
+          "type": "string"
+        },
+        "primary_source_ref": {
+          "type": "string"
+        },
+        "lineage_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "correlation_group_id": {
+          "type": "string"
+        },
+        "verification_state": {
+          "type": "string"
+        },
+        "observed_at_utc": {
+          "type": "string"
+        },
+        "experiment_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "claim_id",
+        "revision",
+        "source_locator",
+        "source_digest",
+        "span_ref",
+        "primary_source_ref",
+        "lineage_refs",
+        "correlation_group_id",
+        "verification_state",
+        "observed_at_utc",
+        "experiment_refs"
+      ],
+      "additionalProperties": false
+    },
+    "next_brief": {
+      "type": "object",
+      "properties": {
+        "brief_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "goal_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "task_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gap_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "gap_classifications": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "evidence_delta_digest": {
+          "type": "string"
+        },
+        "input_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "rationale": {
+          "type": "string"
+        },
+        "owner": {
+          "type": "string"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "acceptance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "recovery": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "estimated_cost_state": {
+          "type": "string"
+        },
+        "stop_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "supersedes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "state": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "brief_id",
+        "revision",
+        "goal_ids",
+        "task_ids",
+        "gap_ids",
+        "gap_classifications",
+        "evidence_delta_digest",
+        "input_refs",
+        "rationale",
+        "owner",
+        "dependencies",
+        "acceptance",
+        "recovery",
+        "estimated_cost_state",
+        "stop_conditions",
+        "supersedes",
+        "state"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "operation_intent"
+        },
+        "record": {
+          "$ref": "#/$defs/operation_intent"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "verification_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/verification_receipt"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "merge_observation"
+        },
+        "record": {
+          "$ref": "#/$defs/merge_observation"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "release_binding"
+        },
+        "record": {
+          "$ref": "#/$defs/release_binding"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "installed_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/installed_receipt"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "schedule_spec"
+        },
+        "record": {
+          "$ref": "#/$defs/schedule_spec"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "lease_receipt"
+        },
+        "record": {
+          "$ref": "#/$defs/lease_receipt"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "campaign_manifest"
+        },
+        "record": {
+          "$ref": "#/$defs/campaign_manifest"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "checkpoint"
+        },
+        "record": {
+          "$ref": "#/$defs/checkpoint"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "claim"
+        },
+        "record": {
+          "$ref": "#/$defs/claim"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "next_brief"
+        },
+        "record": {
+          "$ref": "#/$defs/next_brief"
+        }
+      },
+      "required": [
+        "kind",
+        "record"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

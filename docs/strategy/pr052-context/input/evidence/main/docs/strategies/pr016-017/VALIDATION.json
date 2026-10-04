@@ -1,0 +1,167 @@
+{
+  "schema": "occ.pr016-017-handoff-validation.v1",
+  "date": "2026-10-04",
+  "python": "3.12.14",
+  "node": "v24.19.0",
+  "original_pr_head": "b5b550c63d512842d687c8e4482031403a6b083e",
+  "integrated_main": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+  "results": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -q",
+      "status": "PASS",
+      "scope": "Integrated main + action runtime regression, before adding the installed-layout case; new CLI/path case validated separately",
+      "test_executions": 442,
+      "skipped": 0,
+      "log_sha256": "c0f1958eff0d6c3088fd8f1f34686358987be0f12c6778e9f4521d97b56e549e"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p test_action_runtime.py -q",
+      "status": "PASS",
+      "scope": "Latest changes including the new isolated installed CLI/Native/worker regression",
+      "test_executions": 30,
+      "skipped": 0
+    },
+    {
+      "command": "python -m unittest discover -s desktop/tests -p 'test_*.py' -q",
+      "status": "PASS",
+      "scope": "Full Desktop regression before adding coexistence case",
+      "test_executions": 38,
+      "skipped": 2,
+      "log_sha256": "9040719648ad6dc82544584139111f5465542ed27bd4453b4a5548ba96946daa"
+    },
+    {
+      "command": "python -m unittest discover -s desktop/tests -p test_repo_scan_client.py -q",
+      "status": "PASS",
+      "scope": "Latest action + history + scan coexistence; existing scan/history fixture cases",
+      "test_executions": 6,
+      "skipped": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "status": "PASS",
+      "scope": "Existing Native bridge",
+      "test_executions": 47,
+      "skipped": 0,
+      "log_sha256": "519d18ee9974a723cbd16cfd0dcc6488daa2032abe05ae4bfb537c386ec63622"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "status": "PASS",
+      "scope": "Existing extension with campaigns",
+      "test_executions": 121,
+      "skipped": 0,
+      "log_sha256": "24fa06ec4b18d16c385972d98569bdf5d5d6e58563b2e3dc54207e0fe12c7f4e"
+    },
+    {
+      "command": "python -m unittest discover -s agent-bridge -p test_qualification_adapter.py -q",
+      "status": "PASS",
+      "scope": "Qualification adapter",
+      "test_executions": 8,
+      "skipped": 0
+    },
+    {
+      "command": "python -I -X utf8 desktop/package.py verify --shell desktop",
+      "status": "PASS",
+      "scope": "Owned file hashes",
+      "test_executions": null,
+      "skipped": 0,
+      "log_sha256": "2e77bba42fe7f394db79ccde1aa639bb4192042ffc2390fd08615f4454cd3ffe"
+    },
+    {
+      "command": "python docs/strategies/pr016-017/verify_context.py",
+      "status": "PASS",
+      "scope": "All preserved files, original and nested ZIP equality, exact criterion wording",
+      "test_executions": null,
+      "skipped": 0
+    },
+    {
+      "command": "python docs/strategies/pr016-017/source/verification/verify_package.py",
+      "status": "PASS",
+      "scope": "Original package validation, 27 schema fixtures; jsonschema 4.26 loaded from temporary dependencies via PYTHONPATH",
+      "test_executions": null,
+      "skipped": 0
+    }
+  ],
+  "full_strategy_completed": false,
+  "source_criteria_open": 220,
+  "device_ui_qualification": "NOT_RUN",
+  "final_exact_head_ci": "Observe GitHub PR49 current-head run; historical run is not authority for changed head",
+  "final_integration_main": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+  "followup_results": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -q",
+      "status": "PASS",
+      "test_executions": 481,
+      "skipped": 0,
+      "scope": "Full merged Core regression including shared STOP/capacity cases; shipping manifest change separately validated below",
+      "log_sha256": "501eff6ee48701b1edfd04fc377425a7c2fa80d536f0ad447088385c3db75420"
+    },
+    {
+      "command": "python -m unittest discover -s desktop/tests -p 'test_*.py' -q",
+      "status": "PASS",
+      "test_executions": 45,
+      "skipped": 3,
+      "scope": "Final combined Desktop install/library/actions/history regression; Linux has no Tk display",
+      "log_sha256": "d703b4e7a58dacf971ae3aedf6be52c01bb2a802d168c0f384cc59ca0c226e98"
+    },
+    {
+      "command": "python -m unittest discover -s desktop/tests -p test_context_workflow.py -q",
+      "status": "PASS",
+      "test_executions": 6,
+      "skipped": 1,
+      "scope": "Real standalone installed actions + library + shared STOP + backend hash drift",
+      "log_sha256": "9f726222acb100e0ccab02292e600371429a52ffecfd76533310d04b7891a883"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "status": "PASS",
+      "test_executions": 47,
+      "skipped": 0,
+      "scope": "Final native bridge",
+      "log_sha256": "127c8fd3b07eaddf69dcb297c2135f09c7049c6614da172cfd2226f37d41c0d9"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "status": "PASS",
+      "test_executions": 121,
+      "skipped": 0,
+      "scope": "Final extension",
+      "log_sha256": "1d3dd70266ec1866289a4db1393e7dfd328ee531a7b3a939805f3f35d161459b"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p test_action_runtime.py -q",
+      "status": "PASS",
+      "test_executions": 32,
+      "skipped": 0,
+      "scope": "Final installed-layout and action/Core shared STOP, capacity, unknown-worker Resume"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p test_context_services.py -q",
+      "status": "PASS",
+      "test_executions": 34,
+      "skipped": 0,
+      "scope": "Final shipping manifest and context service local contracts"
+    },
+    {
+      "command": "python -m unittest discover -s content-lab -p test_context_workflow_interop.py -q",
+      "status": "PASS",
+      "test_executions": 2,
+      "skipped": 0,
+      "scope": "Context/campaign integration"
+    },
+    {
+      "command": "python -m unittest discover -s agent-bridge -p test_qualification_adapter.py -q",
+      "status": "PASS",
+      "test_executions": 8,
+      "skipped": 0,
+      "scope": "Final qualification adapter"
+    }
+  ],
+  "final_documentation_integration_main": "ccf73e747e6743ead68040e3eb6837b3a5233fbc",
+  "upstream_strategy_integrity": {
+    "status": "PASS",
+    "source_files_verified": 1826,
+    "source_bytes": 28056140,
+    "runtime_changed_by_pr53": false
+  }
+}

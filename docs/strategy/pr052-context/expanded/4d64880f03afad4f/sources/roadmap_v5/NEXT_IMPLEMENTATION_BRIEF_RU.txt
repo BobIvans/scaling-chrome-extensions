@@ -1,0 +1,45 @@
+V5 — следующий конкретный прирост
+
+Сначала сверить фактический SCE SHA с сохранённой scoped V4 основой:
+5574ab768b39605d4631651a1e8f2451483344db. Не повторять уже доставленное позже.
+Сохранённый local code ещё не опубликован: BLOCKED_AUTO_REVIEW; PR и remote CI
+нет. Этот roadmap не изменяет разрешение или статус публикации.
+
+Первый implementation slice: M5-02 / LAYA4-002,003,004,008,009,010.
+Пользователь выбирает repo и нажимает «Собрать весь репозиторий».
+Существующий native owner идёт по всем страницам pinned inventory до EOF.
+UI показывает progress, cancel и saved resume. Каждый tree entry попадает в
+coverage ledger с indexed/excluded/unsupported/error и reason.
+
+Результат: full source/part manifest, source-to-part range index и ZIP/index
+всех доступных chunks. ContextPacket не выдаёт выбранную bounded часть за всё
+repo. Новый TASK ссылается на существующий task/review owner. Shell/Git hooks,
+package installs и каждый файл repo не исполняются для простого chunking.
+
+Inputs: current handler/DTO/schema map; baseline SHA; repo fixtures; selected
+scope (clean pinned commit first); disk budget; sourcebytes/range manifest.
+Outputs: resumable job/state, complete entry ledger, chunks, manifest, offline
+index, qualification report. Не добавлять competing store/executor.
+
+Acceptance:
+- Множество manifest entries согласовано с tree pinned SHA.
+- Byte reconstruction каждого INDEXED source и range hashes совпадают.
+- Ни hardcoded file cap, ни число context parts не скрывает часть tree.
+- Restart/cancel, duplicate callback и source drift не теряют coverage.
+- Excluded/binary/LFS/submodule/dirty/long-line/empty sources имеют explicit
+  outcome; unsupported не считается captured/AI-read.
+- Во время scan task controls responsive; Windows memory/latency измерены.
+
+Следующий slice: LAYA4-005,006,007 и DEC5-06/07 — JS/TS resolver, provenance
+graph, related tests/contracts, SCC/oversize splitting и межчастные links.
+Статические unknown edges остаются видимы; AI classification помогает выбирать,
+но не подтверждает runtime dependencies.
+
+В параллель: ACTION5-01..03 + DEC5-01 (desktop packaging/IPC spike),
+ACTION5-04..06 (capture/import contracts), TAB4-03/04 + DEC5-03/04 (target
+discovery и UI contract corpus). Прототипы используют версии общих DTO;
+интеграция schema проводится одним owner.
+
+Definition of done этого запроса: одно видимое действие, весь выбранный snapshot
+учтён, outputs проверены, device claims ограничены реальным evidence.
+Grok auto-send, production updater и voice остаются собственными gates.

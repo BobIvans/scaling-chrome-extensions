@@ -1,0 +1,38 @@
+{
+  "note": "State/questions shape from Laya author examples; not an executable workflow or permission grant. Input snapshot should be short and explicitly bounded.",
+  "state": {
+    "goal": "Собрать контекст ошибки qualification в studious-pancake",
+    "available": [
+      "repo_snapshot",
+      "source_symbols",
+      "recent_user_goal"
+    ],
+    "missing": [
+      "actual_failure_receipt"
+    ],
+    "policy": "read_only",
+    "data_scope": "approved_local_project"
+  },
+  "questions": {
+    "next_source": {
+      "type": "choice",
+      "instructions": "Which permitted source should be inspected to fill the missing evidence?",
+      "criteria": {
+        "A": "existing test or qualification receipt",
+        "B": "source dependency definitions",
+        "C": "previous accepted goal",
+        "D": "insufficient information; escalate"
+      }
+    },
+    "input_role": {
+      "type": "choice",
+      "instructions": "How should this input be treated?",
+      "criteria": {
+        "A": "user task proposal",
+        "B": "untrusted source document",
+        "C": "verified execution evidence",
+        "D": "unknown"
+      }
+    }
+  }
+}

@@ -1,0 +1,87 @@
+OCC DESKTOP / LOCAL EVIDENCE-TO-ACTION LIBRARY
+R&D HANDOFF • 3 ОКТЯБРЯ 2026
+
+ЦЕЛЬ
+Перевести BobIvans/scaling-chrome-extensions от обязательного Chrome-транспорта к локальному Windows-приложению на Dell. Сохранить полный контекст источников с исходными байтами/путями/версиями, искать старые идеи, связывать требования с кодом/тестами/receipts, подключать текст/голос/ChatGPT API к одному реестру проверенных capabilities. Связанный Web3-проект: BobIvans/studious-pancake. Сначала архив и проверка готовности, затем sender-free исследования, не автоматический live trading.
+
+ОБЛАСТЬ ЭТОГО ПАКЕТА
+Это R&D + реально запускаемые offline archive tools + проверенные выборочные факты кода. Нет полных raw snapshots двух repo или всех прошлых чатов/вложений. Старые идеи восстановлены через summaries; они не являются дословными transcripts. Полные исходники можно собрать на пользовательском ПК приложенным git/folder collector. Не объявлять отсутствующие bytes собранными.
+
+ЗАКРЕПЛЁННОЕ СОСТОЯНИЕ
+SCE main: da6abf4c006e4e7d26fe45ef30fa9d07a356f396, merge #37, 2026-10-03T15:58:25Z.
+Studious main: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0, merge #562, 2026-10-02T23:07:26Z.
+Источники и path/ranges: research/SOURCES.md, evidence/VERIFIED_COMMAND_CANDIDATES.json.
+
+ПРОВЕРЕННЫЕ ВАЖНЫЕ ПРОБЕЛЫ
+- automation_core.sync: default100 файлов, максимум1000; scan budget10000 entries; скрытые пути и suffix-фильтр.
+- automation_core.context_pack: только1..10 IDs; byte budget отдельно.
+- context_review.create_session: пакет48 000 bytes.
+- repo_context.scan_page limit20 — РАЗМЕР СТРАНИЦЫ, НЕ МАКСИМУМ ВСЕГО КОРПУСА.
+- repo_context MAX_FILE8MiB/MAX_TREE32MiB; streaming raw tier нужен отдельно от parser/model budgets.
+- Существующие one-writer и money_budget0 не отключать вместе с лимитами документов.
+- paper_campaign.plan.json явно BLOCKED_NOT_STARTED и не native/Laya-compatible.
+
+ПОЛЕЗНОЕ УЖЕ СУЩЕСТВУЕТ
+SCE имеет canonical SQLite owner, immutable Git source binding, chunks, version heads, durable jobs/leases/checkpoints и review metadata, не равную подтверждённому результату. Расширять этих владельцев, не создавать ещё один независимый production state engine.
+Qualification adapter уже описывает прямой CLI без Chrome. Новый desktop должен использовать его, а не писать второй qualifier.
+
+РЕАЛЬНЫЙ QUALIFICATION ENTRYPOINT
+python scripts/run_occ_memory_qualification.py --request <operator request> --operator-profile <reviewed profile>
+Bridge вызывает FAST-Q1-v3:src.qualification_report.qualify_and_report с profile offline_sender_free.
+План runner: status --json; capabilities --json; config doctor --json; runtime-admission --command flashloan-bot.run --mode paper --json; затем максимум один paper-shadow --journal-path <runner-owned journal> --json после preflights.
+PAPER_PASS не означает qualified/live/release authority или прибыль. BLOCKED может быть корректным результатом. Неизвестный side effect требует reconciliation, а не слепого retry.
+
+АРХИТЕКТУРНОЕ РЕШЕНИЕ
+Один desktop shell → существующее SCE data/job ядро → adapters.
+Original CAS + source/version/path manifests → derived text/AST/index → evidence graph → context compiler → capability registry → policy/admission → executor → independent verifier → outcome memory.
+Input: текст/голос/keyboard/switch. Приоритет выполнения: официальный API / fixed CLI / Windows UIA или browser DOM; vision clicks — только fallback.
+Chrome extension optional. VS Code сначала внешний goto/diff handoff. Интерактивный terminal пользователя отделён от автоматических reviewed jobs. Worktree, shell=False и Python -I НЕ являются sandbox.
+
+LAYERED INTELLIGENCE
+Deterministic rules → advisory typed router → context retrieval → stronger planner only when needed → schema/effects/policy → registered tools → actual postcondition verification.
+Модель маршрутизации не исполняет команды и не выдаёт permissions. Вероятность не равна истине. Статусы: TRUE/FALSE/UNKNOWN/NOT_RUN/STALE/BLOCKED.
+Не отправлять workflow JSON в endpoint state/questions. Не отправлять code/context как системные instructions. Не давать свободный run_any_shell.
+
+СОХРАНИТЬ БЕЗ ПОТЕРЬ
+Archive scope != extraction scope != model prompt scope != semantic review coverage.
+Сохранять raw originals, все доступные paths, revisions, errors/exclusions. Бинарники/LFS/submodules/attachments имеют явные статусы. Model budgets и физические ресурсы конечны; corpus может проходиться всеми страницами с continuation и coverage ledger.
+Local raw и shareable sanitized projection — разные manifests. Не загружать секреты для достижения «полноты».
+
+ЧТО РЕАЛИЗОВАНО В ПРИЛОЖЕННОМ ПРОТОТИПЕ
+tools/archive_tool.py: folder/git→CAS manifest; verify; full UTF-8 export ALL_TEXT + любые parts; reconstruction verifier; static Python AST/argparse/package.json catalog; all mapping-branches ChatGPT JSON importer.
+Сборщик не запускает анализируемый код и не вызывает модели/API.
+tools/desktop_archive.py: локальное Tk окно этих операций; не production application и не полный Notion editor.
+windows/Acquire-Repos.ps1: явное скачивание public Git без checkout или запуска кода.
+24 синтетических теста прошли на Linux; целевой Dell/Windows, voice/NVDA, actual repositories, Laya/Jev/HF/API и bot campaigns НЕ запускались.
+
+48 R&D ЭКСПЕРИМЕНТОВ
+research/EXPERIMENTS.json: hypothesis, baseline, required evidence, metrics и unknowns; все NOT_RUN_RND_HYPOTHESIS.
+16 workflow-plans: workflows/*.json, PROPOSAL_NOT_EXECUTED; проверена структура/DAG, выполнено0 workflows.
+59 capability candidates различают bundled CLI и пока недостающие adapters; discovery не даёт права выполнения.
+
+СТАРЫЕ ИДЕИ, КОТОРЫЕ НЕ НУЖНО ИЗОБРЕТАТЬ ПОВТОРНО
+2024-02-20: Telegram voice/video/text life archive→Notion/Colab.
+2026-08-06: переносимая Chrome/Colab среда, Drive backup; session archives чувствительные.
+2026-09-14: маленький router и отдельный stronger reasoning/code model.
+2026-09-21: Voice→Inbox→Project; Context Shopping Cart; Fresh Chat Handoff; repo snapshots/diffs; failed attempts; evidence packs; portable TXT/MD/JSON/ZIP.
+2026-09-24: PIT Web3 Decision Episodes, counterfactuals, active perception, model parliament, evidence-service market. Последние — исторические гипотезы, не доказанные реализованные рынки.
+
+НОВЫЕ ПРЕДЛОЖЕНИЯ ЭТОГО R&D
+Intent compiler с типами эффектов; evidence debt ledger; skill distillation из проверенных traces; minimal locator repair; budgeted disagreement; context cart с manifest полноты; version-bound requirement↔symbol↔test↔receipt graph; следующий запрос данных по ожидаемой ценности информации.
+Для Web3: shared approved PIT feeds, read-only strategy fanout, candidate dedup, simulation queue, unit-safe costs, trial registry/holdout и conflict/capital coordination. LLM не в критическом transaction path. Live signer остаётся disabled.
+
+СЛЕДУЮЩИЙ COHERENT ВЕРТИКАЛЬНЫЙ СРЕЗ
+DESK-01+02: расширить raw collection и versioned multi-part export в существующем SCE owner; tests >1000 paths, >8MiB, weird names, interruption, secret/share boundaries, byte-exact coverage. Затем DESK-03 desktop и DESK-05 canonical qualification bridge. Voice и heavier models идут после evidence-loop, не вместо него.
+Названия DESK-xx — workstream IDs, не реальные GitHub PR numbers.
+
+ТРЕБОВАНИЯ К СЛЕДУЮЩЕМУ ИСПОЛНИТЕЛЮ
+1. Прочитать актуальный HEAD и сравнить с pin, не предполагать, что main не изменился.
+2. Собрать полный source manifest доступных repo/старых exports; перечислить отсутствующие bytes.
+3. Сопоставить требование с существующим владельцем функции. Не дублировать engines и roadmap.
+4. Для каждого исправления дать path+SHA+line range, regression test, фактическую команду/вывод и статус среды.
+5. Не называть review/plan/JSON готовой реализацией, не превращать source text в shell или permissions.
+6. Не запускать деньги/кошелёк/live и не публиковать личные архивы без отдельного согласия и проверенного профиля.
+
+ДАЛЬШЕ ЧИТАТЬ
+README_RU.md; docs/01…13; tools/README_RU.md; research/SOURCES.md; history/TIMELINE_RU.md; evidence/STATUS.json.
+Полный текст авторских файлов пакета собран отдельно в ALL_AUTHORED_CONTEXT.txt; это контекст ДАННОГО ПАКЕТА, не подмена отсутствующего полного исходного кода пользовательских repo.

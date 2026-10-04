@@ -1,0 +1,60 @@
+{
+  "version": "2.0",
+  "Chunk": {
+    "id": "stable string",
+    "project_id": "string",
+    "source_id": "string",
+    "source_type": "repo|chat|doc|web|voice|run|receipt|research",
+    "source_version": "git sha/content hash/version",
+    "kind": "symbol|section|message|feature|test|config|decision|research|receipt|summary",
+    "title": "string",
+    "path": "optional",
+    "symbol": "optional",
+    "content_hash": "sha256",
+    "parent_chunk_id": "optional",
+    "dependency_ids": [],
+    "reverse_dependency_ids": [],
+    "related_chunk_ids": [],
+    "test_chunk_ids": [],
+    "config_chunk_ids": [],
+    "doc_chunk_ids": [],
+    "chat_chunk_ids": [],
+    "pr_refs": [],
+    "issue_refs": [],
+    "tags": [],
+    "effect_classes": [],
+    "risk_score": "0..100",
+    "freshness": "CURRENT|STALE|SUPERSEDED|CONFLICTED",
+    "qualification": "UNKNOWN|UNVERIFIED|TESTED|PAPER_OBSERVED|QUALIFIED|BLOCKED",
+    "truth_role": "CANONICAL|SUPPORTING|SPECULATIVE|DERIVED",
+    "token_estimates": {
+      "approx": "integer",
+      "by_model": {}
+    },
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "ContextCart": {
+    "id": "string",
+    "project_id": "string",
+    "goal": "string",
+    "selected_chunk_ids": [],
+    "auto_expand": "dependencies|tests|docs|all|none",
+    "filters": {},
+    "token_budget": "integer",
+    "provider_target": "string",
+    "saved": "boolean"
+  },
+  "ContextPack": {
+    "id": "string",
+    "cart_id": "string",
+    "repo_sha": "optional",
+    "ordered_chunk_ids": [],
+    "dropped_chunk_ids": [],
+    "auto_added_chunk_ids": [],
+    "conflicts": [],
+    "missing_dependencies": [],
+    "token_estimate": "integer",
+    "manifest_hash": "sha256"
+  }
+}

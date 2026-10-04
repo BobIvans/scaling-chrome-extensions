@@ -1,0 +1,49 @@
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-28",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Продолжи Studious qualification research",
+  "parallel_mode": "REQUIRED_EVIDENCE_JOIN",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "local pinned repo graph",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "supported capabilities/blockers",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "selected prior goals/decisions",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_4",
+      "description": "approved offline tests when available",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Evidence bound to same source state, sender absent",
+  "materialization_contract_ru": "Handoff/research artifacts only; separate future code branch",
+  "failure_injection_ru": "Readme proposal incorrectly read as runtime readiness",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}

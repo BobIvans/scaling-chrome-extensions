@@ -1,0 +1,92 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "file_bytes",
+    "parser_input_frame_bytes",
+    "parser_output_frame_bytes",
+    "stderr_total_bytes",
+    "stderr_retained_bytes",
+    "file_timeout_seconds",
+    "global_timeout_seconds",
+    "cleanup_timeout_seconds",
+    "node_old_space_mib",
+    "stage_max_bytes",
+    "projection_batch_rows",
+    "projection_batch_bytes",
+    "progress_interval_ms"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-js-analysis-budget.v1"
+    },
+    "file_bytes": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 8388608
+    },
+    "parser_input_frame_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 33554432
+    },
+    "parser_output_frame_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 8388608
+    },
+    "stderr_total_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 1048576
+    },
+    "stderr_retained_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65536
+    },
+    "file_timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 60
+    },
+    "global_timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 86400
+    },
+    "cleanup_timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "node_old_space_mib": {
+      "type": "integer",
+      "minimum": 64,
+      "maximum": 1024
+    },
+    "stage_max_bytes": {
+      "type": "integer",
+      "minimum": 1048576,
+      "maximum": 17179869184
+    },
+    "projection_batch_rows": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1024
+    },
+    "projection_batch_bytes": {
+      "type": "integer",
+      "minimum": 65536,
+      "maximum": 1048576
+    },
+    "progress_interval_ms": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 1000
+    }
+  },
+  "$comment": "Validate stderr_retained<=stderr_total, base64 payload+header fits input frame, and global deadline covers cancellation/cleanup. Node heap option is not RSS enforcement. No total file-count cap."
+}

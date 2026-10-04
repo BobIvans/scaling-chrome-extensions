@@ -1,0 +1,127 @@
+Создай большой подробный ZIP ROADMAP-PR-021: «Закрытие продукта: Windows scale/fault qualification, польза, стоимость и все критерии V5».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Проверить конечные пользовательские вертикали, исправить реальные integration faults и сверить все 160 задач/164 карточки/28 целей/24 решения.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: G3-011, G3-012, UI3-018, PAR3-022, EVO3-024, TAB4-20, TAB4-21, TAB4-22, LAYA4-026, ACTION5-30
+Feature cards: LIB-053, LIB-055, LIB-056, LIB-060, ACT-013, ACT-014, ACT-026, ACT-053, RND-023, RND-039, RND-040, RND-041, RND-046
+Decisions: DEC5-23
+Goals: GOAL5-01, GOAL5-02, GOAL5-03, GOAL5-04, GOAL5-05, GOAL5-06, GOAL5-07, GOAL5-09, GOAL5-10, GOAL5-12, GOAL5-13, GOAL5-14, GOAL5-15, GOAL5-16, GOAL5-17, GOAL5-18, GOAL5-19, GOAL5-20, GOAL5-21, GOAL5-22, GOAL5-23, GOAL5-25, GOAL5-26, GOAL5-27, GOAL5-28
+Dependencies: PR-010, PR-011, PR-012, PR-013, PR-014, PR-015, PR-016, PR-017, PR-018, PR-019, PR-020
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-034 — Сквозная квалификация Windows 11: масштаб, сбои, UI, voice и обновления
+Scope:
+- Общий corpus wrong-target/stale/cancel/unknown/restore/mic-denied
+- Scale profiles Dell 16 GB и реальные installed receipts
+- Вертикали repo→context→AI→change→update и text/voice→research
+Граница: Этот пакет выполняет квалификацию конечных вертикалей и исправляет подтверждённые faults; профильные владельцы сохраняются. CI не подменяет реальный Windows запуск.
+Приёмка:
+- Каждый тест связан с exact build/device/config
+- Большой корпус не теряет хвосты и origins
+- STOP/crash/offline/restart проходят на устройстве
+- Установка/rollback/canary подтверждены отдельно от CI
+- Отсутствующий device/API receipt остаётся NOT_RUN
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-035 — Полезность и стоимость: benchmarks, ablation, manual baseline и все попытки
+Scope:
+- Frozen corpus собственных retrieval/coding/research задач
+- Manual/no-action baseline, context ablation и независимые оценки
+- Cost/latency/RAM/interventions/unknown/failure accounting
+Граница: Измеряет пользу реализованных функций; не требует придумывать прибыль или идеальный benchmark. Приёмочные пороги согласуются по данным corpus.
+Приёмка:
+- В знаменатель входят все начатые попытки
+- Критерии успеха заморожены до запуска
+- Количество PR не подменяет измеренную пользу
+- Повторные источники не считаются независимыми оценками
+- Отчёт показывает scope, confidence и next missing evidence
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-036 — Закрытие V5: все 160 задач, 164 карточки, 28 целей и выпуск продукта
+Scope:
+- Criterion-level reconciliation всех каталогов и decision records
+- Исправление оставшихся integration defects и stale documentation
+- Delivery/handoff, release notes, registry и точные named blockers
+Граница: №45 — финальная сверка и интеграционные исправления. Новые несвязанные продуктовые идеи создают следующую версию roadmap; их нельзя тихо включать или использовать для бесконечного продления V5.
+Приёмка:
+- Ни один исходный ID не потерян
+- У каждого обязательного критерия есть пригодный receipt или открытый blocker
+- DEFERRED не считается выполнением
+- Delivered/installed/usable различаются
+- Полное закрытие объявляется только после фактической приёмки обязательных критериев
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+G3-011 — Подготовить квалификационный набор вертикального сценария
+- Прогнаны wrong chat, missing part, ambiguous send, stale head, unexpected result.
+- Receipt указывает ОС, UI version, commit и точную область; Windows NOT_RUN не скрывается.
+G3-012 — Обновлять мастер и карту отложенного без дублирования
+- Все старые ID и байты сохранены либо отображены на version copy.
+- Новая задача указывает refinement_of; totals не заявлены как distinct implemented functions.
+UI3-018 — Квалифицировать живой UI маршрут на Windows
+- Пройден нормальный цикл и crash/retry/wrong-target случаи.
+- Offline симулятор и Linux tests не названы Windows/live проверкой.
+PAR3-022 — Пилот параллелизма на Dell и fault injection
+- Зафиксированы устройство/runtime, snapshots, corpus, worker profile и ручной baseline.
+- Измерены RAM, queue age, время до verified outcome, responsiveness STOP и частота unknown effects.
+- Fault fixtures покрывают restart, stale worker, lost receipt, changed chat, alias collision, budget exhaustion и corrupted artifact.
+- PAR3-021 принимается по baseline keyboard/screen-reader критериям; ASR/voice parity не являются условием начала или завершения этого пилота.
+EVO3-024 — Пройти общую qualification feedback loop
+- Все восемь экспериментов имеют pinned fixtures, исходные observations, результаты и explicit pass/fail/unknown.
+- 0 ложных usable и 0 неразрешённых внешних эффектов — обязательные gates; ускорение не компенсирует нарушение.
+- Отчёт указывает, что проверено offline, на Windows и на реальном UI отдельно; непроверенные стадии не закрываются.
+TAB4-20 — Измерение долга и независимая оценка успеха
+- Счётчики разделяют context completeness, delivery, result binding, local tests, CI, merge, install и device availability.
+- У каждого показателя есть числитель, знаменатель, версия сценария и причины исключений.
+- Заблокированные и прерванные попытки видимы отдельно и не увеличивают показатель успеха.
+- Долг связан с нарушенным критерием и конкретной карточкой; отсутствующие доказательства не заменяются словами AI.
+- Логи минимизируют личные данные и позволяют собрать воспроизводимую failure capsule.
+TAB4-21 — Сквозная квалификация на устройстве пользователя
+- Зафиксированы устройство, ОС, браузер, версии host/extension/adapter и доступные способы управления.
+- Пройден сценарий от цели до реально доступной новой команды и отдельно проверен откат.
+- Пройдены смена вкладки, неизвестная отправка, рестарт, stale CI, повреждённая загрузка, миграция и отмена.
+- Измерены длительность, память, ручные вмешательства и точность результатов без переноса Linux-результата на Windows.
+- Непройденные проверки оставляют конкретные возможности DISABLED или MANUAL_ONLY.
+TAB4-22 — Постепенное включение рабочего процесса
+- Режимы dry run, draft-only, configured-send и qualified-update включаются отдельно по доказательствам.
+- Начальный пилот ограничен одним репозиторием, одной целью, одним чатом и одним типом совместимого обновления.
+- Экран показывает, что сейчас IMPLEMENTED/QUALIFIED/PLANNED, и конкретную причину недоступного шага.
+- Экспорт продолжения содержит текущую задачу, незавершённые действия, версии, доказательства и следующий запрос.
+- Расширение на новые приложения, репозитории и группы жизненного контекста требует квалификации соответствующего адаптера/области, сохраняя прежние сценарии.
+LAYA4-026 — Квалифицировать repo batch на Windows 16 GB
+- Device receipt содержит exact app/repo build, OS/CPU/RAM/SSD, corpus digest и active capability versions.
+- Core inventory/roundtrip/restart/export/accessibility сценарии проходят LX4-01/02/06/09/10; прочие эксперименты применяются только к включённым расширениям.
+- Публикуются peak memory, p50/p95 latency, throughput, counts/gaps; слова fastest/infinite не подменяют измерения.
+- Installed native host и browser/desktop integration проходят end-to-end; unit fixtures не выдаются за device qualification.
+- Один успешный chunk run не устанавливает provider sent/merge/update/usable статусы.
+ACTION5-30 — Вести общий qualification corpus и next brief из незакрытых aims
+- Каждая цель имеет реализованный результат с scope/evidence либо named gap/decision/deferred condition.
+- Corpus покрывает wrong repo/tab, stale source, unsupported input, cancelled job, unknown send, restore и denied mic.
+- Linux fixture pass не повышает Windows/Grok/Laya qualification; model claim не закрывает criterion.
+- Next brief выбирает конкретный gap, owners, input artifacts, acceptance, recovery и verification scope.
+- Публикация кода, внешняя отправка и live-money permissions остаются отдельным фактическим scope; roadmap не расширяет их.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

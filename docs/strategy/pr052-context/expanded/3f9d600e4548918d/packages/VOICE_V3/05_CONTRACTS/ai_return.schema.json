@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProviderNeutralAIReturn",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "base_snapshot",
+    "status",
+    "claims",
+    "patch",
+    "tests_reported",
+    "missing_context"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agentos.ai-return/0.2"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "base_snapshot": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PROPOSED_PATCH",
+        "NEEDS_CONTEXT",
+        "NO_CHANGE"
+      ]
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "patch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tests_reported": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "missing_context": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}

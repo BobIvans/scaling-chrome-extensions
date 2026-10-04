@@ -1,0 +1,3559 @@
+ НА DELL WINDOWS 11
+1. Python 3.11+ с Tcl/Tk, py -3 -m tkinter открывает окно.
+2. START_DESKTOP.cmd → выбрать library вне repo.
+3. Ваш ZIP около 4 MB → учтены все entries, полные пути различимы.
+4. Export → SHA оригинального ZIP и всех originals совпадают; files.jsonl counts.
+5. Проверить RAW_ONLY/ERROR, не выдавать их за text reviewed.
+6. STOP во время ZIP scan → закрыть/reopen → resume того же snapshot.
+7. Поиск и заметки переживают restart.
+8. conversations.json → user/assistant export, ветвления и media gaps учтены.
+9. Импорт локальной папки → VS Code/PowerShell открываются в выбранном каталоге.
+10. По желанию один небольшой API request с доступной моделью → receipt.
+
+АКТУАЛЬНЫЕ ПРОБЕЛЫ
+Нативный exe/installer, UI visual acceptance и Windows execution NOT_RUN.
+Не реализованы: Notion-style block editing, smart collections, cross-source graph,
+SCE DB migration, exact tokenization, semantic AST/dependency chunks в прототипе,
+OCR/ASR/recursive archive extraction, API tools, provider switcher, Laya runtime,
+full agent executor, cloud sync, live collaboration, автоматический bot launch.
+Code-smells audit настоящего studious-pancake не выполнялся: исходники не приложены.
+Тест 333 файлов >4 MB проверяет снятие старых caps, не масштаб в миллионы файлов.
+Поиск FTS работает по chunk и может пропустить фразу на границе двух chunks.
+Маленькие TXT parts имеют metadata boundary, но не каждый part повторяет header
+продолжающегося файла; используйте порядок частей/index. Semantic pack compiler
+с повторяемыми source headers остаётся roadmap.
+SQLite/object store не является encrypted vault. Для облачной синхронизации
+не копировать живой WAL как backup; нужен consistent snapshot/export.
+
+ЧЕСТНОЕ ОПРЕДЕЛЕНИЕ ГОТОВНОСТИ
+Code exists ≠ tested on Dell ≠ integrated into SCE ≠ production ≠ financially ready.
+evidence/TEST_RESULTS.txt содержит реальный локальный результат, без live API.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9df86783a313ab0b41aa3ba3a2a745a08a93e7fa011934c8f87d48ea169ef879 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#31:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/docs/11_OFFLINE_AUTOMATION_RU.txt =====
+ОДИН УЖЕ ИСПОЛНЯЕМЫЙ JSON РЕЦЕПТ
+Из папки пакета:
+py -3 app\run_recipe.py --recipe workflows\00_repo_to_context.EXECUTABLE.json --library "C:\SCE-Library" --source "C:\Downloads\studious-pancake.zip" --destination "C:\Context\studious-first"
+
+Он вызывает import_source → export_snapshot, без AI и без shell из JSON.
+Папка destination должна быть новой. Ошибки/неполный import не выдают COMPLETE.
+Сохраняется весь snapshot, а не первые 20 документов.
+
+Все *.SPEC.json — будущие контракты. Handler names не являются реализацией.
+run_recipe.py специально отвергает неизвестные steps. Для новых workflows нужны
+registered handlers, аргументы, verifier, receipts и integration tests.
+Laya questions — отдельный пример входа модели, не установленный Laya runtime.
+
+Проверка экспортированного пакета без AI:
+py -3 app\verify_pack.py "C:\Context\studious-first" --output "C:\Context\verification.json"
+Проверяет hashes/paths/counts и выдаёт TRUE/FALSE/UNKNOWN/NOT_RUN. Это не проверка поведения бота.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 76aaaf0185d0f9a350a1d74790f878114ac723eb3f8bdacfdfc2e0e40418124d | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#32:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/ATTACHMENT_IMPORT_VERIFICATION.json =====
+{
+  "schema": "sce.pack-verification.v1",
+  "index_sha256": "045db21b2957aa72df0b5aa932e336e2e52e7241ec8a79d3021be449e9b6563d",
+  "checks": [
+    {
+      "criterion": "entry_count",
+      "truth": "TRUE",
+      "reason": {
+        "manifest": 6,
+        "index": 6
+      }
+    },
+    {
+      "criterion": "all_entry_originals_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_entry_ids": []
+      }
+    },
+    {
+      "criterion": "txt_part_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_parts": []
+      }
+    },
+    {
+      "criterion": "zip_inventory_paths_occurrences",
+      "truth": "TRUE",
+      "reason": {
+        "expected": 6,
+        "actual": 6
+      }
+    },
+    {
+      "criterion": "all_entries_have_text_derivative",
+      "truth": "FALSE",
+      "reason": {
+        "non_text_or_error_entry_ids": [
+          2
+        ]
+      }
+    },
+    {
+      "criterion": "ai_review_complete",
+      "truth": "NOT_RUN",
+      "reason": "This verifier checks package integrity, not AI reasoning or code behavior."
+    },
+    {
+      "criterion": "flashloan_ready",
+      "truth": "NOT_RUN",
+      "reason": "Bot runtime and qualification not executed."
+    }
+  ],
+  "laya_called": false,
+  "financial_authority": false,
+  "tested_input": "User attached SCE_AGGREGATOR_NEXT_FUNCTIONS_RU_2026-10-03(1).zip",
+  "not_tested_input": "Actual studious-pancake ZIP was not supplied"
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 68ecba11283af663c59bb3f99f8b00d68e78f04e93c3f24700434303d274b48a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#33:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/CURRENT_REPO_HEADS_V2.json =====
+[
+  {
+    "repo": "BobIvans/scaling-chrome-extensions",
+    "sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+    "message": "Merge pull request #37 from BobIvans/codex/occ-v7-verified-report-recovery\n\nOCC V7: recover bound handoffs and verify local report outcomes",
+    "observed_at": "2026-10-03T17:48:21.403Z",
+    "source": "https://api.github.com/repos/BobIvans/scaling-chrome-extensions/branches/main",
+    "scope": "branch metadata only; no current bot tests or installed qualification"
+  },
+  {
+    "repo": "BobIvans/studious-pancake",
+    "sha": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0",
+    "message": "Merge pull request #562 from BobIvans/codex/exact-cpmm-capacity-slice\n\nAdd exact CPMM capacity evidence bridge",
+    "observed_at": "2026-10-03T17:48:21.403Z",
+    "source": "https://api.github.com/repos/BobIvans/studious-pancake/branches/main",
+    "scope": "branch metadata only; no current bot tests or installed qualification"
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 668789f6bddbe60e67e0d26f9c41db8f868ed71105584bebec20f79294c68278 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#34:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/TEST_RESULTS.txt =====
+test_api_payload_and_fake_response (test_context_store.ContextTests.test_api_payload_and_fake_response) ... ok
+test_blob_dedup_keeps_path_identities (test_context_store.ContextTests.test_blob_dedup_keeps_path_identities) ... ok
+test_bom_crlf_utf16_and_invalid_encoding (test_context_store.ContextTests.test_bom_crlf_utf16_and_invalid_encoding) ... ok
+test_cancel_export_no_false_complete (test_context_store.ContextTests.test_cancel_export_no_false_complete) ... ok
+test_chatgpt_all_branches_roles_idempotent (test_context_store.ContextTests.test_chatgpt_all_branches_roles_idempotent) ... ok
+test_corrupt_blob_export_refused (test_context_store.ContextTests.test_corrupt_blob_export_refused) ... ok
+test_folder_symlink_not_followed (test_context_store.ContextTests.test_folder_symlink_not_followed) ... ok
+test_independent_verifier_detects_damage_and_unknown_goals (test_context_store.ContextTests.test_independent_verifier_detects_damage_and_unknown_goals) ... ok
+test_large_archive_more_than_300_entries (test_context_store.ContextTests.test_large_archive_more_than_300_entries) ... ok
+test_library_inside_source_rejected (test_context_store.ContextTests.test_library_inside_source_rejected) ... ok
+test_paths_duplicates_binary_and_traversal (test_context_store.ContextTests.test_paths_duplicates_binary_and_traversal) ... ok
+test_pause_resume_immutable_zip (test_context_store.ContextTests.test_pause_resume_immutable_zip) ... ok
+test_recipe_rejects_shell_steps (test_context_store.ContextTests.test_recipe_rejects_shell_steps) ... ok
+test_restart_search_and_annotations (test_context_store.ContextTests.test_restart_search_and_annotations) ... ok
+
+----------------------------------------------------------------------
+Ran 14 tests in 0.405s
+
+OK
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 c0b3de09331ba6fa1ef65dbfea382d4c011b9ab08a3cc37dc95c968c2ed4cbe2 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#35:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/TEST_V2_labeling.txt =====
+test_annotation_changes_invalidate_context_without_changing_content_revision (test_label_context.LabelContextTests.test_annotation_changes_invalidate_context_without_changing_content_revision) ... ok
+test_asserted_project_differs_from_suggested_goal (test_label_context.LabelContextTests.test_asserted_project_differs_from_suggested_goal) ... ok
+test_cancel_build_atomic_cleanup (test_label_context.LabelContextTests.test_cancel_build_atomic_cleanup) ... ok
+test_cancel_goal_atomic_cleanup (test_label_context.LabelContextTests.test_cancel_goal_atomic_cleanup) ... ok
+test_chat_branches_roles_duplicate_message_ids_preserved (test_label_context.LabelContextTests.test_chat_branches_roles_duplicate_message_ids_preserved) ... ok
+test_corrupted_original_rejected_no_completed_output (test_label_context.LabelContextTests.test_corrupted_original_rejected_no_completed_output) ... ok
+test_duplicate_paths_have_distinct_identity (test_label_context.LabelContextTests.test_duplicate_paths_have_distinct_identity) ... ok
+test_empty_goal_terms_unknown_instead_of_silently_empty (test_label_context.LabelContextTests.test_empty_goal_terms_unknown_instead_of_silently_empty) ... ok
+test_goal_has_no_topk_and_accounts_every_record (test_label_context.LabelContextTests.test_goal_has_no_topk_and_accounts_every_record) ... ok
+test_path_escape_rejected (test_label_context.LabelContextTests.test_path_escape_rejected) ... ok
+test_preserves_all_unicode_spans_and_full_paths_over_twenty_files (test_label_context.LabelContextTests.test_preserves_all_unicode_spans_and_full_paths_over_twenty_files) ... ok
+test_raw_objects_unknown_not_falsely_interpreted (test_label_context.LabelContextTests.test_raw_objects_unknown_not_falsely_interpreted) ... ok
+test_source_revision_stable_and_change_invalidates_dependent_spans (test_label_context.LabelContextTests.test_source_revision_stable_and_change_invalidates_dependent_spans) ... ok
+test_tampered_labels_not_used_as_goal_context (test_label_context.LabelContextTests.test_tampered_labels_not_used_as_goal_context) ... ok
+test_text_complete_without_original_rejected (test_label_context.LabelContextTests.test_text_complete_without_original_rejected) ... ok
+test_utf16_character_locators_and_include_all (test_label_context.LabelContextTests.test_utf16_character_locators_and_include_all) ... ok
+
+----------------------------------------------------------------------
+Ran 16 tests in 0.343s
+
+OK
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5710622073f465442c7acbce06ef3db99c76e5567b03e524729b02a5c8855862 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#36:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/TEST_V2_smells.txt =====
+test_binary_syntax_encoding_and_unreadable_are_explicit (test_repo_smells.ScannerTests.test_binary_syntax_encoding_and_unreadable_are_explicit) ... ok
+test_candidates_hashes_spans_and_never_executes_source (test_repo_smells.ScannerTests.test_candidates_hashes_spans_and_never_executes_source) ... ok
+test_cli_atomic_report_and_refusal_to_write_inside_repo (test_repo_smells.ScannerTests.test_cli_atomic_report_and_refusal_to_write_inside_repo) ... ok
+test_directory_and_file_symlinks_not_followed (test_repo_smells.ScannerTests.test_directory_and_file_symlinks_not_followed) ... ok
+test_file_count_is_not_capped_and_revision_tracks_bytes (test_repo_smells.ScannerTests.test_file_count_is_not_capped_and_revision_tracks_bytes) ... ok
+test_large_graph_uses_iterative_cycle_algorithm (test_repo_smells.ScannerTests.test_large_graph_uses_iterative_cycle_algorithm) ... ok
+test_relative_src_imports_and_ambiguous_module (test_repo_smells.ScannerTests.test_relative_src_imports_and_ambiguous_module) ... ok
+test_repeated_filenames_and_normalized_duplicates (test_repo_smells.ScannerTests.test_repeated_filenames_and_normalized_duplicates) ... ok
+test_resolvable_cycle_external_and_dynamic_imports (test_repo_smells.ScannerTests.test_resolvable_cycle_external_and_dynamic_imports) ... ok
+
+----------------------------------------------------------------------
+Ran 9 tests in 0.233s
+
+OK
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5a1f9d8bb990d88ef5d15340a51a18e813aad1f533cc934181162bf191df2666 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#37:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/TEST_V2_web3.txt =====
+test_absent_receipt_not_run (test_qualification.QualificationTests.test_absent_receipt_not_run) ... ok
+test_cost_recomputation_detects_negative_profit (test_qualification.QualificationTests.test_cost_recomputation_detects_negative_profit) ... ok
+test_dependency_does_not_fake_progress (test_qualification.QualificationTests.test_dependency_does_not_fake_progress) ... ok
+test_each_binding_change_invalidates (test_qualification.QualificationTests.test_each_binding_change_invalidates) ... ok
+test_failing_case_not_overridden_by_summary (test_qualification.QualificationTests.test_failing_case_not_overridden_by_summary) ... ok
+test_hash_corruption_false (test_qualification.QualificationTests.test_hash_corruption_false) ... ok
+test_invalid_plan_refused (test_qualification.QualificationTests.test_invalid_plan_refused) ... ok
+test_inventory_omission_false_and_order_independent (test_qualification.QualificationTests.test_inventory_omission_false_and_order_independent) ... ok
+test_junit_declared_missing_case_or_failure_invalidates (test_qualification.QualificationTests.test_junit_declared_missing_case_or_failure_invalidates) ... ok
+test_junit_suite_level_error_false (test_qualification.QualificationTests.test_junit_suite_level_error_false) ... ok
+test_malformed_json_and_nonfinite_rejected (test_qualification.QualificationTests.test_malformed_json_and_nonfinite_rejected) ... ok
+test_missing_artifact_unknown (test_qualification.QualificationTests.test_missing_artifact_unknown) ... ok
+test_model_text_success_boolean_not_evidence (test_qualification.QualificationTests.test_model_text_success_boolean_not_evidence) ... ok
+test_notrun_attribute_does_not_count_as_execution (test_qualification.QualificationTests.test_notrun_attribute_does_not_count_as_execution) ... ok
+test_observation_outside_receipt_window_unknown (test_qualification.QualificationTests.test_observation_outside_receipt_window_unknown) ... ok
+test_paper_observation_is_not_replay (test_qualification.QualificationTests.test_paper_observation_is_not_replay) ... ok
+test_paths_refused (test_qualification.QualificationTests.test_paths_refused) ... ok
+test_plan_change_and_duplicate_receipts_invalidated (test_qualification.QualificationTests.test_plan_change_and_duplicate_receipts_invalidated) ... ok
+test_process_failure_false_and_bool_exit_refused (test_qualification.QualificationTests.test_process_failure_false_and_bool_exit_refused) ... ok
+test_quote_freshness_and_atomic_units (test_qualification.QualificationTests.test_quote_freshness_and_atomic_units) ... ok
+test_report_cannot_overwrite_inputs_or_evidence (test_qualification.QualificationTests.test_report_cannot_overwrite_inputs_or_evidence) ... ok
+test_report_published_exclusively_and_complete (test_qualification.QualificationTests.test_report_published_exclusively_and_complete) ... ok
+test_skip_and_empty_suite_not_qualifying (test_qualification.QualificationTests.test_skip_and_empty_suite_not_qualifying) ... ok
+test_stale_and_future_invalidated (test_qualification.QualificationTests.test_stale_and_future_invalidated) ... ok
+test_stop_latency_and_forbidden_dispatch (test_qualification.QualificationTests.test_stop_latency_and_forbidden_dispatch) ... ok
+test_symlink_refused (test_qualification.QualificationTests.test_symlink_refused) ... ok
+test_utf16_dtd_is_refused (test_qualification.QualificationTests.test_utf16_dtd_is_refused) ... ok
+test_valid_machine_case_never_authorizes_live (test_qualification.QualificationTests.test_valid_machine_case_never_authorizes_live) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.019s
+
+OK
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8378c6d07d0dd909b57c86a4a335241b3b6b588ffa58252490b25958674a38fe | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#38:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/UNIT_TESTS_V2.json =====
+{
+  "observed_at": "2026-10-03T17:57:18.353450+00:00",
+  "suites": [
+    {
+      "suite": "app/test_context_store.py",
+      "tests": 14,
+      "returncode": 0,
+      "status": "PASS",
+      "note": "Already run on this V2 package in this request; unchanged core, 333files/>4MiB fixture."
+    },
+    {
+      "suite": "labeling",
+      "tests": 16,
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "suite": "web3",
+      "tests": 28,
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "suite": "smells",
+      "tests": 9,
+      "returncode": 0,
+      "status": "PASS"
+    }
+  ],
+  "total_passed": 67
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 bb57b65fa775881dca1e7e00ce35487d52ddce4c0ca6f77794fc066318f714b1 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#39:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/V2_ACTUAL_ATTACHMENT_PACK_CHECK.json =====
+{
+  "schema": "sce.pack-verification.v1",
+  "index_sha256": "f75c63bfe7479e5b89f3728e399001a6f21e7bbe52efc8de007431a694937914",
+  "checks": [
+    {
+      "criterion": "entry_count",
+      "truth": "TRUE",
+      "reason": {
+        "manifest": 6,
+        "index": 6
+      }
+    },
+    {
+      "criterion": "all_entry_originals_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_entry_ids": []
+      }
+    },
+    {
+      "criterion": "txt_part_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_parts": []
+      }
+    },
+    {
+      "criterion": "zip_inventory_paths_occurrences",
+      "truth": "TRUE",
+      "reason": {
+        "expected": 6,
+        "actual": 6
+      }
+    },
+    {
+      "criterion": "all_entries_have_text_derivative",
+      "truth": "FALSE",
+      "reason": {
+        "non_text_or_error_entry_ids": [
+          2
+        ]
+      }
+    },
+    {
+      "criterion": "ai_review_complete",
+      "truth": "NOT_RUN",
+      "reason": "This verifier checks package integrity, not AI reasoning or code behavior."
+    },
+    {
+      "criterion": "flashloan_ready",
+      "truth": "NOT_RUN",
+      "reason": "Bot runtime and qualification not executed."
+    }
+  ],
+  "laya_called": false,
+  "financial_authority": false
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 211ba8103f88651abc314b15217907cd3a986349df81bcad6ebca2eb6c7286aa | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#40:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/V2_INTEGRATION.json =====
+{
+  "status": "PASS",
+  "commands": [
+    {
+      "script": "rnd_v2/labeling/label_context.py",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "script": "rnd_v2/labeling/label_context.py",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "script": "rnd_v2/labeling/label_context.py",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "script": "rnd_v2/smells/repo_smells.py",
+      "returncode": 0,
+      "status": "PASS"
+    },
+    {
+      "script": "rnd_v2/web3/qualification.py",
+      "returncode": 0,
+      "status": "PASS"
+    }
+  ],
+  "attachment_entries": 6,
+  "labels_counts": {
+    "sources": 6,
+    "spans": 21,
+    "messages": 0,
+    "raw_only": 1,
+    "unknown": 0
+  },
+  "goal_counts": {
+    "INCLUDED": 21,
+    "EXCLUDED": 0,
+    "UNKNOWN": 1,
+    "METADATA_ONLY": 5
+  },
+  "qualification_scope": "SYNTHETIC_ARTIFACTS_ONLY",
+  "live_authorized": false,
+  "windows_gui": "NOT_RUN"
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 ec63ebdfbb6b22d7bb3ca2c3c05e773a5472890bf05055a579945f8801fae418 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#41:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/VALIDATION.json =====
+{
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "python": "3.12.14",
+  "tests_passed": 14,
+  "windows_gui": "NOT_RUN",
+  "vscode_powershell_buttons": "NOT_RUN",
+  "live_openai_api": "NOT_RUN",
+  "laya_inference": "NOT_RUN",
+  "bot_runtime": "NOT_RUN",
+  "repo_mutations": 0,
+  "transactions_sent": 0,
+  "browser_dependency": false,
+  "large_test": {
+    "entries": 333,
+    "archive_bytes_lower_bound": 4194304,
+    "archive_type": "ZIP_STORED synthetic UTF-8 source files"
+  },
+  "prototype_data_owner": "isolated desktop-prototype.sqlite3, production SCE migration pending"
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 23c6506073c4f16a2188aa8114f2b1a401c98434e8aeae7a89be183b692203f9 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#42:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/evidence/VALIDATION_V2.json =====
+{
+  "schema": "sce.rnd.validation.v2",
+  "observed_at": "2026-10-03T17:59:45.230750+00:00",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "python": "3.12.14",
+  "unit_tests": {
+    "observed_at": "2026-10-03T17:57:18.353450+00:00",
+    "suites": [
+      {
+        "suite": "app/test_context_store.py",
+        "tests": 14,
+        "returncode": 0,
+        "status": "PASS",
+        "note": "Already run on this V2 package in this request; unchanged core, 333files/>4MiB fixture."
+      },
+      {
+        "suite": "labeling",
+        "tests": 16,
+        "returncode": 0,
+        "status": "PASS"
+      },
+      {
+        "suite": "web3",
+        "tests": 28,
+        "returncode": 0,
+        "status": "PASS"
+      },
+      {
+        "suite": "smells",
+        "tests": 9,
+        "returncode": 0,
+        "status": "PASS"
+      }
+    ],
+    "total_passed": 67
+  },
+  "cli_integration": "PASS_ACTUAL_USER_ATTACHMENT_AND_SYNTHETIC_QUALIFICATION",
+  "json_syntax": "PASS",
+  "python_compile": "PASS",
+  "json_schema_full_validation": "NOT_RUN_JSONSCHEMA_UNAVAILABLE",
+  "new_workflow_specs": 42,
+  "new_workflow_specs_executed": 0,
+  "offline_modules": [
+    "label_context.py",
+    "repo_smells.py",
+    "qualification.py"
+  ],
+  "windows_gui": "NOT_RUN",
+  "windows_installed_qualification": "NOT_RUN",
+  "real_microphone_asr": "NOT_RUN",
+  "local_laya_inference": "NOT_RUN",
+  "grok_api": "NOT_RUN",
+  "openai_live_api": "NOT_RUN",
+  "browser_automation": "NOT_RUN",
+  "updater": "NOT_RUN",
+  "actual_bot_test_campaign": "NOT_RUN",
+  "real_market_observation": "NOT_RUN",
+  "transactions_sent": 0,
+  "github_mutations": 0,
+  "private_telegram_or_drive_import": "NOT_RUN",
+  "history_coverage": "previous preserved capture plus selected retrieved fragments/documents; not entire account history",
+  "integrity_scope": "Hashes establish byte consistency, not authenticated producer or semantic truth",
+  "known_limits": [
+    "Labeling is lexical heuristic, not Laya",
+    "JSON/AST/inventory structures consume finite RAM",
+    "RAW_ONLY preserves originals without semantic interpretation",
+    "Full JSON Schema validation not executed",
+    "Existing ChatGPT derived parent links may not resolve node-vs-message identities",
+    "No universal source connector or scheduler installed",
+    "Full-source archive does not fit unlimited single-model context"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 af3d7bfbd249ee436b4dad176a4b74032219e60b91e5debc9de091864179c530 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#43:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/01_PRODUCT_LOOP_RU.txt =====
+ЛОКАЛЬНАЯ БИБЛИОТЕКА → ЦЕЛЬ → ПРОВЕРЯЕМОЕ ДЕЙСТВИЕ
+Версия R&D V2, 3 октября 2026. Это развитие предыдущего desktop ZIP.
+
+Предлагаемый продукт: локальный рабочий стол для собственных данных, целей и проверяемых действий.
+Первый законченный сценарий: импорт repo/чатов → полный архив → разметка → цель → пакет контекста → анализ → проверяемый следующий шаг.
+Голос — ещё один способ задать ту же задачу; он не создаёт отдельную систему полномочий.
+Кнопки: «Говорить», «Собрать контекст», «Показать источники», «Проверить проект», «Подготовить изменение», «Продолжить», «Стоп».
+
+РОЛИ СЛОЁВ
+1. Capture: сохраняет неизменённый оригинал, его hash, источник, полный путь/ID и время получения.
+2. Parse: создаёт текст/транскрипт/AST как отдельную производную версию. Нераспознанное хранится RAW_ONLY.
+3. Label: метаданные, предложенные semantic tags и исправления пользователя. Тег не является фактом о мире.
+4. Retrieval: находит цель, актуальные решения, исходники, зависимости, прежние ошибки, counterevidence.
+5. Laya: локальный выбор зарегистрированной операции, relevance/intent/priority, маршрутизация и отказ при неоднозначности.
+6. Planner/coder: локальная LLM либо выбранный API строит план/patch. Laya сама по себе не является генератором произвольного кода.
+7. Executor: существующий automation_core/queue вызывает конкретный зарегистрированный handler с валидированными аргументами.
+8. Verifier: проверяет наблюдаемый результат, возвращает TRUE/FALSE/UNKNOWN/NOT_RUN и привязки к версии.
+9. Memory: сохраняет результат, failed attempts и связи с исходной целью. После изменения исходников старое evidence становится stale.
+
+ДВА ВИДА ПОЛНОТЫ
+Полный архив означает: каждый входной объект учтён, оригинальные байты сохранены, ошибка не скрыта.
+Полное понимание означает: нужные объекты распознаны и действительно просмотрены. Это отдельная метрика.
+Архив может содержать миллионы записей; один вызов модели всё равно имеет конечное окно. Решение — полный inventory, потоковые chunks, coverage ledger, несколько проходов и cross-file review.
+Отсутствие top-20 в библиотеке не требует слать всю личную жизнь одному API. Пакет для цели должен показывать включённые, невключённые, неподдерживаемые и устаревшие источники.
+
+КАК ЭТО ВЫГЛЯДИТ ДЛЯ WEB3
+Команда: «Продолжи квалификацию бота, выясни, что мешает paper-наблюдению».
+Система сохраняет транскрипт → разрешает цель/проект → сверяет HEAD → собирает код, config, tests и прошлые blockers → строит mission → запускает известные проверки → сравнивает наблюдения с критериями → сохраняет receipt и следующий blocker.
+Оффлайн replay, live data observation, paper simulation и отправка транзакции — разные режимы с отдельными доказательствами. Отсутствие ошибок в unit tests не означает пригодность стратегии или прибыльность.
+
+КАК ДОБАВЛЯЮТСЯ СПОСОБНОСТИ
+«Новой функции не хватает» → документ с источниками и acceptance → coding agent → изолированный worktree → тесты → PR → CI на точном SHA → release artifact → локальная проверка → переключение версии → healthcheck/rollback.
+Код обновления не выдаёт себе новые аккаунты, OAuth scopes или доступ к секретам. Capability diff виден оператору. Существующее разрешение на обратимые локальные задачи переиспользуется: подтверждение на каждое чтение/тест не нужно.
+Требование проекта — desktop без обязательного Chrome. При задаче в браузере браузер остаётся отдельным необязательным адаптером.
+
+ГРАНИЦА ЭТОЙ ПОСТАВКИ
+Новые офлайн CLI и их тесты находятся рядом с прежним Tk-прототипом. Новые SPEC JSON описывают будущие handlers и не исполняются старым run_recipe.py.
+Настоящие микрофон/ASR, Laya inference, Grok API, browser actions, device qualification и bot runtime в этой сессии не запускались.
+Промышленную интеграцию вести в существующих владельцах SCE, не переносить прототипную SQLite как второй production store.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2448f804c2e8ce5f00fc4240661e3dce66236569d7b3e10ad36153e9e81f34e7 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#44:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/02_RECOVERED_TAGGING_AND_HISTORY_RU.txt =====
+ВОССТАНОВЛЕННОЕ И НОВОЕ
+
+Полностью сохранённый исходник в sources/RECOVERED_GROK_NOTION_CHAT_2026-09-30.txt:
+18 сообщений, из них 9 пользователя; DOM capture, не подтверждённый полный серверный архив.
+Это исходное обсуждение «Notion для репозиториев», библиотеки контекста, AI, web3 и Laya.
+В V2 источники предыдущего ZIP сохранены; добавлены поисковые фрагменты прошлых чатов и два прочитанных исторических документа.
+
+Дополнительный поиск вернул конкретные прежние идеи (фрагменты, не полные беседы):
+20 сентября: provenance датасетов, freshness, drift API/SDK/program, source/license, Function Harvesting Pipeline.
+21 сентября: ROLE/DOMAIN/TAGS; PR_ORIGIN, MEGA, TECH_DEBT_CANDIDATE; dependency-closed chunks; current snapshot + Git lineage; deleted/rename/symbol lineage; incomplete/disabled/unreachable indexes.
+21 сентября: OBSERVED/INFERRED/LATENT/UNKNOWN; различать executable relation, statistical correlation и causal hypothesis.
+22 сентября: требование→код→runtime→config→tests→results→protocol constraints; counterevidence и противоречия README/config/code.
+30 сентября: Person/Repository/Commit/PR/Post/Transcript/Claim/Idea/Decision/Goal/Task/Automation/Artifact/Evidence; MENTIONS, DERIVED_FROM, CONTRADICTS, SUPPORTS, BLOCKS, SATISFIES_GOAL, GENERATED_SCRIPT, EXECUTED_BY.
+30 сентября: first_seen_at, published_at, author, canonical_url, quoted_sources, content_hash. «Первый найденный нами» не равно «первый опубликованный вообще».
+1–2 октября: source/capture→logical item→revision→SQLite/FTS; idempotent import, duplicate bytes с отдельным provenance, tombstones, backup/restore; ALL_CONTEXT, SOURCE_INDEX, GRAPH, RUN_REPORT.
+
+Эти идеи НЕ доказывают, что все названные функции были реализованы. Исторические заявления о PR/CI находятся в источниках, но не превращены в сегодняшние тесты.
+В новом поиске не восстановлена единая ранее утверждённая каноническая схема. Схемы V2 — новая конкретизация прошлых идей.
+
+Обновление фактов: 3 октября при read-only проверке main SCE указывает da6abf4c006e4e7d26fe45ef30fa9d07a356f396 (merge PR37). Studious main:67d3852cbc4cb1b24582df45adbf6a42d4da2af0 (merge PR562). Старое «PR37 открыт» в исторических источниках не является текущим статусом.
+В этот раз не проводился полный аудит исходников Studious, не воспроизводились старые bot receipts.
+
+Сохранённые актуальные ограничения задачи: локальная Windows11 библиотека; сохранение полных путей и исходных байтов; отсутствие произвольного лимита20 документов; Laya advisory; один production owner/store/queue; qualification перед расширением; lender-neutral, MarginFi PAUSED; live-переход отдельный.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7ad4343872724b0c4ea3f2bbc6af4a7d0eb05d894e07fbdaf1da05ebb4e03d53 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#45:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/03_LABEL_EVERY_DATA_PIECE_RU.txt =====
+УНИВЕРСАЛЬНАЯ РАЗМЕТКА ДАННЫХ
+
+Не существует одного идеального semantic тега. Разделяем независимые фасеты и храним основание каждого значения.
+
+Обязательная оболочка любого объекта:
+identity: source_id, logical_item_id, revision_id, content_hash, original_locator;
+capture: captured_at, connector/version, scope, complete/partial/error, raw_blob_ref;
+authorship: автор, role(user/assistant/system/tool/unknown), conversation/message/branch/reply IDs;
+time: published_at, edited_at, observed_at, valid_from/to (не подставлять capture-time как publication-time);
+representation: mime, language, modality, parser/version, text_state, spans (bytes/lines/page/time interval);
+provenance: derived_from, referenced_by, exact repo SHA, file hash, workflow run;
+knowledge: quote/assertion/hypothesis/decision/goal/task/constraint/evidence/counterevidence;
+epistemic: OBSERVED/INFERRED/LATENT/UNKNOWN; отдельная truth TRUE/FALSE/UNKNOWN/NOT_RUN;
+project: repo/domain/owner/symbol/dependency/goal_id (несколько значений допустимы);
+lifecycle: proposed/accepted/active/blocked/done/superseded/rejected/archived;
+sensitivity: personal/confidential/secret/unknown, allowed egress, access scope;
+label provenance: asserted_by, suggested_by, method/version, confidence/calibration, supporting_span, corrected_at.
+
+Точность полей разная. Hash/path/messageID можно вычислить; intent и semantic relevance — предположения.
+Unknown не заменяется пустым ложным фактом. Model confidence не является доказательством истины или разрешением выполнить действие.
+Авторство и provenance относятся к каждому фрагменту. Две копии одного текста могут иметь одинаковые bytes и разные источники.
+
+Примеры:
+• «Хочу локальную библиотеку» в user message → goal candidate, author=user, source span; после явного принятия goal=ACTIVE.
+• «Все тесты прошли» в assistant message → CLAIM, truth=UNKNOWN до test artifact с точным SHA.
+• result.xml из запущенного теста → EVIDENCE, конкретные test cases/skip/fail; validity только для его SHA/config.
+• TODO или shell=True в исходнике → STATIC_CANDIDATE, не автоматически bug/exploit.
+• фотография/аудио без parser → raw сохранён, interpretation=NOT_RUN; OCR/ASR даст отдельную derivative, оригинал остаётся.
+
+Life library:
+Личные разговоры, документы и Telegram imports должны иметь собственные scopes. Голосовая цель выбирает область библиотеки; найденная секретная строка не даёт разрешения отправить её внешнему API.
+Искать «всё моё» — значит учесть все подключённые/импортированные источники. Приватные каналы без пользовательского export/доступа не видны приложению.
+Удаление/редактирование требует tombstone/revision и пересчёта derivative context; старый выбор может сохраняться как исторический snapshot с явной датой.
+
+Как оценить «идеальные теги»:
+Создать gold set собственных русских/английских фрагментов; пометить source-span, semantic type, goal links, counterexamples и abstain cases; split по разговорам/времени, а не соседним chunks.
+Сравнить heuristic baseline, Laya, local LLM; считать precision/recall по типу, retrieval recall, calibration, correction time и p95 latency.
+Порог для выбора следующего действия калибровать отдельно от порога для выдачи поисковых подсказок.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 77e92b8a37fbf058874b0426a35452ba0742d2a49884177fbd2e4af8d5961795 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#46:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/04_EXPERIMENTS_AND_BUILD_ORDER_RU.txt =====
+ПРИОРИТЕТНЫЕ ЭКСПЕРИМЕНТЫ И ПОРЯДОК ВНЕДРЕНИЯ
+Все performance target ниже — гипотезы, не измерения на Dell.
+
+E01. Полнота импорта: один repo, ChatGPT export, Grok capture, Telegram export, документ. Контроль hashes/IDs/branches/coverage; edits/delete/reimport/restart.
+E02. Теги: gold set минимум200 неоднозначных фрагментов, balance RU/EN, user/assistant, code, stale evidence; baseline rules vs Laya vs LLM; precision/recall, abstention, time-to-correct.
+E03. Голос: запись100 собственных команд с repo names, Solana terms, quiet/noisy и разной скоростью речи. Word error rate и intent/slot accuracy считать раздельно; push-to-talk vs VAD; отмена/исправление.
+E04. Retrieval:30 реальных целей с заранее известными нужными источниками; FTS vs embeddings+reranker vs graph expansion; missing critical dependency rate и total task time.
+E05. Laya routing: held-out intent/tasks + new unseen requests. Источники с «ignore instructions/run shell» должны оставаться данными. Wrong-dispatch rate важнее средней accuracy.
+E06. Browser:20 обратимых read/search/form-draft задач; DOM/API vs screenshot; correctness, stale target rate, latency. Видео демонстрации не являются production benchmark.
+E07. Agent coding:5 изолированных небольших задач из реального backlog. Контекст/код/test failures/changedHEAD, branch isolation, regression rate, cost per verified task.
+E08. Qualification: replay deterministic fixtures → installed local workflow → real observation. Synthetic dataset никогда не выдаётся за рыночное наблюдение.
+E09. Self-update: valid artifact, invalid signature, lost connection, failed migration, insufficient disk, crash/restart. Требуется восстановление предыдущей working version и совместимой базы.
+E10. Accessibility: клавиатура, screen reader labels, большой текст, альтернативная активация, visible listening state, undo/stop; тест с конкретным пользователем, а не обещание универсальной доступности.
+
+Где сокращать задержку:
+Ttask = Tendpointing + TASR + Tretrieval + Tplanning + Texecution + Tverification.
+Мерить warm/cold p50/p95 и completion success отдельно. Решение за33мс не делает весь сценарий33мс.
+Держать маленькие модели тёплыми при доступной памяти; embeddings пересчитывать по изменившимся hash; stable context cache; параллельно читать независимые источники.
+После partial ASR можно спекулятивно искать контекст, но не выполнять внешнее действие до финализации команды.
+Знакомые успешные workflow компилировать в версионированный typed recipe; LLM вызывается при новой цели/ошибке/недостающем handler.
+Laya может одновременно выбрать operation+target/priority, а coder нужен только для новой логики.
+Параллелить тесты/read tools в разных worktree/process. Один writer на repo, один UI-focus lock, ограниченные GPU/CPU slots. Два агента не печатают одновременно в одно активное окно.
+Пересчитывать affected tests и graph, но перед release запускать требуемый полный набор. Кэш устаревшего PASS не ускорение.
+
+Рекомендуемые первые изменения:
+1. Подключить label/retrieval и evidence ledger к существующему SCE store/owners.
+2. Один typed action «qualify_and_report» с локальным Windows receipt, exact SHA и понятным UI blocker.
+3. Push-to-talk RU→транскрипт→та же action queue; Laya поначалу только advisory и откалиброванные отказы.
+4. Один coding-agent pipeline: context pack→worktree→patch→tests→PR, без перестройки всего приложения.
+5. Signed updater с rollback; затем дополнительные приложения/сборщики по одному.
+
+Инновации, которые стоит проверять:
+• Evidence-first memory: поиск ранжирует не только похожие слова, но свежесть доказательства для конкретной цели.
+• Goal compiler: одна цель проходит через разные UI/API адаптеры, сохраняя критерий результата.
+• Personal skill distillation: успешный trace становится reusable recipe; изменения UI/кода инвалидируют его preconditions.
+• Active learning: исправленные пользователем теги/маршруты формируют локальный dataset, обучение запускается отдельно и сравнивается с frozen baseline.
+• Incremental qualification: изменение функции автоматически помечает связанные выводы stale и планирует минимальный доказательный повтор.
+Это новые исследовательские предложения, а не заявление о новом научном результате или готовом продукте.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3a842f9be175b7f15683447aab13fca2e8649182f8f786d55ce1d0b6d5ea178b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#47:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/context_functions.json =====
+[
+  {
+    "id": "CTX-01",
+    "title_ru": "Реестр источников и checkpoint каждого импортёра",
+    "status": "SPEC",
+    "acceptance": "source registry, scope, cursor, parser version; повтор не теряет edits",
+    "executed": false
+  },
+  {
+    "id": "CTX-02",
+    "title_ru": "ChatGPT/Grok/Telegram/Google Docs adapters",
+    "status": "SPEC",
+    "acceptance": "сохранять роли/ветки/сообщения/вложения/экспортные ошибки; source completeness",
+    "executed": false
+  },
+  {
+    "id": "CTX-03",
+    "title_ru": "Revision и tombstone reconciliation",
+    "status": "SPEC",
+    "acceptance": "дубликаты bytes сохраняют отдельные provenance; удаление инвалидирует производные",
+    "executed": false
+  },
+  {
+    "id": "CTX-04",
+    "title_ru": "Извлечение целей и принятых решений",
+    "status": "SPEC",
+    "acceptance": "source-spanned candidates; assistant claims отдельно; acceptance только из источника",
+    "executed": false
+  },
+  {
+    "id": "CTX-05",
+    "title_ru": "Timeline противоречий и supersession",
+    "status": "SPEC",
+    "acceptance": "новое решение связывается со старым; не перезаписывать историю",
+    "executed": false
+  },
+  {
+    "id": "CTX-06",
+    "title_ru": "Области личных данных и egress policy",
+    "status": "SPEC",
+    "acceptance": "разрешение на сохранение/поиск отдельно от внешней передачи",
+    "executed": false
+  },
+  {
+    "id": "CTX-07",
+    "title_ru": "Audio/OCR/video derivatives",
+    "status": "SPEC",
+    "acceptance": "исходник+segment timestamps/page boxes+parser/model provenance; unsupported RAW_ONLY",
+    "executed": false
+  },
+  {
+    "id": "CTX-08",
+    "title_ru": "План дня из незакрытых целей",
+    "status": "SPEC",
+    "acceptance": "ссылки на решения/blockers/deps; предложенный список, не выдуманные обязательства",
+    "executed": false
+  },
+  {
+    "id": "CTX-09",
+    "title_ru": "Evidence-aware graph retrieval",
+    "status": "SPEC",
+    "acceptance": "цель→решение→код→тест→receipt; свежесть/контрдоказательства и missing closure",
+    "executed": false
+  },
+  {
+    "id": "CTX-10",
+    "title_ru": "Полный multi-part AI review ledger",
+    "status": "SPEC",
+    "acceptance": "каждая часть pending/reviewed/failed; cross-file synthesis после покрытия",
+    "executed": false
+  },
+  {
+    "id": "CTX-11",
+    "title_ru": "Реестр R&D и сравнение экспериментов",
+    "status": "SPEC",
+    "acceptance": "dataset/model/config/hardware/version; held-out metrics и rejection criteria",
+    "executed": false
+  },
+  {
+    "id": "CTX-12",
+    "title_ru": "Active learning по исправлениям пользователя",
+    "status": "SPEC",
+    "acceptance": "сохранить gold labels и отдельный evaluation split; никакого auto training на секретах",
+    "executed": false
+  },
+  {
+    "id": "CTX-13",
+    "title_ru": "Сбор публичных research signals",
+    "status": "SPEC",
+    "acceptance": "X/GitHub/HF/docs: canonical URL, автор, дата, primary evidence; dedup без потери sources",
+    "executed": false
+  },
+  {
+    "id": "CTX-14",
+    "title_ru": "Event-driven обновление контекста",
+    "status": "SPEC",
+    "acceptance": "file/git/source cursor triggers → existing queue, debounce, idempotency, checkpoint",
+    "executed": false
+  },
+  {
+    "id": "CTX-15",
+    "title_ru": "Dependency-closed code harvesting",
+    "status": "SPEC",
+    "acceptance": "exact commit/file/license/dependencies→adaptation→tests; proposals only",
+    "executed": false
+  },
+  {
+    "id": "CTX-16",
+    "title_ru": "Оценка полезности automations",
+    "status": "SPEC",
+    "acceptance": "verified success rate, cost, p95 task time, user correction rate; не число сгенерированных задач",
+    "executed": false
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 73cea4073e9e418d360fb6ca5aad996f41c3e98ce30c1e0939f90ca7084f2c5b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#48:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/labeling/FUNCTIONS_IMPLEMENTED.json =====
+{
+  "schema": "sce.new.function.catalog.v1",
+  "module": "rnd_v2/labeling/label_context.py",
+  "status": "OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX",
+  "functions": [
+    {
+      "id": "LABEL-01",
+      "name_ru": "Адаптер полного экспортированного пакета",
+      "entrypoint": "build_labels",
+      "scope": "sce.desktop.export.v1"
+    },
+    {
+      "id": "LABEL-02",
+      "name_ru": "Проверка SHA-256 оригиналов и TXT до маркировки",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-03",
+      "name_ru": "Стабильные source/content/span IDs и точные локаторы",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-04",
+      "name_ru": "Различение повторных одинаковых путей ZIP",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-05",
+      "name_ru": "Unicode spans без общего лимита документов",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-06",
+      "name_ru": "Метки ASSERTED, SUGGESTED и UNKNOWN с происхождением",
+      "entrypoint": "label"
+    },
+    {
+      "id": "LABEL-07",
+      "name_ru": "Нормализация Unicode и безопасные ключи тегов",
+      "entrypoint": "sanitize_tag"
+    },
+    {
+      "id": "LABEL-08",
+      "name_ru": "Эвристические кандидаты целей, задач, вопросов, тестов и web3",
+      "entrypoint": "infer",
+      "limitation": "not Laya inference, not verified facts"
+    },
+    {
+      "id": "LABEL-09",
+      "name_ru": "Сохранение всех доступных ролей и ветвей messages.jsonl",
+      "entrypoint": "build_labels",
+      "limitation": "mapping is not independently revalidated"
+    },
+    {
+      "id": "LABEL-10",
+      "name_ru": "Граф происхождения и объявленных parent-связей",
+      "entrypoint": "_graph"
+    },
+    {
+      "id": "LABEL-11",
+      "name_ru": "Контекст по цели без top-20/top-k",
+      "entrypoint": "assemble_goal",
+      "limitation": "lexical candidate search"
+    },
+    {
+      "id": "LABEL-12",
+      "name_ru": "Полный учёт включённого, исключённого и неизвестного",
+      "entrypoint": "assemble_goal"
+    },
+    {
+      "id": "LABEL-13",
+      "name_ru": "Режим включить весь доступный текст",
+      "entrypoint": "assemble_goal(include_all=True)"
+    },
+    {
+      "id": "LABEL-14",
+      "name_ru": "Раздельные версии оригинала и пользовательских меток",
+      "entrypoint": "build_labels"
+    },
+    {
+      "id": "LABEL-15",
+      "name_ru": "Инвалидация контекста при изменении данных или меток",
+      "entrypoint": "compare_revisions"
+    },
+    {
+      "id": "LABEL-16",
+      "name_ru": "Атомарное создание результатов и кооперативная отмена",
+      "entrypoint": "build_labels / assemble_goal"
+    },
+    {
+      "id": "LABEL-17",
+      "name_ru": "JSON Schema записей и coverage",
+      "entrypoint": "label-record.schema.json / goal-coverage.schema.json"
+    },
+    {
+      "id": "LABEL-18",
+      "name_ru": "Расширенная таксономия жизненного контекста",
+      "entrypoint": "universal-label-facets.SPEC.json",
+      "status": "R_AND_D_SPEC_ONLY"
+    }
+  ],
+  "tests": {
+    "command": "python -m unittest discover -s rnd_v2/labeling -p test_label_context.py -v",
+    "passed": 16
+  },
+  "not_run": [
+    "Windows GUI",
+    "Laya inference",
+    "network connectors",
+    "code execution",
+    "flashloan qualification"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 69194c29ea5fa4ebe6e58e8757d53ce5f0e66e45902af26b42ad274e3a976de3 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#49:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/labeling/LABELING_CONTEXT_RU.txt =====
+МЕТКИ ДЛЯ КАЖДОЙ ЧАСТИ КОНТЕКСТА — ИСПОЛНЯЕМЫЙ ОФЛАЙН-ПРОТОТИП
+
+Назначение
+label_context.py читает пакет формата sce.desktop.export.v1, созданный Context Store,
+и создаёт отдельный производный индекс. Исходные files.jsonl, оригиналы и TXT не
+изменяются. Никаких сетевых запросов, запуска чужого кода или обращения к Laya нет.
+Это добавление к изолированному desktop-прототипу, а не новая production-база SCE.
+В production все адаптеры должны пользоваться одной канонической библиотекой SCE.
+
+Запуск из корня нового ZIP, Windows 11 / Python 3.11+
+
+py -3 rnd_v2\labeling\label_context.py build C:\Context\repo-export C:\Context\repo-labels --namespace flashloan-main --project flashloan --tag research
+py -3 rnd_v2\labeling\label_context.py goal C:\Context\repo-labels C:\Context\goal-tests --goal "flashloan tests qualification"
+py -3 rnd_v2\labeling\label_context.py goal C:\Context\repo-labels C:\Context\all-context --goal "Полная проверка репозитория" --include-all
+py -3 rnd_v2\labeling\label_context.py diff C:\Context\repo-labels C:\Context\repo-labels-next C:\Context\revision-diff.json
+
+Все выходные имена должны быть новыми. Для нового snapshot используйте следующий
+каталог. Не переиспользуйте каталог существующего результата.
+Если модуль находится рядом с этим документом, замените rnd_v2\labeling\label_context.py на
+реальное расположение label_context.py.
+
+API для интерфейса
+build_labels(pack, destination, namespace=None, project=None, tags=(), span_chars=4096,
+             progress=lambda message: None, cancel=lambda: False)
+assemble_goal(labels_dir, goal, destination, include_all=False,
+              progress=lambda message: None, cancel=lambda: False)
+compare_revisions(old_labels, new_labels, destination)
+build_labels и assemble_goal возвращают словарь отчёта; cancel=True вызывает
+Cancelled и удаляет временный результат при обычном завершении Python. Жёсткое
+завершение процесса/отключение питания может оставить .labels-* или .goal-*;
+это незавершённые временные каталоги. Не считайте их готовым результатом.
+
+Что реально создаётся
+1. labels.jsonl — одна запись на источник, каждый текстовый span и каждое сообщение
+   conversations.json, если Context Store уже создал messages.jsonl.
+2. graph.json — связи derived_from и reply_to. Последние используют объявленный
+   parent; это не восстановление всех невидимых ветвей истории.
+3. manifest.json — хеши входов/результатов, счётчики, параметры и известные пробелы.
+4. goal/context.jsonl + context.txt — выбранные кандидаты с полными локаторами.
+5. goal/coverage.jsonl — решение для КАЖДОЙ записи: INCLUDED, EXCLUDED, UNKNOWN
+   или METADATA_ONLY; ни одна запись не исчезает из отчёта.
+6. goal/report.json — цель, запрос, хеши, счётчики и НЕПРОВЕРЕННЫЙ смысл результата.
+7. revision-diff.json — изменённые/добавленные/удалённые источники и необходимость
+   пересобрать зависимые документы контекста.
+
+Метки: 14 поддерживаемых измерений
+source, authorship, semantic_type, project, goal, time, status, evidence,
+confidence, sensitivity, machine_parse, language, execution, custom.
+Не каждое измерение заполняется автоматически: неизвестное не подменяется догадкой.
+Общее расширенное предложение содержится в universal-label-facets.SPEC.json.
+
+У каждой метки есть value — исходное значение; tag — нормализованный ключ;
+status — ASSERTED / SUGGESTED / UNKNOWN; basis — происхождение; confidence.
+confidence=null у простых правил: число вероятности не выдумывается.
+ASSERTED означает «явно пришло из этого источника/параметра», а не «объективно доказано».
+Роль user/assistant у сообщения не удостоверяет личность или правильность сказанного.
+Нельзя считать текст ассистента заявленной целью пользователя без отдельного решения.
+Исходные annotations сохраняются полностью, даже если из строки выделены метки.
+Теги проходят Unicode NFKC, casefold, очистку управляющих знаков и пунктуации.
+Оригинальное значение сохраняется для аудита; теги никогда не исполняются.
+
+Что предлагает текущая эвристика
+Вопрос, возможная цель, возможная задача, упоминание тестов, web3, возможное решение,
+кандидат «код» по расширению, наличие русских/латинских букв и упоминание секретов.
+Каждая смысловая метка SUGGESTED. Фраза «API key» не доказывает наличие ключа.
+Отсутствие этой фразы не доказывает отсутствие секретов: sensitivity=unclassified
+остаётся UNKNOWN. Метка unverified_content не превращается в VERIFIED от совпадения
+ключевых слов. Никаких TRUE-решений о готовности бота этот модуль не принимает.
+
+Точность, пути, версии
+source_id = namespace + точный полный путь внутри snapshot + номер повторения
+того же пути. Повторяющиеся пути ZIP сохраняются отдельно. namespace желательно
+задавать явно и одинаково между импортами: например flashloan-main.
+revision_id/content_revision_id зависят от SHA-256 оригинала и типа записи.
+span_id дополнительно зависит от диапазона и SHA-256 текста. Изменение оригинала
+инвалидирует все зависимые spans, даже если часть текста не изменилась.
+annotation_revision_id отдельно учитывает пользовательские метки/проект/annotations.
+diff требует пересборку контекста при любом изменении labels.jsonl, в том числе
+новом разбиении, metadata или messages.jsonl. Это консервативное правило: иногда
+оно попросит пересборку при техническом изменении snapshot без изменения смысла.
+Перестановка одинаковых путей в ZIP меняет идентичность duplicate_occurrence.
+
+Локаторы spans — [start,end) в декодированных Unicode code points. Это не байты
+и не токены модели. encoding записан явно; CRLF не нормализуются. UTF-8 BOM
+сохраняется в тексте; BOM UTF-16/32 обрабатывается декодером, остаётся в оригинале.
+В JSONL присутствуют SHA-256 оригинала, относительный путь объекта, полный путь,
+snapshot, entry и ordinal. Декодируем только TEXT_COMPLETE; PDF/Office/медиа,
+неподдерживаемые кодировки и прочие RAW_ONLY остаются оригиналами + UNKNOWN.
+TEXT_COMPLETE без оригинала — ошибка входного пакета, а не успешная пустая запись.
+
+Границы доказательности
+Хеши проверяют целостность относительно данного пакета, а не личность автора.
+Количество строк files.jsonl сверяется с index.json. Полнота исходного репозитория
+пока REPORTED_BY_EXPORT_MANIFEST_NOT_INDEPENDENT_SOURCE_INVENTORY. Для независимой
+сверки ZIP используйте verify_pack.py; реальный Git inventory требует отдельного
+адаптера, привязанного к commit SHA. Непредоставленные чаты не восстанавливаются.
+messages.jsonl сохраняется по всем представленным ролям/ветвям, без фильтра user-only.
+Его связь с исходным conversations.json здесь повторно не разбирается: поле
+ORIGINAL_HASH_VERIFIED_MAPPING_NOT_REVALIDATED честно указывает этот пробел.
+reply_to может указывать на отсутствующую запись (parent может быть ID узла, а не
+ID сообщения). При повторяющихся message IDs ссылка выбирает первое повторение;
+сама каждая запись сохраняется отдельно. Для точного дерева нужен новый адаптер
+ChatGPT, экспортирующий mapping node IDs и сверяющий их с оригинальным JSON.
+
+Поиск цели и полное покрытие
+goal — лексический поиск кандидатов по тексту, путям и меткам. Не семантический RAG.
+Нет top-20/top-k. Все совпадения включаются; все несовпадения учитываются отдельно.
+EXCLUDED означает «не совпало с текущим лексическим запросом», а не «не относится к цели».
+Результат может пропускать синонимы, склонения, фразы на границе spans и зависимости
+между файлами. Для полного прохода используйте --include-all. Все доступные spans
+и сообщения попадут в контекст; RAW_ONLY всё равно останутся UNKNOWN.
+Если нет значимых поисковых слов, текст помечается UNKNOWN; используйте --include-all.
+Сообщения представлены и внутри исходного JSON, и как удобная производная: для
+контроля полноты такое дублирование допустимо, но downstream AI должен его учитывать.
+Сборка контекста не означает чтение его AI, прохождение тестов или выполнение цели.
+goal_achieved=NOT_RUN, laya_inference=NOT_RUN, semantic_relevance=NOT_VERIFIED.
+
+Ресурсы и сохранность
+Нет произвольного общего лимита документов, файлов, ZIP или текста. span_chars —
+размер сегмента, не предел обработки. Диск/память/контекст провайдера конечны.
+Оригиналы не копируются второй раз: держите исходный pack рядом с индексом и
+резервируйте оба каталога. Только индекс не заменяет архив оригиналов.
+Большинство чтений/записей потоковые. Таблица source_by_entry, словарь дублей,
+одна JSONL-строка сообщения и diff вмещаются в RAM: сверхбольшие экспорты требуют
+SQLite join/потокового JSON адаптера в следующем этапе. Не утверждаем unlimited RAM.
+
+R&D следующие шаги
+— Экстракторы PDF/Office/OCR/ASR со страницами, координатами, таймкодами и отчётом
+  остатка RAW_ONLY; исходник всегда отдельный неизменяемый объект.
+— Метки источника/роли/цели/решения/гипотезы/возражения/отменённой цели/цитаты.
+— Связи supersedes, contradicts, supports, requires, blocks, owned_by, derived_from.
+— Иерархия целей + сроки + происхождение решения, а не только плоский набор тегов.
+— Laya предлагает choice/score, умеет воздержаться; принятые метки имеют автора,
+  версию модели, калибровку на RU/EN и ссылку на доказательство. Это пока спецификация.
+— Идемпотентная маркировка новых/изменившихся spans, оценка precision/recall по
+  пользовательской разметке, выборка спорных тегов для уточнения и обратимые исправления.
+— Semantics/dependency retrieval объединяется с exhaustive ledger: найденное,
+  исключённое и неизвестное сохраняются раздельно, без ложного «прочитано всё».
+
+Проверка
+python -m unittest discover -s app -p "test_label_context.py" -v
+На этапе разработки выполнены 16 тестов: >20 источников, 101 совпадение без top-k,
+полные пути, Unicode/CRLF/UTF16, дубли, роли/ветви, изменение контента/annotations,
+RAW_ONLY, повреждённые хеши, escape-пути, пустой запрос и отмена с очисткой.
+Windows GUI и реальное Laya inference не выполнялись в этой Linux-среде.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f2b69ba748951abd35d0afccca7f153c0760f1721c99ecdbcb4f88b97999c020 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#50:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/labeling/goal-coverage.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:goal:coverage-record:v1",
+  "type": "object",
+  "required": ["id", "source_id", "revision_id", "locator", "state", "reason", "matched_terms"],
+  "properties": {
+    "id": {"type": "string"}, "source_id": {"type": "string"},
+    "revision_id": {"type": "string"}, "locator": {"type": "object"},
+    "state": {"enum": ["INCLUDED", "EXCLUDED", "UNKNOWN", "METADATA_ONLY"]},
+    "reason": {"type": "string"},
+    "matched_terms": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 be85ca9688c74f60b837d0e4e817ed50183754b16258e16a92ed4553181887c5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#51:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/labeling/label-record.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:labels:record:v1",
+  "title": "SCE source/span/message derivative label record",
+  "type": "object",
+  "required": ["schema", "id", "kind", "source_id", "revision_id", "source_sha256", "locator", "labels", "text", "text_state"],
+  "properties": {
+    "schema": {"const": "sce.labels.v1"},
+    "id": {"type": "string"},
+    "kind": {"enum": ["source", "span", "message"]},
+    "source_id": {"type": "string", "pattern": "^source:[a-f0-9]{64}$"},
+    "revision_id": {"type": "string", "pattern": "^revision:[a-f0-9]{64}$"},
+    "content_revision_id": {"type": "string"},
+    "annotation_revision_id": {"type": "string"},
+    "source_sha256": {"type": ["string", "null"]},
+    "locator": {
+      "type": "object", "required": ["path", "duplicate_occurrence", "entry", "ordinal", "snapshot", "original_object"],
+      "properties": {
+        "path": {"type": "string"},
+        "duplicate_occurrence": {"type": "integer", "minimum": 0},
+        "unit": {"const": "decoded_unicode_codepoints"},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0},
+        "encoding": {"type": "string"}
+      }
+    },
+    "text": {"type": ["string", "null"]},
+    "text_state": {"type": "string"},
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["facet", "value", "tag", "status", "basis", "confidence"],
+        "properties": {
+          "facet": {"enum": ["source", "authorship", "semantic_type", "project", "goal", "time", "status", "evidence", "confidence", "sensitivity", "machine_parse", "language", "execution", "custom"]},
+          "value": {"type": "string"}, "tag": {"type": "string"},
+          "status": {"enum": ["ASSERTED", "SUGGESTED", "UNKNOWN"]},
+          "basis": {"type": "string"},
+          "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6fce42947b633fcc5c1728fa852a1b0c26f413fe3598b2e1a05e872c5a1c1ff6 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#52:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/labeling/label_context.py =====
+"""Read-only, offline labels and context coverage over sce.desktop.export.v1.
+
+Original packs are authoritative. Labels are derivatives, never execution rules.
+Python 3.11+; standard library only. No source-count or total-size cap.
+"""
+from __future__ import annotations
+import argparse
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import tempfile
+import unicodedata
+
+VERSION = 'sce.labels.v1'
+FACETS = ['source', 'authorship', 'semantic_type', 'project', 'goal', 'time',
+          'status', 'evidence', 'confidence', 'sensitivity', 'machine_parse',
+          'language', 'execution', 'custom']
+
+class Cancelled(Exception):
+    pass
+
+def checkpoint(cancel):
+    if cancel():
+        raise Cancelled('Отменено: завершённый результат не создан.')
+
+def canonical(value):
+    return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(',', ':'))
+
+def identity(kind, *values):
+    return kind + ':' + hashlib.sha256(canonical(values).encode('utf-8')).hexdigest()
+
+def digest_file(path, cancel=lambda: False):
+    with Path(path).open('rb') as source:
+        digest = hashlib.sha256()
+        while True:
+            checkpoint(cancel)
+            block = source.read(65536)
+            if not block:
+                return digest.hexdigest()
+            digest.update(block)
+
+def safe_path(root, relative):
+    root = Path(root).resolve()
+    p = (root / relative).resolve()
+    if not p.is_relative_to(root) or p == root:
+        raise ValueError('PATH_OUTSIDE_PACK: ' + str(relative))
+    return p
+
+def sanitize_tag(value):
+    """Keep Unicode letters/digits; remove controls and syntactic punctuation."""
+    text = unicodedata.normalize('NFKC', str(value)).casefold()
+    return re.sub(r'[-_]+', '-', ''.join(c if c.isalnum() else '-' for c in text)).strip('-')
+
+def label(facet, value, basis, status='SUGGESTED', confidence=None):
+    if facet not in FACETS:
+        raise ValueError('Unknown facet: ' + facet)
+    item = {'facet': facet, 'value': str(value), 'tag': sanitize_tag(value),
+            'status': status, 'basis': basis, 'confidence': confidence}
+    return item
+
+def jsonl(path):
+    with Path(path).open(encoding='utf-8') as f:
+        for n, line in enumerate(f, 1):
+            if line.strip():
+                try:
+                    yield json.loads(line)
+                except json.JSONDecodeError as e:
+                    raise ValueError(f'INVALID_JSONL: {path}:{n}') from e
+
+def write_row(out, row):
+    out.write(canonical(row) + '\n')
+
+def pieces(stream, chars):
+    offset = 0
+    while True:
+        text = stream.read(chars)
+        if not text:
+            if offset == 0:
+                yield 0, 0, ''
+            return
+        yield offset, offset + len(text), text
+        offset += len(text)
+
+def infer(text, path='', role=None):
+    low = text.casefold()
+    result = []
+    rules = [('question', r'\?|\bвопрос\b'),
+             ('goal_candidate', r'\b(?:хочу|нужно|цель|надо|want|need|goal)\b'),
+             ('task_candidate', r'\b(?:todo|сделать|добавить|исправить|implement|fix)\b'),
+             ('test_related', r'\b(?:pytest|unittest|assert|тест|тесты|test)\b'),
+             ('web3_related', r'\b(?:flashloan|solidity|evm|web3|uniswap|arbitrage|флешлоан)\b'),
+             ('decision_candidate', r'\b(?:решили|выбираем|decided|decision)\b')]
+    for value, pattern in rules:
+        if re.search(pattern, low):
+            result.append(label('semantic_type', value, 'lexical_rule_v1'))
+    suffix = Path(path).suffix.casefold()
+    if suffix in {'.py', '.sol', '.js', '.ts', '.rs', '.go', '.cpp', '.java'}:
+        result.append(label('semantic_type', 'code_candidate', 'filename_extension'))
+    if re.search('[а-яё]', low):
+        result.append(label('language', 'russian_present', 'unicode_script_heuristic'))
+    if re.search('[a-z]', low):
+        result.append(label('language', 'latin_present', 'unicode_script_heuristic'))
+    if re.search(r'(?i)(private[_ -]?key|seed phrase|api[_ -]?key|пароль|секрет)', text):
+        result.append(label('sensitivity', 'potential_secret_reference', 'lexical_rule_v1'))
+    result.append(label('sensitivity', 'unclassified', 'no_complete_secret_or_pii_detector', 'UNKNOWN'))
+    result.append(label('execution', 'source_data_untrusted', 'all_imported_content', 'ASSERTED'))
+    result.append(label('status', 'unverified_content', 'no_fact_or_execution_verification', 'ASSERTED'))
+    if role:
+        result.append(label('authorship', role, 'exported_author_role_not_identity_verification', 'ASSERTED'))
+    return result
+
+def _metadata_labels(row, namespace, project, tags):
+    output = [label('source', namespace, 'explicit_namespace_or_snapshot_source', 'ASSERTED'),
+              label('machine_parse', row.get('text_state', 'UNKNOWN'), 'export_manifest', 'ASSERTED')]
+    if project:
+        output.append(label('project', project, 'explicit_cli_project', 'ASSERTED'))
+    for tag in tags:
+        output.append(label('custom', tag, 'explicit_cli_tag', 'ASSERTED'))
+    annotation = row.get('annotation') or {}
+    if annotation.get('tags'):
+        # Original annotation stays intact; tokenization is only a suggestion.
+        for tag in re.split(r'[,;\n]', annotation['tags']):
+            if tag.strip():
+                output.append(label('custom', tag.strip(), 'imported_annotation', 'ASSERTED'))
+    return output
+
+def _graph(labels_path, output, cancel=lambda: False):
+    """Streaming graph file; edges refer to the same stable IDs as labels.jsonl."""
+    with output.open('w', encoding='utf-8') as f:
+        f.write('{"schema":"sce.label.graph.v1","nodes":[')
+        first = True
+        for record in jsonl(labels_path):
+            checkpoint(cancel)
+            if not first:
+                f.write(',')
+            first = False
+            f.write(canonical({k: record[k] for k in ('id', 'kind', 'source_id', 'revision_id')}))
+        f.write('],"edges":[')
+        first = True
+        for record in jsonl(labels_path):
+            checkpoint(cancel)
+            if record['kind'] == 'source':
+                continue
+            edge = {'from': record['id'], 'to': record['source_record_id'], 'relation': 'derived_from'}
+            if not first:
+                f.write(',')
+            first = False
+            f.write(canonical(edge))
+            if record.get('parent_message_record_id'):
+                f.write(',' + canonical({'from': record['id'], 'to': record['parent_message_record_id'],
+                                        'relation': 'reply_to', 'target_may_be_absent': True}))
+        f.write(']}\n')
+
+def build_labels(pack, destination, namespace=None, project=None, tags=(), span_chars=4096,
+                 progress=lambda message: None, cancel=lambda: False):
+    if span_chars < 1:
+        raise ValueError('span_chars must be positive; this is a segmentation size, not a total cap')
+    pack, destination = Path(pack).resolve(), Path(destination).resolve()
+    if destination.exists():
+        raise ValueError('Choose a new output directory')
+    index = json.loads((pack / 'index.json').read_text(encoding='utf-8'))
+    if index.get('schema') != 'sce.desktop.export.v1':
+        raise ValueError('Only sce.desktop.export.v1 is supported')
+    namespace = namespace or index['snapshot'].get('source') or index['snapshot']['id']
+    # Check source objects and derived text parts. A corrupt input must not acquire labels.
+    for part in index.get('parts', []):
+        checkpoint(cancel)
+        p = safe_path(pack, part['path'])
+        if p.stat().st_size != part['bytes'] or digest_file(p, cancel) != part['sha256']:
+            raise ValueError('CORRUPT_TEXT_PART: ' + str(part['path']))
+    if index['snapshot'].get('archive_sha'):
+        archive_sha = index['snapshot']['archive_sha']
+        if digest_file(safe_path(pack, 'originals/' + archive_sha), cancel) != archive_sha:
+            raise ValueError('CORRUPT_ARCHIVE')
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temp = Path(tempfile.mkdtemp(prefix='.labels-', dir=destination.parent))
+    counts = {'sources': 0, 'spans': 0, 'messages': 0, 'raw_only': 0, 'unknown': 0}
+    duplicates, source_by_entry = {}, {}
+    try:
+        with (temp / 'labels.jsonl').open('w', encoding='utf-8') as out:
+            for row in jsonl(pack / 'files.jsonl'):
+                checkpoint(cancel)
+                path = row['path']
+                occurrence = duplicates.get(path, 0)
+                duplicates[path] = occurrence + 1
+                source_id = identity('source', namespace, path, occurrence)
+                source_hash = row.get('sha256')
+                revision = identity('revision', source_id, source_hash, row['kind'])
+                source_record_id = identity('source-record', revision)
+                locator = {'path': path, 'duplicate_occurrence': occurrence, 'entry': row['id'],
+                           'ordinal': row['ordinal'], 'snapshot': row['snapshot'],
+                           'original_object': row.get('original_object')}
+                labels = _metadata_labels(row, namespace, project, tags)
+                original = safe_path(pack, row['original_object']) if row.get('original_object') else None
+                if row['text_state'] == 'TEXT_COMPLETE' and original is None:
+                    raise ValueError('TEXT_COMPLETE_WITHOUT_ORIGINAL: ' + path)
+                if original and (digest_file(original, cancel) != source_hash or original.stat().st_size != row['size']):
+                    raise ValueError('CORRUPT_ORIGINAL: ' + path)
+                record = {'schema': VERSION, 'id': source_record_id, 'kind': 'source',
+                          'source_id': source_id, 'revision_id': revision, 'source_sha256': source_hash,
+                          'content_revision_id': revision,
+                          'annotation_revision_id': identity('annotation', source_id, labels, row.get('annotation')),
+                          'locator': locator, 'labels': labels, 'source_manifest': row,
+                          'integrity': 'VERIFIED_RAW_BYTES' if original else 'NO_RAW_OBJECT',
+                          'text_state': row['text_state'], 'text': None}
+                source_by_entry[row['id']] = record
+                write_row(out, record)
+                counts['sources'] += 1
+                if row['text_state'] == 'TEXT_COMPLETE' and original:
+                    encoding = row.get('encoding') or 'utf-8'
+                    # newline='' preserves CR/LF; offsets are decoded Unicode code points, not bytes.
+                    with original.open('r', encoding=encoding, errors='strict', newline='') as stream:
+                        for start, end, text in pieces(stream, span_chars):
+                            checkpoint(cancel)
+                            span_hash = hashlib.sha256(text.encode('utf-8')).hexdigest()
+                            span = dict(schema=VERSION, id=identity('span', revision, start, end, span_hash),
+                                        kind='span', source_id=source_id, revision_id=revision,
+                                        source_record_id=source_record_id, source_sha256=source_hash,
+                                        locator={**locator, 'unit': 'decoded_unicode_codepoints',
+                                                 'encoding': encoding, 'start': start, 'end': end},
+                                        text_sha256=span_hash, text=text,
+                                        labels=labels + infer(text, path), text_state='TEXT_COMPLETE')
+                            write_row(out, span)
+                            counts['spans'] += 1
+                elif row['text_state'] not in ('METADATA_ONLY',):
+                    counts['raw_only'] += row['text_state'] == 'RAW_ONLY'
+                    counts['unknown'] += row['text_state'] != 'RAW_ONLY'
+                progress(f'Метки: {counts["sources"]} источников — {path}')
+            if counts['sources'] != index['entries']:
+                raise ValueError('MANIFEST_ENTRY_COUNT_MISMATCH')
+            messages_path = pack / 'messages.jsonl'
+            message_occurrences = {}
+            if messages_path.exists():
+                for message in jsonl(messages_path):
+                    checkpoint(cancel)
+                    if message.get('entry') not in source_by_entry:
+                        raise ValueError('MESSAGE_WITHOUT_SOURCE_ENTRY')
+                    source = source_by_entry[message['entry']]
+                    message_key = (message['entry'], message['conversation'], message['message'])
+                    message_occurrence = message_occurrences.get(message_key, 0)
+                    message_occurrences[message_key] = message_occurrence + 1
+                    message_id = identity('message', source['revision_id'], message['conversation'], message['message'], message_occurrence)
+                    parent = message.get('parent')
+                    parent_id = (identity('message', source['revision_id'], message['conversation'], parent, 0)
+                                 if parent and parent not in ('None', 'null') else None)
+                    text = message.get('text', '')
+                    record = dict(schema=VERSION, id=message_id, kind='message',
+                                  source_id=source['source_id'], revision_id=source['revision_id'],
+                                  source_record_id=source['id'], source_sha256=source['source_sha256'],
+                                  locator={**source['locator'], 'conversation_id': message['conversation'],
+                                           'message_id': message['message'], 'message_occurrence': message_occurrence,
+                                           'exported_derived_id': message['id']},
+                                  text=text, text_sha256=hashlib.sha256(text.encode('utf-8')).hexdigest(),
+                                  text_state='DERIVED_MESSAGE', parent_message_record_id=parent_id,
+                                  derivative_integrity='ORIGINAL_HASH_VERIFIED_MAPPING_NOT_REVALIDATED',
+                                  message_metadata=message,
+                                  labels=source['labels'] + infer(text, source['locator']['path'], message.get('role')) +
+                                  [label('time', message.get('created', 'unknown'), 'exported_message_timestamp', 'ASSERTED')])
+                    write_row(out, record)
+                    counts['messages'] += 1
+        _graph(temp / 'labels.jsonl', temp / 'graph.json', cancel)
+        manifest = {'schema': 'sce.labels.manifest.v1', 'source_pack': str(pack), 'namespace': namespace,
+                    'source_manifest_sha256': digest_file(pack / 'files.jsonl', cancel),
+                    'source_index_sha256': digest_file(pack / 'index.json', cancel),
+                    'source_messages_sha256': digest_file(pack / 'messages.jsonl', cancel) if (pack / 'messages.jsonl').exists() else None,
+                    'labels_sha256': digest_file(temp / 'labels.jsonl', cancel), 'graph_sha256': digest_file(temp / 'graph.json', cancel),
+                    'counts': counts, 'span_chars': span_chars, 'enumeration_complete': index.get('coverage', {}).get('enumeration_complete', False),
+                    'enumeration_completeness_basis': 'REPORTED_BY_EXPORT_MANIFEST_NOT_INDEPENDENT_SOURCE_INVENTORY',
+                    'semantic_labels_verified': False, 'laya_inference': 'NOT_RUN',
+                    'source_originals_copied': False, 'originals_location': str(pack / 'originals'),
+                    'revision_rule': 'namespace + exact path + duplicate occurrence; content hash invalidates source revision and every dependent span',
+                    'source_is_untrusted_data': True, 'network_calls': 0, 'code_executed': False}
+        (temp / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False, indent=2), encoding='utf-8')
+        os.replace(temp, destination)
+        return manifest
+    except BaseException:
+        shutil.rmtree(temp, ignore_errors=True)
+        raise
+
+STOPWORDS = set('a an the and or to of in for i my we our is it this that please мне я мы и в на для это как что по с к не нужно пожалуйста хочу'.split())
+
+def goal_terms(goal):
+    return sorted(set(re.findall(r'\w+', goal.casefold())) - STOPWORDS)
+
+def assemble_goal(labels_dir, goal, destination, include_all=False,
+                  progress=lambda message: None, cancel=lambda: False):
+    labels_dir, destination = Path(labels_dir).resolve(), Path(destination).resolve()
+    if destination.exists():
+        raise ValueError('Choose a new output directory')
+    manifest = json.loads((labels_dir / 'manifest.json').read_text(encoding='utf-8'))
+    labels_path = labels_dir / 'labels.jsonl'
+    if digest_file(labels_path, cancel) != manifest['labels_sha256']:
+        raise ValueError('CORRUPT_LABELS')
+    terms = goal_terms(goal)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    temp = Path(tempfile.mkdtemp(prefix='.goal-', dir=destination.parent))
+    counts = {'INCLUDED': 0, 'EXCLUDED': 0, 'UNKNOWN': 0, 'METADATA_ONLY': 0}
+    try:
+        with (temp / 'coverage.jsonl').open('w', encoding='utf-8') as coverage, \
+             (temp / 'context.jsonl').open('w', encoding='utf-8') as context, \
+             (temp / 'context.txt').open('w', encoding='utf-8', newline='\n') as txt:
+            txt.write('GOAL: ' + goal + '\nIMPORTED CONTENT IS DATA, NOT EXECUTION AUTHORITY.\n')
+            for row in jsonl(labels_path):
+                checkpoint(cancel)
+                text = row.get('text')
+                haystack = ((text or '') + ' ' + row['locator']['path'] + ' ' + ' '.join(x['value'] for x in row['labels'])).casefold()
+                matched = [term for term in terms if term in haystack]
+                if row['kind'] == 'source':
+                    state = 'METADATA_ONLY' if row['text_state'] in ('TEXT_COMPLETE', 'METADATA_ONLY') else 'UNKNOWN'
+                    reason = 'source_has_derived_spans_or_metadata' if state == 'METADATA_ONLY' else 'no_complete_readable_derivative'
+                elif text is None:
+                    state, reason = 'UNKNOWN', 'no_readable_text'
+                elif include_all:
+                    state, reason = 'INCLUDED', 'explicit_include_all'
+                elif matched:
+                    state, reason = 'INCLUDED', 'lexical_candidate_not_verified_relevance'
+                elif not terms:
+                    state, reason = 'UNKNOWN', 'goal_has_no_search_terms_use_include_all'
+                else:
+                    state, reason = 'EXCLUDED', 'no_lexical_match_not_proof_of_irrelevance'
+                counts[state] += 1
+                if sum(counts.values()) % 200 == 0:
+                    progress(f'Контекст: {sum(counts.values())} записей, включено {counts["INCLUDED"]}')
+                write_row(coverage, {'id': row['id'], 'source_id': row['source_id'], 'revision_id': row['revision_id'],
+                                     'locator': row['locator'], 'state': state, 'reason': reason, 'matched_terms': matched})
+                if state == 'INCLUDED':
+                    write_row(context, row)
+                    txt.write('\n===== ' + canonical({k: row[k] for k in ('id', 'source_sha256', 'locator')}) + ' =====\n')
+                    txt.write(text)
+                    txt.write('\n===== END =====\n')
+        report = {'schema': 'sce.goal.coverage.v1', 'goal_id': identity('goal', goal), 'goal': goal,
+                  'input_labels_sha256': manifest['labels_sha256'], 'terms': terms, 'include_all': include_all,
+                  'counts': counts, 'every_label_record_accounted': True,
+                  'source_enumeration_complete': manifest['enumeration_complete'],
+                  'source_enumeration_completeness_basis': manifest['enumeration_completeness_basis'],
+                  'all_modalities_interpreted': False, 'semantic_relevance': 'NOT_VERIFIED',
+                  'goal_achieved': 'NOT_RUN', 'laya_inference': 'NOT_RUN',
+                  'no_top_k_cap': True, 'context_unit': 'characters_not_model_tokens',
+                  'context_sha256': digest_file(temp / 'context.jsonl', cancel),
+                  'coverage_sha256': digest_file(temp / 'coverage.jsonl', cancel)}
+        (temp / 'report.json').write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding='utf-8')
+        os.replace(temp, destination)
+        return report
+    except BaseException:
+        shutil.rmtree(temp, ignore_errors=True)
+        raise
+
+def compare_revisions(old_labels, new_labels, destination):
+    """Conservative dependency invalidation; graph/coverage are never proof of goal success."""
+    def revisions(folder):
+        path = Path(folder)
+        manifest = json.loads((path / 'manifest.json').read_text(encoding='utf-8'))
+        if digest_file(path / 'labels.jsonl') != manifest['labels_sha256']:
+            raise ValueError('CORRUPT_LABELS')
+        return manifest, {r['source_id']: r for r in jsonl(path / 'labels.jsonl') if r['kind'] == 'source'}
+    old_manifest, old = revisions(old_labels)
+    new_manifest, new = revisions(new_labels)
+    changes = []
+    for sid in sorted(set(old) | set(new)):
+        a, b = old.get(sid), new.get(sid)
+        state = 'ADDED' if not a else 'REMOVED' if not b else 'UNCHANGED' if a['revision_id'] == b['revision_id'] else 'CHANGED'
+        annotations_changed = bool(a and b and a.get('annotation_revision_id') != b.get('annotation_revision_id'))
+        changes.append({'source_id': sid, 'state': state,
+                        'old_revision': a['revision_id'] if a else None,
+                        'new_revision': b['revision_id'] if b else None,
+                        'annotation_revision_changed': annotations_changed,
+                        'old_annotation_revision': a.get('annotation_revision_id') if a else None,
+                        'new_annotation_revision': b.get('annotation_revision_id') if b else None,
+                        'invalidate_old_dependent_context': state in ('REMOVED', 'CHANGED') or annotations_changed})
+    result = {'schema': 'sce.revision.diff.v1', 'changes': changes,
+              'new_sources_require_context_reassembly': any(x['state'] == 'ADDED' for x in changes),
+              'labels_artifact_changed': old_manifest['labels_sha256'] != new_manifest['labels_sha256'],
+              'dependent_context_reassembly_required': old_manifest['labels_sha256'] != new_manifest['labels_sha256'],
+              'reassembly_rule': 'Conservative: any labels artifact change includes tags, metadata, segmentation and derivative messages.',
+              'duplicate_path_order_caveat': 'Reordering same-path duplicate entries changes occurrence identity.'}
+    p = Path(destination)
+    with p.open('x', encoding='utf-8') as out:
+        json.dump(result, out, ensure_ascii=False, indent=2)
+    return result
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__)
+    sub = p.add_subparsers(dest='command', required=True)
+    b = sub.add_parser('build')
+    b.add_argument('pack'); b.add_argument('destination')
+    b.add_argument('--namespace'); b.add_argument('--project'); b.add_argument('--tag', action='append', default=[])
+    b.add_argument('--span-chars', type=int, default=4096)
+    g = sub.add_parser('goal')
+    g.add_argument('labels'); g.add_argument('destination'); g.add_argument('--goal', required=True)
+    g.add_argument('--include-all', action='store_true')
+    d = sub.add_parser('diff')
+    d.add_argument('old'); d.add_argument('new'); d.add_argument('destination')
+    a = p.parse_args()
+    if a.command == 'build':
+        result = build_labels(a.pack, a.destination, a.namespace, a.project, a.tag, a.span_chars)
+    elif a.command == 'goal':
+        result = assemble_goal(a.labels, a.goal, a.destination, a.include_all)
+    else:
+        result = compare_revisions(a.old, a.new, a.destination)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+
+if __name__ == '__main__':
+    main()
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d56bac5cc0bd42d5b9e7c6945259ff4c0a96ec87474e02a7c37988dd77066b81 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#53:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/labeling/test_label_context.py =====
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+import unittest
+
+from label_context import build_labels, assemble_goal, compare_revisions, jsonl, sanitize_tag, Cancelled
+
+
+class LabelContextTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def pack(self, name, files, messages=()):
+        folder = self.root / name
+        (folder / 'originals').mkdir(parents=True)
+        rows = []
+        for n, item in enumerate(files, 1):
+            path, raw, state = item[:3]
+            encoding = item[3] if len(item) > 3 else 'utf-8'
+            digest = hashlib.sha256(raw).hexdigest()
+            (folder / 'originals' / digest).write_bytes(raw)
+            rows.append(dict(id=n, ordinal=n-1, path=path, kind='file', snapshot=name,
+                             sha256=digest, size=len(raw), text_state=state, encoding=encoding,
+                             original_object='originals/' + digest, annotation=None))
+        (folder / 'files.jsonl').write_text(''.join(json.dumps(x) + '\n' for x in rows), encoding='utf-8')
+        (folder / 'messages.jsonl').write_text(''.join(json.dumps(x) + '\n' for x in messages), encoding='utf-8')
+        (folder / 'index.json').write_text(json.dumps({'schema': 'sce.desktop.export.v1',
+            'snapshot': {'id': name, 'source': 'repo.zip'}, 'entries': len(rows), 'parts': [],
+            'coverage': {'enumeration_complete': True}}), encoding='utf-8')
+        return folder
+
+    def test_preserves_all_unicode_spans_and_full_paths_over_twenty_files(self):
+        content = '\ufeffНужны тесты flashloan\r\n' * 30
+        pack = self.pack('p', [(f'src/deep/{n}.txt', content.encode(), 'TEXT_COMPLETE') for n in range(57)])
+        before = {p.name: p.read_bytes() for p in (pack / 'originals').iterdir()}
+        result = build_labels(pack, self.root / 'labels', span_chars=17)
+        records = list(jsonl(self.root / 'labels/labels.jsonl'))
+        self.assertEqual(57, result['counts']['sources'])
+        self.assertGreater(result['counts']['spans'], 57)
+        for n in range(57):
+            spans = [r for r in records if r['kind'] == 'span' and r['locator']['path'] == f'src/deep/{n}.txt']
+            self.assertEqual(content, ''.join(r['text'] for r in spans))
+            self.assertEqual(0, spans[0]['locator']['start'])
+            self.assertEqual(len(content), spans[-1]['locator']['end'])
+        self.assertEqual(before, {p.name: p.read_bytes() for p in (pack / 'originals').iterdir()})
+
+    def test_raw_objects_unknown_not_falsely_interpreted(self):
+        pack = self.pack('p', [('code.py', b'flashloan = 1', 'TEXT_COMPLETE'), ('doc.pdf', b'\x00\xffPDF', 'RAW_ONLY')])
+        build_labels(pack, self.root / 'labels')
+        report = assemble_goal(self.root / 'labels', 'flashloan', self.root / 'goal')
+        self.assertEqual(1, report['counts']['UNKNOWN'])
+        self.assertEqual(1, report['counts']['INCLUDED'])
+        self.assertFalse(report['all_modalities_interpreted'])
+        self.assertEqual('NOT_RUN', report['goal_achieved'])
+
+    def test_goal_has_no_topk_and_accounts_every_record(self):
+        pack = self.pack('p', [(str(n), b'flashloan test', 'TEXT_COMPLETE') for n in range(101)] + [('other', b'apples', 'TEXT_COMPLETE')])
+        build_labels(pack, self.root / 'labels')
+        report = assemble_goal(self.root / 'labels', 'flashloan', self.root / 'goal')
+        self.assertEqual(101, report['counts']['INCLUDED'])
+        self.assertEqual(1, report['counts']['EXCLUDED'])
+        self.assertEqual(204, sum(report['counts'].values()))
+        self.assertEqual(204, len(list(jsonl(self.root / 'goal/coverage.jsonl'))))
+
+    def test_source_revision_stable_and_change_invalidates_dependent_spans(self):
+        a = self.pack('a', [('same.py', b'old', 'TEXT_COMPLETE')])
+        b = self.pack('b', [('same.py', b'new', 'TEXT_COMPLETE')])
+        build_labels(a, self.root / 'la', namespace='project')
+        build_labels(a, self.root / 'la2', namespace='project')
+        build_labels(b, self.root / 'lb', namespace='project')
+        arows, a2rows, brows = [list(jsonl(self.root / folder / 'labels.jsonl')) for folder in ('la', 'la2', 'lb')]
+        self.assertEqual([x['id'] for x in arows], [x['id'] for x in a2rows])
+        self.assertEqual(arows[0]['source_id'], brows[0]['source_id'])
+        self.assertNotEqual(arows[1]['id'], brows[1]['id'])
+        report = compare_revisions(self.root / 'la', self.root / 'lb', self.root / 'diff.json')
+        self.assertEqual('CHANGED', report['changes'][0]['state'])
+        self.assertTrue(report['changes'][0]['invalidate_old_dependent_context'])
+
+    def test_duplicate_paths_have_distinct_identity(self):
+        p = self.pack('p', [('same', b'A', 'TEXT_COMPLETE'), ('same', b'B', 'TEXT_COMPLETE')])
+        build_labels(p, self.root / 'labels')
+        rows = [r for r in jsonl(self.root / 'labels/labels.jsonl') if r['kind'] == 'source']
+        self.assertNotEqual(rows[0]['source_id'], rows[1]['source_id'])
+        self.assertEqual([0, 1], [x['locator']['duplicate_occurrence'] for x in rows])
+
+    def test_chat_branches_roles_duplicate_message_ids_preserved(self):
+        messages = [dict(id=str(n), entry=1, conversation='chat1', message=mid,
+                         parent=parent, text=f'goal {n}', role=role, created='100', parts_json='{}')
+                    for n, (mid, parent, role) in enumerate([
+                        ('a', 'None', 'user'), ('b', 'a', 'assistant'),
+                        ('c', 'a', 'assistant'), ('c', 'a', 'tool'), ('d', 'a', 'system')])]
+        p = self.pack('p', [('conversations.json', b'[]', 'TEXT_COMPLETE')], messages)
+        build_labels(p, self.root / 'labels')
+        rows = [r for r in jsonl(self.root / 'labels/labels.jsonl') if r['kind'] == 'message']
+        self.assertEqual(5, len(rows))
+        self.assertEqual(5, len({r['id'] for r in rows}))
+        self.assertEqual({'user','assistant','tool','system'}, {r['message_metadata']['role'] for r in rows})
+        graph = json.loads((self.root / 'labels/graph.json').read_text())
+        self.assertEqual(4, len([x for x in graph['edges'] if x['relation'] == 'reply_to']))
+        self.assertTrue(all(r['derivative_integrity'].endswith('NOT_REVALIDATED') for r in rows))
+
+    def test_asserted_project_differs_from_suggested_goal(self):
+        p = self.pack('p', [('x', 'Хочу flashloan тесты'.encode(), 'TEXT_COMPLETE')])
+        build_labels(p, self.root / 'labels', project='Мой проект', tags=['Tag\n$(danger)'])
+        span = list(jsonl(self.root / 'labels/labels.jsonl'))[1]
+        self.assertEqual('ASSERTED', next(x for x in span['labels'] if x['facet'] == 'project')['status'])
+        self.assertEqual('SUGGESTED', next(x for x in span['labels'] if x['value'] == 'goal_candidate')['status'])
+        self.assertEqual('tag-danger', sanitize_tag('Tag\n$(danger)'))
+        self.assertTrue(all(x['confidence'] is None for x in span['labels']))
+
+    def test_utf16_character_locators_and_include_all(self):
+        original = 'Привет\r\n二😀'
+        p = self.pack('p', [('utf16', original.encode('utf-16'), 'TEXT_COMPLETE', 'utf-16')])
+        build_labels(p, self.root / 'labels', span_chars=2)
+        rows = [r for r in jsonl(self.root / 'labels/labels.jsonl') if r['kind'] == 'span']
+        self.assertEqual(original, ''.join(r['text'] for r in rows))
+        self.assertTrue(all(r['locator']['unit'] == 'decoded_unicode_codepoints' for r in rows))
+        report = assemble_goal(self.root / 'labels', 'unmatched', self.root / 'goal', include_all=True)
+        self.assertEqual(len(rows), report['counts']['INCLUDED'])
+        self.assertEqual(0, report['counts']['EXCLUDED'])
+
+    def test_corrupted_original_rejected_no_completed_output(self):
+        p = self.pack('p', [('x', b'good', 'TEXT_COMPLETE')])
+        next((p / 'originals').iterdir()).write_bytes(b'evil')
+        with self.assertRaisesRegex(ValueError, 'CORRUPT_ORIGINAL'):
+            build_labels(p, self.root / 'labels')
+        self.assertFalse((self.root / 'labels').exists())
+
+    def test_path_escape_rejected(self):
+        p = self.pack('p', [('x', b'good', 'TEXT_COMPLETE')])
+        row = next(jsonl(p / 'files.jsonl')); row['original_object'] = '../../outside'
+        (p / 'files.jsonl').write_text(json.dumps(row))
+        with self.assertRaisesRegex(ValueError, 'PATH_OUTSIDE_PACK'):
+            build_labels(p, self.root / 'labels')
+
+    def test_tampered_labels_not_used_as_goal_context(self):
+        p = self.pack('p', [('x', b'good', 'TEXT_COMPLETE')])
+        build_labels(p, self.root / 'labels')
+        with (self.root / 'labels/labels.jsonl').open('a') as f:
+            f.write('{}\n')
+        with self.assertRaisesRegex(ValueError, 'CORRUPT_LABELS'):
+            assemble_goal(self.root / 'labels', 'good', self.root / 'goal')
+
+    def test_empty_goal_terms_unknown_instead_of_silently_empty(self):
+        p = self.pack('p', [('x', b'good', 'TEXT_COMPLETE')])
+        build_labels(p, self.root / 'labels')
+        report = assemble_goal(self.root / 'labels', 'и на для', self.root / 'goal')
+        self.assertEqual(1, report['counts']['UNKNOWN'])
+        self.assertEqual(0, report['counts']['EXCLUDED'])
+
+    def test_text_complete_without_original_rejected(self):
+        p = self.pack('p', [('x', b'good', 'TEXT_COMPLETE')])
+        row = next(jsonl(p / 'files.jsonl')); row['original_object'] = None
+        (p / 'files.jsonl').write_text(json.dumps(row))
+        with self.assertRaisesRegex(ValueError, 'TEXT_COMPLETE_WITHOUT_ORIGINAL'):
+            build_labels(p, self.root / 'labels')
+
+    def test_annotation_changes_invalidate_context_without_changing_content_revision(self):
+        p = self.pack('p', [('x', b'neutral text', 'TEXT_COMPLETE')])
+        build_labels(p, self.root / 'old', project='apples')
+        build_labels(p, self.root / 'new', project='flashloan')
+        report = compare_revisions(self.root / 'old', self.root / 'new', self.root / 'diff.json')
+        self.assertEqual('UNCHANGED', report['changes'][0]['state'])
+        self.assertTrue(report['changes'][0]['annotation_revision_changed'])
+        self.assertTrue(report['changes'][0]['invalidate_old_dependent_context'])
+        self.assertTrue(report['dependent_context_reassembly_required'])
+
+    def test_cancel_build_atomic_cleanup(self):
+        p = self.pack('p', [('x', b'good', 'TEXT_COMPLETE')])
+        state = {'stop': False}
+        def progress(message):
+            state['stop'] = True
+        with self.assertRaises(Cancelled):
+            build_labels(p, self.root / 'labels', progress=progress, cancel=lambda: state['stop'])
+        self.assertFalse((self.root / 'labels').exists())
+        self.assertFalse(list(self.root.glob('.labels-*')))
+
+    def test_cancel_goal_atomic_cleanup(self):
+        p = self.pack('p', [('x', b'good', 'TEXT_COMPLETE')])
+        build_labels(p, self.root / 'labels')
+        with self.assertRaises(Cancelled):
+            assemble_goal(self.root / 'labels', 'good', self.root / 'goal', cancel=lambda: True)
+        self.assertFalse((self.root / 'goal').exists())
+
+
+if __name__ == '__main__':
+    unittest.main()
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 230014a86e99fb1c5afadc54436411a65483075d1dffdfda7cf772ed801fbf10 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#54:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/labeling/universal-label-facets.SPEC.json =====
+{
+  "schema": "sce.universal.label.facets.spec.v1",
+  "status": "R_AND_D_SPEC_NOT_RUNTIME_EXTRACTOR",
+  "principle_ru": "Единица = исходник + диапазон/локатор + версия + метки с происхождением. Автоматическая метка является предложением, пока её не принял пользователь или формальный верификатор.",
+  "record_kinds": ["file", "span", "chat_message", "branch", "voice_utterance", "audio_interval", "video_interval", "page_region", "table_cell", "code_symbol", "test_case", "test_run", "transaction", "web_capture", "goal", "decision", "recipe", "execution_receipt"],
+  "facets": [
+    {"name": "source", "examples": ["git", "chatgpt_export", "grok_capture", "google_doc_export", "telegram_export", "voice"], "authority": "connector_receipt"},
+    {"name": "source_locator", "examples": ["full_path", "commit_sha", "message_id", "page_bbox", "timecode", "cell_address"], "authority": "parser"},
+    {"name": "authorship", "examples": ["user_statement", "assistant_proposal", "quoted_third_party", "unknown_author"], "authority": "declared_source_role_not_identity_proof"},
+    {"name": "semantic_type", "examples": ["goal", "question", "task", "hypothesis", "observation", "decision", "constraint", "preference", "rejection", "evidence", "code", "result"], "authority": "human_or_suggested_classifier"},
+    {"name": "project", "examples": ["flashloan", "context_library", "voice_accessibility"], "authority": "user_or_candidate"},
+    {"name": "goal", "examples": ["G-001", "parent_goal_id", "daily_objective_id"], "authority": "goal_registry"},
+    {"name": "task_status", "examples": ["proposed", "accepted", "blocked", "running", "done", "canceled", "superseded"], "authority": "workflow_receipt_or_user"},
+    {"name": "evidence_status", "examples": ["CLAIM", "VERIFIED", "CONTRADICTED", "UNKNOWN", "NOT_RUN"], "authority": "typed_verifier"},
+    {"name": "truth_scope", "examples": ["at_commit", "at_block", "during_interval", "under_assumptions"], "authority": "evidence_receipt"},
+    {"name": "time", "examples": ["created", "captured", "valid_from", "valid_until", "due", "timezone"], "authority": "explicit_timestamp_with_basis"},
+    {"name": "recency", "examples": ["fresh", "stale", "needs_refresh"], "authority": "domain_policy_plus_clock"},
+    {"name": "confidence", "examples": ["uncalibrated", "calibrated_probability", "abstained"], "authority": "evaluation_version"},
+    {"name": "sensitivity", "examples": ["unclassified", "personal", "private", "secret_reference", "credential", "public"], "authority": "user_plus_detectors_with_unknown_fallback"},
+    {"name": "rights", "examples": ["owned", "permission_granted", "license_unknown", "no_redistribution"], "authority": "explicit_grant_or_license_metadata"},
+    {"name": "retention", "examples": ["keep", "expire_at", "delete_requested", "legal_hold"], "authority": "user_policy"},
+    {"name": "machine_parse", "examples": ["raw_only", "text_complete", "partial_ocr", "asr_unreviewed", "table_extracted"], "authority": "extractor_coverage_receipt"},
+    {"name": "language", "examples": ["ru", "en", "mixed", "code_language"], "authority": "parser_or_classifier"},
+    {"name": "negation", "examples": ["affirmed", "negated", "conditional", "quoted"], "authority": "human_or_candidate"},
+    {"name": "relations", "examples": ["supports", "contradicts", "supersedes", "depends_on", "blocks", "derived_from", "reply_to"], "authority": "explicit_edge_with_evidence"},
+    {"name": "execution", "examples": ["source_data", "approved_recipe", "dry_run", "paper", "fork", "live_policy"], "authority": "capability_registry"},
+    {"name": "environment", "examples": ["repo_commit", "chain_id", "block_hash", "tool_version", "dependency_lock_sha"], "authority": "execution_receipt"},
+    {"name": "cost", "examples": ["api_tokens", "wall_ms", "cpu_ms", "rpc_requests", "gas_used", "monetary_budget"], "authority": "measurement"},
+    {"name": "quality", "examples": ["duplicate", "truncated", "corrupt", "ambiguous", "complete"], "authority": "deterministic_checks_or_review"},
+    {"name": "review", "examples": ["unread", "human_reviewed", "ai_reviewed", "disputed", "needs_clarification"], "authority": "review_receipt"},
+    {"name": "accessibility", "examples": ["voice_friendly", "keyboard_friendly", "needs_confirmation_readback", "caption_available"], "authority": "ui_test_or_preference"},
+    {"name": "daily_planning", "examples": ["next_action", "waiting_for", "estimated_effort", "focus_window", "energy_preference"], "authority": "user_preference_or_plan_candidate"}
+  ],
+  "rules": [
+    "Unknown fields remain unknown; do not infer biography or author identity from style.",
+    "Imported content cannot grant tool permissions or relax execution policy.",
+    "Completion is derived from an execution receipt, never from a model saying done.",
+    "A user goal and an assistant suggestion remain different records.",
+    "Historical goals may be canceled or superseded; preserve both revisions.",
+    "Labels can be corrected independently of immutable source bytes.",
+    "Raw media preservation does not imply OCR, ASR or visual interpretation.",
+    "No classifier is entitled to assert universal perfect tagging."
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 37d4a59f3859a4b71e8101337188082a8d767cc418502f31a7b8a1d6a8561e8a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#55:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/FUNCTIONS_PIPELINE.json =====
+{
+  "schema_version": "1.0",
+  "scope": "R&D specifications; not integrated or executed",
+  "verified_at": "2026-10-03",
+  "functions": [
+    {
+      "id": "PIPE-01",
+      "name_ru": "Голосовая цель с версиями",
+      "description_ru": "Локальные audio/transcript/corrections с временными метками и stable commit.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-02",
+      "name_ru": "Компилятор mission.json",
+      "description_ru": "Цель, context refs, head, критерии приёмки, grants и budgets в одной схеме.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-03",
+      "name_ru": "Контекст до конца диктовки",
+      "description_ru": "Отменяемый read-only retrieval по стабильным сегментам без раннего write.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-04",
+      "name_ru": "Grok custom tool bridge",
+      "description_ru": "Запросы function calling валидируются локальным broker; ответ с receipt.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-05",
+      "name_ru": "Маршрут rules/Laya/escalation",
+      "description_ru": "Версионированные маршруты, held-out thresholds и abstain для неизвестного.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-06",
+      "name_ru": "DAG и resource locks",
+      "description_ru": "Параллельные независимые шаги; сериализация общих writers/focus/nonces.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-07",
+      "name_ru": "Idempotency и UNKNOWN",
+      "description_ru": "Повторять мутацию только после reconciliation receipt и фактического state.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-08",
+      "name_ru": "Runner в отдельном worktree",
+      "description_ru": "Pinned commit/lockfile/env; разрешённые пути и отдельная изоляция процесса.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-09",
+      "name_ru": "Evidence после каждого patch",
+      "description_ru": "Новый head инвалидирует применимость старых тестовых PASS.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-10",
+      "name_ru": "PR и merge ожидаемого head",
+      "description_ru": "Проверки exact head/merge candidate; branch rules и текущая merge policy.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-11",
+      "name_ru": "Release provenance",
+      "description_ru": "Artifact hash/signature/repository/workflow/merged commit и SBOM.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-12",
+      "name_ru": "Capability diff",
+      "description_ru": "Отдельно код, подключённый аккаунт, scopes, credential validity и tests.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-13",
+      "name_ru": "Staging updater",
+      "description_ru": "Проверка подписанного выпуска перед установкой и переключением версии.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-14",
+      "name_ru": "Миграция с восстановлением",
+      "description_ru": "Snapshot БД, проверка на копии, журнал новых writes и healthcheck.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-15",
+      "name_ru": "Rollback версии",
+      "description_ru": "Совместимое восстановление binary+data без молчаливой потери новых записей.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-16",
+      "name_ru": "Windows semantic automation",
+      "description_ru": "API/CLI/UI Automation adapters и контролируемый foreground fallback.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-17",
+      "name_ru": "Доступный STOP и activity arbitration",
+      "description_ru": "Независимый interrupt, keyboard/text alternatives, уступить UI пользователю.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    },
+    {
+      "id": "PIPE-18",
+      "name_ru": "Измерение реального выигрыша",
+      "description_ru": "p50/p95 verified-result latency, errors, cost, cache, cold/warm и accessibility.",
+      "status": "SPEC",
+      "validation": "NOT_RUN"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 11d8bafcc6224d65d0d89a9940ac5b053be210bf65110e854d836983a016b69a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#56:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/SOURCES_PIPELINE.json =====
+{
+  "verified_at": "2026-10-03",
+  "method": "official pages read through web search; no service execution",
+  "sources": [
+    {
+      "id": "S01",
+      "title": "xAI Function Calling",
+      "url": "https://docs.x.ai/developers/tools/function-calling",
+      "retrieval_ref": "turn18view0",
+      "type": "official_primary"
+    },
+    {
+      "id": "S02",
+      "title": "xAI Code Execution",
+      "url": "https://docs.x.ai/developers/tools/code-execution",
+      "retrieval_ref": "turn18view1",
+      "type": "official_primary"
+    },
+    {
+      "id": "S03",
+      "title": "Git worktree",
+      "url": "https://git-scm.com/docs/git-worktree",
+      "retrieval_ref": "turn20view1",
+      "type": "official_primary"
+    },
+    {
+      "id": "S04",
+      "title": "GitHub Pull Requests REST",
+      "url": "https://docs.github.com/en/rest/pulls/pulls",
+      "retrieval_ref": "turn18view2",
+      "type": "official_primary"
+    },
+    {
+      "id": "S05a",
+      "title": "GitHub artifact attestations",
+      "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+      "retrieval_ref": "turn17search6",
+      "type": "official_primary"
+    },
+    {
+      "id": "S05b",
+      "title": "GitHub artifact attestation how-to",
+      "url": "https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations",
+      "retrieval_ref": "turn20view0",
+      "type": "official_primary"
+    },
+    {
+      "id": "S06",
+      "title": "Tauri updater",
+      "url": "https://v2.tauri.app/plugin/updater/",
+      "retrieval_ref": "turn20view2",
+      "type": "official_primary"
+    },
+    {
+      "id": "S07",
+      "title": "Microsoft UI Automation",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32",
+      "retrieval_ref": "turn18view4",
+      "type": "official_primary"
+    },
+    {
+      "id": "S08a",
+      "title": "Microsoft Set up voice access",
+      "url": "https://support.microsoft.com/en-us/accessibility/windows/voice-access/set-up-voice-access",
+      "retrieval_ref": "turn22view4",
+      "type": "official_primary"
+    },
+    {
+      "id": "S08b",
+      "title": "Microsoft Get started voice access",
+      "url": "https://support.microsoft.com/en-us/accessibility/windows/voice-access/get-started-with-voice-access",
+      "retrieval_ref": "turn17search0",
+      "type": "official_primary"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 04e7a3dfb10820e767557bfd814f2f1cf63af2d0d443406ad9d9f3efc7a5ff44 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#57:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/docs/LATENCY_AND_ACCESSIBILITY_EXPERIMENTS_RU.txt =====
+ЭКСПЕРИМЕНТЫ СКОРОСТИ И ДОСТУПНОСТИ — ПРОЕКТ, НЕ РЕЗУЛЬТАТЫ
+2026-10-03. Все измерения NOT_RUN. Рекомендации ниже — инженерные гипотезы, численные пороги выбираются после baseline на конкретном Dell.
+
+Метрика главная: время от конца произнесённой команды до проверенного полезного результата. Дополнительно: время до ACK, первого найденного свидетельства, готового плана, начала/конца действия; доля верно выполненных задач; стоимость; число исправлений; stop latency. Измерять p50/p95, cold/warm, CPU/GPU/RAM и влияние параллельных задач на foreground responsiveness.
+
+EXP-P01: локальный ASR против выбранного облачного ASR.
+Корпус пользователя: русский, English, смешанные Git/Web3 имена, адреса, цифры, отрицания; тихая комната, шум, разные микрофоны. Идентичные аудиозаписи и human transcript. Считать WER/CER, но главное — intent/slot error и опасная инверсия отрицаний. Local large model может быть медленнее малого CPU-моделя: сначала измерить оборудование. Чувствительные аудио по умолчанию остаются локально.
+
+EXP-P02: routes rules → Laya → larger model.
+Заморозить held-out 100+ типовых целей и неизвестных запросов пользователя, сбалансировать read/write и языки. Сравнить rules-only, local Laya, provider-only, гибрид с abstain. Метрики: верный route, неизвестный ошибочно признан известным, tool/argument error, latency, доля escalations. Нельзя выбирать порог Laya по той же тестовой выборке, которой затем заявляется качество.
+
+EXP-P03: предварительный retrieval по стабильным ASR-сегментам.
+Запускать только read-only поиск до окончания речи; отменять stale search при исправлении транскрипта. Сравнить first evidence и общую latency с retrieval после commit. Ошибочное выполнение изменяющей команды до commit — запрещённый исход; этот опыт не включает execution speculation.
+
+EXP-P04: API/CLI → UI Automation → vision click.
+Одинаковые доступные действия на Windows: открыть источник, найти запись, экспортировать пакет, запустить известный тест. Сравнить latency и reliability. API/CLI и семантические UI handles предпочтительны; screenshots/мышь нужны для приложений без доступного интерфейса. Изменение окна/масштаба/фокуса должно входить в негативные fixtures.
+
+EXP-P05: context cache и delta re-index.
+Базовый путь каждый раз заново сканирует весь репозиторий; кандидат использует content hash и инвалидацию зависимости. Проверить, что изменение одной строки обновляет нужные chunks/derived labels/retrieval и сохраняет старую версию с provenance. Считать bytes read, cache hit, stale evidence rate. Экономить повторную обработку, а не удалять неудобные документы из coverage.
+
+EXP-P06: параллельный DAG и лимиты ресурсов.
+Сравнить serial/2/4 workers на read-only retrieval, статике и независимых тестах. Динамические CPU/RAM/GPU/network tokens дают backpressure; очередь остаётся полной. Для foreground input строго один владелец; для каждого worktree один writer; для signer один nonce owner. Считать critical path, waiting locks, starvation и responsiveness. Больше workers не всегда быстрее.
+
+EXP-P07: один готовый recipe вместо цепочки мелких model calls.
+«Собери контекст и проверь regression» разворачивается в локальную версионированную recipe. Модель видит результат и evidence, а не выбирает каждый list/read/copy. Сравнить model roundtrips, стоимость и error rate. Новый неизвестный процесс всё ещё требует планирования и схемы; cached recipe должен быть привязан к версии handlers и исходным предположениям.
+
+EXP-P08: устойчивость self-update.
+Fault injection: неверная подпись; правильная подпись чужого repository/workflow; stale commit; timeout на download; нехватка диска; interrupt в migration; несовместимый schema; healthcheck fail; новая запись пользователя после старта update; новый scope. Должен оставаться рабочий launcher, проверяемая предыдущая версия и сохранённая библиотека. Отдельно проверить отсутствие ложного «обновлено».
+
+EXP-P09: accessibility task completion.
+Участники с различными способами управления проходят сценарии голосом, клавиатурой, screen reader и комбинированно. UI имеет accessible names, status announcements, текстовый trace, крупные targets, настраиваемые таймауты, альтернативу press-and-hold. Критерии — успешное выполнение и возможность восстановиться после ошибки; не обещать универсальность для всех состояний по тесту одного человека.
+
+Полезные направления инновации для нашего приложения:
+1) Цель как исполняемый документ: текст, evidence, план, grants, receipts и проверяемый итог связаны ID.
+2) Объяснимое предложение автоматизации: повторяющаяся последовательность → recipe candidate → replay → измеренный выигрыш.
+3) Локальная память решений с конфликтами и датами: текущая цель не теряется за старым советом модели.
+4) Возможности обновляются независимо от доверия: код, credentials, scopes и доказательство работоспособности имеют разные статусы.
+5) Быстрый локальный путь для известных команд и background R&D для новых; результаты превращаются в новую versioned recipe после теста.
+
+Это предложения для экспериментов, не подтверждённые новые научные результаты и не заявка на первенство.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 96d8cd6af0dc15e6e7294fe22c799bb2e23dd4b2c9a923d4c4e274a7bdbc60a8 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#58:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/docs/PIPELINE_RU.txt =====
+ГОЛОС → КОНТЕКСТ → GROK → ИЗМЕНЕНИЕ КОДА → ОБНОВЛЕНИЕ ПРИЛОЖЕНИЯ
+Версия R&D: 2026-10-03. Статус всех интеграций этого раздела: SPEC / NOT_RUN.
+
+Реализуемая цель: локальное приложение превращает голосовую цель в проверяемую миссию, собирает нужные свидетельства из полной локальной библиотеки, просит модель разработать изменение и исполняет типизированный процесс проверки. Laya — кандидат для локального выбора маршрута, тегов и следующего шага. Генератор кода, executor, GitHub и установщик остаются отдельными компонентами. В этой части ZIP новых работающих сетевых интеграций нет.
+
+1. Что уже подтверждено источниками
+
+S01. xAI function calling позволяет определить инструменты схемой JSON. Модель возвращает запрос; его исполняет приложение и возвращает результат. Несколько вызовов могут прийти одновременно. Это интерфейс к нашему executor, а не автоматически выданный доступ к Dell.
+https://docs.x.ai/developers/tools/function-calling
+
+S02. Встроенный code_execution исполняет Python на стороне xAI; подходит для вычислений/анализа. Он не доказывает, что тесты нашего Windows-приложения или всего flashloan-репозитория прошли на локальной машине. Передача текста Grok сама по себе не устанавливает локальный инструмент и не создаёт GitHub-токен.
+https://docs.x.ai/developers/tools/code-execution
+https://docs.x.ai/developers/tools/overview
+
+S03. Git worktree позволяет отдельные рабочие деревья одного репозитория. Для эксперимента фиксируем commit, ветку и рабочее дерево; отдельно фиксируем окружение, зависимости, команды и входные fixtures. Worktree сам по себе не является sandbox: изоляцию процесса, сети и секретов делает runner.
+https://git-scm.com/docs/git-worktree
+
+S04. GitHub merge API принимает sha, который должен совпасть с head PR; обновление ветки имеет expected_head_sha. В документации есть также async merge/queue. Ответ enqueued не означает merged. При новом head старые результаты не являются проверкой новой версии.
+https://docs.github.com/en/rest/pulls/pulls
+
+S05. GitHub attestations связывают artifact с происхождением сборки. Проверять нужно подпись и ожидаемые repository/workflow/commit; одной загрузки файла аттестации мало. Для private/internal repositories текущая документация отдельно ограничивает доступность планом Enterprise Cloud. Для других планов нужен альтернативный подписанный выпуск.
+https://docs.github.com/en/actions/concepts/security/artifact-attestations
+https://docs.github.com/en/actions/how-tos/secure-your-work/use-artifact-attestations/use-artifact-attestations
+
+S06. Tauri updater имеет подписанные update-artifacts, public key, HTTPS endpoints и Windows install modes. Это кандидат для будущей desktop-сборки: текущий Python/Tk прототип не становится Tauri-приложением от добавления JSON. Транзакционную миграцию библиотеки, проверку новых прав, контроль здоровья и откат проектируем отдельно.
+https://v2.tauri.app/plugin/updater/
+
+S07. Windows UI Automation даёт семантический доступ к элементам UI и поддерживает автоматизированные тесты. Это предпочтительный Windows-адаптер, когда отсутствует прямой API. Покрытие конкретных сторонних приложений нужно проверять.
+https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32
+
+S08. Windows Voice Access уже предоставляет управление ПК голосом и диктовку; после загрузки language files работает локальное распознавание. На проверенной странице setup русский не указан. FAQ перечисляет меньше языков, чем setup, поэтому не следует использовать старый FAQ как полный актуальный список. Для нашего русского + English web3 словаря нужен отдельный ASR-тест на Dell.
+https://support.microsoft.com/en-us/accessibility/windows/voice-access/set-up-voice-access
+https://support.microsoft.com/en-us/accessibility/windows/voice-access/get-started-with-voice-access
+
+Все URL прочитаны 2026-10-03; фактические API-вызовы, сборки Windows, подписи и GitHub merge здесь NOT_RUN. Версии моделей и пакетов не объявлены «самыми лучшими»: во время реализации фиксировать доступную модель, commit/release зависимости и результаты локального сравнения.
+
+2. Процесс одной миссии
+
+Нажать «Сказать цель» либо hotkey. Сохранить локально исходное audio, сегменты с временем, транскрипцию и исправления пользователя как разные версии. Постоянное прослушивание — отдельный включаемый режим с видимым индикатором, mute/stop и правилами хранения. Голос из видео, браузера и чужой цитаты не становится авторизацией команды.
+
+Стабильные части транскрипта можно использовать для предварительного поиска. Исполнение изменяющих действий начинается после фиксации команды: иначе ASR может заменить «не запускай» на «запускай» или исправить число уже после действия. Кнопка STOP работает через независимый локальный канал, не ждёт ответа облачной модели. Все основные действия доступны клавиатурой/текстом/экранным диктором; голос не единственный способ остановки.
+
+Создать mission.json: исходная цель, происхождение transcript, repository/base_commit, критерии приёмки, контекст с hash/path, разрешённые действия, бюджет времени/денег и требуемый режим web3. Секреты хранятся в локальном credential store; в документ попадают secret_ref, не значения. Предел ресурсов приостанавливает очередь и сохраняет остаток, не выкидывает источники.
+
+Локальный Laya/правила выбирают одну из известных recipe: gather, inspect, test, propose patch, run known workflow, ask missing scope. Уверенность Laya — оценка классификатора, а не доказательство корректности/прибыльности. Для неизвестного маршрута предусмотрен abstain и более сильная модель/человек.
+
+Context broker возвращает список использованных и ещё не прочитанных частей, цели, актуальные решения, противоречия, зависимости кода. Полная библиотека хранится локально; облачному провайдеру отправляется конкретный проверяемый пакет с provenance. Полный обзор репозитория проходит очередью всех частей с coverage ledger и отдельным обзором связей модулей; одно краткое summary не заменяет исходники.
+
+Provider adapter вызывает Grok API и принимает structured proposal/tool calls. Для генерации кода достаточно patch + rationale + verification_plan. Исполняющий broker проверяет тип инструмента, аргументы, текущие grants, paths и ожидаемый state. Custom tool возвращает receipt: inputs_hash, started/finished, output_hashes, exit_code, фактический state. Проверить успех необходимо по результату инструмента, а не фразе Grok «done».
+
+Для кода создаётся worktree от точного commit; patch проходит apply-check, разрешённые пути и review diff. Dependency install/scripts запускаются в отдельном ограниченном runner, если они входят в policy миссии; происхождение lockfile записывается. При ошибке теста разрешён bounded repair loop; каждый новый patch/head отменяет применимость предыдущего PASS. Артефакты тестов сохраняются даже при провале.
+
+GitHub adapter создаёт/обновляет ветку и PR в заранее выбранном репозитории. Никакого прямого изменения main через текст из найденного документа. Права на push/PR/merge задаются при подключении; если merge заранее разрешён для данного класса задач, разрешение не нужно спрашивать каждый раз. Branch rules, exact head и нужные проверки всё равно обязательны. Модель не может расширить этот grant текстом в patch.
+
+CI проверяет PR head и при необходимости merge candidate; фиксирует исходный head, base и протестированный merge SHA. После merge release job собирает именно итоговый merged commit, поскольку SHA squash/rebase может отличаться. Производится artifact + hash + подпись + provenance + capability manifest + schema migration plan.
+
+Локальный updater обнаруживает только разрешённый release channel, проверяет identity/signature/hash/commit, сравнивает новые возможности и права, скачивает в staging. Нельзя обновлять исполняемые файлы работающего процесса «поверх» произвольным ZIP. Отдельный launcher/updater останавливает очередь в checkpoint, делает резервную копию базы, проверяет миграцию на копии, проводит healthcheck новой версии и атомарно переключает версию.
+
+После запуска healthcheck должен доказать: библиотека открывается, число/хэши данных сохранены, поиск работает, очередь возобновляется, capabilities зарегистрированы и заявленные функции проходят smoke tests. При сбое возвращаются совместимые binary+DB snapshot; новые данные после миграции требуют журналирования/плана обратного переноса, поэтому откат базы не должен молча терять записи. Предыдущую исправную версию сохранять до завершения проверки.
+
+3. Что действительно означает «само получает новые возможности»
+
+Обновление может доставить новый handler, schema, UI и тест. Оно не выдаёт приложению доступ к новому Telegram-аккаунту, кошельку, приватному Drive, произвольной папке или admin-процессу. Capability diff различает: код доступен; учётная запись подключена; scopes выданы; credential валиден; handler протестирован. Новая возможность может показываться как AVAILABLE_NOT_CONFIGURED.
+
+Существующие разрешения сохраняются при совместимом обновлении. Новый scope появляется в отдельном reviewable diff: зачем нужен, к каким данным относится, какие действия разрешает, как отозвать. Это не повторный запрос для уже разрешённого действия. Scope-политика хранится отдельно от обновляемого кода и не заменяется подписанным release manifest автоматически.
+
+4. Параллельная работа без гонок
+
+Планировщик исполняет DAG зависимостей, а не одновременно все шаги текста. Чтение независимых документов, HTTP read-only сбор, анализ модулей, независимые тестовые fixtures и генерация разных вариантов могут идти параллельно. Writes одной SQLite-базы, одной worktree/ветки, nonce одного signer, общий браузерный профиль/окно и foreground input требуют locks.
+
+Locks: library_write, worktree:<id>, github_branch:<repo>:<branch>, browser_context:<id>, desktop_foreground, signer:<chain>:<address>. Статический анализ и тесты используют snapshot, поэтому их результаты не меняются от текущих правок пользователя. Несколько браузерных контекстов могут идти параллельно, если сайты/профили/сессии и полномочия допускают; sendKeys/мышь одного рабочего стола сериализуются. User activity приостанавливает foreground automation.
+
+Read steps можно повторять после сетевой ошибки. Publish/merge/transaction/update нельзя вслепую повторять: сначала найти receipt по idempotency key и проверить итоговый state. UNKNOWN означает неизвестный результат, а не FAIL и не основание сделать действие второй раз.
+
+5. Минимальная последовательность внедрения
+
+Этап 1: mission schema, context manifest, read-only tools, evidence receipts, offline dry-run, сохраняемые состояния. Проверка на маленьком fixture и пользовательском 4 MB ZIP.
+Этап 2: push-to-talk RU/EN ASR, preview/correction, route-known-workflow, локальные тесты в worktree, replay mission без облака.
+Этап 3: Grok adapter → patch → тесты → draft PR. Provider credentials остаются локальными. Автоматический merge включается только в настроенной policy после реальной проверки exact-head/branch rules.
+Этап 4: воспроизводимая Windows-сборка → подписанный update → staging/healthcheck/rollback. New scopes как отдельный permission diff.
+Этап 5: web3 supervisor связывает qualification ledger со строго выбранным режимом. Наличие updater/голоса/Grok не повышает paper до live автоматически.
+
+Это архитектурный вывод из возможностей источников и пользовательской цели. Ни один источник не обещает всю описанную end-to-end систему готовой из коробки.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 1f057d1aa6f36ecdf82c637e97164d4f59efb3c5aae6a122d273711292c20daa | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#59:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/examples/capability.example.json =====
+{
+  "schema_version": "1.0",
+  "id": "web3.collect_paper_evidence",
+  "version": "0.0.0-example",
+  "status": "EXAMPLE_NOT_EXECUTABLE",
+  "handler": "future_handlers.paper.collect_evidence",
+  "artifact": {
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "source_commit": "0000000000000000000000000000000000000000",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "workflow": "release-windows.yml",
+    "signature_ref": "NOT_SIGNED_EXAMPLE"
+  },
+  "scope_requests": [
+    {
+      "scope": "filesystem.read",
+      "reason": "Прочитать разрешённые журналы paper campaign.",
+      "resource": "${configured_paper_logs_root}"
+    }
+  ],
+  "execution": {
+    "runtime": "python-worker",
+    "read_only": true,
+    "resource_locks": [],
+    "idempotency": "read_only",
+    "timeout_seconds": 300
+  },
+  "verification": {
+    "input_schema": "NOT_IMPLEMENTED",
+    "output_schema": "NOT_IMPLEMENTED",
+    "test_suite": "NOT_IMPLEMENTED",
+    "state": "NOT_RUN"
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 fd943ff0930e837857cf253d319a56c637744f6597b71bb4b8d6ab9a31ca0fb4 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#60:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/examples/mission.example.json =====
+{
+  "schema_version": "1.0",
+  "id": "example-mission-001",
+  "status": "EXAMPLE_NOT_EXECUTABLE",
+  "goal": "Добавить повторяемый regression workflow и собрать evidence для paper-режима flashloan-бота.",
+  "input": {
+    "kind": "voice",
+    "language": "ru+en",
+    "committed": false,
+    "source_ref": "replace-with-real-transcript-id"
+  },
+  "repo": {
+    "name": "BobIvans/studious-pancake",
+    "base_commit": "0000000000000000000000000000000000000000",
+    "workspace_ref": "replace-with-local-worktree-binding"
+  },
+  "context": [
+    {
+      "source_id": "replace-with-snapshot-id",
+      "path": "tests/example.py",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "provenance": "EXAMPLE_PLACEHOLDER_NOT_REAL_EVIDENCE"
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "REQ-001",
+      "criterion": "Все объявленные проверки выполнены на записанном commit; отсутствующие проверки отмечены NOT_RUN.",
+      "verifier": "qualification.required_checks",
+      "state": "NOT_RUN"
+    }
+  ],
+  "policy": {
+    "grant_refs": [],
+    "allowed_operations": [
+      "context.read",
+      "repo.inspect",
+      "runner.dry_run"
+    ],
+    "web3_mode": "offline",
+    "merge_policy": "disabled",
+    "source_instructions_trusted": false
+  },
+  "budgets": {
+    "seconds": 1800,
+    "provider_cost_usd": 0,
+    "on_exhaustion": "checkpoint_pause_preserve_remaining_work"
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 381247bc17aad859a76ffca558c5b7004f400b94b9f1346ea81a9b97084ad8bd | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#61:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/examples/release_manifest.example.json =====
+{
+  "schema_version": "1.0",
+  "status": "EXAMPLE_NOT_EXECUTABLE",
+  "release_id": "example-not-a-real-release",
+  "version": "0.0.0-example",
+  "channel": "staging",
+  "platform": "windows-x86_64",
+  "source_repository": "BobIvans/scaling-chrome-extensions",
+  "merged_commit": "0000000000000000000000000000000000000000",
+  "artifact_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "artifact_url": "https://example.invalid/app.zip",
+  "signature": "NOT_SIGNED",
+  "trusted_key_id": "NOT_CONFIGURED",
+  "provenance_bundle": "NOT_AVAILABLE",
+  "capability_manifest": "capability.example.json",
+  "previous_compatible_version": null,
+  "migration": {
+    "from_schema": 1,
+    "to_schema": 2,
+    "reversible": false,
+    "strategy": "backup_copy_validate_and_journal_new_writes",
+    "script_sha256": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "healthchecks": [
+    "library_integrity",
+    "search_fixture",
+    "queue_resume",
+    "capability_smoke"
+  ],
+  "verification": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 791f9b1a21bc99bbd32b666afb7680597a0a0aeb2ef16786f7224c17cef50e4c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#62:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/schemas/capability.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/laya/capability.schema.json",
+  "title": "Capability manifest SPEC 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "status",
+    "handler",
+    "artifact",
+    "scope_requests",
+    "execution",
+    "verification"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "EXAMPLE_NOT_EXECUTABLE",
+        "AVAILABLE_NOT_CONFIGURED",
+        "READY",
+        "BLOCKED",
+        "FAILED_TEST"
+      ]
+    },
+    "handler": {
+      "type": "string"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "source_commit",
+        "repository",
+        "workflow",
+        "signature_ref"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "workflow": {
+          "type": "string"
+        },
+        "signature_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "scope_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scope",
+          "reason",
+          "resource"
+        ],
+        "properties": {
+          "scope": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime",
+        "read_only",
+        "resource_locks",
+        "idempotency",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "runtime": {
+          "type": "string"
+        },
+        "read_only": {
+          "type": "boolean"
+        },
+        "resource_locks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "idempotency": {
+          "enum": [
+            "read_only",
+            "receipt_reconciliation"
+          ]
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_schema",
+        "output_schema",
+        "test_suite",
+        "state"
+      ],
+      "properties": {
+        "input_schema": {
+          "type": "string"
+        },
+        "output_schema": {
+          "type": "string"
+        },
+        "test_suite": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "TRUE",
+            "FALSE",
+            "UNKNOWN",
+            "NOT_RUN"
+          ]
+        }
+      }
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ee4587a74b104a999d1a2944ea2c6cb07880b87485972be735e65d85efdf7182 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#63:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/schemas/mission.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/laya/mission.schema.json",
+  "title": "Mission SPEC 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "status",
+    "goal",
+    "input",
+    "repo",
+    "context",
+    "acceptance",
+    "policy",
+    "budgets"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "EXAMPLE_NOT_EXECUTABLE",
+        "DRAFT",
+        "READY",
+        "RUNNING",
+        "PAUSED",
+        "COMPLETE",
+        "FAILED"
+      ]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "language",
+        "committed",
+        "source_ref"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "voice",
+            "text",
+            "document"
+          ]
+        },
+        "language": {
+          "type": "string"
+        },
+        "committed": {
+          "type": "boolean"
+        },
+        "source_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "base_commit",
+        "workspace_ref"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "base_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+        },
+        "workspace_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "context": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "path",
+          "sha256",
+          "provenance"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "provenance": {
+            "type": "string"
+          },
+          "slice": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "criterion",
+          "verifier",
+          "state"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "criterion": {
+            "type": "string"
+          },
+          "verifier": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "TRUE",
+              "FALSE",
+              "UNKNOWN",
+              "NOT_RUN"
+            ]
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grant_refs",
+        "allowed_operations",
+        "web3_mode",
+        "merge_policy",
+        "source_instructions_trusted"
+      ],
+      "properties": {
+        "grant_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowed_operations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "web3_mode": {
+          "enum": [
+            "offline",
+            "fork",
+            "paper",
+            "testnet",
+            "live"
+          ]
+        },
+        "merge_policy": {
+          "enum": [
+            "disabled",
+            "existing_scoped_grant"
+          ]
+        },
+        "source_instructions_trusted": {
+          "const": false
+        }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seconds",
+        "provider_cost_usd",
+        "on_exhaustion"
+      ],
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "provider_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "on_exhaustion": {
+          "const": "checkpoint_pause_preserve_remaining_work"
+        }
+      }
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b3d4c910052f7747474d43b396ab191e5f1710d2641c9d1a0c24d9d87200c984 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#64:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/workflows/PIPE-W01.SPEC.json =====
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W01",
+  "name_ru": "Голос → подтверждённая миссия → контекст",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-01",
+    "PIPE-02",
+    "PIPE-03",
+    "PIPE-05"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "audio",
+      "operation": "voice.capture",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "transcript",
+      "operation": "voice.transcribe",
+      "depends_on": [
+        "audio"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "prefetch",
+      "operation": "context.prefetch_readonly",
+      "depends_on": [
+        "transcript"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "commit",
+      "operation": "mission.commit_transcript",
+      "depends_on": [
+        "transcript"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "route",
+      "operation": "router.select_known_recipe",
+      "depends_on": [
+        "commit"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "context",
+      "operation": "context.resolve_with_coverage",
+      "depends_on": [
+        "prefetch",
+        "commit",
+        "route"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "mission",
+      "operation": "mission.compile_validate",
+      "depends_on": [
+        "context"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "mission.schema_valid AND every_context_ref_resolvable",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    }
+  ],
+  "invariants": [
+    "Changing actions depend on transcript commit.",
+    "Unknown route abstains; cached labels are not authorization.",
+    "Original audio retention follows explicit local setting."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 01e03f296667338169d5658e35dc4355581e3995819aa725940d9f96f09d4c72 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#65:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/workflows/PIPE-W02.SPEC.json =====
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W02",
+  "name_ru": "Grok → patch → локальные проверки → PR",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-04",
+    "PIPE-07",
+    "PIPE-08",
+    "PIPE-09",
+    "PIPE-10"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "pin",
+      "operation": "repo.resolve_commit",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "context",
+      "operation": "context.build_handoff",
+      "depends_on": [
+        "pin"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "proposal",
+      "operation": "provider.grok.propose_patch",
+      "depends_on": [
+        "context"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "worktree",
+      "operation": "repo.create_worktree",
+      "depends_on": [
+        "pin"
+      ],
+      "resource_locks": [
+        "repo_worktree_admin"
+      ],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "apply",
+      "operation": "patch.validate_and_apply",
+      "depends_on": [
+        "proposal",
+        "worktree"
+      ],
+      "resource_locks": [
+        "worktree:${worktree.id}"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "tests",
+      "operation": "runner.run_declared_checks",
+      "depends_on": [
+        "apply"
+      ],
+      "resource_locks": [
+        "worktree:${worktree.id}"
+      ],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "evidence",
+      "operation": "verifier.bind_evidence_to_head",
+      "depends_on": [
+        "tests"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "checks.actual_head == patch.result_head AND required_checks_pass",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "pr",
+      "operation": "github.push_branch_open_pr",
+      "depends_on": [
+        "evidence"
+      ],
+      "resource_locks": [
+        "github_branch:${repo}:${branch}"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "ci",
+      "operation": "github.collect_required_checks",
+      "depends_on": [
+        "pr"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "merge",
+      "operation": "github.merge_if_policy_allows",
+      "depends_on": [
+        "ci"
+      ],
+      "resource_locks": [
+        "github_branch:${repo}:main"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "merge_request.expected_head == verified_head AND rules_pass",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN",
+      "run_if": "mission.policy.merge_policy == existing_scoped_grant AND policy_broker.authorized"
+    },
+    {
+      "id": "confirm",
+      "operation": "github.reconcile_merge",
+      "depends_on": [
+        "merge"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "PR.merged == true AND merged_commit_recorded",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN",
+      "run_if": "merge.dispatched"
+    }
+  ],
+  "invariants": [
+    "No arbitrary shell supplied through tool arguments.",
+    "Any changed head invalidates check applicability.",
+    "Merge step is skipped unless already authorized by mission policy.",
+    "Enqueued/Pending is not Merged."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ],
+  "otherwise_result": "PR_READY_WITH_EVIDENCE"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e37f1aca16329d405225b81337e80dff8919670f36a6e60be441448b86554ea0 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#66:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/workflows/PIPE-W03.SPEC.json =====
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W03",
+  "name_ru": "Проверенный release → local staging → healthcheck → rollback",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-11",
+    "PIPE-12",
+    "PIPE-13",
+    "PIPE-14",
+    "PIPE-15"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "release",
+      "operation": "github.resolve_release_commit",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "artifact",
+      "operation": "update.download_to_staging",
+      "depends_on": [
+        "release"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "verify",
+      "operation": "update.verify_signature_and_provenance",
+      "depends_on": [
+        "artifact"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "hash_valid AND trusted_signer AND expected_repository AND expected_workflow AND source_commit_matches",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "diff",
+      "operation": "capability.compute_permission_diff",
+      "depends_on": [
+        "verify"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "grants",
+      "operation": "policy.resolve_existing_grants",
+      "depends_on": [
+        "diff"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "required_grants_present OR state == AVAILABLE_NOT_CONFIGURED",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "checkpoint",
+      "operation": "queue.quiesce_checkpoint",
+      "depends_on": [
+        "verify"
+      ],
+      "resource_locks": [
+        "library_write"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "backup",
+      "operation": "library.backup_consistent_snapshot",
+      "depends_on": [
+        "checkpoint"
+      ],
+      "resource_locks": [
+        "library_write"
+      ],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "migration",
+      "operation": "update.migrate_copy",
+      "depends_on": [
+        "backup",
+        "grants"
+      ],
+      "resource_locks": [
+        "update_staging"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "health",
+      "operation": "update.run_staging_healthcheck",
+      "depends_on": [
+        "migration"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "switch",
+      "operation": "update.switch_version",
+      "depends_on": [
+        "health"
+      ],
+      "resource_locks": [
+        "application_update"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "postcheck",
+      "operation": "update.verify_started_version",
+      "depends_on": [
+        "switch"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "continue_to_recover_with_failure_receipt",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "recover",
+      "operation": "update.rollback_on_failed_postcheck",
+      "depends_on": [
+        "postcheck"
+      ],
+      "resource_locks": [
+        "application_update",
+        "library_write"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "previous_binary_usable AND data_preserved_or_recovery_required",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN",
+      "run_if": "postcheck.state in [FALSE,UNKNOWN]",
+      "on_success": "report_ROLLED_BACK_or_RECOVERY_REQUIRED"
+    }
+  ],
+  "invariants": [
+    "Manifest cannot grant scopes.",
+    "This is conditional graph: recover runs only when postcheck failed; successful postcheck finalizes.",
+    "No downgrade/replay unless explicitly permitted release/rollback target.",
+    "DB rollback must account for writes after backup; never discard them silently."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9855ba2b42fe543f12f70c0227424f0f1cdab4e9b0473e5e28bf609cd6978502 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#67:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/workflows/PIPE-W04.SPEC.json =====
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W04",
+  "name_ru": "Параллельная миссия с foreground arbitration",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-06",
+    "PIPE-07",
+    "PIPE-16",
+    "PIPE-17"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "validate",
+      "operation": "scheduler.validate_acyclic_graph",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "budget",
+      "operation": "scheduler.reserve_resources",
+      "depends_on": [
+        "validate"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "reads",
+      "operation": "scheduler.dispatch_independent_reads",
+      "depends_on": [
+        "budget"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "tests",
+      "operation": "scheduler.dispatch_isolated_tests",
+      "depends_on": [
+        "budget"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "focus",
+      "operation": "desktop.acquire_foreground_lease",
+      "depends_on": [
+        "budget"
+      ],
+      "resource_locks": [
+        "desktop_foreground"
+      ],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "ui",
+      "operation": "desktop.execute_semantic_action",
+      "depends_on": [
+        "focus"
+      ],
+      "resource_locks": [
+        "desktop_foreground",
+        "browser_context:${context.id}"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "join",
+      "operation": "scheduler.join_receipts",
+      "depends_on": [
+        "reads",
+        "tests",
+        "ui"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "verify",
+      "operation": "verifier.evaluate_actual_outcomes",
+      "depends_on": [
+        "join"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    }
+  ],
+  "invariants": [
+    "User activity pauses foreground lane.",
+    "STOP bypasses cloud planning and blocks new mutation dispatch.",
+    "Concurrent writes require distinct isolated state; browser profile shared state still locks.",
+    "Timers/resources pause queue; they do not silently truncate source coverage."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 c285b331d89bdfd4a38b253c3e52e5bcec911f79b6ecd4d481fb050d8279741c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#68:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/workflows/PIPE-W05.SPEC.json =====
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W05",
+  "name_ru": "Новая capability без автоматической выдачи новых прав",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-12",
+    "PIPE-16"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "old",
+      "operation": "capability.read_installed_manifest",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "new",
+      "operation": "capability.read_candidate_manifest",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "diff",
+      "operation": "capability.compare",
+      "depends_on": [
+        "old",
+        "new"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "evidence",
+      "operation": "capability.collect_regression_results",
+      "depends_on": [
+        "new"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "resolve",
+      "operation": "policy.match_existing_grants",
+      "depends_on": [
+        "diff"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "register",
+      "operation": "capability.register_status",
+      "depends_on": [
+        "evidence",
+        "resolve"
+      ],
+      "resource_locks": [
+        "capability_registry"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "status in [READY,AVAILABLE_NOT_CONFIGURED,BLOCKED,FAILED_TEST]",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    }
+  ],
+  "invariants": [
+    "Package metadata can request scope, never assert it granted.",
+    "New external account consent is distinct from installing new handler.",
+    "Previously authorized compatible actions do not require repeated approval."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e2386a54155a3adf2c5582ca0d6603c5eee87e898b1ef2144a4b3933f650dd72 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#69:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/pipeline/workflows/PIPE-W06.SPEC.json =====
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W06",
+  "name_ru": "Replay качества и скорости после обновления",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-18"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "freeze",
+      "operation": "benchmark.freeze_corpus_and_environment",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "baseline",
+      "operation": "benchmark.run_baseline",
+      "depends_on": [
+        "freeze"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "candidate",
+      "operation": "benchmark.run_candidate",
+      "depends_on": [
+        "freeze"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "compare",
+      "operation": "benchmark.compare_metrics",
+      "depends_on": [
+        "baseline",
+        "candidate"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "report",
+      "operation": "benchmark.write_regression_report",
+      "depends_on": [
+        "compare"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "raw_receipts_present AND all_missing_runs_marked_NOT_RUN",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    }
+  ],
+  "invariants": [
+    "Use held-out cases with unknown intents, noisy RU/EN and incorrect quantities.",
+    "Record p50/p95, correctness and interruption recovery, not only tokens/second.",
+    "Performance target is configured after baseline, not asserted as measured."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9cb554c52f210b624e46a683bab50a51e1b0e909aae993bf9ea34f9778e7b30f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#70:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/research_laya_voice.txt =====
+LAYA + ГОЛОС + АГЕНТЫ: R&D, 03.10.2026
+Проверено веб-поиском: первичные репозитории, model cards и документация. Это проектные рекомендации, а не результаты локального бенчмарка. Никакие модели, браузерные агенты или торговые операции в этой работе не запускались.
+
+1. ЧТО РЕАЛЬНО ДЕЛАЕТ LAYA
+
+Laya возвращает типизированные решения choice/score/noul по текстовому или JSON состоянию. Это подходящий кандидат для выбора workflow, оценки релевантности, тегов и маршрутизации. Модель не пишет код и не управляет ОС сама. Генерация программы — отдельная coding LLM; запуск — executor; доказательство результата — проверки. Точность на нашей русской истории, коде и Web3 данных пока NOT_RUN.
+
+В актуальном README перечислены Router, predict_batch, predict_long, ONNX и интеграции с MCP/LangGraph. Multilingual по умолчанию ограничен 1024 токенами, допускает max_len=8192; вопросы/варианты тоже занимают бюджет. Native HTTP ограничивает choice100 вариантами, а описания вариантов делят отдельный head budget. Полный архив нельзя просто подать одним запросом. Нужны полное сохранение, реестр окон, span offsets и отдельная проверка покрытия. Наличие всех окон не доказывает понимание всех межфайловых связей. Источник LV01.
+
+Практический быстрый путь: официальный Unsloth Desktop документирует локальный Laya Decision API для Windows и других ОС. Его интерфейс совместим с Jev, но формула confidence отличается; пороги Jev нельзя переносить механически. Сравнить Unsloth backend с Python/ONNX backend на нашем железе. Не копировать между ними транспортные лимиты: API-обёртки различаются. Источник LV03.
+
+«Убрать границы» в архиве означает отсутствие скрытых отбрасываний. Ограничения RAM, диска, контекста и размера запроса остаются измеримыми ресурсами. При их достижении — очередь/пауза/разбиение с журналом, а не потеря данных.
+
+2. ЧТО НАЙДЕНО ЧЕРЕЗ X/TWITTER
+
+Проведены запросы site:x.com и site:twitter.com по Jev, Laya, TypeSafe, Nandakishor и конкретным ссылкам. Прямое чтение найденных постов блокировалось 403/ошибкой загрузки. Поэтому социальные ссылки ниже — зацепки DISCOVERED_NOT_DIRECTLY_VERIFIED; сообщения и цифры из агрегаторов не принимаются за проверенные результаты. Технические выводы опираются на открытые первичные проекты авторов.
+
+• tamara, контекстная выборка: https://x.com/tamarajtran/status/2100694549362553153 — прямая загрузка 403. Подтверждённый первичный проект fast-jev-compaction оценивает tool calls/results и сохраняет выбранные элементы verbatim; часть состояния для самой модели может сокращаться. README прямо говорит, что вероятность не доказывает безопасность удаления, а native demo анимирован скриптом без API. Для нашей библиотеки брать идею отбора активного контекста, сохраняя полный оригинал отдельно. LV04, SX01.
+• codila, Jev перед GrokBot: https://x.com/0xCodila/status/2101433560796467348 — прямая загрузка 403. Это кандидат для дальнейшего чтения, а не доказательство «автоматизации всей жизни». SX02.
+• Browser Use: первичный jev-ultrafast показывает разделение decision model и text helper. Jev выбирает операцию и совместимую цель из свежей таблицы DOM; отдельная LLM вводимый текст. Исполнитель повторно проверяет цель и состояние. Model output не превращается в произвольный JavaScript/selector/shell. Их demo и скорость относятся к одному сценарию, не к нашему Windows-компьютеру. LV05.
+
+Дата доступа — 03.10.2026. Источники с будущей относительно этой даты публикацией не использованы. У страниц main/current без pinned SHA дата доступа не означает неизменяемую версию. Перед реализацией фиксировать commit/model revision и license hash.
+
+3. АРХИТЕКТУРА ГОЛОСОВОГО WINDOWS-ПРИЛОЖЕНИЯ
+
+Рекомендуемый pipeline (наше проектное предложение):
+микрофон → VAD/ASR → черновая и финальная транскрипции → явная цель → локальный поиск доказательств → Laya выбирает известный recipe/необходимое уточнение → planner/coding LLM при отсутствии рецепта → типизированный план → executor → независимые проверки → результат и сохранение опыта.
+
+Транскрипция и запись исполнения — разные артефакты: сохранить audio/source ID, временные отметки, ASR/model revision, raw_text, исправле

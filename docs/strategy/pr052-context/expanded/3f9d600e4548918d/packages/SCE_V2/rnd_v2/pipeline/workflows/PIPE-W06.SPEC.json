@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W06",
+  "name_ru": "Replay качества и скорости после обновления",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-18"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "freeze",
+      "operation": "benchmark.freeze_corpus_and_environment",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "baseline",
+      "operation": "benchmark.run_baseline",
+      "depends_on": [
+        "freeze"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "candidate",
+      "operation": "benchmark.run_candidate",
+      "depends_on": [
+        "freeze"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "compare",
+      "operation": "benchmark.compare_metrics",
+      "depends_on": [
+        "baseline",
+        "candidate"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "report",
+      "operation": "benchmark.write_regression_report",
+      "depends_on": [
+        "compare"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "raw_receipts_present AND all_missing_runs_marked_NOT_RUN",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    }
+  ],
+  "invariants": [
+    "Use held-out cases with unknown intents, noisy RU/EN and incorrect quantities.",
+    "Record p50/p95, correctness and interruption recovery, not only tokens/second.",
+    "Performance target is configured after baseline, not asserted as measured."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}

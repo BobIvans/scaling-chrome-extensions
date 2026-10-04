@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF14",
+  "name": "slippage_stress",
+  "title_ru": "Slippage, liquidity и adverse timing",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "fees_and_costs",
+    "pinned_fork"
+  ],
+  "inputs": [
+    "stress_grid",
+    "liquidity_states"
+  ],
+  "steps": [
+    {
+      "id": "slippage_stress.1",
+      "handler": "PROPOSED.slippage_stress.1",
+      "instruction": "Sweep liquidity/price movement/latency/fee shocks with immutable scenario ids"
+    },
+    {
+      "id": "slippage_stress.2",
+      "handler": "PROPOSED.slippage_stress.2",
+      "instruction": "Separate invalid scenarios from adverse valid outcomes"
+    },
+    {
+      "id": "slippage_stress.3",
+      "handler": "PROPOSED.slippage_stress.3",
+      "instruction": "Preserve worst-case failure and all accepted candidate cost computations"
+    }
+  ],
+  "outputs": [
+    "stress_surface",
+    "economics_samples.v1"
+  ],
+  "qualification_criteria": [
+    "No acceptance outside reviewed risk envelope; thresholds are configuration"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

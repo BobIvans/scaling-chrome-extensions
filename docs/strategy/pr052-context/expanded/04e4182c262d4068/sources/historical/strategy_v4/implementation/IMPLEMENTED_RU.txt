@@ -1,0 +1,42 @@
+РЕАЛИЗОВАННЫЙ ЛОКАЛЬНЫЙ СРЕЗ V4
+
+Исходный main SCE: da6abf4c006e4e7d26fe45ef30fa9d07a356f396.
+Новый локальный commit: 5574ab768b39605d4631651a1e8f2451483344db.
+15 файлов, +2412 / -6 строк. Это объём изменения, не число функций.
+
+Добавлено:
+• постоянная задача с точным goal/scope/criteria;
+• неизменяемый TASK с source SHA, declared gaps и JSON-шаблоном ответа;
+• ручные состояния READY/PREPARED/TRANSFER_PENDING/NEEDS_RECONCILIATION/
+  DELIVERY_REPORTED/CANCELLED и устойчивые ключи повторения;
+• reconciliation исхода после отмены без возобновления отправки;
+• импорт ответа, связанного с task/session/packet, без доверия к DONE;
+• revalidation зарегистрированных локальных тестов по фактическому patch tree;
+• отдельные состояния source freshness, coverage, delivery и local evidence;
+• task-list с пагинацией, восстановление UI и отброс устаревших ответов;
+• native commands и installer dependencies;
+• CLI для больших ответов до 128 000 bytes.
+
+Использованы прежние SQLite/review/Core владельцы. Scanned source не импортируется
+как программа. Только синтетические fixture jobs запускали заранее заданные тесты.
+
+Проверки: Content Lab 207; native bridge 49; qualification adapter 8;
+extension 117. Всего 381 PASS / 0 FAIL. В их числе реальные native subprocess
+и UI→NativeClient→JobHost→Python→SQLite roundtrips. Независимый review обнаружил
+и помог исправить partial-code blocker, timeout amplification, cancel recovery,
+большой импорт и UTF-8 preflight. Установленный Chrome/Windows этим не проверен.
+
+На чистом текущем SCE snapshot: 157/157 entries INDEXED, 8 страниц scan;
+реальный JavaScript TASK 10 526 bytes сохраняет gap, source_fresh=true,
+context_complete=false. Это проверка текущего источника, не заявление о whole-repo
+передаче в AI. Отправок провайдеру было 0.
+
+Публикация: автоматическая проверка отклонила push нового кода в GitHub,
+поскольку нет явного разрешения на раскрытие кода этому внешнему назначению.
+Push не выполнен, PR не создан, remote CI не запущен. Код остаётся reviewable
+в локальном checkout и отдельном patch; machine-readable SHA — STATUS.json.
+
+Незавершённое:
+реальный Grok tab adapter, UI send/receipt/extraction, GitHub merge observer,
+release updater, device qualification, voice/Laya runtime, production parallel
+scheduler, универсальное управление PC. Их подробные задачи находятся в V4.

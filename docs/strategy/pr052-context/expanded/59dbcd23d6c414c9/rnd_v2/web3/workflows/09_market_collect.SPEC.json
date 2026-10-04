@@ -1,0 +1,48 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF09",
+  "name": "market_collect",
+  "title_ru": "Сбор рыночных данных без подписи",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "explicitly_configured_read_only_watch"
+  ],
+  "depends_on": [],
+  "inputs": [
+    "read_only_provider_scope",
+    "asset_universe",
+    "retention_policy"
+  ],
+  "steps": [
+    {
+      "id": "market_collect.1",
+      "handler": "PROPOSED.market_collect.1",
+      "instruction": "Collect selected RPC/API/subscription observations into append-only raw files"
+    },
+    {
+      "id": "market_collect.2",
+      "handler": "PROPOSED.market_collect.2",
+      "instruction": "Preserve request id, network, time, anchor, provider id/version, raw response hash"
+    },
+    {
+      "id": "market_collect.3",
+      "handler": "PROPOSED.market_collect.3",
+      "instruction": "Resume cursor and explicitly log gaps/throttling/provider errors"
+    }
+  ],
+  "outputs": [
+    "raw_market_manifest",
+    "collection_receipt"
+  ],
+  "qualification_criteria": [
+    "No signing/send method in collector capabilities; completeness/gaps explicit"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

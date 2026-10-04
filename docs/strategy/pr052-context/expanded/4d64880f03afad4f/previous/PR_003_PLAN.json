@@ -1,0 +1,155 @@
+{
+  "schema": "roadmap.pr-input.v1",
+  "package_id": "ROADMAP-PR-003",
+  "created_date": "2026-10-04",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "local_sequence": 3,
+  "github_pr_number": null,
+  "github_pr_url": null,
+  "status": "PREPARED_IMPLEMENTATION_BRIEF",
+  "application_code_changed": false,
+  "current_head_verified": false,
+  "current_head": null,
+  "estimate_minutes": 60,
+  "estimate_is_guarantee": false,
+  "historical_archived_source_sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+  "historical_reference_local_v4_sha": "5574ab768b39605d4631651a1e8f2451483344db",
+  "selected_task_ids": [
+    "LAYA4-010"
+  ],
+  "prerequisite_task_ids": [
+    "LAYA4-009"
+  ],
+  "source_milestone": "M5-02",
+  "milestone_closed_by_this_package": false,
+  "pr002_file_observed": true,
+  "pr002_actual_implementation_observed": false,
+  "execution_route": "FOREGROUND_CLI",
+  "new_runtime": false,
+  "new_database": false,
+  "new_background_scheduler": false,
+  "native_endpoint_changed": false,
+  "required_scope": [
+    "all captured indexed payload bytes",
+    "atomic part stage",
+    "hash-checked explicit resume",
+    "static paged offline source↔part index",
+    "verified ZIP64 + external receipt"
+  ],
+  "deferred_scope": [
+    "desktop/native start orchestration",
+    "zip-byte-offset resume",
+    "streaming Git inventory",
+    "new format extraction",
+    "semantic grouping/JS resolver",
+    "Grok/voice/Web3 actions"
+  ],
+  "tasks": [
+    {
+      "id": "P003-01",
+      "title": "Actual №2 contract / owner preflight",
+      "budget_minutes": 5,
+      "depends_on": [],
+      "deliverables": [
+        "observed SHA/AGENTS/CI",
+        "profile/snapshot/batch mapping"
+      ],
+      "source_task_ids": [
+        "LAYA4-010"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P003-02",
+      "title": "Streaming raw stage и atomic part publication",
+      "budget_minutes": 15,
+      "depends_on": [
+        "P003-01"
+      ],
+      "deliverables": [
+        "exact captured payloads",
+        "generated paths + stage hash validation"
+      ],
+      "source_task_ids": [
+        "LAYA4-010"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P003-03",
+      "title": "Process lock, checkpoint, resume/status",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P003-02"
+      ],
+      "deliverables": [
+        "one writer",
+        "explicit resume and cancel tombstone",
+        "disk-full counts"
+      ],
+      "source_task_ids": [
+        "LAYA4-010"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P003-04",
+      "title": "Offline index, ZIP64, verification и publish",
+      "budget_minutes": 12,
+      "depends_on": [
+        "P003-03"
+      ],
+      "deliverables": [
+        "source↔part pages",
+        "verified full ZIP + external sidecars"
+      ],
+      "source_task_ids": [
+        "LAYA4-010"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P003-05",
+      "title": "Real integration/fault/regression evidence",
+      "budget_minutes": 13,
+      "depends_on": [
+        "P003-04"
+      ],
+      "deliverables": [
+        "actual DB/CLI tests",
+        "fault windows",
+        "legacy compatibility"
+      ],
+      "source_task_ids": [
+        "LAYA4-010"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P003-06",
+      "title": "Required gates и handoff",
+      "budget_minutes": 5,
+      "depends_on": [
+        "P003-05"
+      ],
+      "deliverables": [
+        "coherent diff + PR description",
+        "actual result receipt",
+        "unmet broad gates"
+      ],
+      "source_task_ids": [
+        "LAYA4-010"
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "completion_rule": "Actual coherent required slice + evidence; timer/fixture/old tests never mark runtime PASS.",
+  "artifact_paths": {
+    "prompt": "EXECUTE_THIS_PR_RU.txt",
+    "brief": "01_PR_003_IMPLEMENTATION_RU.md",
+    "navigation": "02_PARALLEL_CHAT_NAVIGATION_RU.md",
+    "contract": "contracts/EXPORT_CONTRACT.json",
+    "acceptance": "plan/ACCEPTANCE_CASES.json",
+    "result_template": "receipts/IMPLEMENTATION_RESULT_TEMPLATE.json"
+  }
+}

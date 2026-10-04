@@ -1,0 +1,14 @@
+{
+  "id": "ci_failure_pack",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "ingest_ci_logs",
+    "link_changed_files",
+    "link_tests",
+    "retrieve_pr",
+    "build_cart",
+    "compile_pack",
+    "create_fix_task"
+  ]
+}

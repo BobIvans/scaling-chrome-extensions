@@ -1,0 +1,247 @@
+{
+  "schema": "unified-implementation-plan/1",
+  "package_id": "ROADMAP-PR-014-015",
+  "aliases": [
+    "ROADMAP-PR-014",
+    "ROADMAP-PR-015"
+  ],
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "target_code_prs": 1,
+  "status": "SPEC_READY_FOR_CODE_AUDIT",
+  "application_code_changed": false,
+  "current_base_sha": null,
+  "external_prerequisite_packages": [
+    2,
+    3,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13
+  ],
+  "implementation_hours": null,
+  "estimate_note": "Not estimated from current code; package size does not determine wall-clock hours",
+  "workstream_ids": [
+    "WS-013",
+    "WS-014",
+    "WS-015",
+    "WS-016",
+    "WS-017"
+  ],
+  "ids": {
+    "source_task_ids": [
+      "ACTION5-01",
+      "ACTION5-02",
+      "ACTION5-03",
+      "ACTION5-12",
+      "ACTION5-13",
+      "ACTION5-14",
+      "ACTION5-15",
+      "ACTION5-16",
+      "ACTION5-17",
+      "ACTION5-18",
+      "ACTION5-19",
+      "ACTION5-21",
+      "EVO3-001",
+      "EVO3-003",
+      "EVO3-006",
+      "EVO3-014",
+      "EVO3-017",
+      "EVO3-019",
+      "EVO3-023",
+      "G3-001",
+      "G3-003",
+      "G3-004",
+      "G3-005",
+      "G3-006",
+      "LAYA4-001",
+      "LAYA4-017",
+      "LAYA4-018",
+      "LAYA4-019",
+      "LAYA4-020",
+      "LAYA4-021",
+      "LAYA4-025",
+      "LAYA4-027",
+      "PAR3-001",
+      "PAR3-003",
+      "PAR3-015",
+      "TAB4-01",
+      "TAB4-02",
+      "TAB4-05",
+      "TAB4-19",
+      "UI3-003",
+      "UI3-004",
+      "UI3-017"
+    ],
+    "feature_ids": [
+      "ACT-002",
+      "ACT-003",
+      "ACT-004",
+      "ACT-005",
+      "ACT-009",
+      "ACT-010",
+      "ACT-015",
+      "ACT-032",
+      "ACT-033",
+      "ACT-038",
+      "ACT-050",
+      "ACT-051",
+      "ACT-052",
+      "ACT-054",
+      "ACT-057",
+      "LIB-001",
+      "LIB-005",
+      "LIB-025",
+      "LIB-026",
+      "LIB-027",
+      "LIB-029",
+      "LIB-030",
+      "LIB-031",
+      "LIB-032",
+      "LIB-033",
+      "LIB-035",
+      "LIB-036",
+      "LIB-037",
+      "LIB-038",
+      "LIB-039",
+      "LIB-040",
+      "LIB-051",
+      "RND-011"
+    ],
+    "decision_ids": [
+      "DEC5-01",
+      "DEC5-02",
+      "DEC5-05",
+      "DEC5-10",
+      "DEC5-11",
+      "DEC5-12",
+      "DEC5-13",
+      "DEC5-14",
+      "DEC5-18",
+      "DEC5-19"
+    ],
+    "goal_ids": [
+      "GOAL5-01",
+      "GOAL5-04",
+      "GOAL5-08",
+      "GOAL5-09",
+      "GOAL5-11",
+      "GOAL5-12",
+      "GOAL5-15",
+      "GOAL5-16",
+      "GOAL5-17",
+      "GOAL5-19",
+      "GOAL5-23",
+      "GOAL5-28"
+    ]
+  },
+  "stages": [
+    {
+      "id": "S0",
+      "title": "Owner audit и common ABI",
+      "requires": [],
+      "workstreams": [
+        "WS-013",
+        "WS-014",
+        "WS-015",
+        "WS-016",
+        "WS-017"
+      ],
+      "status": "PLANNED",
+      "owner": "Existing owner, actual symbol TBD at S0",
+      "receipt_required": true
+    },
+    {
+      "id": "S1",
+      "title": "Packet / projection / result / NEED_CONTEXT",
+      "requires": [
+        "S0"
+      ],
+      "workstreams": [
+        "WS-013"
+      ],
+      "status": "PLANNED",
+      "owner": "Existing owner, actual symbol TBD at S0",
+      "receipt_required": true
+    },
+    {
+      "id": "S2",
+      "title": "Backup / restore / retention / portable sync",
+      "requires": [
+        "S0"
+      ],
+      "workstreams": [
+        "WS-014"
+      ],
+      "status": "PLANNED",
+      "owner": "Existing owner, actual symbol TBD at S0",
+      "receipt_required": true
+    },
+    {
+      "id": "S3",
+      "title": "Temporal retrieval и independent corpus",
+      "requires": [
+        "S1",
+        "S2"
+      ],
+      "workstreams": [
+        "WS-015"
+      ],
+      "status": "PLANNED",
+      "owner": "Existing owner, actual symbol TBD at S0",
+      "receipt_required": true
+    },
+    {
+      "id": "S4",
+      "title": "Installer / IPC / canonical writes / UI",
+      "requires": [
+        "S1",
+        "S2",
+        "S3"
+      ],
+      "workstreams": [
+        "WS-016"
+      ],
+      "status": "PLANNED",
+      "owner": "Existing owner, actual symbol TBD at S0",
+      "receipt_required": true
+    },
+    {
+      "id": "S5",
+      "title": "Registry / templates / grants / STOP",
+      "requires": [
+        "S4"
+      ],
+      "workstreams": [
+        "WS-017"
+      ],
+      "status": "PLANNED",
+      "owner": "Existing owner, actual symbol TBD at S0",
+      "receipt_required": true
+    },
+    {
+      "id": "S6",
+      "title": "Integration / fault / Windows qualification",
+      "requires": [
+        "S1",
+        "S2",
+        "S3",
+        "S4",
+        "S5"
+      ],
+      "workstreams": [
+        "WS-013",
+        "WS-014",
+        "WS-015",
+        "WS-016",
+        "WS-017"
+      ],
+      "status": "PLANNED",
+      "owner": "Existing owner, actual symbol TBD at S0",
+      "receipt_required": true
+    }
+  ],
+  "source_preservation": "Full V5 catalogs and original roadmap ZIP included; historical master archive externally referenced by hash, not copied",
+  "completion": "Each scoped criterion independently verified; broad downstream criteria remain OPEN"
+}

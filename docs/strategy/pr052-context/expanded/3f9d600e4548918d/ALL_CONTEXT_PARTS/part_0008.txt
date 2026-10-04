@@ -1,0 +1,4665 @@
+t framework result file",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          },
+          {
+            "id": "branch_3",
+            "description": "approved CI job log download",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          }
+        ],
+        "verify_contract_ru": "Distinct source completeness, timestamp and run ID binding",
+        "materialization_contract_ru": "Не перезапускать исходную работу лишь ради получения логов",
+        "failure_injection_ru": "Один log source пуст, второй содержит error tail",
+        "join_policy": {
+          "cancel_after_first_result": false,
+          "preserve_late_evidence": true,
+          "allow_duplicate_external_effect": false
+        },
+        "safety": {
+          "external_writes_enabled": false,
+          "recording_consent_required": true,
+          "foreground_policy": "PER_RESOURCE_LEASE",
+          "live_trading": false
+        },
+        "native_laya_import_format": false,
+        "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+      }
+    },
+    {
+      "key": "VOICE_V3::WF-31",
+      "namespace": "VOICE_V3",
+      "source_path": "packages/VOICE_V3/04_WORKFLOWS/WF-31.json",
+      "original_id": "WF-31",
+      "title": "Продолжай работать, пока я пишу в Chrome",
+      "declared_status": "DESIGN_SPEC_NOT_EXECUTABLE",
+      "execution_in_this_consolidation": "NOT_RUN",
+      "native_laya_compatibility": "NOT_ESTABLISHED_BY_CONSOLIDATION",
+      "original_record": {
+        "schema_version": "voice-agentos.workflow/0.3",
+        "id": "WF-31",
+        "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+        "voice_or_text_example_ru": "Продолжай работать, пока я пишу в Chrome",
+        "parallel_mode": "PARTITIONED_INDEPENDENT_EFFECTS",
+        "branches": [
+          {
+            "id": "branch_1",
+            "description": "context reads and indexing",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          },
+          {
+            "id": "branch_2",
+            "description": "code proposals in worktrees",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          },
+          {
+            "id": "branch_3",
+            "description": "one paused GUI route awaiting lease",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          }
+        ],
+        "verify_contract_ru": "No focus theft and scoped output writes",
+        "materialization_contract_ru": "Foreground only with user lease; background routes продолжаются",
+        "failure_injection_ru": "Пользователь меняет active tab в середине GUI path",
+        "join_policy": {
+          "cancel_after_first_result": false,
+          "preserve_late_evidence": true,
+          "allow_duplicate_external_effect": false
+        },
+        "safety": {
+          "external_writes_enabled": false,
+          "recording_consent_required": true,
+          "foreground_policy": "PER_RESOURCE_LEASE",
+          "live_trading": false
+        },
+        "native_laya_import_format": false,
+        "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+      }
+    },
+    {
+      "key": "VOICE_V3::WF-32",
+      "namespace": "VOICE_V3",
+      "source_path": "packages/VOICE_V3/04_WORKFLOWS/WF-32.json",
+      "original_id": "WF-32",
+      "title": "Проверь пару research snapshots для web3",
+      "declared_status": "DESIGN_SPEC_NOT_EXECUTABLE",
+      "execution_in_this_consolidation": "NOT_RUN",
+      "native_laya_compatibility": "NOT_ESTABLISHED_BY_CONSOLIDATION",
+      "original_record": {
+        "schema_version": "voice-agentos.workflow/0.3",
+        "id": "WF-32",
+        "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+        "voice_or_text_example_ru": "Проверь пару research snapshots для web3",
+        "parallel_mode": "COMPLEMENTARY_UNION",
+        "branches": [
+          {
+            "id": "branch_1",
+            "description": "approved market data source A",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          },
+          {
+            "id": "branch_2",
+            "description": "independent read-only source B",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          },
+          {
+            "id": "branch_3",
+            "description": "local protocol version/capabilities evidence",
+            "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+            "enabled": false
+          }
+        ],
+        "verify_contract_ru": "Chain/state/time/slot/commitment semantics compatible; stale/unknown explicit",
+        "materialization_contract_ru": "Readonly research only; no transaction signing/submission",
+        "failure_injection_ru": "Быстрые ответы из разных моментов дают ложный edge",
+        "join_policy": {
+          "cancel_after_first_result": false,
+          "preserve_late_evidence": true,
+          "allow_duplicate_external_effect": false
+        },
+        "safety": {
+          "external_writes_enabled": false,
+          "recording_consent_required": true,
+          "foreground_policy": "PER_RESOURCE_LEASE",
+          "live_trading": false
+        },
+        "native_laya_import_format": false,
+        "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+      }
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 08778838ac6cc3632517060fbf11a6a5de89868cdc16519fd5707751ed4d75e9 | FIRST SOURCE 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json =====
+[
+  {
+    "id": "FUT-001",
+    "name": "attach_idea_source_span",
+    "title_ru": "Атлас идеи до результата: attach_idea_source_span",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-01"
+  },
+  {
+    "id": "FUT-002",
+    "name": "link_idea_to_outcome",
+    "title_ru": "Атлас идеи до результата: link_idea_to_outcome",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-01"
+  },
+  {
+    "id": "FUT-003",
+    "name": "diff_requirement_interpretations",
+    "title_ru": "Атлас идеи до результата: diff_requirement_interpretations",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-01"
+  },
+  {
+    "id": "FUT-004",
+    "name": "declare_required_context_slots",
+    "title_ru": "Планировщик недостающего контекста: declare_required_context_slots",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-02"
+  },
+  {
+    "id": "FUT-005",
+    "name": "plan_missing_source_acquisition",
+    "title_ru": "Планировщик недостающего контекста: plan_missing_source_acquisition",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-02"
+  },
+  {
+    "id": "FUT-006",
+    "name": "explain_packet_coverage",
+    "title_ru": "Планировщик недостающего контекста: explain_packet_coverage",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-02"
+  },
+  {
+    "id": "FUT-007",
+    "name": "fingerprint_goal_evidence",
+    "title_ru": "Снимки истинности целей: fingerprint_goal_evidence",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-03"
+  },
+  {
+    "id": "FUT-008",
+    "name": "invalidate_dependent_conclusions",
+    "title_ru": "Снимки истинности целей: invalidate_dependent_conclusions",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-03"
+  },
+  {
+    "id": "FUT-009",
+    "name": "explain_goal_truth_snapshot",
+    "title_ru": "Снимки истинности целей: explain_goal_truth_snapshot",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-03"
+  },
+  {
+    "id": "FUT-010",
+    "name": "append_producer_observation",
+    "title_ru": "Параллельная память наблюдений: append_producer_observation",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-04"
+  },
+  {
+    "id": "FUT-011",
+    "name": "reconcile_late_observations",
+    "title_ru": "Параллельная память наблюдений: reconcile_late_observations",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-04"
+  },
+  {
+    "id": "FUT-012",
+    "name": "render_conflicting_source_views",
+    "title_ru": "Параллельная память наблюдений: render_conflicting_source_views",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-04"
+  },
+  {
+    "id": "FUT-013",
+    "name": "register_verifier_failure_domain",
+    "title_ru": "Выбор действительно разных проверок: register_verifier_failure_domain",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-05"
+  },
+  {
+    "id": "FUT-014",
+    "name": "measure_marginal_evidence_gain",
+    "title_ru": "Выбор действительно разных проверок: measure_marginal_evidence_gain",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-05"
+  },
+  {
+    "id": "FUT-015",
+    "name": "choose_diverse_verifier_set",
+    "title_ru": "Выбор действительно разных проверок: choose_diverse_verifier_set",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-05"
+  },
+  {
+    "id": "FUT-016",
+    "name": "build_change_impact_atlas",
+    "title_ru": "Карта следующего изменения repo: build_change_impact_atlas",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-06"
+  },
+  {
+    "id": "FUT-017",
+    "name": "suggest_smallest_useful_patch",
+    "title_ru": "Карта следующего изменения repo: suggest_smallest_useful_patch",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-06"
+  },
+  {
+    "id": "FUT-018",
+    "name": "record_patch_goal_delta",
+    "title_ru": "Карта следующего изменения repo: record_patch_goal_delta",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-06"
+  },
+  {
+    "id": "FUT-019",
+    "name": "explain_label_proposal",
+    "title_ru": "Персональная мастерская тегов: explain_label_proposal",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-07"
+  },
+  {
+    "id": "FUT-020",
+    "name": "collect_label_correction",
+    "title_ru": "Персональная мастерская тегов: collect_label_correction",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-07"
+  },
+  {
+    "id": "FUT-021",
+    "name": "evaluate_personal_taxonomy_revision",
+    "title_ru": "Персональная мастерская тегов: evaluate_personal_taxonomy_revision",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-07"
+  },
+  {
+    "id": "FUT-022",
+    "name": "version_partial_intent",
+    "title_ru": "Разветвления голосовой цели: version_partial_intent",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-08"
+  },
+  {
+    "id": "FUT-023",
+    "name": "prefetch_for_candidate_goals",
+    "title_ru": "Разветвления голосовой цели: prefetch_for_candidate_goals",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-08"
+  },
+  {
+    "id": "FUT-024",
+    "name": "finalize_corrected_voice_mission",
+    "title_ru": "Разветвления голосовой цели: finalize_corrected_voice_mission",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-08"
+  },
+  {
+    "id": "FUT-025",
+    "name": "compile_verified_trace_recipe",
+    "title_ru": "Быстрый путь проверенного навыка: compile_verified_trace_recipe",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-09"
+  },
+  {
+    "id": "FUT-026",
+    "name": "check_recipe_precondition_revision",
+    "title_ru": "Быстрый путь проверенного навыка: check_recipe_precondition_revision",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-09"
+  },
+  {
+    "id": "FUT-027",
+    "name": "route_known_goal_to_fast_path",
+    "title_ru": "Быстрый путь проверенного навыка: route_known_goal_to_fast_path",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-09"
+  },
+  {
+    "id": "FUT-028",
+    "name": "rehearse_release_on_state_copy",
+    "title_ru": "Репетиция обновления приложения: rehearse_release_on_state_copy",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-10"
+  },
+  {
+    "id": "FUT-029",
+    "name": "compare_capability_contracts",
+    "title_ru": "Репетиция обновления приложения: compare_capability_contracts",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-10"
+  },
+  {
+    "id": "FUT-030",
+    "name": "verify_upgrade_rollback_pair",
+    "title_ru": "Репетиция обновления приложения: verify_upgrade_rollback_pair",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-10"
+  },
+  {
+    "id": "FUT-031",
+    "name": "capture_strategy_counterexample",
+    "title_ru": "Корпус опровержений web3-гипотез: capture_strategy_counterexample",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-11"
+  },
+  {
+    "id": "FUT-032",
+    "name": "minimize_reproducible_market_fixture",
+    "title_ru": "Корпус опровержений web3-гипотез: minimize_reproducible_market_fixture",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-11"
+  },
+  {
+    "id": "FUT-033",
+    "name": "replay_negative_qualification_corpus",
+    "title_ru": "Корпус опровержений web3-гипотез: replay_negative_qualification_corpus",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-11"
+  },
+  {
+    "id": "FUT-034",
+    "name": "build_resume_check_questions",
+    "title_ru": "Проверка продолжения новым чатом: build_resume_check_questions",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-12"
+  },
+  {
+    "id": "FUT-035",
+    "name": "verify_handoff_understanding",
+    "title_ru": "Проверка продолжения новым чатом: verify_handoff_understanding",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-12"
+  },
+  {
+    "id": "FUT-036",
+    "name": "append_next_chat_decision_receipt",
+    "title_ru": "Проверка продолжения новым чатом: append_next_chat_decision_receipt",
+    "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+    "author": "assistant",
+    "rnd_id": "AI-RND-12"
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9f205c1268e71f46e526cb726308997ede927376a27613fb8f5f1a5416a4cc53 | FIRST SOURCE 03_CATALOGS/PREVIOUS_DEVELOPMENT_TASKS.json =====
+[
+  {
+    "key": "SCE_V2::D01",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/0",
+    "original_record": {
+      "id": "D01",
+      "priority": "P0",
+      "title_ru": "Desktop transport без обязательного Chrome",
+      "owner_candidates": "native_adapter.py + desktop adapter",
+      "acceptance": [
+        "Существующие services вызываются из desktop без регистрации extension ID"
+      ],
+      "reuses_previous_task": "SCE-NEXT-01",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D02",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/1",
+    "original_record": {
+      "id": "D02",
+      "priority": "P0",
+      "title_ru": "Lossless archive inventory и полные пути",
+      "owner_candidates": "content_lab.py + archive_source.py",
+      "acceptance": [
+        "4 MB/333+ entries, duplicate paths, binary и error ledger без пропусков"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D03",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/2",
+    "original_record": {
+      "id": "D03",
+      "priority": "P0",
+      "title_ru": "Миграция в один canonical store",
+      "owner_candidates": "automation_core.py + migrations",
+      "acceptance": [
+        "Backup, ID map, counts/hashes, rollback; нет двух queue owners"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D04",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/3",
+    "original_record": {
+      "id": "D04",
+      "priority": "P0",
+      "title_ru": "Полный numbered TXT и originals export",
+      "owner_candidates": "context_handoff.py",
+      "acceptance": [
+        "Все entries accounted; chunk spans, UTF-8, hashes, omissions"
+      ],
+      "reuses_previous_task": "SCE-NEXT-04",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D05",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/4",
+    "original_record": {
+      "id": "D05",
+      "priority": "P0",
+      "title_ru": "Токенизатор и provider-aware pack",
+      "owner_candidates": "context_handoff.py",
+      "acceptance": [
+        "Exact tokenizer version; output/reasoning reserve; никаких silent truncations"
+      ],
+      "reuses_previous_task": "SCE-NEXT-05",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D06",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/5",
+    "original_record": {
+      "id": "D06",
+      "priority": "P0",
+      "title_ru": "Импорт user/assistant всех веток chat export",
+      "owner_candidates": "content_lab.py",
+      "acceptance": [
+        "IDs/roles/parent/time/nontext inventory; идемпотентность"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D07",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/6",
+    "original_record": {
+      "id": "D07",
+      "priority": "P0",
+      "title_ru": "Goal/decision/requirement graph",
+      "owner_candidates": "context_review.py + memory tables",
+      "acceptance": [
+        "User requirement отдельно от assistant proposal; source spans; supersedes"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D08",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/7",
+    "original_record": {
+      "id": "D08",
+      "priority": "P0",
+      "title_ru": "Context Cart",
+      "owner_candidates": "desktop UI + handoff",
+      "acceptance": [
+        "Код+deps+tests+docs+history; why selected; missing context"
+      ],
+      "reuses_previous_task": "SCE-NEXT-05",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D09",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/8",
+    "original_record": {
+      "id": "D09",
+      "priority": "P0",
+      "title_ru": "Python + JS/TS AST dependency context",
+      "owner_candidates": "repo_source.py",
+      "acceptance": [
+        "Сохранить Python parser; JS/TS imports; unresolved edges; SCC"
+      ],
+      "reuses_previous_task": "SCE-NEXT-02",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D10",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/9",
+    "original_record": {
+      "id": "D10",
+      "priority": "P0",
+      "title_ru": "Review coverage ledger",
+      "owner_candidates": "context_review.py",
+      "acceptance": [
+        "Request/source hashes, chunks reviewed, stale invalidation"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D11",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/10",
+    "original_record": {
+      "id": "D11",
+      "priority": "P0",
+      "title_ru": "Requirement→code→test evidence",
+      "owner_candidates": "context_review.py + verifier registry",
+      "acceptance": [
+        "TRUE только с criterion receipt на нужном SHA; UNKNOWN при gaps"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D12",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/11",
+    "original_record": {
+      "id": "D12",
+      "priority": "P1",
+      "title_ru": "OpenAI Responses adapter",
+      "owner_candidates": "provider adapter",
+      "acceptance": [
+        "Explicit selected context; response hash; error/incomplete; no retry unknown"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D13",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/12",
+    "original_record": {
+      "id": "D13",
+      "priority": "P1",
+      "title_ru": "Typed library tools для AI",
+      "owner_candidates": "tool registry",
+      "acceptance": [
+        "search/read/build_pack/create_note с version checks и audit"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D14",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/13",
+    "original_record": {
+      "id": "D14",
+      "priority": "P1",
+      "title_ru": "VS Code и terminal workspace bridge",
+      "owner_candidates": "desktop + executor",
+      "acceptance": [
+        "cwd/argv без shell interpolation; exact worktree; user controls"
+      ],
+      "reuses_previous_task": "SCE-NEXT-10",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROTOTYPE_PARTIAL",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D15",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/14",
+    "original_record": {
+      "id": "D15",
+      "priority": "P1",
+      "title_ru": "Static smells и duplicate owners",
+      "owner_candidates": "repo analysis",
+      "acceptance": [
+        "Candidate→source→reproducer; файлы не удаляются по similarity"
+      ],
+      "reuses_previous_task": "SCE-NEXT-02",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D16",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/15",
+    "original_record": {
+      "id": "D16",
+      "priority": "P1",
+      "title_ru": "Git/PR archaeology",
+      "owner_candidates": "repo metadata adapters",
+      "acceptance": [
+        "Closed PR/abandoned branches отдельно от current code; exact refs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D04",
+        "D10"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D17",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/16",
+    "original_record": {
+      "id": "D17",
+      "priority": "P1",
+      "title_ru": "Laya real inference adapter",
+      "owner_candidates": "occ_proposal.py + laya adapter",
+      "acceptance": [
+        "Pinned model/runtime, RU cases, truncation/abstention visible"
+      ],
+      "reuses_previous_task": "SCE-NEXT-16",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D18",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/17",
+    "original_record": {
+      "id": "D18",
+      "priority": "P1",
+      "title_ru": "Laya quality/cost benchmark",
+      "owner_candidates": "evaluation harness",
+      "acceptance": [
+        "Held-out routing, false TRUE, p95 RAM/latency; rules baseline"
+      ],
+      "reuses_previous_task": "SCE-NEXT-13",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D19",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/18",
+    "original_record": {
+      "id": "D19",
+      "priority": "P1",
+      "title_ru": "Replay/resume job orchestration",
+      "owner_candidates": "automation_core.py",
+      "acceptance": [
+        "Stable task keys, retry effects reconciliation, no duplicate mutation"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D20",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/19",
+    "original_record": {
+      "id": "D20",
+      "priority": "P1",
+      "title_ru": "Read-only MCP library access",
+      "owner_candidates": "local IPC + tools",
+      "acceptance": [
+        "Scoped IDs, pagination, full cursor completion, no arbitrary fs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D21",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/20",
+    "original_record": {
+      "id": "D21",
+      "priority": "P1",
+      "title_ru": "Windows installer/device qualification",
+      "owner_candidates": "desktop packaging",
+      "acceptance": [
+        "Clean Dell install/update/uninstall; data survive; signed release plan"
+      ],
+      "reuses_previous_task": "SCE-NEXT-01",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D22",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/21",
+    "original_record": {
+      "id": "D22",
+      "priority": "P1",
+      "title_ru": "Block notes и представления",
+      "owner_candidates": "desktop editor",
+      "acceptance": [
+        "Ссылки на source; notes separate from originals; revision restore"
+      ],
+      "reuses_previous_task": "SCE-NEXT-06",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D23",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/22",
+    "original_record": {
+      "id": "D23",
+      "priority": "P1",
+      "title_ru": "PDF/Office/HTML extraction adapters",
+      "owner_candidates": "content_lab.py",
+      "acceptance": [
+        "Original preserved; tables/pages/format limits explicit; parser versions"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D24",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/23",
+    "original_record": {
+      "id": "D24",
+      "priority": "P1",
+      "title_ru": "Encoding/large JSON/archive streaming",
+      "owner_candidates": "intake adapters",
+      "acceptance": [
+        "Encoding operator choice; recursive inventory; bounded RAM not cap on corpus"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D25",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/24",
+    "original_record": {
+      "id": "D25",
+      "priority": "P1",
+      "title_ru": "Memory export/backup/restore",
+      "owner_candidates": "store services",
+      "acceptance": [
+        "SQLite online backup + blob manifest; hash checked restore"
+      ],
+      "reuses_previous_task": "SCE-NEXT-03",
+      "depends_on": [
+        "D03"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D26",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/25",
+    "original_record": {
+      "id": "D26",
+      "priority": "P1",
+      "title_ru": "Paper qualification bridge",
+      "owner_candidates": "SCE bridge + studious owner",
+      "acceptance": [
+        "Current contract/SHA, real receipts, no live authority inherited"
+      ],
+      "reuses_previous_task": "SCE-NEXT-07",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D27",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/26",
+    "original_record": {
+      "id": "D27",
+      "priority": "P2",
+      "title_ru": "Paper bot supervisor",
+      "owner_candidates": "studious runtime adapter",
+      "acceptance": [
+        "Start/status/stop, stale data, logs/reconcile, operator config"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D28",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/27",
+    "original_record": {
+      "id": "D28",
+      "priority": "P2",
+      "title_ru": "Web3 data and experiment library",
+      "owner_candidates": "research adapters",
+      "acceptance": [
+        "Raw observations/slots/units; hypotheses→datasets→receipts"
+      ],
+      "reuses_previous_task": "SCE-NEXT-14",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D29",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/28",
+    "original_record": {
+      "id": "D29",
+      "priority": "P2",
+      "title_ru": "Voice intent → same TaskSpec",
+      "owner_candidates": "ASR + goal owner",
+      "acceptance": [
+        "RU names/numbers/negation; final only; STOP discard late results"
+      ],
+      "reuses_previous_task": "SCE-NEXT-09",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D30",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/29",
+    "original_record": {
+      "id": "D30",
+      "priority": "P2",
+      "title_ru": "Authorised web/Telegram/research connectors",
+      "owner_candidates": "source registry",
+      "acceptance": [
+        "Per-source watermark/cursor/rate policies; no fake completeness"
+      ],
+      "reuses_previous_task": "SCE-NEXT-14",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D31",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/30",
+    "original_record": {
+      "id": "D31",
+      "priority": "P2",
+      "title_ru": "Event-driven incremental rebuild",
+      "owner_candidates": "queue + dependency invalidation",
+      "acceptance": [
+        "Changed blob only; affected packs stale; no endless unchanged loop"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D32",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/31",
+    "original_record": {
+      "id": "D32",
+      "priority": "P2",
+      "title_ru": "Reusable recipes from verified runs",
+      "owner_candidates": "skill registry",
+      "acceptance": [
+        "Versioned inputs/verifier/rollback, tested before registration"
+      ],
+      "reuses_previous_task": "SCE-NEXT-11",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D33",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/32",
+    "original_record": {
+      "id": "D33",
+      "priority": "P2",
+      "title_ru": "Adaptive goal UI",
+      "owner_candidates": "desktop schema renderer",
+      "acceptance": [
+        "Buttons reference registered actions; model cannot invent executable IDs"
+      ],
+      "reuses_previous_task": "SCE-NEXT-11",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D34",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/33",
+    "original_record": {
+      "id": "D34",
+      "priority": "P2",
+      "title_ru": "Optional sync and collaboration",
+      "owner_candidates": "sync adapter",
+      "acceptance": [
+        "Conflict/revision tests; source-level sharing; local offline still works"
+      ],
+      "reuses_previous_task": "SCE-NEXT-08",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D35",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/34",
+    "original_record": {
+      "id": "D35",
+      "priority": "P2",
+      "title_ru": "Read-only parallel workers, one writer",
+      "owner_candidates": "scheduler",
+      "acceptance": [
+        "Resource budget/RAM backpressure; cancellation; deterministic receipts"
+      ],
+      "reuses_previous_task": "SCE-NEXT-12",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_V2::D36",
+    "source_path": "packages/SCE_V2/ROADMAP.json",
+    "json_pointer": "/tasks/35",
+    "original_record": {
+      "id": "D36",
+      "priority": "P2",
+      "title_ru": "Model escalation and ROI dashboard",
+      "owner_candidates": "provider router + evals",
+      "acceptance": [
+        "Saved time/cost per verified task, no PR count proxy"
+      ],
+      "reuses_previous_task": "SCE-NEXT-13",
+      "depends_on": [
+        "D01"
+      ],
+      "status": "PROPOSED",
+      "windows_verified": false,
+      "github_pr_number": null,
+      "prototype_is_not_production_implementation": true
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-01",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/0",
+    "original_record": {
+      "id": "SCE-NEXT-01",
+      "priority": "P0",
+      "title": "Проверить установленный путь от задачи до отчёта",
+      "owners": [
+        "agent-bridge/Install.ps1",
+        "content-lab/native_adapter.py",
+        "content-lab/review_report.py",
+        "one-click-context/library/repo-review-ui.mjs"
+      ],
+      "depends": [],
+      "value": "Получить первый достоверный результат на пользовательском Windows ПК и найти реальные разрывы установки.",
+      "acceptance": [
+        "На установленном Chrome экспортировать связанный handoff, вернуть review, создать отчёт через existing worker и проверить байты.",
+        "STOP, reconnect и повтор task key не создают второй результат.",
+        "Неправильный или отсутствующий файл отображается как FAILED/BLOCKED с next step; сохранить device receipt."
+      ],
+      "metric": "Доля успешных задач на устройстве и минуты до проверенного отчёта",
+      "status": "DEVICE_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-02",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/1",
+    "original_record": {
+      "id": "SCE-NEXT-02",
+      "priority": "P0",
+      "title": "Завершить выбранные JS и TS зависимости",
+      "owners": [
+        "content-lab/repo_context.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [],
+      "value": "Снять подтверждённый JS_DEPENDENCIES_NOT_PARSED для review кода Chrome расширения.",
+      "acceptance": [
+        "Разбирать статические import/export/re-export закреплённым AST parser и версией resolver.",
+        "Поддержать .js/.mjs/.ts и локальные относительные imports; aliases/config явно описать профилем.",
+        "Dynamic/external/ambiguous edges остаются gaps; изменение dependency делает review stale.",
+        "Не заявлять полный runtime call graph и не игнорировать неполноту."
+      ],
+      "metric": "Доля выбранных code review задач с достаточной closure",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-03",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/2",
+    "original_record": {
+      "id": "SCE-NEXT-03",
+      "priority": "P0",
+      "title": "Реестр подключённых источников и инкрементальный импорт",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/content.js"
+      ],
+      "depends": [],
+      "value": "Перестать повторно собирать одинаковые архивы и путать видимый чат со всей историей.",
+      "acceptance": [
+        "Начать с одного реального ChatGPT JSON/HTML export и выбранной папки документов.",
+        "Стабильные source/message IDs, content hash, версии, deleted/tombstone, checkpoint и coverage.",
+        "Повторный импорт не удваивает записи; прерванный продолжается; parser failures видны.",
+        "Grok/Telegram/почта добавляются отдельными adapters после доступных примеров и проверки доступа."
+      ],
+      "metric": "Минуты ручного сбора и доля источников с известным покрытием",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-04",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/3",
+    "original_record": {
+      "id": "SCE-NEXT-04",
+      "priority": "P0",
+      "title": "Единая спецификация запроса и компилятор документов",
+      "owners": [
+        "one-click-context/library/goal-normalizer.mjs",
+        "content-lab/context_review.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03"
+      ],
+      "value": "Один текстовый запрос создаёт понятное любому AI задание с источниками и проверками.",
+      "acceptance": [
+        "Сохранить verbatim request, goal version, scope, ограничения, acceptance, authority и бюджет.",
+        "Режимы выполнить / подготовить сценарий / подготовить ТЗ используют одну TaskSpec.",
+        "Создавать TXT, DOCX и manifest из одного snapshot; generic contract адаптировать к existing V4/V5.",
+        "Нельзя объявлять пропущенный источник прочитанным; scope/goal/revision drift отклоняет ответ."
+      ],
+      "metric": "Время от запроса до пригодного задания и число уточнений AI",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-05",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/4",
+    "original_record": {
+      "id": "SCE-NEXT-05",
+      "priority": "P0",
+      "title": "Адресный поиск и запрос недостающего контекста",
+      "owners": [
+        "content-lab/repo_context.py",
+        "content-lab/context_handoff.py",
+        "content-lab/occ_v5/context.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03",
+        "SCE-NEXT-04"
+      ],
+      "value": "Давать модели нужные доказательства вместо всей жизни и всех ZIP.",
+      "acceptance": [
+        "FTS + project/time/type filters + source expansion; точные spans и omissions.",
+        "NEXT_CONTEXT_REQUEST указывает конкретный источник, зачем он нужен и бюджет.",
+        "Лимит rounds/bytes; повтор без нового evidence заканчивается BLOCKED.",
+        "Сводки сохраняют ссылки на originals; модель получает возможность дозагрузки."
+      ],
+      "metric": "Recall доказательств при фиксированном бюджете и доля закрытых gaps",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-06",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/5",
+    "original_record": {
+      "id": "SCE-NEXT-06",
+      "priority": "P0",
+      "title": "Проверяемая память целей и решений",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/context_review.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03"
+      ],
+      "value": "Команда продолжить проект восстанавливает реальные решения и незавершённую работу.",
+      "acceptance": [
+        "Goal → decision → task → function → PR → receipt связать stable IDs в existing SQLite.",
+        "Отделять user instruction, source observation, model proposal и verified result.",
+        "Хранить valid_from/valid_to, supersedes, conflicts и исходные spans; старое решение не выигрывает автоматически.",
+        "Явное исправление предпочтения и forget исключают производные записи из retrieval."
+      ],
+      "metric": "Точность ответов что решили и что ещё не сделано",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-07",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/6",
+    "original_record": {
+      "id": "SCE-NEXT-07",
+      "priority": "P0",
+      "title": "Независимые проверки результата и восстановление",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/review_report.py",
+        "content-lab/context_review.py"
+      ],
+      "depends": [
+        "SCE-NEXT-01"
+      ],
+      "value": "Преобразовать успех модели или exit code в проверенный результат каждого типа действия.",
+      "acceptance": [
+        "Registered verifier получает action version, request binding и actual observation.",
+        "Отдельные checks для файла, структурированного результата, Git/CI и UI postcondition.",
+        "Неизвестный эффект после crash означает reconcile до retry.",
+        "Receipt различает PASSED/FAILED/UNKNOWN/BLOCKED/NOT_RUN и доступен в UI."
+      ],
+      "metric": "Ложные SUCCESS и доля recovery без повторного эффекта",
+      "status": "PARTIAL_EXISTING"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-08",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/7",
+    "original_record": {
+      "id": "SCE-NEXT-08",
+      "priority": "P1",
+      "title": "Переносимый цикл работы с несколькими AI",
+      "owners": [
+        "content-lab/context_handoff.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/library/repo-review-ui.mjs"
+      ],
+      "depends": [
+        "SCE-NEXT-04",
+        "SCE-NEXT-05",
+        "SCE-NEXT-07"
+      ],
+      "value": "Продолжать ту же задачу в ChatGPT/Grok/Claude без потери состояния.",
+      "acceptance": [
+        "Сначала export/manual import; затем отдельный официальный API adapter и read-only MCP.",
+        "Capability profile каждого adapter: input formats, tools, context budget, auth, cost, citations.",
+        "Одинаковый response envelope и import с request/snapshot binding.",
+        "Выбор другого провайдера не расширяет права и не переносит секреты в документы."
+      ],
+      "metric": "Доля успешно импортируемых ответов и цена проверенной задачи",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-09",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/8",
+    "original_record": {
+      "id": "SCE-NEXT-09",
+      "priority": "P1",
+      "title": "Настоящий голосовой ввод в общий goal",
+      "owners": [
+        "one-click-context/library/voice-preview.mjs",
+        "one-click-context/library/goal-normalizer.mjs",
+        "content-lab/asr_cpu_experiment.py"
+      ],
+      "depends": [
+        "SCE-NEXT-01",
+        "SCE-NEXT-04"
+      ],
+      "value": "Говорить задачу и корректировать её без отдельного голосового планировщика.",
+      "acceptance": [
+        "Один local ASR worker; final transcript редактируемый; dictation и command различаются.",
+        "STOP/goal epoch отбрасывают поздний transcript; partial не запускает действия.",
+        "На Dell измерить RU/EN latency p50/p95, RAM и ошибки чисел/отрицаний.",
+        "Проверить реальный микрофон и доступность controls; Qwen/Laya не обязательны."
+      ],
+      "metric": "Минуты до корректной задачи и ошибки смысла транскрипции",
+      "status": "DEVICE_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-10",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/9",
+    "original_record": {
+      "id": "SCE-NEXT-10",
+      "priority": "P1",
+      "title": "Один проверяемый сценарий Windows UIA и DOM",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-01",
+        "SCE-NEXT-07"
+      ],
+      "value": "Начать реальное управление PC с измеримого сохранения документа.",
+      "acceptance": [
+        "Выбранные PID/window/control или tab/origin/frame bind к действию.",
+        "Пример: открыть выбранный editor, вставить заданный текст, сохранить в заданную папку, readback.",
+        "Смена target, неоднозначный selector или STOP блокирует следующие steps.",
+        "DOM/UIA/API предпочтительны; OCR fallback только с explicit target и independent check."
+      ],
+      "metric": "Доля повторов сценария без ручной коррекции",
+      "status": "DEVICE_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-11",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/10",
+    "original_record": {
+      "id": "SCE-NEXT-11",
+      "priority": "P1",
+      "title": "Рецепты и создание новых функций из задачи",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/context_handoff.py",
+        "content-lab/schedule_supervisor.py"
+      ],
+      "depends": [
+        "SCE-NEXT-07",
+        "SCE-NEXT-10"
+      ],
+      "value": "Один успешно исполненный сценарий становится повторяемым навыком.",
+      "acceptance": [
+        "Recipe содержит typed parameters, version, capabilities, preconditions, verifier и effect class.",
+        "Сначала обнаружить existing owner; иначе создать точное ТЗ и staging change.",
+        "Reproducer/focused tests/device canary предшествуют регистрации; rollback версии.",
+        "Запрос новых функций и данные источников не исполняются как shell-команды."
+      ],
+      "metric": "Частота повторного использования и минуты коррекции на запуск",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-12",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/11",
+    "original_record": {
+      "id": "SCE-NEXT-12",
+      "priority": "P1",
+      "title": "Панель открытых задач и событийное продолжение",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/schedule_supervisor.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-06",
+        "SCE-NEXT-07",
+        "SCE-NEXT-11"
+      ],
+      "value": "Не терять задачу при перезапуске, CI blocker или появлении нового файла.",
+      "acceptance": [
+        "Текущие выполнено/blocked/next evidence привязаны к receipts и goal version.",
+        "New-source/CI/file triggers используют existing queue, stop/budget и дедупликацию.",
+        "Нет бесконечного повторения без прогресса; 24/7 требует реально работающего host.",
+        "Проверить restart и гонку двух triggers на одной task."
+      ],
+      "metric": "Закрытые open loops за неделю и ручные напоминания",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-13",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/12",
+    "original_record": {
+      "id": "SCE-NEXT-13",
+      "priority": "P1",
+      "title": "Оценка отдачи и выбор модели на реальных задачах",
+      "owners": [
+        "content-lab/context_review.py",
+        "docs/automation/runs"
+      ],
+      "depends": [
+        "SCE-NEXT-04",
+        "SCE-NEXT-07",
+        "SCE-NEXT-08"
+      ],
+      "value": "Выбирать архитектуру по результатам вместо заявления самый умный агент.",
+      "acceptance": [
+        "30 замороженных задач: память 10, документы/код 10, повторяемые действия 10.",
+        "Одинаковые inputs, budget, acceptance; blinded checks, failures и corrections в итогах.",
+        "Baseline manual/current app; варианты FTS, retrieval, model, router сравнивать по одному изменению.",
+        "Стартовый planning gate: нет ложного SUCCESS в 30 кейсах; это не доказательство отсутствия риска вне выборки."
+      ],
+      "metric": "Чистое сэкономленное время и стоимость одного verified outcome",
+      "status": "EXPERIMENT_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-14",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/13",
+    "original_record": {
+      "id": "SCE-NEXT-14",
+      "priority": "P2",
+      "title": "Исследование X и web с превращением сигнала в эксперимент",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-05",
+        "SCE-NEXT-06",
+        "SCE-NEXT-13"
+      ],
+      "value": "Превращать новые идеи в проверяемый backlog по существующим целям.",
+      "acceptance": [
+        "Официальный/разрешённый источник, source URL/author/time/captured_at и query coverage.",
+        "X post → первичная документация/код → gap в current repo → гипотеза → эксперимент.",
+        "Дата/handles/source filters и watermark; архивы не называются свежим поиском.",
+        "Лайки не являются ROI; кандидат не включает новую функцию автоматически."
+      ],
+      "metric": "Verified полезные изменения на час исследования",
+      "status": "PROPOSED"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-15",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/14",
+    "original_record": {
+      "id": "SCE-NEXT-15",
+      "priority": "P2",
+      "title": "Recorder действий с генерацией проверяемого навыка",
+      "owners": [
+        "content-lab/automation_core.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-10",
+        "SCE-NEXT-11",
+        "SCE-NEXT-13"
+      ],
+      "value": "Команда повторяй как я уменьшает ручное программирование routine.",
+      "acceptance": [
+        "Запись только выбранного app/task; selectors и state preconditions вместо координат.",
+        "Удалять credentials из trace, параметризовать values; preview recipe.",
+        "Повтор на изменённых inputs и held-out UI state; неуспех не ведёт к слепому click.",
+        "Наблюдение демонстрации создаёт proposal, canary подтверждает навык."
+      ],
+      "metric": "Время создания навыка и устойчивость на новых inputs",
+      "status": "EXPERIMENT_NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_PREVIOUS::SCE-NEXT-16",
+    "source_path": "packages/SCE_V2/sources/previous_package/NEXT_FUNCTIONS_RU.json",
+    "json_pointer": "/next_tasks/15",
+    "original_record": {
+      "id": "SCE-NEXT-16",
+      "priority": "P2",
+      "title": "Laya advisory и ограниченный критик",
+      "owners": [
+        "content-lab/occ_proposal.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-08",
+        "SCE-NEXT-13"
+      ],
+      "value": "Использовать дополнительный интеллект там, где измерено преимущество.",
+      "acceptance": [
+        "Проверить установленный Laya API; сравнить rules/local/router на одинаковых 30 cases.",
+        "Critic вызывается по конкретному unresolved claim при бюджете rounds/time/cost.",
+        "Agreement не заменяет primary evidence; disagreement порождает узкий проверочный запрос.",
+        "При отсутствии прироста оставить deterministic маршрут."
+      ],
+      "metric": "Прирост verified success относительно затрат",
+      "status": "EXPERIMENT_NOT_RUN"
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-CAP-01",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/0",
+    "original_record": {
+      "work_item_id": "CTX-CAP-01",
+      "title": "Multi-producer capture before global writer assumptions",
+      "scope_ru": "Интегрировать ObservationSession/Producer/coverage с existing SCE store owner; producer-specific immutable event keys; desktop client independent of Chrome extension.",
+      "acceptance_ru": "Читатели/регистраторы параллельны, late arrivals не теряются; scope/retention/stop; 20+ источников; source drift блокирует устаревший context pack.",
+      "rnd_ids": [
+        "RND-43",
+        "RND-44",
+        "RND-45",
+        "RND-51"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-CAP-02",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/1",
+    "original_record": {
+      "work_item_id": "CTX-CAP-02",
+      "title": "Evidence-ready Studious handoff and NEED_CONTEXT loop",
+      "scope_ru": "Build required slots, early pack/deltas, authority lanes and selected-provider output; benchmark LOCAL_FAST/QUALITY_PARALLEL/RECOVERY_HEDGE.",
+      "acceptance_ru": "Source-bound WHY_THIS_PACKET; недостающий источник явно запросить; no signer/sender; тесты реально запускаются только в separately approved sandbox.",
+      "rnd_ids": [
+        "RND-46",
+        "RND-47",
+        "RND-48",
+        "RND-53",
+        "RND-54"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-01",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/2",
+    "original_record": {
+      "work_item_id": "CTX-PAR-01",
+      "title": "Preserve existing owners + trustworthy context intake",
+      "scope_ru": "Подключить desktop client к existing SCE service owner, не создавать вторую queue/database. На pinned current source проверить documented scan/export caps; добавить streaming progress/coverage/error ledger.",
+      "acceptance_ru": "Raw bytes и provenance survive restart; more-than-20 не обрывается; no scanned code execution.",
+      "rnd_ids": [
+        "RND-23",
+        "RND-27",
+        "RND-35"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-02",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/3",
+    "original_record": {
+      "work_item_id": "CTX-PAR-02",
+      "title": "Goal-bound handoff and labeling",
+      "scope_ru": "IntentSpec из текста, evidence requirements, authority-aware tags и provider-neutral HandoffBundle. UI показывает краткое WHY_THIS_PACKET, sources и omissions.",
+      "acceptance_ru": "Required missing evidence возвращает NEEDS_CONTEXT; приватные источники не уходят provider без scope.",
+      "rnd_ids": [
+        "RND-24",
+        "RND-25",
+        "RND-36",
+        "RND-40"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-03",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/4",
+    "original_record": {
+      "work_item_id": "CTX-PAR-03",
+      "title": "Read/candidate races with real diversity",
+      "scope_ru": "Failure-domain registry, serial/eager/hedged comparator, budgets и cancellation receipts. Вначале только чтение и подготовка artifacts.",
+      "acceptance_ru": "First invalid answer rejected; co-failure recorded; loser cancel confirmed; deadline не приводит к effect.",
+      "rnd_ids": [
+        "RND-19",
+        "RND-20",
+        "RND-32"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-04",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/5",
+    "original_record": {
+      "work_item_id": "CTX-PAR-04",
+      "title": "Effect broker and resource ownership",
+      "scope_ru": "Target revision, operation ID, single writer, leases/fencing and unknown-effect reconciliation. Existing Core must remain authority.",
+      "acceptance_ru": "Same intent duplicate produces one local effect; external unknown не повторяется вслепую; foreground user wins.",
+      "rnd_ids": [
+        "RND-21",
+        "RND-22",
+        "RND-30",
+        "RND-33"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-05",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/6",
+    "original_record": {
+      "work_item_id": "CTX-PAR-05",
+      "title": "Studious evidence vertical",
+      "scope_ru": "Registered inspection/test adapter, source-bound failure triage, exact-head evidence, независимые fix criteria. Не интегрировать signer/sender.",
+      "acceptance_ru": "Одна команда создаёт проверяемый failure/context handoff; не выдает fixture/test green за market qualification.",
+      "rnd_ids": [
+        "RND-23",
+        "RND-24",
+        "RND-28",
+        "RND-37"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-06",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/7",
+    "original_record": {
+      "work_item_id": "CTX-PAR-06",
+      "title": "Voice and accessibility adapter",
+      "scope_ru": "Push-to-talk/optional wake + critical-slot checks, separate stop path, live command preview, RU/EN project aliases.",
+      "acceptance_ru": "Same typed input contract as text; false activation/negation errors measured; installed Dell receipt captured.",
+      "rnd_ids": [
+        "RND-29",
+        "RND-30"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-07",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/8",
+    "original_record": {
+      "work_item_id": "CTX-PAR-07",
+      "title": "Safe skill factory and updater",
+      "scope_ru": "Unknown action → isolated candidate code → independent tests → reviewable package → permission diff → staged activation.",
+      "acceptance_ru": "First run may use coder, known replay uses qualified skill; new permissions never auto-granted; no core overwrite while running.",
+      "rnd_ids": [
+        "RND-31",
+        "RND-38",
+        "RND-39",
+        "RND-41"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  },
+  {
+    "key": "VOICE_V3::CTX-PAR-08",
+    "source_path": "packages/VOICE_V3/11_BACKLOG/implementation_work_items.json",
+    "json_pointer": "/9",
+    "original_record": {
+      "work_item_id": "CTX-PAR-08",
+      "title": "Offline optimization and portfolio learning",
+      "scope_ru": "Контекстные ablations, skill minimization, held-out evaluation DSPy/GEPA candidates. Реальные traces снабжают offline optimizer.",
+      "acceptance_ru": "No holdout leakage; promotion only on verified outcomes and unchanged policy constraints; rollback retained.",
+      "rnd_ids": [
+        "RND-26",
+        "RND-38",
+        "RND-42"
+      ],
+      "github_pr_number": null,
+      "status": "PLANNED_NOT_OPENED",
+      "requires_current_source_audit": true
+    }
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 582c7cb13aa12e914213b37590caf62d651463cf251d4c8bbd4ac2915fc6e2eb | FIRST SOURCE 03_CATALOGS/RELATED_REQUIREMENTS_PRESERVED.json =====
+[
+  {
+    "key": "VOICE_V3::REQ-001",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/0",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-001",
+      "title": "Локальное личное приложение",
+      "requirement": "Windows 11; библиотека и control plane локальны, не обязательный SaaS.",
+      "anchor": "local application",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-002",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/1",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-002",
+      "title": "Голос и текст равноправны",
+      "requirement": "Оба входа формируют один IntentSpec; фоновые голоса не считаются приказом.",
+      "anchor": "via text or or via your voice",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-003",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/2",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-003",
+      "title": "Любой выбранный AI",
+      "requirement": "Provider-neutral пакет + adapters; не привязывать память к Grok/OpenAI.",
+      "anchor": "for your AI of choice",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-004",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/3",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-004",
+      "title": "Сохранение исходников",
+      "requirement": "Raw bytes не заменяются summary/chunks; пути, IDs, время и источник сохраняются.",
+      "anchor": "entire history of my life",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-005",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/4",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-005",
+      "title": "Нет лимита двадцати документов",
+      "requirement": "Порции и бюджеты регулируют обработку; не скрывают хвост библиотеки.",
+      "anchor": "more than 20 max docs remove",
+      "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-006",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/5",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-006",
+      "title": "Семантический repo context",
+      "requirement": "Repo map, symbols, dependencies, tests и history вместо ручной нарезки пользователем.",
+      "anchor": "this application could to chunk it",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-007",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/6",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-007",
+      "title": "Несколько источников",
+      "requirement": "ChatGPT/Grok exports, Google Docs exports, разрешённые private Telegram exports, Git.",
+      "anchor": "entire private Telegram channels",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-008",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/7",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-008",
+      "title": "Library UI",
+      "requirement": "Поиск, теги, граф целей, timeline, выбор исходников, completeness/omissions.",
+      "anchor": "library like Notion local application",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-009",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/8",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-009",
+      "title": "Терминал и VS Code",
+      "requirement": "Только зарегистрированные операции с рабочим проектом и областью файлов.",
+      "anchor": "local terminal ... vs code",
+      "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-010",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/9",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-010",
+      "title": "Документы для передачи AI",
+      "requirement": "Короткое объяснение WHY_THIS_PACKET + полные ссылки на evidence + ожидаемый patch/test response.",
+      "anchor": "why this document should be passed to another AI",
+      "source_class": "CURRENT_CHAT_RU_PARAPHRASE",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-011",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/10",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-011",
+      "title": "Продолжение Studious",
+      "requirement": "Qualification/evidence/patch triage для BobIvans/studious-pancake. Не считать план действующим ботом.",
+      "anchor": "continue to work on our Studio Spancake flashloan bot",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-012",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/11",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-012",
+      "title": "Восстановление решений",
+      "requirement": "Старое предложение != новая команда; decision lineage/supersedes и даты.",
+      "anchor": "previous goals ... aggregated",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-013",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/12",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-013",
+      "title": "Новая способность через код",
+      "requirement": "Voice → context → AutomationSpec → coding agent → branch → tests → GitHub review → local skill update.",
+      "anchor": "renew the local application, renew the capabilities",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-014",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/13",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-014",
+      "title": "Параллельные пути одной задачи",
+      "requirement": "Диверсифицированные read/draft candidates; одна точка эффектов, independent verification.",
+      "anchor": "parallel actions would execute on same automation",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-015",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/14",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-015",
+      "title": "Скорость и стоимость",
+      "requirement": "Короткий fast path, delayed hedges, caching, budgets; не безусловный запуск всех моделей.",
+      "anchor": "fastest route to those aims",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-016",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/15",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-016",
+      "title": "Подготовка во время речи",
+      "requirement": "Только разрешённый read-only prefetch по устойчивой части транскрипта.",
+      "anchor": "lowest possible time",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-017",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/16",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-017",
+      "title": "Измеряемая успешность",
+      "requirement": "Verified completed / attempted, false-success отдельно; никаких обещаний 100% arbitrary GUI.",
+      "anchor": "highest sucess rate on execution",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-018",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/17",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-018",
+      "title": "Безопасные маршруты",
+      "requirement": "Не дублировать публикации/merge/удаления/trading; unknown effect требует reconciliation.",
+      "anchor": "multiple safe routes",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-019",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/18",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-019",
+      "title": "Права не выдаёт модель",
+      "requirement": "Typed route/LLM plan не расширяет scope; секреты остаются вне handoff.",
+      "anchor": "safely ... permissions",
+      "source_class": "ASSISTANT_PROPOSED_SAFETY_BOUNDARY",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-020",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/19",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-020",
+      "title": "Accessibility-first",
+      "requirement": "Stop/undo/correction/voice status; пользователь имеет приоритет над GUI worker.",
+      "anchor": "people with disabilities",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-021",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/20",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-021",
+      "title": "Приватность",
+      "requirement": "Локальный capture opt-in; public/private/sensitive, field-level cloud-export approval.",
+      "anchor": "hold any data locally",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-022",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/21",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-022",
+      "title": "API budget",
+      "requirement": "Провайдеры настраиваются по key references и явному лимиту расходов; ключи не включать в ZIP.",
+      "anchor": "use my api key",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-023",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/22",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-023",
+      "title": "Evidence truth",
+      "requirement": "Не путать source_fact, model_claim, implementation, tests, installed qualification, real market evidence.",
+      "anchor": "highest successful ... execution",
+      "source_class": "DERIVED_ACCEPTANCE_CRITERION",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-024",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/23",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-024",
+      "title": "Без обязательного расширения",
+      "requirement": "Desktop — основной интерфейс; Chrome может быть управляемым приложением/optional adapter.",
+      "anchor": "remove wire to chrome extensions",
+      "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-025",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/24",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-025",
+      "title": "Daily workflows",
+      "requirement": "Повторяемые планы/исследования/документы/квитанции; расписания не стартуют от импорта.",
+      "anchor": "executions I need to do daily",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-026",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/25",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-026",
+      "title": "R&D технологий",
+      "requirement": "GitHub/Hugging Face/X разведка, первичные источники и локальные сравнения.",
+      "anchor": "new technologies ... hugging face",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-027",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/26",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-027",
+      "title": "Вопрос о каталоге ChatGPT",
+      "requirement": "Отдельный опциональный путь публикации; точная иконка неизвестна.",
+      "anchor": "insert a link to your service",
+      "source_class": "CURRENT_CHAT_RU_PARAPHRASE",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-028",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/27",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-028",
+      "title": "Пакет продолжения",
+      "requirement": "Два стартовых RU документа, JSON work items/workflows, tested offline reference.",
+      "anchor": "agregate bigger zip",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-029",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/28",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-029",
+      "title": "Сохранить предыдущие идеи",
+      "requirement": "18 прежних R&D и 129 функций остаются в legacy с происхождением и статусом.",
+      "anchor": "this entire chat aims and goals you outlined",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-030",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/29",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-030",
+      "title": "Не заявлять недоступные данные",
+      "requirement": "Исходный ZIP сохранён; более ранние архивы/полные приватные истории не получены здесь.",
+      "anchor": "go thourgh our ideas and my inputs",
+      "source_class": "SCOPE_BOUNDARY",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-031",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/30",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-031",
+      "title": "Один владелец runtime",
+      "requirement": "SCE Core/content.sqlite остаются owners; Studious владеет qualification, voice/Laya advisory.",
+      "anchor": "one evolving context/automation library",
+      "source_class": "RETRIEVED_PRIOR_DECISION_UNVERIFIED_IMPLEMENTATION",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-032",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/31",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-032",
+      "title": "Прогрессивная полнота",
+      "requirement": "Inventory/cursor/coverage/explicit exclusions; retrieval budget не ограничивает хранение.",
+      "anchor": "aggregate any context, any data",
+      "source_class": "CURRENT_CHAT",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-033",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/32",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-033",
+      "title": "Параллельные регистраторы",
+      "requirement": "Несколько методов записи одного процесса сохраняют отдельные наблюдения одновременно; не превращать single-effect broker в запрет multi-capture.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-034",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/33",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-034",
+      "title": "Независимые реальные действия",
+      "requirement": "Действия над разными ресурсами могут исполняться параллельно; конфликтующие операции над одним объектом требуют arbitration.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-035",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/34",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-035",
+      "title": "Разные режимы объединения",
+      "requirement": "Union для дополняющих источников; first-verified для альтернатив; join для обязательных доказательств; prepare/commit для эффектов.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-036",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/35",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-036",
+      "title": "Прогноз до benchmark",
+      "requirement": "Предсказать наиболее быстрые маршруты, обозначить ожидания и не подменять их вымышленными процентами успеха на Dell.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-037",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/36",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-037",
+      "title": "ZIP и текст как совместный вход",
+      "requirement": "Импортировать архив, сообщения и исходники как один граф требований с происхождением; копии не становятся независимым evidence.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-038",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/37",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-038",
+      "title": "Ранний полезный handoff",
+      "requirement": "Отдавать достаточный проверенный пакет выбранному AI до завершения полной индексации, с freeze snapshot и последующими delta.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-039",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/38",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-039",
+      "title": "Практики X/Laya/JeV",
+      "requirement": "Искать реальные примеры и первичные реализации; недоступность X и vendor benchmarks указывать явно.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "VOICE_V3::REQ-040",
+    "source_path": "packages/VOICE_V3/01_CONTEXT/requirements.json",
+    "json_pointer": "/39",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "REQ-040",
+      "title": "Адаптивное дополнение контекста",
+      "requirement": "Запрашивать недостающий источник или символ вместо повторной отправки всей библиотеки; связывать evidence с конкретной задачей.",
+      "anchor": "Latest user interruption / parallel recording clarification",
+      "source_class": "CURRENT_USER_ADDENDUM",
+      "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-01",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/0",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-01",
+      "requirement": "Keep SCE desktop/library automation and Studious trading code as separate repositories with explicit ownership.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "ARCHITECTURE_AND_HISTORICAL_PINNED_REFERENCES",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "docs/01_REPO_FINDINGS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Read current repository HEADs and compare with historical pins; do not apply SCE changes to the bot by mistake.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-02",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/1",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-02",
+      "requirement": "Dell Windows 11 desktop as the primary application; no mandatory Chrome extension.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TK_PROTOTYPE_TARGET_DEVICE_NOT_TESTED",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "tools/desktop_archive.py"
+      ],
+      "remaining_requirement_or_evidence": "Integrate the shell with existing SCE owners, package it, and obtain real Windows device evidence.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-03",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/2",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-03",
+      "requirement": "Preserve original bytes, paths, revisions, provenance, binary items, and explicit omissions.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "BUNDLED_OFFLINE_ARCHIVE_TOOL_NOT_SCE_INTEGRATED",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "tools/archive_tool.py"
+      ],
+      "remaining_requirement_or_evidence": "Acquire actual selected repository/filesystem sources; integrate persistence and secret-safe sharing.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-04",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/3",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-04",
+      "requirement": "No total 20-document, 1000-file, or similar arbitrary corpus cap; continue to the end with coverage.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TOOL_AND_INTEGRATION_PLAN",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md",
+        "evidence/VERIFIED_LIMITS.json"
+      ],
+      "remaining_requirement_or_evidence": "Fix production caps without removing pagination, resource controls, or action permissions; test real target corpus.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-05",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/4",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-05",
+      "requirement": "Multi-part full-context TXT/MD/JSON/ZIP handoffs with per-part source coverage.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "TXT_EXPORT_AND_VERIFIER_BUNDLED_OTHER_INTEGRATION_PLANNED",
+      "original_package_paths": [
+        "tools/archive_tool.py",
+        "AI_HANDOFF_RU.txt",
+        "docs/04_LOSSLESS_CONTEXT_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Choose model-specific budgets separately from archive completeness; do not claim every source was read from attachment presence.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-06",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/5",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-06",
+      "requirement": "All earlier user messages and assistant ideas, including older conversations and all mapping branches.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "NINE_SUMMARY_RECORDS_AND_IMPORTER_NO_COMPLETE_HISTORY",
+      "original_package_paths": [
+        "history/RECOVERED_IDEAS.json",
+        "history/TIMELINE_RU.md",
+        "tools/archive_tool.py"
+      ],
+      "remaining_requirement_or_evidence": "Import available original conversation exports, preserve role/date/IDs/branches/attachments, and link every recovered idea to its source.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-07",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/6",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-07",
+      "requirement": "All earlier Wave/OCC/Laya ZIPs, docs, worktrees and detailed function cards consolidated.",
+      "idea_coverage": "REFERENCED_ONLY",
+      "implementation_evidence": "ORIGINAL_OLD_ASSET_BYTES_MISSING",
+      "original_package_paths": [
+        "history/MISSING_ASSETS_RU.md",
+        "history/TIMELINE_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Acquire and reconcile earlier artifacts by hash and stable IDs, retaining superseded and contradictory proposals.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-08",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/7",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-08",
+      "requirement": "Complete current source snapshots of both repositories, not selective file references.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "ACQUISITION_TOOL_ONLY_NO_TARGET_REPO_SNAPSHOTS",
+      "original_package_paths": [
+        "windows/Acquire-Repos.ps1",
+        "evidence/STATUS.json"
+      ],
+      "remaining_requirement_or_evidence": "Collect complete selected commits, record inventory and byte coverage, then inspect relevant actual code.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-09",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/8",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-09",
+      "requirement": "Closed/abandoned PRs, branches, commit history, prior implementations and failed fixes.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "SNAPSHOT_DIFF_AND_FAILURE_MEMORY_DESIGN_NOT_FULL_HISTORY_ARCHIVE",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+        "history/RECOVERED_IDEAS.json"
+      ],
+      "remaining_requirement_or_evidence": "Ingest repository history and PR records separately; a HEAD-tree archive does not include the full history.",
+      "provenance": "Visible prior conversation context, retrieved historical summaries, and inspected ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-10",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/9",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-10",
+      "requirement": "Drive-like local files plus Notion-like search, editing, tags, backlinks and collections.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "ARCHITECTURE_PROPOSAL_NOT_COMPLETE_WORKSPACE",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Build usable views over one canonical store; retain raw content and derived-index boundaries.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-11",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/10",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-11",
+      "requirement": "Labels on every data piece with roles, origin, versions, links, rights and truth/evidence status.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "PROPOSED_METADATA_AND_GRAPH_NOT_ALL_CONNECTORS_IMPLEMENTED",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+        "docs/11_SECURITY_AND_TRUTH_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Specify and implement a versioned canonical metadata contract and a complete requirement-to-source traceability map.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-12",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/11",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-12",
+      "requirement": "Gather authorized data from ChatGPT/Grok chats, Telegram channels/media, websites, documents and repos.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "FOLDER_GIT_CHATGPT_IMPORT_TOOLS_OTHER_CONNECTORS_PLANNED",
+      "original_package_paths": [
+        "workflows/03_history_import.json",
+        "workflows/11_browser_acquisition.json",
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Acquire actual authorized exports/API data; account for unloaded content, permissions and unavailable attachments.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-13",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/12",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-13",
+      "requirement": "Voice or any text becomes the same task intent and approved automation workflow.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "PROPOSAL_NO_INSTALLED_ASR_TO_EXECUTOR_LOOP",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "workflows/04_voice_proposal.json"
+      ],
+      "remaining_requirement_or_evidence": "Connect real ASR, typed intent, preview, policy, execution and independent result verification.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-14",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/13",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-14",
+      "requirement": "Accessibility: keyboard/switch alternatives, screen reader, editable voice input and independent STOP.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "RND_TEST_PLAN_TARGET_DEVICE_NOT_RUN",
+      "original_package_paths": [
+        "docs/05_ACCESSIBILITY_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Measure actual Windows accessibility, negations/numbers, cancellation latency and recovery on the target device.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-15",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/14",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-15",
+      "requirement": "Laya/Jev plus layered routing, planning, critique, memory and fast deterministic reuse.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "RESEARCH_AND_EXAMPLE_SCHEMAS_INFERENCE_NOT_RUN",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "examples/laya-prediction-request.example.json",
+        "research/EXPERIMENTS.json"
+      ],
+      "remaining_requirement_or_evidence": "Verify the installed model/API contract; benchmark against simple rules; probabilities never grant permissions.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-16",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/15",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-16",
+      "requirement": "Expand beyond prewritten tasks by proposing, testing and promoting new skills from intent/demonstration.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SKILL_LIFECYCLE_PROPOSAL",
+      "original_package_paths": [
+        "workflows/09_demonstration_skill.json",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Implement sandboxed skill testing and reviewed promotion; unsupported tasks remain explicit proposals rather than silent execution.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-17",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/16",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-17",
+      "requirement": "ChatGPT API inside the app for library/repo/context actions with cost and data controls.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "TOOL_SCHEMAS_AND_PLAN_NOT_CONNECTED",
+      "original_package_paths": [
+        "docs/10_OPENAI_AND_AUTOMATION_CONTRACTS_RU.md",
+        "schemas/openai_tools.responses.json",
+        "workflows/13_api_context.json"
+      ],
+      "remaining_requirement_or_evidence": "Implement provider authentication, scoped tools, input sanitization, budgets and result receipts; keep credentials out of archives sent to AI.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-18",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/17",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-18",
+      "requirement": "Local terminal and VS Code open-file/diff integration tied to exact repository paths.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "INTEGRATION_PLAN",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "workflows/12_vscode_handoff.json"
+      ],
+      "remaining_requirement_or_evidence": "Wire actual adapters, separating human terminal input from reviewed automation jobs and their isolation controls.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-19",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/18",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-19",
+      "requirement": "Whole-codebase code-smell, architecture, symbol/import/dependency and technical-debt analysis.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "STATIC_CATALOG_TOOL_AND_REVIEW_PLAN_NO_EXHAUSTIVE_SEMANTIC_AUDIT",
+      "original_package_paths": [
+        "tools/archive_tool.py",
+        "workflows/05_repo_review.json",
+        "docs/01_REPO_FINDINGS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Inventory actual complete code, add missing language parsers, and validate findings with source evidence and regression tests.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-20",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/19",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-20",
+      "requirement": "Discover every useful bot command including qualification campaign command owners and code ranges.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "SELECTIVE_PINNED_COMMAND_CANDIDATES_NOT_EXHAUSTIVE",
+      "original_package_paths": [
+        "evidence/VERIFIED_COMMAND_CANDIDATES.json",
+        "docs/07_QUALIFICATION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Build the current command inventory from the complete codebase and distinguish discovery from executable approval.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-21",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/20",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-21",
+      "requirement": "Run existing canonical qualification from the desktop and ingest reports.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EXISTING_BRIDGE_REFERENCED_NOT_RUN_HERE",
+      "original_package_paths": [
+        "docs/07_QUALIFICATION_RU.md",
+        "workflows/06_qualification.json",
+        "examples/qualification-request.example.json"
+      ],
+      "remaining_requirement_or_evidence": "Validate the operator profile, clean/current SHA and installed package; obtain actual domain and transport receipts.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-22",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/21",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-22",
+      "requirement": "Automate scheduled daily/24h data collection, tests, qualification and R&D reports.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "WORKFLOW_PROPOSALS_NO_CONNECTED_SCHEDULER_OR_EXECUTED_CAMPAIGNS",
+      "original_package_paths": [
+        "workflows/07_paper_campaign.json",
+        "workflows/08_latest_research.json",
+        "evidence/STATUS.json"
+      ],
+      "remaining_requirement_or_evidence": "Implement and verify local scheduling, checkpoints, leases, quotas, stop/restart, retention and campaign outcomes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-23",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/22",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-23",
+      "requirement": "Parallel arbitrage/flashloan strategy discovery, testing and shared market-data collection.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SENDER_FREE_RND_DESIGN_NOT_RUNNING_TRADING_SYSTEM",
+      "original_package_paths": [
+        "docs/08_PARALLEL_WEB3_RU.md",
+        "workflows/16_strategy_replay.json"
+      ],
+      "remaining_requirement_or_evidence": "Supply protocol adapters and real recorded data, then validate snapshots, simulation, costs, conflicts and holdout outcomes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-24",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/23",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-24",
+      "requirement": "Preserve the longer-term goal of approved live Web3 execution without mistaking plans or paper results for readiness.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "LIVE_OUTSIDE_CURRENT_SLICE_NO_SIGNER_AUTHORITY",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "docs/07_QUALIFICATION_RU.md",
+        "docs/08_PARALLEL_WEB3_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recover detailed prior strategy/protocol specifications, validate missing runtime dependencies, and keep live promotion as a separate evidence-and-approval decision.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-25",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/24",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-25",
+      "requirement": "Automated code generation/patch, tests, CI, PR review and a document returned for the next R&D iteration.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "DESIGN_AND_WORKFLOW_PROPOSALS_NOT_END_TO_END_EXECUTED",
+      "original_package_paths": [
+        "workflows/14_implementation_request.json",
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Tie each change to current SHA, validated worktree, reviewed command profile, required tests and factual PR state; avoid duplicate fixes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-26",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/25",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-26",
+      "requirement": "Resume/replay/reconcile, progress/errors and memory of failed attempts instead of repeating work.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EXISTING_OWNERS_REFERENCED_INTEGRATION_NEEDED",
+      "original_package_paths": [
+        "workflows/15_reconciliation.json",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Persist verified execution receipts, source invalidation and checkpoints; reconcile unknown effects before retry.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-27",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/26",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-27",
+      "requirement": "Carry context into a fresh Work chat with goals, current state, gaps and the next implementation slice.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "HANDOFF_DOCUMENTS_PRESENT_NOT_UNIVERSAL_HISTORY",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "ALL_AUTHORED_CONTEXT.txt",
+        "INDEX.json",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Read the archive explicitly, enumerate missing inputs and update continuation state after each work session.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-28",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/27",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-28",
+      "requirement": "Further Hugging Face/GitHub/agentic research with baselines and measurable experiments.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "44_SOURCE_REFERENCES_48_UNRUN_EXPERIMENTS",
+      "original_package_paths": [
+        "research/SOURCES.json",
+        "research/EXPERIMENTS.json",
+        "docs/13_RESEARCH_METHOD_AND_NEXT_SEARCHES_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recheck changing technology facts before implementation and benchmark selected candidates on the same target tasks.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-29",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/28",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-29",
+      "requirement": "Small/local/low-cost operation without model tokens for deterministic archive and code-catalog tasks.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TOOLS_NO_API_REQUIREMENT_MODEL_COSTS_UNMEASURED",
+      "original_package_paths": [
+        "tools/README_RU.md",
+        "docs/06_MODEL_AND_STACK_OPTIONS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Measure Dell RAM/CPU/latency, batch/cache work and meter optional API calls rather than promise unlimited compute.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-30",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/29",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-30",
+      "requirement": "Preserve detailed prior function-card IDs and wave/PR lineage, not only current broad themes.",
+      "idea_coverage": "REFERENCED_ONLY",
+      "implementation_evidence": "OLDER_DETAILED_CATALOGS_NOT_INCLUDED",
+      "original_package_paths": [
+        "history/MISSING_ASSETS_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recover original catalogs such as CAND/CAP/F-series references; numbers recalled in summaries are not verified inventory.",
+      "provenance": "Retrieved historical summaries and visible prior conversation context; original detailed catalogs not available"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-31",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/30",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-31",
+      "requirement": "Protect secrets, preserve authorized local originals, and distinguish TRUE/FALSE/UNKNOWN/NOT_RUN/STALE.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SECURITY_DESIGN_AUTO_SANITIZED_SHARING_NOT_IMPLEMENTED",
+      "original_package_paths": [
+        "docs/11_SECURITY_AND_TRUTH_RU.md",
+        "docs/04_LOSSLESS_CONTEXT_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Implement separate local/private and shareable manifests, review redaction, and keep model/source content outside action authority.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_AUDIT::HC-32",
+    "source_path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+    "json_pointer": "/requirements/31",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "id": "HC-32",
+      "requirement": "Use data on unmet goals and contradictory evidence to choose what to collect or build next.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EVIDENCE_DEBT_AND_NEXT_DATA_REQUEST_RND",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Define observable postconditions and independent evidence, retain negative results, and measure whether the next action reduces the actual blocker.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-001",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/0",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Full repository paths and context",
+      "status": "TOOLS_IMPLEMENTED_TARGET_COLLECTION_NOT_RUN",
+      "evidence_or_next_step": "archive_tool git/folder/text/verify-text; exact source scope required"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-002",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/1",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "No arbitrary >20 document cap",
+      "status": "TOOLS_IMPLEMENTED_INTEGRATION_PROPOSED",
+      "evidence_or_next_step": "1007-file fixture passed; SCE page size20 distinguished from cap10"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-003",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/2",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Windows desktop without required extension",
+      "status": "PROTOTYPE_NOT_TARGET_TESTED",
+      "evidence_or_next_step": "Tk archive front-end; production desktop/IPC/accessibility planned"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-004",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/3",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Older user ideas and assistant suggestions",
+      "status": "PARTIAL_RETRIEVAL_SUMMARIES",
+      "evidence_or_next_step": "2024–2026 timeline; no full old chats/attachments available"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-005",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/4",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Local library like Drive plus Notion-style access",
+      "status": "ARCHITECTURE_PROPOSAL",
+      "evidence_or_next_step": "Canonical store, projections, tags, FTS, editor references"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-006",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/5",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Terminal and VS Code",
+      "status": "INTEGRATION_PLAN",
+      "evidence_or_next_step": "External editor goto/diff; reviewed executor separate from human terminal"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-007",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/6",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Voice to arbitrary automation",
+      "status": "RND_AND_SAFETY_CONTRACT",
+      "evidence_or_next_step": "ASR/router/planner/capabilities/verifier; unsupported action becomes proposal"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-008",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/7",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Laya/Jev research",
+      "status": "PRIMARY_SOURCE_REVIEW",
+      "evidence_or_next_step": "Typed decision models, harness design, calibration and input budgets"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-009",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/8",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Hugging Face and GitHub options",
+      "status": "PRIMARY_SOURCE_SHORTLIST",
+      "evidence_or_next_step": "34 technology sources plus 10 repo evidence sources; models not run"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-010",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/9",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Existing qualification commands",
+      "status": "PINNED_CODE_DISCOVERY_NOT_RUN",
+      "evidence_or_next_step": "Wrapper + five canonical subcommands + SCE adapter/tests"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-011",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/10",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Parallel arbitrage strategies",
+      "status": "SENDER_FREE_RND_PROPOSAL",
+      "evidence_or_next_step": "Shared feeds, replay, costs, holdout, conflict/capital coordination"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-012",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/11",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Automated docs for next AI session",
+      "status": "DELIVERED",
+      "evidence_or_next_step": "AI_HANDOFF_RU.txt, source catalog, requirements ledger, 48 experiments"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-013",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/12",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Automations JSON",
+      "status": "DELIVERED_PROPOSALS_NOT_EXECUTION",
+      "evidence_or_next_step": "16 workflows, Laya prediction example, exact bot profile/request, API tools"
+    }
+  },
+  {
+    "key": "OCC_RND::ROW-014",
+    "source_path": "packages/OCC_RND/evidence/REQUIREMENTS_LEDGER.json",
+    "json_pointer": "/13",
+    "source_class": "REQUIREMENT_INTERPRETATION_IN_RELATED_ARTIFACT_NOT_NEW_VERBATIM_CHAT",
+    "original_record": {
+      "request": "Everything solved / unlimited memory or context",
+      "status": "NOT_CLAIMED",
+      "evidence_or_next_step": "Physical resources/model budgets/source access and tool limits remain explicit"
+    }
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d | FIRST SOURCE 03_CATALOGS/STRUCTURED_RND_CARDS.json =====
+[
+  {
+    "key": "VOICE_V3::RND-19",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/0",
+    "original_record": {
+      "id": "RND-19",
+      "title": "Failure-domain diversity",
+      "problem_ru": "Не путать три обёртки pytest с тремя независимыми страховками.",
+      "novelty": "new",
+      "design_ru": "Добавить дерево общих зависимостей: interpreter, browser engine, remote account, model/provider, verifier, source lineage.",
+      "experiment_ru": "Сравнить 3 обёртки одного пути с 2 реально разными источниками evidence на fault-injection corpus.",
+      "acceptance_ru": "Записать co-failure matrix и marginal recovery каждого маршрута; не выводить независимость из названия инструмента.",
+      "functions": [
+        "route_dependency_fingerprint",
+        "estimate_cofailure_matrix",
+        "select_diverse_portfolio",
+        "record_marginal_recovery"
+      ],
+      "source_ids": [
+        "S01",
+        "S02"
+      ],
+      "requirement_ids": [
+        "REQ-014",
+        "REQ-017"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-20",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/1",
+    "original_record": {
+      "id": "RND-20",
+      "title": "Adaptive hedging",
+      "problem_ru": "Запускать запасной путь только при признаке задержки или нехватки evidence.",
+      "novelty": "new",
+      "design_ru": "Первая дешёвая read-попытка стартует сразу; второй путь после deadline/uncertainty trigger; отменить проигравших с receipt.",
+      "experiment_ru": "Сравнить serial, eager-parallel, delayed-hedge на фиксированном наборе read-only задач при одинаковом бюджете.",
+      "acceptance_ru": "Снизить p95 time-to-verified при заданном API/CPU бюджете; не допустить дублирующих внешних эффектов.",
+      "functions": [
+        "compute_hedge_trigger",
+        "reserve_speculation_budget",
+        "cancel_loser_candidates",
+        "audit_cancellation_completion"
+      ],
+      "source_ids": [
+        "S01"
+      ],
+      "requirement_ids": [
+        "REQ-014",
+        "REQ-015"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-21",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/2",
+    "original_record": {
+      "id": "RND-21",
+      "title": "Single-effect commit broker",
+      "problem_ru": "Результаты готовятся параллельно, эффект принадлежит одному брокеру.",
+      "novelty": "hardening_of_prior_idea",
+      "design_ru": "Уникальный operation_id, payload hash, snapshot revision, writer lease/fencing token, durable outbox и reconciliation.",
+      "experiment_ru": "Два кандидата для одного target; kill/retry вокруг локального commit; отдельно моделировать неизвестный внешний результат.",
+      "acceptance_ru": "Локальный commit ровно один в тестируемой SQLite-транзакции; внешние unknown не перезапускаются слепо.",
+      "functions": [
+        "issue_intent_operation_id",
+        "acquire_effect_lease",
+        "commit_verified_candidate",
+        "reconcile_unknown_effect"
+      ],
+      "source_ids": [
+        "S02"
+      ],
+      "requirement_ids": [
+        "REQ-014",
+        "REQ-018"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-22",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/3",
+    "original_record": {
+      "id": "RND-22",
+      "title": "Resource commutativity and foreground ownership",
+      "problem_ru": "Не дать агентам бороться за мышь, буфер и одну вкладку.",
+      "novelty": "new",
+      "design_ru": "Для каждого node указать read/write resource sets; разные документы параллельны, общий foreground эксклюзивен; пользователь имеет приоритет.",
+      "experiment_ru": "Инъекция пользовательского ввода во время действия; два графа с общим файлом и отдельными browser contexts.",
+      "acceptance_ru": "Нет чужого ввода в выбранной вкладке; conflict graph сериализует общие mutable resources.",
+      "functions": [
+        "infer_resource_access_sets",
+        "build_conflict_graph",
+        "acquire_foreground_lease",
+        "yield_to_user_input"
+      ],
+      "source_ids": [
+        "S03",
+        "S04"
+      ],
+      "requirement_ids": [
+        "REQ-014",
+        "REQ-020",
+        "REQ-024"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-23",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/4",
+    "original_record": {
+      "id": "RND-23",
+      "title": "Snapshot-closed context",
+      "problem_ru": "Пакет связан с одним состоянием проекта, а не смесью вчера и сегодня.",
+      "novelty": "new",
+      "design_ru": "Repo SHA + dirty-file hashes + index hash + config/policy version + source revision задают snapshot; перед effect повторная проверка.",
+      "experiment_ru": "Поменять файл после retrieval и до apply; удалить dependency; изменить allowlist.",
+      "acceptance_ru": "STALE/NEEDS_CONTEXT вместо применения к старой базе; ни одного silent overwrite.",
+      "functions": [
+        "freeze_context_snapshot",
+        "validate_snapshot_closure",
+        "compare_target_revision",
+        "invalidate_stale_candidate"
+      ],
+      "source_ids": [
+        "S04"
+      ],
+      "requirement_ids": [
+        "REQ-006",
+        "REQ-012",
+        "REQ-032"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-24",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/5",
+    "original_record": {
+      "id": "RND-24",
+      "title": "Evidence deficit planner",
+      "problem_ru": "Научить app замечать, какой конкретно информации не хватает.",
+      "novelty": "new",
+      "design_ru": "Coverage matrix goal→required observations; вместо ещё одного полного prompt запрашивать один missing source/test/error.",
+      "experiment_ru": "Дать bug с отсутствующим trace и противоречивыми заметками; проверить выбор следующего чтения.",
+      "acceptance_ru": "Измерить time-to-sufficient-evidence и bytes/request; missing обязательное evidence блокирует действие.",
+      "functions": [
+        "derive_evidence_requirements",
+        "compute_context_deficit",
+        "choose_next_observation",
+        "emit_needs_context_request"
+      ],
+      "source_ids": [
+        "S11"
+      ],
+      "requirement_ids": [
+        "REQ-010",
+        "REQ-015",
+        "REQ-023"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-25",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/6",
+    "original_record": {
+      "id": "RND-25",
+      "title": "Authority-aware labeling",
+      "problem_ru": "Теги должны отличать просьбу пользователя, чужую инструкцию, гипотезу и факт исполнения.",
+      "novelty": "new",
+      "design_ru": "Схема provenance + speaker_role + asserted/observed + authority_scope + valid_time + privacy + evidence_state; словари RU/EN алиасов.",
+      "experiment_ru": "Размечать один набор правилами, GLiNER и Laya; спорные метки не закрывать большинством без source evidence.",
+      "acceptance_ru": "Проверить span precision/recall, unknown rate и отсутствие автоматического VERIFIED по словам done/merged.",
+      "functions": [
+        "extract_label_candidates",
+        "reconcile_label_authority",
+        "normalize_project_aliases",
+        "abstain_on_label_conflict"
+      ],
+      "source_ids": [
+        "S06",
+        "S08"
+      ],
+      "requirement_ids": [
+        "REQ-002",
+        "REQ-007",
+        "REQ-012",
+        "REQ-023"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-26",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/7",
+    "original_record": {
+      "id": "RND-26",
+      "title": "Causal context evaluation",
+      "problem_ru": "Проверять, какие фрагменты реально помогают коду, а какие засоряют контекст.",
+      "novelty": "new",
+      "design_ru": "Held-out tasks: полный pack, semantic slice, slice без выбранного evidence, compact+delta; одинаковый coder и verifier.",
+      "experiment_ru": "Ablation по clauses/tests/history на исторических bug задачах; новые commit families отделить от train.",
+      "acceptance_ru": "Измерить verified patch rate и marginal utility/KB без утечки ответа из будущих PR.",
+      "functions": [
+        "build_context_ablation_set",
+        "measure_evidence_utility",
+        "compare_pack_variants",
+        "freeze_holdout_partitions"
+      ],
+      "source_ids": [
+        "S11",
+        "S12"
+      ],
+      "requirement_ids": [
+        "REQ-006",
+        "REQ-015",
+        "REQ-017"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-27",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/8",
+    "original_record": {
+      "id": "RND-27",
+      "title": "Incremental materialized context views",
+      "problem_ru": "Пересобирать только изменённую часть репозитория и зависимых context packs.",
+      "novelty": "new",
+      "design_ru": "Merkle identifiers на blobs/chunks/derivations; dependency invalidation; parser/schema version входят в cache key.",
+      "experiment_ru": "Изменить одну функцию в большом fixture corpus; сверить incremental output с полной пересборкой.",
+      "acceptance_ru": "Exact equality где детерминировано; явный unresolved для dynamic edges; raw objects никогда не теряются.",
+      "functions": [
+        "hash_derivation_inputs",
+        "invalidate_context_dependents",
+        "refresh_materialized_pack",
+        "compare_incremental_full_build"
+      ],
+      "source_ids": [
+        "S09"
+      ],
+      "requirement_ids": [
+        "REQ-004",
+        "REQ-006",
+        "REQ-032"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-28",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/9",
+    "original_record": {
+      "id": "RND-28",
+      "title": "Verifier adequacy and counterexamples",
+      "problem_ru": "Не выбирать патч только потому, что он обошёл слабые тесты.",
+      "novelty": "new",
+      "design_ru": "Task-specific independent oracles + property/metamorphic tests; mutation-testing эксперименты; разделить test author и patch author.",
+      "experiment_ru": "Сделать intentionally wrong patch, который проходит прежний test; добавить проверку нарушенного инварианта.",
+      "acceptance_ru": "False-success ниже baseline; тесты не отключены, assertions не удалены, negative suite не деградирует.",
+      "functions": [
+        "generate_contract_counterexample",
+        "run_metamorphic_checks",
+        "measure_verifier_mutation_score",
+        "reject_test_weakening_patch"
+      ],
+      "source_ids": [
+        "S11"
+      ],
+      "requirement_ids": [
+        "REQ-011",
+        "REQ-017",
+        "REQ-023"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-29",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/10",
+    "original_record": {
+      "id": "RND-29",
+      "title": "Critical-token ASR arbitration",
+      "problem_ru": "Ошибки в repo name, path, number и отрицании важнее общего word error rate.",
+      "novelty": "new",
+      "design_ru": "Команда имеет stable transcript prefix; domain vocabulary; второй ASR только на спорном span; low confidence не даёт финансовый effect.",
+      "experiment_ru": "RU/EN code-mixed команды: merge/not merge, main/branch, dry-run/live; фоновые голоса и поздние исправления.",
+      "acceptance_ru": "Semantic slot error и false command activation измеряются отдельно; не делать cloud-audio hedge без согласия.",
+      "functions": [
+        "identify_critical_voice_slots",
+        "request_selective_asr_check",
+        "reconcile_transcript_hypotheses",
+        "freeze_confirmed_intent_revision"
+      ],
+      "source_ids": [
+        "S06"
+      ],
+      "requirement_ids": [
+        "REQ-002",
+        "REQ-015",
+        "REQ-020",
+        "REQ-021"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-30",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/11",
+    "original_record": {
+      "id": "RND-30",
+      "title": "Independent stop and intent revision",
+      "problem_ru": "Система должна быстро останавливаться и понимать «нет, не этот repo».",
+      "novelty": "new",
+      "design_ru": "Отдельный high-priority control channel; пересмотр intent отзывает pending plans и leases; committed эффекты не выдавать за undone.",
+      "experiment_ru": "Во время retrieval/patch подготовки/ожидания merge дать stop и смену проекта.",
+      "acceptance_ru": "Ни одного нового effect после подтверждённого stop; unknown external effects идут в reconciliation.",
+      "functions": [
+        "process_stop_signal",
+        "revoke_pending_intent_generation",
+        "supersede_running_plan",
+        "report_irreversible_boundary"
+      ],
+      "source_ids": [
+        "S02"
+      ],
+      "requirement_ids": [
+        "REQ-002",
+        "REQ-018",
+        "REQ-020"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-31",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/12",
+    "original_record": {
+      "id": "RND-31",
+      "title": "Proof-carrying skill packages",
+      "problem_ru": "Навык хранит не только скрипт, но и условия его применимости.",
+      "novelty": "hardening_of_prior_idea",
+      "design_ru": "Skill manifest: input/output schemas, preconditions, postconditions, provenance, environment fingerprint, permissions, expiry, rollback scope.",
+      "experiment_ru": "Повторить успешный навык на другой версии приложения и с другой ролью пользователя.",
+      "acceptance_ru": "Mismatched environment блокирует promotion; receipt содержит code hash и проверенные условия.",
+      "functions": [
+        "build_skill_contract",
+        "attach_skill_evidence_bundle",
+        "validate_skill_environment",
+        "expire_skill_qualification"
+      ],
+      "source_ids": [
+        "S15",
+        "S18"
+      ],
+      "requirement_ids": [
+        "REQ-013",
+        "REQ-017",
+        "REQ-019"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-32",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/13",
+    "original_record": {
+      "id": "RND-32",
+      "title": "Critical-path and attention-budget scheduling",
+      "problem_ru": "Ускорять итог задачи, а не максимальное число одновременно активных процессов.",
+      "novelty": "new",
+      "design_ru": "DAG priorities по критическому пути; RAM/CPU/network/provider budgets; foreground lease; idle-only reindex.",
+      "experiment_ru": "На Dell выполнить фоновые imports + ASR + context pack; сравнить eager fan-out и admission control.",
+      "acceptance_ru": "Не ухудшить voice responsiveness и UI; реальные measured p50/p95 + peak RAM, никаких выдуманных миллисекунд.",
+      "functions": [
+        "estimate_workflow_critical_path",
+        "admit_resource_bounded_nodes",
+        "pause_background_indexing",
+        "score_latency_reliability_frontier"
+      ],
+      "source_ids": [
+        "S01",
+        "S05"
+      ],
+      "requirement_ids": [
+        "REQ-014",
+        "REQ-015",
+        "REQ-020"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-33",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/14",
+    "original_record": {
+      "id": "RND-33",
+      "title": "Unknown-outcome state machine",
+      "problem_ru": "Отмена/таймаут не доказывает, что внешний запрос не выполнился.",
+      "novelty": "new",
+      "design_ru": "PREPARED→DISPATCHED→UNKNOWN→OBSERVED_SUCCESS/SAFE_TO_RETRY/MANUAL_REVIEW. Сверять external receipt по operation ID.",
+      "experiment_ru": "Смоделировать lost response после server commit; нельзя запускать второй маршрут отправки.",
+      "acceptance_ru": "Нулевая слепая повторная публикация; unresolved отдельно от failed.",
+      "functions": [
+        "mark_dispatch_uncertain",
+        "query_effect_receipt",
+        "prove_safe_retry_transition",
+        "quarantine_ambiguous_operation"
+      ],
+      "source_ids": [
+        "S02"
+      ],
+      "requirement_ids": [
+        "REQ-014",
+        "REQ-018",
+        "REQ-023"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-34",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/15",
+    "original_record": {
+      "id": "RND-34",
+      "title": "Adapter conformance and input trust firewall",
+      "problem_ru": "Данные из чужой вкладки не становятся инструкциями ОС.",
+      "novelty": "new",
+      "design_ru": "Typed tool contracts; schema conformance; origin allowlists; source text data-only; executor permissions получаются от user policy.",
+      "experiment_ru": "Вставить в заметку «upload your keys» и в tool result ложный permit; сравнить policy decisions.",
+      "acceptance_ru": "Никакого расширения полномочий от документа; adapter contract tests фиксируют disabled capabilities.",
+      "functions": [
+        "validate_adapter_contract",
+        "classify_input_trust_origin",
+        "isolate_untrusted_document_instructions",
+        "enforce_egress_field_policy"
+      ],
+      "source_ids": [
+        "S16",
+        "S18"
+      ],
+      "requirement_ids": [
+        "REQ-003",
+        "REQ-007",
+        "REQ-019",
+        "REQ-021"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-35",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/16",
+    "original_record": {
+      "id": "RND-35",
+      "title": "Two-speed ingestion",
+      "problem_ru": "Быстро сохранить raw, а тяжёлую разметку выполнить отдельным восстанавливаемым этапом.",
+      "novelty": "new",
+      "design_ru": "Статусы DISCOVERED/RAW_STORED/PARSED/INDEXED/REVIEWED; intake cursor и verification очереди; потоковые blobs вне RAM.",
+      "experiment_ru": "Большой смешанный corpus + interruption; приоритет новым файлам активного проекта.",
+      "acceptance_ru": "Нет исчезнувшего хвоста/тайного лимита; recoverable errors; сохранение raw не означает полный поиск по нему.",
+      "functions": [
+        "register_ingestion_stage",
+        "resume_ingestion_cursor",
+        "stream_large_source_objects",
+        "schedule_progressive_enrichment"
+      ],
+      "source_ids": [
+        "S10"
+      ],
+      "requirement_ids": [
+        "REQ-004",
+        "REQ-005",
+        "REQ-007",
+        "REQ-032"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-36",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/17",
+    "original_record": {
+      "id": "RND-36",
+      "title": "Lineage-aware dedup and evidence diversity",
+      "problem_ru": "Пять пересказов одного сообщения — один источник, а не пять подтверждений.",
+      "novelty": "new",
+      "design_ru": "Exact hash dedup отдельно от semantic near-duplicate; relationship derived_from/quotes/copies сохраняется.",
+      "experiment_ru": "Несколько AI summaries одного поста + одно независимое наблюдение; проверить счёт evidence.",
+      "acceptance_ru": "Не склеивать разные версии цели; не повышать confidence количеством копий одной цепочки.",
+      "functions": [
+        "trace_information_lineage",
+        "cluster_near_duplicate_claims",
+        "compute_independent_evidence_count",
+        "preserve_conflicting_source_versions"
+      ],
+      "source_ids": [
+        "S08"
+      ],
+      "requirement_ids": [
+        "REQ-004",
+        "REQ-012",
+        "REQ-023"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-37",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/18",
+    "original_record": {
+      "id": "RND-37",
+      "title": "Negative knowledge and failure memory",
+      "problem_ru": "Хранить доказанное «это здесь не работает» вместе с условиями и сроком.",
+      "novelty": "new",
+      "design_ru": "Отказ UI locator, missing dependency, unsupported model method, false lead; condition/expiry/recheck trigger.",
+      "experiment_ru": "Повторить известный failure на том же fingerprint, затем сменить версию и проверить expiry.",
+      "acceptance_ru": "Меньше бесполезных повторов без вечной блокировки исправленных возможностей.",
+      "functions": [
+        "record_conditional_failure",
+        "retrieve_negative_capability_evidence",
+        "invalidate_obsolete_failure",
+        "route_around_known_failure"
+      ],
+      "source_ids": [
+        "S14"
+      ],
+      "requirement_ids": [
+        "REQ-012",
+        "REQ-015",
+        "REQ-017"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-38",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/19",
+    "original_record": {
+      "id": "RND-38",
+      "title": "Skill minimization",
+      "problem_ru": "Успешную длинную траекторию сокращать до минимальной проверенной процедуры.",
+      "novelty": "new",
+      "design_ru": "Удалять redundant reads/clicks с offline replay и postcondition oracle; API/CLI замена GUI где подтверждено.",
+      "experiment_ru": "Длинный workflow vs minimized workflow на unseen fixtures и changed windows.",
+      "acceptance_ru": "Меньше действий/latency, одинаковый verified outcome; убрать шаг нельзя только по мнению LLM.",
+      "functions": [
+        "slice_successful_trajectory",
+        "eliminate_redundant_steps",
+        "validate_minimized_skill",
+        "compare_skill_behavioral_equivalence"
+      ],
+      "source_ids": [
+        "S12",
+        "S18"
+      ],
+      "requirement_ids": [
+        "REQ-013",
+        "REQ-015",
+        "REQ-017"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-39",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/20",
+    "original_record": {
+      "id": "RND-39",
+      "title": "Permission-diff aware updater",
+      "problem_ru": "Обновление функции не даёт автоматически новые права на весь компьютер.",
+      "novelty": "hardening_of_prior_idea",
+      "design_ru": "Проверить commit/artifact provenance, version, API contract, permissions diff; stage, healthcheck, single activation; откат только обратимого.",
+      "experiment_ru": "Кандидат просит новый filesystem root/network host; параллельно тест и attestation; activation должен остановиться.",
+      "acceptance_ru": "Никакого privilege creep; несовместимая DB migration требует отдельного плана.",
+      "functions": [
+        "compute_capability_permission_diff",
+        "verify_update_origin",
+        "stage_skill_candidate",
+        "activate_approved_skill_version"
+      ],
+      "source_ids": [
+        "S15"
+      ],
+      "requirement_ids": [
+        "REQ-013",
+        "REQ-018",
+        "REQ-019"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-40",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/21",
+    "original_record": {
+      "id": "RND-40",
+      "title": "Cross-AI exchange contract",
+      "problem_ru": "Отправлять моделям один task contract, а не одинаково весь личный архив.",
+      "novelty": "new",
+      "design_ru": "Task ID, snapshot, context digest, allowed sources, expected response schema; chosen provider receives redacted scoped slice; return patch not direct merge.",
+      "experiment_ru": "Два model adapters + manual exported document; импорт неправильного snapshot и test claim.",
+      "acceptance_ru": "Одинаковая target binding; private data не уходит неразрешённому provider; imported DONE не закрывает задачу.",
+      "functions": [
+        "compile_provider_scoped_handoff",
+        "validate_ai_return_contract",
+        "bind_ai_patch_to_snapshot",
+        "merge_model_evidence_without_effects"
+      ],
+      "source_ids": [
+        "S16"
+      ],
+      "requirement_ids": [
+        "REQ-003",
+        "REQ-010",
+        "REQ-013",
+        "REQ-021"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-41",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/22",
+    "original_record": {
+      "id": "RND-41",
+      "title": "Capability drift monitoring",
+      "problem_ru": "Навык теряет валидность после обновления сайта, инструмента или модели.",
+      "novelty": "new",
+      "design_ru": "Fingerprint version/schema/UI selectors; canary read-only cases; quarantine broken adapter; fallback uses другой failure domain.",
+      "experiment_ru": "Изменить locator/API field/tool schema и проверить fast demotion старого skill.",
+      "acceptance_ru": "Нельзя продолжать по устаревшему cached capability; отдельные receipts для platform qualification.",
+      "functions": [
+        "fingerprint_capability_environment",
+        "run_readonly_capability_canary",
+        "demote_drifted_executor",
+        "schedule_adapter_requalification"
+      ],
+      "source_ids": [
+        "S03",
+        "S05",
+        "S16"
+      ],
+      "requirement_ids": [
+        "REQ-013",
+        "REQ-017",
+        "REQ-026"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-42",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/23",
+    "original_record": {
+      "id": "RND-42",
+      "title": "Offline context-and-skill optimizer",
+      "problem_ru": "Улучшать способы собирать контекст по результатам, не добавляя бездумно больше текста.",
+      "novelty": "new",
+      "design_ru": "DSPy/GEPA как optional offline optimizer для retrieval rules, labels, skill prompts; immutable holdout + cost/privacy constraints.",
+      "experiment_ru": "Одинаковый набор задач для baseline и learned context policy; reject reward hacking и критические regression.",
+      "acceptance_ru": "Promotion только по held-out verified outcomes, без изменения permissions и production policy.",
+      "functions": [
+        "evaluate_context_policy_candidate",
+        "optimize_offline_context_program",
+        "audit_optimizer_data_leakage",
+        "promote_validated_context_policy"
+      ],
+      "source_ids": [
+        "S11",
+        "S12",
+        "S13"
+      ],
+      "requirement_ids": [
+        "REQ-015",
+        "REQ-017",
+        "REQ-026"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "See separate lab status; this card is not an installed integration."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-43",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/24",
+    "original_record": {
+      "id": "RND-43",
+      "title": "Multi-producer observation fabric",
+      "problem_ru": "Много способов записи одного процесса должны дополнять друг друга, а не ждать первого победителя.",
+      "novelty": "new_detail_of_capture",
+      "design_ru": "Append-only streams с ключом session/producer/sequence; bytes dedup отдельно от observation identity; один логически связанный capture session.",
+      "experiment_ru": "Один channel отвечает мгновенно, второй поздно, третий обрывается после части данных.",
+      "acceptance_ru": "Сохранить ранние и поздние события; ошибку и неполноту явно отобразить.",
+      "functions": [
+        "open_observation_session",
+        "append_source_observation",
+        "correlate_observation_streams",
+        "preserve_late_channel_evidence"
+      ],
+      "source_ids": [
+        "S24",
+        "S25"
+      ],
+      "requirement_ids": [
+        "REQ-033",
+        "REQ-007"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-44",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/25",
+    "original_record": {
+      "id": "RND-44",
+      "title": "Capture portfolio by information gaps",
+      "problem_ru": "Постоянная запись всех экранов не равна лучшему контексту.",
+      "novelty": "new",
+      "design_ru": "Сначала дешёвые process/file/UIA/DOM metadata; audio/screenshot только разрешённо и по необходимости; отдельный coverage planner.",
+      "experiment_ru": "Сравнить always-on every-sensor и task-conditioned sensor portfolio на одинаковых задачах.",
+      "acceptance_ru": "Меньше peak RAM/CPU и privacy exposure при не худшем task-evidence recall.",
+      "functions": [
+        "identify_capture_information_gap",
+        "select_observation_portfolio",
+        "measure_sensor_marginal_coverage",
+        "retire_redundant_capture_channel"
+      ],
+      "source_ids": [
+        "S24",
+        "S25"
+      ],
+      "requirement_ids": [
+        "REQ-033",
+        "REQ-036"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-45",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/26",
+    "original_record": {
+      "id": "RND-45",
+      "title": "Join-semantics compiler",
+      "problem_ru": "Нельзя использовать first-winner для всей агрегации и wait-all для каждой команды.",
+      "novelty": "new",
+      "design_ru": "Каждому узлу задать UNION, REQUIRED_EVIDENCE_JOIN, FIRST_VERIFIED, PARTITIONED_MAP или PREPARE_COMMIT.",
+      "experiment_ru": "Одинаковую задачу выполнить с неправильным и правильным join mode.",
+      "acceptance_ru": "Ни потерянных поздних фактов, ни ожидания необязательного архива на critical path.",
+      "functions": [
+        "classify_parallel_join_semantics",
+        "compile_join_contract",
+        "validate_route_merge_policy",
+        "explain_join_wait_reason"
+      ],
+      "source_ids": [
+        "S01",
+        "S02"
+      ],
+      "requirement_ids": [
+        "REQ-035",
+        "REQ-034"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-46",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/27",
+    "original_record": {
+      "id": "RND-46",
+      "title": "Evidence-ready streaming handoff",
+      "problem_ru": "Не ждать «всю жизнь проиндексировали», прежде чем попросить AI исправить одну функцию.",
+      "novelty": "refinement",
+      "design_ru": "Именованные required evidence slots; snapshot freeze; первая достаточная version; поздние данные — delta с parent digest.",
+      "experiment_ru": "Запросить patch до окончания full archive import; позже вернуть contradicting current source.",
+      "acceptance_ru": "Missing critical evidence блокирует ready; существенный delta отзывает stale patch.",
+      "functions": [
+        "compute_minimum_evidence_frontier",
+        "freeze_handoff_revision",
+        "emit_late_evidence_delta",
+        "invalidate_result_after_material_delta"
+      ],
+      "source_ids": [
+        "S09",
+        "S16"
+      ],
+      "requirement_ids": [
+        "REQ-038",
+        "REQ-010"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-47",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/28",
+    "original_record": {
+      "id": "RND-47",
+      "title": "Authority-separated tagging lanes",
+      "problem_ru": "Текст идеи, желание пользователя и фактический test receipt нельзя сводить одним уверенным labeler.",
+      "novelty": "refinement",
+      "design_ru": "Lane A deterministic provenance; B user intent/requirements; C model proposals; D measured code/test state; сохранять conflicts.",
+      "experiment_ru": "Один AI говорит implemented, другой docs говорит planned, actual tests отсутствуют.",
+      "acceptance_ru": "Статус остаётся NOT_VERIFIED; majority summaries не порождает DONE.",
+      "functions": [
+        "label_source_authority_lane",
+        "distinguish_intent_from_world_state",
+        "preserve_label_disagreements",
+        "require_evidence_for_status_promotion"
+      ],
+      "source_ids": [
+        "S06",
+        "S08"
+      ],
+      "requirement_ids": [
+        "REQ-037",
+        "REQ-012"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-48",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/29",
+    "original_record": {
+      "id": "RND-48",
+      "title": "Context request-response protocol",
+      "problem_ru": "Пакет может не знать заранее, какой dependency нужен следующей модели.",
+      "novelty": "new",
+      "design_ru": "AI возвращает typed NEED_CONTEXT(symbol/path/date/reason), локальный compiler исполняет scoped retrieval и выдаёт delta.",
+      "experiment_ru": "Модель обнаруживает missing interface; сравнить весь repo resend с exact code dependency retrieval.",
+      "acceptance_ru": "Source-bound response, lower irrelevant bytes, незапрошенные private roots не раскрываются.",
+      "functions": [
+        "parse_ai_context_request",
+        "resolve_requested_symbol_context",
+        "enforce_context_request_scope",
+        "return_context_delta_receipt"
+      ],
+      "source_ids": [
+        "S09",
+        "S16",
+        "S26"
+      ],
+      "requirement_ids": [
+        "REQ-040",
+        "REQ-003"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-49",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/30",
+    "original_record": {
+      "id": "RND-49",
+      "title": "Desired-state action equivalence",
+      "problem_ru": "Разные команды запуска могут быть одним и тем же методом с общим failure domain.",
+      "novelty": "new_detail",
+      "design_ru": "ActionSpec описывает desired state; registry связывает API/CLI/UIA с pre/postconditions; diversity измерять по восстановленным failures.",
+      "experiment_ru": "Открыть проект code CLI, OS URI handler и UIA; проверить одинаковый итог без тройного открытия.",
+      "acceptance_ru": "Победитель определяется target state; другой route не создаёт duplicate window.",
+      "functions": [
+        "define_action_equivalence_class",
+        "map_goal_to_reachable_state",
+        "choose_shortest_verified_route",
+        "reconcile_same_goal_effects"
+      ],
+      "source_ids": [
+        "S02",
+        "S05"
+      ],
+      "requirement_ids": [
+        "REQ-034",
+        "REQ-036"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-50",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/31",
+    "original_record": {
+      "id": "RND-50",
+      "title": "Foreground-preserving parallel workspace",
+      "problem_ru": "Пользователь продолжает печатать, пока агенты читают и готовят код.",
+      "novelty": "refinement",
+      "design_ru": "Фоновые API/FS workers не трогают focus; UI input lease выдаётся одной активной цепочке и отзывается при ручном вводе.",
+      "experiment_ru": "Во время ASR/retrieval/edit worktree пользователь работает в Chrome.",
+      "acceptance_ru": "Ни stolen focus, ни набора текста в чужом окне; independent tasks продолжаются.",
+      "functions": [
+        "detect_foreground_user_activity",
+        "lease_desktop_input_channel",
+        "suspend_conflicting_gui_path",
+        "continue_noninterfering_background_tasks"
+      ],
+      "source_ids": [
+        "S03",
+        "S25"
+      ],
+      "requirement_ids": [
+        "REQ-034",
+        "REQ-020"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-51",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/32",
+    "original_record": {
+      "id": "RND-51",
+      "title": "Late arrivals and evidence watermarks",
+      "problem_ru": "Источники приходят с разной задержкой; временной порядок не является причинностью.",
+      "novelty": "new",
+      "design_ru": "Per-producer monotonic seq + source version + observed/ingested time; gaps и watermarks; late evidence не отбрасывается.",
+      "experiment_ru": "Перепутать arrival order, повторить событие, сменить source version.",
+      "acceptance_ru": "Никакого last-arrival-wins для истории решений; timestamps не склеивают разные commits.",
+      "functions": [
+        "track_producer_watermark",
+        "detect_capture_sequence_gap",
+        "associate_causal_source_version",
+        "reprocess_late_evidence_revision"
+      ],
+      "source_ids": [
+        "S14"
+      ],
+      "requirement_ids": [
+        "REQ-033",
+        "REQ-038"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-52",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/33",
+    "original_record": {
+      "id": "RND-52",
+      "title": "Recording-to-automation opportunity miner",
+      "problem_ru": "Нужно понять, какие повторяющиеся действия действительно стоит автоматизировать.",
+      "novelty": "refinement",
+      "design_ru": "Cross-source traces → user-confirmed task episode → estimated repeated work → candidate skill → separate verifier.",
+      "experiment_ru": "Из ручного CI triage выделить повторяемые части, не запоминая секретные случайные действия.",
+      "acceptance_ru": "Нет auto-enable только по наблюдению; saved manual effort измеряется после approved replay.",
+      "functions": [
+        "segment_cross_source_task_episode",
+        "rank_automation_opportunities",
+        "draft_skill_from_correlated_episode",
+        "measure_verified_manual_effort_saved"
+      ],
+      "source_ids": [
+        "S24",
+        "S12"
+      ],
+      "requirement_ids": [
+        "REQ-013",
+        "REQ-033"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-53",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/34",
+    "original_record": {
+      "id": "RND-53",
+      "title": "Fast local-first versus remote hedge calibration",
+      "problem_ru": "На CPU laptop параллельные большие модели могут замедлить всё.",
+      "novelty": "new_experiment",
+      "design_ru": "Benchmark rules/FTS alone, local Laya router, local+consented remote hedge; no unconditional fan-out; common resource budget.",
+      "experiment_ru": "Одинаковый held-out RU/EN command corpus; warm/cold, contention, slow API и offline fault.",
+      "acceptance_ru": "Выбирать по cost per verified success и p95 response; reject policy, ухудшающую critical commands.",
+      "functions": [
+        "profile_on_device_route_budget",
+        "compare_local_remote_hedge_policies",
+        "track_quality_latency_pareto_frontier",
+        "promote_empirically_better_portfolio"
+      ],
+      "source_ids": [
+        "S01",
+        "S06",
+        "S22",
+        "S23"
+      ],
+      "requirement_ids": [
+        "REQ-036",
+        "REQ-015"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "VOICE_V3::RND-54",
+    "source_path": "packages/VOICE_V3/03_RND_CARDS/catalog.json",
+    "json_pointer": "/35",
+    "original_record": {
+      "id": "RND-54",
+      "title": "Whole-conversation strategy merge",
+      "problem_ru": "ZIP, текст чата и recovered notes могут содержать дубликаты и противоречивые устаревшие планы.",
+      "novelty": "new_detail",
+      "design_ru": "Canonical requirement IDs + original refs; latest explicit user instruction overrides prior proposal; no auto-closing based on assistant claims.",
+      "experiment_ru": "Импорт legacy ZIP и текущего уточнения multi-recorder; сверить inherited single-writer language.",
+      "acceptance_ru": "Новая стратегия соблюдает multi-producer capture и сохраняет безопасные effect boundaries.",
+      "functions": [
+        "ingest_strategy_artifact_graph",
+        "link_chat_requirement_to_archive",
+        "reconcile_strategy_precedence",
+        "compile_one_provider_neutral_master_handoff"
+      ],
+      "source_ids": [
+        "S16"
+      ],
+      "requirement_ids": [
+        "REQ-037",
+        "REQ-039"
+      ],
+      "status": "PROPOSED_RND",
+      "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-001",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/0",
+    "original_record": {
+      "id": "EXP-001",
+      "area": "archive",
+      "title_ru": "Полный корпус >20 / >1000 документов",
+      "hypothesis_ru": "Потоковый manifest убирает пропуски без роста RAM пропорционально total text.",
+      "baseline_ru": "Текущий single context_pack против multipart",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G03",
+        "G05"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-002",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/1",
+    "original_record": {
+      "id": "EXP-002",
+      "area": "archive",
+      "title_ru": "Большой blob без 8 MiB потолка",
+      "hypothesis_ru": "Raw streaming сохраняет large objects, даже когда parser временно отложен.",
+      "baseline_ru": "Текущий MAX_FILE против raw-first",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G05"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-003",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/2",
+    "original_record": {
+      "id": "EXP-003",
+      "area": "archive",
+      "title_ru": "Точный путь через разные ОС",
+      "hypothesis_ru": "Raw path bytes + display alias позволяют переносить inventory без коллизий Unicode/case.",
+      "baseline_ru": "Только строковый нормализованный path",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G05"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-004",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/3",
+    "original_record": {
+      "id": "EXP-004",
+      "area": "archive",
+      "title_ru": "LFS/submodule completeness",
+      "hypothesis_ru": "Раздельные scope flags предотвращают ложное полное покрытие при pointer-only архиве.",
+      "baseline_ru": "Один общий complete=true",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G05"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-005",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/4",
+    "original_record": {
+      "id": "EXP-005",
+      "area": "archive",
+      "title_ru": "Прерывание на каждом checkpoint",
+      "hypothesis_ru": "Durable cursor и atomic objects позволяют продолжить сбор без потерь или двойного head update.",
+      "baseline_ru": "Повтор full scan без persisted cursor",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G03",
+        "G05"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-006",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/5",
+    "original_record": {
+      "id": "EXP-006",
+      "area": "archive",
+      "title_ru": "Ветки прошлых чатов",
+      "hypothesis_ru": "Branch-aware importer сохраняет идеи из альтернативных ответов, которые теряет линейный export.",
+      "baseline_ru": "Только current branch transcript",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-007",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/6",
+    "original_record": {
+      "id": "EXP-007",
+      "area": "archive",
+      "title_ru": "Вложения и сообщения-ссылки",
+      "hypothesis_ru": "Attachment manifest с missing-state лучше защищает полноту, чем markdown с недоступной ссылкой.",
+      "baseline_ru": "Отсутствие отдельного attachment inventory",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-008",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/7",
+    "original_record": {
+      "id": "EXP-008",
+      "area": "archive",
+      "title_ru": "Байт-контекст vs token budget",
+      "hypothesis_ru": "Отдельный prompt compiler сохраняет raw полноту и предотвращает скрытый model-side cutoff.",
+      "baseline_ru": "Деление только по символам или размерам файла",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S03",
+        "G03"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-009",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/8",
+    "original_record": {
+      "id": "EXP-009",
+      "area": "archive",
+      "title_ru": "Повторные ZIP и version lineage",
+      "hypothesis_ru": "CAS dedup сокращает хранение одинаковых bytes, сохраняя все source paths/versions.",
+      "baseline_ru": "Удаление дубликатов целых документов по похожему title",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-010",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json

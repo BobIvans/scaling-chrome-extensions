@@ -1,0 +1,27 @@
+TITLE: feat(context-desktop): unify ROADMAP-PR-014/015 context lifecycle and Windows client
+
+Проблема
+По roadmap контекстный пакет, долговременный retrieval, backup и desktop развиваются отдельными поставками. Без общей identity installed client может отправлять другую проекцию, повторять неизвестную запись после reconnect и показывать capability как доступную только по описанию. Объединённый PR должен дать один проверяемый цикл от exact source до packet/result и до установленной, квалифицированной операции.
+
+Поведение после реализации
+Пользователь запускает per-user Windows-клиент при закрытом Chrome, открывает прежний профиль и один canonical store. Находит источник по ID, точной цитате, проекту или времени, видит версии и противоречия, добавляет ranges в корзину с WHY_THIS_PACKET. Preview и export используют один immutable share projection. AI возвращает связанный RESULT либо точный NEED_CONTEXT; приложение проверяет snapshot/range/scope и сохраняет ответ как proposal. Backup восстанавливается сначала в отдельный каталог и проверяется перед активацией. Зарегистрированные templates вызываются через существующий Core; STOP доступен независимо от модели, ASR и Chrome.
+
+Included
+WS-013: TaskDocument, source-bound ContextPacket, continuation, read-only gateway, share/redaction, return ingest.
+WS-014: DB/blob/event snapshot, restore rehearsal, tombstones, retention, compatibility migration, optional offline snapshot/event sync.
+WS-015: temporal exact retrieval, conflict sets, WHY_THIS_PACKET, corrections, frozen relevance corpus.
+WS-016: packaging spike, per-user installation, typed IPC, canonical writes, virtualized catalog, keyboard/screen reader, recovery.
+WS-017: installed-build registry, operator templates, grants, idempotent operations, stale qualification, independent STOP.
+
+Интеграция
+Расширяются текущие Content Lab/native/Core/review/policy owners; desktop не пишет SQL и не создаёт store или scheduler. Все handlers и изменяемые пути уточняются после current HEAD audit. Один migration coordinator, один execution owner. PR-014 и PR-015 — aliases одного итогового GitHub PR, а не номера GitHub issues.
+
+Validation — заполнить перед публикацией
+Current base/head: UNKNOWN. Local tests/CI: NOT_RUN. Windows install/device: NOT_RUN. STOP measurements: NOT_RUN. Independent corpus: fixtures prepared, execution NOT_RUN. Package structural checks: отдельный receipt verification/PACKAGE_VALIDATION.json.
+Coding agent обязан заменить этот раздел фактическими командами, corpus denominator, hashes, устройством, результатами и limitations. Нельзя вставлять spec validation как runtime green.
+
+Риски и ограничения реализации
+Multi-artifact backup требует publication barrier/CAS pin, а не только DB snapshot. Restore старого архива требует current tombstone overlay. Runtime выбор и installer не приняты до Windows measurement. Source task с downstream UI/provider/release/campaign criterion остаётся OPEN до соответствующего evidence, даже если этот локальный slice готов.
+
+Downstream
+PR-016 — text/planner/Laya/voice; PR-017 — real browser bindings и AI UI delivery; PR-018 — worktree/PR/CI и updater; PR-019 — campaigns/resources; PR-020 — web3 qualification; PR-021 — общая продуктовая приёмка. В этом PR сохраняются интерфейсы и незакрытые критерии для них.

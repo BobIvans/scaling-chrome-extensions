@@ -1,0 +1,42 @@
+МЕТКИ ДЛЯ ЛЮБОГО ФРАГМЕНТА: СХЕМА ДЛЯ ДАЛЬНЕЙШЕЙ РАЗРАБОТКИ
+
+Слои записи:
+• original: байты/объект источника, неизменяемый идентификатор, SHA-256;
+• source_version: источник, revision, path/URL, время capture и source time;
+• span: file offsets, message ID, page, timestamp audio/video или symbol;
+• interpretation: метки, связи и выводы с авторством, версиями и обоснованием;
+• outcome: выполненные действия и независимые evidence receipts.
+
+Базовые измерения меток:
+1. source_kind: repo/chat/document/web/audio/video/image/terminal/observation.
+2. author_role: user/assistant/tool/external/unknown; speaker и source identity.
+3. information_kind: requirement/idea/decision/question/task/fact/hypothesis/
+   code/test/error/result/constraint/proposal. Несколько меток допустимы.
+4. scope: project, repo, path, symbol, goal, entity, topic, workflow/capability.
+5. chronology: created/captured/valid_from/valid_to/revision/supersedes.
+6. evidence: asserted/suggested/verified/disputed/unknown; отдельный link на
+   критерий и результат TRUE/FALSE/UNKNOWN/NOT_RUN. Уверенность модели не proof.
+7. lifecycle: inbox/to_review/accepted/planned/in_progress/blocked/done/
+   deprecated; текущий статус хранится как view истории событий.
+8. access: local/private/selected_provider/exportable; scope конкретного источника.
+9. provenance: exact span, parent links, extractor/model/version, изменивший метку.
+10. relevance: цель и объяснение связи; urgency/priority — отдельно от truth.
+11. quality: parse/coverage/freshness/conflict/missing-dependency состояния.
+12. action: proposed capability, inputs, required evidence, expected outcome.
+
+Теги могут быть unknown, многозначными или спорными. Не подменять отсутствующее
+значение выдуманным. AI предлагает метки; исходная фраза сохраняется и пользователь
+может исправлять классификацию. Хранить отрицание, временные условия и автора.
+
+Связи:
+derived_from, quotes, supports, contradicts, supersedes, depends_on, implements,
+tests, verifies, blocks, belongs_to, selected_for, produced_by, answered_by.
+
+Пример: пользователь говорит «собери контекст, пока не запускай бота».
+Сохранить весь transcript; отдельно request=context export и constraint=no bot run.
+Не извлекать вторую половину как положительный приказ «запускай бота».
+Это искусственный пример ассистента, не цитата пользователя из истории.
+
+Уже поставляемый офлайн labeling prototype и его границы сохранены в
+packages/SCE_V2/rnd_v2/labeling/. Расширенная схема здесь — будущий контракт,
+не заявление, что все эти facets уже встроены в product store и UI.

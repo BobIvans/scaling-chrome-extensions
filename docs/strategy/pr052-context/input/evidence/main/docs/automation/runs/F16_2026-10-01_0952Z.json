@@ -1,0 +1,130 @@
+{
+  "schema": "occ.execution-receipt.v1",
+  "function_number": 16,
+  "job_id": "occ-f16-authenticated-ci-20261001T0952Z",
+  "recorded_at_utc": "2026-10-01T09:52:22Z",
+  "state": "DONE",
+  "completion_scope": "F16 authenticated exact-head GitHub check-runs transport into the existing CI snapshot owner; not a real credential smoke or release authority",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "working_branch": "codex/f16-authenticated-ci-transport",
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/18",
+  "pr_number": 18,
+  "draft": true,
+  "merged": false,
+  "pr_base_branch": "codex/f15-bounded-schedule-admission",
+  "pr_base_sha": "68c2f2d2a6468ee458df4874570850a4696b2d20",
+  "run_base_sha": "68c2f2d2a6468ee458df4874570850a4696b2d20",
+  "head_sha": "2823c7788a76fb1c45e63b189f205a1272b560c1",
+  "tested_tree_sha": "c5d085f73e5a7a831ebb831417d20b927ac3927b",
+  "run_diff_sha256": "99e9635b391a1529c860c955e1031433a3339576ff1e21d533d2e8bc13ecb660",
+  "head_semantics": "head_sha is the exact F16 code commit tested locally and by CI. The later containing receipt/handoff commit requires its own exact-head CI.",
+  "preflight": {
+    "f15_pr": 16,
+    "f15_head": "68c2f2d2a6468ee458df4874570850a4696b2d20",
+    "f15_exact_head_ci": "PASS",
+    "f15_ci_run": 36837977218,
+    "open_f16_prs_before_write": 0,
+    "duplicate_f16_prs_created": 0,
+    "agents_files_present": false,
+    "prior_f16_receipt_present": false,
+    "active_previous_repo_writer": false
+  },
+  "owner_preservation": {
+    "ci_snapshot_and_release_state": "content-lab/automation_core.py::Core.poll_ci",
+    "transport": "content-lab/github_ci_snapshot.py",
+    "job_queue": "content-lab/automation_core.py::enqueue/Core",
+    "new_queue_or_release_owner": false
+  },
+  "tests": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "result": "PASS",
+      "checks": 80,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "result": "PASS",
+      "checks": 34,
+      "exit_code": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "result": "PASS",
+      "checks": 68,
+      "exit_code": 0
+    },
+    {
+      "command": "git diff --cached --check",
+      "result": "PASS",
+      "exit_code": 0
+    }
+  ],
+  "final_regression_checks": 182,
+  "focused_transport_checks": 7,
+  "checks_overlap_warning": "Focused transport tests are included in the 80 Python checks; do not add them to 182.",
+  "ci": {
+    "state": "PASS",
+    "head_sha": "2823c7788a76fb1c45e63b189f205a1272b560c1",
+    "runs": [
+      {
+        "id": 36845361549,
+        "head_sha": "2823c7788a76fb1c45e63b189f205a1272b560c1",
+        "status": "completed",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36845361549"
+      }
+    ],
+    "checks": [
+      {
+        "id": 110314083180,
+        "name": "core (ubuntu-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36845361549/job/110314083180"
+      },
+      {
+        "id": 110314083601,
+        "name": "core (windows-latest)",
+        "conclusion": "success",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/36845361549/job/110314083601"
+      }
+    ]
+  },
+  "verified_behaviors": [
+    "registered repository and exact 40-hex head binding",
+    "only required GitHub Actions check runs are collected",
+    "latest failed check run overrides older green evidence",
+    "wrong SHA and foreign app cannot satisfy the required set",
+    "bounded pagination and response bytes",
+    "atomic mode-0600 snapshot replacement where supported",
+    "missing or revoked credential clears stale green with a BLOCKED snapshot",
+    "credential and remote response body are absent from snapshot and CLI error",
+    "Core binds authenticated origin to repository, required set, exact head and OBSERVED status",
+    "legacy operator snapshot remains explicitly unauthenticated"
+  ],
+  "limits": {
+    "max_repo_writers": 1,
+    "implementation_attempts": 2,
+    "max_attempts": 3,
+    "provider_api_spend": 0,
+    "new_draft_prs": 1,
+    "updated_draft_prs": 0,
+    "merge": 0,
+    "deploy": 0,
+    "worker_runs": 0,
+    "model_calls": 0,
+    "github_authenticated_smoke_calls": 0,
+    "signup": 0,
+    "blockchain_signing_or_send": 0
+  },
+  "limitations": [
+    "No real GitHub credential was obtained or used; network behavior is covered by deterministic injected fixtures.",
+    "Transport is read-only and does not publish a commit, create a PR, merge or grant release authority.",
+    "A local operator can still replace policy or snapshot files; OS permissions and operator trust remain the local boundary.",
+    "Check-run IDs are used as monotonic evidence IDs; required names must match the registered workflow jobs.",
+    "No voice/ASR/Laya/browser/OpenShell/model/provider/market campaign.",
+    "Related CAND records remain thematic references and are not automatically closed."
+  ],
+  "next_function_number": 17,
+  "next_job": "Audit current head and existing Content Lab export parsing/SQLite owners, then implement one stable ChatGPT export conversation/message ID and edit-dedup gap without adding a second store."
+}

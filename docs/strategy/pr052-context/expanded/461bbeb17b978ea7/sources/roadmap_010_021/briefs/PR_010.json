@@ -1,0 +1,269 @@
+{
+  "number": 10,
+  "package_id": "ROADMAP-PR-010",
+  "title": "Единая библиотека источников: точный поиск, версии, метки, цели и импорт файлов/чатов",
+  "user_outcome": "Закрыть source fidelity/import/search debt №5/8/9 и получить полезную локальную библиотеку с originals, SourceAddress, TXT/folders/archives, ChatGPT/Telegram branches и goal overlays.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    5,
+    9
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Точные ссылки на источники, поиск и ручные метки",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "SourceAddress: source/version/extraction/range/hash",
+        "ID/path/exact-quote/FTS с фильтрами namespace/project/time",
+        "Версии автоматических меток, ручные overrides, сохранённые представления"
+      ],
+      "acceptance": [
+        "Цитата открывает ту же версию после restart",
+        "Ошибочные bounds/hash/namespace отклоняются",
+        "Нет утечки snippets за пределы scope",
+        "Ручная метка переживает повторную extraction",
+        "Все страницы выдачи доступны, включая хвост",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "№9 хранит оригиналы ChatGPT JSON; здесь добавляются точные адреса и поисковый контракт. Семантическая lifetime retrieval — №24; полные importer adapters — №16–20.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-008",
+        "LAYA4-015",
+        "LAYA4-016",
+        "ACTION5-10",
+        "ACTION5-11"
+      ],
+      "feature_ids": [
+        "LIB-014",
+        "LIB-017",
+        "LIB-018",
+        "LIB-050"
+      ],
+      "decision_ids": [
+        "DEC5-15"
+      ],
+      "goal_ids": [
+        "GOAL5-06",
+        "GOAL5-09"
+      ],
+      "workstream_id": "WS-001",
+      "parent_package": "ROADMAP-PR-010",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [],
+      "original_package_inputs": [
+        9
+      ]
+    },
+    {
+      "title": "Общий импорт файлов: TXT, папки, архивы, кодировки и специальные Git payloads",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Importer registry и extractor queue в canonical store",
+        "Streamed TXT/folder checkpoints/encodings и archive provenance graph",
+        "Raw unsupported originals, attachments, local LFS payload verification и submodule identities"
+      ],
+      "acceptance": [
+        "Каждый entry имеет outcome/reason без молчаливого пропуска",
+        "Повтор/rename/delete/resume сохраняют source lineage",
+        "Archive traversal/cycle/resource cases дают явный результат",
+        "LFS pointer и payload имеют отдельные hash/size identities",
+        "TXT и кодировки возвращают точные оригинальные bytes",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Закрывает оставшийся TXT scope №8: итоговый №9 реализует план ChatGPT JSON, а не TXT. PDF/Office — №18, media — №19; retrieval — №10/24. Acquisition выполняется только в выбранном source scope.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "LAYA4-004",
+        "LAYA4-013",
+        "LAYA4-014",
+        "ACTION5-06",
+        "ACTION5-09"
+      ],
+      "feature_ids": [
+        "LIB-006",
+        "LIB-007",
+        "LIB-009",
+        "LIB-010",
+        "LIB-015",
+        "LIB-016",
+        "LIB-041",
+        "LIB-047"
+      ],
+      "decision_ids": [
+        "DEC5-16"
+      ],
+      "goal_ids": [
+        "GOAL5-03",
+        "GOAL5-08"
+      ],
+      "workstream_id": "WS-007",
+      "parent_package": "ROADMAP-PR-010",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-001"
+      ],
+      "original_package_inputs": [
+        9
+      ]
+    },
+    {
+      "title": "Полная история чатов и Telegram: scroll, ветви, правки, авторы и вложения",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "CaptureEnvelope для автора, цитат, времени и edit revisions",
+        "Продолжение virtualized/full-scroll capture после restart",
+        "ChatGPT/Telegram export adapters, attachments и unknown-branch ledger"
+      ],
+      "acceptance": [
+        "Повторные DOM fragments не дублируют сообщения",
+        "Обе наблюдаемые ветви и структурные nodes сохранены",
+        "Цитата не становится репликой другого автора",
+        "Payload missing и недоступные ветви видны",
+        "UI capture сравнивается с доступным export без заявления о невидимой истории",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Расширяет source fidelity №9. Передача в AI chat — №31; не смешивать reading capture с отправкой.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-04",
+        "ACTION5-05"
+      ],
+      "feature_ids": [
+        "LIB-012",
+        "LIB-013",
+        "LIB-042"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-06"
+      ],
+      "workstream_id": "WS-008",
+      "parent_package": "ROADMAP-PR-010",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-007"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Реестр целей, противоречий, заметок и покрытия требований",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "GoalRequest и RU/EN goal revisions с exact user sources",
+        "Questions/terms/contradictions/notes как отдельные overlays",
+        "Goal→source→code→test→result dashboard и устойчивые namespaces"
+      ],
+      "acceptance": [
+        "Новая редакция цели сохраняет предыдущую",
+        "Assistant proposal не маркируется user quote",
+        "Противоречащие источники видны вместе с временем",
+        "Редактирование заметки не меняет импортный оригинал",
+        "Proposed/implemented/tested/installed/usable различаются",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Ручные labels принадлежат №10; automated next brief — №37. Финальный no-goal-left-behind audit — №45.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-002",
+        "G3-009",
+        "EVO3-002",
+        "EVO3-012"
+      ],
+      "feature_ids": [
+        "LIB-019",
+        "LIB-020",
+        "LIB-021",
+        "LIB-022",
+        "LIB-048",
+        "LIB-052",
+        "LIB-058",
+        "ACT-056",
+        "RND-002"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-09",
+        "GOAL5-10"
+      ],
+      "workstream_id": "WS-012",
+      "parent_package": "ROADMAP-PR-010",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-001"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "G3-002",
+    "G3-008",
+    "G3-009",
+    "EVO3-002",
+    "EVO3-012",
+    "LAYA4-004",
+    "LAYA4-013",
+    "LAYA4-014",
+    "LAYA4-015",
+    "LAYA4-016",
+    "ACTION5-04",
+    "ACTION5-05",
+    "ACTION5-06",
+    "ACTION5-09",
+    "ACTION5-10",
+    "ACTION5-11"
+  ],
+  "feature_ids": [
+    "LIB-006",
+    "LIB-007",
+    "LIB-009",
+    "LIB-010",
+    "LIB-012",
+    "LIB-013",
+    "LIB-014",
+    "LIB-015",
+    "LIB-016",
+    "LIB-017",
+    "LIB-018",
+    "LIB-019",
+    "LIB-020",
+    "LIB-021",
+    "LIB-022",
+    "LIB-041",
+    "LIB-042",
+    "LIB-047",
+    "LIB-048",
+    "LIB-050",
+    "LIB-052",
+    "LIB-058",
+    "ACT-056",
+    "RND-002"
+  ],
+  "decision_ids": [
+    "DEC5-15",
+    "DEC5-16"
+  ],
+  "goal_ids": [
+    "GOAL5-03",
+    "GOAL5-06",
+    "GOAL5-08",
+    "GOAL5-09",
+    "GOAL5-10"
+  ]
+}

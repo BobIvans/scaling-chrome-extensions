@@ -1,0 +1,35 @@
+OPEN-SOURCE ВАРИАНТЫ ИЗ НАЙДЕННОГО РАЗГОВОРА
+
+AppFlowy — готовое рабочее пространство с desktop версией. Хороший ориентир
+для страниц и представлений. Перенос всего приложения в SCE потребует отдельного
+решения о его runtime/storage; это не готовый repo-analysis backend.
+https://github.com/AppFlowy-IO/AppFlowy
+
+AFFiNE — документы/рабочее пространство, полезно изучить UX и редактор.
+Старое утверждение «всё MIT» здесь не принимается без проверки конкретных файлов.
+https://github.com/toeverything/AFFiNE
+
+BlockNote — встраиваемый React block editor; кандидат для своих страниц/заметок.
+Ядро и расширения могут иметь разные лицензии, проверять выбранные пакеты.
+https://github.com/TypeCellOS/BlockNote
+
+BlockSuite — toolkit для редакторов/collaboration; потребует своего app integration.
+https://github.com/toeverything/blocksuite
+
+Joplin — локальные заметки и синхронизация; полезен как источник/формат экспорта,
+но не требуется устанавливать его, чтобы пользоваться этим прототипом.
+https://github.com/laurent22/joplin
+
+В предыдущих ответах также были Letta/Graphiti/OpenHands, Continue/Aider,
+LangGraph/Mem0/GraphRAG и различные модели. Их наличие в истории не означает,
+что нужно одновременно добавлять каждый runtime в наше приложение.
+
+ВЫБОР ДЛЯ ЭТОГО ЭТАПА
+Проверить desktop import/export простым Python shell. Для развитой версии
+переиспользовать SCE Python services и один storage owner. Встраиваемый редактор
+добавлять поверх собственной библиотеки, а не хранить отдельную правду в пяти БД.
+На Dell 16 GB измерить idle RAM, время поиска, import throughput, API roundtrip
+и холодный запуск. Не обещать производительность по benchmark чужого GPU.
+Документация Qt: https://doc.qt.io/qtforpython-6/
+Документация Tk: https://docs.python.org/3/library/tkinter.html
+VS Code CLI: https://code.visualstudio.com/docs/configure/command-line

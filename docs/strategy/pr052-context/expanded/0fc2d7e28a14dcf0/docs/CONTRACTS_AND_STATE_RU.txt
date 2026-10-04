@@ -1,0 +1,24 @@
+PROPOSED CONTRACTS v1 — не фактический API текущего checkout
+
+Identity scope
+SourceRef = namespace/source_id/revision_id/blob_sha256/offset_space/start/end. Raw bytes offsets всегда [start,end), int64 safe within selected wire range; transport JSON integers ограничены 2^53-1 в proposal. Большие corpus offsets должны получить новый versioned representation (decimal string) до превышения ABI; это wire representation boundary, не storage cap. Text UTF-8 derived offsets требуют mapping to raw revision; если OCR/audio не имеет raw byte equivalent, используйте typed page/time/table locators и source ref, не фиктивный raw byte range. Current schemas описывают raw/derived byte slice; adapter-specific locator extension требует separate qualified schema.
+
+TaskDocument содержит goal revision, criterion revision, baseline snapshot, requirement refs, source refs, omissions и return contract version. ContextPacket содержит task ref, все selected обязательные sources/parts, coverage и missing ledger. Нейтральный packet digest не зависит от mutable receipt. ShareProjection связывает packet digest, selection/export policy и destination revision; digest считает immutable exported content/index/mapping policy. Same preview/export digest относится именно к projection; packet digest не подменяет destination binding.
+
+Состояния не объединять
+inventory/captured/selected/prepared/local_exported/delivered/model_declared_reviewed/criterion_verified — отдельные факты. Provider UI observation не доказывает read/used. Result proposal не доказывает independent criterion verification. Build downloadable/installed/capability qualified/usable — отдельные gates. Supplied/read/used нельзя массово выставить по manifest presence.
+
+Write intent
+Persist operation_id + canonical intent digest и policy revision в одном transaction. Job enqueue имеет durable outbox/unique key у Core; если Core и content store разные транзакционные domains, существующий outbox/reconcile owner, не pretend atomic SQL across stores. Ack after persistence; crash before ack => same ID lookup. Same ID/different digest => conflict. Read retry может повторяться, write/remote unknown не повторяется как новый эффект. Внешний exactly-once не обещается без adapter idempotency/reconciliation.
+
+IPC envelope
+version, request_id, connection_generation, command enum, namespace, operation_id optional, payload typed by command. Handshake даёт supported command/schema/build/profile/store identity. Нельзя выполнить неизвестный command fallback. Budget max_frame_bytes — negotiated/configured transport value, не corpus limit. Oversize reject before allocation/dispatch. Request cancellation != STOP epoch whole execution scope. Reply previous generation rejected by UI, historical reply retained в journal при нужной reconciliation.
+
+Error classes
+INVALID_SCHEMA, UNKNOWN_COMMAND, PROTOCOL_MISMATCH, OVERSIZE_FRAME, OUT_OF_SCOPE, INVALID_RANGE, MISSING_SOURCE, SOURCE_DRIFT, STALE_BINDING, IDEMPOTENCY_CONFLICT, MISSING_CREDENTIAL, MISSING_DEPENDENCY, UNQUALIFIED, INCOMPATIBLE_BUILD, REVOKED, CANCELLED_BEFORE_DISPATCH, UNKNOWN_EFFECT, BACKUP_INCONSISTENT, HASH_MISMATCH, UNSUPPORTED_SCHEMA, LOCK_BUSY, DISK_FULL.
+Error reply: code, retry_class, user_message, safe_reference, next_action, observed_state; не включать private out-of-scope path, raw secret или undocumented traceback. Retry only according to previous effect observation. Cancel failed-before-send, unknown-send, completed are distinct.
+
+Compatibility
+Strict execution DTO version и unknown fields => reject; исходный imported record хранится raw с unknown future data. Old handoff adapter явно записывает schema and provenance, создаёт новый digest и сообщает unmapped fields. Deprecated command сохраняется read-compatible по documented window, write semantics не guessing. Schema migration coordinated before activation; receipt binding includes schema/build/grant/adapter/verifier revisions.
+
+JSON схемы в contracts/*.schema.json задают structural subset; cross-field security/identity/digest and state semantics проверяются handlers и acceptance tests. Python package validator валидирует используемый schema subset и sample examples, не весь JSON Schema standard и не ABI runtime. v1 must be reconciled with actual owners before code changes.

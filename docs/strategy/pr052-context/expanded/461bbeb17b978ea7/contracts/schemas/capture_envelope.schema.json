@@ -1,0 +1,581 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposal:capture_envelope:v1",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "sce.capture-envelope.proposal.v1"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "namespace",
+        "profile_id",
+        "project_ids"
+      ],
+      "additionalProperties": false
+    },
+    "conversation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "message_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "edit_revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "original_address": {
+      "type": "object",
+      "properties": {
+        "schema": {
+          "const": "sce.source-address.proposal.v1"
+        },
+        "scope": {
+          "type": "object",
+          "properties": {
+            "namespace": {
+              "type": "string",
+              "minLength": 1
+            },
+            "profile_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "project_ids": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "required": [
+            "namespace",
+            "profile_id",
+            "project_ids"
+          ],
+          "additionalProperties": false
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "original_revision_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "raw_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "raw_size": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "coordinate": {
+          "type": "string",
+          "enum": [
+            "RAW_BYTES",
+            "DERIVED_UTF8_BYTES",
+            "JSON_POINTER",
+            "LINE_ONLY"
+          ]
+        },
+        "start": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "end": {
+          "anyOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "range_sha256": {
+          "anyOf": [
+            {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "extraction_revision_id": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "locator": {
+          "anyOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "mapping_quality": {
+          "type": "string",
+          "enum": [
+            "EXACT",
+            "MULTI_RANGE",
+            "SEMANTIC_ONLY",
+            "LINE_ONLY",
+            "UNKNOWN"
+          ]
+        }
+      },
+      "required": [
+        "schema",
+        "scope",
+        "source_id",
+        "original_revision_id",
+        "raw_sha256",
+        "raw_size",
+        "coordinate",
+        "start",
+        "end",
+        "range_sha256",
+        "extraction_revision_id",
+        "locator",
+        "mapping_quality"
+      ],
+      "additionalProperties": false
+    },
+    "author_role": {
+      "type": "string",
+      "enum": [
+        "USER",
+        "ASSISTANT",
+        "SERVICE",
+        "UNKNOWN"
+      ]
+    },
+    "source_event_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "captured_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "inferred_event_at": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "branch_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "quoted_spans": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "address": {
+            "type": "object",
+            "properties": {
+              "schema": {
+                "const": "sce.source-address.proposal.v1"
+              },
+              "scope": {
+                "type": "object",
+                "properties": {
+                  "namespace": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "profile_id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "project_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                },
+                "required": [
+                  "namespace",
+                  "profile_id",
+                  "project_ids"
+                ],
+                "additionalProperties": false
+              },
+              "source_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "original_revision_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "raw_sha256": {
+                "type": "string",
+                "pattern": "^[a-f0-9]{64}$"
+              },
+              "raw_size": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "coordinate": {
+                "type": "string",
+                "enum": [
+                  "RAW_BYTES",
+                  "DERIVED_UTF8_BYTES",
+                  "JSON_POINTER",
+                  "LINE_ONLY"
+                ]
+              },
+              "start": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "end": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 0
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "range_sha256": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "pattern": "^[a-f0-9]{64}$"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "extraction_revision_id": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "locator": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "mapping_quality": {
+                "type": "string",
+                "enum": [
+                  "EXACT",
+                  "MULTI_RANGE",
+                  "SEMANTIC_ONLY",
+                  "LINE_ONLY",
+                  "UNKNOWN"
+                ]
+              }
+            },
+            "required": [
+              "schema",
+              "scope",
+              "source_id",
+              "original_revision_id",
+              "raw_sha256",
+              "raw_size",
+              "coordinate",
+              "start",
+              "end",
+              "range_sha256",
+              "extraction_revision_id",
+              "locator",
+              "mapping_quality"
+            ],
+            "additionalProperties": false
+          },
+          "speaker": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attribution": {
+            "type": "string",
+            "enum": [
+              "DECLARED",
+              "UNKNOWN"
+            ]
+          }
+        },
+        "required": [
+          "address",
+          "speaker",
+          "attribution"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "attachment_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "unknown_fields_ref": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "schema": {
+              "const": "sce.source-address.proposal.v1"
+            },
+            "scope": {
+              "type": "object",
+              "properties": {
+                "namespace": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "profile_id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "project_ids": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                }
+              },
+              "required": [
+                "namespace",
+                "profile_id",
+                "project_ids"
+              ],
+              "additionalProperties": false
+            },
+            "source_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "original_revision_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "raw_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "raw_size": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "coordinate": {
+              "type": "string",
+              "enum": [
+                "RAW_BYTES",
+                "DERIVED_UTF8_BYTES",
+                "JSON_POINTER",
+                "LINE_ONLY"
+              ]
+            },
+            "start": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "end": {
+              "anyOf": [
+                {
+                  "type": "integer",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "range_sha256": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "extraction_revision_id": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "locator": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "mapping_quality": {
+              "type": "string",
+              "enum": [
+                "EXACT",
+                "MULTI_RANGE",
+                "SEMANTIC_ONLY",
+                "LINE_ONLY",
+                "UNKNOWN"
+              ]
+            }
+          },
+          "required": [
+            "schema",
+            "scope",
+            "source_id",
+            "original_revision_id",
+            "raw_sha256",
+            "raw_size",
+            "coordinate",
+            "start",
+            "end",
+            "range_sha256",
+            "extraction_revision_id",
+            "locator",
+            "mapping_quality"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "scope",
+    "conversation_id",
+    "message_id",
+    "edit_revision_id",
+    "original_address",
+    "author_role",
+    "source_event_at",
+    "captured_at",
+    "inferred_event_at",
+    "branch_refs",
+    "quoted_spans",
+    "attachment_refs",
+    "gaps",
+    "unknown_fields_ref"
+  ],
+  "additionalProperties": false
+}

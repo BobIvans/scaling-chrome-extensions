@@ -1,0 +1,59 @@
+{
+  "schema": "sce.pack-verification.v1",
+  "index_sha256": "045db21b2957aa72df0b5aa932e336e2e52e7241ec8a79d3021be449e9b6563d",
+  "checks": [
+    {
+      "criterion": "entry_count",
+      "truth": "TRUE",
+      "reason": {
+        "manifest": 6,
+        "index": 6
+      }
+    },
+    {
+      "criterion": "all_entry_originals_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_entry_ids": []
+      }
+    },
+    {
+      "criterion": "txt_part_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_parts": []
+      }
+    },
+    {
+      "criterion": "zip_inventory_paths_occurrences",
+      "truth": "TRUE",
+      "reason": {
+        "expected": 6,
+        "actual": 6
+      }
+    },
+    {
+      "criterion": "all_entries_have_text_derivative",
+      "truth": "FALSE",
+      "reason": {
+        "non_text_or_error_entry_ids": [
+          2
+        ]
+      }
+    },
+    {
+      "criterion": "ai_review_complete",
+      "truth": "NOT_RUN",
+      "reason": "This verifier checks package integrity, not AI reasoning or code behavior."
+    },
+    {
+      "criterion": "flashloan_ready",
+      "truth": "NOT_RUN",
+      "reason": "Bot runtime and qualification not executed."
+    }
+  ],
+  "laya_called": false,
+  "financial_authority": false,
+  "tested_input": "User attached SCE_AGGREGATOR_NEXT_FUNCTIONS_RU_2026-10-03(1).zip",
+  "not_tested_input": "Actual studious-pancake ZIP was not supplied"
+}

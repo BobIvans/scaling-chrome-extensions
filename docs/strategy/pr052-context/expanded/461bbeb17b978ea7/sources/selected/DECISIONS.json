@@ -1,0 +1,146 @@
+[
+  {
+    "id": "DEC5-06",
+    "title": "Языковые версии JS/TS parser/resolver и provenance edges",
+    "related_feature_ids": [
+      "RND-003",
+      "LIB-016"
+    ],
+    "related_task_ids": [
+      "LAYA4-005",
+      "LAYA4-006",
+      "LAYA4-007"
+    ],
+    "what_is_undefined": "V4 перечисляет JS/TS, workspace и aliases, но не выбирает parser/resolver versions, supported syntax/config precedence, generated source behavior и machine-readable unresolved edge reasons.",
+    "options": [
+      "Статический parser + explicit versioned resolver rules",
+      "Regex imports и guessed aliases",
+      "Runtime execution импортов для полного dynamic graph"
+    ],
+    "recommended_default": "Qualified static JS/TS parser, parse/config digests, explicit ESM/CommonJS/workspace/alias rules и unresolved statuses; не исполнять repo ради извлечения графа.",
+    "rationale": "Разрешение имени должно быть воспроизводимым и связано с конфигурацией. Статический анализ не может обещать знать произвольные dynamic imports или все runtime calls.",
+    "validation_experiment": "Построить golden monorepo corpus: tsconfig paths/project references, extension resolution, package exports, ESM/CommonJS, dynamic import, broken syntax и cross-language contract; сравнить edge IDs и reasons.",
+    "decision_acceptance": [
+      "Support matrix и parser/config/resolver versions сохранены в graph artifact.",
+      "Каждая edge имеет source span, rule, confidence/type и resolved target либо конкретную причину unresolved.",
+      "Неподдерживаемый синтаксис сохраняет raw coverage и не добавляет выдуманных связей."
+    ],
+    "owner_role": "Repository analysis owner",
+    "blocking_milestones": [
+      "V4:S2"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-07",
+    "title": "Политика связанных chunks и oversize SCC",
+    "related_feature_ids": [
+      "LIB-005",
+      "LIB-026",
+      "RND-003"
+    ],
+    "related_task_ids": [
+      "LAYA4-008",
+      "LAYA4-009",
+      "G3-003"
+    ],
+    "what_is_undefined": "SCC и связанные тесты уже включены в стратегию, но не выбран trade-off между oversized component, budget, duplication, stable logical chunk ID и inclusion reasons под конкретную цель.",
+    "options": [
+      "SCC groups с bounded subparts и explicit bridge manifest",
+      "Не разрывать SCC даже если part не помещается",
+      "Произвольные одинаковые byte chunks без graph overlay"
+    ],
+    "recommended_default": "Whole-file/AST-aware groups по SCC и goal relevance; крупная SCC допускает subparts с полным bridge manifest, соседние interfaces/test refs; exact raw ranges остаются независимым layer.",
+    "rationale": "Зависимости могут превышать окно AI. Система должна показать split и missing frontier, а не нарушать бюджет или утверждать полное понимание графа.",
+    "validation_experiment": "Corpus с большим циклом, disconnected tests, shared schema и cross-language boundary; сравнить разные budgets, deterministic group IDs, bridge edges и reconstructed sources.",
+    "decision_acceptance": [
+      "Policy version задаёт tie-breaks, bytes/token estimate, duplication rules и oversized behavior.",
+      "Все crossing edges и исключённые dependencies видны в manifest/WHY_THIS_PACKET.",
+      "Изменение budget меняет physical parts без потери logical source/range identity."
+    ],
+    "owner_role": "Chunk planning owner",
+    "blocking_milestones": [
+      "V4:S1",
+      "V4:S2"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-15",
+    "title": "Таксономия автометок и устойчивые исправления",
+    "related_feature_ids": [
+      "LIB-018",
+      "LIB-019",
+      "LIB-050",
+      "LIB-058"
+    ],
+    "related_task_ids": [
+      "LAYA4-015",
+      "LAYA4-016",
+      "LAYA4-025",
+      "G3-008"
+    ],
+    "what_is_undefined": "Tagging включён в roadmap, но не выбраны facets/ontology версии, multi-language aliases, confidence thresholds, manual override semantics и reindex behavior при новой модели.",
+    "options": [
+      "Независимые facets + immutable model observations + human overlay",
+      "Единая папка на каждую guessed тему",
+      "Последний labeler заменяет все метки"
+    ],
+    "recommended_default": "Project/source type/goal/status/time/domain facets раздельно; labels имеют author/rule/model/version и confidence; human edits сохраняются отдельным overlay, ambiguous остаётся unclassified.",
+    "rationale": "Классификация должна помогать находить контекст, а не навязывать пользователю тему и стирать его исправление после повторного запуска.",
+    "validation_experiment": "Corpus RU/EN, overlaps между проектами и цитатами; вручную исправить ошибочные labels, обновить taxonomy/model, rerun и проверить stability/manual overlay.",
+    "decision_acceptance": [
+      "Ontology version и alias/migration policy описаны; label provenance обязателен.",
+      "Manual corrections не теряются после reindex и доступны для revert.",
+      "Uncertain labels видны и не дают полномочий на execution/share."
+    ],
+    "owner_role": "Library organization owner",
+    "blocking_milestones": [
+      "V4:S3",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-16",
+    "title": "Порядок source adapters и контракты извлечения",
+    "related_feature_ids": [
+      "LIB-012",
+      "LIB-013",
+      "LIB-015",
+      "LIB-016",
+      "LIB-041",
+      "LIB-042",
+      "LIB-043",
+      "LIB-044",
+      "LIB-045",
+      "LIB-046",
+      "LIB-047"
+    ],
+    "related_task_ids": [
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-017"
+    ],
+    "what_is_undefined": "Много источников перечислены, но не выбран MVP importer order, supported export formats, branch/edit identity, timestamps, extraction fidelity и worker failure isolation. Недоступный чат не может быть восстановлен предположением.",
+    "options": [
+      "Git/папки/явные chat exports первыми, затем PDF/media adapters",
+      "Подключить все аккаунты и live collectors одновременно",
+      "Хранить только cleaned extracted text"
+    ],
+    "recommended_default": "Original-first per importer schemas; explicit exports/files первыми; versioned chat branches/edits/quotes и timestamps; lazy OCR/ASR derivatives. Live connectors добавляются после своих source/fidelity contracts.",
+    "rationale": "Упорядоченные adapters дают измеримую полноту и не зависят от неполученных исторических источников. Extractor failure не уничтожает оригинал.",
+    "validation_experiment": "Golden source corpus: edited/deleted message, nested quote, branch, attachment, timezone, non-UTF8, OCR failure и audio timestamps; отдельно unavailable-source ledger.",
+    "decision_acceptance": [
+      "Support matrix, original/source/version identity и parser/extractor versions определены.",
+      "Точные слова/bytes восстанавливаются в declared scope; quotes/assistant proposals не приписаны пользователю.",
+      "Missing/unsupported/failed различаются; доступ нового источника не предполагается установленным заранее."
+    ],
+    "owner_role": "Source adapter owner",
+    "blocking_milestones": [
+      "V4:S3",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  }
+]

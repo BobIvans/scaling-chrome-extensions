@@ -1,0 +1,16 @@
+ОДИН УЖЕ ИСПОЛНЯЕМЫЙ JSON РЕЦЕПТ
+Из папки пакета:
+py -3 app\run_recipe.py --recipe workflows\00_repo_to_context.EXECUTABLE.json --library "C:\SCE-Library" --source "C:\Downloads\studious-pancake.zip" --destination "C:\Context\studious-first"
+
+Он вызывает import_source → export_snapshot, без AI и без shell из JSON.
+Папка destination должна быть новой. Ошибки/неполный import не выдают COMPLETE.
+Сохраняется весь snapshot, а не первые 20 документов.
+
+Все *.SPEC.json — будущие контракты. Handler names не являются реализацией.
+run_recipe.py специально отвергает неизвестные steps. Для новых workflows нужны
+registered handlers, аргументы, verifier, receipts и integration tests.
+Laya questions — отдельный пример входа модели, не установленный Laya runtime.
+
+Проверка экспортированного пакета без AI:
+py -3 app\verify_pack.py "C:\Context\studious-first" --output "C:\Context\verification.json"
+Проверяет hashes/paths/counts и выдаёт TRUE/FALSE/UNKNOWN/NOT_RUN. Это не проверка поведения бота.

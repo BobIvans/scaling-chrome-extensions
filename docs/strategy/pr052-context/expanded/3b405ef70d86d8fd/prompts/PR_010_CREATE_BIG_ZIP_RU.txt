@@ -1,0 +1,172 @@
+Создай большой подробный ZIP ROADMAP-PR-010: «Единая библиотека источников: точный поиск, версии, метки, цели и импорт файлов/чатов».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Закрыть source fidelity/import/search debt №5/8/9 и получить полезную локальную библиотеку с originals, SourceAddress, TXT/folders/archives, ChatGPT/Telegram branches и goal overlays.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: G3-002, G3-008, G3-009, EVO3-002, EVO3-012, LAYA4-004, LAYA4-013, LAYA4-014, LAYA4-015, LAYA4-016, ACTION5-04, ACTION5-05, ACTION5-06, ACTION5-09, ACTION5-10, ACTION5-11
+Feature cards: LIB-006, LIB-007, LIB-009, LIB-010, LIB-012, LIB-013, LIB-014, LIB-015, LIB-016, LIB-017, LIB-018, LIB-019, LIB-020, LIB-021, LIB-022, LIB-041, LIB-042, LIB-047, LIB-048, LIB-050, LIB-052, LIB-058, ACT-056, RND-002
+Decisions: DEC5-15, DEC5-16
+Goals: GOAL5-03, GOAL5-06, GOAL5-08, GOAL5-09, GOAL5-10
+Dependencies: PR-005, PR-009
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-001 — Точные ссылки на источники, поиск и ручные метки
+Scope:
+- SourceAddress: source/version/extraction/range/hash
+- ID/path/exact-quote/FTS с фильтрами namespace/project/time
+- Версии автоматических меток, ручные overrides, сохранённые представления
+Граница: №9 хранит оригиналы ChatGPT JSON; здесь добавляются точные адреса и поисковый контракт. Семантическая lifetime retrieval — №24; полные importer adapters — №16–20.
+Приёмка:
+- Цитата открывает ту же версию после restart
+- Ошибочные bounds/hash/namespace отклоняются
+- Нет утечки snippets за пределы scope
+- Ручная метка переживает повторную extraction
+- Все страницы выдачи доступны, включая хвост
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-007 — Общий импорт файлов: TXT, папки, архивы, кодировки и специальные Git payloads
+Scope:
+- Importer registry и extractor queue в canonical store
+- Streamed TXT/folder checkpoints/encodings и archive provenance graph
+- Raw unsupported originals, attachments, local LFS payload verification и submodule identities
+Граница: Закрывает оставшийся TXT scope №8: итоговый №9 реализует план ChatGPT JSON, а не TXT. PDF/Office — №18, media — №19; retrieval — №10/24. Acquisition выполняется только в выбранном source scope.
+Приёмка:
+- Каждый entry имеет outcome/reason без молчаливого пропуска
+- Повтор/rename/delete/resume сохраняют source lineage
+- Archive traversal/cycle/resource cases дают явный результат
+- LFS pointer и payload имеют отдельные hash/size identities
+- TXT и кодировки возвращают точные оригинальные bytes
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-008 — Полная история чатов и Telegram: scroll, ветви, правки, авторы и вложения
+Scope:
+- CaptureEnvelope для автора, цитат, времени и edit revisions
+- Продолжение virtualized/full-scroll capture после restart
+- ChatGPT/Telegram export adapters, attachments и unknown-branch ledger
+Граница: Расширяет source fidelity №9. Передача в AI chat — №31; не смешивать reading capture с отправкой.
+Приёмка:
+- Повторные DOM fragments не дублируют сообщения
+- Обе наблюдаемые ветви и структурные nodes сохранены
+- Цитата не становится репликой другого автора
+- Payload missing и недоступные ветви видны
+- UI capture сравнивается с доступным export без заявления о невидимой истории
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-012 — Реестр целей, противоречий, заметок и покрытия требований
+Scope:
+- GoalRequest и RU/EN goal revisions с exact user sources
+- Questions/terms/contradictions/notes как отдельные overlays
+- Goal→source→code→test→result dashboard и устойчивые namespaces
+Граница: Ручные labels принадлежат №10; automated next brief — №37. Финальный no-goal-left-behind audit — №45.
+Приёмка:
+- Новая редакция цели сохраняет предыдущую
+- Assistant proposal не маркируется user quote
+- Противоречащие источники видны вместе с временем
+- Редактирование заметки не меняет импортный оригинал
+- Proposed/implemented/tested/installed/usable различаются
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+G3-002 — GoalRequest с исходной формулировкой и требованиями
+- Сохраняется точный original_text; интерпретации имеют автора.
+- Неизвестный target не заменяется догадкой; исправление голоса меняет revision.
+G3-008 — Поддержать метки состояния и пользовательские исправления
+- Rule/model/user provenance различимы.
+- Переиндексация сохраняет пользовательское исправление и инвалидирует stale derived label.
+G3-009 — Собрать панель целей и непокрытых требований
+- Каждый активный requirement имеет источник, статус и следующую проверку.
+- Противоречащие данные отображаются; число повторений AI не повышает evidence level.
+EVO3-002 — Реестр целей и покрытия без потери пользовательских формулировок
+- Оригинальная формулировка и её digest сохранены; интерпретация, приоритет и критерии представлены отдельно.
+- Каждый критерий связан с source/implementation/device evidence или имеет явный gap/deferred reason.
+- Метрика покрытия публикует знаменатель; критический незакрытый критерий исключает общий статус цели achieved.
+EVO3-012 — Проекция статуса и объяснимые guards
+- Для каждого guard видны pass/fail/unknown/stale и ссылки на основания.
+- AI response, user merged assertion, integration verified и capability usable не сводятся к одному ready.
+- Проекция воспроизводится из тех же events/evidence детерминированно; её UI-переключатель не обходит policy.
+LAYA4-004 — Полный ledger форматов, gaps и защищённых данных
+- Для каждого entry есть одна disposition: indexed, excluded, unsupported, missing, error, deferred или pending; pending исключает completion.
+- LFS pointer отличается от available payload; submodule/symlink metadata не выдаются за содержимое target.
+- Binary/non-UTF8, oversize, parse error, credential heuristic и operator exclusion сохраняют reason и исходный hash, когда он доступен.
+- Zero omission проверяет accounted==tracked_total; all_tracked_bytes_exportable имеет отдельное значение.
+- Exclusion policy не запрещает обычные исходники по случайной подстроке; секретные bytes не дублируются в diagnostic log.
+LAYA4-013 — Добавить каталог источников с intent и lifetime policy
+- Record отделяет raw/extracted/transcript/summary/claim/evidence и имеет стабильные source/revision IDs.
+- Сохраняются original user text, capture intent, source_event_at и captured_at; неизвестное время не выдумывается.
+- Project/lifetime scope и share/retention policy закреплены отдельно от auto labels.
+- Namespace/profile границы существующего store применяются ко всем каталожным queries.
+- Импорт одного материала не делает его автоматически доступным всем future automations.
+LAYA4-014 — Организовать extractor очередь и gap reconciliation
+- Каждый extractor имеет format/version/limits и pure input→derived output contract; output ссылается на raw hash/ranges.
+- Existing ChatGPT export/selected record paths используются повторно; raw transcript и исправленный текст не смешиваются.
+- PDF/OCR/ASR/image/unsupported inputs имеют явное состояние READY/PENDING/UNSUPPORTED/FAILED/MISSING.
+- Bulk import resumable и идемпотентен; network/model invocation обозначен capability и scope, не происходит скрытно.
+- Неизвестный attachment учитывается до извлечения; OCR/ASR confidence не объявляется доказанным содержимым.
+LAYA4-015 — Автоматические метки с источником и user overlay
+- Label хранит dimension/value/source_ref/extractor_version/assigned_at/evidence class.
+- Детерминированный path match, keyword rule, AI inference и user label различаются.
+- User overlay имеет приоритет и сохраняется после reindex; конфликт виден и откатывается.
+- Dimensions включают project/topic/goal/module/capability candidate/evidence/freshness/delivery/next action.
+- Implemented/enabled/usable выводятся из evidence owner; слова из исходного чата не устанавливают их напрямую.
+LAYA4-016 — Единый поиск, фильтры и timeline с source links
+- Namespace/project-aware current search использует existing Core search owner; legacy item shapes не приводят к KeyError/потере результата.
+- Есть exact ID/path/quote, FTS, project/type/topic/date/status filters и version selector.
+- Каждый hit показывает excerpt, origin, revision/freshness и основание попадания.
+- Timeline отличает source_event_at от captured_at и не размещает unknown event time как точную дату.
+- Пагинация стабильна; private project фильтр применяется до поиска/reranking, не только после выдачи.
+ACTION5-04 — CaptureEnvelope сохраняет исходный текст и автора
+- Реконструкция raw text совпадает byte-for-byte; нормализованный search text хранит обратные offsets.
+- Время сообщения, время захвата и inferred event time не объединяются в одно поле.
+- Цитата другого автора внутри сообщения не становится словами пользователя; неизвестное авторство явно UNKNOWN.
+- Исправление пользователя создаёт overlay/version, сохраняя исходное написание.
+ACTION5-05 — Учитывать full-scroll чат и недоступные ветви
+- Top/middle/bottom и virtualized-history fixtures дают по одной source version на наблюдаемый message ID.
+- Loading/end-of-history подтверждается наблюдением; scroll без новых сообщений сам по себе не означает COMPLETE.
+- Недоступная ветвь, удалённое сообщение, вложение и login wall отображаются как конкретный gap.
+- Export и DOM capture связываются по происхождению; разные ветви не склеиваются по похожему тексту.
+ACTION5-06 — Закрепить общий контракт файлового импортера
+- Несовпадение extension/MIME отражается в manifest; extraction не скрывает оригинал.
+- У каждого выбранного файла ровно один исход: imported, excluded с причиной, unsupported или error.
+- Повторное продолжение создаёт новые версии только для изменённых bytes и сохраняет все origins.
+- Unknown importer fields сохраняются в raw envelope, не становятся исполнимыми настройками.
+ACTION5-09 — Учитывать архивы, папки и вложения как граф происхождения
+- Вложенные ZIP, одинаковые bytes в двух путях, empty entry и missing attachment учтены отдельно по происхождению.
+- Traversal path, symlink, compression bomb и budget limit дают явный blocked/error и не записывают вне staging scope.
+- Repo LFS pointers/submodules остаются отдельным disposition до фактического получения разрешённых bytes.
+- Повторная распаковка не считает копии независимыми подтверждениями.
+ACTION5-10 — Версионировать автометки и пользовательские исправления
+- Каждый автоматический tag указывает rule/model version и supporting source span либо отмечен inference.
+- User correction имеет приоритет в представлении и не удаляет прежнее предложение.
+- Разные facets не объединяют source type, цель, статус исполнения и private scope в одну метку.
+- Taxonomy upgrade не переименовывает исторические labels без version mapping.
+ACTION5-11 — Сделать SourceAddress для точной цитаты и диапазона
+- SourceAddress открывает тот же диапазон после restart; изменение оригинала не переносит ссылку молча.
+- Derived text указывает исходный range и extraction version; unsupported mapping возвращает UNKNOWN.
+- Ошибочные range bounds, namespace и hash отклоняются до чтения.
+- Удалённый оригинал возвращает tombstone/missing и не подменяется совпадающей цитатой.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

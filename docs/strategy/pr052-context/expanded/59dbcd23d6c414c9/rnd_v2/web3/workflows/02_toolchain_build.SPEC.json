@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF02",
+  "name": "toolchain_build",
+  "title_ru": "Воспроизводимая сборка",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "repo_inventory"
+  ],
+  "inputs": [
+    "lockfiles",
+    "compiler_versions",
+    "build_recipe"
+  ],
+  "steps": [
+    {
+      "id": "toolchain_build.1",
+      "handler": "PROPOSED.toolchain_build.1",
+      "instruction": "Проверять pinned dependency/runner/compiler versions"
+    },
+    {
+      "id": "toolchain_build.2",
+      "handler": "PROPOSED.toolchain_build.2",
+      "instruction": "Собирать из isolated snapshot без live signer"
+    },
+    {
+      "id": "toolchain_build.3",
+      "handler": "PROPOSED.toolchain_build.3",
+      "instruction": "Сохранять stdout/stderr/exit/tool versions и hashes compiled outputs"
+    }
+  ],
+  "outputs": [
+    "build_receipt",
+    "binary_manifest"
+  ],
+  "qualification_criteria": [
+    "Successful clean build; compiler warnings triaged; no secret embedded"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

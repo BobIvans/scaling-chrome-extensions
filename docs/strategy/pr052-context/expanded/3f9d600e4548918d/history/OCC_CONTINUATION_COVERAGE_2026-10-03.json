@@ -1,0 +1,499 @@
+{
+  "schema": "occ.handoff-completeness-audit.v1",
+  "date": "2026-10-03",
+  "original_zip": "OCC_DESKTOP_RND_2026-10-03.zip",
+  "original_zip_sha256": "bc531412e6cbb441c267430b616207ac7448e0b5c414c8141a3c312d4dbbb69c",
+  "verdict": {
+    "strategic_continuation": "SUFFICIENT_TO_START_DEFINED_NEXT_SLICE_WITH_GAPS",
+    "all_historical_ideas_inputs_and_attachments": "NOT_ESTABLISHED_SOURCES_MISSING",
+    "all_automation_implemented_and_ready": "NO",
+    "historical_completeness_percentage": null
+  },
+  "verification_scope": "Inspected supplied ZIP, verified all original listed hashes, compared current request and available historical summaries; no repo refresh, new technology research, target code tests or device execution.",
+  "counts": {
+    "original_zip_members": 66,
+    "original_manifest_files_verified": 65,
+    "original_manifest_mismatches": 0,
+    "source_reference_records": 44,
+    "experiment_records": 48,
+    "workflow_proposals": 16,
+    "workflows_marked_ready_for_automatic_execution": 0,
+    "capability_candidate_records": 59,
+    "capability_states": {
+      "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION": 52,
+      "BUNDLED_CLI_NOT_WORKFLOW_WIRED": 7
+    },
+    "recovered_history_summary_records": 9,
+    "original_broad_requirements": 14,
+    "audit_known_requirement_rows": 32
+  },
+  "requirements": [
+    {
+      "id": "HC-01",
+      "requirement": "Keep SCE desktop/library automation and Studious trading code as separate repositories with explicit ownership.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "ARCHITECTURE_AND_HISTORICAL_PINNED_REFERENCES",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "docs/01_REPO_FINDINGS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Read current repository HEADs and compare with historical pins; do not apply SCE changes to the bot by mistake.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-02",
+      "requirement": "Dell Windows 11 desktop as the primary application; no mandatory Chrome extension.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TK_PROTOTYPE_TARGET_DEVICE_NOT_TESTED",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "tools/desktop_archive.py"
+      ],
+      "remaining_requirement_or_evidence": "Integrate the shell with existing SCE owners, package it, and obtain real Windows device evidence.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-03",
+      "requirement": "Preserve original bytes, paths, revisions, provenance, binary items, and explicit omissions.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "BUNDLED_OFFLINE_ARCHIVE_TOOL_NOT_SCE_INTEGRATED",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "tools/archive_tool.py"
+      ],
+      "remaining_requirement_or_evidence": "Acquire actual selected repository/filesystem sources; integrate persistence and secret-safe sharing.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-04",
+      "requirement": "No total 20-document, 1000-file, or similar arbitrary corpus cap; continue to the end with coverage.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TOOL_AND_INTEGRATION_PLAN",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md",
+        "evidence/VERIFIED_LIMITS.json"
+      ],
+      "remaining_requirement_or_evidence": "Fix production caps without removing pagination, resource controls, or action permissions; test real target corpus.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-05",
+      "requirement": "Multi-part full-context TXT/MD/JSON/ZIP handoffs with per-part source coverage.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "TXT_EXPORT_AND_VERIFIER_BUNDLED_OTHER_INTEGRATION_PLANNED",
+      "original_package_paths": [
+        "tools/archive_tool.py",
+        "AI_HANDOFF_RU.txt",
+        "docs/04_LOSSLESS_CONTEXT_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Choose model-specific budgets separately from archive completeness; do not claim every source was read from attachment presence.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-06",
+      "requirement": "All earlier user messages and assistant ideas, including older conversations and all mapping branches.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "NINE_SUMMARY_RECORDS_AND_IMPORTER_NO_COMPLETE_HISTORY",
+      "original_package_paths": [
+        "history/RECOVERED_IDEAS.json",
+        "history/TIMELINE_RU.md",
+        "tools/archive_tool.py"
+      ],
+      "remaining_requirement_or_evidence": "Import available original conversation exports, preserve role/date/IDs/branches/attachments, and link every recovered idea to its source.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-07",
+      "requirement": "All earlier Wave/OCC/Laya ZIPs, docs, worktrees and detailed function cards consolidated.",
+      "idea_coverage": "REFERENCED_ONLY",
+      "implementation_evidence": "ORIGINAL_OLD_ASSET_BYTES_MISSING",
+      "original_package_paths": [
+        "history/MISSING_ASSETS_RU.md",
+        "history/TIMELINE_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Acquire and reconcile earlier artifacts by hash and stable IDs, retaining superseded and contradictory proposals.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-08",
+      "requirement": "Complete current source snapshots of both repositories, not selective file references.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "ACQUISITION_TOOL_ONLY_NO_TARGET_REPO_SNAPSHOTS",
+      "original_package_paths": [
+        "windows/Acquire-Repos.ps1",
+        "evidence/STATUS.json"
+      ],
+      "remaining_requirement_or_evidence": "Collect complete selected commits, record inventory and byte coverage, then inspect relevant actual code.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-09",
+      "requirement": "Closed/abandoned PRs, branches, commit history, prior implementations and failed fixes.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "SNAPSHOT_DIFF_AND_FAILURE_MEMORY_DESIGN_NOT_FULL_HISTORY_ARCHIVE",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+        "history/RECOVERED_IDEAS.json"
+      ],
+      "remaining_requirement_or_evidence": "Ingest repository history and PR records separately; a HEAD-tree archive does not include the full history.",
+      "provenance": "Visible prior conversation context, retrieved historical summaries, and inspected ZIP"
+    },
+    {
+      "id": "HC-10",
+      "requirement": "Drive-like local files plus Notion-like search, editing, tags, backlinks and collections.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "ARCHITECTURE_PROPOSAL_NOT_COMPLETE_WORKSPACE",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Build usable views over one canonical store; retain raw content and derived-index boundaries.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-11",
+      "requirement": "Labels on every data piece with roles, origin, versions, links, rights and truth/evidence status.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "PROPOSED_METADATA_AND_GRAPH_NOT_ALL_CONNECTORS_IMPLEMENTED",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+        "docs/11_SECURITY_AND_TRUTH_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Specify and implement a versioned canonical metadata contract and a complete requirement-to-source traceability map.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-12",
+      "requirement": "Gather authorized data from ChatGPT/Grok chats, Telegram channels/media, websites, documents and repos.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "FOLDER_GIT_CHATGPT_IMPORT_TOOLS_OTHER_CONNECTORS_PLANNED",
+      "original_package_paths": [
+        "workflows/03_history_import.json",
+        "workflows/11_browser_acquisition.json",
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Acquire actual authorized exports/API data; account for unloaded content, permissions and unavailable attachments.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-13",
+      "requirement": "Voice or any text becomes the same task intent and approved automation workflow.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "PROPOSAL_NO_INSTALLED_ASR_TO_EXECUTOR_LOOP",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "workflows/04_voice_proposal.json"
+      ],
+      "remaining_requirement_or_evidence": "Connect real ASR, typed intent, preview, policy, execution and independent result verification.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-14",
+      "requirement": "Accessibility: keyboard/switch alternatives, screen reader, editable voice input and independent STOP.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "RND_TEST_PLAN_TARGET_DEVICE_NOT_RUN",
+      "original_package_paths": [
+        "docs/05_ACCESSIBILITY_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Measure actual Windows accessibility, negations/numbers, cancellation latency and recovery on the target device.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-15",
+      "requirement": "Laya/Jev plus layered routing, planning, critique, memory and fast deterministic reuse.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "RESEARCH_AND_EXAMPLE_SCHEMAS_INFERENCE_NOT_RUN",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "examples/laya-prediction-request.example.json",
+        "research/EXPERIMENTS.json"
+      ],
+      "remaining_requirement_or_evidence": "Verify the installed model/API contract; benchmark against simple rules; probabilities never grant permissions.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-16",
+      "requirement": "Expand beyond prewritten tasks by proposing, testing and promoting new skills from intent/demonstration.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SKILL_LIFECYCLE_PROPOSAL",
+      "original_package_paths": [
+        "workflows/09_demonstration_skill.json",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Implement sandboxed skill testing and reviewed promotion; unsupported tasks remain explicit proposals rather than silent execution.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-17",
+      "requirement": "ChatGPT API inside the app for library/repo/context actions with cost and data controls.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "TOOL_SCHEMAS_AND_PLAN_NOT_CONNECTED",
+      "original_package_paths": [
+        "docs/10_OPENAI_AND_AUTOMATION_CONTRACTS_RU.md",
+        "schemas/openai_tools.responses.json",
+        "workflows/13_api_context.json"
+      ],
+      "remaining_requirement_or_evidence": "Implement provider authentication, scoped tools, input sanitization, budgets and result receipts; keep credentials out of archives sent to AI.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-18",
+      "requirement": "Local terminal and VS Code open-file/diff integration tied to exact repository paths.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "INTEGRATION_PLAN",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "workflows/12_vscode_handoff.json"
+      ],
+      "remaining_requirement_or_evidence": "Wire actual adapters, separating human terminal input from reviewed automation jobs and their isolation controls.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-19",
+      "requirement": "Whole-codebase code-smell, architecture, symbol/import/dependency and technical-debt analysis.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "STATIC_CATALOG_TOOL_AND_REVIEW_PLAN_NO_EXHAUSTIVE_SEMANTIC_AUDIT",
+      "original_package_paths": [
+        "tools/archive_tool.py",
+        "workflows/05_repo_review.json",
+        "docs/01_REPO_FINDINGS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Inventory actual complete code, add missing language parsers, and validate findings with source evidence and regression tests.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-20",
+      "requirement": "Discover every useful bot command including qualification campaign command owners and code ranges.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "SELECTIVE_PINNED_COMMAND_CANDIDATES_NOT_EXHAUSTIVE",
+      "original_package_paths": [
+        "evidence/VERIFIED_COMMAND_CANDIDATES.json",
+        "docs/07_QUALIFICATION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Build the current command inventory from the complete codebase and distinguish discovery from executable approval.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-21",
+      "requirement": "Run existing canonical qualification from the desktop and ingest reports.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EXISTING_BRIDGE_REFERENCED_NOT_RUN_HERE",
+      "original_package_paths": [
+        "docs/07_QUALIFICATION_RU.md",
+        "workflows/06_qualification.json",
+        "examples/qualification-request.example.json"
+      ],
+      "remaining_requirement_or_evidence": "Validate the operator profile, clean/current SHA and installed package; obtain actual domain and transport receipts.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-22",
+      "requirement": "Automate scheduled daily/24h data collection, tests, qualification and R&D reports.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "WORKFLOW_PROPOSALS_NO_CONNECTED_SCHEDULER_OR_EXECUTED_CAMPAIGNS",
+      "original_package_paths": [
+        "workflows/07_paper_campaign.json",
+        "workflows/08_latest_research.json",
+        "evidence/STATUS.json"
+      ],
+      "remaining_requirement_or_evidence": "Implement and verify local scheduling, checkpoints, leases, quotas, stop/restart, retention and campaign outcomes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-23",
+      "requirement": "Parallel arbitrage/flashloan strategy discovery, testing and shared market-data collection.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SENDER_FREE_RND_DESIGN_NOT_RUNNING_TRADING_SYSTEM",
+      "original_package_paths": [
+        "docs/08_PARALLEL_WEB3_RU.md",
+        "workflows/16_strategy_replay.json"
+      ],
+      "remaining_requirement_or_evidence": "Supply protocol adapters and real recorded data, then validate snapshots, simulation, costs, conflicts and holdout outcomes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-24",
+      "requirement": "Preserve the longer-term goal of approved live Web3 execution without mistaking plans or paper results for readiness.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "LIVE_OUTSIDE_CURRENT_SLICE_NO_SIGNER_AUTHORITY",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "docs/07_QUALIFICATION_RU.md",
+        "docs/08_PARALLEL_WEB3_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recover detailed prior strategy/protocol specifications, validate missing runtime dependencies, and keep live promotion as a separate evidence-and-approval decision.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-25",
+      "requirement": "Automated code generation/patch, tests, CI, PR review and a document returned for the next R&D iteration.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "DESIGN_AND_WORKFLOW_PROPOSALS_NOT_END_TO_END_EXECUTED",
+      "original_package_paths": [
+        "workflows/14_implementation_request.json",
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Tie each change to current SHA, validated worktree, reviewed command profile, required tests and factual PR state; avoid duplicate fixes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-26",
+      "requirement": "Resume/replay/reconcile, progress/errors and memory of failed attempts instead of repeating work.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EXISTING_OWNERS_REFERENCED_INTEGRATION_NEEDED",
+      "original_package_paths": [
+        "workflows/15_reconciliation.json",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Persist verified execution receipts, source invalidation and checkpoints; reconcile unknown effects before retry.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-27",
+      "requirement": "Carry context into a fresh Work chat with goals, current state, gaps and the next implementation slice.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "HANDOFF_DOCUMENTS_PRESENT_NOT_UNIVERSAL_HISTORY",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "ALL_AUTHORED_CONTEXT.txt",
+        "INDEX.json",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Read the archive explicitly, enumerate missing inputs and update continuation state after each work session.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-28",
+      "requirement": "Further Hugging Face/GitHub/agentic research with baselines and measurable experiments.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "44_SOURCE_REFERENCES_48_UNRUN_EXPERIMENTS",
+      "original_package_paths": [
+        "research/SOURCES.json",
+        "research/EXPERIMENTS.json",
+        "docs/13_RESEARCH_METHOD_AND_NEXT_SEARCHES_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recheck changing technology facts before implementation and benchmark selected candidates on the same target tasks.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-29",
+      "requirement": "Small/local/low-cost operation without model tokens for deterministic archive and code-catalog tasks.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TOOLS_NO_API_REQUIREMENT_MODEL_COSTS_UNMEASURED",
+      "original_package_paths": [
+        "tools/README_RU.md",
+        "docs/06_MODEL_AND_STACK_OPTIONS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Measure Dell RAM/CPU/latency, batch/cache work and meter optional API calls rather than promise unlimited compute.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-30",
+      "requirement": "Preserve detailed prior function-card IDs and wave/PR lineage, not only current broad themes.",
+      "idea_coverage": "REFERENCED_ONLY",
+      "implementation_evidence": "OLDER_DETAILED_CATALOGS_NOT_INCLUDED",
+      "original_package_paths": [
+        "history/MISSING_ASSETS_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recover original catalogs such as CAND/CAP/F-series references; numbers recalled in summaries are not verified inventory.",
+      "provenance": "Retrieved historical summaries and visible prior conversation context; original detailed catalogs not available"
+    },
+    {
+      "id": "HC-31",
+      "requirement": "Protect secrets, preserve authorized local originals, and distinguish TRUE/FALSE/UNKNOWN/NOT_RUN/STALE.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SECURITY_DESIGN_AUTO_SANITIZED_SHARING_NOT_IMPLEMENTED",
+      "original_package_paths": [
+        "docs/11_SECURITY_AND_TRUTH_RU.md",
+        "docs/04_LOSSLESS_CONTEXT_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Implement separate local/private and shareable manifests, review redaction, and keep model/source content outside action authority.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-32",
+      "requirement": "Use data on unmet goals and contradictory evidence to choose what to collect or build next.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EVIDENCE_DEBT_AND_NEXT_DATA_REQUEST_RND",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Define observable postconditions and independent evidence, retain negative results, and measure whether the next action reduces the actual blocker.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  ],
+  "missing_sources": [
+    {
+      "id": "MS-01",
+      "kind": "conversation_exports",
+      "state": "MISSING_ORIGINAL_BYTES",
+      "detail": "All previous user/assistant messages, branches and attachments; only partial historical summaries are in the original archive."
+    },
+    {
+      "id": "MS-02",
+      "kind": "earlier_zip_packages",
+      "state": "MISSING_ORIGINAL_BYTES",
+      "detail": "Older OCC/LAYA/Voice/Wave packages including those named in history/MISSING_ASSETS_RU.md and prior messages."
+    },
+    {
+      "id": "MS-03",
+      "kind": "other_same_day_aggregations",
+      "state": "HISTORICAL_SUMMARY_REFERENCE_ONLY",
+      "detail": "A retrieved earlier discussion names OCC_SCE_DESKTOP_FULL_CONTEXT_RU_2026-10-03.zip; another refers to a separate 128-function/42-workflow package. Neither was uploaded in this turn. Counts are historical assistant claims, not verified artifact contents."
+    },
+    {
+      "id": "MS-04",
+      "kind": "full_repository_snapshots",
+      "state": "NOT_INCLUDED",
+      "detail": "No complete current SCE or Studious source snapshot is embedded. Historical pinned source references are not a checkout."
+    },
+    {
+      "id": "MS-05",
+      "kind": "git_and_pr_history",
+      "state": "NOT_INCLUDED_AS_COMPLETE_ARCHIVE",
+      "detail": "All branches/commits, closed or abandoned PRs, discussions, attachments, LFS payloads and submodule contents require separate acquisition."
+    },
+    {
+      "id": "MS-06",
+      "kind": "device_setup_and_receipts",
+      "state": "NOT_RUN_OR_UNAVAILABLE",
+      "detail": "Actual Dell paths, installed components, model/runtime measurements, Windows accessibility, API integration and bot qualification receipts are absent. Credentials must not be supplied as public context."
+    },
+    {
+      "id": "MS-07",
+      "kind": "detailed_web3_strategy_specs_and_data",
+      "state": "PARTIAL_THEMES_ONLY",
+      "detail": "The archive gives parallel sender-free architecture, not a complete union of every earlier strategy/protocol specification, full command inventory or market dataset."
+    },
+    {
+      "id": "MS-08",
+      "kind": "full_cross_source_library",
+      "state": "NOT_COLLECTED",
+      "detail": "Actual local filesystem, Telegram media, Grok/ChatGPT exports and other personal content are not gathered merely because ingestion workflows are described."
+    }
+  ],
+  "provenance_rules": [
+    "Known requirements are not an exhaustive universe of all historical ideas.",
+    "Recovered summaries are not verbatim transcripts or original attachments.",
+    "Historical assistant numbers and PR states need source/code verification.",
+    "Original test report is preserved, not represented as newly rerun tests."
+  ],
+  "next_work_slice": [
+    "Read existing owners and current repository HEADs.",
+    "DESK-01 plus DESK-02: full source manifest and versioned multi-part export.",
+    "DESK-03: desktop view over existing canonical state.",
+    "DESK-05: existing qualification bridge; obtain actual device evidence.",
+    "Integrate voice/router/scheduler after proving the data-to-result loop."
+  ],
+  "do_not_discard": [
+    "Longer-term reviewed live execution goal; current live gate remains closed.",
+    "Unimplemented ideas; preserve them as backlog, not as already working features.",
+    "Missing historical sources; preserve their references with MISSING status."
+  ]
+}

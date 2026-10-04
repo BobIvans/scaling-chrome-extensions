@@ -1,0 +1,3312 @@
+ния пользователя, final_goal и отдельную связь goal→plan→run→evidence. Предварительный ASR можно использовать для read-only prefetch, но финальные действия должны ссылаться на финальную версию цели. Команда «стоп» отменяет новые шаги и показывает уже выполненные.
+
+ASR-кандидаты:
+• whisper.cpp: локальный C/C++ runtime, microphone stream и basic command примеры. Потоковый пример обрабатывает обновления аудио периодически, это не обещание мгновенной точной речи. Для RU использовать multilingual веса, а не .en. Windows и доступные ускорители выбирать после hardware probe. LV06.
+• faster-whisper: Python/CTranslate2, CPU/GPU режимы, word timestamps, Silero VAD. Базовая библиотека транскрибирует сегменты; для непрерывного разговора нужен streaming wrapper/собственная очередь. Сравнить int8 CPU с доступным GPU, не переносить авторский benchmark на Dell. LV07.
+• sherpa-onnx: локальная обработка, инструкции Windows, online/offline модели; документируется streaming Russian T-one, русские Zipformer/GigaAM и другие варианты. Отличать настоящий streaming checkpoint от offline checkpoint с VAD вокруг него. LV08.
+• Qwen3-ASR0.6B/1.7B: официальный toolkit включает русский и streaming; на проверенной странице streaming доступен через vLLM и не возвращает timestamps/batch. Windows packaging/backend потребует отдельного прототипа. Для точных временных отметок — отдельный aligner после финализации. LV09.
+• Parakeet-TDT0.6B-v3: model card включает русский и латышский, timestamps; дополнительный кандидат для RU/LV/EN библиотеки и больших записей. Throughput сервера не равен задержке окончания одной голосовой команды. LV10.
+• Pipecat: готовая оркестрация аудио, STT/LLM/TTS, streaming frames и прерывания. Использовать, если необходим диалог с голосовым ответом; для первой кнопки «записать цель» достаточно меньшего локального pipeline. LV11.
+
+Accessibility — обязательные продуктовые требования, а не обещание медицинского эффекта: клавиатура, screen-reader labels, текстовая альтернатива микрофону, регулируемое ожидание пауз, большие controls, видимое состояние записи, настраиваемая команда остановки, отсутствие обязательного удерживания кнопки, исправление транскрипции голосом/текстом. Длинные паузы и особенности речи должны быть отдельными тестовыми группами с согласия участников.
+
+Для Windows desktop использовать UI Automation: Microsoft документирует программный доступ к UI и поддержку assistive technology/testing. Надёжность зависит от того, что конкретное приложение раскрывает в accessibility tree. LV12. Для веба предпочитать API, а затем DOM/Playwright с проверками готовности элементов и результата. Playwright auto-waiting проверяет видимость/доступность/стабильность, но не смысловой успех цели. LV13.
+
+4. КАК УСКОРИТЬ, НЕ ТЕРЯЯ КОНТЕКСТ
+
+Предложения для нашего приложения:
+• Держать ASR/router прогретыми; idle-unload настраивать с учётом памяти. Записывать cold/warm отдельно.
+• Индексировать при импорте и изменениях; SHA dedup и delta tagging вместо пересчёта всей истории.
+• FTS/BM25 для точных путей/символов + embeddings для смысла + metadata-фильтры для ролей/дат/проектов; ранжирование после shortlist.
+• EmbeddingGemma — компактный multilingual кандидат с2048token входом и выбираемой размерностью вектора; BGE-M3 — multilingual dense/sparse/multivector кандидат до8192token. Это модели поиска, не гарантия полноты. LV14,LV15.
+• Пакетировать независимые типизированные вопросы к одному состоянию. В текущем UI state сразу предложить совместимые операции и цели; проверять свежесть перед исполнением.
+• Изолированные read-only retrieval и независимые тесты выполнять параллельно. Один writer на worktree/файл; один владелец активного окна; отдельный координатор зависимых действий.
+• Часто успешный validated workflow превращать в версионированный recipe. Не генерировать заново код для каждого «покажи результаты вчерашнего теста».
+• Кэшировать по source hash + model revision + ontology version + question pack hash; изменение любого компонента инвалидирует результат.
+• Вести ledger какие куски обработаны, какие запрошены и какие не вошли в активный prompt. Полный архив не подменять кратким ответом AI.
+• Локальный Laya выбирать первым только после измерений. Возможны дешёвые правила, embeddings и Laya; избыточный нейросетевой вызов для точной команды может замедлять.
+
+5. НОВЫЕ R&D ЭКСПЕРИМЕНТЫ
+
+Все строки ниже PROPOSED/NOT_RUN. Числовые значения — проект испытания, а не результаты или доказанные пороги.
+
+E01 ASR: 150 согласованных команд RU,50EN,50 смешанных RU/EN с путями/адресами/именами библиотек; тихо/шум/длинные паузы. Сравнить whisper.cpp, faster-whisper, sherpa streaming, затем Qwen/Parakeet. Метрики WER/CER, exact match важных entities, end-of-speech→final transcript p50/p95, RAM/VRAM, RTF, ложные команды на тишине. Делить train/calibration/test по говорящему и сессии.
+E02 Router: минимум300 вручную размеченных реальных целей; baselines rules, embeddings, Laya, coding LLM. Метрики macro-F1, recall редких целей, Brier/ECE, risk-coverage, p50/p95. Пороги определять calibration split; окончательная оценка на heldout.
+E03 Context:100 задач с заранее известными evidence spans в чатах/репо/доках. FTS vs FTS+dense vs hybrid+rerank. Метрики evidence recall@budget, точность source links, failure на старых/противоречивых версиях. Полный путь и роль автора обязательны.
+E04 Long source: вопрос в начале/середине/конце, RU и код,12/50/100 кандидатов тегов. Проверять потреблённые token spans и head truncation; coarse→fine/shortlist сравнить с predict_long. Не приравнивать агрегированные вероятности к междокументному доказательству.
+E05 Voice execution:40 реальных read-only/обратимых сценариев app/API/UI. Метрики время до первого полезного действия, end-to-end completion, ошибочные действия, действия после отмены, корректность восстановления. Замерять повторные warm/cold запуски.
+E06 Concurrency: workers1/2/4/8 для импорта, поиска, тестов. Сначала resource probe, затем выбирать по p95 foreground latency и peak memory. Больший параллелизм не считается автоматически лучше.
+E07 Script reuse: сравнить каждый раз LLM planner против validated recipes + Laya router. Считать completion, число LLM вызовов, стоимость, latency, repair rate, число новых dependencies.
+E08 Prompt injection: вредные указания внутри README/чата/страницы остаются данными. Проверить, что они не расширяют capability scope и не запускают новые инструменты; тесты с canary markers, без реального внешнего действия.
+E09 Goal clarification: LAVOIR от25.09.2026 исследует выбор вопроса по ожидаемой ценности информации. Это свежая исследовательская гипотеза для минимизации лишних уточнений; опубликованные результаты не воспроизведены на нашей задаче. Сравнить always-ask, never-ask, threshold, VOI на неполных/противоречивых целях. LV16.
+E10 Layered policies: вдохновиться vLLM Semantic Router — комбинация быстрых правил и нейронных сигналов в явной политике. Для Dell начать с маленького локального dispatcher; большой gateway не обязателен. Сравнить single LLM против rule→embed→Laya→LLM каскада по качеству и p95. LV17.
+E11 Accessibility: отдельные настройки endpointing, speech correction и cancellation. Успех — выполненная цель и возможность остановить/исправить; меньше кликов само по себе недостаточно.
+
+Начальный engineering target: текстовый feedback о принятой команде менее200мс после финальной транскрипции, первый read-only результат p95≤2с на прогретой системе. Это желаемые бюджеты, не обещание. Кодогенерация, запуск браузера, RPC/блокчейн и тестовые кампании измеряются отдельно и могут занимать минуты/часы.
+
+6. ЧТО ДОБАВИТЬ В РЕЕСТР ФУНКЦИЙ
+
+LVF01 hardware_probe — CPU/RAM/GPU/backend capabilities без предположений о Dell.
+LVF02 local_decision_backend — Unsloth/native Laya/ONNX adapter с revision и loopback endpoint.
+LVF03 question_pack_registry — versioned choice/score/noul schemas и classifier calibration.
+LVF04 lossless_inference_ledger — окна, span offsets, ошибки и повторение до покрытия.
+LVF05 voice_capture_session — opt-in запись, состояние, локальные audio/text links.
+LVF06 partial_transcript_prefetch — speculative read-only поиск без запуска действий.
+LVF07 finalize_goal — неизменяемая финальная версия цели и исправления.
+LVF08 voice_stop_resume — cancel token, журнал уже сделанного, продолжение с checkpoint.
+LVF09 asr_entity_dictionary — проектные имена/пути и проверка важных сущностей.
+LVF10 multimodal_local_search — FTS+embeddings+metadata, ссылки на spans.
+LVF11 recipe_router — выбор существующего tested workflow с abstain/fallback.
+LVF12 adaptive_clarification — минимальный полезный уточняющий вопрос; R&D.
+LVF13 typed_action_registry — observed target/args/preconditions/postconditions.
+LVF14 windows_uia_adapter — доступ к опубликованным UIA elements/patterns.
+LVF15 browser_dom_adapter — snapshot, target freshness, semantic completion checks.
+LVF16 worker_resource_scheduler — параллельные read-only jobs, locks для writers/UI.
+LVF17 outcome_verifier — TRUE/FALSE/UNKNOWN/NOT_RUN по независимым проверкам.
+LVF18 validated_recipe_compiler — успешные traces→проект рецепта→тесты→version.
+LVF19 warm_model_manager — load/unload/cache keyed по revisions.
+LVF20 latency_eval_harness — timestamps по стадиям, p50/p95, качество/ресурсы.
+LVF21 accessibility_profiles — keyboard/text/voice/pauses/labels/cancellation.
+LVF22 source_aware_context_compaction — ограничение active prompt при полном archive.
+LVF23 social_claim_verification_queue — X claim→первоисточник→код→reproduction status.
+LVF24 model_change_regression_suite — upgrade inference backend не меняет решения молча.
+
+Все24 — новые функции спецификации/R&D, не заявление о готовой реализации в desktop prototype. Перед включением runtime нужны реализация, тесты на Windows и предметные данные пользователя.
+
+ИСТОЧНИКИ
+Точные URL, ID, статус проверки и ограничения — research_laya_voice_sources.json. Числа чужих benchmarks намеренно не используются как прогноз нашего приложения.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 641c8759dc4b2b3fa5d0094582ffc70678ec5d23485c6e87a64bee024b173049 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#71:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/research_laya_voice_sources.json =====
+{
+  "schema_version": "1.0",
+  "report": "research_laya_voice.txt",
+  "as_of": "2026-10-03",
+  "evidence_policy": "Primary technical sources only. Social posts blocked are discovered leads, not directly verified. Research recommendations and targets are authored proposals.",
+  "runtime_status": "NOT_RUN",
+  "future_dated_sources_used": false,
+  "sources": [
+    {
+      "id": "LV01",
+      "url": "https://github.com/NandhaKishorM/laya",
+      "web_ref": "turn8view0",
+      "source_type": "PRIMARY_REPOSITORY",
+      "supported_claims": "choice/score/noul, Router, predict_long/batch, multilingual default1024 and max8192, option budget",
+      "limitations": "Current main mutable; no Dell/own-domain inference run. Native serve limits differ from other wrappers.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV02",
+      "url": "https://huggingface.co/convaiinnovations/laya",
+      "web_ref": "turn8view1",
+      "source_type": "PRIMARY_MODEL_CARD",
+      "supported_claims": "Model identity and trained decision-model positioning",
+      "limitations": "Author-reported performance; not a generative coding/execution model.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV03",
+      "url": "https://unsloth.ai/docs/models/decision-laya",
+      "web_ref": "turn24view3",
+      "source_type": "PRIMARY_DOCUMENTATION",
+      "supported_claims": "Local Windows Laya Decision API GUI; Jev-compatible transport; probability/confidence distinction",
+      "limitations": "No installation or device compatibility test. Unsloth transport limits differ from native laya.serve.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV04",
+      "url": "https://github.com/tamaratran/fast-jev-compaction/blob/e3f262a7f4d42bd8dd32ced30d26176f7cb545b0/README.md",
+      "web_ref": "turn11view1",
+      "source_type": "PRIMARY_REPOSITORY_PINNED",
+      "supported_claims": "Tool call/result relevance filtering; paired calls; verbatim chosen items; scripted native demo; explicit compaction limits",
+      "limitations": "Lossy active-context operation, not complete archive. Token estimates and model confidence do not prove safe deletion.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV05",
+      "url": "https://github.com/browser-use/jev-ultrafast/blob/1231850a0bf1a0c0341fe408ef1668dbbfdfac46/README.md",
+      "web_ref": "turn11view3",
+      "source_type": "PRIMARY_REPOSITORY_PINNED",
+      "supported_claims": "Indexed observed DOM actions selected by Jev; text generation delegated; fresh-state and target checks",
+      "limitations": "Single browser example; no Windows app coverage or locally reproduced timing.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV06",
+      "url": "https://github.com/ggml-org/whisper.cpp",
+      "web_ref": "turn10view2",
+      "source_type": "PRIMARY_REPOSITORY",
+      "supported_claims": "Local C/C++ ASR, microphone stream and basic commands, Windows-related acceleration instructions",
+      "limitations": "Multilingual checkpoint required for Russian; no local hardware test; stream example is periodic transcription.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV07",
+      "url": "https://github.com/SYSTRAN/faster-whisper",
+      "web_ref": "turn10view3",
+      "source_type": "PRIMARY_REPOSITORY",
+      "supported_claims": "CTranslate2 Whisper implementation, word timestamps, Silero VAD, CPU/GPU modes",
+      "limitations": "Streaming orchestration separate; no claimed latency measured on user device.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV08",
+      "url": "https://k2-fsa.github.io/sherpa/onnx/index.html",
+      "web_ref": "turn15view1",
+      "source_type": "PRIMARY_DOCUMENTATION",
+      "supported_claims": "Local ONNX speech processing, Windows builds, Russian streaming/offline model families",
+      "limitations": "Model-specific online/offline distinction essential; no downloaded model or speech evaluation.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV09",
+      "url": "https://github.com/QwenLM/Qwen3-ASR",
+      "web_ref": "turn21view0",
+      "source_type": "PRIMARY_REPOSITORY",
+      "supported_claims": "Russian ASR, streaming via vLLM, separate forced aligner",
+      "limitations": "Current docs say streaming lacks batch/timestamps; Windows packaging and hardware compatibility untested.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV10",
+      "url": "https://huggingface.co/nvidia/parakeet-tdt-0.6b-v3",
+      "web_ref": "turn19search1",
+      "source_type": "PRIMARY_MODEL_CARD",
+      "supported_claims": "Russian/Latvian among25 languages, timestamps, multilingual transcription",
+      "limitations": "Throughput cannot be equated with end-of-utterance latency; no Dell measurements.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV11",
+      "url": "https://docs.pipecat.ai/pipecat/learn/overview",
+      "web_ref": "turn15view0",
+      "source_type": "PRIMARY_DOCUMENTATION",
+      "supported_claims": "Frame pipeline for STT/LLM/TTS; streaming coordination and multiworker concepts",
+      "limitations": "Framework not complete PC agent; provider/hardware latency remains workload dependent.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV12",
+      "url": "https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32",
+      "web_ref": "turn15view2",
+      "source_type": "PRIMARY_DOCUMENTATION",
+      "supported_claims": "UI Automation framework for accessibility and automated interaction/testing",
+      "limitations": "Target apps may expose insufficient controls; no claim universal PC control.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV13",
+      "url": "https://playwright.dev/docs/actionability",
+      "web_ref": "turn15view3",
+      "source_type": "PRIMARY_DOCUMENTATION",
+      "supported_claims": "Auto-waiting/actionability assertions before browser actions",
+      "limitations": "Actionability is not evidence that higher-level user goal completed.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV14",
+      "url": "https://huggingface.co/google/embeddinggemma-300m",
+      "web_ref": "turn21view1",
+      "source_type": "PRIMARY_MODEL_CARD",
+      "supported_claims": "Multilingual local embedding model;2048 tokens;768/512/256/128dim",
+      "limitations": "Retrieval candidate; accuracy/code coverage must be tested; model license/terms require version-pinning.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV15",
+      "url": "https://huggingface.co/BAAI/bge-m3",
+      "web_ref": "turn19search0",
+      "source_type": "PRIMARY_MODEL_CARD",
+      "supported_claims": "Multilingual dense/sparse/multivector retrieval;8192token sequence",
+      "limitations": "Long input support does not prove complete semantic coverage.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV16",
+      "url": "https://arxiv.org/abs/2609.30706",
+      "web_ref": "turn24view0",
+      "source_type": "PRIMARY_RESEARCH_PREPRINT",
+      "supported_claims": "LAVOIR expected-value-of-information slot questions",
+      "limitations": "Submitted2026-09-25. Exploratory candidate, not reproduced or production approval; hardware metrics not Dell.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "LV17",
+      "url": "https://arxiv.org/abs/2603.04444",
+      "web_ref": "turn24view1",
+      "source_type": "PRIMARY_RESEARCH_REPORT",
+      "supported_claims": "Configurable semantic-routing signals and Boolean policy composition",
+      "limitations": "Architecture inspiration, not recommendation to deploy full infrastructure on Dell.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "SX01",
+      "url": "https://x.com/tamarajtran/status/2100694549362553153",
+      "web_ref": "turn11view0",
+      "source_type": "DISCOVERED_NOT_DIRECTLY_VERIFIED",
+      "supported_claims": "Direct X link found via discovery index; corresponding project primary README independently read",
+      "limitations": "X direct fetch403; no exact tweet text/claims treated as verified.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "SX02",
+      "url": "https://x.com/0xCodila/status/2101433560796467348",
+      "web_ref": "turn11view2",
+      "source_type": "DISCOVERED_NOT_DIRECTLY_VERIFIED",
+      "supported_claims": "Candidate post about Jev/GrokBot from discovery index",
+      "limitations": "X direct fetch403; no first-hand implementation or performance verification.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    },
+    {
+      "id": "DISC01",
+      "url": "https://jevmodel.ai/citations/",
+      "web_ref": "turn10view1",
+      "source_type": "DISCOVERY_ONLY_SECONDARY",
+      "supported_claims": "Discovered X and pinned GitHub links",
+      "limitations": "Not relied upon for technical claims or benchmark numbers.",
+      "accessed_date": "2026-10-03",
+      "locally_reproduced": false
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 561639f75eb00c1c8240fd960db61530eeba929ab1f6645ed95cd9d2834d628a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#72:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/smells/README_RU.txt =====
+ЛОКАЛЬНЫЙ СКАНЕР КАНДИДАТОВ НА CODE SMELLS — версия 1.0.0
+
+Что работает
+============
+repo_smells.py рекурсивно читает все обнаруженные .py в локальной папке.
+Он ничего не импортирует из проекта, не запускает код, не устанавливает
+зависимости, не обращается к RPC, API или кошелькам. Нужен Python 3.11+.
+Это отдельный инструмент R&D, а не завершённая интеграция Laya.
+
+Windows PowerShell:
+  py -3 .\repo_smells.py "C:\code\my-bot" --output "C:\reports\bot-smells.json"
+
+Если Python-пакеты лежат в src:
+  py -3 .\repo_smells.py "C:\code\my-bot" --output "C:\reports\bot-smells.json" --import-root src --long-function-lines 100
+
+Параметр --import-root можно повторять. По умолчанию корень импортов — сама
+папка репозитория. Порог размера функций по умолчанию 80 физических строк;
+это настраиваемый критерий находки, а не ограничение объёма анализа.
+
+JSON-отчёт требуется записывать СНАРУЖИ сканируемого репозитория: инструмент
+не добавляет и не перезаписывает его файлы. Запись отчёта атомарная через
+временный файл. При остановке до замены новый итоговый отчёт не готов;
+старый файл с тем же именем может остаться — проверяйте generated_at и хеш.
+Код выхода 0 означает, что отчёт создан; это не отсутствие проблем.
+Код выхода 2 означает ошибку аргументов, корневой папки, памяти или записи.
+Принудительная остановка процессом может дать другой ненулевой код выхода.
+
+Новые функции
+=============
+SMELL-01 Полный рекурсивный реестр .py: относительный путь от корня, абсолютный
+         путь, SHA-256 исходных байтов, размер, mtime, статус чтения и разбора.
+SMELL-02 Маркеры eval/exec, буквального shell=True, bare except и except/pass.
+SMELL-03 Длинные функции с именем, строками и настраиваемым порогом.
+SMELL-04 Дубли тел функций по нормализованному AST без координат и ведущих
+         docstring; одинаковые basename разных папок сохраняются отдельно.
+SMELL-05 Граф разрешимых локальных импортов с настраиваемыми import roots.
+SMELL-06 Циклические компоненты графа с исходными строками и рёбрами; алгоритм
+         не зависит от лимита рекурсии Python для количества модулей.
+SMELL-07 Отдельный список внешних/неразрешённых, wildcard и динамических
+         импортов. Он явно показывает неполноту графа зависимостей.
+SMELL-08 Отдельные статусы binary, syntax/decode/read/stat/list errors,
+         пропущенных symlink/reparse point и изменений во время чтения.
+SMELL-09 Детерминированный хеш наблюдавшегося реестра для привязки результатов
+         к версии байтов; каждой находке присвоен стабильный ID.
+SMELL-10 Отчёт STATIC_CANDIDATE для дальнейшего тегирования/проверки агентом.
+
+Как трактовать результат
+========================
+Каждая находка — STATIC_CANDIDATE и requires_review=true. Это гипотеза,
+которую можно связать с данным в библиотеке по path + source_sha256 +
+start_line/end_line, а затем проверить тестом или обзором человека/LLM.
+Колонки AST start_column/end_column — байтовые смещения UTF-8, не номер
+видимого символа. Номера строк начинаются с 1. Конец диапазона колонок
+исключающий, как в Python AST.
+
+Пример меток для элемента библиотеки:
+  data_kind=code_evidence
+  project=my-bot
+  evidence_status=STATIC_CANDIDATE
+  claim_type=possible_maintainability_issue
+  source_sha256=<из отчёта>
+  source_path=<полный относительный путь>
+  finding_id=<из отчёта>
+  rule=BARE_EXCEPT
+  next_action=review_exception_handling
+
+Перепроверка меняет оценку утверждения, но не должна затирать исходную
+находку. Добавляйте отдельную проверку с evidence_status=CONFIRMED,
+REFUTED или UNKNOWN, причиной, версией исходника и ссылкой на тест.
+
+security_audit_pass, runtime_tests и live_bot_readiness всегда NOT_RUN.
+COMPLETE_FOR_DISCOVERED_PYTHON означает только завершённый разбор найденных
+.py. COMPLETE_WITH_GAPS означает, что есть пропуски/ошибки. Ноль находок не
+доказывает безопасность, прибыльность, отсутствие запахов или готовность
+бота к live. Скрипт не делает таких выводов.
+
+Ограничения и точность
+=====================
+Нет произвольного ограничения на 20 документов, 300 файлов или общий размер
+репозитория. Однако файл целиком, AST и итоговый JSON находятся в RAM.
+Физическая память, диск и ограничения парсера существуют. Этот инструмент
+не обещает обработку любого объёма без ошибок; не заменяет архиватор данных.
+Языки, отличные от Python, файлы .pyi и содержимое архивов не анализируются.
+
+Оригиналы сохраняются неизменными: читаются только исходные байты. Поля
+хеша не являются Git commit SHA. Для воспроизводимости используйте
+неизменяемую копию/checkout. Проверка stat до/после чтения обнаруживает
+обычные изменения, но не создаёт атомарный снимок всего репозитория.
+Инструмент не защищён от враждебной одновременной подмены каталогов локальным
+процессом. Обнаруженные symlink и Windows reparse points пропускаются;
+их цели не сканируются. Это явно отражается в статусе, а не скрывается.
+
+Разрешение импортов консервативное: sys.path, installed packages, __all__,
+атрибуты модулей, плагины и runtime import hooks не исполняются. При
+совпадении нескольких локальных модулей имя помечается как неоднозначное.
+Карта строится по успешно разобранным файлам; файл с syntax error не может
+стать доказанным узлом. Неизвестный модуль не объявляется «отсутствующим»:
+он может быть установленной зависимостью или требовать других import roots.
+
+Условные импорты и импорты внутри функций входят в статический граф. Цикл
+в нём не доказывает цикл выполнения или падение программы. Динамические
+вызовы __import__, importlib.import_module и распознаваемые aliases идут
+в отдельный список, включая вызовы с буквальным именем. Другие косвенные
+способы импорта могут быть пропущены.
+
+Имена eval/exec и importlib могут быть переопределены. shell=True может
+принадлежать пользовательской функции. Поиск дубликатов не переименовывает
+переменные и не сравнивает внешнее окружение/аргументы; sync/async функции
+с одинаковым телом тоже могут иметь разную семантику. Это кандидаты для
+обзора, не автоматическое разрешение удалить или переписать код.
+
+Проверка
+========
+  py -3 -m unittest discover -s . -p "test_repo_smells.py" -v
+
+Тесты проверяют реальные исходники во временных папках: отсутствие их
+исполнения/изменения, hashes/spans, дубли basename, invalid/binary source,
+ошибку чтения, пропуск ссылок, локальные/relative/src импорты, циклы,
+динамические импорты, >300 файлов, 2500 узлов графа и реальный CLI.
+Windows запуск и Windows junction отдельно требуют проверки на Dell.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a2b5aec4c1e2cf1e0ab08ab8bd614101b8c148ac2b3999550a340ce927799aeb | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#73:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/smells/TEST_RESULTS.txt =====
+Command: python -m unittest discover -s rnd_work/smells -p 'test_repo_smells.py' -v
+Environment: Linux execution workspace. Tests use temporary synthetic repositories.
+
+test_binary_syntax_encoding_and_unreadable_are_explicit ... ok
+test_candidates_hashes_spans_and_never_executes_source ... ok
+test_cli_atomic_report_and_refusal_to_write_inside_repo ... ok
+test_directory_and_file_symlinks_not_followed ... ok
+test_file_count_is_not_capped_and_revision_tracks_bytes ... ok
+test_large_graph_uses_iterative_cycle_algorithm ... ok
+test_relative_src_imports_and_ambiguous_module ... ok
+test_repeated_filenames_and_normalized_duplicates ... ok
+test_resolvable_cycle_external_and_dynamic_imports ... ok
+
+Ran 9 tests in 0.224s
+OK
+Exit code: 0
+
+Not run: real user flashloan repository, Windows 11, Windows junction test,
+Laya inference, live API/RPC, bot runtime, security audit or live qualification.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ce73bd8dedc126600f53eb2932f40036b61fb0e2f654b7e949b6a59cc9fea6b3 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#74:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/smells/VALIDATION.json =====
+{
+  "artifact": "repo_smells.py",
+  "scanner_version": "1.0.0",
+  "date": "2026-10-03",
+  "runtime_environment": "Linux; Python in execution workspace",
+  "unit_tests": {
+    "status": "PASSED",
+    "command": "python -m unittest discover -s rnd_work/smells -p 'test_repo_smells.py' -v",
+    "test_count": 9,
+    "exit_code": 0,
+    "reported_seconds": 0.224,
+    "scope": "Temporary synthetic repositories only"
+  },
+  "evidence": [
+    "321 Python files are included without a 300-file cap",
+    "2500-node cycle graph processed without recursive graph traversal",
+    "Source file with a write-on-execution statement is parsed without executing it",
+    "Original source bytes unchanged after scanning",
+    "Nested repeated basenames retain separate paths",
+    "Binary, decode, syntax and simulated permission errors have explicit statuses",
+    "File and directory symlinks skipped without following a loop",
+    "Relative src-layout imports and local import cycles are reported",
+    "External, ambiguous and dynamic imports remain explicitly unresolved",
+    "Actual CLI writes JSON report and rejects an output path inside repository"
+  ],
+  "user_flashloan_repository_scan": "NOT_RUN",
+  "windows_11_execution": "NOT_RUN",
+  "windows_junction_integration_test": "NOT_RUN",
+  "laya_model_inference": "NOT_RUN",
+  "security_audit_pass": "NOT_RUN",
+  "runtime_bot_tests": "NOT_RUN",
+  "live_bot_readiness": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2a6a8c8bb047f0f780076087b880369444eedf6a7447074baf9c76bd55fb1746 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#75:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/smells/repo_smells.py =====
+#!/usr/bin/env python3
+"""Read-only Python source inventory and STATIC_CANDIDATE findings. Stdlib only."""
+from __future__ import annotations
+
+import argparse
+import ast
+import hashlib
+import io
+import json
+import os
+from pathlib import Path
+import stat
+import tempfile
+import tokenize
+from datetime import datetime, timezone
+
+
+VERSION = "1.0.0"
+
+
+def digest(data: bytes) -> str:
+    return hashlib.sha256(data).hexdigest()
+
+
+def span(node: ast.AST) -> dict:
+    return {"start_line": getattr(node, "lineno", None),
+            "end_line": getattr(node, "end_lineno", getattr(node, "lineno", None)),
+            "start_column": getattr(node, "col_offset", None),
+            "end_column": getattr(node, "end_col_offset", None)}
+
+
+def stable_id(value: object) -> str:
+    return digest(json.dumps(value, ensure_ascii=True, sort_keys=True).encode("utf-8"))[:24]
+
+
+def candidate(rule: str, evidence: list[dict], explanation: str, **extra) -> dict:
+    result = {"rule": rule, "status": "STATIC_CANDIDATE", "requires_review": True,
+              "explanation": explanation, "evidence": evidence, **extra}
+    result["id"] = stable_id(result)
+    return result
+
+
+def evidence(record: dict, node: ast.AST) -> dict:
+    return {"path": record["path"], "absolute_path": record["absolute_path"],
+            "source_sha256": record["sha256"], **span(node)}
+
+
+def is_link_or_reparse(path: Path) -> bool:
+    info = path.stat(follow_symlinks=False)
+    return stat.S_ISLNK(info.st_mode) or bool(
+        getattr(info, "st_file_attributes", 0) & getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0x400))
+
+
+def inventory(root: Path):
+    """Walk without following links/junctions; no document or file-count limit."""
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        try:
+            with os.scandir(directory) as iterator:
+                children = sorted(iterator, key=lambda x: x.name)
+        except OSError as exc:
+            yield directory, "LIST_ERROR", str(exc)
+            continue
+        for item in children:
+            path = Path(item.path)
+            try:
+                if item.is_symlink() or is_link_or_reparse(path):
+                    yield path, "SKIPPED_SYMLINK_OR_JUNCTION", None
+                elif item.is_dir(follow_symlinks=False):
+                    pending.append(path)
+                elif item.is_file(follow_symlinks=False) and path.suffix.lower() == ".py":
+                    yield path, "PYTHON_SOURCE", None
+                elif path.suffix.lower() == ".py":
+                    yield path, "SKIPPED_NONREGULAR", None
+            except OSError as exc:
+                yield path, "STAT_ERROR", str(exc)
+
+
+def read_source(path: Path, record: dict):
+    """Detect source encoding using Python's coding-cookie rules. Never imports it."""
+    try:
+        before = path.stat(follow_symlinks=False)
+        if not stat.S_ISREG(before.st_mode):
+            record["status"] = "SKIPPED_NONREGULAR"
+            return None
+        # O_NOFOLLOW is available on Unix; lstat/fstat identity checks also detect a
+        # replacement race. Windows junctions are skipped during the inventory.
+        flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+        fd = os.open(path, flags)
+        with os.fdopen(fd, "rb") as handle:
+            opened = os.fstat(handle.fileno())
+            if not stat.S_ISREG(opened.st_mode):
+                record["status"] = "SKIPPED_NONREGULAR"
+                return None
+            raw = handle.read()
+            after_handle = os.fstat(handle.fileno())
+        after_path = path.stat(follow_symlinks=False)
+    except OSError as exc:
+        record.update(status="READ_ERROR", error=str(exc))
+        return None
+    record.update(sha256=digest(raw), byte_count=len(raw), mtime_ns=opened.st_mtime_ns)
+    def identity(value):
+        return value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns
+    if not (identity(before) == identity(opened) == identity(after_handle) == identity(after_path)):
+        record.update(status="SOURCE_CHANGED_DURING_READ", error="Retry from an immutable checkout.")
+        return None
+    if b"\x00" in raw:
+        record.update(status="BINARY", error="NUL bytes are not valid Python source.")
+        return None
+    try:
+        encoding, _ = tokenize.detect_encoding(io.BytesIO(raw).readline)
+        text = raw.decode(encoding)
+        record["encoding"] = encoding
+    except (SyntaxError, UnicodeError, LookupError) as exc:
+        record.update(status="DECODE_ERROR", error=str(exc))
+        return None
+    try:
+        tree = ast.parse(text, filename=str(path))
+    except (SyntaxError, ValueError, RecursionError) as exc:
+        record.update(status="SYNTAX_ERROR", error=str(exc),
+                      error_line=getattr(exc, "lineno", None),
+                      error_column=getattr(exc, "offset", None))
+        return None
+    record.update(status="PARSED", line_count=len(text.splitlines()))
+    return tree
+
+
+def qualified_name(node: ast.AST, parents: dict) -> str:
+    parts = [node.name]
+    current = parents.get(node)
+    while current is not None:
+        if isinstance(current, (ast.ClassDef, ast.FunctionDef, ast.AsyncFunctionDef)):
+            parts.append(current.name)
+        current = parents.get(current)
+    return ".".join(reversed(parts))
+
+
+def inspect_tree(tree: ast.AST, record: dict, threshold: int, duplicates: dict,
+                 findings: list, imports: list, dynamic: list):
+    nodes = list(ast.walk(tree))
+    parents = {child: node for node in nodes for child in ast.iter_child_nodes(node)}
+    importlib_names = {"importlib"}
+    import_module_names = set()
+    for node in nodes:
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                if alias.name == "importlib":
+                    importlib_names.add(alias.asname or "importlib")
+        if isinstance(node, ast.ImportFrom) and node.level == 0 and node.module == "importlib":
+            import_module_names.update(alias.asname or alias.name for alias in node.names
+                                       if alias.name == "import_module")
+    for node in nodes:
+        ev = evidence(record, node)
+        if isinstance(node, ast.Call):
+            if isinstance(node.func, ast.Name) and node.func.id in {"eval", "exec"}:
+                findings.append(candidate("EVAL_OR_EXEC", [ev],
+                    "Вызов с именем eval/exec; переопределение имени и достижимость не установлены.",
+                    called_name=node.func.id))
+            if any(kw.arg == "shell" and isinstance(kw.value, ast.Constant)
+                   and kw.value.value is True for kw in node.keywords):
+                findings.append(candidate("LITERAL_SHELL_TRUE", [ev],
+                    "У вызова указан shell=True; получатель вызова и происхождение команды требуют проверки."))
+            func = node.func
+            dynamic_call = (isinstance(func, ast.Name) and
+                            (func.id == "__import__" or func.id in import_module_names)) or (
+                isinstance(func, ast.Attribute) and func.attr == "import_module" and
+                isinstance(func.value, ast.Name) and func.value.id in importlib_names)
+            if dynamic_call:
+                literal = (node.args[0].value if node.args and isinstance(node.args[0], ast.Constant)
+                           and isinstance(node.args[0].value, str) else None)
+                dynamic.append({**ev, "status": "UNRESOLVED_DYNAMIC_IMPORT",
+                                "literal_argument": literal,
+                                "reason": "Runtime imports are not executed or included in the proven graph."})
+        if isinstance(node, ast.ExceptHandler):
+            if node.type is None:
+                findings.append(candidate("BARE_EXCEPT", [ev],
+                    "Обработчик без типа исключения; намерение и последствия требуют проверки."))
+            if node.body and all(isinstance(item, ast.Pass) for item in node.body):
+                findings.append(candidate("EXCEPT_PASS", [ev],
+                    "Тело обработчика состоит только из pass; возможное подавление ошибки."))
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            name = qualified_name(node, parents)
+            lines = node.end_lineno - node.lineno + 1
+            if lines > threshold:
+                findings.append(candidate("LONG_FUNCTION", [ev],
+                    "Размер функции превышает настраиваемый порог; это повод для обзора, а не дефект.",
+                    function=name, physical_lines=lines, configured_threshold=threshold))
+            body = list(node.body)
+            if body and isinstance(body[0], ast.Expr) and isinstance(body[0].value, ast.Constant) \
+                    and isinstance(body[0].value.value, str):
+                body = body[1:]
+            normalized = ast.dump(ast.Module(body=body, type_ignores=[]), include_attributes=False)
+            duplicates.setdefault(digest(normalized.encode()), []).append({**ev, "function": name})
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            imports.append({"record": record, "node": node})
+
+
+def local_modules(records: list, import_roots: list[str]):
+    mapping = {}
+    contexts = {}
+    for record in records:
+        if record["status"] != "PARSED":
+            continue
+        path = Path(record["path"])
+        for import_root in import_roots:
+            try:
+                relative = path.relative_to(Path(import_root))
+            except ValueError:
+                continue
+            parts = list(relative.with_suffix("").parts)
+            is_package = parts[-1] == "__init__"
+            if is_package:
+                parts.pop()
+            module = ".".join(parts)
+            package = module if is_package else ".".join(parts[:-1])
+            if module:
+                mapping.setdefault(module, set()).add(record["path"])
+            contexts.setdefault(record["path"], set()).add(package)
+    return mapping, contexts
+
+
+def resolve_imports(records: list, imports: list, import_roots: list[str]):
+    mapping, contexts = local_modules(records, import_roots)
+    edges, unresolved = [], []
+    namespaces = {".".join(name.split(".")[:i]) for name in mapping
+                  for i in range(1, len(name.split(".")))}
+    def resolution(name):
+        targets = mapping.get(name, set())
+        if len(targets) == 1:
+            return next(iter(targets)), "RESOLVED_LOCAL"
+        if len(targets) > 1:
+            return None, "AMBIGUOUS_LOCAL_MODULE"
+        if name in namespaces:
+            return None, "LOCAL_NAMESPACE_PACKAGE"
+        return None, "EXTERNAL_OR_UNRESOLVED_MODULE"
+
+    def add_module(name, record, node, required=True):
+        target, status = resolution(name)
+        if target:
+            edges.append({"source": record["path"], "target": target,
+                          "module": name, "status": "STATIC_IMPORT_EDGE",
+                          "evidence": evidence(record, node)})
+        elif required and status != "LOCAL_NAMESPACE_PACKAGE":
+            unresolved.append({**evidence(record, node), "module": name, "status": status})
+        # Importing pkg.child can also execute each resolvable parent __init__.
+        for i in range(1, len(name.split("."))):
+            parent_name = ".".join(name.split(".")[:i])
+            parent, _ = resolution(parent_name)
+            if parent:
+                edges.append({"source": record["path"], "target": parent,
+                              "module": parent_name, "status": "STATIC_PACKAGE_INIT_EDGE",
+                              "evidence": evidence(record, node)})
+        return target, status
+
+    for item in imports:
+        record, node = item["record"], item["node"]
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                add_module(alias.name, record, node)
+            continue
+        bases = set()
+        if node.level:
+            for package in contexts.get(record["path"], set()):
+                pieces = package.split(".") if package else []
+                if node.level <= len(pieces):
+                    head = pieces[:len(pieces) - node.level + 1]
+                    bases.add(".".join(head + ([node.module] if node.module else [])))
+            if len(bases) != 1:
+                unresolved.append({**evidence(record, node), "module": node.module,
+                                   "level": node.level, "status": "UNRESOLVED_RELATIVE_IMPORT",
+                                   "reason": "Unknown or ambiguous package under configured import roots."})
+                continue
+        else:
+            bases.add(node.module or "")
+        base = next(iter(bases))
+        target, base_status = add_module(base, record, node)
+        for alias in node.names:
+            if alias.name == "*":
+                unresolved.append({**evidence(record, node), "module": base,
+                                   "status": "WILDCARD_BINDINGS_UNKNOWN"})
+                continue
+            child = base + "." + alias.name if base else alias.name
+            child_target, child_status = resolution(child)
+            if child_target:
+                add_module(child, record, node)
+            elif target or base_status == "LOCAL_NAMESPACE_PACKAGE":
+                unresolved.append({**evidence(record, node), "module": child,
+                                   "status": "ATTRIBUTE_OR_SUBMODULE_UNKNOWN",
+                                   "reason": "Imported attributes and runtime package exports are not evaluated."})
+            elif child_status == "AMBIGUOUS_LOCAL_MODULE":
+                unresolved.append({**evidence(record, node), "module": child, "status": child_status})
+    # A statement can reach the same package initializer by several names.
+    edges = list({stable_id(edge): edge for edge in edges}.values())
+    return edges, unresolved, {key: sorted(value) for key, value in mapping.items()}
+
+
+def strongly_connected(nodes, edges):
+    """Iterative Kosaraju: no recursion limit or enumeration of exponential cycles."""
+    forward = {node: set() for node in nodes}
+    reverse = {node: set() for node in nodes}
+    for edge in edges:
+        forward[edge["source"]].add(edge["target"])
+        reverse[edge["target"]].add(edge["source"])
+    visited, order = set(), []
+    for start in sorted(nodes):
+        if start in visited:
+            continue
+        stack = [(start, False)]
+        while stack:
+            node, leaving = stack.pop()
+            if leaving:
+                order.append(node)
+            elif node not in visited:
+                visited.add(node)
+                stack.append((node, True))
+                stack.extend((neighbor, False) for neighbor in sorted(forward[node], reverse=True)
+                             if neighbor not in visited)
+    assigned = set()
+    for start in reversed(order):
+        if start in assigned:
+            continue
+        component, stack = [], [start]
+        while stack:
+            node = stack.pop()
+            if node in assigned:
+                continue
+            assigned.add(node)
+            component.append(node)
+            stack.extend(reverse[node] - assigned)
+        if len(component) > 1 or start in forward[start]:
+            yield sorted(component)
+
+
+def scan_repo(source: str | Path, *, long_function_lines: int = 80,
+              import_roots: list[str] | None = None) -> dict:
+    raw_root = Path(source).absolute()
+    if is_link_or_reparse(raw_root):
+        raise ValueError("Repository root must not be a symlink or junction.")
+    root = raw_root.resolve(strict=True)
+    if not root.is_dir():
+        raise ValueError("Repository must be a directory.")
+    if long_function_lines < 1:
+        raise ValueError("long_function_lines must be positive.")
+    import_roots = import_roots or ["."]
+    normalized_roots = []
+    for supplied in import_roots:
+        path = Path(supplied)
+        if path.is_absolute() or ".." in path.parts:
+            raise ValueError("Import roots must be relative paths inside the repository.")
+        normalized_roots.append(path.as_posix())
+    records, findings, imports, dynamic, duplicates = [], [], [], [], {}
+    for path, kind, error in inventory(root):
+        record = {"path": path.relative_to(root).as_posix(), "absolute_path": str(path),
+                  "status": kind}
+        records.append(record)
+        if error:
+            record["error"] = error
+        if kind != "PYTHON_SOURCE":
+            continue
+        tree = read_source(path, record)
+        if tree is not None:
+            inspect_tree(tree, record, long_function_lines, duplicates, findings, imports, dynamic)
+    records.sort(key=lambda r: r["path"])
+    for body_hash, occurrences in sorted(duplicates.items()):
+        if len(occurrences) > 1:
+            findings.append(candidate("DUPLICATE_FUNCTION_BODY", occurrences,
+                "Совпадают AST тел функций без ведущих docstring и координат; это не доказательство одинаковой семантики.",
+                normalized_body_sha256=body_hash))
+    edges, unresolved, module_map = resolve_imports(records, imports, normalized_roots)
+    parsed = [record["path"] for record in records if record["status"] == "PARSED"]
+    for component in strongly_connected(parsed, edges):
+        contained = [edge for edge in edges if edge["source"] in component and edge["target"] in component]
+        findings.append(candidate("LOCAL_IMPORT_CYCLE", [edge["evidence"] for edge in contained],
+            "Сильно связная компонента статических локальных импортов; условные импорты могут не выполняться вместе.",
+            component=component, import_edges=contained))
+    counts = {}
+    for record in records:
+        counts[record["status"]] = counts.get(record["status"], 0) + 1
+    digest_inputs = [{key: record.get(key) for key in ("path", "status", "sha256", "byte_count")}
+                     for record in records]
+    return {"schema_version": 1, "scanner_version": VERSION,
+            "generated_at": datetime.now(timezone.utc).isoformat(), "root": str(root),
+            "scan_status": "COMPLETE_WITH_GAPS" if any(record["status"] != "PARSED" for record in records)
+                           else "COMPLETE_FOR_DISCOVERED_PYTHON",
+            "assessment": "STATIC_CANDIDATES_ONLY", "security_audit_pass": "NOT_RUN",
+            "runtime_tests": "NOT_RUN", "live_bot_readiness": "NOT_RUN",
+            "inventory_revision_sha256": digest(json.dumps(digest_inputs, ensure_ascii=True,
+                                                           sort_keys=True).encode()),
+            "configuration": {"long_function_lines": long_function_lines,
+                              "import_roots": normalized_roots, "file_count_cap": None,
+                              "source_execution": False, "symlink_following": False},
+            "summary": {"files_by_status": counts, "candidate_count": len(findings),
+                        "resolved_import_edges": len(edges), "unresolved_imports": len(unresolved),
+                        "dynamic_imports": len(dynamic)},
+            "files": records, "findings": findings,
+            "imports": {"module_map": module_map, "edges": edges,
+                        "unresolved": unresolved, "dynamic": dynamic},
+            "limitations": [
+                "Only .py files; no source code is executed and no dependencies are installed.",
+                "Each source file and report are processed in RAM; memory, disk and Python parser limits still apply.",
+                "Not an atomic repository snapshot; use an immutable checkout for repeatable evidence.",
+                "Hashes describe observed bytes, not a Git commit or proof of correctness.",
+                "Static imports may be conditional; dependency injection, runtime paths and dynamic imports remain unresolved.",
+                "Eval/exec and import aliases can be rebound; other aliases and indirect calls can be missed.",
+                "No cross-language, dataflow, vulnerability, profitability or live-trading assessment.",
+                "Directory link replacement during traversal is not hardened against a hostile concurrent local process."]}
+
+
+def write_report(report: dict, output: str | Path):
+    destination = Path(output).absolute()
+    root = Path(report["root"])
+    resolved = destination.resolve()
+    if resolved == root or root in resolved.parents:
+        raise ValueError("Write reports outside the scanned repository to preserve its files.")
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    fd, temporary = tempfile.mkstemp(prefix=".repo-smells-", suffix=".json", dir=destination.parent)
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8", newline="\n") as handle:
+            json.dump(report, handle, ensure_ascii=True, indent=2)
+            handle.write("\n")
+        os.replace(temporary, destination)
+    except BaseException:
+        Path(temporary).unlink(missing_ok=True)
+        raise
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("repo", help="Local folder; source is never executed")
+    parser.add_argument("--output", required=True, help="JSON report path OUTSIDE the repository")
+    parser.add_argument("--long-function-lines", type=int, default=80)
+    parser.add_argument("--import-root", action="append", help="Relative Python import root; repeatable, default '.'")
+    args = parser.parse_args(argv)
+    try:
+        report = scan_repo(args.repo, long_function_lines=args.long_function_lines, import_roots=args.import_root)
+        write_report(report, args.output)
+    except (ValueError, OSError, MemoryError) as exc:
+        parser.exit(2, f"Scan/report not completed: {exc}\n")
+    print(json.dumps({"output": str(Path(args.output).absolute()), "scan_status": report["scan_status"],
+                      "assessment": report["assessment"], **report["summary"]}, ensure_ascii=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d4b02f74a6f87e0375cece254e34f29f1b59442f9d653a23caf19dd86f6d9998 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#76:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/smells/test_repo_smells.py =====
+import hashlib
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+from unittest.mock import patch
+
+from repo_smells import scan_repo, write_report, strongly_connected
+
+
+class ScannerTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.base = Path(self.temp.name)
+        self.repo = self.base / "repo"
+        self.repo.mkdir()
+
+    def tearDown(self):
+        self.temp.cleanup()
+
+    def source(self, relative, value):
+        path = self.repo / relative
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(value if isinstance(value, bytes) else value.encode())
+        return path
+
+    def test_candidates_hashes_spans_and_never_executes_source(self):
+        marker = self.base / "executed.txt"
+        code = (f"open({str(marker)!r}, 'w').write('executed')\n"
+                "def unsafe(value):\n"
+                "    try:\n"
+                "        eval(value)\n"
+                "        exec(value)\n"
+                "        runner(value, shell=True)\n"
+                "    except:\n"
+                "        pass\n")
+        path = self.source("jobs/runner.py", code)
+        original = path.read_bytes()
+        report = scan_repo(self.repo, long_function_lines=3)
+        rules = {item["rule"] for item in report["findings"]}
+        self.assertTrue({"EVAL_OR_EXEC", "LITERAL_SHELL_TRUE", "BARE_EXCEPT", "EXCEPT_PASS", "LONG_FUNCTION"} <= rules)
+        self.assertEqual(report["security_audit_pass"], "NOT_RUN")
+        self.assertFalse(marker.exists())
+        self.assertEqual(path.read_bytes(), original)
+        for finding in report["findings"]:
+            self.assertEqual(finding["status"], "STATIC_CANDIDATE")
+            ev = finding["evidence"][0]
+            self.assertEqual(ev["path"], "jobs/runner.py")
+            self.assertEqual(ev["source_sha256"], hashlib.sha256(original).hexdigest())
+            self.assertGreaterEqual(ev["start_line"], 2)
+            self.assertGreaterEqual(ev["end_line"], ev["start_line"])
+
+    def test_repeated_filenames_and_normalized_duplicates(self):
+        self.source("one/common.py", 'def a(x):\n    "first doc"\n    return x + 1\n')
+        self.source("two/common.py", 'async def b(x):\n    "different doc"\n    return x + 1\n')
+        report = scan_repo(self.repo)
+        duplicate = [item for item in report["findings"] if item["rule"] == "DUPLICATE_FUNCTION_BODY"]
+        self.assertEqual(len(duplicate), 1)
+        self.assertEqual({item["path"] for item in duplicate[0]["evidence"]},
+                         {"one/common.py", "two/common.py"})
+        self.assertEqual(len(report["files"]), 2)
+
+    def test_binary_syntax_encoding_and_unreadable_are_explicit(self):
+        self.source("binary.py", b"\x00\xff")
+        self.source("syntax.py", "def nope(\n")
+        self.source("encoding.py", b"\xff = 1\n")
+        blocked = self.source("unreadable.py", "x = 1\n")
+        self.source("latin.py", b"# coding: latin-1\ns = '\xe9'\n")
+        real_open = os.open
+        def fake_open(path, flags, *args, **kwargs):
+            if Path(path) == blocked:
+                raise PermissionError("fixture denies read")
+            return real_open(path, flags, *args, **kwargs)
+        with patch("repo_smells.os.open", side_effect=fake_open):
+            report = scan_repo(self.repo)
+        outcomes = {item["path"]: item["status"] for item in report["files"]}
+        self.assertEqual(outcomes, {"binary.py": "BINARY", "syntax.py": "SYNTAX_ERROR",
+                                   "encoding.py": "DECODE_ERROR", "unreadable.py": "READ_ERROR",
+                                   "latin.py": "PARSED"})
+        self.assertEqual(report["scan_status"], "COMPLETE_WITH_GAPS")
+        self.assertEqual(report["live_bot_readiness"], "NOT_RUN")
+
+    def test_directory_and_file_symlinks_not_followed(self):
+        self.source("real/a.py", "x = 1\n")
+        try:
+            (self.repo / "loop").symlink_to(self.repo, target_is_directory=True)
+            (self.repo / "alias.py").symlink_to(self.repo / "real/a.py")
+        except OSError as exc:
+            self.skipTest(f"Symlinks unavailable: {exc}")
+        report = scan_repo(self.repo)
+        self.assertEqual(len(report["files"]), 3)
+        self.assertEqual(sum(item["status"] == "PARSED" for item in report["files"]), 1)
+        self.assertEqual(sum(item["status"] == "SKIPPED_SYMLINK_OR_JUNCTION" for item in report["files"]), 2)
+
+    def test_resolvable_cycle_external_and_dynamic_imports(self):
+        self.source("a.py", "import b\nimport third_party_unknown\nimport importlib as il\nil.import_module('hidden')\n")
+        self.source("b.py", "import a\nfrom importlib import import_module as imp\nimp(name)\n")
+        report = scan_repo(self.repo)
+        cycles = [item for item in report["findings"] if item["rule"] == "LOCAL_IMPORT_CYCLE"]
+        self.assertEqual(len(cycles), 1)
+        self.assertEqual(cycles[0]["component"], ["a.py", "b.py"])
+        self.assertTrue(all(edge["target"] in {"a.py", "b.py"} for edge in report["imports"]["edges"]))
+        self.assertEqual(len(report["imports"]["dynamic"]), 2)
+        self.assertTrue(any(item["module"] == "third_party_unknown" for item in report["imports"]["unresolved"]))
+
+    def test_relative_src_imports_and_ambiguous_module(self):
+        self.source("src/pkg/__init__.py", "")
+        self.source("src/pkg/a.py", "from . import b\n")
+        self.source("src/pkg/b.py", "from .a import missing_attribute\n")
+        report = scan_repo(self.repo, import_roots=["src"])
+        cycles = [item for item in report["findings"] if item["rule"] == "LOCAL_IMPORT_CYCLE"]
+        self.assertEqual(cycles[0]["component"], ["src/pkg/a.py", "src/pkg/b.py"])
+        self.assertTrue(any(item["status"] == "ATTRIBUTE_OR_SUBMODULE_UNKNOWN"
+                            for item in report["imports"]["unresolved"]))
+        self.source("both.py", "")
+        self.source("both/__init__.py", "")
+        self.source("consumer.py", "import both\n")
+        ambiguous = scan_repo(self.repo)
+        self.assertTrue(any(item["status"] == "AMBIGUOUS_LOCAL_MODULE"
+                            for item in ambiguous["imports"]["unresolved"]))
+
+    def test_file_count_is_not_capped_and_revision_tracks_bytes(self):
+        for index in range(321):
+            self.source(f"group/{index:04}.py", f"value = {index}\n")
+        report = scan_repo(self.repo)
+        self.assertEqual(len(report["files"]), 321)
+        self.assertIsNone(report["configuration"]["file_count_cap"])
+        again = scan_repo(self.repo)
+        self.assertEqual(report["inventory_revision_sha256"], again["inventory_revision_sha256"])
+        self.source("group/0000.py", "value = 42\n")
+        self.assertNotEqual(report["inventory_revision_sha256"], scan_repo(self.repo)["inventory_revision_sha256"])
+
+    def test_cli_atomic_report_and_refusal_to_write_inside_repo(self):
+        source = self.source("a.py", "x = 1\n")
+        output = self.base / "report.json"
+        cli = Path(__file__).with_name("repo_smells.py")
+        process = subprocess.run([sys.executable, str(cli), str(self.repo), "--output", str(output)],
+                                 capture_output=True, text=True)
+        self.assertEqual(process.returncode, 0, process.stderr)
+        report = json.loads(output.read_text())
+        self.assertEqual(report["assessment"], "STATIC_CANDIDATES_ONLY")
+        with self.assertRaisesRegex(ValueError, "outside"):
+            write_report(report, source)
+        self.assertEqual(source.read_text(), "x = 1\n")
+        bad = subprocess.run([sys.executable, str(cli), str(self.repo), "--output", str(output),
+                              "--long-function-lines", "0"], capture_output=True)
+        self.assertEqual(bad.returncode, 2)
+
+    def test_large_graph_uses_iterative_cycle_algorithm(self):
+        nodes = [str(index) for index in range(2500)]
+        edges = [{"source": nodes[index], "target": nodes[(index + 1) % len(nodes)]}
+                 for index in range(len(nodes))]
+        components = list(strongly_connected(nodes, edges))
+        self.assertEqual(len(components), 1)
+        self.assertEqual(len(components[0]), 2500)
+
+
+if __name__ == "__main__":
+    unittest.main()
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a046c63857467c47809fbcf1f4f5fe7c98be62dafe18f6f1e1280024a3353717 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#77:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/CLI_REPORT.SYNTHETIC.json =====
+{
+  "schema": "web3-qualification/v1/report",
+  "evaluated_at": "2026-10-03T17:00:00+00:00",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "plan_sha256": "d47c90e91671bf437982d67d5a9478608039f298364bfb4a400ab848cd4541e1",
+  "binding_sha256": "d6e0f03e2c2b0e072529d61fdd29242afc4b8f853c2f359f2d45ce9a40d28849",
+  "stages": [
+    {
+      "id": "inventory",
+      "adapter": "inventory_diff.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "expected_entries": 1,
+        "observed_entries": 1,
+        "missing": 0,
+        "extra": 0
+      },
+      "live_authorized": false,
+      "dependencies": {},
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "unit",
+      "adapter": "junit_xml.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "cases": 3,
+        "failed": 0,
+        "suite_errors": 0,
+        "skipped": 0,
+        "missing_name_fragments": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "inventory": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "cost",
+      "adapter": "economics_samples.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "samples": 1,
+        "accepted": 1,
+        "minimum_accepted_net_minor": 15,
+        "breach_sample_ids": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "unit": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "observation",
+      "adapter": "observation_window.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "samples": 2,
+        "first_observed_at": "2026-10-03T16:58:00+00:00",
+        "last_observed_at": "2026-10-03T16:59:00+00:00",
+        "duration_seconds": 60.0,
+        "max_gap_seconds": 60.0,
+        "provider_ids": [
+          "synthetic-provider"
+        ],
+        "breach_sample_ids": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "cost": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    },
+    {
+      "id": "stop",
+      "adapter": "stop_latency.v1",
+      "own_status": "TRUE",
+      "status": "TRUE",
+      "reasons": [],
+      "metrics": {
+        "probes": 1,
+        "max_stop_latency_ms": 10.0,
+        "forbidden_dispatches": 0,
+        "missing_faults": []
+      },
+      "live_authorized": false,
+      "dependencies": {
+        "unit": "TRUE"
+      },
+      "eligible_for_next_stage": true
+    }
+  ],
+  "ignored_unknown_stage_receipts": [],
+  "live_authorized": false,
+  "ready_for_live": false,
+  "actual_bot_execution": "NOT_RUN",
+  "producer_authenticity": "UNKNOWN",
+  "attestation_authenticated": false,
+  "external_chain_truth": "UNKNOWN",
+  "trust_statement": "TRUE only verifies configured predicates on supplied artifacts; hashes do not prove producer honesty or chain truth.",
+  "configured_predicates": "TRUE"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2cba110bae06af5904b2a28a0e15b50a9b2e7f3e1a862593950cee40adac931f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#78:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/EXPERIMENT_MATRIX.csv =====
+﻿id,experiment,intervention,failure_signal,candidate_acceptance,mode,execution_status
+W3-E01,Replay reproducibility,same event dataset+seed+clock,different decision/artifact digests,exact match or explained nondeterminism,OFFLINE_ONLY,NOT_RUN
+W3-E02,Stale quote rejection,delay quotes above reviewed budget,accepted stale candidate,zero such acceptances over recorded cases,OFFLINE_ONLY,NOT_RUN
+W3-E03,Full cost accounting,sweep each fee and token decimals,accepted net below configured threshold,integer recomputation and matching accounting unit,OFFLINE_ONLY,NOT_RUN
+W3-E04,Repayment boundaries,principal/fee/rounding edge cases,invariant failure / unauthorized callback,required cases execute with true machine receipts,CHAIN_ADAPTER_REQUIRED,NOT_RUN
+W3-E05,Stateful invariant non-vacuity,handler runs/depth/corpus,zero useful handler calls or hidden revert loop,reviewed campaign coverage reached,CHAIN_ADAPTER_REQUIRED,NOT_RUN
+W3-E06,Provider inconsistency,same-anchor responses from distinct upstreams,unexpected divergence,divergence yields UNKNOWN and pause candidate,READ_ONLY_NETWORK_SPEC,NOT_RUN
+W3-E07,Reorg/slot change,replace canonical anchor or source view,old proof stays TRUE,invalidate affected evidence by exact binding,OFFLINE_ONLY,NOT_RUN
+W3-E08,Observation vs replay,supply replay artifact for paper stage,replay classified as market observation,refuse mode mismatch,OFFLINE_ONLY,NOT_RUN
+W3-E09,RPC quota and disconnect,429/timeout/drop,unbounded retry or cursor loss,bounded backoff + explicit gap ledger,ISOLATED_RUNNER_SPEC,NOT_RUN
+W3-E10,Stop latency,voice/button stop under CPU load,post-trigger forbidden dispatch,measured latency distribution within reviewed target,WINDOWS_DEVICE_REQUIRED,NOT_RUN
+W3-E11,Update rollback,failed migration/new version health check,library corruption or inability to restore,copy migration + tested compatible rollback,WINDOWS_DEVICE_REQUIRED,NOT_RUN
+W3-E12,Wrong network protection,network/genesis mismatch,receipt passes despite wrong chain,UNKNOWN mismatch and no side effect,OFFLINE_ONLY,NOT_RUN
+W3-E13,Evidence corruption,alter one artifact byte,same TRUE status,FALSE hash integrity status,OFFLINE_ONLY,NOT_RUN
+W3-E14,False claim robustness,success=true / AI text / empty JUnit,any automatic ready-for-live,UNKNOWN or FALSE; live_authorized always false,OFFLINE_ONLY,NOT_RUN
+W3-E15,Device sustained performance,Dell CPU/RAM/GPU heating + voice + indexing,p99 delay exceeds actual target,measured local profile; no remote extrapolation,WINDOWS_DEVICE_REQUIRED,NOT_RUN
+W3-E16,Worktree isolation,two parallel patch/test tasks,shared state/test pollution,separate roots+locked shared resources+exact versions,LOCAL_RUNNER_SPEC,NOT_RUN
+W3-E17,Secret isolation,fixture fake key in repository/log,key in model context or exported text,secret policy catches fixtures; authorized raw retained locally,SYNTHETIC_FIXTURES_ONLY,NOT_RUN
+W3-E18,Paper economics honesty,modeled fills vs observed quotes,hypothetical PnL labeled realized,separate metrics and assumptions stored,READ_ONLY_NETWORK_SPEC,NOT_RUN
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2bc096ad835e91d1598c1cb5eee05a0ced5e3c5e78224375c248089053914a80 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#79:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/FUNCTIONS_WEB3.json =====
+{
+  "schema": "function-catalog/v1",
+  "implemented_offline_count": 13,
+  "spec_only_count": 28,
+  "functions": [
+    {
+      "id": "W3-F01",
+      "function": "evidence.validate_plan",
+      "title_ru": "Проверка типизированного плана и DAG этапов",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F02",
+      "function": "evidence.bind_revision",
+      "title_ru": "Сравнение exact repo/config/input/environment/network/anchor/provider/model/toolchain",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F03",
+      "function": "evidence.verify_artifacts",
+      "title_ru": "Потоковая проверка bytes/SHA256 и contained paths",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F04",
+      "function": "evidence.invalidate_stale",
+      "title_ru": "Срок актуальности, будущие timestamps и несовпадение plan hash",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F05",
+      "function": "evidence.require_machine_receipt",
+      "title_ru": "Проверка pinned runner identity вместо текста/успешного boolean",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F06",
+      "function": "evidence.inventory_diff",
+      "title_ru": "Сверка полного path+ordinal manifest",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F07",
+      "function": "evidence.junit_cases",
+      "title_ru": "Проверка реальных записей testcase, failure/error/skipped и требуемых названий",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F08",
+      "function": "evidence.economic_predicates",
+      "title_ru": "Пересчёт net cost в integer atomic units и freshness accepted candidates",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F09",
+      "function": "evidence.observation_window",
+      "title_ru": "Длительность/gaps/provider ids/paper-only/source freshness по журналу",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F10",
+      "function": "evidence.stop_latency",
+      "title_ru": "Проверка записанных stop latency и запрещённых dispatch после trigger",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F11",
+      "function": "evidence.propagate_dependencies",
+      "title_ru": "Раздельный own status и readiness с учётом зависимостей",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F12",
+      "function": "evidence.four_states",
+      "title_ru": "TRUE/FALSE/UNKNOWN/NOT_RUN, причины и неизменное live_authorized=false",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F13",
+      "function": "evidence.refuse_ambiguous_receipts",
+      "title_ru": "Отказ от скрытого выбора между несколькими receipts",
+      "status": "IMPLEMENTED_OFFLINE_PROTOTYPE",
+      "owner_candidate": "content-lab/context_review.py + automation_core.py canonical queue adapter",
+      "implementation": "qualification.py",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F14",
+      "function": "web3.repo_inventory",
+      "title_ru": "Сверка полного репозитория и входных данных",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF01",
+      "path": "workflows/01_repo_inventory.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F15",
+      "function": "web3.toolchain_build",
+      "title_ru": "Воспроизводимая сборка",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF02",
+      "path": "workflows/02_toolchain_build.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F16",
+      "function": "web3.static_smells",
+      "title_ru": "Детерминированные code smells и проверка гипотез",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF03",
+      "path": "workflows/03_static_smells.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F17",
+      "function": "web3.unit_contracts",
+      "title_ru": "Unit и boundary regression",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF04",
+      "path": "workflows/04_unit_contracts.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F18",
+      "function": "web3.fuzz_campaign",
+      "title_ru": "Fuzz с corpus и seed",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF05",
+      "path": "workflows/05_fuzz_campaign.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F19",
+      "function": "web3.stateful_invariants",
+      "title_ru": "Stateful invariants",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF06",
+      "path": "workflows/06_stateful_invariants.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F20",
+      "function": "web3.pinned_fork",
+      "title_ru": "Fork или local validator pinned state",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF07",
+      "path": "workflows/07_pinned_fork.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F21",
+      "function": "web3.offline_replay",
+      "title_ru": "Детерминированный replay",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF08",
+      "path": "workflows/08_offline_replay.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F22",
+      "function": "web3.market_collect",
+      "title_ru": "Сбор рыночных данных без подписи",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF09",
+      "path": "workflows/09_market_collect.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F23",
+      "function": "web3.provider_compare",
+      "title_ru": "Сравнение независимых provider views",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF10",
+      "path": "workflows/10_provider_compare.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F24",
+      "function": "web3.oracle_freshness",
+      "title_ru": "Oracle и quote freshness",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF11",
+      "path": "workflows/11_oracle_freshness.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F25",
+      "function": "web3.fees_and_costs",
+      "title_ru": "Полная стоимость opportunity",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF12",
+      "path": "workflows/12_fees_and_costs.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F26",
+      "function": "web3.route_atomicity",
+      "title_ru": "Маршрут и атомарность",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF13",
+      "path": "workflows/13_route_atomicity.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F27",
+      "function": "web3.slippage_stress",
+      "title_ru": "Slippage, liquidity и adverse timing",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF14",
+      "path": "workflows/14_slippage_stress.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F28",
+      "function": "web3.lender_repayment",
+      "title_ru": "Lender-neutral repayment contract",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF15",
+      "path": "workflows/15_lender_repayment.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F29",
+      "function": "web3.paper_observation",
+      "title_ru": "Реальное paper-наблюдение",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF16",
+      "path": "workflows/16_paper_observation.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F30",
+      "function": "web3.fault_injection",
+      "title_ru": "Operational faults",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF17",
+      "path": "workflows/17_fault_injection.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F31",
+      "function": "web3.windows_device",
+      "title_ru": "Dell Windows 11 qualification",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF18",
+      "path": "workflows/18_windows_device.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F32",
+      "function": "web3.stop_and_pause",
+      "title_ru": "Пауза и остановка по голосу/кнопке",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF19",
+      "path": "workflows/19_stop_and_pause.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F33",
+      "function": "web3.release_artifact",
+      "title_ru": "Release, digest и rollback",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF20",
+      "path": "workflows/20_release_artifact.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F34",
+      "function": "web3.canary_plan",
+      "title_ru": "План ограниченного canary",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF21",
+      "path": "workflows/21_canary_plan.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F35",
+      "function": "web3.live_monitoring",
+      "title_ru": "Мониторинг уже разрешённого live",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF22",
+      "path": "workflows/22_live_monitoring.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F36",
+      "function": "web3.stale_invalidation",
+      "title_ru": "Инвалидация по изменению inputs",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF23",
+      "path": "workflows/23_stale_invalidation.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F37",
+      "function": "web3.incident_replay",
+      "title_ru": "Incident→regression",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF24",
+      "path": "workflows/24_incident_replay.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F38",
+      "function": "web3.qualification_packet",
+      "title_ru": "Пакет решения readiness",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF25",
+      "path": "workflows/25_qualification_packet.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F39",
+      "function": "web3.coverage_holes",
+      "title_ru": "Поиск непроверенных требований",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF26",
+      "path": "workflows/26_coverage_holes.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F40",
+      "function": "web3.experiment_scheduler",
+      "title_ru": "Очередь R&D экспериментов",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF27",
+      "path": "workflows/27_experiment_scheduler.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    },
+    {
+      "id": "W3-F41",
+      "function": "web3.voice_goal_binding",
+      "title_ru": "Голосовая цель→проверяемый Web3 план",
+      "status": "SPEC_NOT_EXECUTABLE",
+      "workflow_id": "W3-WF28",
+      "path": "workflows/28_voice_goal_binding.SPEC.json",
+      "actual_bot_validation": "NOT_RUN"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e87bab61e91c83c5c22f368f94ad1322d40eb83fb0fb2455c5f41a7c8e09a14f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#80:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/README_WEB3_RU.txt =====
+WEB3 QUALIFICATION R&D — 2026-10-03
+
+Этот модуль добавляет проверяемый путь от данных к квалификации бота. В нём нет
+подписи транзакций, отправки в сеть, автотрейдинга, RPC клиента или установленной
+фоновой автоматизации. 28 workflow JSON — спецификации будущих адаптеров.
+qualification.py — работающий локальный офлайн verifier пяти форматов артефактов.
+
+Что именно уже работает
+
+1. Проверка плана и зависимостей этапов: циклы, неизвестные адаптеры, неподдержанные
+   критерии и дубликаты отклоняются.
+2. Сравнение полного binding: exact Git revision; SHA256 config, input manifest,
+   environment; network/genesis; block или slot anchor; finality; provider/model
+   identity и version; точные версии toolchain.
+3. Проверка сохранённых байтов по SHA256 и размеру; только пути внутри evidence root.
+   Absolute/drive/UNC/traversal/symlink paths не принимаются. Реальные исходные пути
+   репозитория при этом остаются в manifest и не используются как адрес для записи.
+4. Инвалидация по plan hash, binding, истечению TTL, будущему времени, неверному
+   порядку timestamps и неоднозначным нескольким receipts одного этапа.
+5. inventory_diff.v1 сверяет path + ordinal + bytes + hash двух manifest без потери
+   совпадающих basename. Это сравнение двух manifests, а не доказательство, что
+   внешний источник уже перечислил всё: исходный source manifest надо получать
+   проверенным inventory adapter.
+6. junit_xml.v1 читает testcase, failure/error/skipped, обязательные названия,
+   suite-level errors и сверяет агрегатные счётчики с реальными testcase records.
+   Пустая suite, скрытая пропущенная testcase, skip и успех в произвольном boolean
+   не подменяют выполненный тест. Название теста само не доказывает силу assertions.
+7. economics_samples.v1 пересчитывает принятые candidates по целым atomic units:
+   proceeds - principal - flash fee - swap fee - network fee - slippage reserve -
+   other cost; сравнивает quote age и заданный min net. В producer contract proceeds
+   означает сумму до перечисленных вычетов. Нельзя дважды вычитать уже удержанный
+   fee. Конвертация разных активов, полнота cost model, реальность возможного fill
+   и будущая прибыль этим арифметическим verifier не доказываются.
+8. observation_window.v1 проверяет число записей, длительность, gaps, provider ids,
+   источник/время, network/finality и нулевые recorded sign/send counters. Времена
+   должны лежать в интервале процесса receipt. OFFLINE_REPLAY и
+   REAL_MARKET_PAPER_OBSERVATION — разные типы данных. Нулевые поля журнала ещё не
+   доказывают отсутствие внешнего signer: это надо обеспечивать execution sandbox.
+9. stop_latency.v1 вычисляет latency из monotonic ns и проверяет запись запрещённых
+   dispatch после trigger; требует перечисленные виды fault и количество probes.
+10. Статусы этапа own_status и status с зависимостями разделены. Локальная проверка
+    может пройти, а зависимости остаться NOT_RUN. Следующий этап тогда не eligible.
+
+Смысл статусов
+
+TRUE: заданные predicates выполнены на предоставленных согласованных артефактах.
+FALSE: наблюдается провал теста/критерия, ненулевой exit code или нарушение SHA.
+UNKNOWN: материал не позволяет судить — binding устарел/не совпал, артефакт отсутствует,
+не тот producer/schema, время ошибочно, JSON/XML противоречив или источник неоднозначен.
+NOT_RUN: для этапа не передан receipt. Это не FALSE и не успешный «пропуск».
+
+Граница доверия
+
+SHA256 подтверждает соответствие байтов указанному digest, а не честность того, кто
+создал обе записи. pinned producer id/version/binary hash здесь проверяются только
+как заявленные поля: процесс этого producer не запускается и подпись/attestation
+не удостоверяется. Поэтому report ВСЕГДА содержит attestation_authenticated=false,
+producer_authenticity=UNKNOWN, external_chain_truth=UNKNOWN, ready_for_live=false,
+live_authorized=false. Никто не должен превращать configured_predicates=TRUE в
+«бот безопасен, можно торговать». Будущий trusted collector должен самостоятельно
+получать runner version/digest, argv, environment, stdout/stderr, точную revision,
+source data и execution scope, с защищённым журналом и проверяемой подписью.
+
+Не менять evidence directory во время проверки: hostile concurrent filesystem
+mutation и полноценная cryptographic attestation не решены в этом прототипе.
+Большие raw blobs хешируются потоково. JUnit XML, JSON plan/receipts и manifest
+индексы сейчас находятся в памяти: для огромных campaigns нужна последующая
+streaming/SQLite адаптация. Полноту лога при аварии надо устанавливать по отдельным
+cursors/sequences. Это не «безграничная память» и не молчаливое усечение.
+
+Запуск на Windows 11
+
+Python 3.11+; дополнительные библиотеки не нужны. Из папки web3:
+
+py -3 -m unittest discover -s . -p "test_*.py" -v
+
+Синтетический пример (одной строкой):
+py -3 qualification.py --plan examples/plan.SYNTHETIC.json --evidence-root examples --receipt examples/receipt_inventory.SYNTHETIC.json --receipt examples/receipt_unit.SYNTHETIC.json --receipt examples/receipt_cost.SYNTHETIC.json --receipt examples/receipt_observation.SYNTHETIC.json --receipt examples/receipt_stop.SYNTHETIC.json --now 2026-10-03T17:00:00Z --output REPORT.REPRODUCED.json
+
+Только пример использует --now, чтобы повторить историческую проверку. В реальной
+проверке не передавать --now: используется текущее UTC, старые receipts станут UNKNOWN.
+Файл examples/REPORT.SYNTHETIC.json относится исключительно к сгенерированным fixtures;
+он не является результатом запуска studious-pancake, SCE или настоящего рынка.
+Без --receipt этапы показывают NOT_RUN. Код возврата: 0 — configured predicates TRUE,
+2 — не все этапы квалифицируются, 3 — неверный входной план/JSON или путь отчёта. Даже код 0 не выдаёт
+разрешение на live. --output сохраняет только НОВЫЙ файл ВНЕ evidence root и не может
+совпадать с plan/receipt input. Повторный запуск требует нового имени отчёта.
+Публикация использует atomic hard link рядом с временным файлом; файловая система
+без hard links вернёт ошибку без перезаписи данных. CLI сам ничего не запускает.
+
+Как довести до интеграции
+
+A. Сначала выбрать фактическую цепочку и runtime по исходникам flashloan-бота,
+   lockfiles и текущим контрактам/программам. В этой работе не выполнен полный аудит
+   bot repo. Исторические записи про Solana не позволяют назначить EVM adapter.
+B. Добавлять handlers в существующего владельца SCE automation_core.py и canonical
+   очередь. Не создавать конкурирующий production scheduler с новой копией истины.
+C. Laya ранжирует контекст, выбирает проверенный template и abstains при недостатке
+   данных. Генерацию кода, shell/browser исполнение, проверку и live полномочия
+   предоставляют отдельные явно типизированные capabilities; это не функции Laya.
+D. Для каждого шага: exact inputs → isolated worktree → runner artifacts → verifier
+   → receipt → status. Cache только по полному dependency fingerprint. Изменение
+   кода/config/network/provider/model/toolchain лишает старый результат актуальности.
+E. После offline replay — отдельное реальное paper observation без signer. Далее
+   operational faults, stop/recovery, Windows device и release/rollback qualification.
+   Canary/live остаются отдельными reviewed scopes с конкретным сроком, network,
+   assets, action set и лимитами. В данном пакете эти исполнители отсутствуют.
+F. MarginFi остаётся PAUSED по найденному историческому ограничению. Repayment
+   сценарии lender-neutral; возобновление конкретного lender не предполагается.
+
+28 workflow specifications
+
+01 repo inventory; 02 reproducible build; 03 static smells; 04 unit/boundary cases;
+05 fuzz+corpus; 06 stateful invariants; 07 pinned fork/local validator; 08 replay;
+09 read-only market collection; 10 provider comparison; 11 oracle/quote freshness;
+12 fees/costs; 13 route atomicity; 14 slippage/liquidity stress; 15 lender repayment;
+16 actual market paper observation; 17 faults; 18 Dell Windows device qualification;
+19 stop/pause; 20 release/migration/rollback; 21 canary plan; 22 live monitoring SPEC;
+23 stale invalidation; 24 incident replay→regression; 25 qualification packet;
+26 requirement coverage holes; 27 R&D experiment scheduling; 28 voice goal binding.
+
+Каждый JSON содержит inputs, steps, outputs, dependencies, candidate criteria,
+idempotency, Laya role и статус SPEC_NOT_EXECUTABLE. Исполним только qualification.py.
+Поля min/max в examples — демонстрационные числа для tiny fixtures. Они не являются
+торговыми лимитами, рекомендациями или нормативом достаточного тестирования.
+EXPERIMENT_MATRIX.csv: 18 проектов экспериментов, actual execution для всех NOT_RUN.
+Юнит-тесты verifier не считаются выполнением этих экспериментальных кампаний.
+
+Проверенные первичные источники, 2026-10-03
+
+https://eips.ethereum.org/EIPS/eip-1898
+EIP задаёт blockHash и requireCanonical для ряда EVM state query методов. Нужно
+проверять реальную поддержку выбранным provider. Number/«latest» не заменяют
+зафиксированную идентичность состояния при сравнении нескольких источников.
+
+https://ethereum.org/developers/docs/apis/json-rpc/
+Справочник Ethereum RPC. Применим при подтверждённом EVM runtime конкретного бота.
+
+https://solana.com/docs/rpc
+Solana использует cluster-specific endpoints и commitment processed/confirmed/
+finalized. Это отдельная модель данных; slot/program state не следует механически
+подменять EVM block/contract терминами.
+
+https://getfoundry.sh/forge/invariant-testing
+Официальная индексированная документация описывает runs/depth и invariant targets.
+Прямое открытие страницы инструментом вернуло unsupported markdown content-type;
+получен индексированный текст первичного сайта. Приведённые здесь критерии coverage
+и operational qualification — наш проектный выбор, а не цитата о гарантии безопасности.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 860f61707b8180f1d80da1aa64f8dbf8606261fa21ad14465cca9bf04adfe265 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#81:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/RECEIPT.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:web3-qualification:receipt:v1",
+  "title": "Offline qualification receipt envelope; runtime performs semantic checks",
+  "type": "object",
+  "required": [
+    "schema",
+    "campaign_id",
+    "plan_sha256",
+    "stage_id",
+    "adapter",
+    "binding",
+    "producer",
+    "started_at",
+    "completed_at",
+    "process",
+    "artifacts"
+  ],
+  "properties": {
+    "schema": {
+      "const": "web3-qualification/v1/receipt"
+    },
+    "campaign_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "stage_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter": {
+      "enum": [
+        "inventory_diff.v1",
+        "junit_xml.v1",
+        "economics_samples.v1",
+        "observation_window.v1",
+        "stop_latency.v1"
+      ]
+    },
+    "binding": {
+      "type": "object"
+    },
+    "producer": {
+      "type": "object",
+      "required": [
+        "kind",
+        "id",
+        "version",
+        "binary_sha256"
+      ],
+      "properties": {
+        "kind": {
+          "const": "machine_runner"
+        },
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "binary_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "additionalProperties": false
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "completed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "process": {
+      "type": "object",
+      "required": [
+        "state",
+        "exit_code"
+      ],
+      "properties": {
+        "state": {
+          "const": "EXITED"
+        },
+        "exit_code": {
+          "type": "integer"
+        }
+      }
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "role",
+          "path",
+          "bytes",
+          "sha256"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9563c0eb8121a6be0343f6eae4dc4f2647560f698dc3bd2485f0fe6756a84a0e | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#82:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/SOURCES_WEB3.json =====
+{
+  "checked_at": "2026-10-03",
+  "scope": "Primary sources only. Architecture below is a proposed design, not a source claim.",
+  "sources": [
+    {
+      "id": "W3-S01",
+      "url": "https://eips.ethereum.org/EIPS/eip-1898",
+      "claim_ru": "EVM state queries may specify blockHash and requireCanonical; actual provider support must be tested.",
+      "ref": "turn13view0"
+    },
+    {
+      "id": "W3-S02",
+      "url": "https://ethereum.org/developers/docs/apis/json-rpc/",
+      "claim_ru": "Ethereum RPC block selectors and block identity; no assumption that the actual bot is EVM.",
+      "ref": "turn13view1"
+    },
+    {
+      "id": "W3-S03",
+      "url": "https://solana.com/docs/rpc",
+      "claim_ru": "Solana cluster endpoints and distinct processed/confirmed/finalized commitment levels.",
+      "ref": "turn16view0"
+    },
+    {
+      "id": "W3-S04",
+      "url": "https://getfoundry.sh/forge/invariant-testing",
+      "claim_ru": "Foundry invariant campaigns use runs/depth and need target/handler coverage. Indexed official page; direct open returned content-type error.",
+      "ref": "turn12search0"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e02e153baa34f74ac1ebe051624e07f522b58123e24ab8b43a3114a008ee9fa2 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#83:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/TEST_RESULTS.txt =====
+test_absent_receipt_not_run (test_qualification.QualificationTests.test_absent_receipt_not_run) ... ok
+test_cost_recomputation_detects_negative_profit (test_qualification.QualificationTests.test_cost_recomputation_detects_negative_profit) ... ok
+test_dependency_does_not_fake_progress (test_qualification.QualificationTests.test_dependency_does_not_fake_progress) ... ok
+test_each_binding_change_invalidates (test_qualification.QualificationTests.test_each_binding_change_invalidates) ... ok
+test_failing_case_not_overridden_by_summary (test_qualification.QualificationTests.test_failing_case_not_overridden_by_summary) ... ok
+test_hash_corruption_false (test_qualification.QualificationTests.test_hash_corruption_false) ... ok
+test_invalid_plan_refused (test_qualification.QualificationTests.test_invalid_plan_refused) ... ok
+test_inventory_omission_false_and_order_independent (test_qualification.QualificationTests.test_inventory_omission_false_and_order_independent) ... ok
+test_junit_declared_missing_case_or_failure_invalidates (test_qualification.QualificationTests.test_junit_declared_missing_case_or_failure_invalidates) ... ok
+test_junit_suite_level_error_false (test_qualification.QualificationTests.test_junit_suite_level_error_false) ... ok
+test_malformed_json_and_nonfinite_rejected (test_qualification.QualificationTests.test_malformed_json_and_nonfinite_rejected) ... ok
+test_missing_artifact_unknown (test_qualification.QualificationTests.test_missing_artifact_unknown) ... ok
+test_model_text_success_boolean_not_evidence (test_qualification.QualificationTests.test_model_text_success_boolean_not_evidence) ... ok
+test_notrun_attribute_does_not_count_as_execution (test_qualification.QualificationTests.test_notrun_attribute_does_not_count_as_execution) ... ok
+test_observation_outside_receipt_window_unknown (test_qualification.QualificationTests.test_observation_outside_receipt_window_unknown) ... ok
+test_paper_observation_is_not_replay (test_qualification.QualificationTests.test_paper_observation_is_not_replay) ... ok
+test_paths_refused (test_qualification.QualificationTests.test_paths_refused) ... ok
+test_plan_change_and_duplicate_receipts_invalidated (test_qualification.QualificationTests.test_plan_change_and_duplicate_receipts_invalidated) ... ok
+test_process_failure_false_and_bool_exit_refused (test_qualification.QualificationTests.test_process_failure_false_and_bool_exit_refused) ... ok
+test_quote_freshness_and_atomic_units (test_qualification.QualificationTests.test_quote_freshness_and_atomic_units) ... ok
+test_report_cannot_overwrite_inputs_or_evidence (test_qualification.QualificationTests.test_report_cannot_overwrite_inputs_or_evidence) ... ok
+test_report_published_exclusively_and_complete (test_qualification.QualificationTests.test_report_published_exclusively_and_complete) ... ok
+test_skip_and_empty_suite_not_qualifying (test_qualification.QualificationTests.test_skip_and_empty_suite_not_qualifying) ... ok
+test_stale_and_future_invalidated (test_qualification.QualificationTests.test_stale_and_future_invalidated) ... ok
+test_stop_latency_and_forbidden_dispatch (test_qualification.QualificationTests.test_stop_latency_and_forbidden_dispatch) ... ok
+test_symlink_refused (test_qualification.QualificationTests.test_symlink_refused) ... ok
+test_utf16_dtd_is_refused (test_qualification.QualificationTests.test_utf16_dtd_is_refused) ... ok
+test_valid_machine_case_never_authorizes_live (test_qualification.QualificationTests.test_valid_machine_case_never_authorizes_live) ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 0.020s
+
+OK
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a1615288d7f4063abb5ab0b3dcf1f23d89966e4346667d713c8d37cdc7f4a480 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#84:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/VALIDATION_WEB3.json =====
+{
+  "checked_at": "2026-10-03",
+  "offline_evaluator_tests": {
+    "count": 28,
+    "status": "PASS",
+    "runtime": "Linux stdlib Python, synthetic fixtures"
+  },
+  "cli_five_adapter_fixture": "PASS",
+  "real_repo_qualification": "NOT_RUN",
+  "read_only_market_observation": "NOT_RUN",
+  "windows_device_tests": "NOT_RUN",
+  "laya_inference": "NOT_RUN",
+  "live_transactions": "NOT_RUN",
+  "attestation_authenticated": false,
+  "live_authorized": false,
+  "implemented_functions": 13,
+  "spec_workflows": 28,
+  "experiments_planned_not_run": 18
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#85:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/build_specs.py =====
+"""Regenerate specification JSON and demo-only fixtures; does not run a bot."""
+import csv
+import datetime as dt
+import hashlib
+import json
+from pathlib import Path
+from qualification import canonical_hash, file_hash, evaluate
+ROOT = Path(__file__).resolve().parent
+SPEC = ROOT / 'workflows'
+SPEC.mkdir(exist_ok=True)
+
+def write(path, value):
+    path.write_text(json.dumps(value, ensure_ascii=False, indent=2) + '\n', encoding='utf-8')
+
+specs = [
+('repo_inventory','Сверка полного репозитория и входных данных',[],['repo_snapshot','source_manifest'],['Фиксировать exact revision + dirty diff + submodules + LFS pointers separately','Сопоставлять полный путь/ordinal/bytes/hash между ожидаемым и прочитанным manifest','Отдельно сохранять unreadable/binary/excluded и причину'],['inventory_diff.v1','completeness_report'],['No silently omitted files; unresolved LFS or missing submodule remains UNKNOWN']),
+('toolchain_build','Воспроизводимая сборка',['repo_inventory'],['lockfiles','compiler_versions','build_recipe'],['Проверять pinned dependency/runner/compiler versions','Собирать из isolated snapshot без live signer','Сохранять stdout/stderr/exit/tool versions и hashes compiled outputs'],['build_receipt','binary_manifest'],['Successful clean build; compiler warnings triaged; no secret embedded']),
+('static_smells','Детерминированные code smells и проверка гипотез',['repo_inventory'],['sources','ruleset_sha256'],['Запускать language-specific AST/rules adapters','Laya ранжирует находки, но не закрывает их как исправленные','Сохранять file/range/rule/matched excerpt/repro и false-positive decision'],['finding_ledger','rule_run_receipt'],['Every suppressed finding has provenance; model belief is not test evidence']),
+('unit_contracts','Unit и boundary regression',['toolchain_build'],['test_suite','requirements'],['Извлечь requirement→test mapping','Запустить exact unit selection и сохранить настоящий JUnit per testcase','Проверить repayment/rounding/config/nonce/decimal boundary cases'],['junit_xml.v1'],['Required named cases executed; no skipped/failure/error cases']),
+('fuzz_campaign','Fuzz с corpus и seed',['unit_contracts'],['seed_set','corpus_hash','fuzz_budget'],['Пиновать seeds, tool version, cases/runs/depth и предел времени','Сохранять covered selectors, revert distribution, execution counts','Сжимать counterexample и добавлять regression test'],['campaign_metrics','counterexample','junit_xml.v1'],['Budgets actually reached; timeout or vacuous coverage does not pass']),
+('stateful_invariants','Stateful invariants',['unit_contracts'],['invariant_spec','handler_config'],['Проверять balance accounting, authorization boundaries, atomic repayment, cleanup after revert','Измерять reachable handlers and non-vacuous execution','В Foundry учитывать runs/depth; для Solana выбрать отдельный harness после repo discovery'],['invariant_campaign','junit_xml.v1'],['No violation in recorded campaign; invariants not claimed exhaustive']),
+('pinned_fork','Fork или local validator pinned state',['toolchain_build'],['network_adapter','anchor','protocol_addresses'],['Проверить chain/genesis, block/slot anchor and provider capabilities','EVM: bind blockHash and canonicality where supported; record actual tool support','Solana: record cluster, slot, account snapshots, program versions, commitment; do not call EVM fork equivalent'],['fork_or_validator_receipt','state_snapshot'],['Target protocol bytecode/program and state recorded; chain remains repo-dependent']),
+('offline_replay','Детерминированный replay',['unit_contracts'],['immutable_market_dataset','replay_clock','strategy_config'],['Replay recorded event ordering with clock control','Compare decisions against expected behavior and aggregate reproducibility hashes','Track dropped/out-of-order events and rejected opportunities'],['replay_receipt','decision_log'],['OFFLINE_REPLAY only; does not satisfy paper observation']),
+('market_collect','Сбор рыночных данных без подписи',[],['read_only_provider_scope','asset_universe','retention_policy'],['Collect selected RPC/API/subscription observations into append-only raw files','Preserve request id, network, time, anchor, provider id/version, raw response hash','Resume cursor and explicitly log gaps/throttling/provider errors'],['raw_market_manifest','collection_receipt'],['No signing/send method in collector capabilities; completeness/gaps explicit']),
+('provider_compare','Сравнение независимых provider views',['market_collect'],['provider_set','same_anchor_queries'],['Normalize responses for same state anchor','Compute disagreements/latency/rate-limit/drop rates','Do not count two aliases to same upstream as demonstrated independent sources'],['provider_disagreement_report'],['Agreement scope and provider provenance recorded; disagreement triggers UNKNOWN']),
+('oracle_freshness','Oracle и quote freshness',['market_collect'],['oracle_config','feed_identity','freshness_budget'],['Check timestamp/slot/block against configured source semantics','Inject stale quote and delayed oracle updates','Record every reject and any accepted stale candidate'],['freshness_cases','economics_samples.v1'],['No accepted candidate exceeds explicit freshness policy']),
+('fees_and_costs','Полная стоимость opportunity',['offline_replay'],['cost_model','atomic_accounting_unit','fee_inputs'],['Record principal, flash/swap/network fees, slippage reserve, other known costs','Compute candidate net using integers in same accounting unit','Retain conversion source/timestamp and rejection reason'],['economics_samples.v1','cost_assumptions'],['Configured predicate only; model completeness and future profit not proven']),
+('route_atomicity','Маршрут и атомарность',['pinned_fork','unit_contracts'],['route_template','protocol_adapters'],['Inject failure at each route step','Assert state rollback or compensation according to actual chain semantics','Test token decimals, transfer behaviors, pool liquidity boundaries'],['route_fault_cases','junit_xml.v1'],['Exact protocols/chain semantics qualified, not inferred from generic flashloan label']),
+('slippage_stress','Slippage, liquidity и adverse timing',['fees_and_costs','pinned_fork'],['stress_grid','liquidity_states'],['Sweep liquidity/price movement/latency/fee shocks with immutable scenario ids','Separate invalid scenarios from adverse valid outcomes','Preserve worst-case failure and all accepted candidate cost computations'],['stress_surface','economics_samples.v1'],['No acceptance outside reviewed risk envelope; thresholds are configuration']),
+('lender_repayment','Lender-neutral repayment contract',['route_atomicity'],['lender_adapter','repayment_cases'],['Verify principal+fee handling on exact adapter and chain','Inject insufficient repayment, authorization mismatch and wrong callback origin','Keep MarginFi work PAUSED unless separate current instruction resumes it'],['repayment_receipt','junit_xml.v1'],['No claim that a paused lender is implemented or live qualified']),
+('paper_observation','Реальное paper-наблюдение',['market_collect','offline_replay'],['real_market_window','read_only_runtime','candidate_log'],['Observe current market via pinned provider config without signing or sending','Record gap/freshness/decision latencies and hypothetical outcomes with caveats','Separate actual observed quotes from modeled fills and offline replay'],['observation_window.v1','paper_economics','raw_rpc_manifest'],['Minimum chosen observation window/coverage met; simulated fills are not realized PnL']),
+('fault_injection','Operational faults',['unit_contracts'],['fault_catalog','isolated_runner'],['Inject RPC disconnect, stale state, reorg signal, clock shift, disk full, restart','Check persistence cursor, retry idempotency, no duplicate dispatch','Record recovery time and missing evidence'],['fault_report','junit_xml.v1'],['Expected handling executed for every required fault; no production signing']),
+('windows_device','Dell Windows 11 qualification',['toolchain_build'],['actual_device_profile','microphone','memory','disk'],['Benchmark cold/warm start, CPU/GPU/RAM and sustained heat under target workload','Test wake/sleep, network changes, microphone loss and disk pressure','Qualify installed runtime/provider/model separately from remote test runner'],['device_matrix','latency_measurements'],['Measured on actual Dell; Linux tests do not imply Windows readiness']),
+('stop_and_pause','Пауза и остановка по голосу/кнопке',['fault_injection'],['stop_channel','cancel_token_protocol'],['Use accessible stop button plus configured voice alternative','Inject stop under load and process boundaries','Measure trigger-to-blocked dispatch with monotonic timestamps'],['stop_latency.v1'],['No forbidden dispatch after trigger; cancellation of pending external side effect verified separately']),
+('release_artifact','Release, digest и rollback',['toolchain_build','unit_contracts'],['reviewed_commit','release_manifest','rollback_package'],['Download into staging and validate manifest/signed provenance via chosen verifier','Run migrations on a copied DB and health checks','Activate version atomically where supported; retain tested rollback including DB compatibility'],['release_manifest','migration_receipt','rollback_receipt'],['Artifact identity corresponds to reviewed revision; an archive download alone is not update qualification']),
+('canary_plan','План ограниченного canary',['paper_observation','stop_and_pause','release_artifact'],['specific_operator_authorization','limits','expiry','network','signer_scope'],['Render exact proposed executable version/network/assets/limits and expiry','Check operational prerequisites and define immediate stop signals','Remain disabled in this R&D pack; no executable signing or broadcasting handler'],['canary_plan_only'],['Requires separate reviewed live authorization; offline TRUE never enables signer']),
+('live_monitoring','Мониторинг уже разрешённого live',['canary_plan'],['authorized_runtime_id','read_only_telemetry','incident_policy'],['Read receipts, balances, nonce/sequence state, drawdown and provider health','Detect reconciliation differences, exposure/risk budget breach and config drift','Request/perform only preauthorized pause; propose further actions for operator'],['live_monitor_spec','incident_timeline'],['SPEC only here; no live runtime/transaction/watch task installed']),
+('stale_invalidation','Инвалидация по изменению inputs',['repo_inventory'],['binding_before','binding_after','dependency_graph'],['Invalidate affected proofs on repo/config/data/provider/model/network/toolchain change','Recompute only nodes whose explicit dependency fingerprint changed','Keep earlier evidence readable as HISTORICAL, not current TRUE'],['invalidation_plan'],['No receipt reused across different binding without deliberate recomputation']),
+('incident_replay','Incident→regression',['fault_injection'],['incident_bundle','redacted_logs','state_anchor'],['Snapshot evidence without deleting originals','Create minimal reproducer and deterministic test from observed failure','Patch in separate worktree; compare before/after under same scenario'],['incident_case','regression_receipt'],['Patch claim linked to failing-before/passing-after evidence']),
+('qualification_packet','Пакет решения readiness',['unit_contracts','offline_replay','paper_observation','windows_device','stop_and_pause'],['all_explicit_receipts','reviewed_plan'],['Evaluate artifact integrity and exact bindings','Report own and dependency status per stage','Render TRUE/FALSE/UNKNOWN/NOT_RUN with reasons and no automatic live authorization'],['qualification.py report'],['Existing implemented offline verifier checks selected artifact contracts only']),
+('coverage_holes','Поиск непроверенных требований',['repo_inventory','static_smells'],['goal_ledger','requirements','tests','receipts'],['Join goal ids→repo paths→required cases→current receipts','Distinguish no test, unexecuted test, failed test and stale result','Laya routes candidate next task; deterministic ledger counts coverage'],['coverage_gap_queue'],['No semantic completeness claim from a keyword match']),
+('experiment_scheduler','Очередь R&D экспериментов',['coverage_holes'],['experiment_matrix','cost_budget','resource_locks'],['Compile typed tasks into existing automation_core queue','Parallelize read-only independent stages; isolate repo worktrees and shared devices','Checkpoint progress and resume exact failed nodes with idempotency keys'],['experiment_queue_spec'],['No second canonical production executor; schedule not installed by this pack']),
+('voice_goal_binding','Голосовая цель→проверяемый Web3 план',[],['transcript','explicit_goal','current_context_manifest'],['Preserve transcript span/time and intent revision','Retrieve cited requirements and repo snapshot; disambiguate observe/test/deploy/live','Laya selects template or abstains; goal changes create new plan hash'],['typed_goal','qualification_plan_draft'],['Uncertain chain/asset/action stays unresolved; model does not self-authorize trading']),
+]
+
+functions = []
+implemented = [
+('evidence.validate_plan','Проверка типизированного плана и DAG этапов'),
+('evidence.bind_revision','Сравнение exact repo/config/input/environment/network/anchor/provider/model/toolchain'),
+('evidence.verify_artifacts','Потоковая проверка bytes/SHA256 и contained paths'),
+('evidence.invalidate_stale','Срок актуальности, будущие timestamps и несовпадение plan hash'),
+('evidence.require_machine_receipt','Проверка pinned runner identity вместо текста/успешного boolean'),
+('evidence.inventory_diff','Сверка полного path+ordinal manifest'),
+('evidence.junit_cases','Проверка реальных записей testcase, failure/error/skipped и требуемых названий'),
+('evidence.economic_predicates','Пересчёт net cost в integer atomic units и freshness accepted candidates'),
+('evidence.observation_window','Длительность/gaps/provider ids/paper-only/source freshness по журналу'),
+('evidence.stop_latency','Проверка записанных stop latency и запрещённых dispatch после trigger'),
+('evidence.propagate_dependencies','Раздельный own status и readiness с учётом зависимостей'),
+('evidence.four_states','TRUE/FALSE/UNKNOWN/NOT_RUN, причины и неизменное live_authorized=false'),
+('evidence.refuse_ambiguous_receipts','Отказ от скрытого выбора между несколькими receipts'),
+]
+for idx,(fid,title) in enumerate(implemented,1):
+    functions.append({'id':f'W3-F{idx:02d}','function':fid,'title_ru':title,'status':'IMPLEMENTED_OFFLINE_PROTOTYPE','owner_candidate':'content-lab/context_review.py + automation_core.py canonical queue adapter','implementation':'qualification.py','actual_bot_validation':'NOT_RUN'})
+for idx,(sid,title,deps,inputs,steps,outputs,criteria) in enumerate(specs,1):
+    data={'schema':'web3-workflow-spec/v1','id':f'W3-WF{idx:02d}','name':sid,'title_ru':title,'status':'SPEC_NOT_EXECUTABLE','enabled':False,
+          'trigger_candidates':['manual_goal','new_snapshot','receipt_invalidated'] if sid not in {'market_collect','live_monitoring'} else ['explicitly_configured_read_only_watch'],
+          'depends_on':deps,'inputs':inputs,'steps':[{'id':f'{sid}.{n}','handler':'PROPOSED.'+sid+'.'+str(n),'instruction':s} for n,s in enumerate(steps,1)],
+          'outputs':outputs,'qualification_criteria':criteria,'on_missing_evidence':'UNKNOWN','idempotency_key':'sha256(workflow_id + goal_revision + exact_binding + step_inputs)',
+          'execution_owner':'existing SCE automation_core.py queue, future reviewed adapter','laya_role':'advisory template/risk/task routing with abstention; no evidence fabrication','network_scope':'repo-dependent; unknown until actual bot repository is inspected','live_authorized':False,'signing_handler_present':False}
+    write(SPEC/f'{idx:02d}_{sid}.SPEC.json',data)
+    functions.append({'id':f'W3-F{len(implemented)+idx:02d}','function':'web3.'+sid,'title_ru':title,'status':'SPEC_NOT_EXECUTABLE','workflow_id':data['id'],'path':'workflows/'+f'{idx:02d}_{sid}.SPEC.json','actual_bot_validation':'NOT_RUN'})
+write(ROOT/'FUNCTIONS_WEB3.json',{'schema':'function-catalog/v1','implemented_offline_count':len(implemented),'spec_only_count':len(specs),'functions':functions})
+
+experiments = [
+('W3-E01','Replay reproducibility','same event dataset+seed+clock','different decision/artifact digests','exact match or explained nondeterminism','OFFLINE_ONLY'),
+('W3-E02','Stale quote rejection','delay quotes above reviewed budget','accepted stale candidate','zero such acceptances over recorded cases','OFFLINE_ONLY'),
+('W3-E03','Full cost accounting','sweep each fee and token decimals','accepted net below configured threshold','integer recomputation and matching accounting unit','OFFLINE_ONLY'),
+('W3-E04','Repayment boundaries','principal/fee/rounding edge cases','invariant failure / unauthorized callback','required cases execute with true machine receipts','CHAIN_ADAPTER_REQUIRED'),
+('W3-E05','Stateful invariant non-vacuity','handler runs/depth/corpus','zero useful handler calls or hidden revert loop','reviewed campaign coverage reached','CHAIN_ADAPTER_REQUIRED'),
+('W3-E06','Provider inconsistency','same-anchor responses from distinct upstreams','unexpected divergence','divergence yields UNKNOWN and pause candidate','READ_ONLY_NETWORK_SPEC'),
+('W3-E07','Reorg/slot change','replace canonical anchor or source view','old proof stays TRUE','invalidate affected evidence by exact binding','OFFLINE_ONLY'),
+('W3-E08','Observation vs replay','supply replay artifact for paper stage','replay classified as market observation','refuse mode mismatch','OFFLINE_ONLY'),
+('W3-E09','RPC quota and disconnect','429/timeout/drop','unbounded retry or cursor loss','bounded backoff + explicit gap ledger','ISOLATED_RUNNER_SPEC'),
+('W3-E10','Stop latency','voice/button stop under CPU load','post-trigger forbidden dispatch','measured latency distribution within reviewed target','WINDOWS_DEVICE_REQUIRED'),
+('W3-E11','Update rollback','failed migration/new version health check','library corruption or inability to restore','copy migration + tested compatible rollback','WINDOWS_DEVICE_REQUIRED'),
+('W3-E12','Wrong network protection','network/genesis mismatch','receipt passes despite wrong chain','UNKNOWN mismatch and no side effect','OFFLINE_ONLY'),
+('W3-E13','Evidence corruption','alter one artifact byte','same TRUE status','FALSE hash integrity status','OFFLINE_ONLY'),
+('W3-E14','False claim robustness','success=true / AI text / empty JUnit','any automatic ready-for-live','UNKNOWN or FALSE; live_authorized always false','OFFLINE_ONLY'),
+('W3-E15','Device sustained performance','Dell CPU/RAM/GPU heating + voice + indexing','p99 delay exceeds actual target','measured local profile; no remote extrapolation','WINDOWS_DEVICE_REQUIRED'),
+('W3-E16','Worktree isolation','two parallel patch/test tasks','shared state/test pollution','separate roots+locked shared resources+exact versions','LOCAL_RUNNER_SPEC'),
+('W3-E17','Secret isolation','fixture fake key in repository/log','key in model context or exported text','secret policy catches fixtures; authorized raw retained locally','SYNTHETIC_FIXTURES_ONLY'),
+('W3-E18','Paper economics honesty','modeled fills vs observed quotes','hypothetical PnL labeled realized','separate metrics and assumptions stored','READ_ONLY_NETWORK_SPEC'),
+]
+with (ROOT/'EXPERIMENT_MATRIX.csv').open('w',encoding='utf-8-sig',newline='') as f:
+    w=csv.writer(f);w.writerow(['id','experiment','intervention','failure_signal','candidate_acceptance','execution_status']);w.writerows([(*r,'NOT_RUN') for r in experiments])
+# Header must include both mode and execution status.
+p=ROOT/'EXPERIMENT_MATRIX.csv';s=p.read_text(encoding='utf-8-sig');s=s.replace('candidate_acceptance,execution_status','candidate_acceptance,mode,execution_status',1);p.write_text(s,encoding='utf-8-sig')
+write(ROOT/'SOURCES_WEB3.json',{'checked_at':'2026-10-03','scope':'Primary sources only. Architecture below is a proposed design, not a source claim.', 'sources':[
+{'id':'W3-S01','url':'https://eips.ethereum.org/EIPS/eip-1898','claim_ru':'EVM state queries may specify blockHash and requireCanonical; actual provider support must be tested.','ref':'turn13view0'},
+{'id':'W3-S02','url':'https://ethereum.org/developers/docs/apis/json-rpc/','claim_ru':'Ethereum RPC block selectors and block identity; no assumption that the actual bot is EVM.','ref':'turn13view1'},
+{'id':'W3-S03','url':'https://solana.com/docs/rpc','claim_ru':'Solana cluster endpoints and distinct processed/confirmed/finalized commitment levels.','ref':'turn16view0'},
+{'id':'W3-S04','url':'https://getfoundry.sh/forge/invariant-testing','claim_ru':'Foundry invariant campaigns use runs/depth and need target/handler coverage. Indexed official page; direct open returned content-type error.','ref':'turn12search0'}]})
+
+# Small synthetic fixture demonstrates evaluator behavior, never actual bot readiness.
+EX = ROOT/'examples'; EX.mkdir(exist_ok=True)
+config={'synthetic_fixture':True,'never_trade':True};env={'environment':'synthetic documentation fixture'}
+write(EX/'config.json',config);write(EX/'environment.json',env)
+manifest=[{'path':'synthetic/repayment.py','ordinal':0,'bytes':11,'sha256':hashlib.sha256(b'fixture only').hexdigest()}]
+(EX/'expected.jsonl').write_text(json.dumps(manifest[0])+'\n');(EX/'observed.jsonl').write_text((EX/'expected.jsonl').read_text())
+(EX/'tests.xml').write_text('<testsuite><testcase classname="fixture" name="repayment"/><testcase classname="fixture" name="stale_quote"/><testcase classname="fixture" name="stop"/></testsuite>')
+(EX/'costs.jsonl').write_text(json.dumps({'sample_id':'synthetic-1','accounting_unit':'FIXTURE_ATOMIC','proceeds_minor':120,'principal_minor':100,'flash_fee_minor':1,'swap_fee_minor':1,'network_fee_minor':1,'slippage_reserve_minor':1,'other_cost_minor':1,'quote_age_ms':10,'decision':'ACCEPT'})+'\n')
+observations=[]
+for i in range(2):
+    t=f'2026-10-03T16:{58+i}:00Z'
+    observations.append({'sample_id':f'synthetic-{i}','mode':'OFFLINE_REPLAY','network_id':'fixture:1','anchor_hash':f'fixture-{i}','height':str(i),'finality':'fixture','observed_at':t,'source_at':t,'provider_id':'synthetic-provider','signed_transactions':0,'sent_transactions':0})
+(EX/'observations.jsonl').write_text(''.join(json.dumps(r)+'\n' for r in observations))
+(EX/'stop.jsonl').write_text(json.dumps({'probe_id':'synthetic-1','fault':'rpc_timeout','trigger_monotonic_ns':1000000000,'blocked_monotonic_ns':1010000000,'forbidden_dispatches_after_trigger':0})+'\n')
+binding={'repo_revision':'0'*40,'config_sha256':file_hash(EX/'config.json'),'input_manifest_sha256':file_hash(EX/'expected.jsonl'),'environment_sha256':file_hash(EX/'environment.json'),'network':{'family':'offline_fixture','network_id':'fixture:1','genesis_hash':'synthetic'},'anchor':{'height':'0','hash':'synthetic','finality':'fixture'},'provider':{'id':'synthetic','version':'1'},'model':{'id':'none','revision':'none'},'toolchain':{'fixture_generator':'build_specs.py/v1'}}
+producer={'id':'synthetic-fixture-generator','version':'1','binary_sha256':file_hash(Path(__file__))}
+stage_data=[('inventory','inventory_diff.v1',[],{'min_entries':1},[('expected_manifest','expected.jsonl'),('observed_manifest','observed.jsonl')]),('unit','junit_xml.v1',['inventory'],{'min_cases':3,'required_name_fragments':['repayment','stale_quote','stop']},[('test_results','tests.xml')]),('cost','economics_samples.v1',['unit'],{'min_samples':1,'min_accepted':1,'max_quote_age_ms':100,'min_net_minor':1,'accounting_unit':'FIXTURE_ATOMIC'},[('economics','costs.jsonl')]),('observation','observation_window.v1',['cost'],{'min_samples':2,'min_duration_seconds':60,'max_gap_seconds':60,'min_providers':1,'max_source_age_ms':1000,'mode':'OFFLINE_REPLAY'},[('observations','observations.jsonl')]),('stop','stop_latency.v1',['unit'],{'min_probes':1,'max_stop_latency_ms':50,'required_faults':['rpc_timeout']},[('stop_probes','stop.jsonl')])]
+plan={'schema':'web3-qualification/v1','campaign_id':'SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT','status':'RND_EXAMPLE_NOT_OPERATIONAL','live_authorized':False,'binding':binding,'stages':[{'id':sid,'adapter':adapter,'depends_on':deps,'producer':producer,'max_age_seconds':3600,'criteria':criteria} for sid,adapter,deps,criteria,_ in stage_data]}
+write(EX/'plan.SYNTHETIC.json',plan)
+receipts=[]
+for sid,adapter,_,_,arts in stage_data:
+    r={'schema':'web3-qualification/v1/receipt','campaign_id':plan['campaign_id'],'plan_sha256':canonical_hash(plan),'stage_id':sid,'adapter':adapter,'binding':binding,'producer':dict(producer,kind='machine_runner'),'started_at':'2026-10-03T16:50:00Z','completed_at':'2026-10-03T16:59:30Z','process':{'state':'EXITED','exit_code':0},'artifacts':[{'role':role,'path':name,'bytes':(EX/name).stat().st_size,'sha256':file_hash(EX/name)} for role,name in arts]}
+    write(EX/f'receipt_{sid}.SYNTHETIC.json',r);receipts.append(r)
+write(EX/'REPORT.SYNTHETIC.json',evaluate(plan,receipts,EX,dt.datetime(2026,10,3,17,0,tzinfo=dt.timezone.utc)))
+print(json.dumps({'specs':len(specs),'implemented_functions':len(implemented),'spec_functions':len(specs),'experiments':len(experiments)}))
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 efab140a8c2922093d65b5ef02abaddf32ecd8d502f4659dce99e5bd3e8ec1dc | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#87:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/config.json =====
+{
+  "synthetic_fixture": true,
+  "never_trade": true
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a5c794b0e538a3eca2ac5298ba31188dd098c55bff533369e73a98359ea9d5e7 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#88:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/costs.jsonl =====
+{"sample_id": "synthetic-1", "accounting_unit": "FIXTURE_ATOMIC", "proceeds_minor": 120, "principal_minor": 100, "flash_fee_minor": 1, "swap_fee_minor": 1, "network_fee_minor": 1, "slippage_reserve_minor": 1, "other_cost_minor": 1, "quote_age_ms": 10, "decision": "ACCEPT"}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 13440a4654769788a562b44da2e7b03b5e58fb25cab580a3bb220c242669e66d | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#89:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/environment.json =====
+{
+  "environment": "synthetic documentation fixture"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#90:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/expected.jsonl =====
+{"path": "synthetic/repayment.py", "ordinal": 0, "bytes": 11, "sha256": "f0fce4c4b7a93190210cf71dfe9225a62d468b76a268df42f0447b12390802ae"}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 dc5571fa3e4c2e9a46e7408a7ebb51cd1d156bfaaf96260f4a3634c272a0eb70 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#91:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/observations.jsonl =====
+{"sample_id": "synthetic-0", "mode": "OFFLINE_REPLAY", "network_id": "fixture:1", "anchor_hash": "fixture-0", "height": "0", "finality": "fixture", "observed_at": "2026-10-03T16:58:00Z", "source_at": "2026-10-03T16:58:00Z", "provider_id": "synthetic-provider", "signed_transactions": 0, "sent_transactions": 0}
+{"sample_id": "synthetic-1", "mode": "OFFLINE_REPLAY", "network_id": "fixture:1", "anchor_hash": "fixture-1", "height": "1", "finality": "fixture", "observed_at": "2026-10-03T16:59:00Z", "source_at": "2026-10-03T16:59:00Z", "provider_id": "synthetic-provider", "signed_transactions": 0, "sent_transactions": 0}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 91b6cdf7f0b210203052afa6fbdcf04a6bc82d73ea4a69787ecf6e15edf9471c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#93:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/plan.SYNTHETIC.json =====
+{
+  "schema": "web3-qualification/v1",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "status": "RND_EXAMPLE_NOT_OPERATIONAL",
+  "live_authorized": false,
+  "binding": {
+    "repo_revision": "0000000000000000000000000000000000000000",
+    "config_sha256": "efab140a8c2922093d65b5ef02abaddf32ecd8d502f4659dce99e5bd3e8ec1dc",
+    "input_manifest_sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c",
+    "environment_sha256": "13440a4654769788a562b44da2e7b03b5e58fb25cab580a3bb220c242669e66d",
+    "network": {
+      "family": "offline_fixture",
+      "network_id": "fixture:1",
+      "genesis_hash": "synthetic"
+    },
+    "anchor": {
+      "height": "0",
+      "hash": "synthetic",
+      "finality": "fixture"
+    },
+    "provider": {
+      "id": "synthetic",
+      "version": "1"
+    },
+    "model": {
+      "id": "none",
+      "revision": "none"
+    },
+    "toolchain": {
+      "fixture_generator": "build_specs.py/v1"
+    }
+  },
+  "stages": [
+    {
+      "id": "inventory",
+      "adapter": "inventory_diff.v1",
+      "depends_on": [],
+      "producer": {
+        "id": "synthetic-fixture-generator",
+        "version": "1",
+        "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5"
+      },
+      "max_age_seconds": 3600,
+      "criteria": {
+        "min_entries": 1
+      }
+    },
+    {
+      "id": "unit",
+      "adapter": "junit_xml.v1",
+      "depends_on": [
+        "inventory"
+      ],
+      "producer": {
+        "id": "synthetic-fixture-generator",
+        "version": "1",
+        "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5"
+      },
+      "max_age_seconds": 3600,
+      "criteria": {
+        "min_cases": 3,
+        "required_name_fragments": [
+          "repayment",
+          "stale_quote",
+          "stop"
+        ]
+      }
+    },
+    {
+      "id": "cost",
+      "adapter": "economics_samples.v1",
+      "depends_on": [
+        "unit"
+      ],
+      "producer": {
+        "id": "synthetic-fixture-generator",
+        "version": "1",
+        "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5"
+      },
+      "max_age_seconds": 3600,
+      "criteria": {
+        "min_samples": 1,
+        "min_accepted": 1,
+        "max_quote_age_ms": 100,
+        "min_net_minor": 1,
+        "accounting_unit": "FIXTURE_ATOMIC"
+      }
+    },
+    {
+      "id": "observation",
+      "adapter": "observation_window.v1",
+      "depends_on": [
+        "cost"
+      ],
+      "producer": {
+        "id": "synthetic-fixture-generator",
+        "version": "1",
+        "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5"
+      },
+      "max_age_seconds": 3600,
+      "criteria": {
+        "min_samples": 2,
+        "min_duration_seconds": 60,
+        "max_gap_seconds": 60,
+        "min_providers": 1,
+        "max_source_age_ms": 1000,
+        "mode": "OFFLINE_REPLAY"
+      }
+    },
+    {
+      "id": "stop",
+      "adapter": "stop_latency.v1",
+      "depends_on": [
+        "unit"
+      ],
+      "producer": {
+        "id": "synthetic-fixture-generator",
+        "version": "1",
+        "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5"
+      },
+      "max_age_seconds": 3600,
+      "criteria": {
+        "min_probes": 1,
+        "max_stop_latency_ms": 50,
+        "required_faults": [
+          "rpc_timeout"
+        ]
+      }
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f373e5ae07c862a4e954facb41f1485bb56c5c4bf60d0eacf592b885db59fb3f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#94:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/receipt_cost.SYNTHETIC.json =====
+{
+  "schema": "web3-qualification/v1/receipt",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "plan_sha256": "d47c90e91671bf437982d67d5a9478608039f298364bfb4a400ab848cd4541e1",
+  "stage_id": "cost",
+  "adapter": "economics_samples.v1",
+  "binding": {
+    "repo_revision": "0000000000000000000000000000000000000000",
+    "config_sha256": "efab140a8c2922093d65b5ef02abaddf32ecd8d502f4659dce99e5bd3e8ec1dc",
+    "input_manifest_sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c",
+    "environment_sha256": "13440a4654769788a562b44da2e7b03b5e58fb25cab580a3bb220c242669e66d",
+    "network": {
+      "family": "offline_fixture",
+      "network_id": "fixture:1",
+      "genesis_hash": "synthetic"
+    },
+    "anchor": {
+      "height": "0",
+      "hash": "synthetic",
+      "finality": "fixture"
+    },
+    "provider": {
+      "id": "synthetic",
+      "version": "1"
+    },
+    "model": {
+      "id": "none",
+      "revision": "none"
+    },
+    "toolchain": {
+      "fixture_generator": "build_specs.py/v1"
+    }
+  },
+  "producer": {
+    "id": "synthetic-fixture-generator",
+    "version": "1",
+    "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5",
+    "kind": "machine_runner"
+  },
+  "started_at": "2026-10-03T16:50:00Z",
+  "completed_at": "2026-10-03T16:59:30Z",
+  "process": {
+    "state": "EXITED",
+    "exit_code": 0
+  },
+  "artifacts": [
+    {
+      "role": "economics",
+      "path": "costs.jsonl",
+      "bytes": 274,
+      "sha256": "a5c794b0e538a3eca2ac5298ba31188dd098c55bff533369e73a98359ea9d5e7"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 00a36cdfb5b42316415bf2e6a7919a3b1f34328445d6503a0399a1df4b8a28eb | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#95:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/receipt_inventory.SYNTHETIC.json =====
+{
+  "schema": "web3-qualification/v1/receipt",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "plan_sha256": "d47c90e91671bf437982d67d5a9478608039f298364bfb4a400ab848cd4541e1",
+  "stage_id": "inventory",
+  "adapter": "inventory_diff.v1",
+  "binding": {
+    "repo_revision": "0000000000000000000000000000000000000000",
+    "config_sha256": "efab140a8c2922093d65b5ef02abaddf32ecd8d502f4659dce99e5bd3e8ec1dc",
+    "input_manifest_sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c",
+    "environment_sha256": "13440a4654769788a562b44da2e7b03b5e58fb25cab580a3bb220c242669e66d",
+    "network": {
+      "family": "offline_fixture",
+      "network_id": "fixture:1",
+      "genesis_hash": "synthetic"
+    },
+    "anchor": {
+      "height": "0",
+      "hash": "synthetic",
+      "finality": "fixture"
+    },
+    "provider": {
+      "id": "synthetic",
+      "version": "1"
+    },
+    "model": {
+      "id": "none",
+      "revision": "none"
+    },
+    "toolchain": {
+      "fixture_generator": "build_specs.py/v1"
+    }
+  },
+  "producer": {
+    "id": "synthetic-fixture-generator",
+    "version": "1",
+    "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5",
+    "kind": "machine_runner"
+  },
+  "started_at": "2026-10-03T16:50:00Z",
+  "completed_at": "2026-10-03T16:59:30Z",
+  "process": {
+    "state": "EXITED",
+    "exit_code": 0
+  },
+  "artifacts": [
+    {
+      "role": "expected_manifest",
+      "path": "expected.jsonl",
+      "bytes": 140,
+      "sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c"
+    },
+    {
+      "role": "observed_manifest",
+      "path": "observed.jsonl",
+      "bytes": 140,
+      "sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6b13c4771daa899a204f5d92116454ab0f62d8c79519d7678502682dd3409712 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#96:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/receipt_observation.SYNTHETIC.json =====
+{
+  "schema": "web3-qualification/v1/receipt",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "plan_sha256": "d47c90e91671bf437982d67d5a9478608039f298364bfb4a400ab848cd4541e1",
+  "stage_id": "observation",
+  "adapter": "observation_window.v1",
+  "binding": {
+    "repo_revision": "0000000000000000000000000000000000000000",
+    "config_sha256": "efab140a8c2922093d65b5ef02abaddf32ecd8d502f4659dce99e5bd3e8ec1dc",
+    "input_manifest_sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c",
+    "environment_sha256": "13440a4654769788a562b44da2e7b03b5e58fb25cab580a3bb220c242669e66d",
+    "network": {
+      "family": "offline_fixture",
+      "network_id": "fixture:1",
+      "genesis_hash": "synthetic"
+    },
+    "anchor": {
+      "height": "0",
+      "hash": "synthetic",
+      "finality": "fixture"
+    },
+    "provider": {
+      "id": "synthetic",
+      "version": "1"
+    },
+    "model": {
+      "id": "none",
+      "revision": "none"
+    },
+    "toolchain": {
+      "fixture_generator": "build_specs.py/v1"
+    }
+  },
+  "producer": {
+    "id": "synthetic-fixture-generator",
+    "version": "1",
+    "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5",
+    "kind": "machine_runner"
+  },
+  "started_at": "2026-10-03T16:50:00Z",
+  "completed_at": "2026-10-03T16:59:30Z",
+  "process": {
+    "state": "EXITED",
+    "exit_code": 0
+  },
+  "artifacts": [
+    {
+      "role": "observations",
+      "path": "observations.jsonl",
+      "bytes": 622,
+      "sha256": "dc5571fa3e4c2e9a46e7408a7ebb51cd1d156bfaaf96260f4a3634c272a0eb70"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5c9a2c159fa3480202554670bb76faebfefd4c9b2829c39cf61a0d68192bdad8 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#97:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/receipt_stop.SYNTHETIC.json =====
+{
+  "schema": "web3-qualification/v1/receipt",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "plan_sha256": "d47c90e91671bf437982d67d5a9478608039f298364bfb4a400ab848cd4541e1",
+  "stage_id": "stop",
+  "adapter": "stop_latency.v1",
+  "binding": {
+    "repo_revision": "0000000000000000000000000000000000000000",
+    "config_sha256": "efab140a8c2922093d65b5ef02abaddf32ecd8d502f4659dce99e5bd3e8ec1dc",
+    "input_manifest_sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c",
+    "environment_sha256": "13440a4654769788a562b44da2e7b03b5e58fb25cab580a3bb220c242669e66d",
+    "network": {
+      "family": "offline_fixture",
+      "network_id": "fixture:1",
+      "genesis_hash": "synthetic"
+    },
+    "anchor": {
+      "height": "0",
+      "hash": "synthetic",
+      "finality": "fixture"
+    },
+    "provider": {
+      "id": "synthetic",
+      "version": "1"
+    },
+    "model": {
+      "id": "none",
+      "revision": "none"
+    },
+    "toolchain": {
+      "fixture_generator": "build_specs.py/v1"
+    }
+  },
+  "producer": {
+    "id": "synthetic-fixture-generator",
+    "version": "1",
+    "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5",
+    "kind": "machine_runner"
+  },
+  "started_at": "2026-10-03T16:50:00Z",
+  "completed_at": "2026-10-03T16:59:30Z",
+  "process": {
+    "state": "EXITED",
+    "exit_code": 0
+  },
+  "artifacts": [
+    {
+      "role": "stop_probes",
+      "path": "stop.jsonl",
+      "bytes": 165,
+      "sha256": "cf0c82f4d2e89acb1a73a1bc65443658dc8bce7841e1cbe8f6a98f40a058496b"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d68c5bbc23b605a3c504ffcde0f3e66944283003d90a045091de1f4489a47274 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#98:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/receipt_unit.SYNTHETIC.json =====
+{
+  "schema": "web3-qualification/v1/receipt",
+  "campaign_id": "SYNTHETIC_FIXTURE_NOT_ACTUAL_BOT",
+  "plan_sha256": "d47c90e91671bf437982d67d5a9478608039f298364bfb4a400ab848cd4541e1",
+  "stage_id": "unit",
+  "adapter": "junit_xml.v1",
+  "binding": {
+    "repo_revision": "0000000000000000000000000000000000000000",
+    "config_sha256": "efab140a8c2922093d65b5ef02abaddf32ecd8d502f4659dce99e5bd3e8ec1dc",
+    "input_manifest_sha256": "896efa1d330c9123899d36dca40b125cf5af97f83890651a179863f5cc7fd84c",
+    "environment_sha256": "13440a4654769788a562b44da2e7b03b5e58fb25cab580a3bb220c242669e66d",
+    "network": {
+      "family": "offline_fixture",
+      "network_id": "fixture:1",
+      "genesis_hash": "synthetic"
+    },
+    "anchor": {
+      "height": "0",
+      "hash": "synthetic",
+      "finality": "fixture"
+    },
+    "provider": {
+      "id": "synthetic",
+      "version": "1"
+    },
+    "model": {
+      "id": "none",
+      "revision": "none"
+    },
+    "toolchain": {
+      "fixture_generator": "build_specs.py/v1"
+    }
+  },
+  "producer": {
+    "id": "synthetic-fixture-generator",
+    "version": "1",
+    "binary_sha256": "10820788d3c161281804469e0c59a013669284af2906b0e564ba182ee9eb42f5",
+    "kind": "machine_runner"
+  },
+  "started_at": "2026-10-03T16:50:00Z",
+  "completed_at": "2026-10-03T16:59:30Z",
+  "process": {
+    "state": "EXITED",
+    "exit_code": 0
+  },
+  "artifacts": [
+    {
+      "role": "test_results",
+      "path": "tests.xml",
+      "bytes": 164,
+      "sha256": "7eacb20b8d137d3dda06996dcb1f5d5ec23fedc4627bc3a1daee1bfd3940be63"
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 cf0c82f4d2e89acb1a73a1bc65443658dc8bce7841e1cbe8f6a98f40a058496b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#99:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/stop.jsonl =====
+{"probe_id": "synthetic-1", "fault": "rpc_timeout", "trigger_monotonic_ns": 1000000000, "blocked_monotonic_ns": 1010000000, "forbidden_dispatches_after_trigger": 0}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7eacb20b8d137d3dda06996dcb1f5d5ec23fedc4627bc3a1daee1bfd3940be63 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#100:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/examples/tests.xml =====
+<testsuite><testcase classname="fixture" name="repayment"/><testcase classname="fixture" name="stale_quote"/><testcase classname="fixture" name="stop"/></testsuite>
+===== END CONTENT =====
+
+===== CONTENT SHA256 2da5009d2b7d9fdb1ae569b6b6f9d66d3242432a59d6956560796b692169c5ba | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#101:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/qualification.py =====
+"""Offline, stdlib qualification evidence evaluator. Never sends network traffic or transactions.
+TRUE means only configured predicates passed on supplied machine artifacts. It is
+not authentication of the artifact producer, a code audit or live authorization.
+"""
+from __future__ import annotations
+import argparse
+import datetime as dt
+import hashlib
+import json
+import math
+import os
+from pathlib import Path, PurePosixPath, PureWindowsPath
+import re
+import sys
+import tempfile
+import xml.etree.ElementTree as ET
+
+SCHEMA = "web3-qualification/v1"
+DIGEST = re.compile(r"^[0-9a-f]{64}$")
+REVISION = re.compile(r"^[0-9a-f]{40}(?:[0-9a-f]{24})?$")
+ADAPTERS = {"inventory_diff.v1", "junit_xml.v1", "economics_samples.v1", "observation_window.v1", "stop_latency.v1"}
+REQUIRED_ROLES = {
+    "inventory_diff.v1": {"expected_manifest", "observed_manifest"},
+    "junit_xml.v1": {"test_results"},
+    "economics_samples.v1": {"economics"},
+    "observation_window.v1": {"observations"},
+    "stop_latency.v1": {"stop_probes"},
+}
+
+class EvidenceError(ValueError):
+    pass
+
+
+def reject_constants(value):
+    raise EvidenceError("Non-finite JSON number: " + value)
+
+
+def unique_keys(pairs):
+    obj = {}
+    for key, value in pairs:
+        if key in obj:
+            raise EvidenceError("Duplicate JSON key: " + key)
+        obj[key] = value
+    return obj
+
+
+def json_loads(value):
+    return json.loads(value, object_pairs_hook=unique_keys, parse_constant=reject_constants)
+
+
+def read_json(path):
+    return json_loads(Path(path).read_text(encoding="utf-8"))
+
+
+def canonical_hash(obj):
+    data = json.dumps(obj, ensure_ascii=False, sort_keys=True, separators=(",", ":"), allow_nan=False).encode("utf-8")
+    return hashlib.sha256(data).hexdigest()
+
+
+def file_hash(path):
+    h = hashlib.sha256()
+    with Path(path).open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def utc(value):
+    if not isinstance(value, str):
+        raise EvidenceError("Timestamp must be an ISO string")
+    stamp = dt.datetime.fromisoformat(value.replace("Z", "+00:00"))
+    if stamp.tzinfo is None:
+        raise EvidenceError("Timestamp timezone missing")
+    return stamp.astimezone(dt.timezone.utc)
+
+
+def number(value, key, minimum=None, integer=False):
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value):
+        raise EvidenceError(key + " must be a finite number, not a boolean")
+    if integer and not isinstance(value, int):
+        raise EvidenceError(key + " must be an integer")
+    if minimum is not None and value < minimum:
+        raise EvidenceError(key + " below minimum")
+    return value
+
+
+def text_value(value, key):
+    if not isinstance(value, str) or not value.strip():
+        raise EvidenceError(key + " must be non-empty text")
+    return value
+
+
+def local_path(root, relative):
+    """Portable paths: refuse absolute, drive, backslash, traversal and symlinks.
+    A caller must not concurrently mutate the evidence directory while evaluating.
+    """
+    if not isinstance(relative, str) or not relative or "\x00" in relative or "\\" in relative:
+        raise EvidenceError("Unsafe artifact path")
+    path = PurePosixPath(relative)
+    if path.is_absolute() or PureWindowsPath(relative).drive or ".." in path.parts or ":" in relative:
+        raise EvidenceError("Artifact path escapes evidence root")
+    base = Path(root).resolve(strict=True)
+    candidate = base.joinpath(*path.parts)
+    for n in range(1, len(path.parts) + 1):
+        if base.joinpath(*path.parts[:n]).is_symlink():
+            raise EvidenceError("Symlink evidence path refused")
+    candidate = candidate.resolve(strict=True)
+    if not candidate.is_relative_to(base) or not candidate.is_file():
+        raise EvidenceError("Artifact is not a regular contained file")
+    return candidate
+
+
+def rows(path):
+    count = 0
+    with Path(path).open(encoding="utf-8") as stream:
+        for lineno, line in enumerate(stream, 1):
+            if not line.strip():
+                continue
+            row = json_loads(line)
+            if not isinstance(row, dict):
+                raise EvidenceError(f"Line {lineno} is not an object")
+            count += 1
+            yield row
+    if not count:
+        raise EvidenceError("Empty observation artifact")
+
+
+def validate_binding(binding):
+    if not isinstance(binding, dict) or not REVISION.fullmatch(binding.get("repo_revision", "")):
+        raise EvidenceError("Exact 40/64 hex repo_revision required")
+    for key in ("config_sha256", "input_manifest_sha256", "environment_sha256"):
+        if not DIGEST.fullmatch(binding.get(key, "")):
+            raise EvidenceError(key + " requires sha256")
+    for object_key, keys in {
+        "network": ("family", "network_id", "genesis_hash"),
+        "anchor": ("height", "hash", "finality"),
+        "provider": ("id", "version"),
+        "model": ("id", "revision"),
+    }.items():
+        obj = binding.get(object_key)
+        if not isinstance(obj, dict):
+            raise EvidenceError(object_key + " missing")
+        for key in keys:
+            text_value(obj.get(key), object_key + "." + key)
+    if binding["network"]["family"] not in {"evm", "solana", "unknown", "offline_fixture"}:
+        raise EvidenceError("Unknown network family")
+    toolchain = binding.get("toolchain")
+    if not isinstance(toolchain, dict) or not toolchain:
+        raise EvidenceError("Exact toolchain versions required")
+    for key, value in toolchain.items():
+        text_value(value, "toolchain." + key)
+
+
+def validate_plan(plan):
+    if not isinstance(plan, dict) or plan.get("schema") != SCHEMA:
+        raise EvidenceError("Invalid plan schema")
+    text_value(plan.get("campaign_id"), "campaign_id")
+    if plan.get("live_authorized") is not False:
+        raise EvidenceError("This offline evaluator requires live_authorized=false")
+    validate_binding(plan.get("binding"))
+    stages = plan.get("stages")
+    if not isinstance(stages, list) or not stages:
+        raise EvidenceError("Non-empty stages required")
+    seen = set()
+    for stage in stages:
+        sid = text_value(stage.get("id"), "stage.id")
+        if sid in seen:
+            raise EvidenceError("Duplicate stage id")
+        adapter = stage.get("adapter")
+        if adapter not in ADAPTERS:
+            raise EvidenceError("Unimplemented adapter: " + str(adapter))
+        deps = stage.get("depends_on")
+        if not isinstance(deps, list) or len(deps) != len(set(deps)) or any(d not in seen for d in deps):
+            raise EvidenceError("Stages must be ordered DAG; dependency unknown/duplicate/cyclic")
+        number(stage.get("max_age_seconds"), "max_age_seconds", 1)
+        producer = stage.get("producer")
+        if not isinstance(producer, dict):
+            raise EvidenceError("Pinned producer required")
+        for key in ("id", "version"):
+            text_value(producer.get(key), "producer." + key)
+        if not DIGEST.fullmatch(producer.get("binary_sha256", "")):
+            raise EvidenceError("Pinned producer binary_sha256 required")
+        c = stage.get("criteria")
+        if not isinstance(c, dict):
+            raise EvidenceError("criteria required")
+        required = {
+            "inventory_diff.v1": {"min_entries"},
+            "junit_xml.v1": {"min_cases", "required_name_fragments"},
+            "economics_samples.v1": {"min_samples", "min_accepted", "max_quote_age_ms", "min_net_minor", "accounting_unit"},
+            "observation_window.v1": {"min_samples", "min_duration_seconds", "max_gap_seconds", "min_providers", "max_source_age_ms", "mode"},
+            "stop_latency.v1": {"min_probes", "max_stop_latency_ms", "required_faults"},
+        }[adapter]
+        if set(c) != required:
+            raise EvidenceError("Missing or unsupported criteria: " + adapter)
+        for key in required:
+            if key.startswith("min_") or key.startswith("max_"):
+                minimum = 1 if key in {"min_entries", "min_cases", "min_samples", "min_probes", "min_providers"} else 0
+                number(c[key], key, minimum if key != "min_net_minor" else None,
+                       integer=key in {"min_entries", "min_cases", "min_samples", "min_accepted", "min_probes", "min_providers", "min_net_minor"})
+        for key in ("required_name_fragments", "required_faults"):
+            if key in c and (not isinstance(c[key], list) or not c[key] or any(not isinstance(i, str) or not i for i in c[key])):
+                raise EvidenceError(key + " must name required coverage cases")
+        if "accounting_unit" in c:
+            text_value(c["accounting_unit"], "accounting_unit")
+        if "mode" in c and c["mode"] not in {"REAL_MARKET_PAPER_OBSERVATION", "OFFLINE_REPLAY"}:
+            raise EvidenceError("Observation mode must be exact")
+        seen.add(sid)
+
+
+def inventory(artifacts, c, binding):
+    def index(role):
+        result = {}
+        for row in rows(artifacts[role]):
+            path = text_value(row.get("path"), "entry path")
+            ordinal = number(row.get("ordinal"), "ordinal", 0, integer=True)
+            key = (path, ordinal)
+            if key in result:
+                raise EvidenceError("Duplicate path/ordinal in inventory")
+            if not DIGEST.fullmatch(row.get("sha256", "")):
+                raise EvidenceError("Invalid entry sha256")
+            size = number(row.get("bytes"), "entry bytes", 0, integer=True)
+            result[key] = (row["sha256"], size)
+        return result
+    expected, observed = index("expected_manifest"), index("observed_manifest")
+    failures = []
+    if len(expected) < c["min_entries"]:
+        failures.append("Too few inventory entries")
+    if expected != observed:
+        failures.append("Inventory omissions, additions or byte/hash mismatches")
+    return {"expected_entries": len(expected), "observed_entries": len(observed), "missing": len(set(expected)-set(observed)), "extra": len(set(observed)-set(expected))}, failures
+
+
+def junit(artifacts, c, binding):
+    data = artifacts["test_results"].read_bytes()
+    declarations = data.upper().replace(b"\x00", b"")  # Also catch UTF-16/32 declarations.
+    if b"<!DOCTYPE" in declarations or b"<!ENTITY" in declarations:
+        raise EvidenceError("DTD/entities refused")
+    root = ET.fromstring(data)
+    if root.tag not in {"testsuite", "testsuites"}:
+        raise EvidenceError("Invalid JUnit root")
+    cases = list(root.iter("testcase"))
+    ids, failed, skipped = set(), 0, 0
+    for case in cases:
+        name = text_value(case.get("name"), "testcase.name")
+        cls = text_value(case.get("classname"), "testcase.classname")
+        if (cls, name) in ids:
+            raise EvidenceError("Duplicate JUnit testcase identity")
+        ids.add((cls, name))
+        failed += bool(case.findall("failure") or case.findall("error") or case.get("status", "").lower() in {"failed", "error"})
+        skipped += bool(case.findall("skipped") or case.get("status", "").lower() in {"notrun", "disabled", "skipped"} or case.get("result", "").lower() in {"suppressed", "skipped"})
+    names = [cls + "." + name for cls, name in ids]
+    missing = [q for q in c["required_name_fragments"] if not any(q in name for name in names)]
+    failures = []
+    if len(cases) - skipped < c["min_cases"]: failures.append("Insufficient executed testcases")
+    suite_errors = sum(len(s.findall("error")) + len(s.findall("failure")) for s in root.iter("testsuite"))
+    if failed or suite_errors: failures.append("Test failures or suite errors")
+    for suite in root.iter():
+        if suite.tag not in {"testsuite", "testsuites"}:
+            continue
+        descendants = list(suite.iter("testcase"))
+        counters = {"tests": len(descendants),
+                    "failures": sum(bool(case.findall("failure")) for case in descendants),
+                    "errors": sum(bool(case.findall("error")) for case in descendants),
+                    "skipped": sum(bool(case.findall("skipped")) for case in descendants)}
+        for key, observed_count in counters.items():
+            declared = suite.get(key)
+            if declared is not None:
+                if not declared.isdecimal():
+                    raise EvidenceError("Non-integer JUnit aggregate counter: " + key)
+                if int(declared) != observed_count:
+                    if failed or suite_errors or skipped:
+                        failures.append("JUnit aggregate counter disagrees with known failing/skipped testcase records: " + key)
+                    else:
+                        raise EvidenceError("JUnit aggregate counter disagrees with testcase records: " + key)
+        if suite.get("disabled") is not None:
+            if not suite.get("disabled").isdecimal():
+                raise EvidenceError("Invalid JUnit disabled counter")
+            if int(suite.get("disabled")):
+                failures.append("Disabled testcases are not qualifying")
+    if skipped: failures.append("Skipped testcases are not qualifying")
+    if missing: failures.append("Required testcase coverage missing")
+    return {"cases": len(cases), "failed": failed, "suite_errors": suite_errors, "skipped": skipped, "missing_name_fragments": missing}, failures
+
+
+def economics(artifacts, c, binding):
+    count, accepted, breaches, ids, minimum = 0, 0, [], set(), None
+    for row in rows(artifacts["economics"]):
+        sid = text_value(row.get("sample_id"), "sample_id")
+        if sid in ids: raise EvidenceError("Duplicate economics sample")
+        ids.add(sid)
+        if row.get("accounting_unit") != c["accounting_unit"]:
+            raise EvidenceError("Accounting units differ")
+        # All terms must already be converted into the same explicitly declared
+        # atomic accounting unit by the recorded adapter; no implicit floats.
+        values = {k: number(row.get(k), k, 0, integer=True) for k in (
+            "proceeds_minor", "principal_minor", "flash_fee_minor", "swap_fee_minor",
+            "network_fee_minor", "slippage_reserve_minor", "other_cost_minor")}
+        age = number(row.get("quote_age_ms"), "quote_age_ms", 0)
+        decision = row.get("decision")
+        if decision not in {"ACCEPT", "REJECT"}: raise EvidenceError("Unrecognized candidate decision")
+        net = values["proceeds_minor"] - sum(v for k, v in values.items() if k != "proceeds_minor")
+        count += 1
+        if decision == "ACCEPT":
+            accepted += 1
+            minimum = net if minimum is None else min(minimum, net)
+            if net < c["min_net_minor"] or age > c["max_quote_age_ms"]:
+                breaches.append(sid)
+    failures = []
+    if count < c["min_samples"]: failures.append("Too few economic samples")
+    if accepted < c["min_accepted"]: failures.append("Too few accepted candidates for this experiment")
+    if breaches: failures.append("Accepted candidate violates net-cost or freshness predicate")
+    return {"samples": count, "accepted": accepted, "minimum_accepted_net_minor": minimum, "breach_sample_ids": breaches}, failures
+
+
+def observation(artifacts, c, binding):
+    times, providers, seen, breaches = [], set(), set(), []
+    for row in rows(artifacts["observations"]):
+        sid = text_value(row.get("sample_id"), "sample_id")
+        if sid in seen: raise EvidenceError("Duplicate observation sample")
+        seen.add(sid)
+        if row.get("mode") != c["mode"]:
+            raise EvidenceError("Observation mode mismatch: replay is not market observation")
+        if row.get("network_id") != binding["network"]["network_id"]:
+            raise EvidenceError("Observation network mismatch")
+        text_value(row.get("anchor_hash"), "observation anchor_hash")
+        text_value(row.get("height"), "observation height")
+        if row.get("finality") != binding["anchor"]["finality"]:
+            raise EvidenceError("Observation finality policy mismatch")
+        observed, source = utc(row.get("observed_at")), utc(row.get("source_at"))
+        if times and observed < times[-1]: raise EvidenceError("Observation time went backwards")
+        times.append(observed)
+        providers.add(text_value(row.get("provider_id"), "provider_id"))
+        source_age = (observed - source).total_seconds() * 1000
+        if source_age < 0 or source_age > c["max_source_age_ms"]:
+            breaches.append(sid)
+        if number(row.get("signed_transactions"), "signed_transactions", 0, integer=True) != 0 or number(row.get("sent_transactions"), "sent_transactions", 0, integer=True) != 0:
+            breaches.append(sid + ":paper_sent_or_signed")
+    duration = (times[-1] - times[0]).total_seconds()
+    gap = max(((b-a).total_seconds() for a,b in zip(times,times[1:])), default=0)
+    failures = []
+    if len(times) < c["min_samples"]: failures.append("Too few observation samples")
+    if duration < c["min_duration_seconds"]: failures.append("Observation window too short")
+    if gap > c["max_gap_seconds"]: failures.append("Observation gap exceeds budget")
+    if len(providers) < c["min_providers"]: failures.append("Insufficient distinct provider identifiers")
+    if breaches: failures.append("Source freshness or paper-only contract violated")
+    return {"samples": len(times), "first_observed_at": times[0].isoformat(), "last_observed_at": times[-1].isoformat(), "duration_seconds": duration, "max_gap_seconds": gap, "provider_ids": sorted(providers), "breach_sample_ids": breaches}, failures
+
+
+def stop_latency(artifacts, c, binding):
+    latencies, faults, seen, dispatches = [], set(), set(), 0
+    for row in rows(artifacts["stop_probes"]):
+        sid = text_value(row.get("probe_id"), "probe_id")
+        if sid in seen: raise EvidenceError("Duplicate stop probe")
+        seen.add(sid)
+        fault = text_value(row.get("fault"), "fault")
+        trigger = number(row.get("trigger_monotonic_ns"), "trigger_monotonic_ns", 0, integer=True)
+        stopped = number(row.get("blocked_monotonic_ns"), "blocked_monotonic_ns", trigger, integer=True)
+        dispatches += number(row.get("forbidden_dispatches_after_trigger"), "forbidden_dispatches_after_trigger", 0, integer=True)
+        latencies.append((stopped-trigger) / 1_000_000)
+        faults.add(fault)
+    missing = sorted(set(c["required_faults"])-faults)
+    failures = []
+    if len(latencies) < c["min_probes"]: failures.append("Insufficient stop probes")
+    if max(latencies) > c["max_stop_latency_ms"]: failures.append("Stop latency exceeded")
+    if dispatches: failures.append("Forbidden dispatch observed after trigger")
+    if missing: failures.append("Required injected faults not covered")
+    return {"probes": len(latencies), "max_stop_latency_ms": max(latencies), "forbidden_dispatches": dispatches, "missing_faults": missing}, failures
+
+
+VALIDATORS = {"inventory_diff.v1": inventory, "junit_xml.v1": junit, "economics_samples.v1": economics,
+              "observation_window.v1": observation, "stop_latency.v1": stop_latency}
+
+
+def aggregate(states):
+    for state in ("FALSE", "UNKNOWN", "NOT_RUN"):
+        if state in states: return state
+    return "TRUE"
+
+
+def evaluate(plan, receipts, root, now=None):
+    validate_plan(plan)
+    now = now or dt.datetime.now(dt.timezone.utc)
+    if now.tzinfo is None: raise EvidenceError("now requires timezone")
+    plan_hash = canonical_hash(plan)
+    candidates = {s["id"]: [] for s in plan["stages"]}
+    unknown_receipts = []
+    for receipt in receipts:
+        if not isinstance(receipt, dict): raise EvidenceError("Receipt must be object")
+        if receipt.get("stage_id") in candidates:
+            candidates[receipt["stage_id"]].append(receipt)
+        else:
+            unknown_receipts.append(receipt.get("stage_id"))
+    result = {"schema": SCHEMA + "/report", "evaluated_at": now.isoformat(), "campaign_id": plan["campaign_id"],
+              "plan_sha256": plan_hash, "binding_sha256": canonical_hash(plan["binding"]), "stages": [],
+              "ignored_unknown_stage_receipts": unknown_receipts,
+              "live_authorized": False, "ready_for_live": False, "actual_bot_execution": "NOT_RUN",
+              "producer_authenticity": "UNKNOWN", "attestation_authenticated": False, "external_chain_truth": "UNKNOWN",
+              "trust_statement": "TRUE only verifies configured predicates on supplied artifacts; hashes do not prove producer honesty or chain truth."}
+    by_id = {}
+    for stage in plan["stages"]:
+        sid = stage["id"]
+        out = {"id": sid, "adapter": stage["adapter"], "own_status": "NOT_RUN", "status": "NOT_RUN", "reasons": [], "metrics": {}, "live_authorized": False}
+        options = candidates[sid]
+        if len(options) > 1:
+            out.update(own_status="UNKNOWN", reasons=["Multiple receipts for same stage; select explicit campaign attempt"])
+        elif len(options) == 1:
+            receipt = options[0]
+            try:
+                if receipt.get("schema") != SCHEMA + "/receipt": raise EvidenceError("Receipt schema mismatch")
+                if receipt.get("campaign_id") != plan["campaign_id"] or receipt.get("plan_sha256") != plan_hash:
+                    raise EvidenceError("Receipt campaign/plan mismatch; invalidate previous evidence")
+                if receipt.get("binding") != plan["binding"]:
+                    raise EvidenceError("Repository/config/input/network/anchor/provider/model/toolchain binding differs")
+                if receipt.get("adapter") != stage["adapter"]:
+                    raise EvidenceError("Receipt adapter mismatch")
+                if receipt.get("producer") != dict(stage["producer"], kind="machine_runner"):
+                    raise EvidenceError("Unpinned producer; model text is not machine evidence")
+                started, completed = utc(receipt.get("started_at")), utc(receipt.get("completed_at"))
+                if completed < started or completed > now or started > now:
+                    raise EvidenceError("Receipt time ordering invalid/future dated")
+                if (now - completed).total_seconds() > stage["max_age_seconds"]:
+                    raise EvidenceError("Receipt stale; recollect for current plan")
+                process = receipt.get("process")
+                if not isinstance(process, dict) or process.get("state") != "EXITED":
+                    raise EvidenceError("No completed machine process")
+                exit_code = number(process.get("exit_code"), "exit_code", integer=True)
+                if exit_code != 0:
+                    out.update(own_status="FALSE", reasons=["Runner process exited with nonzero status"])
+                else:
+                    artifact_records = receipt.get("artifacts")
+                    if not isinstance(artifact_records, list): raise EvidenceError("artifacts must be array")
+                    artifacts = {}
+                    integrity_failure = []
+                    for item in artifact_records:
+                        role = text_value(item.get("role"), "artifact role")
+                        if role in artifacts: raise EvidenceError("Duplicate artifact role")
+                        path = local_path(root, item.get("path"))
+                        size = number(item.get("bytes"), "artifact bytes", 0, integer=True)
+                        digest = item.get("sha256", "")
+                        if not DIGEST.fullmatch(digest): raise EvidenceError("Invalid artifact sha256")
+                        if path.stat().st_size != size or file_hash(path) != digest:
+                            integrity_failure.append(role)
+                        artifacts[role] = path
+                    if integrity_failure:
+                        out.update(own_status="FALSE", reasons=["Artifact byte/hash mismatch: " + ",".join(integrity_failure)])
+                    elif not REQUIRED_ROLES[stage["adapter"]].issubset(artifacts):
+                        raise EvidenceError("Required machine artifact missing")
+                    else:
+                        metrics, failures = VALIDATORS[stage["adapter"]](artifacts, stage["criteria"], plan["binding"])
+                        if stage["adapter"] == "observation_window.v1" and (utc(metrics["first_observed_at"]) < started or utc(metrics["last_observed_at"]) > completed):
+                            raise EvidenceError("Observation timestamps outside recorded process window")
+                        out.update(own_status="FALSE" if failures else "TRUE", metrics=metrics, reasons=failures)
+            except (EvidenceError, ValueError, OSError, TypeError, KeyError, AttributeError, ET.ParseError) as exc:
+                out.update(own_status="UNKNOWN", reasons=[str(exc)])
+        else:
+            out["reasons"].append("No explicit receipt supplied")
+        deps = {dep: by_id[dep]["status"] for dep in stage["depends_on"]}
+        out["dependencies"] = deps
+        out["status"] = aggregate([out["own_status"], *deps.values()])
+        out["eligible_for_next_stage"] = out["status"] == "TRUE"
+        if any(s != "TRUE" for s in deps.values()):
+            out["reasons"].append("Dependency evidence does not qualify")
+        by_id[sid] = out
+        result["stages"].append(out)
+    result["configured_predicates"] = aggregate([s["status"] for s in result["stages"]])
+    return result
+
+
+def write_report(path, encoded, evidence_root, input_paths=()):
+    """Publish a complete NEW report outside all input locations, without clobber.
+    Hard-link publication is exclusive and atomic; unsupported filesystems fail safe.
+    """
+    destination = Path(path).resolve()
+    evidence = Path(evidence_root).resolve()
+    if destination.is_relative_to(evidence):
+        raise EvidenceError("Report output must be outside read-only evidence root")
+    if any(destination == Path(item).resolve() for item in input_paths):
+        raise EvidenceError("Report output may not overwrite plan or receipt inputs")
+    if destination.exists():
+        raise EvidenceError("Report output already exists; choose a new filename")
+    descriptor, temp_name = tempfile.mkstemp(prefix=".qualification-report-", dir=destination.parent)
+    temporary = Path(temp_name)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as stream:
+            stream.write(encoded)
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.link(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--plan", required=True, help="Reviewed qualification plan JSON")
+    parser.add_argument("--evidence-root", required=True, help="Read-only directory containing receipt artifacts")
+    parser.add_argument("--receipt", action="append", default=[], help="Explicit receipt JSON path; may repeat")
+    parser.add_argument("--now", help="ISO timestamp only for reproducible offline experiments")
+    parser.add_argument("--output", help="Report JSON file; stdout if omitted")
+    args = parser.parse_args()
+    try:
+        report = evaluate(read_json(args.plan), [read_json(p) for p in args.receipt], args.evidence_root, utc(args.now) if args.now else None)
+        encoded = json.dumps(report, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+        if args.output:
+            write_report(args.output, encoded, args.evidence_root, [args.plan, *args.receipt])
+        else:
+            print(encoded, end="")
+        return 0 if report["configured_predicates"] == "TRUE" else 2
+    except (EvidenceError, ValueError, OSError, TypeError) as exc:
+        print("Qualification input invalid: " + str(exc), file=sys.stderr)
+        return 3
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 16de7b6d5f7e0285fbfbd7ec5e75c7629c26c05d13f55a3ba2adbf75994a165f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#102:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/test_qualification.py =====
+import copy
+import datetime as dt
+import hashlib
+import json
+from pathlib import Path
+import tempfile
+import unittest
+from qualification import evaluate, canonical_hash, file_hash, EvidenceError, validate_plan, read_json, write_report
+
+NOW = dt.datetime(2026, 10, 3, 17, 0, tzinfo=dt.timezone.utc)
+BINDING = {
+    "repo_revision": "a" * 40, "config_sha256": "b" * 64,
+    "input_manifest_sha256": "c" * 64, "environment_sha256": "d" * 64,
+    "network": {"family": "offline_fixture", "network_id": "fixture:1", "genesis_hash": "fixture-genesis"},
+    "anchor": {"height": "100", "hash": "fixture-block-100", "finality": "fixture"},
+    "provider": {"id": "fixture-provider", "version": "1"},
+    "model": {"id": "none", "revision": "none"}, "toolchain": {"python": "3.11.fixture"}
+}
+PRODUCER = {"id": "qualification-test-fixture", "version": "1", "binary_sha256": "e" * 64}
+CRITERIA = {
+    "junit_xml.v1": {"min_cases": 1, "required_name_fragments": ["repayment"]},
+    "inventory_diff.v1": {"min_entries": 1},
+    "economics_samples.v1": {"min_samples": 1, "min_accepted": 1, "max_quote_age_ms": 100, "min_net_minor": 1, "accounting_unit": "USDC:atomic:fixture"},
+    "observation_window.v1": {"min_samples": 2, "min_duration_seconds": 60, "max_gap_seconds": 60, "min_providers": 2, "max_source_age_ms": 1000, "mode": "REAL_MARKET_PAPER_OBSERVATION"},
+    "stop_latency.v1": {"min_probes": 1, "max_stop_latency_ms": 50, "required_faults": ["rpc_timeout"]}
+}
+
+def plan(adapter="junit_xml.v1"):
+    return {"schema": "web3-qualification/v1", "campaign_id": "TEST_FIXTURE_NOT_BOT",
+            "live_authorized": False, "binding": copy.deepcopy(BINDING), "stages": [
+                {"id": "stage1", "adapter": adapter, "producer": dict(PRODUCER), "depends_on": [],
+                 "max_age_seconds": 3600, "criteria": copy.deepcopy(CRITERIA[adapter])}]}
+
+class QualificationTests(unittest.TestCase):
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.root = Path(self.temp.name)
+    def tearDown(self): self.temp.cleanup()
+    def artifact(self, role, content, name=None):
+        path = self.root / (name or role)
+        path.write_text(content, encoding="utf-8")
+        return {"role": role, "path": path.name, "bytes": path.stat().st_size, "sha256": file_hash(path)}
+    def jsonl(self, role, values):
+        return self.artifact(role, "".join(json.dumps(i) + "\n" for i in values))
+    def receipt(self, p, artifacts=None):
+        if artifacts is None:
+            artifacts = [self.artifact("test_results", '<testsuite><testcase name="repayment" classname="flashloan"/></testsuite>')]
+        return {"schema": "web3-qualification/v1/receipt", "campaign_id": p["campaign_id"],
+                "plan_sha256": canonical_hash(p), "stage_id": "stage1", "adapter": p["stages"][0]["adapter"],
+                "binding": copy.deepcopy(p["binding"]), "producer": dict(PRODUCER, kind="machine_runner"),
+                "started_at": "2026-10-03T16:50:00Z", "completed_at": "2026-10-03T16:59:00Z",
+                "process": {"state": "EXITED", "exit_code": 0}, "artifacts": artifacts}
+    def run_receipt(self, p, r): return evaluate(p, [r], self.root, NOW)
+    def status(self, p, r): return self.run_receipt(p, r)["stages"][0]["own_status"]
+    def test_valid_machine_case_never_authorizes_live(self):
+        p = plan(); r = self.receipt(p)
+        report = self.run_receipt(p, r)
+        self.assertEqual(report["configured_predicates"], "TRUE")
+        self.assertFalse(report["live_authorized"])
+        self.assertFalse(report["ready_for_live"])
+        self.assertEqual(report["producer_authenticity"], "UNKNOWN")
+    def test_absent_receipt_not_run(self):
+        report = evaluate(plan(), [], self.root, NOW)
+        self.assertEqual(report["configured_predicates"], "NOT_RUN")
+    def test_each_binding_change_invalidates(self):
+        for key in ("repo_revision", "config_sha256", "input_manifest_sha256", "environment_sha256", "network", "anchor", "provider", "model", "toolchain"):
+            with self.subTest(key=key):
+                p = plan(); r = self.receipt(p); r["binding"][key] = "changed"
+                self.assertEqual(self.status(p, r), "UNKNOWN")
+    def test_stale_and_future_invalidated(self):
+        p = plan(); r = self.receipt(p)
+        r["completed_at"] = "2026-10-02T16:59:00Z"; r["started_at"] = "2026-10-02T16:50:00Z"
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+        r["completed_at"] = "2026-10-04T16:59:00Z"
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+    def test_hash_corruption_false(self):
+        p = plan(); r = self.receipt(p)
+        (self.root / "test_results").write_text("tampered")
+        self.assertEqual(self.status(p, r), "FALSE")
+    def test_missing_artifact_unknown(self):
+        p = plan(); r = self.receipt(p); (self.root / "test_results").unlink()
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+    def test_model_text_success_boolean_not_evidence(self):
+        p = plan(); r = self.receipt(p, [])
+        r["success"] = True; r["model_text"] = "Everything is safe and live ready."
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+        r["producer"]["kind"] = "llm"
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+    def test_process_failure_false_and_bool_exit_refused(self):
+        p = plan(); r = self.receipt(p); r["process"]["exit_code"] = 1
+        self.assertEqual(self.status(p, r), "FALSE")
+        r["process"]["exit_code"] = False
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+    def test_failing_case_not_overridden_by_summary(self):
+        p = plan(); a = self.artifact("test_results", '<testsuite tests="1" failures="0"><testcase name="repayment" classname="f"><failure>insufficient repayment</failure></testcase></testsuite>')
+        self.assertEqual(self.status(p, self.receipt(p, [a])), "FALSE")
+    def test_skip_and_empty_suite_not_qualifying(self):
+        for data in ['<testsuite><testcase name="repayment" classname="f"><skipped/></testcase></testsuite>', '<testsuite tests="0" failures="0"/>']:
+            p = plan(); a = self.artifact("test_results", data)
+            self.assertEqual(self.status(p, self.receipt(p, [a])), "FALSE")
+    def test_plan_change_and_duplicate_receipts_invalidated(self):
+        p = plan(); r = self.receipt(p); p["stages"][0]["criteria"]["min_cases"] = 2
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+        report = evaluate(p, [r, r], self.root, NOW)
+        self.assertEqual(report["configured_predicates"], "UNKNOWN")
+    def test_dependency_does_not_fake_progress(self):
+        p = plan(); s2 = copy.deepcopy(p["stages"][0]); s2.update(id="stage2", depends_on=["stage1"]); p["stages"].append(s2)
+        r = self.receipt(p); r["stage_id"] = "stage2"
+        report = self.run_receipt(p, r)
+        self.assertEqual(report["stages"][1]["own_status"], "TRUE")
+        self.assertEqual(report["stages"][1]["status"], "NOT_RUN")
+        self.assertFalse(report["stages"][1]["eligible_for_next_stage"])
+    def test_paths_refused(self):
+        for bad in ["../escape", "/tmp/escape", "C:/Windows/file", "x\\y", "file:stream", "//server/file"]:
+            with self.subTest(bad=bad):
+                p = plan(); r = self.receipt(p); r["artifacts"][0]["path"] = bad
+                self.assertEqual(self.status(p, r), "UNKNOWN")
+    def test_symlink_refused(self):
+        p = plan(); r = self.receipt(p)
+        (self.root / "link").symlink_to(self.root / "test_results")
+        r["artifacts"][0]["path"] = "link"
+        self.assertEqual(self.status(p, r), "UNKNOWN")
+    def test_inventory_omission_false_and_order_independent(self):
+        p = plan("inventory_diff.v1")
+        a = {"path": "dir/a.py", "ordinal": 0, "bytes": 5, "sha256": "f"*64}
+        b = dict(a, path="b.py", ordinal=1)
+        artifacts = [self.jsonl("expected_manifest", [a,b]), self.jsonl("observed_manifest", [b,a])]
+        self.assertEqual(self.status(p, self.receipt(p, artifacts)), "TRUE")
+        artifacts[1] = self.jsonl("observed_manifest", [a])
+        self.assertEqual(self.status(p, self.receipt(p, artifacts)), "FALSE")
+    def test_cost_recomputation_detects_negative_profit(self):
+        p = plan("economics_samples.v1")
+        sample = {"sample_id":"s1", "accounting_unit":"USDC:atomic:fixture", "proceeds_minor":110, "principal_minor":100, "flash_fee_minor":2, "swap_fee_minor":3, "network_fee_minor":2, "slippage_reserve_minor":1, "other_cost_minor":1, "quote_age_ms":10, "decision":"ACCEPT", "profit_is_positive":True}
+        r = self.receipt(p, [self.jsonl("economics", [sample])]); self.assertEqual(self.status(p,r), "TRUE")
+        sample["network_fee_minor"] = 50
+        r = self.receipt(p, [self.jsonl("economics", [sample])]); self.assertEqual(self.status(p,r), "FALSE")
+    def test_quote_freshness_and_atomic_units(self):
+        p = plan("economics_samples.v1")
+        sample = {"sample_id":"s1", "accounting_unit":"USDC:atomic:fixture", "proceeds_minor":100, "principal_minor":0, "flash_fee_minor":0, "swap_fee_minor":0, "network_fee_minor":0, "slippage_reserve_minor":0, "other_cost_minor":0, "quote_age_ms":101, "decision":"ACCEPT"}
+        self.assertEqual(self.status(p, self.receipt(p,[self.jsonl("economics",[sample])])), "FALSE")
+        sample["quote_age_ms"] = 0; sample["network_fee_minor"] = 0.5
+        self.assertEqual(self.status(p, self.receipt(p,[self.jsonl("economics",[sample])])), "UNKNOWN")
+    def test_paper_observation_is_not_replay(self):
+        p = plan("observation_window.v1")
+        base = {"sample_id":"s1", "mode":"REAL_MARKET_PAPER_OBSERVATION", "network_id":"fixture:1", "anchor_hash":"hash", "height":"100", "finality":"fixture", "observed_at":"2026-10-03T16:50:00Z", "source_at":"2026-10-03T16:50:00Z", "provider_id":"provider1", "signed_transactions":0, "sent_transactions":0}
+        nxt = dict(base, sample_id="s2", observed_at="2026-10-03T16:51:00Z", source_at="2026-10-03T16:51:00Z", provider_id="provider2")
+        self.assertEqual(self.status(p,self.receipt(p,[self.jsonl("observations",[base,nxt])])), "TRUE")
+        nxt["mode"] = "OFFLINE_REPLAY"
+        self.assertEqual(self.status(p,self.receipt(p,[self.jsonl("observations",[base,nxt])])), "UNKNOWN")
+    def test_stop_latency_and_forbidden_dispatch(self):
+        p = plan("stop_latency.v1")
+        probe = {"probe_id":"p1", "fault":"rpc_timeout", "trigger_monotonic_ns":1000000000, "blocked_monotonic_ns":1040000000, "forbidden_dispatches_after_trigger":0}
+        self.assertEqual(self.status(p,self.receipt(p,[self.jsonl("stop_probes",[probe])])), "TRUE")
+        probe["forbidden_dispatches_after_trigger"] = 1
+        self.assertEqual(self.status(p,self.receipt(p,[self.jsonl("stop_probes",[probe])])), "FALSE")
+    def test_malformed_json_and_nonfinite_rejected(self):
+        path = self.root / "bad.json"
+        for value in ['{"a":1,"a":2}', '{"a":NaN}']:
+            path.write_text(value)
+            with self.assertRaises(EvidenceError): read_json(path)
+    def test_junit_declared_missing_case_or_failure_invalidates(self):
+        for attrs in ['tests="2" failures="1"', 'tests="99" failures="0"', 'tests="1" errors="1"', 'tests="1" skipped="1"']:
+            p = plan()
+            a = self.artifact("test_results", '<testsuite ' + attrs + '><testcase name="repayment" classname="f"/></testsuite>')
+            self.assertEqual(self.status(p, self.receipt(p,[a])), "UNKNOWN")
+    def test_junit_suite_level_error_false(self):
+        p = plan()
+        a = self.artifact("test_results", '<testsuite><error>setup failed</error><testcase name="repayment" classname="f"/></testsuite>')
+        self.assertEqual(self.status(p, self.receipt(p,[a])), "FALSE")
+    def test_observation_outside_receipt_window_unknown(self):
+        p = plan("observation_window.v1")
+        base = {"sample_id":"s1", "mode":"REAL_MARKET_PAPER_OBSERVATION", "network_id":"fixture:1", "anchor_hash":"hash", "height":"100", "finality":"fixture", "observed_at":"2026-10-03T16:20:00Z", "source_at":"2026-10-03T16:20:00Z", "provider_id":"provider1", "signed_transactions":0, "sent_transactions":0}
+        nxt = dict(base, sample_id="s2", observed_at="2026-10-03T16:21:00Z", source_at="2026-10-03T16:21:00Z", provider_id="provider2")
+        self.assertEqual(self.status(p,self.receipt(p,[self.jsonl("observations",[base,nxt])])), "UNKNOWN")
+    def test_report_cannot_overwrite_inputs_or_evidence(self):
+        evidence = self.root / "evidence"; evidence.mkdir()
+        plan_path = self.root / "plan.json"; plan_path.write_text("original")
+        with self.assertRaises(EvidenceError): write_report(plan_path, "replacement", evidence, [plan_path])
+        with self.assertRaises(EvidenceError): write_report(evidence / "report.json", "replacement", evidence)
+        self.assertEqual(plan_path.read_text(), "original")
+        self.assertFalse((evidence / "report.json").exists())
+    def test_report_published_exclusively_and_complete(self):
+        evidence = self.root / "evidence"; evidence.mkdir()
+        output = self.root / "report.json"
+        write_report(output, '{"complete":true}', evidence)
+        self.assertEqual(output.read_text(), '{"complete":true}')
+        with self.assertRaises(EvidenceError): write_report(output, "replacement", evidence)
+        self.assertEqual(output.read_text(), '{"complete":true}')
+        self.assertFalse(list(self.root.glob(".qualification-report-*")))
+    def test_notrun_attribute_does_not_count_as_execution(self):
+        p = plan()
+        a = self.artifact("test_results", '<testsuite><testcase name="repayment" classname="f" status="notrun"/></testsuite>')
+        self.assertEqual(self.status(p,self.receipt(p,[a])), "FALSE")
+    def test_utf16_dtd_is_refused(self):
+        p = plan()
+        path = self.root / "test_results"
+        path.write_bytes('<?xml version="1.0" encoding="utf-16"?><!DOCTYPE testsuite [<!ENTITY x "pass">]><testsuite><testcase name="repayment" classname="f">&x;</testcase></testsuite>'.encode("utf-16"))
+        a = {"role":"test_results", "path":path.name, "bytes":path.stat().st_size, "sha256":file_hash(path)}
+        self.asse

@@ -1,0 +1,50 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF19",
+  "name": "stop_and_pause",
+  "title_ru": "Пауза и остановка по голосу/кнопке",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "fault_injection"
+  ],
+  "inputs": [
+    "stop_channel",
+    "cancel_token_protocol"
+  ],
+  "steps": [
+    {
+      "id": "stop_and_pause.1",
+      "handler": "PROPOSED.stop_and_pause.1",
+      "instruction": "Use accessible stop button plus configured voice alternative"
+    },
+    {
+      "id": "stop_and_pause.2",
+      "handler": "PROPOSED.stop_and_pause.2",
+      "instruction": "Inject stop under load and process boundaries"
+    },
+    {
+      "id": "stop_and_pause.3",
+      "handler": "PROPOSED.stop_and_pause.3",
+      "instruction": "Measure trigger-to-blocked dispatch with monotonic timestamps"
+    }
+  ],
+  "outputs": [
+    "stop_latency.v1"
+  ],
+  "qualification_criteria": [
+    "No forbidden dispatch after trigger; cancellation of pending external side effect verified separately"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,31 @@
+WINDOWS INSTALL, UI И STOP — qualification runbook
+
+Target: пользовательский Dell Latitude 5400, Windows 11; recorded build/CPU/RAM/system free space/device ID, installed versions. Указанный target — ожидаемая конфигурация, а не подключённое/проверенное устройство. Linux-container smoke не заменяет Windows receipt.
+
+Packaging spike
+Сравнить existing Tk pilot и один поддерживаемый кандидат runtime; название альтернативы выбрать по доступному коду, не по предположенному installed SDK. Один и тот же fixture corpus и baseline operations. Каждый кандидат: per-user install без cwd assumption, app shortcut, two starts, закрытый Chrome, backend crash/reconnect, same store, keyboard/screen reader, 10k rows, 200% scaling, unicode path. Записать elapsed boot/warm boot, process tree и peak working set, package bytes, dependency footprint, uninstall data retention. ADR DEC5-01 принят только по actual device evidence. В этом ZIP runtime/installer choice PROPOSED/OPEN.
+
+Полный сценарий
+1. Установить shell в per-user location, data root выбрать через trusted bootstrap; открыть из Start Menu при закрытом Chrome и произвольном cwd. First run покажет build/data path/backend status. Повторный запуск показывает тот же namespace/source count; второй client не открывает competing writer.
+2. Импорт fixture TXT с русскими/английскими символами, BOM/CRLF и secret canary; raw hash compare. Найти exact phrase и historical revision, выбрать range конца большого файла; bulk selection/query handle не загружает все previews.
+3. Keyboard-only создать goal/criteria, WHY basket, экспорт provider-neutral packet/share projection. Check exported bytes/profile/digest. Raw secret redacted; offline index не содержит canary. Manual AI test reply вводится через файл/текст; valid binding proposal, stale binding review.
+4. Kill backend после durable intent до ack; reconnect lookup same ID. Late reply старой connection generation не меняет UI. Close/reopen shell: task/result state сохранён. Unknown external fake effect нельзя auto resend.
+5. Backup while fixture imports; corrupt a blob => reject restore. Valid restore clean directory; compare invariant queries, aliases, relations, hashes/corrections. Tombstone newer than backup remains current-hidden. Interrupt activation descriptor switch and recover; old lease publish blocked.
+6. Registry fake adapter: qualified build+grant run -> one effect; retry same ID -> existing receipt. Change build, grant, adapter/schema -> stale/disabled. Missing credentials => MISSING_CREDENTIAL; no secret stdout. Template malicious doc executable/env ignored.
+7. STOP keyboard while simulated worker blocked and ASR/model/network/Chrome unavailable. Measure local acknowledgement, durable epoch and last dispatch. Pending tasks cancelled before dispatch; active unknown external outcome remains UNKNOWN. Restart worker with expired fence cannot resume. Resume triggers current policy/qualification/reconciliation, same logical operation.
+8. Screen reader labels/errors/progress/STOP/Resume/unknown message; focus order all panels/dialogs; no mouse; test contrast and 200% text scaling. Test result records screen reader name/version and actual user/device observation, not aria-label presence alone.
+9. Upgrade installed package using compatible migration rehearsal; old data/heads preserved. Uninstall shell leaves user library; reinstall reopen same configured path. Installer package/demo does not contain private sources/goals/tokens/user paths. Default profile scopes one user; second test user cannot read first.
+
+Device receipts
+Each receipt: case_id, build artifact digest, schema/profile/adapter/verifier revision, device and OS, setup input hashes, exact procedure, observed outcome, timestamp, logs/screenshots paths/hashes, performance samples, limitations. No invented timestamp/results. Status NOT_RUN until executed.
+
+Independent stop path constraints
+STOP handler не проходит через model planning или occupied normal job queue. Control timeout сообщает «запрос остановки сохранён/не подтверждён» отдельно от worker observed state. При блокировке whole process не обещать отмену external effect; только известные own subprocesses могут terminate через proven controller. Core exposes cancellation fence; callbacks publish only current lease+epoch; stale completion stored historical, не fresh result. Нельзя использовать label STOP как доказательство остановленного runtime.
+
+Operator templates examples
+library.search_exact — read-only existing service.
+context.export_selected — local artifact write under configured export root.
+library.backup — local artifact write, pinned objects, no remote send.
+editor.open_source — version-aware configured editor path, Unicode line refs.
+qualification.run_local — registered test adapter/cwd/resources, no signer/sender.
+Этот список — proposed operations. Enabled только после actual registration/binding/checks. Real API/CLI/browser adapters требуют own qualification; example JSON не делает Laya/Grok/VS Code установленными.

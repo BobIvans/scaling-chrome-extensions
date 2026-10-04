@@ -1,0 +1,37 @@
+{
+  "checked_date": "2026-10-04",
+  "scope": "Documentation checks only; no API/transaction/protocol execution",
+  "sources": [
+    {
+      "url": "https://developers.jup.ag/docs/portal/rate-limits",
+      "title": "Jupiter rate limits",
+      "facts": "Documentation describes per-organisation sliding-window limits and shared main request bucket; quota and 429 handling must be versioned.",
+      "implementation_implication": "Do not multiply provider budget by parallel workers/API keys. Runtime uses configured plan/response policy; recheck before actual acquisition."
+    },
+    {
+      "url": "https://solana.com/docs/core/fees/fee-structure",
+      "title": "Solana fee structure",
+      "facts": "The documentation separates base and prioritisation fees and states fees are charged on failed included transactions.",
+      "implementation_implication": "Account for failure costs. Pin transaction format and correct fee calculation; avoid one generic formula across formats."
+    },
+    {
+      "url": "https://docs.marginfi.com/protocol-overview/fees",
+      "title": "Marginfi/P0 fee documentation",
+      "facts": "The retrieved page describes P0 program flashloan fees separately from frontend swap/slippage fees.",
+      "implementation_implication": "Documentation is not on-chain proof for a specific bank/program revision. Pin lender program/state and preserve other route costs."
+    },
+    {
+      "url": "https://github.com/0dotxyz/marginfi-v2",
+      "title": "Marginfi program source",
+      "facts": "Official repository retrieved from mrgnlabs/marginfi-v2 redirected to 0dotxyz/marginfi-v2.",
+      "implementation_implication": "Verify program/IDL/source compatibility and identity; this package did not audit full program code."
+    },
+    {
+      "url": "https://github.com/Kamino-Finance/klend-sdk",
+      "title": "Kamino Lending SDK",
+      "facts": "Official TypeScript SDK repository inspected as source entrypoint only.",
+      "implementation_implication": "No runnable SCE/Studious Kamino handler assumed. Pin SDK/version/instruction contract during coding audit."
+    }
+  ],
+  "prices_or_profit_promised": false
+}

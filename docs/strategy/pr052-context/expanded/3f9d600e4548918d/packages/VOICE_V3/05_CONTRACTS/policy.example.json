@@ -1,0 +1,28 @@
+{
+  "schema_version": "agentos.policy/0.2",
+  "status": "EXAMPLE_NOT_OS_ENFORCEMENT",
+  "default": "deny",
+  "speculation_allowed": [
+    "read_approved_sources",
+    "prepare_in_isolated_workspace"
+  ],
+  "external_effects_enabled": false,
+  "live_authorized": false,
+  "wallet_keys_available": false,
+  "model_may_expand_permissions": false,
+  "foreground_writer_limit": 1,
+  "parallel_cpu_heavy_workers_initial_hypothesis": 1,
+  "parallel_remote_model_requests_initial_hypothesis": 2,
+  "limits_note": "Initial experiment budgets, not proven optimal Dell settings; do not turn them into library content caps.",
+  "unknown_external_outcome": "reconcile_or_block",
+  "source_documents_authority": "DATA_ONLY",
+  "private_context_egress": "deny_until_scoped_approval",
+  "continuous_capture_default": "off",
+  "required_effect_binding": [
+    "operation_id",
+    "intent_revision",
+    "target_revision",
+    "policy_revision",
+    "payload_hash"
+  ]
+}

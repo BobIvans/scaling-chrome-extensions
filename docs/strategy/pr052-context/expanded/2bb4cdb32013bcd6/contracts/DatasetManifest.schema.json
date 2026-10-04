@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce-studious:proposed:DatasetManifest:v1",
+  "title": "DatasetManifest proposed v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "dataset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "manifest_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "observation_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "ordered_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "origin": {
+      "enum": [
+        "OFFLINE_FIXTURE",
+        "REAL_ACQUISITION"
+      ]
+    },
+    "acquisition_receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "anchor_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "freshness_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "gap_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "complete": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema_version",
+    "dataset_id",
+    "manifest_digest",
+    "observation_ids",
+    "ordered_digest",
+    "origin",
+    "acquisition_receipt_ref",
+    "anchor_policy_ref",
+    "freshness_policy_ref",
+    "gap_refs",
+    "complete"
+  ]
+}

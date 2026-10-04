@@ -1,0 +1,48 @@
+ПЕРЕХОД ОТ CHROME К DESKTOP
+Проверенный SCE main: da6abf4c006e4e7d26fe45ef30fa9d07a356f396, 157 файлов.
+Это snapshot проверки 03.10.2026. Перед PR получить новый HEAD и сравнить owners.
+
+ТЕКУЩИЙ ПРОТОТИП
+app/desktop.py — Tk shell; app/context_store.py — экспериментальный import/export.
+Его desktop-prototype.sqlite3 специально НЕ открывает существующий content.sqlite3.
+Это изолированная проверка пользовательского сценария. Не запускать его как второй
+production-владелец тех же задач. Он не мигрирует старые OCC данные автоматически.
+
+ЦЕЛЕВАЯ ИНТЕГРАЦИЯ В SCE
+1. Сделать backup существующего content.sqlite3 штатным SQLite backup API.
+2. Вынести application services из native_adapter.py: транспорт не должен владеть
+   поиском, repo index, review sessions, queue и разрешениями.
+3. Добавить desktop adapter, который вызывает те же сервисы в процессе или через
+   локальный IPC. Для браузерного UI в будущем — authenticated loopback/stdio,
+   а не открытый 0.0.0.0 сервер с произвольным shell endpoint.
+4. Перенести функции lossless ZIP inventory и object store в existing content-lab.
+   Зафиксировать schema migration, stable ID mapping и один SQLite writer.
+5. Сохранить existing repo_source.py для Python AST/imports/SCC; не заменять его
+   простым разрезанием текста из прототипа. Добавить generic archive source owner.
+6. Привязать context export к context_review.py/context_handoff.py V4/V5.
+7. automation_core.py остаётся владельцем jobs, leases, cancel и reconciliation.
+8. После миграции сравнить counts/hashes/versions/receipts. Проверить rollback.
+   Только затем переключить desktop на canonical store и вывести prototype DB.
+
+MAP OWNERS
+ZIP/folder intake → content_lab.py + новый archive_source.py.
+Git inventory → repo_context.py; AST/deps → repo_source.py.
+Review → context_review.py; AI packet → context_handoff.py.
+Jobs → automation_core.py; расписание → schedule_supervisor.py.
+Desktop → новый desktop/; native_adapter.py остаётся optional compatibility.
+Laya → occ_proposal.py + отдельный inference adapter; authority остаётся в core.
+Flashloan execution → studious-pancake; SCE хранит поручение и receipt.
+
+ИНТЕРФЕЙС ПРОДУКТОВОЙ ВЕРСИИ
+Левая панель: проекты, папки, источники, сохранённые поиски.
+Центр: файл/страница, provenance, история, связи, блоки заметок.
+Правая: Context Cart, задача, бюджет модели, источники, ответ, следующий шаг.
+Отдельные экраны: задачи/запуски, code findings, repo changes, Web3 experiments.
+Большие таблицы виртуализированы; пагинация не является общим лимитом документов.
+
+ТЕХНОЛОГИЧЕСКОЕ РЕШЕНИЕ
+Сейчас Tk позволяет проверить desktop без npm/Chrome/новых pip dependencies.
+Для развитого интерфейса кандидат: Tauri + React + BlockNote, Python core sidecar.
+Альтернатива с меньшим числом языков: PySide6. Выбрать после измерения запуска,
+RAM, упаковки, IPC cancellation и редактора; benchmark на Dell ещё NOT_RUN.
+Не переписывать весь core ради интерфейса и не объединять сразу все OSS runtimes.

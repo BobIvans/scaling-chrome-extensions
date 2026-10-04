@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:goal:coverage-record:v1",
+  "type": "object",
+  "required": ["id", "source_id", "revision_id", "locator", "state", "reason", "matched_terms"],
+  "properties": {
+    "id": {"type": "string"}, "source_id": {"type": "string"},
+    "revision_id": {"type": "string"}, "locator": {"type": "object"},
+    "state": {"enum": ["INCLUDED", "EXCLUDED", "UNKNOWN", "METADATA_ONLY"]},
+    "reason": {"type": "string"},
+    "matched_terms": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": false
+}

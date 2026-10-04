@@ -1,0 +1,273 @@
+{
+  "number": 21,
+  "package_id": "ROADMAP-PR-021",
+  "title": "Закрытие продукта: Windows scale/fault qualification, польза, стоимость и все критерии V5",
+  "user_outcome": "Проверить конечные пользовательские вертикали, исправить реальные integration faults и сверить все 160 задач/164 карточки/28 целей/24 решения.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Сквозная квалификация Windows 11: масштаб, сбои, UI, voice и обновления",
+      "lane": "Качество",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Общий corpus wrong-target/stale/cancel/unknown/restore/mic-denied",
+        "Scale profiles Dell 16 GB и реальные installed receipts",
+        "Вертикали repo→context→AI→change→update и text/voice→research"
+      ],
+      "acceptance": [
+        "Каждый тест связан с exact build/device/config",
+        "Большой корпус не теряет хвосты и origins",
+        "STOP/crash/offline/restart проходят на устройстве",
+        "Установка/rollback/canary подтверждены отдельно от CI",
+        "Отсутствующий device/API receipt остаётся NOT_RUN",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Этот пакет выполняет квалификацию конечных вертикалей и исправляет подтверждённые faults; профильные владельцы сохраняются. CI не подменяет реальный Windows запуск.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-011",
+        "UI3-018",
+        "PAR3-022",
+        "EVO3-024",
+        "TAB4-21",
+        "LAYA4-026"
+      ],
+      "feature_ids": [
+        "LIB-060",
+        "ACT-053",
+        "RND-023"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-01",
+        "GOAL5-02",
+        "GOAL5-03",
+        "GOAL5-04",
+        "GOAL5-05",
+        "GOAL5-06",
+        "GOAL5-07",
+        "GOAL5-09",
+        "GOAL5-12",
+        "GOAL5-13",
+        "GOAL5-14",
+        "GOAL5-15",
+        "GOAL5-16",
+        "GOAL5-17",
+        "GOAL5-18",
+        "GOAL5-19",
+        "GOAL5-20",
+        "GOAL5-21",
+        "GOAL5-22",
+        "GOAL5-23",
+        "GOAL5-26",
+        "GOAL5-28"
+      ],
+      "workstream_id": "WS-034",
+      "parent_package": "ROADMAP-PR-021",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-003",
+        "WS-004",
+        "WS-005",
+        "WS-006",
+        "WS-008",
+        "WS-009",
+        "WS-010",
+        "WS-011",
+        "WS-014",
+        "WS-015",
+        "WS-016",
+        "WS-019",
+        "WS-020",
+        "WS-022",
+        "WS-024",
+        "WS-027",
+        "WS-028",
+        "WS-029",
+        "WS-030",
+        "WS-031",
+        "WS-032",
+        "WS-033"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Полезность и стоимость: benchmarks, ablation, manual baseline и все попытки",
+      "lane": "Качество",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Frozen corpus собственных retrieval/coding/research задач",
+        "Manual/no-action baseline, context ablation и независимые оценки",
+        "Cost/latency/RAM/interventions/unknown/failure accounting"
+      ],
+      "acceptance": [
+        "В знаменатель входят все начатые попытки",
+        "Критерии успеха заморожены до запуска",
+        "Количество PR не подменяет измеренную пользу",
+        "Повторные источники не считаются независимыми оценками",
+        "Отчёт показывает scope, confidence и next missing evidence",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Измеряет пользу реализованных функций; не требует придумывать прибыль или идеальный benchmark. Приёмочные пороги согласуются по данным corpus.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "TAB4-20"
+      ],
+      "feature_ids": [
+        "LIB-055",
+        "ACT-013",
+        "ACT-014",
+        "ACT-026",
+        "RND-039",
+        "RND-040",
+        "RND-041"
+      ],
+      "decision_ids": [
+        "DEC5-23"
+      ],
+      "goal_ids": [
+        "GOAL5-15",
+        "GOAL5-21",
+        "GOAL5-25",
+        "GOAL5-27"
+      ],
+      "workstream_id": "WS-035",
+      "parent_package": "ROADMAP-PR-021",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-015",
+        "WS-027",
+        "WS-028",
+        "WS-031",
+        "WS-032",
+        "WS-033",
+        "WS-034"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Закрытие V5: все 160 задач, 164 карточки, 28 целей и выпуск продукта",
+      "lane": "Качество",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Criterion-level reconciliation всех каталогов и decision records",
+        "Исправление оставшихся integration defects и stale documentation",
+        "Delivery/handoff, release notes, registry и точные named blockers"
+      ],
+      "acceptance": [
+        "Ни один исходный ID не потерян",
+        "У каждого обязательного критерия есть пригодный receipt или открытый blocker",
+        "DEFERRED не считается выполнением",
+        "Delivered/installed/usable различаются",
+        "Полное закрытие объявляется только после фактической приёмки обязательных критериев",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "№45 — финальная сверка и интеграционные исправления. Новые несвязанные продуктовые идеи создают следующую версию roadmap; их нельзя тихо включать или использовать для бесконечного продления V5.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-012",
+        "TAB4-22",
+        "ACTION5-30"
+      ],
+      "feature_ids": [
+        "LIB-053",
+        "LIB-056",
+        "RND-046"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-10",
+        "GOAL5-27",
+        "GOAL5-28"
+      ],
+      "workstream_id": "WS-036",
+      "parent_package": "ROADMAP-PR-021",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-034",
+        "WS-035"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "G3-011",
+    "G3-012",
+    "UI3-018",
+    "PAR3-022",
+    "EVO3-024",
+    "TAB4-20",
+    "TAB4-21",
+    "TAB4-22",
+    "LAYA4-026",
+    "ACTION5-30"
+  ],
+  "feature_ids": [
+    "LIB-053",
+    "LIB-055",
+    "LIB-056",
+    "LIB-060",
+    "ACT-013",
+    "ACT-014",
+    "ACT-026",
+    "ACT-053",
+    "RND-023",
+    "RND-039",
+    "RND-040",
+    "RND-041",
+    "RND-046"
+  ],
+  "decision_ids": [
+    "DEC5-23"
+  ],
+  "goal_ids": [
+    "GOAL5-01",
+    "GOAL5-02",
+    "GOAL5-03",
+    "GOAL5-04",
+    "GOAL5-05",
+    "GOAL5-06",
+    "GOAL5-07",
+    "GOAL5-09",
+    "GOAL5-10",
+    "GOAL5-12",
+    "GOAL5-13",
+    "GOAL5-14",
+    "GOAL5-15",
+    "GOAL5-16",
+    "GOAL5-17",
+    "GOAL5-18",
+    "GOAL5-19",
+    "GOAL5-20",
+    "GOAL5-21",
+    "GOAL5-22",
+    "GOAL5-23",
+    "GOAL5-25",
+    "GOAL5-26",
+    "GOAL5-27",
+    "GOAL5-28"
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W01",
+  "title_ru": "Импорт личной истории",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "export file or configured read scope"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "register_source_scope",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "preserve_raw",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "parse_roles_branches_attachments",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "reconcile_revisions",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "suggest_labels",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "6",
+      "handler_candidate": "report_coverage",
+      "depends_on": [
+        "5"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "inventory.jsonl",
+    "labels.jsonl",
+    "coverage.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}

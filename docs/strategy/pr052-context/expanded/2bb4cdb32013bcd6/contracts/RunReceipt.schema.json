@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce-studious:proposed:RunReceipt:v1",
+  "title": "RunReceipt proposed v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": {
+      "const": "1"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "request_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "handler_identity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "repository",
+        "source_revision",
+        "build_digest"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_revision": {
+          "type": "string",
+          "minLength": 1
+        },
+        "build_digest": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "mode": {
+      "enum": [
+        "READ_ONLY",
+        "REPLAY",
+        "PAPER"
+      ]
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "origin": {
+      "enum": [
+        "OFFLINE_FIXTURE",
+        "REAL_ACQUISITION"
+      ]
+    },
+    "campaign_executed": {
+      "type": "boolean"
+    },
+    "process_exit": {
+      "type": [
+        "integer",
+        "null"
+      ]
+    },
+    "domain_status": {
+      "enum": [
+        "COMPLETED",
+        "FAILED",
+        "BLOCKED",
+        "CANCELLED",
+        "UNKNOWN",
+        "INVALID_CAMPAIGN"
+      ]
+    },
+    "evidence_applicability": {
+      "enum": [
+        "CURRENT",
+        "STALE",
+        "UNKNOWN"
+      ]
+    },
+    "dataset_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "config_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "criteria_digest": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "started_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "ended_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "useful_calls": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "artifacts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "ref",
+          "sha256",
+          "kind"
+        ],
+        "properties": {
+          "ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "kind": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "gap_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "economic_origin": {
+      "enum": [
+        "NOT_EVALUATED",
+        "MODELED",
+        "OBSERVED_QUOTES_HYPOTHETICAL_FILLS"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "run_id",
+    "attempt_id",
+    "request_digest",
+    "handler_identity",
+    "mode",
+    "profile",
+    "origin",
+    "campaign_executed",
+    "process_exit",
+    "domain_status",
+    "evidence_applicability",
+    "dataset_digest",
+    "config_digest",
+    "criteria_digest",
+    "started_at",
+    "ended_at",
+    "useful_calls",
+    "artifacts",
+    "gap_refs",
+    "economic_origin"
+  ]
+}

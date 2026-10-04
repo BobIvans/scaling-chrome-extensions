@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF13",
+  "name": "route_atomicity",
+  "title_ru": "Маршрут и атомарность",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "pinned_fork",
+    "unit_contracts"
+  ],
+  "inputs": [
+    "route_template",
+    "protocol_adapters"
+  ],
+  "steps": [
+    {
+      "id": "route_atomicity.1",
+      "handler": "PROPOSED.route_atomicity.1",
+      "instruction": "Inject failure at each route step"
+    },
+    {
+      "id": "route_atomicity.2",
+      "handler": "PROPOSED.route_atomicity.2",
+      "instruction": "Assert state rollback or compensation according to actual chain semantics"
+    },
+    {
+      "id": "route_atomicity.3",
+      "handler": "PROPOSED.route_atomicity.3",
+      "instruction": "Test token decimals, transfer behaviors, pool liquidity boundaries"
+    }
+  ],
+  "outputs": [
+    "route_fault_cases",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "Exact protocols/chain semantics qualified, not inferred from generic flashloan label"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

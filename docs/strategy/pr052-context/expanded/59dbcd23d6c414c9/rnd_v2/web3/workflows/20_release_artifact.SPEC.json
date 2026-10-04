@@ -1,0 +1,54 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF20",
+  "name": "release_artifact",
+  "title_ru": "Release, digest и rollback",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build",
+    "unit_contracts"
+  ],
+  "inputs": [
+    "reviewed_commit",
+    "release_manifest",
+    "rollback_package"
+  ],
+  "steps": [
+    {
+      "id": "release_artifact.1",
+      "handler": "PROPOSED.release_artifact.1",
+      "instruction": "Download into staging and validate manifest/signed provenance via chosen verifier"
+    },
+    {
+      "id": "release_artifact.2",
+      "handler": "PROPOSED.release_artifact.2",
+      "instruction": "Run migrations on a copied DB and health checks"
+    },
+    {
+      "id": "release_artifact.3",
+      "handler": "PROPOSED.release_artifact.3",
+      "instruction": "Activate version atomically where supported; retain tested rollback including DB compatibility"
+    }
+  ],
+  "outputs": [
+    "release_manifest",
+    "migration_receipt",
+    "rollback_receipt"
+  ],
+  "qualification_criteria": [
+    "Artifact identity corresponds to reviewed revision; an archive download alone is not update qualification"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

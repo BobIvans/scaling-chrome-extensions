@@ -1,0 +1,122 @@
+[
+  {
+    "id": "R01",
+    "owner": "WS-002",
+    "fixture": "Two START with same key + UI double-click/network timeout",
+    "independent_oracle": "exactly one job and snapshot, same ID after restart",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "R02",
+    "owner": "WS-002",
+    "fixture": "HEAD changes mid-scan; revocation; cancel then process restart",
+    "independent_oracle": "SOURCE_DRIFT/BLOCKED/CANCELED remain separate; no mixed commit or revived job",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "R03",
+    "owner": "WS-002",
+    "fixture": "Git tree exceeds old enumeration budget; NUL/path oddities; kill subprocess",
+    "independent_oracle": "all entries accounted or explicit error; bounded RSS; no partial COMPLETE",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "R04",
+    "owner": "WS-003",
+    "fixture": "21+ snapshots, 21+ delta paths, more than 39 parts",
+    "independent_oracle": "iterate to EOF with complete distinct IDs, last source and last chunk recover",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "R05",
+    "owner": "WS-003",
+    "fixture": "Disk full and crash before/after part publish; damaged completed part",
+    "independent_oracle": "no partial success; staged recovery/hash verification; no duplicated output",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "R06",
+    "owner": "WS-006",
+    "fixture": "Change/delete/rename plus parser/policy change and unresolved edge",
+    "independent_oracle": "precise invalidation, conservative uncertainty, clean/incremental equivalence",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "R07",
+    "owner": "WS-006",
+    "fixture": "Same bytes from two origins, corrupt derived cache, eviction",
+    "independent_oracle": "single immutable object, two provenance links, raw evidence retained",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "D01",
+    "owner": "WS-009",
+    "fixture": "PDF/DOCX/XLSX/PPTX golden corpus: negative numbers, units, merged cells",
+    "independent_oracle": "page/cell/slide clicks resolve exact original version; unsupported mapping UNKNOWN",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "D02",
+    "owner": "WS-009",
+    "fixture": "Scanned and password PDF, partial page failure and correction",
+    "independent_oracle": "OCR derived label; original immutable; gap/partial state, no false COMPLETE",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "M01",
+    "owner": "WS-010",
+    "fixture": "RU/EN/code-switch, silence, overlapping speakers and transcript correction",
+    "independent_oracle": "time range opens exact media; UNKNOWN speaker/segment; ASR original retained",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "M02",
+    "owner": "WS-010",
+    "fixture": "Offline/no external grant; cancel/restart at segment boundary",
+    "independent_oracle": "media local, cursor survives, no duplicate source version",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "W01",
+    "owner": "WS-011",
+    "fixture": "Multi-page GitHub PR/issues/review/CI attempt history with 429 and timeout",
+    "independent_oracle": "checkpoint/backoff to explicit EOF; raw responses and failures preserved",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "W02",
+    "owner": "WS-011",
+    "fixture": "Web revision/RSS repost and inaccessible page",
+    "independent_oracle": "history retained; syndication links original; no match distinct from inaccessible",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "X01",
+    "owner": "ALL",
+    "fixture": "Cross-source search→citation→open exact original after restart",
+    "independent_oracle": "source_id/version and coordinate stable; UNKNOWN remains visible",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  },
+  {
+    "id": "X02",
+    "owner": "ALL",
+    "fixture": "Windows 11 Dell 16 GB representative large corpus cold/warm",
+    "independent_oracle": "record peak RSS, elapsed time, disk, page counts, UI responsiveness; no invented threshold",
+    "receipt_status": "NOT_RUN",
+    "receipt_path": null
+  }
+]

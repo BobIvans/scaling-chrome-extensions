@@ -1,0 +1,30 @@
+ПРИЁМКА НА DELL WINDOWS 11
+1. Python 3.11+ с Tcl/Tk, py -3 -m tkinter открывает окно.
+2. START_DESKTOP.cmd → выбрать library вне repo.
+3. Ваш ZIP около 4 MB → учтены все entries, полные пути различимы.
+4. Export → SHA оригинального ZIP и всех originals совпадают; files.jsonl counts.
+5. Проверить RAW_ONLY/ERROR, не выдавать их за text reviewed.
+6. STOP во время ZIP scan → закрыть/reopen → resume того же snapshot.
+7. Поиск и заметки переживают restart.
+8. conversations.json → user/assistant export, ветвления и media gaps учтены.
+9. Импорт локальной папки → VS Code/PowerShell открываются в выбранном каталоге.
+10. По желанию один небольшой API request с доступной моделью → receipt.
+
+АКТУАЛЬНЫЕ ПРОБЕЛЫ
+Нативный exe/installer, UI visual acceptance и Windows execution NOT_RUN.
+Не реализованы: Notion-style block editing, smart collections, cross-source graph,
+SCE DB migration, exact tokenization, semantic AST/dependency chunks в прототипе,
+OCR/ASR/recursive archive extraction, API tools, provider switcher, Laya runtime,
+full agent executor, cloud sync, live collaboration, автоматический bot launch.
+Code-smells audit настоящего studious-pancake не выполнялся: исходники не приложены.
+Тест 333 файлов >4 MB проверяет снятие старых caps, не масштаб в миллионы файлов.
+Поиск FTS работает по chunk и может пропустить фразу на границе двух chunks.
+Маленькие TXT parts имеют metadata boundary, но не каждый part повторяет header
+продолжающегося файла; используйте порядок частей/index. Semantic pack compiler
+с повторяемыми source headers остаётся roadmap.
+SQLite/object store не является encrypted vault. Для облачной синхронизации
+не копировать живой WAL как backup; нужен consistent snapshot/export.
+
+ЧЕСТНОЕ ОПРЕДЕЛЕНИЕ ГОТОВНОСТИ
+Code exists ≠ tested on Dell ≠ integrated into SCE ≠ production ≠ financially ready.
+evidence/TEST_RESULTS.txt содержит реальный локальный результат, без live API.

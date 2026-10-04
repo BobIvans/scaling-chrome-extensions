@@ -1,0 +1,170 @@
+[
+  {
+    "id": "bot.qualification.wrapper",
+    "source": "G08",
+    "path": "scripts/run_occ_memory_qualification.py",
+    "read_line_range": [
+      1,
+      40
+    ],
+    "argv": [
+      "<reviewed-python>",
+      "scripts/run_occ_memory_qualification.py",
+      "--request",
+      "<operator-owned-request>",
+      "--operator-profile",
+      "<operator-owned-profile>"
+    ],
+    "notes": "Use canonical wrapper. Exit 3 can be domain BLOCKED, not generic transport failure.",
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0"
+  },
+  {
+    "id": "bot.status",
+    "source": "G10",
+    "path": "src/qualification_report.py",
+    "read_line_range": [
+      1,
+      240
+    ],
+    "argv": [
+      "<installed-reviewed-flashloan-bot>",
+      "status",
+      "--json"
+    ],
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0"
+  },
+  {
+    "id": "bot.capabilities",
+    "source": "G10",
+    "path": "src/qualification_report.py",
+    "read_line_range": [
+      1,
+      240
+    ],
+    "argv": [
+      "<installed-reviewed-flashloan-bot>",
+      "capabilities",
+      "--json"
+    ],
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0"
+  },
+  {
+    "id": "bot.config.doctor",
+    "source": "G10",
+    "path": "src/qualification_report.py",
+    "read_line_range": [
+      1,
+      240
+    ],
+    "argv": [
+      "<installed-reviewed-flashloan-bot>",
+      "config",
+      "doctor",
+      "--json"
+    ],
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0"
+  },
+  {
+    "id": "bot.runtime-admission",
+    "source": "G10",
+    "path": "src/qualification_report.py",
+    "read_line_range": [
+      1,
+      240
+    ],
+    "argv": [
+      "<installed-reviewed-flashloan-bot>",
+      "runtime-admission",
+      "--command",
+      "flashloan-bot.run",
+      "--mode",
+      "paper",
+      "--json"
+    ],
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0"
+  },
+  {
+    "id": "bot.paper-shadow",
+    "source": "G10",
+    "path": "src/qualification_report.py",
+    "read_line_range": [
+      1,
+      240
+    ],
+    "argv": [
+      "<installed-reviewed-flashloan-bot>",
+      "paper-shadow",
+      "--journal-path",
+      "<runner-owned-journal>",
+      "--json"
+    ],
+    "notes": "Only after canonical preflights. Not a standalone live permit.",
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0"
+  },
+  {
+    "id": "sce.qualification.adapter",
+    "source": "G07",
+    "path": "agent-bridge/qualification_adapter.py",
+    "read_line_range": null,
+    "argv": [
+      "<reviewed-python>",
+      "-I",
+      "-X",
+      "utf8",
+      "agent-bridge/qualification_adapter.py",
+      "--profile",
+      "<operator-profile>"
+    ],
+    "stdin": "typed qualification.inspect request; see source adapter docs",
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396"
+  },
+  {
+    "id": "sce.qualification.adapter.tests",
+    "source": "G07",
+    "path": "agent-bridge/QUALIFICATION_ADAPTER_RU.md",
+    "read_line_range": null,
+    "argv": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "agent-bridge",
+      "-p",
+      "test_qualification_adapter.py",
+      "-v"
+    ],
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396"
+  },
+  {
+    "id": "sce.native.tests",
+    "source": "G07",
+    "path": "agent-bridge/QUALIFICATION_ADAPTER_RU.md",
+    "read_line_range": null,
+    "argv": [
+      "node",
+      "--test",
+      "agent-bridge/*.test.mjs"
+    ],
+    "notes": "Wildcard expansion/runtime compatibility on Windows not tested here.",
+    "status": "DISCOVERED_NOT_RUN_NOT_AUTHORIZED",
+    "authority": "CODE_OR_DOC_DISCOVERY_ONLY",
+    "source_commit": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396"
+  }
+]

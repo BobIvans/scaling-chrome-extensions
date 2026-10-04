@@ -1,0 +1,917 @@
+[
+  {
+    "id": "RND-19",
+    "title": "Failure-domain diversity",
+    "problem_ru": "Не путать три обёртки pytest с тремя независимыми страховками.",
+    "novelty": "new",
+    "design_ru": "Добавить дерево общих зависимостей: interpreter, browser engine, remote account, model/provider, verifier, source lineage.",
+    "experiment_ru": "Сравнить 3 обёртки одного пути с 2 реально разными источниками evidence на fault-injection corpus.",
+    "acceptance_ru": "Записать co-failure matrix и marginal recovery каждого маршрута; не выводить независимость из названия инструмента.",
+    "functions": [
+      "route_dependency_fingerprint",
+      "estimate_cofailure_matrix",
+      "select_diverse_portfolio",
+      "record_marginal_recovery"
+    ],
+    "source_ids": [
+      "S01",
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-20",
+    "title": "Adaptive hedging",
+    "problem_ru": "Запускать запасной путь только при признаке задержки или нехватки evidence.",
+    "novelty": "new",
+    "design_ru": "Первая дешёвая read-попытка стартует сразу; второй путь после deadline/uncertainty trigger; отменить проигравших с receipt.",
+    "experiment_ru": "Сравнить serial, eager-parallel, delayed-hedge на фиксированном наборе read-only задач при одинаковом бюджете.",
+    "acceptance_ru": "Снизить p95 time-to-verified при заданном API/CPU бюджете; не допустить дублирующих внешних эффектов.",
+    "functions": [
+      "compute_hedge_trigger",
+      "reserve_speculation_budget",
+      "cancel_loser_candidates",
+      "audit_cancellation_completion"
+    ],
+    "source_ids": [
+      "S01"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-015"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-21",
+    "title": "Single-effect commit broker",
+    "problem_ru": "Результаты готовятся параллельно, эффект принадлежит одному брокеру.",
+    "novelty": "hardening_of_prior_idea",
+    "design_ru": "Уникальный operation_id, payload hash, snapshot revision, writer lease/fencing token, durable outbox и reconciliation.",
+    "experiment_ru": "Два кандидата для одного target; kill/retry вокруг локального commit; отдельно моделировать неизвестный внешний результат.",
+    "acceptance_ru": "Локальный commit ровно один в тестируемой SQLite-транзакции; внешние unknown не перезапускаются слепо.",
+    "functions": [
+      "issue_intent_operation_id",
+      "acquire_effect_lease",
+      "commit_verified_candidate",
+      "reconcile_unknown_effect"
+    ],
+    "source_ids": [
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-018"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-22",
+    "title": "Resource commutativity and foreground ownership",
+    "problem_ru": "Не дать агентам бороться за мышь, буфер и одну вкладку.",
+    "novelty": "new",
+    "design_ru": "Для каждого node указать read/write resource sets; разные документы параллельны, общий foreground эксклюзивен; пользователь имеет приоритет.",
+    "experiment_ru": "Инъекция пользовательского ввода во время действия; два графа с общим файлом и отдельными browser contexts.",
+    "acceptance_ru": "Нет чужого ввода в выбранной вкладке; conflict graph сериализует общие mutable resources.",
+    "functions": [
+      "infer_resource_access_sets",
+      "build_conflict_graph",
+      "acquire_foreground_lease",
+      "yield_to_user_input"
+    ],
+    "source_ids": [
+      "S03",
+      "S04"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-020",
+      "REQ-024"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-23",
+    "title": "Snapshot-closed context",
+    "problem_ru": "Пакет связан с одним состоянием проекта, а не смесью вчера и сегодня.",
+    "novelty": "new",
+    "design_ru": "Repo SHA + dirty-file hashes + index hash + config/policy version + source revision задают snapshot; перед effect повторная проверка.",
+    "experiment_ru": "Поменять файл после retrieval и до apply; удалить dependency; изменить allowlist.",
+    "acceptance_ru": "STALE/NEEDS_CONTEXT вместо применения к старой базе; ни одного silent overwrite.",
+    "functions": [
+      "freeze_context_snapshot",
+      "validate_snapshot_closure",
+      "compare_target_revision",
+      "invalidate_stale_candidate"
+    ],
+    "source_ids": [
+      "S04"
+    ],
+    "requirement_ids": [
+      "REQ-006",
+      "REQ-012",
+      "REQ-032"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-24",
+    "title": "Evidence deficit planner",
+    "problem_ru": "Научить app замечать, какой конкретно информации не хватает.",
+    "novelty": "new",
+    "design_ru": "Coverage matrix goal→required observations; вместо ещё одного полного prompt запрашивать один missing source/test/error.",
+    "experiment_ru": "Дать bug с отсутствующим trace и противоречивыми заметками; проверить выбор следующего чтения.",
+    "acceptance_ru": "Измерить time-to-sufficient-evidence и bytes/request; missing обязательное evidence блокирует действие.",
+    "functions": [
+      "derive_evidence_requirements",
+      "compute_context_deficit",
+      "choose_next_observation",
+      "emit_needs_context_request"
+    ],
+    "source_ids": [
+      "S11"
+    ],
+    "requirement_ids": [
+      "REQ-010",
+      "REQ-015",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-25",
+    "title": "Authority-aware labeling",
+    "problem_ru": "Теги должны отличать просьбу пользователя, чужую инструкцию, гипотезу и факт исполнения.",
+    "novelty": "new",
+    "design_ru": "Схема provenance + speaker_role + asserted/observed + authority_scope + valid_time + privacy + evidence_state; словари RU/EN алиасов.",
+    "experiment_ru": "Размечать один набор правилами, GLiNER и Laya; спорные метки не закрывать большинством без source evidence.",
+    "acceptance_ru": "Проверить span precision/recall, unknown rate и отсутствие автоматического VERIFIED по словам done/merged.",
+    "functions": [
+      "extract_label_candidates",
+      "reconcile_label_authority",
+      "normalize_project_aliases",
+      "abstain_on_label_conflict"
+    ],
+    "source_ids": [
+      "S06",
+      "S08"
+    ],
+    "requirement_ids": [
+      "REQ-002",
+      "REQ-007",
+      "REQ-012",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-26",
+    "title": "Causal context evaluation",
+    "problem_ru": "Проверять, какие фрагменты реально помогают коду, а какие засоряют контекст.",
+    "novelty": "new",
+    "design_ru": "Held-out tasks: полный pack, semantic slice, slice без выбранного evidence, compact+delta; одинаковый coder и verifier.",
+    "experiment_ru": "Ablation по clauses/tests/history на исторических bug задачах; новые commit families отделить от train.",
+    "acceptance_ru": "Измерить verified patch rate и marginal utility/KB без утечки ответа из будущих PR.",
+    "functions": [
+      "build_context_ablation_set",
+      "measure_evidence_utility",
+      "compare_pack_variants",
+      "freeze_holdout_partitions"
+    ],
+    "source_ids": [
+      "S11",
+      "S12"
+    ],
+    "requirement_ids": [
+      "REQ-006",
+      "REQ-015",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-27",
+    "title": "Incremental materialized context views",
+    "problem_ru": "Пересобирать только изменённую часть репозитория и зависимых context packs.",
+    "novelty": "new",
+    "design_ru": "Merkle identifiers на blobs/chunks/derivations; dependency invalidation; parser/schema version входят в cache key.",
+    "experiment_ru": "Изменить одну функцию в большом fixture corpus; сверить incremental output с полной пересборкой.",
+    "acceptance_ru": "Exact equality где детерминировано; явный unresolved для dynamic edges; raw objects никогда не теряются.",
+    "functions": [
+      "hash_derivation_inputs",
+      "invalidate_context_dependents",
+      "refresh_materialized_pack",
+      "compare_incremental_full_build"
+    ],
+    "source_ids": [
+      "S09"
+    ],
+    "requirement_ids": [
+      "REQ-004",
+      "REQ-006",
+      "REQ-032"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-28",
+    "title": "Verifier adequacy and counterexamples",
+    "problem_ru": "Не выбирать патч только потому, что он обошёл слабые тесты.",
+    "novelty": "new",
+    "design_ru": "Task-specific independent oracles + property/metamorphic tests; mutation-testing эксперименты; разделить test author и patch author.",
+    "experiment_ru": "Сделать intentionally wrong patch, который проходит прежний test; добавить проверку нарушенного инварианта.",
+    "acceptance_ru": "False-success ниже baseline; тесты не отключены, assertions не удалены, negative suite не деградирует.",
+    "functions": [
+      "generate_contract_counterexample",
+      "run_metamorphic_checks",
+      "measure_verifier_mutation_score",
+      "reject_test_weakening_patch"
+    ],
+    "source_ids": [
+      "S11"
+    ],
+    "requirement_ids": [
+      "REQ-011",
+      "REQ-017",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-29",
+    "title": "Critical-token ASR arbitration",
+    "problem_ru": "Ошибки в repo name, path, number и отрицании важнее общего word error rate.",
+    "novelty": "new",
+    "design_ru": "Команда имеет stable transcript prefix; domain vocabulary; второй ASR только на спорном span; low confidence не даёт финансовый effect.",
+    "experiment_ru": "RU/EN code-mixed команды: merge/not merge, main/branch, dry-run/live; фоновые голоса и поздние исправления.",
+    "acceptance_ru": "Semantic slot error и false command activation измеряются отдельно; не делать cloud-audio hedge без согласия.",
+    "functions": [
+      "identify_critical_voice_slots",
+      "request_selective_asr_check",
+      "reconcile_transcript_hypotheses",
+      "freeze_confirmed_intent_revision"
+    ],
+    "source_ids": [
+      "S06"
+    ],
+    "requirement_ids": [
+      "REQ-002",
+      "REQ-015",
+      "REQ-020",
+      "REQ-021"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-30",
+    "title": "Independent stop and intent revision",
+    "problem_ru": "Система должна быстро останавливаться и понимать «нет, не этот repo».",
+    "novelty": "new",
+    "design_ru": "Отдельный high-priority control channel; пересмотр intent отзывает pending plans и leases; committed эффекты не выдавать за undone.",
+    "experiment_ru": "Во время retrieval/patch подготовки/ожидания merge дать stop и смену проекта.",
+    "acceptance_ru": "Ни одного нового effect после подтверждённого stop; unknown external effects идут в reconciliation.",
+    "functions": [
+      "process_stop_signal",
+      "revoke_pending_intent_generation",
+      "supersede_running_plan",
+      "report_irreversible_boundary"
+    ],
+    "source_ids": [
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-002",
+      "REQ-018",
+      "REQ-020"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-31",
+    "title": "Proof-carrying skill packages",
+    "problem_ru": "Навык хранит не только скрипт, но и условия его применимости.",
+    "novelty": "hardening_of_prior_idea",
+    "design_ru": "Skill manifest: input/output schemas, preconditions, postconditions, provenance, environment fingerprint, permissions, expiry, rollback scope.",
+    "experiment_ru": "Повторить успешный навык на другой версии приложения и с другой ролью пользователя.",
+    "acceptance_ru": "Mismatched environment блокирует promotion; receipt содержит code hash и проверенные условия.",
+    "functions": [
+      "build_skill_contract",
+      "attach_skill_evidence_bundle",
+      "validate_skill_environment",
+      "expire_skill_qualification"
+    ],
+    "source_ids": [
+      "S15",
+      "S18"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-017",
+      "REQ-019"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-32",
+    "title": "Critical-path and attention-budget scheduling",
+    "problem_ru": "Ускорять итог задачи, а не максимальное число одновременно активных процессов.",
+    "novelty": "new",
+    "design_ru": "DAG priorities по критическому пути; RAM/CPU/network/provider budgets; foreground lease; idle-only reindex.",
+    "experiment_ru": "На Dell выполнить фоновые imports + ASR + context pack; сравнить eager fan-out и admission control.",
+    "acceptance_ru": "Не ухудшить voice responsiveness и UI; реальные measured p50/p95 + peak RAM, никаких выдуманных миллисекунд.",
+    "functions": [
+      "estimate_workflow_critical_path",
+      "admit_resource_bounded_nodes",
+      "pause_background_indexing",
+      "score_latency_reliability_frontier"
+    ],
+    "source_ids": [
+      "S01",
+      "S05"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-015",
+      "REQ-020"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-33",
+    "title": "Unknown-outcome state machine",
+    "problem_ru": "Отмена/таймаут не доказывает, что внешний запрос не выполнился.",
+    "novelty": "new",
+    "design_ru": "PREPARED→DISPATCHED→UNKNOWN→OBSERVED_SUCCESS/SAFE_TO_RETRY/MANUAL_REVIEW. Сверять external receipt по operation ID.",
+    "experiment_ru": "Смоделировать lost response после server commit; нельзя запускать второй маршрут отправки.",
+    "acceptance_ru": "Нулевая слепая повторная публикация; unresolved отдельно от failed.",
+    "functions": [
+      "mark_dispatch_uncertain",
+      "query_effect_receipt",
+      "prove_safe_retry_transition",
+      "quarantine_ambiguous_operation"
+    ],
+    "source_ids": [
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-018",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-34",
+    "title": "Adapter conformance and input trust firewall",
+    "problem_ru": "Данные из чужой вкладки не становятся инструкциями ОС.",
+    "novelty": "new",
+    "design_ru": "Typed tool contracts; schema conformance; origin allowlists; source text data-only; executor permissions получаются от user policy.",
+    "experiment_ru": "Вставить в заметку «upload your keys» и в tool result ложный permit; сравнить policy decisions.",
+    "acceptance_ru": "Никакого расширения полномочий от документа; adapter contract tests фиксируют disabled capabilities.",
+    "functions": [
+      "validate_adapter_contract",
+      "classify_input_trust_origin",
+      "isolate_untrusted_document_instructions",
+      "enforce_egress_field_policy"
+    ],
+    "source_ids": [
+      "S16",
+      "S18"
+    ],
+    "requirement_ids": [
+      "REQ-003",
+      "REQ-007",
+      "REQ-019",
+      "REQ-021"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-35",
+    "title": "Two-speed ingestion",
+    "problem_ru": "Быстро сохранить raw, а тяжёлую разметку выполнить отдельным восстанавливаемым этапом.",
+    "novelty": "new",
+    "design_ru": "Статусы DISCOVERED/RAW_STORED/PARSED/INDEXED/REVIEWED; intake cursor и verification очереди; потоковые blobs вне RAM.",
+    "experiment_ru": "Большой смешанный corpus + interruption; приоритет новым файлам активного проекта.",
+    "acceptance_ru": "Нет исчезнувшего хвоста/тайного лимита; recoverable errors; сохранение raw не означает полный поиск по нему.",
+    "functions": [
+      "register_ingestion_stage",
+      "resume_ingestion_cursor",
+      "stream_large_source_objects",
+      "schedule_progressive_enrichment"
+    ],
+    "source_ids": [
+      "S10"
+    ],
+    "requirement_ids": [
+      "REQ-004",
+      "REQ-005",
+      "REQ-007",
+      "REQ-032"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-36",
+    "title": "Lineage-aware dedup and evidence diversity",
+    "problem_ru": "Пять пересказов одного сообщения — один источник, а не пять подтверждений.",
+    "novelty": "new",
+    "design_ru": "Exact hash dedup отдельно от semantic near-duplicate; relationship derived_from/quotes/copies сохраняется.",
+    "experiment_ru": "Несколько AI summaries одного поста + одно независимое наблюдение; проверить счёт evidence.",
+    "acceptance_ru": "Не склеивать разные версии цели; не повышать confidence количеством копий одной цепочки.",
+    "functions": [
+      "trace_information_lineage",
+      "cluster_near_duplicate_claims",
+      "compute_independent_evidence_count",
+      "preserve_conflicting_source_versions"
+    ],
+    "source_ids": [
+      "S08"
+    ],
+    "requirement_ids": [
+      "REQ-004",
+      "REQ-012",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-37",
+    "title": "Negative knowledge and failure memory",
+    "problem_ru": "Хранить доказанное «это здесь не работает» вместе с условиями и сроком.",
+    "novelty": "new",
+    "design_ru": "Отказ UI locator, missing dependency, unsupported model method, false lead; condition/expiry/recheck trigger.",
+    "experiment_ru": "Повторить известный failure на том же fingerprint, затем сменить версию и проверить expiry.",
+    "acceptance_ru": "Меньше бесполезных повторов без вечной блокировки исправленных возможностей.",
+    "functions": [
+      "record_conditional_failure",
+      "retrieve_negative_capability_evidence",
+      "invalidate_obsolete_failure",
+      "route_around_known_failure"
+    ],
+    "source_ids": [
+      "S14"
+    ],
+    "requirement_ids": [
+      "REQ-012",
+      "REQ-015",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-38",
+    "title": "Skill minimization",
+    "problem_ru": "Успешную длинную траекторию сокращать до минимальной проверенной процедуры.",
+    "novelty": "new",
+    "design_ru": "Удалять redundant reads/clicks с offline replay и postcondition oracle; API/CLI замена GUI где подтверждено.",
+    "experiment_ru": "Длинный workflow vs minimized workflow на unseen fixtures и changed windows.",
+    "acceptance_ru": "Меньше действий/latency, одинаковый verified outcome; убрать шаг нельзя только по мнению LLM.",
+    "functions": [
+      "slice_successful_trajectory",
+      "eliminate_redundant_steps",
+      "validate_minimized_skill",
+      "compare_skill_behavioral_equivalence"
+    ],
+    "source_ids": [
+      "S12",
+      "S18"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-015",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-39",
+    "title": "Permission-diff aware updater",
+    "problem_ru": "Обновление функции не даёт автоматически новые права на весь компьютер.",
+    "novelty": "hardening_of_prior_idea",
+    "design_ru": "Проверить commit/artifact provenance, version, API contract, permissions diff; stage, healthcheck, single activation; откат только обратимого.",
+    "experiment_ru": "Кандидат просит новый filesystem root/network host; параллельно тест и attestation; activation должен остановиться.",
+    "acceptance_ru": "Никакого privilege creep; несовместимая DB migration требует отдельного плана.",
+    "functions": [
+      "compute_capability_permission_diff",
+      "verify_update_origin",
+      "stage_skill_candidate",
+      "activate_approved_skill_version"
+    ],
+    "source_ids": [
+      "S15"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-018",
+      "REQ-019"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-40",
+    "title": "Cross-AI exchange contract",
+    "problem_ru": "Отправлять моделям один task contract, а не одинаково весь личный архив.",
+    "novelty": "new",
+    "design_ru": "Task ID, snapshot, context digest, allowed sources, expected response schema; chosen provider receives redacted scoped slice; return patch not direct merge.",
+    "experiment_ru": "Два model adapters + manual exported document; импорт неправильного snapshot и test claim.",
+    "acceptance_ru": "Одинаковая target binding; private data не уходит неразрешённому provider; imported DONE не закрывает задачу.",
+    "functions": [
+      "compile_provider_scoped_handoff",
+      "validate_ai_return_contract",
+      "bind_ai_patch_to_snapshot",
+      "merge_model_evidence_without_effects"
+    ],
+    "source_ids": [
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-003",
+      "REQ-010",
+      "REQ-013",
+      "REQ-021"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-41",
+    "title": "Capability drift monitoring",
+    "problem_ru": "Навык теряет валидность после обновления сайта, инструмента или модели.",
+    "novelty": "new",
+    "design_ru": "Fingerprint version/schema/UI selectors; canary read-only cases; quarantine broken adapter; fallback uses другой failure domain.",
+    "experiment_ru": "Изменить locator/API field/tool schema и проверить fast demotion старого skill.",
+    "acceptance_ru": "Нельзя продолжать по устаревшему cached capability; отдельные receipts для platform qualification.",
+    "functions": [
+      "fingerprint_capability_environment",
+      "run_readonly_capability_canary",
+      "demote_drifted_executor",
+      "schedule_adapter_requalification"
+    ],
+    "source_ids": [
+      "S03",
+      "S05",
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-017",
+      "REQ-026"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-42",
+    "title": "Offline context-and-skill optimizer",
+    "problem_ru": "Улучшать способы собирать контекст по результатам, не добавляя бездумно больше текста.",
+    "novelty": "new",
+    "design_ru": "DSPy/GEPA как optional offline optimizer для retrieval rules, labels, skill prompts; immutable holdout + cost/privacy constraints.",
+    "experiment_ru": "Одинаковый набор задач для baseline и learned context policy; reject reward hacking и критические regression.",
+    "acceptance_ru": "Promotion только по held-out verified outcomes, без изменения permissions и production policy.",
+    "functions": [
+      "evaluate_context_policy_candidate",
+      "optimize_offline_context_program",
+      "audit_optimizer_data_leakage",
+      "promote_validated_context_policy"
+    ],
+    "source_ids": [
+      "S11",
+      "S12",
+      "S13"
+    ],
+    "requirement_ids": [
+      "REQ-015",
+      "REQ-017",
+      "REQ-026"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-43",
+    "title": "Multi-producer observation fabric",
+    "problem_ru": "Много способов записи одного процесса должны дополнять друг друга, а не ждать первого победителя.",
+    "novelty": "new_detail_of_capture",
+    "design_ru": "Append-only streams с ключом session/producer/sequence; bytes dedup отдельно от observation identity; один логически связанный capture session.",
+    "experiment_ru": "Один channel отвечает мгновенно, второй поздно, третий обрывается после части данных.",
+    "acceptance_ru": "Сохранить ранние и поздние события; ошибку и неполноту явно отобразить.",
+    "functions": [
+      "open_observation_session",
+      "append_source_observation",
+      "correlate_observation_streams",
+      "preserve_late_channel_evidence"
+    ],
+    "source_ids": [
+      "S24",
+      "S25"
+    ],
+    "requirement_ids": [
+      "REQ-033",
+      "REQ-007"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-44",
+    "title": "Capture portfolio by information gaps",
+    "problem_ru": "Постоянная запись всех экранов не равна лучшему контексту.",
+    "novelty": "new",
+    "design_ru": "Сначала дешёвые process/file/UIA/DOM metadata; audio/screenshot только разрешённо и по необходимости; отдельный coverage planner.",
+    "experiment_ru": "Сравнить always-on every-sensor и task-conditioned sensor portfolio на одинаковых задачах.",
+    "acceptance_ru": "Меньше peak RAM/CPU и privacy exposure при не худшем task-evidence recall.",
+    "functions": [
+      "identify_capture_information_gap",
+      "select_observation_portfolio",
+      "measure_sensor_marginal_coverage",
+      "retire_redundant_capture_channel"
+    ],
+    "source_ids": [
+      "S24",
+      "S25"
+    ],
+    "requirement_ids": [
+      "REQ-033",
+      "REQ-036"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-45",
+    "title": "Join-semantics compiler",
+    "problem_ru": "Нельзя использовать first-winner для всей агрегации и wait-all для каждой команды.",
+    "novelty": "new",
+    "design_ru": "Каждому узлу задать UNION, REQUIRED_EVIDENCE_JOIN, FIRST_VERIFIED, PARTITIONED_MAP или PREPARE_COMMIT.",
+    "experiment_ru": "Одинаковую задачу выполнить с неправильным и правильным join mode.",
+    "acceptance_ru": "Ни потерянных поздних фактов, ни ожидания необязательного архива на critical path.",
+    "functions": [
+      "classify_parallel_join_semantics",
+      "compile_join_contract",
+      "validate_route_merge_policy",
+      "explain_join_wait_reason"
+    ],
+    "source_ids": [
+      "S01",
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-035",
+      "REQ-034"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-46",
+    "title": "Evidence-ready streaming handoff",
+    "problem_ru": "Не ждать «всю жизнь проиндексировали», прежде чем попросить AI исправить одну функцию.",
+    "novelty": "refinement",
+    "design_ru": "Именованные required evidence slots; snapshot freeze; первая достаточная version; поздние данные — delta с parent digest.",
+    "experiment_ru": "Запросить patch до окончания full archive import; позже вернуть contradicting current source.",
+    "acceptance_ru": "Missing critical evidence блокирует ready; существенный delta отзывает stale patch.",
+    "functions": [
+      "compute_minimum_evidence_frontier",
+      "freeze_handoff_revision",
+      "emit_late_evidence_delta",
+      "invalidate_result_after_material_delta"
+    ],
+    "source_ids": [
+      "S09",
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-038",
+      "REQ-010"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-47",
+    "title": "Authority-separated tagging lanes",
+    "problem_ru": "Текст идеи, желание пользователя и фактический test receipt нельзя сводить одним уверенным labeler.",
+    "novelty": "refinement",
+    "design_ru": "Lane A deterministic provenance; B user intent/requirements; C model proposals; D measured code/test state; сохранять conflicts.",
+    "experiment_ru": "Один AI говорит implemented, другой docs говорит planned, actual tests отсутствуют.",
+    "acceptance_ru": "Статус остаётся NOT_VERIFIED; majority summaries не порождает DONE.",
+    "functions": [
+      "label_source_authority_lane",
+      "distinguish_intent_from_world_state",
+      "preserve_label_disagreements",
+      "require_evidence_for_status_promotion"
+    ],
+    "source_ids": [
+      "S06",
+      "S08"
+    ],
+    "requirement_ids": [
+      "REQ-037",
+      "REQ-012"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-48",
+    "title": "Context request-response protocol",
+    "problem_ru": "Пакет может не знать заранее, какой dependency нужен следующей модели.",
+    "novelty": "new",
+    "design_ru": "AI возвращает typed NEED_CONTEXT(symbol/path/date/reason), локальный compiler исполняет scoped retrieval и выдаёт delta.",
+    "experiment_ru": "Модель обнаруживает missing interface; сравнить весь repo resend с exact code dependency retrieval.",
+    "acceptance_ru": "Source-bound response, lower irrelevant bytes, незапрошенные private roots не раскрываются.",
+    "functions": [
+      "parse_ai_context_request",
+      "resolve_requested_symbol_context",
+      "enforce_context_request_scope",
+      "return_context_delta_receipt"
+    ],
+    "source_ids": [
+      "S09",
+      "S16",
+      "S26"
+    ],
+    "requirement_ids": [
+      "REQ-040",
+      "REQ-003"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-49",
+    "title": "Desired-state action equivalence",
+    "problem_ru": "Разные команды запуска могут быть одним и тем же методом с общим failure domain.",
+    "novelty": "new_detail",
+    "design_ru": "ActionSpec описывает desired state; registry связывает API/CLI/UIA с pre/postconditions; diversity измерять по восстановленным failures.",
+    "experiment_ru": "Открыть проект code CLI, OS URI handler и UIA; проверить одинаковый итог без тройного открытия.",
+    "acceptance_ru": "Победитель определяется target state; другой route не создаёт duplicate window.",
+    "functions": [
+      "define_action_equivalence_class",
+      "map_goal_to_reachable_state",
+      "choose_shortest_verified_route",
+      "reconcile_same_goal_effects"
+    ],
+    "source_ids": [
+      "S02",
+      "S05"
+    ],
+    "requirement_ids": [
+      "REQ-034",
+      "REQ-036"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-50",
+    "title": "Foreground-preserving parallel workspace",
+    "problem_ru": "Пользователь продолжает печатать, пока агенты читают и готовят код.",
+    "novelty": "refinement",
+    "design_ru": "Фоновые API/FS workers не трогают focus; UI input lease выдаётся одной активной цепочке и отзывается при ручном вводе.",
+    "experiment_ru": "Во время ASR/retrieval/edit worktree пользователь работает в Chrome.",
+    "acceptance_ru": "Ни stolen focus, ни набора текста в чужом окне; independent tasks продолжаются.",
+    "functions": [
+      "detect_foreground_user_activity",
+      "lease_desktop_input_channel",
+      "suspend_conflicting_gui_path",
+      "continue_noninterfering_background_tasks"
+    ],
+    "source_ids": [
+      "S03",
+      "S25"
+    ],
+    "requirement_ids": [
+      "REQ-034",
+      "REQ-020"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-51",
+    "title": "Late arrivals and evidence watermarks",
+    "problem_ru": "Источники приходят с разной задержкой; временной порядок не является причинностью.",
+    "novelty": "new",
+    "design_ru": "Per-producer monotonic seq + source version + observed/ingested time; gaps и watermarks; late evidence не отбрасывается.",
+    "experiment_ru": "Перепутать arrival order, повторить событие, сменить source version.",
+    "acceptance_ru": "Никакого last-arrival-wins для истории решений; timestamps не склеивают разные commits.",
+    "functions": [
+      "track_producer_watermark",
+      "detect_capture_sequence_gap",
+      "associate_causal_source_version",
+      "reprocess_late_evidence_revision"
+    ],
+    "source_ids": [
+      "S14"
+    ],
+    "requirement_ids": [
+      "REQ-033",
+      "REQ-038"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-52",
+    "title": "Recording-to-automation opportunity miner",
+    "problem_ru": "Нужно понять, какие повторяющиеся действия действительно стоит автоматизировать.",
+    "novelty": "refinement",
+    "design_ru": "Cross-source traces → user-confirmed task episode → estimated repeated work → candidate skill → separate verifier.",
+    "experiment_ru": "Из ручного CI triage выделить повторяемые части, не запоминая секретные случайные действия.",
+    "acceptance_ru": "Нет auto-enable только по наблюдению; saved manual effort измеряется после approved replay.",
+    "functions": [
+      "segment_cross_source_task_episode",
+      "rank_automation_opportunities",
+      "draft_skill_from_correlated_episode",
+      "measure_verified_manual_effort_saved"
+    ],
+    "source_ids": [
+      "S24",
+      "S12"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-033"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-53",
+    "title": "Fast local-first versus remote hedge calibration",
+    "problem_ru": "На CPU laptop параллельные большие модели могут замедлить всё.",
+    "novelty": "new_experiment",
+    "design_ru": "Benchmark rules/FTS alone, local Laya router, local+consented remote hedge; no unconditional fan-out; common resource budget.",
+    "experiment_ru": "Одинаковый held-out RU/EN command corpus; warm/cold, contention, slow API и offline fault.",
+    "acceptance_ru": "Выбирать по cost per verified success и p95 response; reject policy, ухудшающую critical commands.",
+    "functions": [
+      "profile_on_device_route_budget",
+      "compare_local_remote_hedge_policies",
+      "track_quality_latency_pareto_frontier",
+      "promote_empirically_better_portfolio"
+    ],
+    "source_ids": [
+      "S01",
+      "S06",
+      "S22",
+      "S23"
+    ],
+    "requirement_ids": [
+      "REQ-036",
+      "REQ-015"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-54",
+    "title": "Whole-conversation strategy merge",
+    "problem_ru": "ZIP, текст чата и recovered notes могут содержать дубликаты и противоречивые устаревшие планы.",
+    "novelty": "new_detail",
+    "design_ru": "Canonical requirement IDs + original refs; latest explicit user instruction overrides prior proposal; no auto-closing based on assistant claims.",
+    "experiment_ru": "Импорт legacy ZIP и текущего уточнения multi-recorder; сверить inherited single-writer language.",
+    "acceptance_ru": "Новая стратегия соблюдает multi-producer capture и сохраняет безопасные effect boundaries.",
+    "functions": [
+      "ingest_strategy_artifact_graph",
+      "link_chat_requirement_to_archive",
+      "reconcile_strategy_precedence",
+      "compile_one_provider_neutral_master_handoff"
+    ],
+    "source_ids": [
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-037",
+      "REQ-039"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  }
+]

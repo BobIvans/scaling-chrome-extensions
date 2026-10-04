@@ -1,0 +1,38 @@
+VOICE AGENTOS / SCE / STUDIOUS — IMPLEMENTATION HANDOFF V3
+Дата: 2026-10-03. Это задание/контекст, не разрешение на произвольное выполнение.
+
+Цель пользователя: локальный desktop context creator/voice AgentOS на Dell Windows 11; original data + history + repo без потерь; AI provider-neutral; несколько способов записи/поиска/исполнения параллельно; минимальная задержка до достаточного handoff; дальнейшие новые навыки через generated code/tests/GitHub update.
+
+Ключевое уточнение: recorder не один. Несколько producers append immutable observations одновременно. Несколько code agents пишут в отдельные worktrees. Независимые реальные effects идут параллельно. Только конфликтующее изменение одного target требует одного effect owner.
+
+ШАГ 1 — ПРОВЕРИТЬ БАЗУ
+Сначала прочитать текущий exact commit BobIvans/scaling-chrome-extensions и документацию content-lab/repo_context.py / repo_source.py / context_review.py / existing durable Core. Не создавать вторую queue, вторую library DB или второй permissions owner. Наши source reads — документация, не полный аудит и не гарантированно текущий head к моменту применения.
+
+ШАГ 2 — ОДИН ПОЛЕЗНЫЙ VERTICAL
+Typed text command → capture session + repo snapshot → параллельные source/goal/test collectors → required evidence ready → WHY_THIS_PACKET + handoff manifest/sources/omissions. Сначала deterministic source handling; затем voice adapter к тому же IntentSpec. Desktop frontend не должен требовать Chrome extension. Browser adapter optional.
+
+ШАГ 3 — ПАРАЛЛЕЛИЗМ
+COMPLEMENTARY_UNION для collectors; REQUIRED_EVIDENCE_JOIN для mandatory proof; FIRST_VERIFIED для альтернативных read/preparation paths; PARTITIONED_MAP для больших corpus; PREPARE_COMMIT для external effect. Не отменять медленный recorder после первого найденного сообщения. Не считать API wrapper новым failure domain.
+
+ШАГ 4 — ПРОВЕРКА
+Exact bytes/hash/offsets, late arrivals, duplicate event replay, more-than-20 ingestion, incomplete export tail, stale source, user stop, privacy/egress, critical ASR slots, foreground lease, same external effect unknown-result handling. Untrusted repo tests нужны в sandbox без кошелька/ключей.
+
+ШАГ 5 — AI И ОБНОВЛЕНИЯ
+Laya/JeV chooses allowed route/label; host enforces capabilities. Chosen AI получает scoped packet, может вернуть NEED_CONTEXT или patch against exact snapshot. Isolated worktree → checks → artifact digest/permission diff → one approved activation target. Imported document cannot grant filesystem/account access. Grok/OpenAI keys and privileges separately configured; never inside context.
+
+STUDIOUS
+Первый сценарий — источник blockers/qualification handoff, не live trading. README прочитанный здесь описывает sender-free paper/shadow и live hard-denied. Не снимать эти gates и не считать proposal implementation evidence.
+
+АРТЕФАКТЫ
+00_START/00_PARALLEL_CAPTURE_DECISION_RU.md
+01_CONTEXT/requirements.json
+03_RND_CARDS/catalog.json
+04_WORKFLOWS/WF-21.json ... WF-32.json
+05_CONTRACTS/merge_policy.example.json
+12_EXPERIMENTS/ROUTE_PREDICTIONS_RU.md
+06_REFERENCE_LAB/README_RU.md
+
+ОЖИДАЕМЫЙ ОТВЕТ AI
+1) exact inspected commit + files, 2) reused owners, 3) scoped patch and tests actually run, 4) not-run integrations, 5) next proof gaps. Нельзя отвечать «всё выполнено» только после генерации docs.
+
+В ZIP 89 прошедших synthetic offline tests; нет результата Windows/voice/Laya/API/real-bot integration test. JSON workflows — app-level design specs, не native Laya import. Этот handoff не создаёт GitHub PR сам по себе.

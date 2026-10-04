@@ -1,0 +1,30 @@
+{
+  "schema_version": "plan.v1",
+  "plan_id": "plan-1",
+  "intent_id": "intent-1",
+  "intent_revision": 1,
+  "semantic_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "canonicalizer_version": "1",
+  "registry_version": "1",
+  "template_version": "1",
+  "scope_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "steps": [
+    {
+      "step_id": "step-1",
+      "capability_ref": "fixture:prepare",
+      "capability_version": "1",
+      "depends_on": [],
+      "input_refs": [
+        "fixture:source"
+      ],
+      "expected_output_criteria": [
+        "packet manifest hashes match"
+      ],
+      "effect_kind": "LOCAL_READ"
+    }
+  ],
+  "state": "COMPILED",
+  "unrecognized_executable_argv": [
+    "fixture-not-executable"
+  ]
+}

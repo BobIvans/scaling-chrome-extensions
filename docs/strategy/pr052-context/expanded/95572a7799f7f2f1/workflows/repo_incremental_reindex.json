@@ -1,0 +1,16 @@
+{
+  "id": "repo_incremental_reindex",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "git_diff",
+    "find_changed_files",
+    "reparse_changed",
+    "preserve_stable_ids",
+    "supersede_changed",
+    "walk_reverse_dependencies",
+    "invalidate_derived",
+    "rebuild_indexes",
+    "receipt"
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce-studious:proposed:EconomicAmount:v1",
+  "title": "EconomicAmount proposed v1",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "asset_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "network": {
+      "type": "string",
+      "minLength": 1
+    },
+    "atomic_amount": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)$"
+    },
+    "decimals": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 38
+    },
+    "cost_kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "included_in_quote": {
+      "type": "boolean"
+    },
+    "valuation_anchor_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "assumption_version": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "asset_id",
+    "network",
+    "atomic_amount",
+    "decimals",
+    "cost_kind",
+    "included_in_quote",
+    "valuation_anchor_ref",
+    "assumption_version"
+  ]
+}

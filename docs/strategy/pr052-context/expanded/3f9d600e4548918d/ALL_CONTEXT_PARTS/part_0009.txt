@@ -1,0 +1,3649 @@
+",
+    "json_pointer": "/9",
+    "original_record": {
+      "id": "EXP-010",
+      "area": "archive",
+      "title_ru": "Dirty workspace vs commit",
+      "hypothesis_ru": "Два явных snapshot scope предотвращают ошибки анализа незакоммиченных изменений как части SHA.",
+      "baseline_ru": "Чтение working tree с прежним commit label",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G05"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "source_byte_coverage",
+          "path_inventory_coverage",
+          "reconstruction_hash_match",
+          "explicit_missing_count",
+          "peak_RSS",
+          "recovery_success"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-011",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/10",
+    "original_record": {
+      "id": "EXP-011",
+      "area": "routing",
+      "title_ru": "Нужна ли вообще модель",
+      "hypothesis_ru": "Точные aliases/registry покрывают частые команды дешевле LLM без ухудшения результата.",
+      "baseline_ru": "Always-LLM",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S02",
+        "S30"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-012",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/11",
+    "original_record": {
+      "id": "EXP-012",
+      "area": "routing",
+      "title_ru": "Калибровка на собственных outcomes",
+      "hypothesis_ru": "Held-out calibration снижает cost-weighted routing errors по сравнению с raw confidence.",
+      "baseline_ru": "Исходный confidence без calibration",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S03",
+        "S04"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-013",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/12",
+    "original_record": {
+      "id": "EXP-013",
+      "area": "routing",
+      "title_ru": "Иерархическое пространство действий",
+      "hypothesis_ru": "Family→skill routing надёжнее плоского выбора из сотен labels при одинаковом бюджете.",
+      "baseline_ru": "Flat action catalog",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S03",
+        "S04"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-014",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/13",
+    "original_record": {
+      "id": "EXP-014",
+      "area": "routing",
+      "title_ru": "Чувствительность к именам labels",
+      "hypothesis_ru": "Перестановка/переименование опций обнаруживает label bias до выдачи реальных capabilities.",
+      "baseline_ru": "Одна фиксированная форма вопроса",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S03"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-015",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/14",
+    "original_record": {
+      "id": "EXP-015",
+      "area": "routing",
+      "title_ru": "Эскалация по цене ошибки",
+      "hypothesis_ru": "Cost-aware abstention уменьшает вредные вызовы без always-expensive reasoning.",
+      "baseline_ru": "Единый confidence threshold для всех задач",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S01",
+        "S02"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-016",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/15",
+    "original_record": {
+      "id": "EXP-016",
+      "area": "routing",
+      "title_ru": "Unknown не становится False",
+      "hypothesis_ru": "Многозначная evidence-логика уменьшает ложные решения при missing/stale данных.",
+      "baseline_ru": "Булевое ready/not-ready без причины",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G04",
+        "G06"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-017",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/16",
+    "original_record": {
+      "id": "EXP-017",
+      "area": "routing",
+      "title_ru": "Distillation успешного trace",
+      "hypothesis_ru": "Повторяемый workflow после компиляции в проверенный skill требует меньше модельных вызовов.",
+      "baseline_ru": "Каждый запуск планируется заново",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S06"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-018",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/17",
+    "original_record": {
+      "id": "EXP-018",
+      "area": "routing",
+      "title_ru": "Независимый verifier",
+      "hypothesis_ru": "Проверка реальных postconditions ловит больше ложных успехов, чем self-report исполнителя.",
+      "baseline_ru": "Только exit0 или ответ LLM",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S06",
+        "G07"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-019",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/18",
+    "original_record": {
+      "id": "EXP-019",
+      "area": "routing",
+      "title_ru": "Budgeted model disagreement",
+      "hypothesis_ru": "Выборочный critic полезнее постоянного model parliament по cost per verified outcome.",
+      "baseline_ru": "Всегда один агент и всегда несколько агентов",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S02"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-020",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/19",
+    "original_record": {
+      "id": "EXP-020",
+      "area": "routing",
+      "title_ru": "Prompt injection из источника",
+      "hypothesis_ru": "Effect/policy boundary блокирует инструкции из imported text независимо от router confidence.",
+      "baseline_ru": "Смешивание документа и системных инструкций",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S30",
+        "S31"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "intent_macro_F1",
+          "cost_weighted_wrong_action_rate",
+          "Brier_score",
+          "risk_coverage_curve",
+          "latency_p95",
+          "API_cost_per_verified_outcome"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-021",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/20",
+    "original_record": {
+      "id": "EXP-021",
+      "area": "voice",
+      "title_ru": "Финализация ASR перед действием",
+      "hypothesis_ru": "Ожидание stable transcript уменьшает неверные действия при самокоррекции.",
+      "baseline_ru": "Действие по первому partial transcript",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S18",
+        "S19"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-022",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/21",
+    "original_record": {
+      "id": "EXP-022",
+      "area": "voice",
+      "title_ru": "Отрицание и исправление суммы",
+      "hypothesis_ru": "Slot-aware подтверждение критичных параметров сокращает ошибки команд с «не» и числами.",
+      "baseline_ru": "Только средний WER",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S18",
+        "S19"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-023",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/22",
+    "original_record": {
+      "id": "EXP-023",
+      "area": "voice",
+      "title_ru": "Repo/API entity lexicon",
+      "hypothesis_ru": "Локальный словарь aliases улучшает intent parsing RU+English без изменения оригинальной транскрипции.",
+      "baseline_ru": "Общий ASR текст без entity mapping",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S18",
+        "S19"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-024",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/23",
+    "original_record": {
+      "id": "EXP-024",
+      "area": "voice",
+      "title_ru": "Feedback loop от собственного TTS",
+      "hypothesis_ru": "Изоляция playback/capture предотвращает повторные команды, услышанные от самого агента.",
+      "baseline_ru": "Один постоянно активный микрофонный поток",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-025",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/24",
+    "original_record": {
+      "id": "EXP-025",
+      "area": "voice",
+      "title_ru": "Контроль без голоса и мыши",
+      "hypothesis_ru": "Общий typed API позволяет выполнить ту же задачу клавиатурой/switch input без отдельной логики.",
+      "baseline_ru": "Voice-only control",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S12",
+        "S15"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-026",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/25",
+    "original_record": {
+      "id": "EXP-026",
+      "area": "voice",
+      "title_ru": "NVDA task completion",
+      "hypothesis_ru": "Semantic labels и управляемый focus уменьшают число вмешательств на реальной задаче библиотеки.",
+      "baseline_ru": "Визуально исправный UI без screen-reader test",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S15"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-027",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/26",
+    "original_record": {
+      "id": "EXP-027",
+      "area": "voice",
+      "title_ru": "UIA перед координатным кликом",
+      "hypothesis_ru": "Семантический locator устойчивее к размеру/положению окна для поддерживаемого приложения.",
+      "baseline_ru": "Абсолютные screenshot coordinates",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S12",
+        "S13",
+        "S14"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-028",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/27",
+    "original_record": {
+      "id": "EXP-028",
+      "area": "voice",
+      "title_ru": "Minimal locator repair",
+      "hypothesis_ru": "Локальный repair с postcondition безопаснее полного перепланирования при UI drift.",
+      "baseline_ru": "Свободный повторный обход desktop",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S05",
+        "S06",
+        "S08"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "critical_slot_accuracy",
+          "intent_accuracy",
+          "end_of_utterance_to_verified_action_latency",
+          "false_command_count",
+          "corrections",
+          "keyboard_screen_reader_completion"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-029",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/28",
+    "original_record": {
+      "id": "EXP-029",
+      "area": "library",
+      "title_ru": "Lexical + semantic retrieval",
+      "hypothesis_ru": "Hybrid retrieval улучшает recall без потери exact path/SHA матчей.",
+      "baseline_ru": "FTS-only и embedding-only",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S23"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "retrieval_recall_at_k",
+          "exact_path_recall",
+          "correct_revision_rate",
+          "duplicate_work_avoided",
+          "private_span_leaks",
+          "citation_coverage"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-030",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/29",
+    "original_record": {
+      "id": "EXP-030",
+      "area": "library",
+      "title_ru": "Старое предложение vs свежий код",
+      "hypothesis_ru": "Version-bound requirement graph уменьшает повторные PR по уже реализованной функции.",
+      "baseline_ru": "Поиск только по текстовой похожести",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G01",
+        "G04"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "retrieval_recall_at_k",
+          "exact_path_recall",
+          "correct_revision_rate",
+          "duplicate_work_avoided",
+          "private_span_leaks",
+          "citation_coverage"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-031",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/30",
+    "original_record": {
+      "id": "EXP-031",
+      "area": "library",
+      "title_ru": "Память отрицательных попыток",
+      "hypothesis_ru": "Retrieval прошлых failed traces сокращает повтор одинакового неудачного исправления.",
+      "baseline_ru": "Хранение только удачных outputs",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "retrieval_recall_at_k",
+          "exact_path_recall",
+          "correct_revision_rate",
+          "duplicate_work_avoided",
+          "private_span_leaks",
+          "citation_coverage"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-032",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/31",
+    "original_record": {
+      "id": "EXP-032",
+      "area": "library",
+      "title_ru": "Evidence debt next-query",
+      "hypothesis_ru": "Выбор следующего запроса по ожидаемой ценности даёт больше решённых blockers на единицу данных.",
+      "baseline_ru": "Просто максимальный объём нового контекста",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "retrieval_recall_at_k",
+          "exact_path_recall",
+          "correct_revision_rate",
+          "duplicate_work_avoided",
+          "private_span_leaks",
+          "citation_coverage"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-033",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/32",
+    "original_record": {
+      "id": "EXP-033",
+      "area": "library",
+      "title_ru": "Качество document extraction",
+      "hypothesis_ru": "Raw-backed converters лучше выявляют missing tables/sections, чем только готовый Markdown.",
+      "baseline_ru": "Plain text extraction без coverage ledger",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S24",
+        "S25",
+        "S26"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "retrieval_recall_at_k",
+          "exact_path_recall",
+          "correct_revision_rate",
+          "duplicate_work_avoided",
+          "private_span_leaks",
+          "citation_coverage"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-034",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/33",
+    "original_record": {
+      "id": "EXP-034",
+      "area": "library",
+      "title_ru": "Приватность при cross-source search",
+      "hypothesis_ru": "ACL-aware retrieval не возвращает private spans в публичный context bundle.",
+      "baseline_ru": "Фильтр только после генерации ответа",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S30"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "retrieval_recall_at_k",
+          "exact_path_recall",
+          "correct_revision_rate",
+          "duplicate_work_avoided",
+          "private_span_leaks",
+          "citation_coverage"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-035",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/34",
+    "original_record": {
+      "id": "EXP-035",
+      "area": "web3",
+      "title_ru": "Installed package identity",
+      "hypothesis_ru": "Проверка source/installed hashes обнаруживает ложные квалификации другого кода.",
+      "baseline_ru": "Совпадает только package name/version",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G09",
+        "G10"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-036",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/35",
+    "original_record": {
+      "id": "EXP-036",
+      "area": "web3",
+      "title_ru": "Канонический qualification loop",
+      "hypothesis_ru": "Desktop adapter к существующему owner уменьшает расхождение verdicts по сравнению со вторым runner.",
+      "baseline_ru": "Новый собственный qualification engine",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G07",
+        "G08",
+        "G09"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-037",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/36",
+    "original_record": {
+      "id": "EXP-037",
+      "area": "web3",
+      "title_ru": "PIT shared feed fanout",
+      "hypothesis_ru": "Общий point-in-time feed уменьшает дублирование RPC и inconsistent state между workers.",
+      "baseline_ru": "Каждая стратегия собирает state сама",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S33",
+        "G06"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-038",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/37",
+    "original_record": {
+      "id": "EXP-038",
+      "area": "web3",
+      "title_ru": "Unit-safe net edge",
+      "hypothesis_ru": "Явная модель единиц и embedded costs обнаруживает ложноположительный arbitrage PnL.",
+      "baseline_ru": "Сложение fee/slippage из разнородных источников",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G06"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-039",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/38",
+    "original_record": {
+      "id": "EXP-039",
+      "area": "web3",
+      "title_ru": "Conflict-aware candidate scheduling",
+      "hypothesis_ru": "Координатор учитывает shared accounts/capital и уменьшает бесполезную конкуренцию своих workers.",
+      "baseline_ru": "Независимая отправка всех кандидатов",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S33",
+        "S34"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-040",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/39",
+    "original_record": {
+      "id": "EXP-040",
+      "area": "web3",
+      "title_ru": "Holdout после выбора стратегии",
+      "hypothesis_ru": "Time-separated frozen holdout отсеивает случайные победы среди множества trials.",
+      "baseline_ru": "Выбирать лучший replay без нового теста",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G06"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-041",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/40",
+    "original_record": {
+      "id": "EXP-041",
+      "area": "web3",
+      "title_ru": "CLI capability coverage",
+      "hypothesis_ru": "Static candidates + installed tests дают более точную карту реальных команд, чем список функций.",
+      "baseline_ru": "Все definitions считаются доступными командами",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G10"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-042",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/41",
+    "original_record": {
+      "id": "EXP-042",
+      "area": "web3",
+      "title_ru": "Observation vs realized fill",
+      "hypothesis_ru": "Отдельные labels исключают объявление modeled edge реализованной прибылью.",
+      "baseline_ru": "Один общий pnl field",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G06",
+        "S34"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "point_in_time_consistency",
+          "duplicate_RPC_ratio",
+          "cost_accounting_error",
+          "observed_vs_modeled_label_integrity",
+          "holdout_stability",
+          "transactions_sent"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-043",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/42",
+    "original_record": {
+      "id": "EXP-043",
+      "area": "operations",
+      "title_ru": "Неизвестный side effect и retry",
+      "hypothesis_ru": "Reconciliation-state предотвращает двойное действие после timeout.",
+      "baseline_ru": "Автоматический повтор любого failed task",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G07"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "duplicate_side_effect_count",
+          "recovery_time",
+          "policy_violations",
+          "resource_budget_overrun",
+          "evidence_integrity",
+          "verified_completion_rate"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-044",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/43",
+    "original_record": {
+      "id": "EXP-044",
+      "area": "operations",
+      "title_ru": "Windows sleep/crash recovery",
+      "hypothesis_ru": "Leases и повторная проверка evidence позволяют восстановиться без ложного DONE.",
+      "baseline_ru": "Только process status in memory",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "G03"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "duplicate_side_effect_count",
+          "recovery_time",
+          "policy_violations",
+          "resource_budget_overrun",
+          "evidence_integrity",
+          "verified_completion_rate"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-045",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/44",
+    "original_record": {
+      "id": "EXP-045",
+      "area": "operations",
+      "title_ru": "Least-privilege process boundary",
+      "hypothesis_ru": "Reviewed profiles и sandbox блокируют запись/сеть вне разрешённой области даже при неверном плане.",
+      "baseline_ru": "shell=False как единственная защита",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S31",
+        "G03"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "duplicate_side_effect_count",
+          "recovery_time",
+          "policy_violations",
+          "resource_budget_overrun",
+          "evidence_integrity",
+          "verified_completion_rate"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-046",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/45",
+    "original_record": {
+      "id": "EXP-046",
+      "area": "operations",
+      "title_ru": "Sanitized export reproducibility",
+      "hypothesis_ru": "Две manifests raw/share сохраняют проверяемую полноту без отправки secret contents.",
+      "baseline_ru": "Публично отправлять raw ради полноты",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "duplicate_side_effect_count",
+          "recovery_time",
+          "policy_violations",
+          "resource_budget_overrun",
+          "evidence_integrity",
+          "verified_completion_rate"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-047",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/46",
+    "original_record": {
+      "id": "EXP-047",
+      "area": "operations",
+      "title_ru": "Token/API cost admission",
+      "hypothesis_ru": "Предварительный budget и reserved output allowance предотвращают незаметный перерасход на R&D.",
+      "baseline_ru": "Непрерывные запросы по наличию API key",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S30",
+        "S32"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "duplicate_side_effect_count",
+          "recovery_time",
+          "policy_violations",
+          "resource_budget_overrun",
+          "evidence_integrity",
+          "verified_completion_rate"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "OCC_RND::EXP-048",
+    "source_path": "packages/OCC_RND/research/EXPERIMENTS.json",
+    "json_pointer": "/47",
+    "original_record": {
+      "id": "EXP-048",
+      "area": "operations",
+      "title_ru": "Версионирование learned skills",
+      "hypothesis_ru": "Pinned adapter/tests с rollback переживают dependency/UI update лучше mutable latest skill.",
+      "baseline_ru": "Автообновление production по свежему release",
+      "status": "NOT_RUN_RND_HYPOTHESIS",
+      "source_ids": [
+        "S04",
+        "S05"
+      ],
+      "protocol": {
+        "dataset": "Versioned, consented task/fixture set; freeze holdout before choosing thresholds.",
+        "comparators": "Run baseline and candidate on identical immutable inputs; record environment and revisions.",
+        "metrics": [
+          "duplicate_side_effect_count",
+          "recovery_time",
+          "policy_violations",
+          "resource_budget_overrun",
+          "evidence_integrity",
+          "verified_completion_rate"
+        ],
+        "acceptance": "Pre-register task-specific threshold and cost/risk tradeoff. A candidate must improve the target outcome without weakening authority or data coverage.",
+        "stop": "Unapproved side effect, privacy leak, corrupt evidence, or resource budget exceeded."
+      },
+      "required_evidence": [
+        "source_or_dataset_hash",
+        "config_and_code_revision",
+        "raw_logs",
+        "independent_verifier_result",
+        "negative_cases",
+        "heldout_outcome"
+      ],
+      "unknowns": [
+        "Dell/Windows performance",
+        "real user task distribution",
+        "domain calibration"
+      ],
+      "money_or_signer_allowed": false
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-01",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/0",
+    "original_record": {
+      "id": "AI-RND-01",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Атлас идеи до результата",
+      "problem_ru": "Слова пользователя могут теряться между summary, backlog и изменением кода.",
+      "design_ru": "Связать literal quote→idea→capability→patch→test→результат. Исправление интерпретации создаёт новую версию, не стирая слова.",
+      "experiment_ru": "Сравнить восстановление 20 целей по summary и по атласу: время, ошибочное авторство, потерянные ограничения.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-001",
+        "FUTURE::FUT-002",
+        "FUTURE::FUT-003"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-02",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/1",
+    "original_record": {
+      "id": "AI-RND-02",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Планировщик недостающего контекста",
+      "problem_ru": "Большой пакет ещё не гарантирует присутствие конкретного теста или решения.",
+      "design_ru": "Задавать обязательные evidence slots и достраивать минимально нужные источники; отдельно иметь полный архивный экспорт.",
+      "experiment_ru": "В реальных задачах скрывать один необходимый источник; измерять обнаружение нехватки и число бесполезных запросов.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-004",
+        "FUTURE::FUT-005",
+        "FUTURE::FUT-006"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-03",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/2",
+    "original_record": {
+      "id": "AI-RND-03",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Снимки истинности целей",
+      "problem_ru": "PASS перестаёт быть надёжным после изменения кода, конфигурации или входов.",
+      "design_ru": "Привязать оценку цели к fingerprint зависимостей; показывать цепочку причин TRUE/FALSE/UNKNOWN/NOT_RUN и stale.",
+      "experiment_ru": "Менять по одному входу известного успешного сценария и проверять, что неверный старый результат не переиспользуется.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-007",
+        "FUTURE::FUT-008",
+        "FUTURE::FUT-009"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-04",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/3",
+    "original_record": {
+      "id": "AI-RND-04",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Параллельная память наблюдений",
+      "problem_ru": "Записи из нескольких producers могут повторяться, опаздывать и противоречить друг другу.",
+      "design_ru": "Хранить immutable observations с producer, event time и received time; строить views позже, сохраняя альтернативы.",
+      "experiment_ru": "Параллельный импорт одного чата из двух экспортов, поздняя правка, restart: ноль необъяснённых потерь; отдельная метрика дублей.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-010",
+        "FUTURE::FUT-011",
+        "FUTURE::FUT-012"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-05",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/4",
+    "original_record": {
+      "id": "AI-RND-05",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Выбор действительно разных проверок",
+      "problem_ru": "Несколько агентов способны повторить одну ошибку общего источника.",
+      "design_ru": "Описать общие failure domains и выбирать дополнительные проверки по измеряемому новому evidence.",
+      "experiment_ru": "Сравнить одинаковые и разнородные проверки при одинаковом бюджете; считать совместные отказы и ложный PASS.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-013",
+        "FUTURE::FUT-014",
+        "FUTURE::FUT-015"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-06",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/5",
+    "original_record": {
+      "id": "AI-RND-06",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Карта следующего изменения repo",
+      "problem_ru": "Генерация большого списка PR мало помогает выбрать ближайший полезный шаг.",
+      "design_ru": "Показывать цель, существующий owner, узкий diff, затронутые тесты и ожидаемый эффект; возвращать результаты в библиотеку.",
+      "experiment_ru": "Пять одинаковых задач с обычным prompt и картой изменения: time-to-accepted-change, regression и ручные исправления.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-016",
+        "FUTURE::FUT-017",
+        "FUTURE::FUT-018"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-07",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/6",
+    "original_record": {
+      "id": "AI-RND-07",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Персональная мастерская тегов",
+      "problem_ru": "Универсальная автоматическая классификация не учитывает индивидуальный смысл терминов.",
+      "design_ru": "Показывать предложенную метку, источник и причину; исправления пользователя формируют versioned gold set.",
+      "experiment_ru": "RU/EN, code, transcript и неоднозначные фразы: precision/recall, abstention, время исправления, перенос на новые данные.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-019",
+        "FUTURE::FUT-020",
+        "FUTURE::FUT-021"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-08",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/7",
+    "original_record": {
+      "id": "AI-RND-08",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Разветвления голосовой цели",
+      "problem_ru": "Человек меняет мысль во время диктовки, а частичный текст может выглядеть как команда.",
+      "design_ru": "Разделить поток речи, черновой intent и финальную миссию; заранее искать контекст, сохранять отменённые ветки как историю.",
+      "experiment_ru": "Команды с отрицаниями и самокоррекцией: intent/slot accuracy, false dispatch, время до понятного preview и остановки.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-022",
+        "FUTURE::FUT-023",
+        "FUTURE::FUT-024"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-09",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/8",
+    "original_record": {
+      "id": "AI-RND-09",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Быстрый путь проверенного навыка",
+      "problem_ru": "Повторный вызов coder на известную задачу увеличивает задержку и вариативность.",
+      "design_ru": "После доказанного результата сохранять рецепт с предусловиями; при изменении UI/кода возвращаться к диагностике.",
+      "experiment_ru": "Сравнить каждый раз LLM и recipe replay: проверенный успех, p95 latency, stale-precondition detection и стоимость.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-025",
+        "FUTURE::FUT-026",
+        "FUTURE::FUT-027"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-10",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/9",
+    "original_record": {
+      "id": "AI-RND-10",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Репетиция обновления приложения",
+      "problem_ru": "Обновление capabilities может сломать совместимость данных или обработчиков.",
+      "design_ru": "Испытывать candidate release на копии состояния, формировать capability/data diff и план возврата.",
+      "experiment_ru": "Проверить сбой миграции, обрыв загрузки и restart; измерить восстановление данных и работоспособность прошлой версии.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-028",
+        "FUTURE::FUT-029",
+        "FUTURE::FUT-030"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-11",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/10",
+    "original_record": {
+      "id": "AI-RND-11",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Корпус опровержений web3-гипотез",
+      "problem_ru": "Положительные примеры не показывают, где стратегия или измерение неверны.",
+      "design_ru": "Сохранять failing routes, stale quotes, комиссии, недостаточную ликвидность и provider disagreements как replay fixtures.",
+      "experiment_ru": "Испытать изменение стратегии на скрытых отрицательных примерах; отдельно оценивать исследование, paper и реальный рынок.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-031",
+        "FUTURE::FUT-032",
+        "FUTURE::FUT-033"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "ASSISTANT_V3::AI-RND-12",
+    "source_path": "02_STRATEGY/ASSISTANT_RND_PROPOSALS.json",
+    "json_pointer": "/11",
+    "original_record": {
+      "id": "AI-RND-12",
+      "author": "assistant",
+      "status": "PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED",
+      "title_ru": "Проверка продолжения новым чатом",
+      "problem_ru": "Новый чат может забыть ключевое ограничение даже с большим ZIP.",
+      "design_ru": "Небольшой source-bound resume check: назвать ближайшее изменение, важные ограничения и неизвестное; ответы проверяются по пакету.",
+      "experiment_ru": "Дать одинаковые задачи разным новым сессиям; оценить continuity errors, пропущенные ограничения и time-to-first-correct-step.",
+      "novelty_claim": false,
+      "user_accepted_design": false,
+      "functions": [
+        "FUTURE::FUT-034",
+        "FUTURE::FUT-035",
+        "FUTURE::FUT-036"
+      ],
+      "measurement_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E01",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 1,
+    "original_record": {
+      "id": "W3-E01",
+      "experiment": "Replay reproducibility",
+      "intervention": "same event dataset+seed+clock",
+      "failure_signal": "different decision/artifact digests",
+      "candidate_acceptance": "exact match or explained nondeterminism",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E02",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 2,
+    "original_record": {
+      "id": "W3-E02",
+      "experiment": "Stale quote rejection",
+      "intervention": "delay quotes above reviewed budget",
+      "failure_signal": "accepted stale candidate",
+      "candidate_acceptance": "zero such acceptances over recorded cases",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E03",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 3,
+    "original_record": {
+      "id": "W3-E03",
+      "experiment": "Full cost accounting",
+      "intervention": "sweep each fee and token decimals",
+      "failure_signal": "accepted net below configured threshold",
+      "candidate_acceptance": "integer recomputation and matching accounting unit",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E04",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 4,
+    "original_record": {
+      "id": "W3-E04",
+      "experiment": "Repayment boundaries",
+      "intervention": "principal/fee/rounding edge cases",
+      "failure_signal": "invariant failure / unauthorized callback",
+      "candidate_acceptance": "required cases execute with true machine receipts",
+      "mode": "CHAIN_ADAPTER_REQUIRED",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E05",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 5,
+    "original_record": {
+      "id": "W3-E05",
+      "experiment": "Stateful invariant non-vacuity",
+      "intervention": "handler runs/depth/corpus",
+      "failure_signal": "zero useful handler calls or hidden revert loop",
+      "candidate_acceptance": "reviewed campaign coverage reached",
+      "mode": "CHAIN_ADAPTER_REQUIRED",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E06",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 6,
+    "original_record": {
+      "id": "W3-E06",
+      "experiment": "Provider inconsistency",
+      "intervention": "same-anchor responses from distinct upstreams",
+      "failure_signal": "unexpected divergence",
+      "candidate_acceptance": "divergence yields UNKNOWN and pause candidate",
+      "mode": "READ_ONLY_NETWORK_SPEC",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E07",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 7,
+    "original_record": {
+      "id": "W3-E07",
+      "experiment": "Reorg/slot change",
+      "intervention": "replace canonical anchor or source view",
+      "failure_signal": "old proof stays TRUE",
+      "candidate_acceptance": "invalidate affected evidence by exact binding",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E08",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 8,
+    "original_record": {
+      "id": "W3-E08",
+      "experiment": "Observation vs replay",
+      "intervention": "supply replay artifact for paper stage",
+      "failure_signal": "replay classified as market observation",
+      "candidate_acceptance": "refuse mode mismatch",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E09",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 9,
+    "original_record": {
+      "id": "W3-E09",
+      "experiment": "RPC quota and disconnect",
+      "intervention": "429/timeout/drop",
+      "failure_signal": "unbounded retry or cursor loss",
+      "candidate_acceptance": "bounded backoff + explicit gap ledger",
+      "mode": "ISOLATED_RUNNER_SPEC",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E10",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 10,
+    "original_record": {
+      "id": "W3-E10",
+      "experiment": "Stop latency",
+      "intervention": "voice/button stop under CPU load",
+      "failure_signal": "post-trigger forbidden dispatch",
+      "candidate_acceptance": "measured latency distribution within reviewed target",
+      "mode": "WINDOWS_DEVICE_REQUIRED",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E11",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 11,
+    "original_record": {
+      "id": "W3-E11",
+      "experiment": "Update rollback",
+      "intervention": "failed migration/new version health check",
+      "failure_signal": "library corruption or inability to restore",
+      "candidate_acceptance": "copy migration + tested compatible rollback",
+      "mode": "WINDOWS_DEVICE_REQUIRED",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E12",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 12,
+    "original_record": {
+      "id": "W3-E12",
+      "experiment": "Wrong network protection",
+      "intervention": "network/genesis mismatch",
+      "failure_signal": "receipt passes despite wrong chain",
+      "candidate_acceptance": "UNKNOWN mismatch and no side effect",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E13",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 13,
+    "original_record": {
+      "id": "W3-E13",
+      "experiment": "Evidence corruption",
+      "intervention": "alter one artifact byte",
+      "failure_signal": "same TRUE status",
+      "candidate_acceptance": "FALSE hash integrity status",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E14",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 14,
+    "original_record": {
+      "id": "W3-E14",
+      "experiment": "False claim robustness",
+      "intervention": "success=true / AI text / empty JUnit",
+      "failure_signal": "any automatic ready-for-live",
+      "candidate_acceptance": "UNKNOWN or FALSE; live_authorized always false",
+      "mode": "OFFLINE_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E15",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 15,
+    "original_record": {
+      "id": "W3-E15",
+      "experiment": "Device sustained performance",
+      "intervention": "Dell CPU/RAM/GPU heating + voice + indexing",
+      "failure_signal": "p99 delay exceeds actual target",
+      "candidate_acceptance": "measured local profile; no remote extrapolation",
+      "mode": "WINDOWS_DEVICE_REQUIRED",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E16",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 16,
+    "original_record": {
+      "id": "W3-E16",
+      "experiment": "Worktree isolation",
+      "intervention": "two parallel patch/test tasks",
+      "failure_signal": "shared state/test pollution",
+      "candidate_acceptance": "separate roots+locked shared resources+exact versions",
+      "mode": "LOCAL_RUNNER_SPEC",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E17",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 17,
+    "original_record": {
+      "id": "W3-E17",
+      "experiment": "Secret isolation",
+      "intervention": "fixture fake key in repository/log",
+      "failure_signal": "key in model context or exported text",
+      "candidate_acceptance": "secret policy catches fixtures; authorized raw retained locally",
+      "mode": "SYNTHETIC_FIXTURES_ONLY",
+      "execution_status": "NOT_RUN"
+    }
+  },
+  {
+    "key": "SCE_WEB3::W3-E18",
+    "source_path": "packages/SCE_V2/rnd_v2/web3/EXPERIMENT_MATRIX.csv",
+    "csv_data_row_1based": 18,
+    "original_record": {
+      "id": "W3-E18",
+      "experiment": "Paper economics honesty",
+      "intervention": "modeled fills vs observed quotes",
+      "failure_signal": "hypothetical PnL labeled realized",
+      "candidate_acceptance": "separate metrics and assumptions stored",
+      "mode": "READ_ONLY_NETWORK_SPEC",
+      "execution_status": "NOT_RUN"
+    }
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b8304925c48b50cde9d2a291576eca4b9e13831a27c0261883e1e21ad8530013 | FIRST SOURCE 04_CONTINUE/CONTINUATION_PROTOCOL_RU.txt =====
+ПРАВИЛА ПРОДОЛЖЕНИЯ И ОБНОВЛЕНИЯ ПАКЕТА
+
+1. Читать актуальный корневой handoff, затем оригиналы релевантных источников.
+   Legacy START/REQUEST внутри packages имеют историческую область действия.
+2. Слова пользователя сохранять без исправления. Интерпретацию хранить отдельно.
+   Каждая новая идея содержит source ID/span; proposal ассистента имеет author.
+3. Не удалять отвергнутые/отложенные идеи: ставить status и superseded_by/reason.
+4. Перед code change прочитать текущий repo и инструкции; исторический SHA не
+   превращается в current HEAD. Связать старый backlog с найденными owners.
+5. Для результатов хранить inputs/revisions/commands/logs/verifier и NOT_RUN,
+   если исполнения не было. Сохранение JSON не означает исполнение workflow.
+6. Расширять capabilities по одному проверяемому вертикальному сценарию.
+7. Хранить новые источники целиком; для binaries — оригинал и статус извлечения.
+   Не заменять архив длинным prompt. Полный TXT и выбранный context pack сосуществуют.
+8. После каждой сессии обновить: what changed, decisions, next small step,
+   source gaps, function/workflow statuses, проверяемый manifest.
+
+ПРОВЕРКА ПОНИМАНИЯ НОВЫМ ЧАТОМ
+• Каков ближайший приоритет пользователя? (M002: агрегировать и передать контекст AI.)
+• Что означает отсутствие потолка 20 документов? (Полный источник сохраняется;
+  очереди и части не скрывают остаток.)
+• Что изменено в подходе к параллельности? (Много producers; locks по общим ресурсам.)
+• Какие функции уже работали, а какие SPEC? (Смотреть исходные statuses и evidence;
+  не выводить это из количества карточек.)
+• Какие данные отсутствуют? (SOURCE_COVERAGE и связанные coverage-файлы.)
+• Какое следующее изменение? (N01–N03, с актуальным repo и существующими owners.)
+
+ШАБЛОН ЗАПИСИ ПОСЛЕ СЕССИИ
+Дата/цель:
+Дословное пожелание пользователя и source ID:
+Источники/версии:
+Изменения/patch/PR (если были):
+Фактически выполненные проверки и evidence:
+Что осталось SPEC/NOT_RUN/UNKNOWN:
+Принятые решения и отложенные идеи:
+Следующий небольшой шаг:
+Новые missing sources:
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 46f78e46efd4249ecb819cb6e9ea49ee391599c73b8b63a653fa133c62bd5930 | FIRST SOURCE 04_CONTINUE/FIRST_MESSAGE_TO_NEW_WORK_CHAT_RU.txt =====
+Прочитай приложенный ZIP и продолжи нашу стратегию на русском.
+
+Сначала открой 00_START_HERE_RU.txt, SOURCE_COVERAGE.json,
+02_STRATEGY/MASTER_STRATEGY_RU.txt,
+02_STRATEGY/NEXT_DEVELOPMENT_NOW_LATER_RU.txt и
+02_STRATEGY/DECISIONS_AND_TENSIONS_RU.txt.
+Мои доступные сообщения дословно: 01_YOUR_WORDS/ALL_AVAILABLE_MESSAGES.txt.
+Цитаты и 124 идеи: 02_STRATEGY/USER_IDEAS_WITH_QUOTES.json.
+Все функции и workflows: 03_CATALOGS/. Код и прежние исследования: packages/.
+
+Мы строим локальное desktop-приложение Dell Windows 11 на основе существующего
+BobIvans/scaling-chrome-extensions: полная библиотека данных как файлы+страницы,
+repo ZIP→оригиналы/пути→TXT/chunks→контекст выбранной цели→AI→проверенный результат.
+Chrome extension не должна быть обязательной. Не терять файлы после двадцатого,
+полные пути, ветви чатов, пользовательские слова и версии. Физические ограничения
+обрабатывать очередями и явными статусами, не молчаливым обрезанием.
+
+Будущее направление: голос/текст/кнопка → intent/context → Laya/router →
+зарегистрированные CLI/API/browser/desktop действия → независимая проверка;
+код через AI→worktree→tests→review/GitHub→обновление capabilities и приложения.
+Параллельный сбор наблюдений нужен; несколько producers и isolated worktrees
+могут писать одновременно. Координируй конкретный общий изменяемый ресурс.
+Web3/flashloan/Studious Pancake — первый прикладной проект: repo context,
+smells, tests, qualification, data gathering и затем отдельный путь к live.
+
+Сейчас выбери следующий небольшой работающий срез N01–N03: проверь актуальные
+owners/источники, подключи полный импорт и multipart handoff к существующей основе.
+Если нужного repo/экспорта нет, укажи конкретный недостающий источник и продолжи
+доступную часть. Не начинай backlog заново; сопоставь старые task IDs и evidence.
+Обсуждение возможностей не означает, что внешние операции уже выполнены.
+Предложения и NOT_RUN не называй реализованными. Runtime не менялся при сборке V3.
+
+Перед изменениями коротко скажи: что уже есть, какой один результат делаем сейчас,
+какие источники не прочитаны. Затем выполняй конкретное согласованное задание.
+После работы дополни ZIP: новые user words, decisions, actual changes, evidence,
+remaining work, source coverage и проверяемый handoff для следующей сессии.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 529c2c35123ecbb2dfb6510f5534e800cae9e61fd2f97d1324fdecb88f9227d8 | FIRST SOURCE 04_CONTINUE/MISSING_SOURCES_RU.txt =====
+ЧТО НУЖНО ДОБАВИТЬ ПО МЕРЕ ДОСТУПНОСТИ
+
+Архив достаточен для продолжения известной стратегии, но не является выгрузкой всей истории аккаунта.
+
+GAP-01: Complete ChatGPT account conversation export, including all related parallel chats and branches
+Статус: MISSING_AS_FULL_EXPORT
+Значение: Cannot claim all historical words or ideas are captured.
+Далее: Import a selected complete export and reconcile message/branch IDs.
+
+GAP-02: Complete Grok history beyond the preserved 18-message capture and saved request files
+Статус: MISSING_AS_FULL_EXPORT
+Значение: Other conversations may contain additional ideas.
+Далее: Import available exports/captures with explicit scope.
+
+GAP-03: All previous Google Docs and private Telegram channel contents
+Статус: NOT_AGGREGATED_HERE
+Значение: Plans for adapters do not constitute imported data.
+Далее: Add operator-selected authorized sources/exports and source checkpoints.
+
+GAP-04: Actual current Studious Pancake / flashloan repository ZIP or checkout
+Статус: NOT_PRESENT_AS_COMPLETE_TARGET_REPO
+Значение: No assertion of entire bot code review, current command correctness or bot qualification.
+Далее: Select actual repository snapshot; create manifest and audit real entrypoints.
+
+GAP-05: Current full BobIvans/scaling-chrome-extensions repository snapshot
+Статус: NO_FRESH_COMPLETE_REPO_AUDIT_IN_V3
+Значение: Archived prototypes and previous code findings cannot establish present HEAD.
+Далее: Read current repo/owners before implementing N01–N03.
+
+GAP-06: Dell Windows 11 device, current model runtimes, actual market observations and external integrations
+Статус: NOT_RUN_OR_OBSERVED_IN_V3
+Значение: No device latency, live readiness or installed capability claim.
+Далее: Run explicit acceptance workflows on chosen device and pinned inputs.
+
+GAP-07: All older attachments and all assistant chat replies not included in preserved source packages
+Статус: UNKNOWN_OR_MISSING
+Значение: Cannot establish a global completeness percentage.
+Далее: Add a source when located; preserve original and reconcile by digest/message ID.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b6e30fd2a7c3e6c49e5fa12b5008ff3f4046237948f731ce5075dc644316409e | FIRST SOURCE 04_CONTINUE/WHAT_IS_NEW_IN_V3_RU.txt =====
+ДОБАВЛЕНО В V3
+
+• Дословные M001–M005 и общий индекс 25 доступных записей (включая исторические).
+• 124 идеи/запроса пользователя с точными цитатами, offsets и ссылками на функции.
+• Объединены исходные SCE, VOICE, OCC и Laya chunk/UI материалы без изменения
+  сохранённых файлов. Старые ZIP тоже внутри; их каталоги не были выборочно урезаны.
+• Сводные 587 карточек функций: SCE 128 + VOICE 273 + OCC 59 + Laya chunk/UI 91
+  + 36 дополнительных предложений ассистента. Возможны смысловые пересечения.
+• 136 описаний workflows: SCE 61 + VOICE 32 + OCC 16 + Laya chunk/UI 27.
+• 114 структурированных R&D-карточек; исходные текстовые эксперименты также сохранены.
+• 86 строк связанных требований и 62 прежних work items с исходными ID.
+• 12 новых/развитых исследовательских предложений ассистента с baseline/экспериментом.
+• Уточнение о параллельной записи и конкретных общих ресурсах отражено в стратегии.
+• План N01–N12: сейчас, следующий цикл и отложенные направления.
+• Схема labeling любого фрагмента, source coverage, handoff, verification script.
+• Полный объединённый текст и части без обрезания, с обратимой проверкой.
+
+КОД ПРОДУКТА В ЭТОЙ ВЕРСИИ НЕ МЕНЯЛСЯ
+Новые функции FUT-001…036 — предложения. Их полный перечень и source IDs находятся
+в 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json; контекст — ASSISTANT_RND_PROPOSALS.json.
+Старые результаты тестов сохранены как исторические. Новая проверка касается
+сохранности пакетов, цитат, индексов и возможности восстановить полный TXT.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 345300758ee787c94476b7a8f53188242f5734919c6dab9c7a4a28f9c94ca448 | FIRST SOURCE SOURCE_COVERAGE.json =====
+{
+  "schema": "continuation.source-coverage.v3",
+  "date": "2026-10-03",
+  "verdict": "READY_TO_CONTINUE_KNOWN_STRATEGY_WITH_EXPLICIT_SOURCE_GAPS",
+  "literal_current_user_messages_preserved": 5,
+  "literal_and_captured_records": 25,
+  "user_idea_quote_rows": 124,
+  "all_account_history_complete": false,
+  "global_historical_completeness_percentage": null,
+  "runtime_implementation_complete": false,
+  "archives_are_not_permissions": true,
+  "sources": [
+    {
+      "id": "SRC-SCE_V2",
+      "path": "original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip",
+      "scope": "Entire named archive and expanded files",
+      "status": "FULL_FOR_THIS_FILE",
+      "file_count": 180,
+      "bytes": 868817,
+      "sha256": "59dbcd23d6c414c93d38abe75888a0c4844cebe05ee4ebe42c0fcc7bf879148b",
+      "all_prior_chats_covered": false
+    },
+    {
+      "id": "SRC-VOICE_V3",
+      "path": "original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip",
+      "scope": "Entire named archive and expanded files",
+      "status": "FULL_FOR_THIS_FILE",
+      "file_count": 156,
+      "bytes": 300261,
+      "sha256": "c306d85a69ac3f9449024aaa71f861f8899ad00a8708e7c9f58dc86193967767",
+      "all_prior_chats_covered": false
+    },
+    {
+      "id": "SRC-OCC_RND",
+      "path": "original_archives/OCC_DESKTOP_RND_2026-10-03.zip",
+      "scope": "Entire named archive and expanded files",
+      "status": "FULL_FOR_THIS_FILE",
+      "file_count": 66,
+      "bytes": 209048,
+      "sha256": "bc531412e6cbb441c267430b616207ac7448e0b5c414c8141a3c312d4dbbb69c",
+      "all_prior_chats_covered": false
+    },
+    {
+      "id": "SRC-LAYA_CHUNK_V2",
+      "path": "packages/SCE_V2/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip",
+      "scope": "Entire named archive and expanded files",
+      "status": "FULL_FOR_THIS_FILE",
+      "file_count": 42,
+      "bytes": 21428,
+      "sha256": "95572a7799f7f2f192022b1e83104acf3eeafd7e0ab88cde4b0d7440aa9e9c2d",
+      "all_prior_chats_covered": false
+    },
+    {
+      "id": "SRC-CURRENT-MESSAGES",
+      "path": "01_YOUR_WORDS/MESSAGES.jsonl",
+      "status": "FULL_FOR_FIVE_VISIBLE_USER_MESSAGES",
+      "message_ids": [
+        "M001",
+        "M002",
+        "M003",
+        "M004",
+        "M005"
+      ],
+      "known_visible_user_count": 5,
+      "full_platform_chat_export": false,
+      "scope_note": "Exactly the five substantive messages accessible in this task context; not system/tool/internal messages and not an account export."
+    },
+    {
+      "id": "SRC-GROK-SEP30",
+      "path": "packages/SCE_V2/sources/RECOVERED_MESSAGES.json",
+      "status": "FULL_FOR_SAVED_18_MESSAGE_CAPTURE",
+      "user_messages": 9,
+      "assistant_messages": 9,
+      "platform_export_complete": false,
+      "capture_date": "2026-09-30"
+    },
+    {
+      "id": "SRC-OCC-USER",
+      "path": "packages/OCC_RND/history/CURRENT_REQUEST_VERBATIM.txt",
+      "status": "FULL_FOR_SAVED_REQUEST_TEXT",
+      "source_class": "Related artifact marked VERBATIM; original chat not reopened"
+    },
+    {
+      "id": "SRC-VOICE-CLARIFICATION",
+      "path": "packages/VOICE_V3/01_CONTEXT/LATEST_USER_CLARIFICATION_RU.md",
+      "status": "PARTIAL_QUOTE_AND_SUMMARY",
+      "source_class": "Short reported quote, not a complete message transcript"
+    },
+    {
+      "id": "SRC-PERSONAL-CONTEXT",
+      "path": "history/PERSONAL_CONTEXT_FRAGMENTS.txt",
+      "status": "PARTIAL_SEARCH_FRAGMENTS",
+      "source_class": "Relevant retrieved fragments/summaries only; not full conversation exports"
+    },
+    {
+      "id": "SRC-HISTORICAL-ASSISTANT",
+      "path": "packages/SCE_V2/sources/SELECTED_ASSISTANT_IDEAS_HISTORICAL.txt",
+      "status": "SELECTED_SAVED_OUTPUTS",
+      "source_class": "Selected previous outputs and package documents; not every historical assistant reply"
+    },
+    {
+      "id": "SRC-OCC-AUDIT",
+      "path": "history/OCC_HANDOFF_COMPLETENESS_AUDIT_2026-10-03.md",
+      "status": "FULL_READ_TEXT_SNAPSHOT",
+      "source_class": "Complete content read from saved document; local text snapshot, not a byte-comparison claim"
+    },
+    {
+      "id": "SRC-OCC-COVERAGE",
+      "path": "history/OCC_CONTINUATION_COVERAGE_2026-10-03.json",
+      "status": "FULL_READ_TEXT_SNAPSHOT"
+    },
+    {
+      "id": "SRC-OCC-HANDOFF",
+      "path": "history/OCC_START_NEW_WORK_CHAT_2026-10-03.txt",
+      "status": "FULL_READ_TEXT_SNAPSHOT"
+    }
+  ],
+  "missing_or_partial_sources": [
+    {
+      "id": "GAP-01",
+      "source": "Complete ChatGPT account conversation export, including all related parallel chats and branches",
+      "status": "MISSING_AS_FULL_EXPORT",
+      "impact": "Cannot claim all historical words or ideas are captured.",
+      "next": "Import a selected complete export and reconcile message/branch IDs."
+    },
+    {
+      "id": "GAP-02",
+      "source": "Complete Grok history beyond the preserved 18-message capture and saved request files",
+      "status": "MISSING_AS_FULL_EXPORT",
+      "impact": "Other conversations may contain additional ideas.",
+      "next": "Import available exports/captures with explicit scope."
+    },
+    {
+      "id": "GAP-03",
+      "source": "All previous Google Docs and private Telegram channel contents",
+      "status": "NOT_AGGREGATED_HERE",
+      "impact": "Plans for adapters do not constitute imported data.",
+      "next": "Add operator-selected authorized sources/exports and source checkpoints."
+    },
+    {
+      "id": "GAP-04",
+      "source": "Actual current Studious Pancake / flashloan repository ZIP or checkout",
+      "status": "NOT_PRESENT_AS_COMPLETE_TARGET_REPO",
+      "impact": "No assertion of entire bot code review, current command correctness or bot qualification.",
+      "next": "Select actual repository snapshot; create manifest and audit real entrypoints."
+    },
+    {
+      "id": "GAP-05",
+      "source": "Current full BobIvans/scaling-chrome-extensions repository snapshot",
+      "status": "NO_FRESH_COMPLETE_REPO_AUDIT_IN_V3",
+      "impact": "Archived prototypes and previous code findings cannot establish present HEAD.",
+      "next": "Read current repo/owners before implementing N01–N03."
+    },
+    {
+      "id": "GAP-06",
+      "source": "Dell Windows 11 device, current model runtimes, actual market observations and external integrations",
+      "status": "NOT_RUN_OR_OBSERVED_IN_V3",
+      "impact": "No device latency, live readiness or installed capability claim.",
+      "next": "Run explicit acceptance workflows on chosen device and pinned inputs."
+    },
+    {
+      "id": "GAP-07",
+      "source": "All older attachments and all assistant chat replies not included in preserved source packages",
+      "status": "UNKNOWN_OR_MISSING",
+      "impact": "Cannot establish a global completeness percentage.",
+      "next": "Add a source when located; preserve original and reconcile by digest/message ID."
+    }
+  ],
+  "semantic_coverage_note": "124 quote-bound rows plus related requirement catalogs; interpretation can be enriched. Preservation of source words is verified, exhaustive capture of every possible idea is not mathematically asserted.",
+  "text_export_note": "ALL_CONTEXT includes unique decodable textual contents from expanded files and recursively inspected embedded ZIP/OOXML containers. Every source occurrence is indexed; byte-identical text is stored once and referenced. Binary/unsupported extraction status is explicit. Original bytes are preserved in packages/archives.",
+  "historical_evidence_note": "Previous tests and repository findings retained as dated evidence; no runtime retest or web research refresh in V3.",
+  "archive_read_verification": "05_INTEGRITY/ORIGINAL_PACKAGE_PRESERVATION.json"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b17be4415ce7298d4e683247bacc8f0addc996a918273ad585d21cd6276dce0f | FIRST SOURCE history/OCC_CONTINUATION_COVERAGE_2026-10-03.json =====
+{
+  "schema": "occ.handoff-completeness-audit.v1",
+  "date": "2026-10-03",
+  "original_zip": "OCC_DESKTOP_RND_2026-10-03.zip",
+  "original_zip_sha256": "bc531412e6cbb441c267430b616207ac7448e0b5c414c8141a3c312d4dbbb69c",
+  "verdict": {
+    "strategic_continuation": "SUFFICIENT_TO_START_DEFINED_NEXT_SLICE_WITH_GAPS",
+    "all_historical_ideas_inputs_and_attachments": "NOT_ESTABLISHED_SOURCES_MISSING",
+    "all_automation_implemented_and_ready": "NO",
+    "historical_completeness_percentage": null
+  },
+  "verification_scope": "Inspected supplied ZIP, verified all original listed hashes, compared current request and available historical summaries; no repo refresh, new technology research, target code tests or device execution.",
+  "counts": {
+    "original_zip_members": 66,
+    "original_manifest_files_verified": 65,
+    "original_manifest_mismatches": 0,
+    "source_reference_records": 44,
+    "experiment_records": 48,
+    "workflow_proposals": 16,
+    "workflows_marked_ready_for_automatic_execution": 0,
+    "capability_candidate_records": 59,
+    "capability_states": {
+      "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION": 52,
+      "BUNDLED_CLI_NOT_WORKFLOW_WIRED": 7
+    },
+    "recovered_history_summary_records": 9,
+    "original_broad_requirements": 14,
+    "audit_known_requirement_rows": 32
+  },
+  "requirements": [
+    {
+      "id": "HC-01",
+      "requirement": "Keep SCE desktop/library automation and Studious trading code as separate repositories with explicit ownership.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "ARCHITECTURE_AND_HISTORICAL_PINNED_REFERENCES",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "docs/01_REPO_FINDINGS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Read current repository HEADs and compare with historical pins; do not apply SCE changes to the bot by mistake.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-02",
+      "requirement": "Dell Windows 11 desktop as the primary application; no mandatory Chrome extension.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TK_PROTOTYPE_TARGET_DEVICE_NOT_TESTED",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "tools/desktop_archive.py"
+      ],
+      "remaining_requirement_or_evidence": "Integrate the shell with existing SCE owners, package it, and obtain real Windows device evidence.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-03",
+      "requirement": "Preserve original bytes, paths, revisions, provenance, binary items, and explicit omissions.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "BUNDLED_OFFLINE_ARCHIVE_TOOL_NOT_SCE_INTEGRATED",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "tools/archive_tool.py"
+      ],
+      "remaining_requirement_or_evidence": "Acquire actual selected repository/filesystem sources; integrate persistence and secret-safe sharing.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-04",
+      "requirement": "No total 20-document, 1000-file, or similar arbitrary corpus cap; continue to the end with coverage.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TOOL_AND_INTEGRATION_PLAN",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md",
+        "evidence/VERIFIED_LIMITS.json"
+      ],
+      "remaining_requirement_or_evidence": "Fix production caps without removing pagination, resource controls, or action permissions; test real target corpus.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-05",
+      "requirement": "Multi-part full-context TXT/MD/JSON/ZIP handoffs with per-part source coverage.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "TXT_EXPORT_AND_VERIFIER_BUNDLED_OTHER_INTEGRATION_PLANNED",
+      "original_package_paths": [
+        "tools/archive_tool.py",
+        "AI_HANDOFF_RU.txt",
+        "docs/04_LOSSLESS_CONTEXT_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Choose model-specific budgets separately from archive completeness; do not claim every source was read from attachment presence.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-06",
+      "requirement": "All earlier user messages and assistant ideas, including older conversations and all mapping branches.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "NINE_SUMMARY_RECORDS_AND_IMPORTER_NO_COMPLETE_HISTORY",
+      "original_package_paths": [
+        "history/RECOVERED_IDEAS.json",
+        "history/TIMELINE_RU.md",
+        "tools/archive_tool.py"
+      ],
+      "remaining_requirement_or_evidence": "Import available original conversation exports, preserve role/date/IDs/branches/attachments, and link every recovered idea to its source.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-07",
+      "requirement": "All earlier Wave/OCC/Laya ZIPs, docs, worktrees and detailed function cards consolidated.",
+      "idea_coverage": "REFERENCED_ONLY",
+      "implementation_evidence": "ORIGINAL_OLD_ASSET_BYTES_MISSING",
+      "original_package_paths": [
+        "history/MISSING_ASSETS_RU.md",
+        "history/TIMELINE_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Acquire and reconcile earlier artifacts by hash and stable IDs, retaining superseded and contradictory proposals.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-08",
+      "requirement": "Complete current source snapshots of both repositories, not selective file references.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "ACQUISITION_TOOL_ONLY_NO_TARGET_REPO_SNAPSHOTS",
+      "original_package_paths": [
+        "windows/Acquire-Repos.ps1",
+        "evidence/STATUS.json"
+      ],
+      "remaining_requirement_or_evidence": "Collect complete selected commits, record inventory and byte coverage, then inspect relevant actual code.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-09",
+      "requirement": "Closed/abandoned PRs, branches, commit history, prior implementations and failed fixes.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "SNAPSHOT_DIFF_AND_FAILURE_MEMORY_DESIGN_NOT_FULL_HISTORY_ARCHIVE",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+        "history/RECOVERED_IDEAS.json"
+      ],
+      "remaining_requirement_or_evidence": "Ingest repository history and PR records separately; a HEAD-tree archive does not include the full history.",
+      "provenance": "Visible prior conversation context, retrieved historical summaries, and inspected ZIP"
+    },
+    {
+      "id": "HC-10",
+      "requirement": "Drive-like local files plus Notion-like search, editing, tags, backlinks and collections.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "ARCHITECTURE_PROPOSAL_NOT_COMPLETE_WORKSPACE",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Build usable views over one canonical store; retain raw content and derived-index boundaries.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-11",
+      "requirement": "Labels on every data piece with roles, origin, versions, links, rights and truth/evidence status.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "PROPOSED_METADATA_AND_GRAPH_NOT_ALL_CONNECTORS_IMPLEMENTED",
+      "original_package_paths": [
+        "docs/04_LOSSLESS_CONTEXT_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+        "docs/11_SECURITY_AND_TRUTH_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Specify and implement a versioned canonical metadata contract and a complete requirement-to-source traceability map.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-12",
+      "requirement": "Gather authorized data from ChatGPT/Grok chats, Telegram channels/media, websites, documents and repos.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "FOLDER_GIT_CHATGPT_IMPORT_TOOLS_OTHER_CONNECTORS_PLANNED",
+      "original_package_paths": [
+        "workflows/03_history_import.json",
+        "workflows/11_browser_acquisition.json",
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Acquire actual authorized exports/API data; account for unloaded content, permissions and unavailable attachments.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-13",
+      "requirement": "Voice or any text becomes the same task intent and approved automation workflow.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "PROPOSAL_NO_INSTALLED_ASR_TO_EXECUTOR_LOOP",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "workflows/04_voice_proposal.json"
+      ],
+      "remaining_requirement_or_evidence": "Connect real ASR, typed intent, preview, policy, execution and independent result verification.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-14",
+      "requirement": "Accessibility: keyboard/switch alternatives, screen reader, editable voice input and independent STOP.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "RND_TEST_PLAN_TARGET_DEVICE_NOT_RUN",
+      "original_package_paths": [
+        "docs/05_ACCESSIBILITY_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Measure actual Windows accessibility, negations/numbers, cancellation latency and recovery on the target device.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-15",
+      "requirement": "Laya/Jev plus layered routing, planning, critique, memory and fast deterministic reuse.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "RESEARCH_AND_EXAMPLE_SCHEMAS_INFERENCE_NOT_RUN",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "examples/laya-prediction-request.example.json",
+        "research/EXPERIMENTS.json"
+      ],
+      "remaining_requirement_or_evidence": "Verify the installed model/API contract; benchmark against simple rules; probabilities never grant permissions.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-16",
+      "requirement": "Expand beyond prewritten tasks by proposing, testing and promoting new skills from intent/demonstration.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SKILL_LIFECYCLE_PROPOSAL",
+      "original_package_paths": [
+        "workflows/09_demonstration_skill.json",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Implement sandboxed skill testing and reviewed promotion; unsupported tasks remain explicit proposals rather than silent execution.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-17",
+      "requirement": "ChatGPT API inside the app for library/repo/context actions with cost and data controls.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "TOOL_SCHEMAS_AND_PLAN_NOT_CONNECTED",
+      "original_package_paths": [
+        "docs/10_OPENAI_AND_AUTOMATION_CONTRACTS_RU.md",
+        "schemas/openai_tools.responses.json",
+        "workflows/13_api_context.json"
+      ],
+      "remaining_requirement_or_evidence": "Implement provider authentication, scoped tools, input sanitization, budgets and result receipts; keep credentials out of archives sent to AI.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-18",
+      "requirement": "Local terminal and VS Code open-file/diff integration tied to exact repository paths.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "INTEGRATION_PLAN",
+      "original_package_paths": [
+        "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+        "workflows/12_vscode_handoff.json"
+      ],
+      "remaining_requirement_or_evidence": "Wire actual adapters, separating human terminal input from reviewed automation jobs and their isolation controls.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-19",
+      "requirement": "Whole-codebase code-smell, architecture, symbol/import/dependency and technical-debt analysis.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "STATIC_CATALOG_TOOL_AND_REVIEW_PLAN_NO_EXHAUSTIVE_SEMANTIC_AUDIT",
+      "original_package_paths": [
+        "tools/archive_tool.py",
+        "workflows/05_repo_review.json",
+        "docs/01_REPO_FINDINGS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Inventory actual complete code, add missing language parsers, and validate findings with source evidence and regression tests.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-20",
+      "requirement": "Discover every useful bot command including qualification campaign command owners and code ranges.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "SELECTIVE_PINNED_COMMAND_CANDIDATES_NOT_EXHAUSTIVE",
+      "original_package_paths": [
+        "evidence/VERIFIED_COMMAND_CANDIDATES.json",
+        "docs/07_QUALIFICATION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Build the current command inventory from the complete codebase and distinguish discovery from executable approval.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-21",
+      "requirement": "Run existing canonical qualification from the desktop and ingest reports.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EXISTING_BRIDGE_REFERENCED_NOT_RUN_HERE",
+      "original_package_paths": [
+        "docs/07_QUALIFICATION_RU.md",
+        "workflows/06_qualification.json",
+        "examples/qualification-request.example.json"
+      ],
+      "remaining_requirement_or_evidence": "Validate the operator profile, clean/current SHA and installed package; obtain actual domain and transport receipts.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-22",
+      "requirement": "Automate scheduled daily/24h data collection, tests, qualification and R&D reports.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "WORKFLOW_PROPOSALS_NO_CONNECTED_SCHEDULER_OR_EXECUTED_CAMPAIGNS",
+      "original_package_paths": [
+        "workflows/07_paper_campaign.json",
+        "workflows/08_latest_research.json",
+        "evidence/STATUS.json"
+      ],
+      "remaining_requirement_or_evidence": "Implement and verify local scheduling, checkpoints, leases, quotas, stop/restart, retention and campaign outcomes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-23",
+      "requirement": "Parallel arbitrage/flashloan strategy discovery, testing and shared market-data collection.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SENDER_FREE_RND_DESIGN_NOT_RUNNING_TRADING_SYSTEM",
+      "original_package_paths": [
+        "docs/08_PARALLEL_WEB3_RU.md",
+        "workflows/16_strategy_replay.json"
+      ],
+      "remaining_requirement_or_evidence": "Supply protocol adapters and real recorded data, then validate snapshots, simulation, costs, conflicts and holdout outcomes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-24",
+      "requirement": "Preserve the longer-term goal of approved live Web3 execution without mistaking plans or paper results for readiness.",
+      "idea_coverage": "PARTIAL",
+      "implementation_evidence": "LIVE_OUTSIDE_CURRENT_SLICE_NO_SIGNER_AUTHORITY",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "docs/07_QUALIFICATION_RU.md",
+        "docs/08_PARALLEL_WEB3_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recover detailed prior strategy/protocol specifications, validate missing runtime dependencies, and keep live promotion as a separate evidence-and-approval decision.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-25",
+      "requirement": "Automated code generation/patch, tests, CI, PR review and a document returned for the next R&D iteration.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "DESIGN_AND_WORKFLOW_PROPOSALS_NOT_END_TO_END_EXECUTED",
+      "original_package_paths": [
+        "workflows/14_implementation_request.json",
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Tie each change to current SHA, validated worktree, reviewed command profile, required tests and factual PR state; avoid duplicate fixes.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-26",
+      "requirement": "Resume/replay/reconcile, progress/errors and memory of failed attempts instead of repeating work.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EXISTING_OWNERS_REFERENCED_INTEGRATION_NEEDED",
+      "original_package_paths": [
+        "workflows/15_reconciliation.json",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Persist verified execution receipts, source invalidation and checkpoints; reconcile unknown effects before retry.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-27",
+      "requirement": "Carry context into a fresh Work chat with goals, current state, gaps and the next implementation slice.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "HANDOFF_DOCUMENTS_PRESENT_NOT_UNIVERSAL_HISTORY",
+      "original_package_paths": [
+        "AI_HANDOFF_RU.txt",
+        "ALL_AUTHORED_CONTEXT.txt",
+        "INDEX.json",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Read the archive explicitly, enumerate missing inputs and update continuation state after each work session.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-28",
+      "requirement": "Further Hugging Face/GitHub/agentic research with baselines and measurable experiments.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "44_SOURCE_REFERENCES_48_UNRUN_EXPERIMENTS",
+      "original_package_paths": [
+        "research/SOURCES.json",
+        "research/EXPERIMENTS.json",
+        "docs/13_RESEARCH_METHOD_AND_NEXT_SEARCHES_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recheck changing technology facts before implementation and benchmark selected candidates on the same target tasks.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-29",
+      "requirement": "Small/local/low-cost operation without model tokens for deterministic archive and code-catalog tasks.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "OFFLINE_TOOLS_NO_API_REQUIREMENT_MODEL_COSTS_UNMEASURED",
+      "original_package_paths": [
+        "tools/README_RU.md",
+        "docs/06_MODEL_AND_STACK_OPTIONS_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Measure Dell RAM/CPU/latency, batch/cache work and meter optional API calls rather than promise unlimited compute.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-30",
+      "requirement": "Preserve detailed prior function-card IDs and wave/PR lineage, not only current broad themes.",
+      "idea_coverage": "REFERENCED_ONLY",
+      "implementation_evidence": "OLDER_DETAILED_CATALOGS_NOT_INCLUDED",
+      "original_package_paths": [
+        "history/MISSING_ASSETS_RU.md",
+        "docs/12_IMPLEMENTATION_PLAN_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Recover original catalogs such as CAND/CAP/F-series references; numbers recalled in summaries are not verified inventory.",
+      "provenance": "Retrieved historical summaries and visible prior conversation context; original detailed catalogs not available"
+    },
+    {
+      "id": "HC-31",
+      "requirement": "Protect secrets, preserve authorized local originals, and distinguish TRUE/FALSE/UNKNOWN/NOT_RUN/STALE.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "SECURITY_DESIGN_AUTO_SANITIZED_SHARING_NOT_IMPLEMENTED",
+      "original_package_paths": [
+        "docs/11_SECURITY_AND_TRUTH_RU.md",
+        "docs/04_LOSSLESS_CONTEXT_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Implement separate local/private and shareable manifests, review redaction, and keep model/source content outside action authority.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    },
+    {
+      "id": "HC-32",
+      "requirement": "Use data on unmet goals and contradictory evidence to choose what to collect or build next.",
+      "idea_coverage": "REPRESENTED",
+      "implementation_evidence": "EVIDENCE_DEBT_AND_NEXT_DATA_REQUEST_RND",
+      "original_package_paths": [
+        "docs/03_LAYERED_INTELLIGENCE_RU.md",
+        "docs/09_LIBRARY_AND_COMPETITION_RU.md"
+      ],
+      "remaining_requirement_or_evidence": "Define observable postconditions and independent evidence, retain negative results, and measure whether the next action reduces the actual blocker.",
+      "provenance": "Current supplied request and inspected original ZIP"
+    }
+  ],
+  "missing_sources": [
+    {
+      "id": "MS-01",
+      "kind": "conversation_exports",
+      "state": "MISSING_ORIGINAL_BYTES",
+      "detail": "All previous user/assistant messages, branches and attachments; only partial historical summaries are in the original archive."
+    },
+    {
+      "id": "MS-02",
+      "kind": "earlier_zip_packages",
+      "state": "MISSING_ORIGINAL_BYTES",
+      "detail": "Older OCC/LAYA/Voice/Wave packages including those named in history/MISSING_ASSETS_RU.md and prior messages."
+    },
+    {
+      "id": "MS-03",
+      "kind": "other_same_day_aggregations",
+      "state": "HISTORICAL_SUMMARY_REFERENCE_ONLY",
+      "detail": "A retrieved earlier discussion names OCC_SCE_DESKTOP_FULL_CONTEXT_RU_2026-10-03.zip; another refers to a separate 128-function/42-workflow package. Neither was uploaded in this turn. Counts are historical assistant claims, not verified artifact contents."
+    },
+    {
+      "id": "MS-04",
+      "kind": "full_repository_snapshots",
+      "state": "NOT_INCLUDED",
+      "detail": "No complete current SCE or Studious source snapshot is embedded. Historical pinned source references are not a checkout."
+    },
+    {
+      "id": "MS-05",
+      "kind": "git_and_pr_history",
+      "state": "NOT_INCLUDED_AS_COMPLETE_ARCHIVE",
+      "detail": "All branches/commits, closed or abandoned PRs, discussions, attachments, LFS payloads and submodule contents require separate acquisition."
+    },
+    {
+      "id": "MS-06",
+      "kind": "device_setup_and_receipts",
+      "state": "NOT_RUN_OR_UNAVAILABLE",
+      "detail": "Actual Dell paths, installed components, model/runtime measurements, Windows accessibility, API integration and bot qualification receipts are absent. Credentials must not be supplied as public context."
+    },
+    {
+      "id": "MS-07",
+      "kind": "detailed_web3_strategy_specs_and_data",
+      "state": "PARTIAL_THEMES_ONLY",
+      "detail": "The archive gives parallel sender-free architecture, not a complete union of every earlier strategy/protocol specification, full command inventory or market dataset."
+    },
+    {
+      "id": "MS-08",
+      "kind": "full_cross_source_library",
+      "state": "NOT_COLLECTED",
+      "detail": "Actual local filesystem, Telegram media, Grok/ChatGPT exports and other personal content are not gathered merely because ingestion workflows are described."
+    }
+  ],
+  "provenance_rules": [
+    "Known requirements are not an exhaustive universe of all historical ideas.",
+    "Recovered summaries are not verbatim transcripts or original attachments.",
+    "Historical assistant numbers and PR states need source/code verification.",
+    "Original test report is preserved, not represented as newly rerun tests."
+  ],
+  "next_work_slice": [
+    "Read existing owners and current repository HEADs.",
+    "DESK-01 plus DESK-02: full source manifest and versioned multi-part export.",
+    "DESK-03: desktop view over existing canonical state.",
+    "DESK-05: existing qualification bridge; obtain actual device evidence.",
+    "Integrate voice/router/scheduler after proving the data-to-result loop."
+  ],
+  "do_not_discard": [
+    "Longer-term reviewed live execution goal; current live gate remains closed.",
+    "Unimplemented ideas; preserve them as backlog, not as already working features.",
+    "Missing historical sources; preserve their references with MISSING status."
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 03ad020344e8b7dd069190b83632ff2a55da5c0abec522cceb81629e5dbbb738 | FIRST SOURCE history/OCC_HANDOFF_COMPLETENESS_AUDIT_2026-10-03.md =====
+# Handoff completeness audit — 3 October 2026
+
+## Verdict
+
+**The original ZIP is a usable strategy handoff, not a complete archive of all historical ideas,
+inputs, artifacts, source code or working automations.** A new work session can start the defined
+next implementation slice from it, provided missing inputs and planned features remain explicit.
+There is no defensible percentage for “all of my ideas”: the full original source universe has
+not been collected.
+
+This audited copy preserves all 66 original files byte-for-byte. It adds a starter and coverage
+audit; it does not implement missing product functions or invent missing historical content.
+
+## What was directly checked
+
+The supplied ZIP was opened and its member inventory inspected. All 65 files listed in the
+original `PACKAGE_MANIFEST.json` match their recorded size and SHA-256. The manifest itself is
+the 66th original file. ZIP CRC validation also passed during inspection. These checks establish
+integrity relative to the supplied manifest, not historical completeness or program correctness.
+
+The original `evidence/STATUS.json` explicitly says:
+
+```json
+{
+  "full_repo_snapshots_included": false,
+  "all_past_conversations_included": false,
+  "old_attachment_bytes_included": false,
+  "workflow_plans_executed": 0
+}
+```
+
+The original inventory contains 44 source-reference records, 48 experiment proposals, 16
+workflow proposals, 59 capability candidates, nine historical summary records and a 14-row
+broad requirement ledger. Of the capability candidates, seven are
+`BUNDLED_CLI_NOT_WORKFLOW_WIRED` and 52 are
+`REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION`. All 16 workflow JSONs are marked
+`PROPOSAL_NOT_EXECUTED` and `ready_for_automatic_execution=false`.
+
+The 24-test report belongs to the original delivery. This audit did not rerun it, execute the bot,
+refresh repository HEADs, benchmark models, call provider APIs or test the Dell. No new claim
+about present-day external software behavior is made here.
+
+## Preserved strategic direction
+
+The original documents cover desktop migration without a mandatory extension; complete local
+source preservation and multi-part context; a Drive/Notion-style library; labeling and provenance;
+voice/text/accessibility; Laya/Jev and layered decision-making; optional API integration; terminal/
+VS Code links; code/command discovery; qualification; parallel sender-free Web3 research;
+demonstration-based skills; evidence, negative memory, recovery and subsequent AI handoffs.
+
+These are mostly architecture and R&D contracts. They are not proof that each corresponding
+feature has been implemented, integrated or tested. The static code catalog is not an exhaustive
+semantic audit of both repositories. Selective qualification references are not a complete
+command inventory. Broad parallel-strategy design is not every earlier protocol/strategy spec.
+
+## Missing or partial material that matters in a new chat
+
+1. **Full original conversation history.** The nine recovered records are summaries, not all
+   user messages and assistant responses. Attachments and all earlier detailed reasoning inputs
+   are not supplied as source bytes. An importer being present does not mean imports were run.
+2. **Earlier ZIPs, waves and detailed function-card catalogs.** The archive's
+   `history/MISSING_ASSETS_RU.md` explicitly lists missing assets. Retrieved historical summaries
+   also refer to separate same-day aggregated packages and older CAND/CAP/F-series work. Their
+   reported counts and status are historical claims, not a verified union of content in this ZIP.
+3. **Actual complete repository source and development history.** Historical pinned URLs are
+   useful starting evidence, but not embedded full snapshots. A selected Git tree is not all
+   commits, branches, PR discussions, LFS payloads or submodule contents.
+4. **Installation and execution evidence.** Windows UI/accessibility, real ASR/Laya/Jev/API
+   execution, scheduler integration, target-repo tests and bot/market qualification are not
+   established by this package. The actual user device configuration must be measured, not guessed.
+5. **Detailed end-to-end product integration.** The richer library, editor/terminal, automation
+   registry, scheduled campaigns and additional adapters remain work. Do not treat workflow
+   proposals as a native Laya runtime or an already configured scheduler.
+
+## Continuation procedure
+
+Attach the audited ZIP and use its root `START_NEW_WORK_CHAT.txt` as the starting instruction.
+The same text is available as a separate file for convenient upload or pasting. Read the original
+`AI_HANDOFF_RU.txt`, original status, this audit, current code and the source map before changing
+anything. Do not infer complete model reading from archive attachment or from a single summary.
+
+The new `CONTINUATION_COVERAGE.json` maps 32 known requirement groups to actual paths in the
+original ZIP and identifies the next missing evidence for each. It preserves the long-term
+approved-live goal while keeping it outside the current sender-free implementation slice.
+It is a working known-requirements map, not proof that every historical idea has been found.
+
+Start by reconciling current code with DESK-01/02 (complete source manifests and multi-part
+exports), then desktop integration and the existing qualification bridge. Do not restart a new
+thousand-PR roadmap or erase deferred ideas. Keep unresolved requirements, failures and missing
+sources in the ledger and return an updated handoff after each verified slice.
+
+## Evidence needed before claiming “all inputs aggregated”
+
+Define the source universe: which chats/exports, old ZIPs, repository refs, PR records and local
+folders count. Produce an inventory, source hashes, role/date/message or artifact identifiers,
+raw-byte/extraction statuses and explicit missing entries. Link each recovered requirement and
+its revisions to source spans. Reconcile old and new function IDs, duplicates and contradictions.
+Only then can completeness be measured against that defined scope. An ever-growing body of
+future ideas is not a fixed, enumerable input set today.
+
+## Provenance and safety
+
+This audit uses the supplied original ZIP, visible requests and limited retrieved historical
+summaries. It does not include original bytes from unseen assets and never promotes a recalled
+assistant statement to current repository truth. No repository or external account was modified.
+The added text does not contain API keys or wallet secrets. Raw local archives still require a
+privacy/secret review before external sharing.
+
+The original `INDEX.json`, `PACKAGE_MANIFEST.json` and `ALL_AUTHORED_CONTEXT.txt` remain unchanged
+and describe only their original subdirectory. `HANDOFF_MANIFEST.json` at the audited ZIP root
+covers the original files plus audit additions; it excludes itself from its own hash list.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 fa3fc8a89d8260af76e85d34384367031d1a2b373df392fd032fd2290a56a49c | FIRST SOURCE history/OCC_START_NEW_WORK_CHAT_2026-10-03.txt =====
+START A NEW WORK CHAT — OCC DESKTOP / STUDIOUS CONTINUATION
+2026-10-03 | Audited handoff, not a complete personal-history archive
+
+Treat this as a continuation of my existing project, not a request to invent another roadmap.
+Use the supplied archive as the starting context. Read its files explicitly; do not infer that
+all contents were read from the presence of the attachment. Do not assume access to older chats.
+
+READ FIRST
+1. HANDOFF_AUDIT/COMPLETENESS_AUDIT_EN.md and HANDOFF_AUDIT/CONTINUATION_COVERAGE.json.
+2. OCC_DESKTOP_RND_2026-10-03/AI_HANDOFF_RU.txt.
+3. OCC_DESKTOP_RND_2026-10-03/evidence/STATUS.json and evidence/REQUIREMENTS_LEDGER.json.
+4. OCC_DESKTOP_RND_2026-10-03/docs/01_REPO_FINDINGS_RU.md and docs/12_IMPLEMENTATION_PLAN_RU.md.
+5. Read all relevant original docs, history records, workflow plans and source references using
+   INDEX.json. ALL_AUTHORED_CONTEXT.txt consolidates the ORIGINAL package only; it does not
+   include the additional HANDOFF_AUDIT files, entire repositories, or missing older chats.
+
+MY STRATEGY TO PRESERVE
+Build a Windows 11 Dell-compatible desktop application in BobIvans/scaling-chrome-extensions.
+Chrome extension must not be required. Keep the existing canonical library/job owners.
+The app combines a Drive-like local source library, Notion-like access/search/labels, full
+repository context, ChatGPT API collaboration, terminal/VS Code links, and voice/text-to-action.
+Archive all selected originals with paths, versions and provenance. No arbitrary total file or
+document cap and no silent truncation. Physical limits and per-model prompt budgets must remain
+explicit, resumable and separate from archive completeness. A page size of 20 is not a total cap.
+
+Use deterministic automation first, then Laya/Jev or another measured router and a stronger
+planner only when useful. New tasks may become proposed skills, code and tests. Unknown tasks
+must not silently become unrestricted shell execution. Support keyboard/accessibility alternatives
+and independent STOP, not voice alone. Preserve user approvals, typed effects, budgets and
+independent postcondition verification. Minimize apps, duplication and unnecessary API costs.
+
+The related bot is BobIvans/studious-pancake. Keep its code and requirements separate from SCE.
+The desktop should gather context, discover real command owners, run approved tests/qualification,
+collect receipts, create documents for the next AI review, and eventually orchestrate parallel
+Web3 strategy research. Preserve the longer-term goal of approved live operation, but do not
+open signing/live permissions or equate paper output with qualification or profit.
+
+DO NOT LOSE THE HISTORICAL REQUIREMENTS
+Preserve original user inputs, assistant proposals, failed attempts, evidence, old wave/function
+IDs, PR history and branches where obtainable. Import full authorized exports including mapping
+branches and attachment inventories. Deduplicate bytes without erasing source identities.
+Map requirement -> source -> symbol/code owner -> test -> receipt -> revision. Keep contradictory,
+superseded, missing, stale and untested items explicit. A summary is not an original transcript.
+Full library data should include authorized chats/media/files/repositories, but a connector plan
+is not proof that the data was collected. Detailed old ZIPs and complete strategy specifications
+still need acquisition and reconciliation.
+
+VERIFIED ARCHIVE FACTS
+The original package has 66 files, 44 source records, 48 unrun experiment proposals, 16 workflow
+plans and 59 capability candidates. Seven candidates point to bundled CLI tools not wired as
+workflows; 52 require adapters or existing-owner integration. Nine recovered history records
+are summaries. The original requirement ledger has 14 broad rows, not every historical function.
+This audit adds 32 known requirement mappings; it does not establish exhaustive history.
+Original local test receipts describe 24 synthetic Linux tests, not a fresh target-device run.
+No complete repository snapshots or all older ZIP bytes are embedded. Do not call this fully
+implemented, all-ideas-complete, or automatically executable.
+
+STARTING IMPLEMENTATION SLICE
+Read current GitHub source and HEADs before edits; historical pins in this archive may be stale.
+SCE historical pin: da6abf4c006e4e7d26fe45ef30fa9d07a356f396.
+Studious historical pin: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0.
+Compare existing implementation to each requirement. Do not overwrite newer fixes, duplicate
+owners, merge old plans blindly, or invent new PR/wave counts.
+
+Prefer DESK-01 + DESK-02: full manifest/raw collection and versioned multi-part context export
+inside the existing SCE owner, with coverage, recovery and regression tests. Then DESK-03 desktop
+integration and DESK-05 reuse of the existing qualification bridge. Preserve other workstreams
+in the backlog. Re-check current source before relying on any historical command or API detail.
+Work on accessible nonblocked tasks; enumerate unavailable sources rather than repeatedly
+asking me to restate goals already present. No live trades or publication of private archives.
+
+WHAT TO RETURN AT THE END OF EVERY WORK SESSION
+Provide actual changed paths and exact SHA/PR state, commands/tests and environment, passed/failed/
+not-run evidence, missing sources, remaining work and the next concrete slice. Update the
+requirement mapping and a resumable handoff. Separate idea coverage, implementation coverage,
+source-byte coverage and outcome verification. A generated plan or JSON is not an execution.
+Do not claim asynchronous work, automatic background operation or completion without evidence.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7fda7526262c0bb624e65b86a79443f2d111e14c9312c41b5fca9d2997b54e50 | FIRST SOURCE history/PERSONAL_CONTEXT_FRAGMENTS.txt =====
+SEARCH FRAGMENTS, NOT FULL TRANSCRIPTS; do not treat summaries or abbreviated quotations as verbatim message records.
+
+[convo search]
+- [USER_CONSTRAINT] [c0] U@2026-01-21T09:48:17Z, -255d: wants Telegram text/voice transcription automatically resent to multiple modules with full chat history; scrape visible responses, record them, and update/version ZIP repositories with distilled strategies and code capabilities.
+- [USER_CONSTRAINT] [c0] U@2026-01-21T09:54:01Z, -255d: asks for simultaneous multi-model execution, recording/transcription, ZFIR strategy files and added capabilities; mentions Selenium/Puppeteer and parallel routes.
+- [USER_FACT] [c0] U@2026-01-21T11:32:53Z, -255d: proposes VoiceMode + Telegram, up to 1TB Alibaba storage, pixel/surface-level recording, and automated sharing across CIFAR repositories/models without manual copy-paste.
+- [PRIOR_ASSISTANT_OUTPUT] [c0] A@2026-01-21T17:18:16Z, -255d: prior artifact defines repo folders/models/transcripts/distiller, parallel API fan-out, visible DOM-only capture, ZIP versioning, and open_questions.md; explicitly says internal thought processes cannot be extracted, only prompts, visible replies, metadata, timestamps, comparisons.
+
+- [USER_CONSTRAINT] [c1] U@2026-10-02T21:34:18Z, -22h: asks to revisit prior goals/strategies; SCE should automate actions from gathered context, via ChatGPT API, voice→automation, and a ZIP/SOTA strategy package; asks what remains for later development.
+- [USER_PREFERENCE] [c1] U@2026-10-02T21:34:18Z, -22h: wants full-codebase context docs, code-smell/tech-debt review, aggregated-function logic audit, and parallel R&D/data gathering for new currency pairs/flashloan qualification; explicitly “start with first taking a doc” before granting technology-change access.
+- [USER_CONSTRAINT] [c1] U@2026-10-02T21:08:44Z, -22h: continuation target is BobIvans/scaling-chrome-extensions: context aggregator, repository chunking, and action automations; asks for unfinished items and next implementation based on previous chats.
+
+- [USER_CONSTRAINT] [c2] U@2026-10-03T17:00:49Z, -2h: просит убрать лимиты/Chrome, сохранить весь репозиторий с полными путями и контекстом; локальное Windows 11-приложение должно агрегировать жизнь/работу, Web3, Telegram/Grok/ChatGPT, запускать тесты/qualification/data gathering, терминал/VS Code и параллельные automation.
+- [USER_CONSTRAINT] [c2] U@2026-10-03T17:38:57Z, -1h30m: точные идеи: голос/текст→транскрипт→контекстный документ→Grok→GitHub merge→Laya скачивает/обновляет приложение; labeling всего контекста, маршрутизация, быстрые параллельные действия, доступность для людей с инвалидностью; просит workflows и новые функции.
+- [PRIOR_ASSISTANT_OUTPUT] [c2] A@2026-10-03T18:05:09Z, -1h4m: пакет содержит 20 дополнений, 12 workflows, 101 действие, разметку 4 209 путей и 15 цитат из чата 30 сентября; подтверждены пробелы: неполный охват чатов/Docs/Telegram/голоса, inference
+
+- [USER_CONSTRAINT] [c3] U@2026-10-03T17:58:48Z, -1h10m: просит кратчайший путь к целям через несколько безопасных параллельных маршрутов, выполняемых одной автоматизацией для максимального успеха; найти примеры параллельных автоматизаций и дополнительные области.
+- [USER_CONSTRAINT] [c3] U@2026-10-03T18:21:09Z, -48m: просит пройти все идеи и пользовательские вводы, агрегировать больший ZIP, сохранить цели всего чата и стратегии; отдельно сохранить буквально все свои идеи функций/R&D и указать, что оставить на будущее.
+- [PRIOR_ASSISTANT_OUTPUT] [c3] A@2026-10-03T18:51:56Z, -17m: стратегия: параллельно наблюдать → собирать достаточный контекст → дополнять → готовить решения → независимо проверять → согласованно применять; режимы включают многоканальные наблюдения, гонку альтернатив, независимую работу и согласованное применение.
+- [PRIOR_ASSISTANT_OUTPUT] [c3] A@2026-10-03T19:06:30Z, -2m: заявлено сохранение полного бэклога функций, R&D-идей и отложенного roadmap
+
+- [USER_CONSTRAINT] [c4] U@2026-10-03T17:08:43Z, -2h: wants all own messages/ideas/automation strategies aggregated into a larger ZIP; remove Chrome-extension dependency for a Dell Windows 11 desktop app; no 20-document cap; preserve full repo/path data and older conversations.
+- [USER_PREFERENCE] [c4] U@2026-10-03T17:08:43Z, -2h: local library “like Google Drive” with Notion-like access, ChatGPT API, terminal/VS Code integration, Laya/Jev automation, Web3 qualification/testing/data gathering, code-smell detection, parallel arbitrage strategies, faster execution; research Hugging Face/SOTA local intelligence.
+- [PRIOR_ASSISTANT_OUTPUT] [c4] A@2026-10-03T17:55:46Z, -1h: ZIP contains 2,643 repo files, 42 expanded archives, 48 tasks, 12 workflows, 10 Laya JSON requests; explicitly says history is partial, not a full chat export, and Windows EXE is not implemented. Gaps: account-wide export, unavailable files, later conversations/repo changes.
+
+- [USER_CONSTRAINT] [c5] U@2026-10-03T17:17:25Z, -2h: wants literal preservation of all own automation ideas/messages; one larger ZIP; Windows 11 local library replacing Chrome extension, repo/context aggregation without doc caps, Voice/Text→PC actions, terminal/VS Code, Web3 qualification/testing/data gathering, layered Laya/Jev automation, parallel arbitrage research.
+- [USER_CONSTRAINT] [c5] U@2026-10-03T19:01:10Z, -8m: explicitly requests going through his exact words, saving every idea/function as future R&D, and the entire chat’s aims—“absolutelly everything”—in one ZIP for Work continuation; assistant should distinguish missing history.
+- [PRIOR_ASSISTANT_OUTPUT] [c5] A@2026-10-03T18:45:07Z, -24m: audited ZIP preserves 66 files, 32-requirement map, 9 recovered historical summaries, 16 workflow proposals/59 candidates; gaps: original chats, attachments, earlier ZIPs/function catalogs, complete repos/specs, execution evidence; 52 candidates need adapters and none of 16 workflows is ready.
+
+[gmail]
+[INSUFFICIENT] Gmail search failed before it could retrieve matching emails.
+
+[files]
+Sources:
+[f0] OCC_ALL_AUTHORED_CONTEXT_2026-10-03.txt
+[f1] occ_full_page_2026-09-30-19-20-40.txt
+[f2] OCC_CONTINUATION_COVERAGE_2026-10-03.json
+
+Evidence:
+- [FILE_CONTENT] [f0] Точная пользовательская формулировка: “reserach latest data how people automate gathering data and runing code automation… automate voice to automation workflows… create zip r&d lets everything to agregate as context… remove wire to chrome extensions and do via dell windows 11 compitable desktop app… agregate even bigger zip… find all of my own messages and ideas… web3 bot… qualification campaighn code lines… run automations of testing repo and automations data gathering and genereting docs… huge ton of arbitrage strategies in parallel… fastest seamless creation of automation”.
+- [FILE_CONTENT] [f0] Дополнительная точная формулировка: “find even older conversations where we discusing automating data gathering creating local library of content agregated from anywhere… competing with notion… collaborating with chatgpt (api inside app)… local terminal… directly integrate vs code”.
+- [FILE_FACT] [f1] В сохранённом разговоре за 30.09.2026 зафиксирована стратегия: сначала Repo Context + MCP + Adaptive UI; параллельно/затем web3 data sources + auth; потом agentic system; коммерциализация — после стабильного core.
+- [FILE_FACT] [f2] Незавершённое: фактический ASR→intent→preview→policy→execution→independent verification не подключён; accessibility на Windows 11 не измерена; Laya/Jev API и latency не проверены; sandboxed skill testing/promotion отсутствуют; история/экспорты требуют authorized API/data, с рисками unloaded content, permissions, unavailable attachments. 
+- [CONFLICT] [f0][f1] Laya/Jev, ~33 ms и “ускорение” присутствуют как исследовательские/ассистентские формулировки, но в [f2] прямо отмечено: inference/benchmark на целевом Dell не выполнены; это не подтверждённые runtime-результаты.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 272218fff42d0b9425cbbcb8401fc1590b76f853f5557a8c8ea9478d117a7700 | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#0:OCC_DESKTOP_RND_2026-10-03/00_START_HERE_RU.txt =====
+OCC DESKTOP R&D • 2026-10-03
+
+1. Открой AI_HANDOFF_RU.txt: он соединяет главные решения и задания следующему разработчику.
+2. Проверенные факты кода: docs/01_REPO_FINDINGS_RU.md. История идей: history/TIMELINE_RU.md.
+3. Для локального сбора установи Python 3.10+ с Tk и Git, затем используй tools/README_RU.md.
+   Не требуется Chrome extension. Не требуется Laya, OpenAI API, GPU или доступ к кошельку.
+4. Для окна-прототипа: python tools/desktop_archive.py
+   Для тестов: python -m unittest discover -s tests -v
+5. Для полного контекста репозитория: git → verify → text → verify-text → catalog.
+   ALL_TEXT.txt содержит весь доступный UTF-8-текст; бинарные и не-UTF-8 оригиналы лежат в CAS.
+6. Перед отправкой архива в ChatGPT проверь секреты/персональные данные и размер реально выбранного контекста.
+   В этой версии безопасная автоматическая облачная публикация НЕ реализована.
+
+ЧЕСТНАЯ ГРАНИЦА:
+ZIP содержит R&D, инструменты, выборочные проверенные ссылки на код и summaries старых идей.
+Он НЕ содержит целиком недоступные старые ZIP/все чаты/оба полных checkout.
+Ни один workflow-план не является доказательством исполнения, прибыльности или production qualification.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 be714af5add4caf40d7f925de0c15bdb4b6e8b3d39bb989a31ba7d71c571cd36 | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#1:OCC_DESKTOP_RND_2026-10-03/AI_HANDOFF_RU.txt =====
+OCC DESKTOP / LOCAL EVIDENCE-TO-ACTION LIBRARY
+R&D HANDOFF • 3 ОКТЯБРЯ 2026
+
+ЦЕЛЬ
+Перевести BobIvans/scaling-chrome-extensions от обязательного Chrome-транспорта к локальному Windows-приложению на Dell. Сохранить полный контекст источников с исходными байтами/путями/версиями, искать старые идеи, связывать требования с кодом/тестами/receipts, подключать текст/голос/ChatGPT API к одному реестру проверенных capabilities. Связанный Web3-проект: BobIvans/studious-pancake. Сначала архив и проверка готовности, затем sender-free исследования, не автоматический live trading.
+
+ОБЛАСТЬ ЭТОГО ПАКЕТА
+Это R&D + реально запускаемые offline archive tools + проверенные выборочные факты кода. Нет полных raw snapshots двух repo или всех прошлых чатов/вложений. Старые идеи восстановлены через summaries; они не являются дословными transcripts. Полные исходники можно собрать на пользовательском ПК приложенным git/folder collector. Не объявлять отсутствующие bytes собранными.
+
+ЗАКРЕПЛЁННОЕ СОСТОЯНИЕ
+SCE main: da6abf4c006e4e7d26fe45ef30fa9d07a356f396, merge #37, 2026-10-03T15:58:25Z.
+Studious main: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0, merge #562, 2026-10-02T23:07:26Z.
+Источники и path/ranges: research/SOURCES.md, evidence/VERIFIED_COMMAND_CANDIDATES.json.
+
+ПРОВЕРЕННЫЕ ВАЖНЫЕ ПРОБЕЛЫ
+- automation_core.sync: default100 файлов, максимум1000; scan budget10000 entries; скрытые пути и suffix-фильтр.
+- automation_core.context_pack: только1..10 IDs; byte budget отдельно.
+- context_review.create_session: пакет48 000 bytes.
+- repo_context.scan_page limit20 — РАЗМЕР СТРАНИЦЫ, НЕ МАКСИМУМ ВСЕГО КОРПУСА.
+- repo_context MAX_FILE8MiB/MAX_TREE32MiB; streaming raw tier нужен отдельно от parser/model budgets.
+- Существующие one-writer и money_budget0 не отключать вместе с лимитами документов.
+- paper_campaign.plan.json явно BLOCKED_NOT_STARTED и не native/Laya-compatible.
+
+ПОЛЕЗНОЕ УЖЕ СУЩЕСТВУЕТ
+SCE имеет canonical SQLite owner, immutable Git source binding, chunks, version heads, durable jobs/leases/checkpoints и review metadata, не равную подтверждённому результату. Расширять этих владельцев, не создавать ещё один независимый production state engine.
+Qualification adapter уже описывает прямой CLI без Chrome. Новый desktop должен использовать его, а не писать второй qualifier.
+
+РЕАЛЬНЫЙ QUALIFICATION ENTRYPOINT
+python scripts/run_occ_memory_qualification.py --request <operator request> --operator-profile <reviewed profile>
+Bridge вызывает FAST-Q1-v3:src.qualification_report.qualify_and_report с profile offline_sender_free.
+План runner: status --json; capabilities --json; config doctor --json; runtime-admission --command flashloan-bot.run --mode paper --json; затем максимум один paper-shadow --journal-path <runner-owned journal> --json после preflights.
+PAPER_PASS не означает qualified/live/release authority или прибыль. BLOCKED может быть корректным результатом. Неизвестный side effect требует reconciliation, а не слепого retry.
+
+АРХИТЕКТУРНОЕ РЕШЕНИЕ
+Один desktop shell → существующее SCE data/job ядро → adapters.
+Original CAS + source/version/path manifests → derived text/AST/index → evidence graph → context compiler → capability registry → policy/admission → executor → independent verifier → outcome memory.
+Input: текст/голос/keyboard/switch. Приоритет выполнения: официальный API / fixed CLI / Windows UIA или browser DOM; vision clicks — только fallback.
+Chrome extension optional. VS Code сначала внешний goto/diff handoff. Интерактивный terminal пользователя отделён от автоматических reviewed jobs. Worktree, shell=False и Python -I НЕ являются sandbox.
+
+LAYERED INTELLIGENCE
+Deterministic rules → advisory typed router → context retrieval → stronger planner only when needed → schema/effects/policy → registered tools → actual postcondition verification.
+Модель маршрутизации не исполняет команды и не выдаёт permissions. Вероятность не равна истине. Статусы: TRUE/FALSE/UNKNOWN/NOT_RUN/STALE/BLOCKED.
+Не отправлять workflow JSON в endpoint state/questions. Не отправлять code/context как системные instructions. Не давать свободный run_any_shell.
+
+СОХРАНИТЬ БЕЗ ПОТЕРЬ
+Archive scope != extraction scope != model prompt scope != semantic review coverage.
+Сохранять raw originals, все доступные paths, revisions, errors/exclusions. Бинарники/LFS/submodules/attachments имеют явные статусы. Model budgets и физические ресурсы конечны; corpus может проходиться всеми страницами с continuation и coverage ledger.
+Local raw и shareable sanitized projection — разные manifests. Не загружать секреты для достижения «полноты».
+
+ЧТО РЕАЛИЗОВАНО В ПРИЛОЖЕННОМ ПРОТОТИПЕ
+tools/archive_tool.py: folder/git→CAS manifest; verify; full UTF-8 export ALL_TEXT + любые parts; reconstruction verifier; static Python AST/argparse/package.json catalog; all mapping-branches ChatGPT JSON importer.
+Сборщик не запускает анализируемый код и не вызывает модели/API.
+tools/desktop_archive.py: локальное Tk окно этих операций; не production application и не полный Notion editor.
+windows/Acquire-Repos.ps1: явное скачивание public Git без checkout или запуска кода.
+24 синтетических теста прошли на Linux; целевой Dell/Windows, voice/NVDA, actual repositories, Laya/Jev/HF/API и bot campaigns НЕ запускались.
+
+48 R&D ЭКСПЕРИМЕНТОВ
+research/EXPERIMENTS.json: hypothesis, baseline, required evidence, metrics и unknowns; все NOT_RUN_RND_HYPOTHESIS.
+16 workflow-plans: workflows/*.json, PROPOSAL_NOT_EXECUTED; проверена структура/DAG, выполнено0 workflows.
+59 capability candidates различают bundled CLI и пока недостающие adapters; discovery не даёт права выполнения.
+
+СТАРЫЕ ИДЕИ, КОТОРЫЕ НЕ НУЖНО ИЗОБРЕТАТЬ ПОВТОРНО
+2024-02-20: Telegram voice/video/text life archive→Notion/Colab.
+2026-08-06: переносимая Chrome/Colab среда, Drive backup; session archives чувствительные.
+2026-09-14: маленький router и отдельный stronger reasoning/code model.
+2026-09-21: Voice→Inbox→Project; Context Shopping Cart; Fresh Chat Handoff; repo snapshots/diffs; failed attempts; evidence packs; portable TXT/MD/JSON/ZIP.
+2026-09-24: PIT Web3 Decision Episodes, counterfactuals, active perception, model parliament, evidence-service market. Последние — исторические гипотезы, не доказанные реализованные рынки.
+
+НОВЫЕ ПРЕДЛОЖЕНИЯ ЭТОГО R&D
+Intent compiler с типами эффектов; evidence debt ledger; skill distillation из проверенных traces; minimal locator repair; budgeted disagreement; context cart с manifest полноты; version-bound requirement↔symbol↔test↔receipt graph; следующий запрос данных по ожидаемой ценности информации.
+Для Web3: shared approved PIT feeds, read-only strategy fanout, candidate dedup, simulation queue, unit-safe costs, trial registry/holdout и conflict/capital coordination. LLM не в критическом transaction path. Live signer остаётся disabled.
+
+СЛЕДУЮЩИЙ COHERENT ВЕРТИКАЛЬНЫЙ СРЕЗ
+DESK-01+02: расширить raw collection и versioned multi-part export в существующем SCE owner; tests >1000 paths, >8MiB, weird names, interruption, secret/share boundaries, byte-exact coverage. Затем DESK-03 desktop и DESK-05 canonical qualification bridge. Voice и heavier models идут после evidence-loop, не вместо него.
+Названия DESK-xx — workstream IDs, не реальные GitHub PR numbers.
+
+ТРЕБОВАНИЯ К СЛЕДУЮЩЕМУ ИСПОЛНИТЕЛЮ
+1. Прочитать актуальный HEAD и сравнить с pin, не предполагать, что main не изменился.
+2. Собрать полный source manifest доступных repo/старых exports; перечислить отсутствующие bytes.
+3. Сопоставить требование с существующим владельцем функции. Не дублировать engines и roadmap.
+4. Для каждого исправления дать path+SHA+line range, regression test, фактическую команду/вывод и статус среды.
+5. Не называть review/plan/JSON готовой реализацией, не превращать source text в shell или permissions.
+6. Не запускать деньги/кошелёк/live и не публиковать личные архивы без отдельного согласия и проверенного профиля.
+
+ДАЛЬШЕ ЧИТАТЬ
+README_RU.md; docs/01…13; tools/README_RU.md; research/SOURCES.md; history/TIMELINE_RU.md; evidence/STATUS.json.
+Полный текст авторских файлов пакета собран отдельно в ALL_AUTHORED_CONTEXT.txt; это контекст ДАННОГО ПАКЕТА, не подмена отсутствующего полного исходного кода пользовательских repo.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f1854688013a294af47e58e2a89a891ea421526a8c24d989b0ac00c61b882b1d | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#2:OCC_DESKTOP_RND_2026-10-03/ALL_AUTHORED_CONTEXT.txt =====
+FULL TEXT OF THIS R&D DELIVERY, NOT FULL SOURCE SNAPSHOTS OF USER REPOSITORIES.
+Scope: all authored text/code/JSON files listed below before generation of INDEX and PACKAGE_MANIFEST.
+Original paths and SHA-256 precede each complete file; no arbitrary file-count truncation.
+Generated self-referential projections/manifests are excluded by definition.
+
+
+===== FILE {"path": "00_START_HERE_RU.txt", "bytes": 1805, "sha256": "272218fff42d0b9425cbbcb8401fc1590b76f853f5557a8c8ea9478d117a7700"} =====
+OCC DESKTOP R&D • 2026-10-03
+
+1. Открой AI_HANDOFF_RU.txt: он соединяет главные решения и задания следующему разработчику.
+2. Проверенные факты кода: docs/01_REPO_FINDINGS_RU.md. История идей: history/TIMELINE_RU.md.
+3. Для локального сбора установи Python 3.10+ с Tk и Git, затем используй tools/README_RU.md.
+   Не требуется Chrome extension. Не требуется Laya, OpenAI API, GPU или доступ к кошельку.
+4. Для окна-прототипа: python tools/desktop_archive.py
+   Для тестов: python -m unittest discover -s tests -v
+5. Для полного контекста репозитория: git → verify → text → verify-text → catalog.
+   ALL_TEXT.txt содержит весь доступный UTF-8-текст; бинарные и не-UTF-8 оригиналы лежат в CAS.
+6. Перед отправкой архива в ChatGPT проверь секреты/персональные данные и размер реально выбранного контекста.
+   В этой версии безопасная автоматическая облачная публикация НЕ реализована.
+
+ЧЕСТНАЯ ГРАНИЦА:
+ZIP содержит R&D, инструменты, выборочные проверенные ссылки на код и summaries старых идей.
+Он НЕ содержит целиком недоступные старые ZIP/все чаты/оба полных checkout.
+Ни один workflow-план не является доказательством исполнения, прибыльности или production qualification.
+
+===== END FILE =====
+
+===== FILE {"path": "AI_HANDOFF_RU.txt", "bytes": 10944, "sha256": "be714af5add4caf40d7f925de0c15bdb4b6e8b3d39bb989a31ba7d71c571cd36"} =====
+OCC DESKTOP / LOCAL EVIDENCE-TO-ACTION LIBRARY
+R&D HANDOFF • 3 ОКТЯБРЯ 2026
+
+ЦЕЛЬ
+Перевести BobIvans/scaling-chrome-extensions от обязательного Chrome-транспорта к локальному Windows-приложению на Dell. Сохранить полный контекст источников с исходными байтами/путями/версиями, искать старые идеи, связывать требования с кодом/тестами/receipts, подключать текст/голос/ChatGPT API к одному реестру проверенных capabilities. Связанный Web3-проект: BobIvans/studious-pancake. Сначала архив и проверка готовности, затем sender-free исследования, не автоматический live trading.
+
+ОБЛАСТЬ ЭТОГО ПАКЕТА
+Это R&D + реально запускаемые offline archive tools + проверенные выборочные факты кода. Нет полных raw snapshots двух repo или всех прошлых чатов/вложений. Старые идеи восстановлены через summaries; они не являются дословными transcripts. Полные исходники можно собрать на пользовательском ПК приложенным git/folder collector. Не объявлять отсутствующие bytes собранными.
+
+ЗАКРЕПЛЁННОЕ СОСТОЯНИЕ
+SCE main: da6abf4c006e4e7d26fe45ef30fa9d07a356f396, merge #37, 2026-10-03T15:58:25Z.
+Studious main: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0, merge #562, 2026-10-02T23:07:26Z.
+Источники и path/ranges: research/SOURCES.md, evidence/VERIFIED_COMMAND_CANDIDATES.json.
+
+ПРОВЕРЕННЫЕ ВАЖНЫЕ ПРОБЕЛЫ
+- automation_core.sync: default100 файлов, максимум1000; scan budget10000 entries; скрытые пути и suffix-фильтр.
+- automation_core.context_pack: только1..10 IDs; byte budget отдельно.
+- context_review.create_session: пакет48 000 bytes.
+- repo_context.scan_page limit20 — РАЗМЕР СТРАНИЦЫ, НЕ МАКСИМУМ ВСЕГО КОРПУСА.
+- repo_context MAX_FILE8MiB/MAX_TREE32MiB; streaming raw tier нужен отдельно от parser/model budgets.
+- Существующие one-writer и money_budget0 не отключать вместе с лимитами документов.
+- paper_campaign.plan.json явно BLOCKED_NOT_STARTED и не native/Laya-compatible.
+
+ПОЛЕЗНОЕ УЖЕ СУЩЕСТВУЕТ
+SCE имеет canonical SQLite owner, immutable Git source binding, chunks, version heads, durable jobs/leases/checkpoints и review metadata, не равную подтверждённому результату. Расширять этих владельцев, не создавать ещё один независимый production state engine.
+Qualification adapter уже описывает прямой CLI без Chrome. Новый desktop должен использовать его, а не писать второй qualifier.
+
+РЕАЛЬНЫЙ QUALIFICATION ENTRYPOINT
+python scripts/run_occ_memory_qualification.py --request <operator request> --operator-profile <reviewed profile>
+Bridge вызывает FAST-Q1-v3:src.qualification_report.qualify_and_report с profile offline_sender_free.
+План runner: status --json; capabilities --json; config doctor --json; runtime-admission --command flashloan-bot.run --mode paper --json; затем максимум один paper-shadow --journal-path <runner-owned journal> --json после preflights.
+PAPER_PASS не означает qualified/live/release authority или прибыль. BLOCKED может быть корректным результатом. Неизвестный side effect требует reconciliation, а не слепого retry.
+
+АРХИТЕКТУРНОЕ РЕШЕНИЕ
+Один desktop shell → существующее SCE data/job ядро → adapters.
+Original CAS + source/version/path manifests → derived text/AST/index → evidence graph → context compiler → capability registry → policy/admission → executor → independent verifier → outcome memory.
+Input: текст/голос/keyboard/switch. Приоритет выполнения: официальный API / fixed CLI / Windows UIA или browser DOM; vision clicks — только fallback.
+Chrome extension optional. VS Code сначала внешний goto/diff handoff. Интерактивный terminal пользователя отделён от автоматических reviewed jobs. Worktree, shell=False и Python -I НЕ являются sandbox.
+
+LAYERED INTELLIGENCE
+Deterministic rules → advisory typed router → context retrieval → stronger planner only when needed → schema/effects/policy → registered tools → actual postcondition verification.
+Модель маршрутизации не исполняет команды и не выдаёт permissions. Вероятность не равна истине. Статусы: TRUE/FALSE/UNKNOWN/NOT_RUN/STALE/BLOCKED.
+Не отправлять workflow JSON в endpoint state/questions. Не отправлять code/context как системные instructions. Не давать свободный run_any_shell.
+
+СОХРАНИТЬ БЕЗ ПОТЕРЬ
+Archive scope != extraction scope != model prompt scope != semantic review coverage.
+Сохранять raw originals, все доступные paths, revisions, errors/exclusions. Бинарники/LFS/submodules/attachments имеют явные статусы. Model budgets и физические ресурсы конечны; corpus может проходиться всеми страницами с continuation и coverage ledger.
+Local raw и shareable sanitized projection — разные manifests. Не загружать секреты для достижения «полноты».
+
+ЧТО РЕАЛИЗОВАНО В ПРИЛОЖЕННОМ ПРОТОТИПЕ
+tools/archive_tool.py: folder/git→CAS manifest; verify; full UTF-8 export ALL_TEXT + любые parts; reconstruction verifier; static Python AST/argparse/package.json catalog; all mapping-branches ChatGPT JSON importer.
+Сборщик не запускает анализируемый код и не вызывает модели/API.
+tools/desktop_archive.py: локальное Tk окно этих операций; не production application и не полный Notion editor.
+windows/Acquire-Repos.ps1: явное скачивание public Git без checkout или запуска кода.
+24 синтетических теста прошли на Linux; целевой Dell/Windows, voice/NVDA, actual repositories, Laya/Jev/HF/API и bot campaigns НЕ запускались.
+
+48 R&D ЭКСПЕРИМЕНТОВ
+research/EXPERIMENTS.json: hypothesis, baseline, required evidence, metrics и unknowns; все NOT_RUN_RND_HYPOTHESIS.
+16 workflow-plans: workflows/*.json, PROPOSAL_NOT_EXECUTED; проверена структура/DAG, выполнено0 workflows.
+59 capability candidates различают bundled CLI и пока недостающие adapters; discovery не даёт права выполнения.
+
+СТАРЫЕ ИДЕИ, КОТОРЫЕ НЕ НУЖНО ИЗОБРЕТАТЬ ПОВТОРНО
+2024-02-20: Telegram voice/video/text life archive→Notion/Colab.
+2026-08-06: переносимая Chrome/Colab среда, Drive backup; session archives чувствительные.
+2026-09-14: маленький router и отдельный stronger reasoning/code model.
+2026-09-21: Voice→Inbox→Project; Context Shopping Cart; Fresh Chat Handoff; repo snapshots/diffs; failed attempts; evidence packs; portable TXT/MD/JSON/ZIP.
+2026-09-24: PIT Web3 Decision Episodes, counterfactuals, active perception, model parliament, evidence-service market. Последние — исторические гипотезы, не доказанные реализованные рынки.
+
+НОВЫЕ ПРЕДЛОЖЕНИЯ ЭТОГО R&D
+Intent compiler с типами эффектов; evidence debt ledger; skill distillation из проверенных traces; minimal locator repair; budgeted disagreement; context cart с manifest полноты; version-bound requirement↔symbol↔test↔receipt graph; следующий запрос данных по ожидаемой ценности информации.
+Для Web3: shared approved PIT feeds, read-only strategy fanout, candidate dedup, simulation queue, unit-safe costs, trial registry/holdout и conflict/capital coordination. LLM не в критическом transaction path. Live signer остаётся disabled.
+
+СЛЕДУЮЩИЙ COHERENT ВЕРТИКАЛЬНЫЙ СРЕЗ
+DESK-01+02: расширить raw collection и versioned multi-part export в существующем SCE owner; tests >1000 paths, >8MiB, weird names, interruption, secret/share boundaries, byte-exact coverage. Затем DESK-03 desktop и DESK-05 canonical qualification bridge. Voice и heavier models идут после evidence-loop, не вместо него.
+Названия DESK-xx — workstream IDs, не реальные GitHub PR numbers.
+
+ТРЕБОВАНИЯ К СЛЕДУЮЩЕМУ ИСПОЛНИТЕЛЮ
+1. Прочитать актуальный HEAD и сравнить с pin, не предполагать, что main не изменился.
+2. Собрать полный source manifest доступных repo/старых exports; перечислить отсутствующие bytes.
+3. Сопоставить требование с существующим владельцем функции. Не дублировать engines и roadmap.
+4. Для каждого исправления дать path+SHA+line range, regression test, фактическую команду/вывод и статус среды.
+5. Не называть review/plan/JSON готовой реализацией, не превращать source text в shell или permissions.
+6. Не запускать деньги/кошелёк/live и не публиковать личные архивы без отдельного согласия и проверенного профиля.
+
+ДАЛЬШЕ ЧИТАТЬ
+README_RU.md; docs/01…13; tools/README_RU.md; research/SOURCES.md; history/TIMELINE_RU.md; evidence/STATUS.json.
+Полный текст авторских файлов пакета собран отдельно в ALL_AUTHORED_CONTEXT.txt; это контекст ДАННОГО ПАКЕТА, не подмена отсутствующего полного исходного кода пользовательских repo.
+
+===== END FILE =====
+
+===== FILE {"path": "README_RU.md", "bytes": 4837, "sha256": "e0aa29cd09cd35da9be75e67256202f3bcee82ad9d27d1a759e31217ec159f1a"} =====
+# OCC Desktop R&D — 3 октября 2026
+
+**Начать с `00_START_HERE_RU.txt`, затем `AI_HANDOFF_RU.txt`.**
+
+Это R&D-пакет для `BobIvans/scaling-chrome-extensions` и связанного `studious-pancake`: проверенные выборочные факты кода, восстановленная история идей, архитектура Windows-библиотеки, экспериментальные задания, JSON-контракты и работающий локальный архиватор.
+
+## Что внутри действительно сделано
+
+В `tools/archive_tool.py` реализованы сбор папки без потолка числа файлов, чтение закреплённого Git-дерева без импорта его кода, хранение исходных байтов, инвентарь всех обнаруженных путей, SHA-256, потоковый экспорт ВСЕГО UTF-8-текста, фрагменты без отбрасывания хвоста, проверка восстановления текста, статический каталог Python/argparse/package.json и импорт всех mapping-веток ChatGPT JSON. Есть тесты и небольшой desktop front-end на Tk.
+
+**Это не полный исходный снимок двух репозиториев и не полный экспорт твоих прошлых чатов.** Через подключённый GitHub прочитаны закреплённые фрагменты и документы; полное скачивание в среду не удалось. Вложения прошлых чатов не были доступны как файлы. Сохранённые в `history` записи — явно помеченные восстановленные summaries, не придуманные дословные сообщения. На ПК полный Git-снимок собирает `windows/Acquire-Repos.ps1`.
+
+## Что не выполнено
+
+Нет commit/PR/merge. Нет запуска твоего бота, реального paper-campaign, торгов, кошелька или подписанта. Нет теста на Dell/Windows, микрофона, NVDA, Laya/Jev, Hugging Face моделей или OpenAI API. JSON workflow-планы не исполняются автоматически. Успешные тесты относятся только к приложенному архиватору и синтетическим фикстурам Linux.
+
+## Приватность прежде передачи в AI
+
+Архиватор **сохраняет оригиналы локально**, включая потенциально чувствительные обычные файлы выбранной папки. Полнота локального архива не означает разрешение отправить его в облако. `possible_secret_name` — слабая подсказка, НЕ полноценный поиск секретов. Не выбирай весь диск и не загружай получившийся raw-архив без проверки. Следующий production-слой должен делать отдельную sanitized-проекцию с журналом исключений и явным разрешением на передачу.
+
+## Чтение по задачам
+
+`docs/01_REPO_FINDINGS_RU.md` — что уже существует и какие лимиты действительно найдены.
+
+`docs/02_DESKTOP_ARCHITECTURE_RU.md` — минимальная desktop-архитектура без обязательного Chrome.
+
+`docs/03_LAYERED_INTELLIGENCE_RU.md` и `research/EXPERIMENTS.json` — как превращать цель в проверяемую автоматизацию, а не только в ответ модели.
+
+`docs/04_LOSSLESS_CONTEXT_RU.md` и `tools/README_RU.md` — оригиналы, пути, полный текст, контроль пропусков и команды запуска.
+
+`docs/07_QUALIFICATION_RU.md` — существующие команды бота; `docs/08_PARALLEL_WEB3_RU.md` — безопасное масштабирование исследований.
+
+`docs/12_IMPLEMENTATION_PLAN_RU.md` — интеграция в существующих владельцев данных SCE, а не создание параллельной несовместимой системы.
+
+`research/SOURCES.md` — официальные источники, проверенные 2026-10-03; `evidence/STATUS.json` — пределы фактически выполненной проверки.
+
+===== END FILE =====
+
+===== FILE {"path": "docs/01_REPO_FINDINGS_RU.md", "bytes": 5734, "sha256": "1a804c815bd34d88af453e48f4aae63b306793fe04a2befb11b3dab439ea2466"} =====
+# Проверенное состояние и ограничения
+
+Дата чтения: 2026-10-03. Состояние может измениться после закреплённых SHA. Источники [G01–G10] раскрыты в `research/SOURCES.md`. Это выборочная проверка фактических функций, а не объявление полного аудита каждого файла.
+
+## Закреплённые состояния
+
+SCE: `da6abf4c006e4e7d26fe45ef30fa9d07a356f396`, merge #37, 2026-10-03T15:58:25Z. Studious: `67d3852cbc4cb1b24582df45adbf6a42d4da2af0`, merge #562, 2026-10-02T23:07:26Z. Эти SHA занесены в примеры; новые ветки требуют новой проверки, а не молчаливого обновления профиля.
+
+## Найденные ограничения — не все одного типа
+
+| Место | Фактическое поведение | Что делать |
+|---|---|---|
+| `automation_core.sync` [G03] | По умолчанию 100 файлов, валидатор не допускает больше 1 000; бюджет обхода 10 000 entries | Полный manifest отдельно от размера рабочей страницы; продолжение по durable cursor |
+| `automation_core.sync` [G03] | Скрытые файлы/директории и многие suffix не включаются; `node_modules` пропускается | Все пути перечислять; политику включения отражать явными статусами, не скрытыми фильтрами |
+| `automation_core.context_pack` [G03] | Только 1–10 уникальных IDs; default 100 000 bytes, максимум 1 000 000 | Создать новую потоковую multi-part проекцию; не менять контракт старого single-pack молча |
+| `context_review.create_session` [G04] | Запрашивает `context_pack(..., max_bytes=48_000)` | Сессия должна ссылаться на bundle manifest и точные части, а не держать весь корпус в одном JSON |
+| `repo_context.scan_page` [G05] | `limit=20`, разрешены 1–100 записей на страницу | **Это НЕ максимум 20 документов во всей библиотеке.** Проверить цикл до завершения cursor |
+| `repo_context` [G05] | `MAX_FILE=8 MiB`, `MAX_TREE=32 MiB`; Git helper собирает stdout до проверки лимита | Потоковый `ls-tree`/`cat-file`, raw storage, отдельные лимиты parser/model с явным PARTIAL |
+| `repo_context.source_path` [G05] | Ограничения UTF-8, длины и допустимых символов | Хранить сырой путь как bytes/base64 и безопасный display-path; не применять исходный путь при распаковке |
+| `automation_core.validate_policy` [G03] | Один writer и нулевой money budget | Сохранить до введения доказанных leases/изоляции/ресурсных пулов; это не произвольный лимит документов |
+| `paper_campaign.plan.json` [G06] | `BLOCKED_NOT_STARTED`, `native_adapter_compatible=false` | Не запускать как Laya-request или готовую команду; сначала реализовать admission/сбор evidence |
+
+## Уже есть полезный фундамент
+
+`repo_context` уже привязывает записи к Git-объектам, хранит entries/chunks, состояние обхода и byte offsets. `automation_core` уже имеет SQLite owner, версии источников, задачи, lease, checkpoint и события. `context_review` отличает review-утверждение от подтверждённого результата. Это нужно расширять, а не обходить вторым production-хранилищем. [G03–G05]
+
+`agent-bridge/QUALIFICATION_ADAPTER_RU.md` описывает прямой вызов CLI без Chrome. Следовательно, переносить надо транспорт/UI и политику capabilities, а не переписывать существующую qualification-логику. [G07]
+
+## Статические сигналы и настоящие дефекты
+
+`except: pass`, длинная функция, TODO или одинаковые имена не доказывают ошибку. Для каждого сигнала нужен путь, SHA, line range, ожидаемое поведение, минимальный тест, фактический результат и версия среды. Отдельно классифицировать `CODE_DEFECT`, `MISSING_EVIDENCE`, `ENVIRONMENT_BLOCKER`, `PROPOSAL_ONLY`. Старый PR или красивый markdown не меняют status автоматически.
+
+## Чего эта проверка не установила
+
+Полное число файлов/функций, точное покрытие всей кодовой базы, статус всех PR/CI, содержимое недоступных старых ZIP, работоспособность на твоём Dell и прибыльность бота здесь не установлены. Инструмент полного локального сбора приложен именно для закрытия этих пробелов без выдумывания totals.
+
+===== END FILE =====
+
+===== FILE {"path": "docs/02_DESKTOP_ARCHITECTURE_RU.md", "bytes": 6183, "sha256": "5a0d15468cfadcdf2d6f4bafc3f747058a585dbb0b164a2504b6acfcb38d0cb1"} =====
+# Windows-приложение вместо обязательного Chrome extension
+
+## Предлагаемое решение
+
+Один desktop-shell, существующее Python-ядро SCE и один canonical store. Chrome-extension сохраняется только как необязательный способ захвата отдельных страниц; отсутствие extension не должно блокировать импорт файлов, Git, библиотеку, API, terminal jobs или qualification.
+
+Первый вертикальный срез: выбрать репозиторий → получить immutable snapshot → построить пути/поиск/каталог → сформировать полный context export → открыть конкретный символ в VS Code → запустить одну заранее проверенную qualification-команду → вернуть receipt в библиотеку. Голос подключается к этому же typed API, не образует второй механизм исполнения.
+
+## Границы модулей
+
+| Модуль | Ответственность | Не имеет права |
+|---|---|---|
+| Desktop UI | Файлы, поиск, задачи, previews, согласия, с

@@ -1,0 +1,42 @@
+name: PR52 full source context integrity
+on:
+  pull_request:
+    paths:
+      - 'docs/strategy/pr052-context/**'
+      - 'MASTER_CONTEXT.md'
+      - 'CODEX_START_HERE.md'
+      - '.github/workflows/pr052-context-integrity.yml'
+  push:
+    branches: ['codex/pr020-021-research-qualification']
+    paths:
+      - 'docs/strategy/pr052-context/**'
+      - 'MASTER_CONTEXT.md'
+      - 'CODEX_START_HERE.md'
+      - '.github/workflows/pr052-context-integrity.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  context-integrity:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+        env:
+          GIT_CONFIG_COUNT: '2'
+          GIT_CONFIG_KEY_0: core.longpaths
+          GIT_CONFIG_VALUE_0: 'true'
+          GIT_CONFIG_KEY_1: core.autocrlf
+          GIT_CONFIG_VALUE_1: 'false'
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.13'
+      - name: Verify all source bytes and original criterion ledger
+        run: python -I -X utf8 docs/strategy/pr052-context/verify_context.py

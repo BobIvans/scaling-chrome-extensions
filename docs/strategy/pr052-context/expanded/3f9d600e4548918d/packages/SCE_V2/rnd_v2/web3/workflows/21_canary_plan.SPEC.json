@@ -1,0 +1,55 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF21",
+  "name": "canary_plan",
+  "title_ru": "План ограниченного canary",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "paper_observation",
+    "stop_and_pause",
+    "release_artifact"
+  ],
+  "inputs": [
+    "specific_operator_authorization",
+    "limits",
+    "expiry",
+    "network",
+    "signer_scope"
+  ],
+  "steps": [
+    {
+      "id": "canary_plan.1",
+      "handler": "PROPOSED.canary_plan.1",
+      "instruction": "Render exact proposed executable version/network/assets/limits and expiry"
+    },
+    {
+      "id": "canary_plan.2",
+      "handler": "PROPOSED.canary_plan.2",
+      "instruction": "Check operational prerequisites and define immediate stop signals"
+    },
+    {
+      "id": "canary_plan.3",
+      "handler": "PROPOSED.canary_plan.3",
+      "instruction": "Remain disabled in this R&D pack; no executable signing or broadcasting handler"
+    }
+  ],
+  "outputs": [
+    "canary_plan_only"
+  ],
+  "qualification_criteria": [
+    "Requires separate reviewed live authorization; offline TRUE never enables signer"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

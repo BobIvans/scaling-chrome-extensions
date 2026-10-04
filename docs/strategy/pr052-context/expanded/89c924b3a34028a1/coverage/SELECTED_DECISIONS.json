@@ -1,0 +1,129 @@
+{
+  "count": 3,
+  "decisions": [
+    {
+      "id": "DEC5-20",
+      "title": "Release provenance, exact-SHA updater и активация",
+      "related_feature_ids": [
+        "ACT-046",
+        "ACT-047",
+        "RND-007",
+        "RND-008"
+      ],
+      "related_task_ids": [
+        "TAB4-10",
+        "TAB4-11",
+        "TAB4-12",
+        "TAB4-14",
+        "TAB4-15",
+        "EVO3-008",
+        "EVO3-013",
+        "EVO3-016"
+      ],
+      "what_is_undefined": "V4 требует staged updater, но не выбирает release producer/channel, source-to-asset binding, signatures/identity, dependency lock policy, activation mechanism и ownership проверяющего bootstrap.",
+      "options": [
+        "Pinned source/release channel + provenance manifest + staged activation",
+        "Скачать default branch ZIP и сразу выполнить scripts",
+        "Фраза merged как installed receipt"
+      ],
+      "recommended_default": "Один configured repo/release channel; exact candidate SHA/asset digest; qualified build/provenance manifest, dependency locks, staging, migration rehearsal, atomic active pointer и independent installed receipt. Bootstrap/evaluator обновляются отдельным типом.",
+      "rationale": "Merge и head tests не доказывают итоговую установленную сборку. Previous version restore должен учитывать данные и jobs, а upstream scripts не запускаются из факта загрузки.",
+      "validation_experiment": "Controlled repo: merge/squash/rebase, advancing branch, tampered asset, failed candidate test, interrupted download/migration/activation, rollback и bootstrap-change proposal.",
+      "decision_acceptance": [
+        "Channel/provenance/release manifest, dependency policy и activation ABI зафиксированы.",
+        "Квалифицированы именно итоговый install SHA/artifact и target device; drift вызывает новую проверку.",
+        "Failure сохраняет рабочую версию; восстановление данных/jobs проверено; updater не меняет собственные критерии."
+      ],
+      "owner_role": "Release/updater qualification owner",
+      "blocking_milestones": [
+        "V4:S6",
+        "V4:S7",
+        "V4:S11"
+      ],
+      "status": "PROPOSED_NOT_DECIDED"
+    },
+    {
+      "id": "DEC5-21",
+      "title": "Durable scheduler, budgets и возобновление Windows",
+      "related_feature_ids": [
+        "ACT-016",
+        "ACT-022",
+        "ACT-024",
+        "ACT-025",
+        "ACT-027",
+        "ACT-049",
+        "ACT-055",
+        "RND-024",
+        "RND-025",
+        "RND-039"
+      ],
+      "related_task_ids": [
+        "PAR3-007",
+        "PAR3-008",
+        "PAR3-014",
+        "PAR3-016",
+        "PAR3-019",
+        "PAR3-022"
+      ],
+      "what_is_undefined": "Параллельный planner есть как reference, но не выбраны owner scheduler lifecycle, resource weights, per-provider quotas, persisted reservation, sleep/catch-up semantics и retirement stuck leases на Windows.",
+      "options": [
+        "Существующий Core owner с measured resource-class admission",
+        "Unlimited fan-out и retries до успеха",
+        "Отдельный scheduler/store для каждой app automation"
+      ],
+      "recommended_default": "Сохранить Core max_parallel=1 до qualified pilot; design resource-class admission для независимых read/research jobs, leases/fencing, CPU/RAM/provider reservations и no-burst catch-up на reconnect/reboot.",
+      "rationale": "16 GB и внешние квоты конечны; просроченное расписание не должно запускать все пропущенные effects одновременно. Один owner и persisted budgets предотвращают гонки и скрытые расходы.",
+      "validation_experiment": "Fixture DAG с shared UI/store/worktree, Windows sleep/reboot, provider offline/quota, exhausted budget, aging и cancel. Измерить реальные resource limits, затем pilot bounded read parallelism.",
+      "decision_acceptance": [
+        "Resource identity, admission/budget/lease schema и catch-up policy зафиксированы.",
+        "Reservation и reconciliation переживают restart; old lease не пишет после нового fence.",
+        "Pilot публикует corpus/resource measurements; production limit не повышается только по успеху reference tests."
+      ],
+      "owner_role": "Scheduler/resource owner",
+      "blocking_milestones": [
+        "V4:S9",
+        "V4:S11"
+      ],
+      "status": "PROPOSED_NOT_DECIDED"
+    },
+    {
+      "id": "DEC5-22",
+      "title": "Границы автономного improvement loop",
+      "related_feature_ids": [
+        "ACT-009",
+        "ACT-025",
+        "ACT-040",
+        "ACT-056",
+        "RND-044",
+        "RND-045"
+      ],
+      "related_task_ids": [
+        "TAB4-17",
+        "G3-010",
+        "EVO3-021",
+        "LAYA4-028"
+      ],
+      "what_is_undefined": "Автономное повторение описано, но не зафиксированы progress measure, stop reason taxonomy, repeated-failure identity, максимальные iterations/time/spend и правила изменения замороженных acceptance criteria.",
+      "options": [
+        "Конечный cycle с frozen criteria и next brief по evidence blocker",
+        "Бесконечно переписывать код пока AI сообщает success",
+        "После первой ошибки сбрасывать task и повторять всё"
+      ],
+      "recommended_default": "Campaign revision фиксирует goal/criteria/scope; finite iteration/time/provider budget, repeated-failure dedup и blocker-driven next request; stop сохраняет завершённые evidence и остаток. Unknown effect запускает reconciliation, не новую попытку.",
+      "rationale": "Интеллект обновления проявляется выбором следующего полезного evidence, а не количеством генераций. Критерии не должны снижаться системой ради закрытия задачи.",
+      "validation_experiment": "Corpus no-progress, repeated failed patch, new dependency, changing goal, budget exhaustion и ambiguous send; проверить stopping reason/next brief и сохранение исходной версии критериев.",
+      "decision_acceptance": [
+        "Iteration/progress/stop schemas, ceilings и frozen-criteria semantics описаны.",
+        "Каждый переход имеет reason и источник; loop не повторяет uncertain effect и не меняет criteria silently.",
+        "Blocked goal остаётся в deferred register с конкретным revisit condition."
+      ],
+      "owner_role": "Campaign/planning owner",
+      "blocking_milestones": [
+        "V4:S8",
+        "V4:S9",
+        "V4:S11"
+      ],
+      "status": "PROPOSED_NOT_DECIDED"
+    }
+  ]
+}

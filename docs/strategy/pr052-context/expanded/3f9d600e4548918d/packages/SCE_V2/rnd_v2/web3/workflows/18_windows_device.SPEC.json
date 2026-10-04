@@ -1,0 +1,53 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF18",
+  "name": "windows_device",
+  "title_ru": "Dell Windows 11 qualification",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build"
+  ],
+  "inputs": [
+    "actual_device_profile",
+    "microphone",
+    "memory",
+    "disk"
+  ],
+  "steps": [
+    {
+      "id": "windows_device.1",
+      "handler": "PROPOSED.windows_device.1",
+      "instruction": "Benchmark cold/warm start, CPU/GPU/RAM and sustained heat under target workload"
+    },
+    {
+      "id": "windows_device.2",
+      "handler": "PROPOSED.windows_device.2",
+      "instruction": "Test wake/sleep, network changes, microphone loss and disk pressure"
+    },
+    {
+      "id": "windows_device.3",
+      "handler": "PROPOSED.windows_device.3",
+      "instruction": "Qualify installed runtime/provider/model separately from remote test runner"
+    }
+  ],
+  "outputs": [
+    "device_matrix",
+    "latency_measurements"
+  ],
+  "qualification_criteria": [
+    "Measured on actual Dell; Linux tests do not imply Windows readiness"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

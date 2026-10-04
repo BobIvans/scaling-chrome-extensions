@@ -1,0 +1,34 @@
+{
+  "schema_version": "1.0",
+  "id": "web3.collect_paper_evidence",
+  "version": "0.0.0-example",
+  "status": "EXAMPLE_NOT_EXECUTABLE",
+  "handler": "future_handlers.paper.collect_evidence",
+  "artifact": {
+    "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+    "source_commit": "0000000000000000000000000000000000000000",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "workflow": "release-windows.yml",
+    "signature_ref": "NOT_SIGNED_EXAMPLE"
+  },
+  "scope_requests": [
+    {
+      "scope": "filesystem.read",
+      "reason": "Прочитать разрешённые журналы paper campaign.",
+      "resource": "${configured_paper_logs_root}"
+    }
+  ],
+  "execution": {
+    "runtime": "python-worker",
+    "read_only": true,
+    "resource_locks": [],
+    "idempotency": "read_only",
+    "timeout_seconds": 300
+  },
+  "verification": {
+    "input_schema": "NOT_IMPLEMENTED",
+    "output_schema": "NOT_IMPLEMENTED",
+    "test_suite": "NOT_IMPLEMENTED",
+    "state": "NOT_RUN"
+  }
+}

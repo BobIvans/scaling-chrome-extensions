@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/laya/mission.schema.json",
+  "title": "Mission SPEC 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "status",
+    "goal",
+    "input",
+    "repo",
+    "context",
+    "acceptance",
+    "policy",
+    "budgets"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "enum": [
+        "EXAMPLE_NOT_EXECUTABLE",
+        "DRAFT",
+        "READY",
+        "RUNNING",
+        "PAUSED",
+        "COMPLETE",
+        "FAILED"
+      ]
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "input": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "language",
+        "committed",
+        "source_ref"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "voice",
+            "text",
+            "document"
+          ]
+        },
+        "language": {
+          "type": "string"
+        },
+        "committed": {
+          "type": "boolean"
+        },
+        "source_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "repo": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "name",
+        "base_commit",
+        "workspace_ref"
+      ],
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "base_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+        },
+        "workspace_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "context": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "path",
+          "sha256",
+          "provenance"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "provenance": {
+            "type": "string"
+          },
+          "slice": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "acceptance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "criterion",
+          "verifier",
+          "state"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "criterion": {
+            "type": "string"
+          },
+          "verifier": {
+            "type": "string"
+          },
+          "state": {
+            "enum": [
+              "TRUE",
+              "FALSE",
+              "UNKNOWN",
+              "NOT_RUN"
+            ]
+          }
+        }
+      }
+    },
+    "policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "grant_refs",
+        "allowed_operations",
+        "web3_mode",
+        "merge_policy",
+        "source_instructions_trusted"
+      ],
+      "properties": {
+        "grant_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "allowed_operations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "web3_mode": {
+          "enum": [
+            "offline",
+            "fork",
+            "paper",
+            "testnet",
+            "live"
+          ]
+        },
+        "merge_policy": {
+          "enum": [
+            "disabled",
+            "existing_scoped_grant"
+          ]
+        },
+        "source_instructions_trusted": {
+          "const": false
+        }
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "seconds",
+        "provider_cost_usd",
+        "on_exhaustion"
+      ],
+      "properties": {
+        "seconds": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "provider_cost_usd": {
+          "type": "number",
+          "minimum": 0
+        },
+        "on_exhaustion": {
+          "const": "checkpoint_pause_preserve_remaining_work"
+        }
+      }
+    }
+  }
+}

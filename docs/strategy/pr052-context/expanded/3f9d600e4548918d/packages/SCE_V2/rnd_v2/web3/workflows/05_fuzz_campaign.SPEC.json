@@ -1,0 +1,53 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF05",
+  "name": "fuzz_campaign",
+  "title_ru": "Fuzz с corpus и seed",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts"
+  ],
+  "inputs": [
+    "seed_set",
+    "corpus_hash",
+    "fuzz_budget"
+  ],
+  "steps": [
+    {
+      "id": "fuzz_campaign.1",
+      "handler": "PROPOSED.fuzz_campaign.1",
+      "instruction": "Пиновать seeds, tool version, cases/runs/depth и предел времени"
+    },
+    {
+      "id": "fuzz_campaign.2",
+      "handler": "PROPOSED.fuzz_campaign.2",
+      "instruction": "Сохранять covered selectors, revert distribution, execution counts"
+    },
+    {
+      "id": "fuzz_campaign.3",
+      "handler": "PROPOSED.fuzz_campaign.3",
+      "instruction": "Сжимать counterexample и добавлять regression test"
+    }
+  ],
+  "outputs": [
+    "campaign_metrics",
+    "counterexample",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "Budgets actually reached; timeout or vacuous coverage does not pass"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

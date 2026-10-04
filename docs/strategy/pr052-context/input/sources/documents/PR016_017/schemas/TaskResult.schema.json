@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskResult",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "result.v1"
+    },
+    "result_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packet_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "target_binding_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "conversation_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "response_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "response_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "finalized": {
+      "const": true
+    },
+    "coverage_claims": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "part_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_version_ref": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_kind": {
+            "type": "string",
+            "enum": [
+              "RECEIVED",
+              "USED"
+            ]
+          },
+          "claim_ref": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "part_id",
+          "source_version_ref",
+          "claim_kind",
+          "claim_ref"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "missing_part_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "findings_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "model_done_claim": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema_version",
+    "result_id",
+    "revision",
+    "task_id",
+    "attempt_id",
+    "packet_sha256",
+    "target_binding_id",
+    "conversation_ref",
+    "response_ref",
+    "response_sha256",
+    "finalized",
+    "coverage_claims",
+    "missing_part_ids",
+    "findings_refs",
+    "model_done_claim"
+  ],
+  "additionalProperties": false
+}

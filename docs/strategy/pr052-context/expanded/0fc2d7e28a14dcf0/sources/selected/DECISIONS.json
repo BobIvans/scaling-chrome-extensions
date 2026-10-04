@@ -1,0 +1,384 @@
+[
+  {
+    "id": "DEC5-01",
+    "title": "Desktop transport, упаковка и владелец процесса",
+    "related_feature_ids": [
+      "LIB-001",
+      "LIB-029",
+      "LIB-031",
+      "ACT-050",
+      "ACT-051",
+      "RND-008",
+      "RND-010"
+    ],
+    "related_task_ids": [
+      "G3-001",
+      "TAB4-01",
+      "LAYA4-001"
+    ],
+    "what_is_undefined": "V4 требует desktop без обязательного Chrome и одного Core/SQLite owner, но не выбирает desktop runtime, IPC, bootstrap или жизненный цикл фонового процесса; не определены per-user установка и способ reconnect клиента.",
+    "options": [
+      "Типизированный stdio IPC между desktop shell и существующим Core",
+      "Локальный authenticated HTTP service с отдельным lifecycle",
+      "Расширение Chrome как единственный клиент"
+    ],
+    "recommended_default": "Для прототипа: per-user desktop shell с typed stdio IPC к существующему Core; bootstrap и store-path едины; shell выбирается отдельным packaging spike без миграции DB owner.",
+    "rationale": "Сохраняет текущие контракты и позволяет работать с закрытым Chrome; не создаёт конкурирующий service/store. Выбор shell должен учитывать реальную Windows упаковку, обновление и ресурсы, а не популярность framework.",
+    "validation_experiment": "Сравнить два минимальных кандидата shell на Dell: install/uninstall, closed-Chrome start, reconnect после crash, один writer и открытие большого каталога; опубликовать фактические boot/RAM результаты.",
+    "decision_acceptance": [
+      "Зафиксированы shell/runtime versions, IPC schema, process ownership и пути профиля/данных.",
+      "Установка и повторный запуск проверены на конкретной Windows сборке; второй клиент не создаёт второго writer.",
+      "Показаны offline режим и восстановление после crash без потери task references."
+    ],
+    "owner_role": "Desktop/runtime owner",
+    "blocking_milestones": [
+      "V4:S0",
+      "V4:S3",
+      "V4:S7"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-02",
+    "title": "Версия scope/auth и отделение контекста от полномочий",
+    "related_feature_ids": [
+      "ACT-003",
+      "ACT-004",
+      "ACT-005",
+      "ACT-054",
+      "LIB-037",
+      "LIB-039"
+    ],
+    "related_task_ids": [
+      "TAB4-02",
+      "EVO3-019",
+      "UI3-008"
+    ],
+    "what_is_undefined": "Список полей scope описан, но не выбран machine-readable policy ABI: identity principal, effects, data projection, expiry/revocation, расходные пределы и сравнение новой версии. Не задано, чем защищён локальный канал и кто может менять profile.",
+    "options": [
+      "Typed versioned profile с exact actions/targets и отдельными grants",
+      "Широкое разрешение на app/repo без effect types",
+      "Разрешение заново на каждый шаг"
+    ],
+    "recommended_default": "Typed immutable profile revision: зарегистрированные sources/targets/effects, budget/time ceilings, revocation; изменение доверенного profile доступно пользователю/оператору, а не imported context.",
+    "rationale": "Автономность возможна в сохранённых границах без повторения одинаковых вопросов; новый адресат или права остаются явным изменением, а document/voice claim не выдают их сами.",
+    "validation_experiment": "Прогнать profile checker на разрешённых повторных действиях, смене repo/account, stale grants, отозванном scope и текстовой инструкции из исходника расширить права.",
+    "decision_acceptance": [
+      "Schema и canonical digest policy version зафиксированы.",
+      "Разрешённый повтор в неизменном scope не требует нового решения; новая цель/данные/права не получают старый grant.",
+      "Revocation semantics покрывают pending intent, completed remote effect и queued remaining work."
+    ],
+    "owner_role": "Policy/trust owner",
+    "blocking_milestones": [
+      "V4:S4",
+      "V4:S5",
+      "V4:S7",
+      "V4:S8",
+      "V4:S11"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-05",
+    "title": "Envelope многотомного контекста и бюджет транспорта",
+    "related_feature_ids": [
+      "LIB-005",
+      "LIB-024",
+      "LIB-025",
+      "LIB-028",
+      "LIB-057",
+      "ACT-010"
+    ],
+    "related_task_ids": [
+      "TAB4-05",
+      "TAB4-19",
+      "LAYA4-009",
+      "LAYA4-019",
+      "LAYA4-021",
+      "UI3-004",
+      "UI3-011"
+    ],
+    "what_is_undefined": "План требует все части без общего count cap, но не фиксирует wire manifest, packet continuation, byte/token budget estimator, транспортные лимиты и доказательство receipt/consumption каждого тома.",
+    "options": [
+      "Provider-neutral part manifest и отдельные qualified provider profiles",
+      "Один огромный ZIP всегда целиком в чат",
+      "Саммари вместо оригиналов без range mappings"
+    ],
+    "recommended_default": "Immutable manifest part IDs/hashes/ranges/order; byte budget строгий, token estimate явно приблизительный; provider profiles получают limits из qualification; prepared/sent/received/claimed_used различаются.",
+    "rationale": "Архив может быть большим, передача и окно AI конечны. Части нельзя считать прочитанными только потому, что они находятся в ZIP или uploaded.",
+    "validation_experiment": "В corpus изменить размер parts, прервать загрузку, повторить/пропустить том, дать wrong packet ID; реконструировать selected originals по manifests и запросить конкретный missing range.",
+    "decision_acceptance": [
+      "Schema manifest и continuation request заданы; packet identity не зависит от mutable UI поля.",
+      "Все исходные selected bytes восстановимы либо имеют explicit reason отсутствия.",
+      "Для каждого provider указаны measured/unknown limits и сила каждого receipt вида."
+    ],
+    "owner_role": "Context/transport contract owner",
+    "blocking_milestones": [
+      "V4:S1",
+      "V4:S2",
+      "V4:S5",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-10",
+    "title": "Версионирование схем, migration rehearsal и rollback",
+    "related_feature_ids": [
+      "LIB-030",
+      "LIB-047",
+      "LIB-052",
+      "ACT-047"
+    ],
+    "related_task_ids": [
+      "LAYA4-027",
+      "EVO3-014",
+      "EVO3-015",
+      "TAB4-14"
+    ],
+    "what_is_undefined": "Rollback есть в цели, но отсутствуют compatibility matrix DB/app/importer schemas, forward unknown field behavior, migration journal и восстановление активных jobs при downgrade.",
+    "options": [
+      "Versioned migrations с rehearsal и explicit compatibility matrix",
+      "In-place schema change при каждом запуске",
+      "Обнуление store и повторный импорт после обновления"
+    ],
+    "recommended_default": "Migrations принадлежит существующему store owner; copy/rehearsal до активации; snapshot/journal для recovery; job и evidence pinned к schema/profile revisions; unknown source fields сохраняются.",
+    "rationale": "Копия старого binary сама по себе не гарантирует совместимость изменённых данных. На каждой версии нужна политика обратимости, а не общий лозунг rollback.",
+    "validation_experiment": "Fixture store с tasks, history, aliases и unfinished jobs: interrupted migration, newer schema opening old app, unknown importer field, restore и resumable state checks.",
+    "decision_acceptance": [
+      "Зафиксированы min/max schema compatibility, migration steps, recovery point и irreversible cases.",
+      "Репетиция не изменяет production store; interrupted migration имеет однозначное recovery state.",
+      "После восстановления ссылки goals/tasks/evidence валидны; incompatible job не возобновляется silently."
+    ],
+    "owner_role": "Store migration owner",
+    "blocking_milestones": [
+      "V4:S3",
+      "V4:S7",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-11",
+    "title": "Согласованный backup и полное восстановление",
+    "related_feature_ids": [
+      "LIB-035",
+      "LIB-036"
+    ],
+    "related_task_ids": [
+      "LAYA4-027",
+      "EVO3-014"
+    ],
+    "what_is_undefined": "Backup указан как функция, но не определены snapshot consistency для SQLite/WAL и CAS, reachable objects manifest, destination identity, encryption/key recovery и правила restore в другое место.",
+    "options": [
+      "Consistent DB snapshot + referenced object manifest и restore corpus",
+      "Копирование папки во время записи без coordination",
+      "Cloud sync как единственный backup"
+    ],
+    "recommended_default": "Локальный независимый backup artifact из consistent SQLite snapshot и referenced objects с hashes/schema versions; destination явный; encryption profile отдельно проверяется; restore сначала в новый каталог.",
+    "rationale": "Sync повторяет ошибки/удаления, а несогласованная file copy может дать missing references. Восстановление должно проверять данные, а не только existence ZIP.",
+    "validation_experiment": "Сделать backup при import/job writes, восстановить на clean path, намеренно удалить один blob и повредить manifest; при encrypted profile отдельно проверить восстановление ключа без секретов в report.",
+    "decision_acceptance": [
+      "Backup manifest перечисляет DB revision, objects, schemas, state boundary и проверенные hashes.",
+      "Restore обнаруживает отсутствующий/повреждённый object и не выдаёт partial restore за complete.",
+      "Политика ключей/destination/access явна; проверенный restore имеет receipt."
+    ],
+    "owner_role": "Backup/recovery owner",
+    "blocking_milestones": [
+      "V4:S3",
+      "V4:S7",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-12",
+    "title": "Retention, tombstones и пределы удаления",
+    "related_feature_ids": [
+      "LIB-051",
+      "LIB-008",
+      "LIB-035",
+      "ACT-034"
+    ],
+    "related_task_ids": [
+      "LAYA4-017",
+      "LAYA4-027"
+    ],
+    "what_is_undefined": "V4 учитывает originals/derivatives/backups/sent copies, но не выбирает default retention per class, delete alias vs source/object, tombstone propagation и смысл восстановления удалённого источника из backup.",
+    "options": [
+      "Class-specific retention и tombstone propagation с user-visible limits",
+      "Автоматическое удаление всех originals после extraction",
+      "Никогда не удалять ничего"
+    ],
+    "recommended_default": "Originals сохраняются до явного правила/выбора удаления; caches/extractions/audio temp имеют отдельные policies. Alias удаляется отдельно от общего blob; tombstone учитывается в derivation/search/restore.",
+    "rationale": "Lifetime archive не отменяет контроль хранения. Обещание удалить уже переданную внешнюю копию непроверяемо; список этих copies остаётся в history.",
+    "validation_experiment": "Удалить source с shared identical blob, transcripts/chunks/search entries и backed-up copy; restore после tombstone и убедиться, что data не resurrected silently.",
+    "decision_acceptance": [
+      "Retention classes, inheritance, TTL conditions и delete semantics versioned.",
+      "Reachable shared blob сохраняется; удалённые source/derivatives не участвуют в обычном retrieval.",
+      "UI перечисляет external/backups copies и известные ограничения удаления."
+    ],
+    "owner_role": "Data lifecycle owner",
+    "blocking_milestones": [
+      "V4:S3",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-13",
+    "title": "Share projection, redaction и recipient binding",
+    "related_feature_ids": [
+      "LIB-037",
+      "LIB-038",
+      "LIB-039",
+      "LIB-059",
+      "ACT-005"
+    ],
+    "related_task_ids": [
+      "LAYA4-020",
+      "TAB4-05",
+      "TAB4-19",
+      "UI3-007"
+    ],
+    "what_is_undefined": "Контекст должен быстро передаваться, но не задан projection schema, redaction offsets, проверка numeric/table fidelity, секретные типы и привязка preview к exact recipient/document version перед внешним эффектом.",
+    "options": [
+      "Selected immutable projection с redaction ledger и recipient digest",
+      "Отправить всю библиотеку для максимального контекста",
+      "Редактировать оригиналы напрямую до передачи"
+    ],
+    "recommended_default": "ShareProjection выбирает sources/ranges и recipient scope; placeholders/redaction mapping принадлежат derived export; raw originals локальны; document/recipient diff invalidates preview approval.",
+    "rationale": "Быстрый share должен оставаться воспроизводимым и не менять точные источники. Выбор части личного архива не означает передачу всех будущих источников.",
+    "validation_experiment": "Corpus вложенных quotations/secrets, числа/единицы/таблицы, смена recipient после preview и stale source revision; проверить projection hashes и leak/fidelity report.",
+    "decision_acceptance": [
+      "Projection/redaction/recipient schemas и dry-run preview зафиксированы.",
+      "Original fidelity не меняется; export показывает omissions и преобразования.",
+      "Изменившийся recipient/document не использует preview прежней версии; secret references не разворачиваются из context автоматически."
+    ],
+    "owner_role": "Privacy/context export owner",
+    "blocking_milestones": [
+      "V4:S3",
+      "V4:S5",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-14",
+    "title": "Lifetime retrieval, временные версии и противоречия",
+    "related_feature_ids": [
+      "LIB-017",
+      "LIB-021",
+      "LIB-026",
+      "LIB-040",
+      "ACT-052",
+      "RND-040"
+    ],
+    "related_task_ids": [
+      "LAYA4-016",
+      "LAYA4-018",
+      "LAYA4-025",
+      "G3-009"
+    ],
+    "what_is_undefined": "Поиск по цели описан, но не заданы ranking/fallback, temporal applicability, contradictory sources, diversity/duplication rules и проверяемый benchmark выбора relevant exact spans.",
+    "options": [
+      "FTS/filters и provenance graph first; optional rerank",
+      "Обязательные embeddings/model для каждого запроса",
+      "Один последний summary всей истории"
+    ],
+    "recommended_default": "Deterministic FTS/path/ID/time/project filters; bounded ranges и WHY_THIS_PACKET; optional model/rerank отдельно измеряется; conflicts и validity periods показываются рядом, не стираются.",
+    "rationale": "Точный источник можно искать без модели и не терять старые ограничения. Семантический rerank полезен только если улучшает measured retrieval, а не заменяет provenance.",
+    "validation_experiment": "Заморозить пользовательские вопросы на выбранном корпусе: older preference/newer correction, project collision, duplicate quote, hard negative и missing source. Сравнить manual/FTS/model modes.",
+    "decision_acceptance": [
+      "Retrieval policy задаёт tie-breaks, temporal rules, filters и provenance/exclusion explanations.",
+      "Ответ приводит exact source spans и known gaps; contradiction не скрыта единственным уверенным summary.",
+      "Публикуются scope/corpus и actual retrieval measurements без обещания unlimited context."
+    ],
+    "owner_role": "Retrieval/knowledge owner",
+    "blocking_milestones": [
+      "V4:S3",
+      "V4:S10"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-18",
+    "title": "Доступность, focus и независимый STOP",
+    "related_feature_ids": [
+      "ACT-032",
+      "ACT-033",
+      "ACT-036",
+      "ACT-053",
+      "ACT-057"
+    ],
+    "related_task_ids": [
+      "TAB4-16",
+      "TAB4-21",
+      "UI3-016",
+      "UI3-017",
+      "PAR3-015",
+      "PAR3-021"
+    ],
+    "what_is_undefined": "Доступность заявлена, но не выбран проверяемый keyboard/screen-reader interaction contract, focus ownership, stop process boundary и target-device corpus для разных способов управления.",
+    "options": [
+      "Keyboard/text parity и независимый local stop controller",
+      "Voice обязательный для остановки",
+      "UI macro удерживает focus до конца независимо от пользователя"
+    ],
+    "recommended_default": "Все основные действия доступны клавиатурой/текстом и semantic controls; локальный STOP отдельным каналом; реальный input пользователя уступает focus и приостанавливает UI automation.",
+    "rationale": "Помощник для инвалидности должен работать при недоступном микрофоне и не требовать точного мышиного движения. STOP отменяет будущие шаги, а completed external effect честно остаётся.",
+    "validation_experiment": "На Windows выполнить keyboard-only и screen-reader task creation/recovery, потерю focus, user typing во время draft, зависший ASR/worker и local STOP; измерить stop/recovery, не утверждать непроверенные timings.",
+    "decision_acceptance": [
+      "Control/focus/stop contracts и поддерживаемые assistive modes заданы.",
+      "Нельзя остаться без работающего stop/text пути при сбое ASR или браузера.",
+      "Receipt фиксирует приложение/устройство/assistive mode и известные ограничения."
+    ],
+    "owner_role": "Accessibility/device qualification owner",
+    "blocking_milestones": [
+      "V4:S5",
+      "V4:S8"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  },
+  {
+    "id": "DEC5-19",
+    "title": "Capability registry и связь с installed build",
+    "related_feature_ids": [
+      "ACT-002",
+      "ACT-041",
+      "ACT-042",
+      "ACT-043",
+      "ACT-045",
+      "ACT-048",
+      "RND-009"
+    ],
+    "related_task_ids": [
+      "PAR3-003",
+      "EVO3-017",
+      "EVO3-018",
+      "TAB4-13",
+      "TAB4-22"
+    ],
+    "what_is_undefined": "Capabilities должны появляться после обновления, но registry ABI не задаёт typed args/effects, resources, permissions, environment/dependencies, version compatibility и independent verifier binding.",
+    "options": [
+      "Versioned typed registry с installed-build/qualification binding",
+      "Автозапуск всех новых scripts из скачанного repo",
+      "Capabilities как свободный текст и README promises"
+    ],
+    "recommended_default": "Stable capability ID/version, typed arguments/effects/resources/profile/verifier и installed artifact digest; discovery -> candidate -> qualified -> enabled. Наличие файла и AI описание не включает execution.",
+    "rationale": "Система должна отличать реализованную возможность от идеи и совместимость навыков после обновления. Registered command остаётся существующим Core template, не новым shell dispatcher.",
+    "validation_experiment": "Изменить args/permissions/dependency и installed digest; попробовать old skill и declared-but-unimplemented capability; сверить registry diff, invalidate/requalify и execution owner.",
+    "decision_acceptance": [
+      "Capability/skill schemas и compatibility transitions описаны.",
+      "Новая capability не расширяет полномочия старого profile; missing dependency/qualification видны.",
+      "Execution receipt связан с actual installed artifact и зарегистрированным verifier."
+    ],
+    "owner_role": "Capability/runtime owner",
+    "blocking_milestones": [
+      "V4:S7",
+      "V4:S8",
+      "V4:S11"
+    ],
+    "status": "PROPOSED_NOT_DECIDED"
+  }
+]

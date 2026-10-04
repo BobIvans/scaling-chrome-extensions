@@ -1,0 +1,50 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF22",
+  "name": "live_monitoring",
+  "title_ru": "Мониторинг уже разрешённого live",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "explicitly_configured_read_only_watch"
+  ],
+  "depends_on": [
+    "canary_plan"
+  ],
+  "inputs": [
+    "authorized_runtime_id",
+    "read_only_telemetry",
+    "incident_policy"
+  ],
+  "steps": [
+    {
+      "id": "live_monitoring.1",
+      "handler": "PROPOSED.live_monitoring.1",
+      "instruction": "Read receipts, balances, nonce/sequence state, drawdown and provider health"
+    },
+    {
+      "id": "live_monitoring.2",
+      "handler": "PROPOSED.live_monitoring.2",
+      "instruction": "Detect reconciliation differences, exposure/risk budget breach and config drift"
+    },
+    {
+      "id": "live_monitoring.3",
+      "handler": "PROPOSED.live_monitoring.3",
+      "instruction": "Request/perform only preauthorized pause; propose further actions for operator"
+    }
+  ],
+  "outputs": [
+    "live_monitor_spec",
+    "incident_timeline"
+  ],
+  "qualification_criteria": [
+    "SPEC only here; no live runtime/transaction/watch task installed"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,49 @@
+{
+  "schema_version": "1.0",
+  "id": "example-mission-001",
+  "status": "EXAMPLE_NOT_EXECUTABLE",
+  "goal": "Добавить повторяемый regression workflow и собрать evidence для paper-режима flashloan-бота.",
+  "input": {
+    "kind": "voice",
+    "language": "ru+en",
+    "committed": false,
+    "source_ref": "replace-with-real-transcript-id"
+  },
+  "repo": {
+    "name": "BobIvans/studious-pancake",
+    "base_commit": "0000000000000000000000000000000000000000",
+    "workspace_ref": "replace-with-local-worktree-binding"
+  },
+  "context": [
+    {
+      "source_id": "replace-with-snapshot-id",
+      "path": "tests/example.py",
+      "sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+      "provenance": "EXAMPLE_PLACEHOLDER_NOT_REAL_EVIDENCE"
+    }
+  ],
+  "acceptance": [
+    {
+      "id": "REQ-001",
+      "criterion": "Все объявленные проверки выполнены на записанном commit; отсутствующие проверки отмечены NOT_RUN.",
+      "verifier": "qualification.required_checks",
+      "state": "NOT_RUN"
+    }
+  ],
+  "policy": {
+    "grant_refs": [],
+    "allowed_operations": [
+      "context.read",
+      "repo.inspect",
+      "runner.dry_run"
+    ],
+    "web3_mode": "offline",
+    "merge_policy": "disabled",
+    "source_instructions_trusted": false
+  },
+  "budgets": {
+    "seconds": 1800,
+    "provider_cost_usd": 0,
+    "on_exhaustion": "checkpoint_pause_preserve_remaining_work"
+  }
+}

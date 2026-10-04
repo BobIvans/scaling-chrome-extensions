@@ -1,0 +1,1038 @@
+{
+  "schema": "proposed.product-task-catalog.v2",
+  "language": "ru",
+  "status": "design_only",
+  "source_revision": "SCE read-only snapshot da6abf4c006e4e7d26fe45ef30fa9d07a356f396; no runtime qualification claimed",
+  "additive_to_prior_catalog": true,
+  "count": 48,
+  "note": "48 новых задач детализации. Существующие capabilities расширяются; статус карточки не является заявлением реализации. Dependencies refer only to this V2 catalog.",
+  "tasks": [
+    {
+      "id": "V2-001",
+      "title": "Зафиксировать текущий SCE и владельцев расширения",
+      "owner_layer": "SCE architecture / current snapshot",
+      "depends_on": [],
+      "acceptance": [
+        "Карта связывает каждый новый контракт с существующим модулем, API, store и конкретным пробелом; repo_context.py, repo_source.py, context_review.py, native_adapter.py, durable.mjs и repo-review-ui.mjs сохранены как владельцы.",
+        "Отдельно перечислены документированные возможности, прочитанный код, фактически выполненные тесты и ещё не пройденная Windows qualification; статус одного не подменяет другой.",
+        "Каждая следующая задача помечает reuse/extend/new; предложенная миграция данных имеет владельца и обратимость.",
+        "Зафиксированы текущие bounds: 20 entries на scan-request, полный cursor, 8 MiB blob, 32 MiB enumeration, 10 text chunks/80k final document, 16k native envelope; размер страницы не описан как предел corpus."
+      ],
+      "source_or_rationale": "Текущий SCE HEAD da6abf4c006e4e7d26fe45ef30fa9d07a356f396; docs/automation/context-foundation.md; пользователь просит развить незавершённое, а не создать вторую библиотеку.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P0",
+      "artifact": "audit/V2_OWNER_AND_GAP_MAP.json",
+      "failure_behavior": "Если текущий HEAD изменился, сохранить оба audit snapshots и пересчитать затронутые bindings; не переписывать owner map по старому архиву."
+    },
+    {
+      "id": "V2-002",
+      "title": "Контракт области snapshot и незакоммиченных данных",
+      "owner_layer": "content-lab/repo_context.py",
+      "depends_on": [
+        "V2-001"
+      ],
+      "acceptance": [
+        "UI явно выбирает committed HEAD либо отдельную working-tree overlay; snapshot хранит commit, dirty diff hash, index state и policy.",
+        "Untracked, ignored, submodule, symlink, generated и excluded paths имеют disposition, а не молча исчезают.",
+        "Overlay никогда не подменяет immutable Git blob; экспорт показывает origin каждого диапазона.",
+        "Изменение файла во время чтения приводит к повторному snapshot/read либо SOURCE_DRIFT с сохранением уже завершённых работ."
+      ],
+      "source_or_rationale": "Запрос «chunking entire repo» и текущий HEAD-only inventory не равнозначны всем локальным файлам.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P0",
+      "artifact": "contracts/RepositorySnapshotScope.json",
+      "failure_behavior": "Не смешивать байты разных revisions в один snapshot; остановить затронутую часть, оставить resumable inventory."
+    },
+    {
+      "id": "V2-003",
+      "title": "Продолжение большого импорта и streaming вместо жёсткого потолка corpus",
+      "owner_layer": "content-lab/repo_context.py + native_adapter.py",
+      "depends_on": [
+        "V2-001",
+        "V2-002"
+      ],
+      "acceptance": [
+        "Отдельные пределы памяти/транспорта и общий объём corpus конфигурируются; превышение вызывает pagination/streaming или явный unsupported/error.",
+        "Большие blobs поддерживаются через проверяемые fragments либо сохраняются с ERROR и объяснением, если формат ещё не реализован.",
+        "Checkpoint переносится через restart, не требует повторной обработки законченных immutable blobs.",
+        "Fixture с хвостовыми файлами после 2000 entries и числом частей выше 20 сохраняет все полученные разрешённые bytes и manifest."
+      ],
+      "source_or_rationale": "Пользователь хочет весь repo и больше 20 документов; существующие safety bounds требуют обхода через порции, а не скрытого truncation.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P0",
+      "artifact": "contracts/StreamingImportAndExport.json",
+      "failure_behavior": "При нехватке диска или quota запомнить точную остановку и coverage; не помечать импорт COMPLETE."
+    },
+    {
+      "id": "V2-004",
+      "title": "Единый контракт provenance и event log",
+      "owner_layer": "repo_context.py + context_review.py + durable.mjs",
+      "depends_on": [
+        "V2-001"
+      ],
+      "acceptance": [
+        "Событие содержит event ID, operation/job ID, causal parent, source revision, contract version, время и evidence refs.",
+        "Проекция latest status восстанавливается из append-only событий без потери прошлых результатов.",
+        "Все extractor/tag/context/job события разрешаются к исходному snapshot; imported archive имеет свою historical provenance.",
+        "Fixtures с повторными событиями и неверной ссылкой различают duplicate, corruption и новую revision."
+      ],
+      "source_or_rationale": "Пользователь просит catalog log context extractor; предыдущий контракт требует source/version/path/range/hash.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P0",
+      "artifact": "contracts/ProvenanceEventV2.json",
+      "failure_behavior": "Невалидное событие помещается в quarantine с причиной; журнал не принимает произвольный success claim как доказательство."
+    },
+    {
+      "id": "V2-005",
+      "title": "Полное покрытие инвентаря и immutable blob ledger",
+      "owner_layer": "content-lab/repo_context.py",
+      "depends_on": [
+        "V2-002",
+        "V2-003",
+        "V2-004"
+      ],
+      "acceptance": [
+        "Для каждого enumerated path существует terminal disposition INDEXED/EXCLUDED/ERROR/UNSUPPORTED, размер и исходный OID/hash при доступности.",
+        "Coverage отдельно показывает bytes received, bytes indexed, semantic parsed и context exported.",
+        "Пустые файлы, Unicode, CRLF, binary и отсутствующие objects входят в regression corpus.",
+        "Повтор неизменного scan не порождает новую физическую blob-копию, но сохраняет observation timestamp."
+      ],
+      "source_or_rationale": "Начало пользовательского сценария: «chunking entire repo into sorted chunks». Существующий inventory расширяется.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "reports/REPO_INVENTORY_COVERAGE.json",
+      "failure_behavior": "Ошибки отдельных путей сохраняются; COMPLETE означает завершённый ledger, но не 100% indexed, если есть ERROR/EXCLUDED."
+    },
+    {
+      "id": "V2-006",
+      "title": "Связать текущие Python AST/SCC с расширяемыми parser adapters",
+      "owner_layer": "content-lab/repo_source.py",
+      "depends_on": [
+        "V2-001",
+        "V2-005"
+      ],
+      "acceptance": [
+        "Python AST/import/SCC используется через текущий owner, без import scanned code.",
+        "Каждый edge содержит from/to/type, source span, parser version, evidence class confirmed/heuristic/unresolved.",
+        "JS/TS adapter добавляется только с pinned dependency/ADR и fixture corpus; до этого честно TEXT_ONLY.",
+        "Ambiguous alias, runtime import, external module и reflection сохраняются как unresolved с причиной."
+      ],
+      "source_or_rationale": "Текущий Python AST/imports/SCC уже существует; JS TEXT_ONLY и dynamic edges нельзя выдавать за точные.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "contracts/StaticGraphAdapter.json",
+      "failure_behavior": "Ошибка парсера не теряет текст; fallback TEXT_ONLY, а semantic coverage уменьшается явно."
+    },
+    {
+      "id": "V2-007",
+      "title": "Группы chunks по SCC и подтверждённым зависимостям",
+      "owner_layer": "content-lab/repo_source.py",
+      "depends_on": [
+        "V2-005",
+        "V2-006"
+      ],
+      "acceptance": [
+        "Группа содержит component ID, member paths, byte spans, зависимости, evidence type каждого ребра и исходный snapshot.",
+        "Сильносвязанный компонент сохраняется логически целым; большой компонент получает несколько физических частей и список мостов.",
+        "Тестовые и конфигурационные связи имеют отдельный тип и не притворяются доказанными вызовами.",
+        "Повтор на одинаковом snapshot/budget/parser version создаёт одинаковые IDs и порядок."
+      ],
+      "source_or_rationale": "Запрос «correlated wired parts of repo together».",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "artifacts/RELATED_CHUNK_GROUPS.json",
+      "failure_behavior": "Неизвестные связи показываются в review queue; алгоритм не смешивает несвязанные файлы только для достижения размера."
+    },
+    {
+      "id": "V2-008",
+      "title": "Проверяемый multipart export и cross-chunk bridge manifest",
+      "owner_layer": "repo_source.py + context_review.py",
+      "depends_on": [
+        "V2-003",
+        "V2-007"
+      ],
+      "acceptance": [
+        "Manifest фиксирует physical parts, source coverage, offsets/hashes, component bridges, omitted binary и continuation cursor.",
+        "Byte reconstruction fixture проходит для UTF-8/BOM/CRLF/long line/binary; context-copy мосты не считаются первичными bytes.",
+        "Ни число частей, ни UI page size не ограничивают corpus; per-message budget показан пользователю.",
+        "Каждый chunk имеет понятный заголовок purpose/paths/symbols/dependencies и ссылку на полный индекс."
+      ],
+      "source_or_rationale": "Все части должны восстанавливать сохранённый corpus; экспорт для AI может включать выбранное представление.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "artifacts/CONTEXT_PARTS_MANIFEST.json",
+      "failure_behavior": "При разрыве или несовпадении хеша export получает INVALID; не выдавать пакет как полный."
+    },
+    {
+      "id": "V2-009",
+      "title": "Инкрементальный diff и инвалидирование зависимого контекста",
+      "owner_layer": "repo_context.py + repo_source.py",
+      "depends_on": [
+        "V2-007",
+        "V2-008"
+      ],
+      "acceptance": [
+        "Diff перечисляет add/edit/delete и inferred rename с evidence, без переписывания предыдущего snapshot.",
+        "Изменившийся публичный символ помечает затронутые groups/context packs stale; при unresolved edge неопределённость видна.",
+        "Повторная сборка переиспользует unchanged blobs/extractions, но проверяет актуальность refs.",
+        "Changed-only export содержит dependency context и полный delta ledger, поэтому изменения не оторваны от интерфейсов."
+      ],
+      "source_or_rationale": "Быстрое повторное R&D после обновлений repo требует считать только изменившееся.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "artifacts/SNAPSHOT_DELTA.json",
+      "failure_behavior": "Если ancestry или matching ненадёжен, выполнить полный scan; не заявлять нулевые изменения по неудачному diff."
+    },
+    {
+      "id": "V2-010",
+      "title": "Реестр extractor adapters и очередь неподдерживаемых форматов",
+      "owner_layer": "content-lab/repo_context.py",
+      "depends_on": [
+        "V2-004",
+        "V2-005"
+      ],
+      "acceptance": [
+        "Adapter определяет supported MIME/extension, версию, разрешённые resource bounds, outputs и confidence limits.",
+        "Raw blob сохраняется до text projection; извлечение не исполняет код документа.",
+        "Первый slice поддерживает код/TXT/JSON/MD/CSV как текст; OCR/audio/PDF adapters остаются явной очередью при отсутствии реализации.",
+        "Re-extract создаёт новую производную revision и не теряет исходный источник или старую проекцию."
+      ],
+      "source_or_rationale": "Пользователь просит быстрый сбор любых доступных данных; формат с отсутствующим extractor должен сохраняться.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "contracts/ExtractorRegistry.json",
+      "failure_behavior": "Ошибка extractor приводит к retained raw + pending/failed extraction; отсутствие текста не выдаётся за пустой документ."
+    },
+    {
+      "id": "V2-011",
+      "title": "Каталог revisions и точный локальный поиск",
+      "owner_layer": "content-lab/repo_context.py existing SQLite/FTS",
+      "depends_on": [
+        "V2-004",
+        "V2-005",
+        "V2-010"
+      ],
+      "acceptance": [
+        "Поиск поддерживает path, exact phrase, project, source type, revision и status; результат открывает конкретный source span.",
+        "Unchanged content dedup не удаляет aliases/origins или историю появления.",
+        "Индекс перестраивается из сохранённых источников и схемы без обращения к AI.",
+        "Baseline измеряется на фиксированном corpus и Dell; целевой p95 выбирается после baseline, не заявляется как текущий benchmark."
+      ],
+      "source_or_rationale": "«easy to store and find in local library access».",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "artifacts/LIBRARY_SEARCH_CONTRACT.json",
+      "failure_behavior": "При сломанном FTS доступен manifest/path browse и rebuild; файлы не теряются вместе с индексом."
+    },
+    {
+      "id": "V2-012",
+      "title": "UI выбора repo, прогресса и списка связанных частей",
+      "owner_layer": "library/repo-review-ui.mjs + desktop shell decision",
+      "depends_on": [
+        "V2-005",
+        "V2-007",
+        "V2-008",
+        "V2-011"
+      ],
+      "acceptance": [
+        "Можно выбрать repository alias, видеть snapshot, запустить/продолжить scan и открыть весь ledger с pagination.",
+        "Экран отображает группы, причины связи, semantic limits, число частей, coverage и export status.",
+        "У каждой долгой операции есть resume/stop и сохранённый job ID; смена repo не показывает поздний ответ предыдущего.",
+        "Расширение существующего UI не создаёт вторую store; автономный desktop shell использует тот же service contract."
+      ],
+      "source_or_rationale": "Пользователь прямо просит начать с UI functions для chunking.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "ui/REPO_CONTEXT_FLOW.md",
+      "failure_behavior": "Disconnect отображается явно; поздние ответы старого snapshot не перерисовывают текущую панель."
+    },
+    {
+      "id": "V2-013",
+      "title": "Быстрый локальный export/share с профилями данных",
+      "owner_layer": "context_review.py + library UI",
+      "depends_on": [
+        "V2-008",
+        "V2-011",
+        "V2-012"
+      ],
+      "acceptance": [
+        "Профили full-personal, AI-task и share-limited перечисляют входящие и исключённые источники.",
+        "Экспорт содержит manifest/checksums и restore/readme; no external send происходит от кнопки локального save.",
+        "При изменении профиля пакета создаётся новая derivation, raw corpus не меняется.",
+        "Профиль AI-task не включает известные secret fields и указывает, что heuristic не гарантирует обнаружить все секреты."
+      ],
+      "source_or_rationale": "«hold and share fast» должно иметь понятный состав передаваемого пакета.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "contracts/SharePackProfiles.json",
+      "failure_behavior": "Недостаток места/невозможность записать архив сохраняет draft и ошибку; наружу не отправляется частичный невалидный архив."
+    },
+    {
+      "id": "V2-014",
+      "title": "Backup/restore и контроль миграции локальной библиотеки",
+      "owner_layer": "repo_context.py existing store",
+      "depends_on": [
+        "V2-004",
+        "V2-011",
+        "V2-013"
+      ],
+      "acceptance": [
+        "Backup согласован с DB и blob manifest; restoration проверяет hashes, revisions, links и search rebuild.",
+        "Процедура проходит прерывание и заполнение диска без повреждения последней годной версии.",
+        "Схема миграции хранит version и проверенный путь возврата/forward recovery.",
+        "Политика шифрования/секретов указана явно; локальность не называется шифрованием."
+      ],
+      "source_or_rationale": "Полный контекст жизни требует восстановления, а не только сохранения UI state.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P1",
+      "artifact": "artifacts/BACKUP_RESTORE_RECEIPT.json",
+      "failure_behavior": "Не удалять предыдущую годную копию до verified restore; migration failure оставляет recoverable checkpoint."
+    },
+    {
+      "id": "V2-015",
+      "title": "Автометки с авторами, основаниями и исправлением",
+      "owner_layer": "repo_context.py + catalog UI",
+      "depends_on": [
+        "V2-004",
+        "V2-010",
+        "V2-011"
+      ],
+      "acceptance": [
+        "Taxonomy включает project/source/topic/entity/intent/status/evidence/time/access и сохраняет version.",
+        "Каждая label имеет author/method/source span; model-suggested отделена от user-confirmed.",
+        "Пользовательская правка защищена от тихого перезаписывания повторной классификацией.",
+        "Gold corpus фиксирует precision/recall отдельно для goals/tasks/accepted decisions; ошибочная атрибуция учитывается отдельно."
+      ],
+      "source_or_rationale": "«label automation on content».",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "contracts/ContentLabels.json",
+      "failure_behavior": "При неоднозначности предложить метку с review status; не создавать accepted user decision из AI summary."
+    },
+    {
+      "id": "V2-016",
+      "title": "Граф целей, решений, задач и конфликтующих указаний",
+      "owner_layer": "repo_context.py + context_review.py",
+      "depends_on": [
+        "V2-004",
+        "V2-015"
+      ],
+      "acceptance": [
+        "Goal/decision хранит точную цитату, автора, источник, время, supersedes и scope.",
+        "Противоречащие инструкции представлены параллельно до разрешения; поздний факт не удаляет исходные слова.",
+        "AI suggestion не получает author=user и статус accepted без соответствующего события.",
+        "Открытые требования связаны с задачами либо deferred reason/return condition."
+      ],
+      "source_or_rationale": "Новый запрос связывает голосовые указания, документы и будущие действия; прежняя стратегия требует не терять цели.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "artifacts/GOAL_DECISION_GRAPH.json",
+      "failure_behavior": "Нельзя однозначно определить актуальное требование — plan получает NEEDS_DECISION, а чтение и сбор контекста продолжаются."
+    },
+    {
+      "id": "V2-017",
+      "title": "Нормализация текстовой цели в GoalRequest",
+      "owner_layer": "context_review.py + UI",
+      "depends_on": [
+        "V2-012",
+        "V2-016"
+      ],
+      "acceptance": [
+        "GoalRequest сохраняет original text, normalized intent, target repo/app, desired output, constraints и source refs.",
+        "Необязательные поля заполняются доступным контекстом; неизвестные остаются unknown, а не выдумываются.",
+        "Выбор правильного alias/branch/person не основан только на похожем имени.",
+        "Для отсутствующей capability формируется capability-gap task, а не произвольная shell-команда."
+      ],
+      "source_or_rationale": "«i say to this app anything to do» начинается с структуры задачи.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "contracts/GoalRequestV2.json",
+      "failure_behavior": "Недостаточно данных для внешнего эффекта — вернуть конкретный missing field; локальное сохранение и подготовка документа не блокируются."
+    },
+    {
+      "id": "V2-018",
+      "title": "Компилятор task-specific контекста с source budget",
+      "owner_layer": "context_review.py + repo_source.py",
+      "depends_on": [
+        "V2-008",
+        "V2-011",
+        "V2-016",
+        "V2-017"
+      ],
+      "acceptance": [
+        "Компилятор объединяет exact path/symbol/FTS/graph retrieval, обязательные требования, контракты и relevant tests.",
+        "Пакет содержит base SHA, accepted scope, task acceptance, include/exclude/missing, бюджет и next-context protocol.",
+        "Режим полного архива отделён от фактического текущего AI запроса; не включённые части не называются прочитанными моделью.",
+        "Provider profile не меняет сохранённые raw sources; дополнительный запрос контекста продолжает тот же snapshot."
+      ],
+      "source_or_rationale": "«structure context and data doc ... resend to AI manually or via automation».",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "contracts/ContextPackV2.json",
+      "failure_behavior": "Если обязательный source missing или stale, export может быть draft, но не verified complete."
+    },
+    {
+      "id": "V2-019",
+      "title": "Проверка покрытия требований и источников до handoff",
+      "owner_layer": "content-lab/context_review.py",
+      "depends_on": [
+        "V2-016",
+        "V2-018"
+      ],
+      "acceptance": [
+        "Каждое обязательное requirement связано с included evidence либо явным missing/omitted reason.",
+        "Все quoted spans/hash refs разрешаются к pinned sources; stale references блокируют verified status.",
+        "Автоматическая проверка отмечает возможные повторения/противоречия отдельно от доказанных.",
+        "Последующий AI coverage claim не удаляет известный omission или failed provenance check."
+      ],
+      "source_or_rationale": "Предыдущая стратегия no-goal-left-behind и текущий запрос полного R&D контекста.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "artifacts/CONTEXT_REVIEW_RECEIPT.json",
+      "failure_behavior": "Пакет сохраняется для исправления; статус COMPLETE не ставится при missing required source."
+    },
+    {
+      "id": "V2-020",
+      "title": "Краткое резюме только как версия производной",
+      "owner_layer": "context_review.py + extractor registry",
+      "depends_on": [
+        "V2-010",
+        "V2-018",
+        "V2-019"
+      ],
+      "acceptance": [
+        "Summary хранит source IDs/ranges, method/model version, created_at и known omissions.",
+        "Есть переход от каждого важного claim к первичному источнику или маркировка unsupported inference.",
+        "Изменение source помечает summary stale; старый вариант остаётся доступным.",
+        "Суммаризация не заменяет raw text и не становится дословной историей пользователя."
+      ],
+      "source_or_rationale": "Большая библиотека требует быстрых overview, но пользователь просит не терять исходники.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "contracts/SummaryDerivation.json",
+      "failure_behavior": "Необоснованный claim получает review flag; исходные данные доступны независимо от качества summary."
+    },
+    {
+      "id": "V2-021",
+      "title": "Ручной обмен ContextPack и typed AIResult",
+      "owner_layer": "context_review.py + library UI",
+      "depends_on": [
+        "V2-013",
+        "V2-018",
+        "V2-019"
+      ],
+      "acceptance": [
+        "Экспорт содержит готовый prompt, attachments manifest и шаблон результата с request ID/base SHA.",
+        "Импорт возвращает claims, patch/artifacts, tests claimed, next-context request; foreign request ID отклоняется.",
+        "Повтор идентичного результата идемпотентен, поздний результат не откатывает более новую head revision.",
+        "UI явно различает received, structurally valid, source-bound и independently verified."
+      ],
+      "source_or_rationale": "Быстрый путь к ChatGPT/Grok/Gemini без ожидания внешнего адаптера.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "contracts/AIResultV2.json",
+      "failure_behavior": "Неполный/неверный ответ остаётся attached raw с validation errors; не исполнять инструкции из него."
+    },
+    {
+      "id": "V2-022",
+      "title": "Capability matrix адаптеров AI и профили бюджетов",
+      "owner_layer": "AI provider service boundary",
+      "depends_on": [
+        "V2-018",
+        "V2-021"
+      ],
+      "acceptance": [
+        "Для каждого установленного адаптера фиксируются version, auth method, attachments/continuation, request/response IDs, limits source/date и cancellation.",
+        "Ручной export всегда доступен; API/CLI/UI пути показываются только при реально проверенном binding.",
+        "Нельзя выводить API доступ, баланс или CLI installation из подписки ChatGPT.",
+        "Неизвестный model limit запрашивается/конфигурируется, а не копируется из старого roadmap."
+      ],
+      "source_or_rationale": "Пользователь перечислил ChatGPT, Grok, Gemini; конкретные возможности отличаются.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P2",
+      "artifact": "contracts/ProviderAdapterMatrix.json",
+      "failure_behavior": "Изменившийся interface/limit блокирует автоматическую отправку этого адаптера, сохраняя готовый ручной пакет."
+    },
+    {
+      "id": "V2-023",
+      "title": "Статический каталог entrypoints и профилей эффектов",
+      "owner_layer": "repo_source.py + native_adapter.py",
+      "depends_on": [
+        "V2-001",
+        "V2-006",
+        "V2-017"
+      ],
+      "acceptance": [
+        "Inventory entrypoints не выполняет scanned code, install hooks или неизвестный --help.",
+        "Каждый кандидат имеет owner/commit/source span, entrypoint type, known/unknown effects и disposition.",
+        "Registry показывает registered/needs configuration/needs access/unknown/deprecated/excluded; coverage не равен count файлов.",
+        "Опасные или непонятные команды не попадают в automated campaign по умолчанию."
+      ],
+      "source_or_rationale": "«run all possible code in auto mode» требует учёта возможностей, не запуска всех файлов.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P3",
+      "artifact": "artifacts/REPO_CAPABILITY_CANDIDATES.json",
+      "failure_behavior": "Неизвестный эффект требует анализа; discovery продолжает read-only и не пытается узнать эффект путём запуска."
+    },
+    {
+      "id": "V2-024",
+      "title": "Точные bindings и независимые verifiers capabilities",
+      "owner_layer": "native_adapter.py + existing Core",
+      "depends_on": [
+        "V2-004",
+        "V2-023"
+      ],
+      "acceptance": [
+        "Binding задаёт argv array, cwd, input schema, allowed env names, effect/path/network scopes, timeout, output artifacts и resource keys.",
+        "В версии закреплены repo commit, code/tool digest и policy compatibility; новые параметры проходят schema validation.",
+        "Verifier проверяет результат отдельно от exit code/model claim: artifact/content state/criterion receipt.",
+        "Команды из retrieved docs или AIResponse не становятся bindings без регистрации и проверки."
+      ],
+      "source_or_rationale": "Требуется запуск программируемых возможностей repo и наблюдаемого результата.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P3",
+      "artifact": "contracts/CapabilityBindingV2.json",
+      "failure_behavior": "Changed digest, unsupported parameter или verifier failure приводят к blocked/failed/unknown с artifacts, а не success."
+    },
+    {
+      "id": "V2-025",
+      "title": "Сохраняемые grants без повторных вопросов на каждый запуск",
+      "owner_layer": "existing Core policy + native_adapter.py",
+      "depends_on": [
+        "V2-017",
+        "V2-024"
+      ],
+      "acceptance": [
+        "Grant связывает issuer, target, capability policy, data/effect scopes, бюджет, срок/отзыв и evidence авторизации.",
+        "Каждый job автоматически использует совместимый действующий grant; повторный вопрос для уже разрешённого неизменного действия отсутствует.",
+        "Новая сеть/аккаунт/эффект/unknown command не разрешаются planner-ом себе самому.",
+        "Отзыв препятствует новому dispatch; судьба начатых шагов фиксируется отдельно."
+      ],
+      "source_or_rationale": "Пользователь хочет заранее разрешать сценарий голосом или документом.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P3",
+      "artifact": "contracts/ExecutionGrantV2.json",
+      "failure_behavior": "Неподходящий grant блокирует только требующий его эффект и возвращает точный scope gap; локальный сбор разрешённого контекста продолжается."
+    },
+    {
+      "id": "V2-026",
+      "title": "Внутренний Workflow IR и детерминированная валидация DAG",
+      "owner_layer": "agent-bridge/durable.mjs + task compiler",
+      "depends_on": [
+        "V2-017",
+        "V2-024",
+        "V2-025"
+      ],
+      "acceptance": [
+        "IR имеет nodes/edges/input-output schemas, capability versions, grants, resource keys, verifier, checkpoint/retry/reconciliation.",
+        "Validator выявляет cycles, missing inputs, unknown capability, несовместимый scope и неоднозначные effects до dispatch.",
+        "Plan preview показывает цель, конкретные шаги и ожидаемые изменения понятным языком.",
+        "Разделены proposed, validated, bound, authorized и executable; один parsed JSON не означает исполнимость."
+      ],
+      "source_or_rationale": "Нужна кнопка создавать автоматизацию из цели; JSON не является native Laya format.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P3",
+      "artifact": "contracts/WorkflowIRV2.json",
+      "failure_behavior": "Не прошедший validation план сохраняется как draft с diagnostic list, не исполняется частично без явно отдельного допустимого subplan."
+    },
+    {
+      "id": "V2-027",
+      "title": "Laya router adapter с коротким state и измеряемой маршрутизацией",
+      "owner_layer": "router adapter -> existing Core",
+      "depends_on": [
+        "V2-022",
+        "V2-024",
+        "V2-026"
+      ],
+      "acceptance": [
+        "Binding фиксирует установленный Laya product/version/interface; наш DAG остаётся собственным IR.",
+        "В router идут compact intent, bounded candidate capability IDs и flags, а не полный repository corpus.",
+        "Ответ проверяется по schema и registry; unknown/noul/low-confidence/ambiguous переводятся в abstain/clarify, не произвольную команду.",
+        "Сравниваются rules baseline и router на held-out RU/EN/voice-noise corpus; цели latency/dispatch error — эксперименты на Dell.",
+        "predict_long/window scores не интерпретируются как калиброванная уверенность документа; chunk coverage остаётся задачей библиотеки."
+      ],
+      "source_or_rationale": "Проверенная upstream Laya — router/classifier; полный repo нельзя отправлять в усекательный state.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P3",
+      "artifact": "contracts/LayaRouterBinding.json",
+      "failure_behavior": "Laya недоступна/не совпала версия — deterministic/manual route; разрешения не определяются вероятностью модели."
+    },
+    {
+      "id": "V2-028",
+      "title": "Durable jobs, locks, idempotency и reconciliation",
+      "owner_layer": "agent-bridge/durable.mjs existing Core",
+      "depends_on": [
+        "V2-004",
+        "V2-024",
+        "V2-025",
+        "V2-026"
+      ],
+      "acceptance": [
+        "Существующие queue/leases/cancel/reconciliation расширяются вместо второго scheduler.",
+        "После restart восстанавливаются input snapshot, operation IDs, outputs и последняя подтверждённая стадия.",
+        "Ресурсные locks отдельно для DB writer, branch, file, account и UI focus; независимые read-only jobs могут идти параллельно.",
+        "Неизвестный внешний эффект вызывает reconciliation с тем же operation ID, а не blind retry."
+      ],
+      "source_or_rationale": "Автоматика должна переживать перезапуск, сеть и параллельные задачи.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P3",
+      "artifact": "artifacts/WORKFLOW_EXECUTION_RECEIPT.json",
+      "failure_behavior": "Partial/unknown остаются явными; timeout не приравнивается к отсутствию внешнего эффекта."
+    },
+    {
+      "id": "V2-029",
+      "title": "Журнал выполнения, failure capsules и replay диагностики",
+      "owner_layer": "existing Core + catalog UI",
+      "depends_on": [
+        "V2-004",
+        "V2-012",
+        "V2-028"
+      ],
+      "acceptance": [
+        "UI показывает planned/observed steps, input/output evidence, retries, duration, status, affected resources и следующую причину ожидания.",
+        "Failure capsule содержит минимальный reproducible input, версии, ошибку, подтверждённые эффекты и условие безопасного повторения.",
+        "Секреты не попадают в log; экспорт диагностики использует отдельный share profile.",
+        "Replay никогда не повторяет реальный внешний эффект без подходящего тестового adapter или grant."
+      ],
+      "source_or_rationale": "Пользователь просит log, быстрый поиск и продолжение исследований.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P3",
+      "artifact": "artifacts/FAILURE_CAPSULE.json",
+      "failure_behavior": "Неудача сохранения receipt помечает результат unknown и пишет recoverable local diagnostic; молчаливый success запрещён."
+    },
+    {
+      "id": "V2-030",
+      "title": "Клавиатура, screen reader и доступные имена во всех основных UI шагах",
+      "owner_layer": "library/repo-review-ui.mjs + desktop UI",
+      "depends_on": [
+        "V2-012",
+        "V2-017",
+        "V2-029"
+      ],
+      "acceptance": [
+        "Добавление repo, поиск, сбор контекста, preview, export, отмена и журнал доступны без мыши.",
+        "Каждый интерактивный элемент имеет имя/роль/state и предсказуемый focus order; dialog возвращает фокус.",
+        "Ошибки/прогресс/unknown объявляются доступно; статус не кодируется только цветом.",
+        "Usability fixture с keyboard-only и выбранным screen reader на Windows сохраняет реальные результаты и дефекты."
+      ],
+      "source_or_rationale": "Пользователь хочет приложение для людей с ограниченной возможностью пользоваться ПК.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P4",
+      "artifact": "qualification/ACCESSIBILITY_CORE_RECEIPT.json",
+      "failure_behavior": "Недоступная операция получает альтернативный текстовый маршрут; компонент не объявляется accessible только по наличию aria-label."
+    },
+    {
+      "id": "V2-031",
+      "title": "Голос в тот же GoalRequest с исправляемым transcript",
+      "owner_layer": "voice input adapter + existing UI",
+      "depends_on": [
+        "V2-017",
+        "V2-025",
+        "V2-030"
+      ],
+      "acceptance": [
+        "Push-to-talk создаёт transcript с original audio policy, language и correction history; далее тот же GoalRequest.",
+        "Имена repo/branch/file отражаются в preview и проходят те же target checks, что текст.",
+        "Озвучивание результата настраивается; always-on/wake word остаётся отдельным deferred experiment.",
+        "На Dell измеряются latency, word/intent errors, шум и accessibility usability; цифры не берутся из рекламы моделей."
+      ],
+      "source_or_rationale": "«via text or voice to execute ... pc».",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P4",
+      "artifact": "contracts/VoiceGoalInput.json",
+      "failure_behavior": "При low intelligibility сохраняется черновик текста и доступен ручной ввод; никаких действий из неразборчивой команды."
+    },
+    {
+      "id": "V2-032",
+      "title": "Глобальный STOP и корректное возобновление",
+      "owner_layer": "desktop host + existing Core",
+      "depends_on": [
+        "V2-028",
+        "V2-030",
+        "V2-031"
+      ],
+      "acceptance": [
+        "STOP доступен GUI и глобальной клавишей; voice stop является дополнительным каналом.",
+        "После STOP не начинается новый dispatch; уже выполняемые шаги получают observed cancellation/completed/unknown.",
+        "Resume проверяет актуальность target/grant/snapshot и не повторяет неизвестный side effect.",
+        "Fixture проверяет STOP во время DB write, внешнего request, потери фокуса и restart."
+      ],
+      "source_or_rationale": "Управление ПК должно останавливаться голосом/клавиатурой без потери состояния.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P4",
+      "artifact": "qualification/STOP_RESUME_RECEIPT.json",
+      "failure_behavior": "Неотменяемый эффект честно отмечается; UI не говорит «всё отменено», если исход неизвестен."
+    },
+    {
+      "id": "V2-033",
+      "title": "Capability adapters для конкретных Windows приложений",
+      "owner_layer": "native_adapter.py + Windows accessibility adapter",
+      "depends_on": [
+        "V2-024",
+        "V2-025",
+        "V2-028",
+        "V2-032"
+      ],
+      "acceptance": [
+        "Каждый adapter привязан к app/window identity, version, semantic control locator и effect verifier.",
+        "API/CLI/structured accessibility/visual route выбираются по реально доступному интерфейсу, не по обещанию универсального клика.",
+        "Перед вводом проверяется target focus; после — ожидаемый effect; clipboard и typed secrets не логируются.",
+        "Неподдерживаемое приложение создаёт capability request и fallback instructions вместо координатного guess."
+      ],
+      "source_or_rationale": "Цель «anything on pc» разворачивается в реестр проверенных app actions.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P4",
+      "artifact": "contracts/WindowsAppCapability.json",
+      "failure_behavior": "Смена окна/локатора/версии блокирует шаг; после возможного ввода запускается reconciliation, а не повторный ввод."
+    },
+    {
+      "id": "V2-034",
+      "title": "Installed Windows вертикальная qualification UI и native host",
+      "owner_layer": "existing UI + native host + device harness",
+      "depends_on": [
+        "V2-014",
+        "V2-021",
+        "V2-030",
+        "V2-031",
+        "V2-032",
+        "V2-033"
+      ],
+      "acceptance": [
+        "На устройстве пользователя выполнен repo scan→related chunks→context export→manual response import→search→resume.",
+        "Отдельно записаны voice/keyboard, native host connection, sleep/offline, cancel/restart и filesystem permissions.",
+        "Receipt содержит actual OS/runtime/app versions, snapshot, steps/evidence и failed cases.",
+        "Прототип HTML или DOM fixture не называется установленной Windows квалификацией."
+      ],
+      "source_or_rationale": "Текущий foundation документ прямо оставляет installed Windows receipt NOT RUN.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P4",
+      "artifact": "qualification/WINDOWS_INSTALLED_DEVICE_RECEIPT.json",
+      "failure_behavior": "Провал оставляет приложение в ручном read/export режиме и точный defect task; последующие PC actions не объявляются готовыми."
+    },
+    {
+      "id": "V2-035",
+      "title": "Grok Build CLI adapter и typed streaming result",
+      "owner_layer": "AI adapter service -> registered capability",
+      "depends_on": [
+        "V2-022",
+        "V2-024",
+        "V2-025",
+        "V2-028"
+      ],
+      "acceptance": [
+        "Зафиксированы версия grok, auth, cwd/worktree policy, параметры headless и фактическая streaming schema.",
+        "Запрос привязан к request ID/base SHA/context hash; stdout/stderr/exit/status обрабатываются без утечки ключа.",
+        "Adapter подтверждает полученные artifacts, прекращение/timeout и late events; нельзя считать любой final text успешным patch.",
+        "Запуск происходит только по действующему grant; если CLI отсутствует, остаётся ручной Grok handoff.",
+        "UI-chat automation не подменяет документированный CLI путь без отдельного проверенного adapter."
+      ],
+      "source_or_rationale": "Official docs.x.ai/build/overview: TUI, headless grok -p, streaming-json, ACP; установленный adapter ещё не проверен.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P5",
+      "artifact": "contracts/GrokBuildAdapterBinding.json",
+      "failure_behavior": "Несовместимая схема/авторизация/unknown execution создаёт adapter error receipt; сохраняется пакет и возможность ручного продолжения."
+    },
+    {
+      "id": "V2-036",
+      "title": "Результат AI и независимый criterion verifier",
+      "owner_layer": "content-lab/context_review.py + registered audit job",
+      "depends_on": [
+        "V2-019",
+        "V2-021",
+        "V2-024",
+        "V2-028"
+      ],
+      "acceptance": [
+        "Критерии задаются до запроса AI и привязаны к accepted scope/base snapshot.",
+        "Verifier выполняет зарегистрированную проверку либо сверяет конкретный артефакт и фиксирует actual evidence.",
+        "DONE, supplied hash и claimed tests остаются claims без независимой проверки.",
+        "Finding закрывается только при всех required verified criteria; partial verified status сохраняет недоказанное."
+      ],
+      "source_or_rationale": "Текущий SCE source binding не доказывает fix criterion; это прямо отмечено как next step.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P5",
+      "artifact": "artifacts/CRITERION_EVIDENCE_RECEIPT.json",
+      "failure_behavior": "Отсутствующий environment/criterion остаётся unverified/blocked; пользователь видит точную причину, а не ложное зелёное состояние."
+    },
+    {
+      "id": "V2-037",
+      "title": "Патч в изолированном worktree и draft PR preparation",
+      "owner_layer": "code-change adapter + context review",
+      "depends_on": [
+        "V2-021",
+        "V2-025",
+        "V2-028",
+        "V2-036"
+      ],
+      "acceptance": [
+        "Патч применим к exact base SHA и accepted scope, хранит diff и source-linked rationale.",
+        "Существующий checkout не перезаписывается; worktree не объявляется security sandbox.",
+        "Разрешённые tests запускаются через registry; неизвестные install/test hooks требуют классификации.",
+        "Bundle связывает goal→context pack→AIResult→diff→receipts; внешняя публикация PR требует подходящий заранее выданный grant."
+      ],
+      "source_or_rationale": "Пользователь хочет развитие возможностей через AI; первый deliverable — проверяемая привязка изменения к цели. Входом может быть ручной AIResult любого выбранного AI; Grok Build — необязательный adapter, не общая зависимость.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P5",
+      "artifact": "artifacts/PATCH_REVIEW_BUNDLE.json",
+      "failure_behavior": "Conflict/base drift создаёт rebase review task; не force-push и не merge на основании AI claim."
+    },
+    {
+      "id": "V2-038",
+      "title": "Проверка точного PR и merge по GitHub",
+      "owner_layer": "GitHub read adapter + context review",
+      "depends_on": [
+        "V2-024",
+        "V2-025",
+        "V2-028",
+        "V2-037"
+      ],
+      "acceptance": [
+        "Хранятся owner/repo/PR number/expected base branch/expected head SHA и required check policy.",
+        "Авторитетное чтение проверяет current head, merge state/time, base repository/branch, merge commit и required checks.",
+        "Squash/rebase/merge методы имеют явную mapping policy; result commit сверяется с base ancestry и reviewed PR.",
+        "Voice/chat/webhook инициирует poll, но не является merge proof; изменившийся head инвалидирует старую review привязку."
+      ],
+      "source_or_rationale": "Пользователь хочет, чтобы приложение понимало, что GitHub merged, после заранее сказанной команды.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P5",
+      "artifact": "artifacts/GITHUB_MERGE_RECEIPT.json",
+      "failure_behavior": "API недоступно/проверка не завершена/SHA не совпал — pending/unknown/blocked; downstream release не стартует по одному тексту «merged»."
+    },
+    {
+      "id": "V2-039",
+      "title": "Связанный release manifest и проверка происхождения",
+      "owner_layer": "release adapter + Core policy",
+      "depends_on": [
+        "V2-014",
+        "V2-024",
+        "V2-025",
+        "V2-038"
+      ],
+      "acceptance": [
+        "Manifest связывает source repo/commit, release/version, asset digests, build metadata, schema versions и capability contracts.",
+        "Policy задаёт доверенный release channel и проверку подписи/provenance; неизвестный signer/source не принимается автоматически.",
+        "Asset hash проверяется до staging; binary/source mapping соответствует verified merge и release policy.",
+        "Release с новыми scopes не расширяет существующие grants."
+      ],
+      "source_or_rationale": "Merge не доказывает происхождение установленного desktop binary.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P5",
+      "artifact": "contracts/ReleaseProvenanceManifest.json",
+      "failure_behavior": "Не прошедший integrity/provenance check release остаётся quarantined; текущая версия продолжает работать."
+    },
+    {
+      "id": "V2-040",
+      "title": "Stage, migration dry-run, update и rollback",
+      "owner_layer": "desktop updater + existing store",
+      "depends_on": [
+        "V2-014",
+        "V2-028",
+        "V2-039"
+      ],
+      "acceptance": [
+        "До переключения создан verified backup/checkpoint; migration проверена на копии библиотеки.",
+        "Staging smoke test выполняет существующий repo→context сценарий и заявленную новую capability.",
+        "Активная версия переключается только после verified stage; after-switch health проверяется отдельно.",
+        "Fixture прерывает download/migration/switch и восстанавливает согласованные code/data versions без ложного installed status."
+      ],
+      "source_or_rationale": "Новые AI-разработанные capabilities должны реально доходить до приложения.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P5",
+      "artifact": "artifacts/UPDATE_ROLLBACK_RECEIPT.json",
+      "failure_behavior": "Rollback выбирает совместимую версию данных; необратимая миграция запрещает притворяться мгновенным откатом и использует documented recovery."
+    },
+    {
+      "id": "V2-041",
+      "title": "Публикация новой capability в UI после установленной проверки",
+      "owner_layer": "capability registry + UI",
+      "depends_on": [
+        "V2-024",
+        "V2-025",
+        "V2-036",
+        "V2-040"
+      ],
+      "acceptance": [
+        "Capability появляется как available только при installed code version и прошедшем verifier.",
+        "UI различает source merged/release verified/installed/capability verified, а не одно «готово».",
+        "Compatibility policy проверяет прежние grants; новые эффекты остаются ungranted.",
+        "Первый реальный outcome связывается с исходным goal и закрывает соответствующую задачу доказательством."
+      ],
+      "source_or_rationale": "Замкнуть цикл: идея→AI→merge→release→работающая кнопка.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P5",
+      "artifact": "artifacts/INSTALLED_CAPABILITY_RECEIPT.json",
+      "failure_behavior": "Новая capability не прошла smoke — unavailable с recovery path; старые рабочие возможности сохраняют статус."
+    },
+    {
+      "id": "V2-042",
+      "title": "Сбор данных через зарегистрированные collectors и freshness",
+      "owner_layer": "repo-specific adapters + source catalog",
+      "depends_on": [
+        "V2-010",
+        "V2-024",
+        "V2-025",
+        "V2-028"
+      ],
+      "acceptance": [
+        "Collector хранит source identity, fetched_at/source time, schema, status, retry/backoff и разрешённую область.",
+        "Raw response и нормализованная projection связаны hashes; stale/partial/missing различаются.",
+        "Общий dataset может читаться параллельными research jobs без дублирования сетевого запроса по одному ключу.",
+        "Конкретные endpoints и budgets заполняются из фактического repo config и grants, не выдумываются в docs."
+      ],
+      "source_or_rationale": "«run repo ... automations ... gather data».",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P6",
+      "artifact": "artifacts/DATA_COLLECTION_MANIFEST.json",
+      "failure_behavior": "Недоступный источник оставляет gap и next retry; stale данные не выдаются за свежие."
+    },
+    {
+      "id": "V2-043",
+      "title": "Qualification capability registry для studious-pancake",
+      "owner_layer": "studious-pancake audited entrypoints + SCE bridge",
+      "depends_on": [
+        "V2-023",
+        "V2-024",
+        "V2-025",
+        "V2-036",
+        "V2-042"
+      ],
+      "acceptance": [
+        "После текущего read-only audit перечислены точные существующие команды/профили tests/replay/simulation/paper и их effects.",
+        "Первый выбранный профиль sender-free/read-only; отсутствие реального sender проверяется контрактом и isolation config.",
+        "Каждый run фиксирует code/data snapshot, fees/cost assumptions, metrics, artifacts и expected completion predicate.",
+        "Неизвестные/неготовые/live команды остаются отдельными dispositions; результат не объявляется прибыльностью или production readiness."
+      ],
+      "source_or_rationale": "Пользователь просит Laya автоматизировать квалификацию и исследования web3 repo.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P6",
+      "artifact": "artifacts/STUDIOUS_QUALIFICATION_BINDINGS.json",
+      "failure_behavior": "Недостающий config/data/schema создаёт blocked qualification task; не переходить к live для «проверки»."
+    },
+    {
+      "id": "V2-044",
+      "title": "Расписание кампаний, бюджеты и реальные интервалы наблюдения",
+      "owner_layer": "existing Core scheduler/durable.mjs",
+      "depends_on": [
+        "V2-028",
+        "V2-029",
+        "V2-042",
+        "V2-043"
+      ],
+      "acceptance": [
+        "Schedule хранит timezone, cadence, deadline, allowed capability set, grant, data/CPU/API budgets и resource concurrency.",
+        "Sleep/offline/restart дают recorded skipped intervals и resume policy; 24h plan не называется 24h observed run.",
+        "Бюджеты и freshness проверяются перед каждым dispatch; exhaustion создаёт graceful pause.",
+        "Daily receipt показывает successful/failed/unknown/skipped, actual coverage, cost и список artifacts."
+      ],
+      "source_or_rationale": "Цель круглосуточного автоматического R&D и повторяемого сбора.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P6",
+      "artifact": "contracts/QualificationCampaignSchedule.json",
+      "failure_behavior": "Не воспроизводить без ограничений весь пропущенный backlog после пробуждения; применить явную catch-up policy."
+    },
+    {
+      "id": "V2-045",
+      "title": "Следующий R&D brief из доказанных gaps",
+      "owner_layer": "context_review.py + goals/catalog",
+      "depends_on": [
+        "V2-009",
+        "V2-016",
+        "V2-019",
+        "V2-029",
+        "V2-036",
+        "V2-043"
+      ],
+      "acceptance": [
+        "Brief выбирает конкретные unverified criteria, unresolved edges, failed fixtures и stale источники, а не генерирует абстрактную волну PR.",
+        "Каждая идея имеет evidence, dependency, expected benefit, experiment, stop rule и defer condition.",
+        "Дедуп сравнивает requirement/evidence lineage; повтор старой идеи отмечается, а не считается новой функцией.",
+        "Новый запрос компилируется через тот же ContextPack и входит в каталог с отдельной AI attribution."
+      ],
+      "source_or_rationale": "Пользователь хочет снова посылать repo AI для R&D и развивать незавершённые стратегии.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P6",
+      "artifact": "artifacts/NEXT_RND_BRIEF.json",
+      "failure_behavior": "Если новых доказательств нет, отчёт говорит no-new-evidence и предлагает сбор, а не придумывает прогресс."
+    },
+    {
+      "id": "V2-046",
+      "title": "Панель кампаний, возможностей и незавершённости",
+      "owner_layer": "library UI + durable/Core projection",
+      "depends_on": [
+        "V2-015",
+        "V2-029",
+        "V2-041",
+        "V2-044",
+        "V2-045"
+      ],
+      "acceptance": [
+        "Панель показывает registered/executable/blocked/deferred и actual outcome receipts отдельно от roadmap count.",
+        "Можно перейти goal→source→task→workflow→job→artifact→criterion→release.",
+        "Unknown jobs и незакрытые criteria представлены в очереди, не спрятаны в общей процентной оценке.",
+        "Фильтры по repo, phase, capability effect, snapshot и failure reason помогают быстро продолжить работу."
+      ],
+      "source_or_rationale": "Пользователь хочет понимать, какие функции работают автоматически и что развивать дальше.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P6",
+      "artifact": "ui/PRODUCT_PROGRESS_AND_CAMPAIGNS.md",
+      "failure_behavior": "Недоступная projection перестраивается из событий; отсутствующая receipt не заменяется optimistic UI success."
+    },
+    {
+      "id": "V2-047",
+      "title": "Экспериментальные метрики полезности и производительности",
+      "owner_layer": "qualification harness + product research",
+      "depends_on": [
+        "V2-021",
+        "V2-029",
+        "V2-034",
+        "V2-046"
+      ],
+      "acceptance": [
+        "Зафиксированы corpus, repo snapshot, Dell hardware/runtime, задачи, ручной baseline и experiment version.",
+        "Измеряются scan/rescan/RAM/search p50-p95/export time, source coverage, extra context requests, dispatch errors, unknown resolution и время до verified outcome.",
+        "Потеря разрешённых received bytes и dispatch без подходящего grant являются correctness failures независимо от скорости.",
+        "Цели вроде p95 search <1s маркируются proposed targets и принимаются/корректируются после реальных измерений."
+      ],
+      "source_or_rationale": "Нужна максимальная эффективность, но latency/экономия не должны быть выдуманными.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P7",
+      "artifact": "experiments/PRODUCT_BASELINE_AND_TARGETS.json",
+      "failure_behavior": "Провал target не скрывается подбором лёгких fixtures; публикуются данные и следующий измеримый bottleneck."
+    },
+    {
+      "id": "V2-048",
+      "title": "Кандидаты навыков и сохранённый deferred register",
+      "owner_layer": "capability/workflow catalog + goals",
+      "depends_on": [
+        "V2-026",
+        "V2-029",
+        "V2-041",
+        "V2-045",
+        "V2-047"
+      ],
+      "acceptance": [
+        "Успешный workflow становится skill candidate с scope, versions, input/output schema, evidence, grant requirements и validity conditions.",
+        "Перед promotion проверяются новые случаи и recovery; единственный удачный run не делает навык универсальным.",
+        "Изменение app/repo/API/policy инвалидирует нужную часть навыка и запускает requalification.",
+        "Always-on voice, sync, marketplace, multimodal extraction, new trading strategies и local planner сохранены с return condition и prerequisites."
+      ],
+      "source_or_rationale": "Будущая автоматизация должна переиспользовать доказанный опыт и сохранять отложенные идеи.",
+      "implementation_status": "proposed_extension_not_implemented_by_this_document",
+      "phase": "P7",
+      "artifact": "artifacts/SKILL_CANDIDATES_AND_DEFERRED.json",
+      "failure_behavior": "Устаревший skill виден как stale/unavailable; прежние failures сохраняются, чтобы новый AI не повторял известный неудачный путь."
+    }
+  ],
+  "phase_namespace": "V2_DELIVERY_PHASES",
+  "phase_note": "V2 phase labels scope this incremental delivery plan; dependencies are authoritative, and these labels are not identical to V1 P0-P8.",
+  "phase_definitions": {
+    "P0": "Owners and intake contracts",
+    "P1": "Correlated repo capture/catalog/UI",
+    "P2": "Labels, goals and AI handoff",
+    "P3": "Registered execution and Laya routing",
+    "P4": "Accessibility and Windows/voice adapters",
+    "P5": "AI coding, GitHub evidence and application updates",
+    "P6": "Collectors and qualification campaigns",
+    "P7": "Evaluation and reusable skills"
+  }
+}

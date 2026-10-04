@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposal:graph_group:v1",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "sce.graph-group.proposal.v1"
+    },
+    "group_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "group_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "graph_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "namespace",
+        "profile_id",
+        "project_ids"
+      ],
+      "additionalProperties": false
+    },
+    "planner_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "membership_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "membership_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "parts_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "parts_count": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "crossing_edges_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "raw_ids_unchanged": {
+      "type": "boolean"
+    },
+    "membership_complete": {
+      "type": "boolean"
+    },
+    "gaps": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schema",
+    "group_id",
+    "group_revision",
+    "graph_revision",
+    "scope",
+    "planner_version",
+    "policy_sha256",
+    "membership_count",
+    "membership_manifest_sha256",
+    "parts_manifest_sha256",
+    "parts_count",
+    "crossing_edges_ref",
+    "raw_ids_unchanged",
+    "membership_complete",
+    "gaps"
+  ],
+  "additionalProperties": false
+}

@@ -1,0 +1,5046 @@
+rtEqual(self.status(p,self.receipt(p,[a])), "UNKNOWN")
+    def test_invalid_plan_refused(self):
+        p = plan(); p["live_authorized"] = True
+        with self.assertRaises(EvidenceError): validate_plan(p)
+        p = plan(); p["stages"][0]["depends_on"] = ["stage1"]
+        with self.assertRaises(EvidenceError): validate_plan(p)
+        p = plan(); p["stages"][0]["criteria"]["any_boolean_success"] = True
+        with self.assertRaises(EvidenceError): validate_plan(p)
+
+if __name__ == "__main__": unittest.main(verbosity=2)
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 cc0c535aae6a7359b65919ed7620799257edcdf8624bfb760fba8cbf0f96ff74 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#103:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/01_repo_inventory.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF01",
+  "name": "repo_inventory",
+  "title_ru": "Сверка полного репозитория и входных данных",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [],
+  "inputs": [
+    "repo_snapshot",
+    "source_manifest"
+  ],
+  "steps": [
+    {
+      "id": "repo_inventory.1",
+      "handler": "PROPOSED.repo_inventory.1",
+      "instruction": "Фиксировать exact revision + dirty diff + submodules + LFS pointers separately"
+    },
+    {
+      "id": "repo_inventory.2",
+      "handler": "PROPOSED.repo_inventory.2",
+      "instruction": "Сопоставлять полный путь/ordinal/bytes/hash между ожидаемым и прочитанным manifest"
+    },
+    {
+      "id": "repo_inventory.3",
+      "handler": "PROPOSED.repo_inventory.3",
+      "instruction": "Отдельно сохранять unreadable/binary/excluded и причину"
+    }
+  ],
+  "outputs": [
+    "inventory_diff.v1",
+    "completeness_report"
+  ],
+  "qualification_criteria": [
+    "No silently omitted files; unresolved LFS or missing submodule remains UNKNOWN"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7237e6b076dd0d696ecbd80d4276450de1d624a70ef2d956495c9509f4b171de | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#104:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/02_toolchain_build.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF02",
+  "name": "toolchain_build",
+  "title_ru": "Воспроизводимая сборка",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "repo_inventory"
+  ],
+  "inputs": [
+    "lockfiles",
+    "compiler_versions",
+    "build_recipe"
+  ],
+  "steps": [
+    {
+      "id": "toolchain_build.1",
+      "handler": "PROPOSED.toolchain_build.1",
+      "instruction": "Проверять pinned dependency/runner/compiler versions"
+    },
+    {
+      "id": "toolchain_build.2",
+      "handler": "PROPOSED.toolchain_build.2",
+      "instruction": "Собирать из isolated snapshot без live signer"
+    },
+    {
+      "id": "toolchain_build.3",
+      "handler": "PROPOSED.toolchain_build.3",
+      "instruction": "Сохранять stdout/stderr/exit/tool versions и hashes compiled outputs"
+    }
+  ],
+  "outputs": [
+    "build_receipt",
+    "binary_manifest"
+  ],
+  "qualification_criteria": [
+    "Successful clean build; compiler warnings triaged; no secret embedded"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 46930e08eb3c1d2cfb0637b80538dd554115a40c27049a417e53be9e6cb72872 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#105:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/03_static_smells.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF03",
+  "name": "static_smells",
+  "title_ru": "Детерминированные code smells и проверка гипотез",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "repo_inventory"
+  ],
+  "inputs": [
+    "sources",
+    "ruleset_sha256"
+  ],
+  "steps": [
+    {
+      "id": "static_smells.1",
+      "handler": "PROPOSED.static_smells.1",
+      "instruction": "Запускать language-specific AST/rules adapters"
+    },
+    {
+      "id": "static_smells.2",
+      "handler": "PROPOSED.static_smells.2",
+      "instruction": "Laya ранжирует находки, но не закрывает их как исправленные"
+    },
+    {
+      "id": "static_smells.3",
+      "handler": "PROPOSED.static_smells.3",
+      "instruction": "Сохранять file/range/rule/matched excerpt/repro и false-positive decision"
+    }
+  ],
+  "outputs": [
+    "finding_ledger",
+    "rule_run_receipt"
+  ],
+  "qualification_criteria": [
+    "Every suppressed finding has provenance; model belief is not test evidence"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 4a999c98a12e5a6b1aa8035d40626b465d6104b4c091c56a8b5cecb634a8737c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#106:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/04_unit_contracts.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF04",
+  "name": "unit_contracts",
+  "title_ru": "Unit и boundary regression",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build"
+  ],
+  "inputs": [
+    "test_suite",
+    "requirements"
+  ],
+  "steps": [
+    {
+      "id": "unit_contracts.1",
+      "handler": "PROPOSED.unit_contracts.1",
+      "instruction": "Извлечь requirement→test mapping"
+    },
+    {
+      "id": "unit_contracts.2",
+      "handler": "PROPOSED.unit_contracts.2",
+      "instruction": "Запустить exact unit selection и сохранить настоящий JUnit per testcase"
+    },
+    {
+      "id": "unit_contracts.3",
+      "handler": "PROPOSED.unit_contracts.3",
+      "instruction": "Проверить repayment/rounding/config/nonce/decimal boundary cases"
+    }
+  ],
+  "outputs": [
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "Required named cases executed; no skipped/failure/error cases"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3df91b71fc2dd1ddb5327f9bb0648075499776133cc1648c66d16fac06d09ace | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#107:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/05_fuzz_campaign.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF05",
+  "name": "fuzz_campaign",
+  "title_ru": "Fuzz с corpus и seed",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts"
+  ],
+  "inputs": [
+    "seed_set",
+    "corpus_hash",
+    "fuzz_budget"
+  ],
+  "steps": [
+    {
+      "id": "fuzz_campaign.1",
+      "handler": "PROPOSED.fuzz_campaign.1",
+      "instruction": "Пиновать seeds, tool version, cases/runs/depth и предел времени"
+    },
+    {
+      "id": "fuzz_campaign.2",
+      "handler": "PROPOSED.fuzz_campaign.2",
+      "instruction": "Сохранять covered selectors, revert distribution, execution counts"
+    },
+    {
+      "id": "fuzz_campaign.3",
+      "handler": "PROPOSED.fuzz_campaign.3",
+      "instruction": "Сжимать counterexample и добавлять regression test"
+    }
+  ],
+  "outputs": [
+    "campaign_metrics",
+    "counterexample",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "Budgets actually reached; timeout or vacuous coverage does not pass"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2021e207647c54bdd365630419d868ed783a72b65cb220a422261a839ca94c00 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#108:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/06_stateful_invariants.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF06",
+  "name": "stateful_invariants",
+  "title_ru": "Stateful invariants",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts"
+  ],
+  "inputs": [
+    "invariant_spec",
+    "handler_config"
+  ],
+  "steps": [
+    {
+      "id": "stateful_invariants.1",
+      "handler": "PROPOSED.stateful_invariants.1",
+      "instruction": "Проверять balance accounting, authorization boundaries, atomic repayment, cleanup after revert"
+    },
+    {
+      "id": "stateful_invariants.2",
+      "handler": "PROPOSED.stateful_invariants.2",
+      "instruction": "Измерять reachable handlers and non-vacuous execution"
+    },
+    {
+      "id": "stateful_invariants.3",
+      "handler": "PROPOSED.stateful_invariants.3",
+      "instruction": "В Foundry учитывать runs/depth; для Solana выбрать отдельный harness после repo discovery"
+    }
+  ],
+  "outputs": [
+    "invariant_campaign",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "No violation in recorded campaign; invariants not claimed exhaustive"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 fbef3b18ae5cfe045977be372a55f868c685aa326bb5df2f601619345f3324c9 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#109:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/07_pinned_fork.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF07",
+  "name": "pinned_fork",
+  "title_ru": "Fork или local validator pinned state",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build"
+  ],
+  "inputs": [
+    "network_adapter",
+    "anchor",
+    "protocol_addresses"
+  ],
+  "steps": [
+    {
+      "id": "pinned_fork.1",
+      "handler": "PROPOSED.pinned_fork.1",
+      "instruction": "Проверить chain/genesis, block/slot anchor and provider capabilities"
+    },
+    {
+      "id": "pinned_fork.2",
+      "handler": "PROPOSED.pinned_fork.2",
+      "instruction": "EVM: bind blockHash and canonicality where supported; record actual tool support"
+    },
+    {
+      "id": "pinned_fork.3",
+      "handler": "PROPOSED.pinned_fork.3",
+      "instruction": "Solana: record cluster, slot, account snapshots, program versions, commitment; do not call EVM fork equivalent"
+    }
+  ],
+  "outputs": [
+    "fork_or_validator_receipt",
+    "state_snapshot"
+  ],
+  "qualification_criteria": [
+    "Target protocol bytecode/program and state recorded; chain remains repo-dependent"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 eaa28c11bc73a9bb21d830aac99f66e7f1df7c1b2ba820c09d5ba366edd6b9a5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#110:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/08_offline_replay.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF08",
+  "name": "offline_replay",
+  "title_ru": "Детерминированный replay",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts"
+  ],
+  "inputs": [
+    "immutable_market_dataset",
+    "replay_clock",
+    "strategy_config"
+  ],
+  "steps": [
+    {
+      "id": "offline_replay.1",
+      "handler": "PROPOSED.offline_replay.1",
+      "instruction": "Replay recorded event ordering with clock control"
+    },
+    {
+      "id": "offline_replay.2",
+      "handler": "PROPOSED.offline_replay.2",
+      "instruction": "Compare decisions against expected behavior and aggregate reproducibility hashes"
+    },
+    {
+      "id": "offline_replay.3",
+      "handler": "PROPOSED.offline_replay.3",
+      "instruction": "Track dropped/out-of-order events and rejected opportunities"
+    }
+  ],
+  "outputs": [
+    "replay_receipt",
+    "decision_log"
+  ],
+  "qualification_criteria": [
+    "OFFLINE_REPLAY only; does not satisfy paper observation"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 eef80b4b5bb99cc86a683bf0372bcd9de7936f4f192affb1dfd5708a094c645b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#111:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/09_market_collect.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF09",
+  "name": "market_collect",
+  "title_ru": "Сбор рыночных данных без подписи",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "explicitly_configured_read_only_watch"
+  ],
+  "depends_on": [],
+  "inputs": [
+    "read_only_provider_scope",
+    "asset_universe",
+    "retention_policy"
+  ],
+  "steps": [
+    {
+      "id": "market_collect.1",
+      "handler": "PROPOSED.market_collect.1",
+      "instruction": "Collect selected RPC/API/subscription observations into append-only raw files"
+    },
+    {
+      "id": "market_collect.2",
+      "handler": "PROPOSED.market_collect.2",
+      "instruction": "Preserve request id, network, time, anchor, provider id/version, raw response hash"
+    },
+    {
+      "id": "market_collect.3",
+      "handler": "PROPOSED.market_collect.3",
+      "instruction": "Resume cursor and explicitly log gaps/throttling/provider errors"
+    }
+  ],
+  "outputs": [
+    "raw_market_manifest",
+    "collection_receipt"
+  ],
+  "qualification_criteria": [
+    "No signing/send method in collector capabilities; completeness/gaps explicit"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6e144015ca27f7514712753dcf92a74a8c98cf1de850e39b77695810ffe0ef90 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#112:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/10_provider_compare.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF10",
+  "name": "provider_compare",
+  "title_ru": "Сравнение независимых provider views",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "market_collect"
+  ],
+  "inputs": [
+    "provider_set",
+    "same_anchor_queries"
+  ],
+  "steps": [
+    {
+      "id": "provider_compare.1",
+      "handler": "PROPOSED.provider_compare.1",
+      "instruction": "Normalize responses for same state anchor"
+    },
+    {
+      "id": "provider_compare.2",
+      "handler": "PROPOSED.provider_compare.2",
+      "instruction": "Compute disagreements/latency/rate-limit/drop rates"
+    },
+    {
+      "id": "provider_compare.3",
+      "handler": "PROPOSED.provider_compare.3",
+      "instruction": "Do not count two aliases to same upstream as demonstrated independent sources"
+    }
+  ],
+  "outputs": [
+    "provider_disagreement_report"
+  ],
+  "qualification_criteria": [
+    "Agreement scope and provider provenance recorded; disagreement triggers UNKNOWN"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3a61a9ca11acf8f1c1654f089ae16c6376dcdc1de8b7c52ea428b9ebd4d22efc | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#113:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/11_oracle_freshness.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF11",
+  "name": "oracle_freshness",
+  "title_ru": "Oracle и quote freshness",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "market_collect"
+  ],
+  "inputs": [
+    "oracle_config",
+    "feed_identity",
+    "freshness_budget"
+  ],
+  "steps": [
+    {
+      "id": "oracle_freshness.1",
+      "handler": "PROPOSED.oracle_freshness.1",
+      "instruction": "Check timestamp/slot/block against configured source semantics"
+    },
+    {
+      "id": "oracle_freshness.2",
+      "handler": "PROPOSED.oracle_freshness.2",
+      "instruction": "Inject stale quote and delayed oracle updates"
+    },
+    {
+      "id": "oracle_freshness.3",
+      "handler": "PROPOSED.oracle_freshness.3",
+      "instruction": "Record every reject and any accepted stale candidate"
+    }
+  ],
+  "outputs": [
+    "freshness_cases",
+    "economics_samples.v1"
+  ],
+  "qualification_criteria": [
+    "No accepted candidate exceeds explicit freshness policy"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 380212c44a2a0590e76687be5062ca5e09de66bd1b67a185ad66d5545a4f09fb | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#114:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/12_fees_and_costs.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF12",
+  "name": "fees_and_costs",
+  "title_ru": "Полная стоимость opportunity",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "offline_replay"
+  ],
+  "inputs": [
+    "cost_model",
+    "atomic_accounting_unit",
+    "fee_inputs"
+  ],
+  "steps": [
+    {
+      "id": "fees_and_costs.1",
+      "handler": "PROPOSED.fees_and_costs.1",
+      "instruction": "Record principal, flash/swap/network fees, slippage reserve, other known costs"
+    },
+    {
+      "id": "fees_and_costs.2",
+      "handler": "PROPOSED.fees_and_costs.2",
+      "instruction": "Compute candidate net using integers in same accounting unit"
+    },
+    {
+      "id": "fees_and_costs.3",
+      "handler": "PROPOSED.fees_and_costs.3",
+      "instruction": "Retain conversion source/timestamp and rejection reason"
+    }
+  ],
+  "outputs": [
+    "economics_samples.v1",
+    "cost_assumptions"
+  ],
+  "qualification_criteria": [
+    "Configured predicate only; model completeness and future profit not proven"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 0f68a8bffcd9ac07b30ce2df51deb1965ee1389028dcadd6c36c57b6db7ddcc8 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#115:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/13_route_atomicity.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF13",
+  "name": "route_atomicity",
+  "title_ru": "Маршрут и атомарность",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "pinned_fork",
+    "unit_contracts"
+  ],
+  "inputs": [
+    "route_template",
+    "protocol_adapters"
+  ],
+  "steps": [
+    {
+      "id": "route_atomicity.1",
+      "handler": "PROPOSED.route_atomicity.1",
+      "instruction": "Inject failure at each route step"
+    },
+    {
+      "id": "route_atomicity.2",
+      "handler": "PROPOSED.route_atomicity.2",
+      "instruction": "Assert state rollback or compensation according to actual chain semantics"
+    },
+    {
+      "id": "route_atomicity.3",
+      "handler": "PROPOSED.route_atomicity.3",
+      "instruction": "Test token decimals, transfer behaviors, pool liquidity boundaries"
+    }
+  ],
+  "outputs": [
+    "route_fault_cases",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "Exact protocols/chain semantics qualified, not inferred from generic flashloan label"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8f54f565a3172c16bad9058077b0d21cd0bdc98a8ae058142bb576bea9a59c09 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#116:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/14_slippage_stress.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF14",
+  "name": "slippage_stress",
+  "title_ru": "Slippage, liquidity и adverse timing",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "fees_and_costs",
+    "pinned_fork"
+  ],
+  "inputs": [
+    "stress_grid",
+    "liquidity_states"
+  ],
+  "steps": [
+    {
+      "id": "slippage_stress.1",
+      "handler": "PROPOSED.slippage_stress.1",
+      "instruction": "Sweep liquidity/price movement/latency/fee shocks with immutable scenario ids"
+    },
+    {
+      "id": "slippage_stress.2",
+      "handler": "PROPOSED.slippage_stress.2",
+      "instruction": "Separate invalid scenarios from adverse valid outcomes"
+    },
+    {
+      "id": "slippage_stress.3",
+      "handler": "PROPOSED.slippage_stress.3",
+      "instruction": "Preserve worst-case failure and all accepted candidate cost computations"
+    }
+  ],
+  "outputs": [
+    "stress_surface",
+    "economics_samples.v1"
+  ],
+  "qualification_criteria": [
+    "No acceptance outside reviewed risk envelope; thresholds are configuration"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f8d1c1f79d9870d72260df4df653986518dbf6d46f969619d4e85ff0c51c72ec | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#117:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/15_lender_repayment.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF15",
+  "name": "lender_repayment",
+  "title_ru": "Lender-neutral repayment contract",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "route_atomicity"
+  ],
+  "inputs": [
+    "lender_adapter",
+    "repayment_cases"
+  ],
+  "steps": [
+    {
+      "id": "lender_repayment.1",
+      "handler": "PROPOSED.lender_repayment.1",
+      "instruction": "Verify principal+fee handling on exact adapter and chain"
+    },
+    {
+      "id": "lender_repayment.2",
+      "handler": "PROPOSED.lender_repayment.2",
+      "instruction": "Inject insufficient repayment, authorization mismatch and wrong callback origin"
+    },
+    {
+      "id": "lender_repayment.3",
+      "handler": "PROPOSED.lender_repayment.3",
+      "instruction": "Keep MarginFi work PAUSED unless separate current instruction resumes it"
+    }
+  ],
+  "outputs": [
+    "repayment_receipt",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "No claim that a paused lender is implemented or live qualified"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9f72e0068e1082e5602578c35daf99785d8eb148b34b5f2651bbc463243ec29b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#118:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/16_paper_observation.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF16",
+  "name": "paper_observation",
+  "title_ru": "Реальное paper-наблюдение",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "market_collect",
+    "offline_replay"
+  ],
+  "inputs": [
+    "real_market_window",
+    "read_only_runtime",
+    "candidate_log"
+  ],
+  "steps": [
+    {
+      "id": "paper_observation.1",
+      "handler": "PROPOSED.paper_observation.1",
+      "instruction": "Observe current market via pinned provider config without signing or sending"
+    },
+    {
+      "id": "paper_observation.2",
+      "handler": "PROPOSED.paper_observation.2",
+      "instruction": "Record gap/freshness/decision latencies and hypothetical outcomes with caveats"
+    },
+    {
+      "id": "paper_observation.3",
+      "handler": "PROPOSED.paper_observation.3",
+      "instruction": "Separate actual observed quotes from modeled fills and offline replay"
+    }
+  ],
+  "outputs": [
+    "observation_window.v1",
+    "paper_economics",
+    "raw_rpc_manifest"
+  ],
+  "qualification_criteria": [
+    "Minimum chosen observation window/coverage met; simulated fills are not realized PnL"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5a00a6d7c380764e5e4a5fa9495d29b19fcf33b5e7569b1e02485eae3deb4ad7 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#119:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/17_fault_injection.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF17",
+  "name": "fault_injection",
+  "title_ru": "Operational faults",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts"
+  ],
+  "inputs": [
+    "fault_catalog",
+    "isolated_runner"
+  ],
+  "steps": [
+    {
+      "id": "fault_injection.1",
+      "handler": "PROPOSED.fault_injection.1",
+      "instruction": "Inject RPC disconnect, stale state, reorg signal, clock shift, disk full, restart"
+    },
+    {
+      "id": "fault_injection.2",
+      "handler": "PROPOSED.fault_injection.2",
+      "instruction": "Check persistence cursor, retry idempotency, no duplicate dispatch"
+    },
+    {
+      "id": "fault_injection.3",
+      "handler": "PROPOSED.fault_injection.3",
+      "instruction": "Record recovery time and missing evidence"
+    }
+  ],
+  "outputs": [
+    "fault_report",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "Expected handling executed for every required fault; no production signing"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9dd87e28d9dcef9355ca0aafc77423fa0daa6f142e50086835ef5017168802be | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#120:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/18_windows_device.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF18",
+  "name": "windows_device",
+  "title_ru": "Dell Windows 11 qualification",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build"
+  ],
+  "inputs": [
+    "actual_device_profile",
+    "microphone",
+    "memory",
+    "disk"
+  ],
+  "steps": [
+    {
+      "id": "windows_device.1",
+      "handler": "PROPOSED.windows_device.1",
+      "instruction": "Benchmark cold/warm start, CPU/GPU/RAM and sustained heat under target workload"
+    },
+    {
+      "id": "windows_device.2",
+      "handler": "PROPOSED.windows_device.2",
+      "instruction": "Test wake/sleep, network changes, microphone loss and disk pressure"
+    },
+    {
+      "id": "windows_device.3",
+      "handler": "PROPOSED.windows_device.3",
+      "instruction": "Qualify installed runtime/provider/model separately from remote test runner"
+    }
+  ],
+  "outputs": [
+    "device_matrix",
+    "latency_measurements"
+  ],
+  "qualification_criteria": [
+    "Measured on actual Dell; Linux tests do not imply Windows readiness"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e5206874a256dc4328c7e0fa0e3a0c9a925c902ee0c8987fa3e4ee2e6318808a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#121:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/19_stop_and_pause.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF19",
+  "name": "stop_and_pause",
+  "title_ru": "Пауза и остановка по голосу/кнопке",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "fault_injection"
+  ],
+  "inputs": [
+    "stop_channel",
+    "cancel_token_protocol"
+  ],
+  "steps": [
+    {
+      "id": "stop_and_pause.1",
+      "handler": "PROPOSED.stop_and_pause.1",
+      "instruction": "Use accessible stop button plus configured voice alternative"
+    },
+    {
+      "id": "stop_and_pause.2",
+      "handler": "PROPOSED.stop_and_pause.2",
+      "instruction": "Inject stop under load and process boundaries"
+    },
+    {
+      "id": "stop_and_pause.3",
+      "handler": "PROPOSED.stop_and_pause.3",
+      "instruction": "Measure trigger-to-blocked dispatch with monotonic timestamps"
+    }
+  ],
+  "outputs": [
+    "stop_latency.v1"
+  ],
+  "qualification_criteria": [
+    "No forbidden dispatch after trigger; cancellation of pending external side effect verified separately"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7186a6de0b1d82d0d4f30aa8b72fc412415b2565cf10f417b586580979bb3b34 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#122:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/20_release_artifact.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF20",
+  "name": "release_artifact",
+  "title_ru": "Release, digest и rollback",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build",
+    "unit_contracts"
+  ],
+  "inputs": [
+    "reviewed_commit",
+    "release_manifest",
+    "rollback_package"
+  ],
+  "steps": [
+    {
+      "id": "release_artifact.1",
+      "handler": "PROPOSED.release_artifact.1",
+      "instruction": "Download into staging and validate manifest/signed provenance via chosen verifier"
+    },
+    {
+      "id": "release_artifact.2",
+      "handler": "PROPOSED.release_artifact.2",
+      "instruction": "Run migrations on a copied DB and health checks"
+    },
+    {
+      "id": "release_artifact.3",
+      "handler": "PROPOSED.release_artifact.3",
+      "instruction": "Activate version atomically where supported; retain tested rollback including DB compatibility"
+    }
+  ],
+  "outputs": [
+    "release_manifest",
+    "migration_receipt",
+    "rollback_receipt"
+  ],
+  "qualification_criteria": [
+    "Artifact identity corresponds to reviewed revision; an archive download alone is not update qualification"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2701d221d57fed37d4dca2522cd10c7e1d2bfba78b0c3bec30970fc05c65a8c5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#123:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/21_canary_plan.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF21",
+  "name": "canary_plan",
+  "title_ru": "План ограниченного canary",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "paper_observation",
+    "stop_and_pause",
+    "release_artifact"
+  ],
+  "inputs": [
+    "specific_operator_authorization",
+    "limits",
+    "expiry",
+    "network",
+    "signer_scope"
+  ],
+  "steps": [
+    {
+      "id": "canary_plan.1",
+      "handler": "PROPOSED.canary_plan.1",
+      "instruction": "Render exact proposed executable version/network/assets/limits and expiry"
+    },
+    {
+      "id": "canary_plan.2",
+      "handler": "PROPOSED.canary_plan.2",
+      "instruction": "Check operational prerequisites and define immediate stop signals"
+    },
+    {
+      "id": "canary_plan.3",
+      "handler": "PROPOSED.canary_plan.3",
+      "instruction": "Remain disabled in this R&D pack; no executable signing or broadcasting handler"
+    }
+  ],
+  "outputs": [
+    "canary_plan_only"
+  ],
+  "qualification_criteria": [
+    "Requires separate reviewed live authorization; offline TRUE never enables signer"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 90a0a4db60ea5f8a9f2cc0f4584efe030bef5ccd1380ed594f81ef1c838bd8c5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#124:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/22_live_monitoring.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF22",
+  "name": "live_monitoring",
+  "title_ru": "Мониторинг уже разрешённого live",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "explicitly_configured_read_only_watch"
+  ],
+  "depends_on": [
+    "canary_plan"
+  ],
+  "inputs": [
+    "authorized_runtime_id",
+    "read_only_telemetry",
+    "incident_policy"
+  ],
+  "steps": [
+    {
+      "id": "live_monitoring.1",
+      "handler": "PROPOSED.live_monitoring.1",
+      "instruction": "Read receipts, balances, nonce/sequence state, drawdown and provider health"
+    },
+    {
+      "id": "live_monitoring.2",
+      "handler": "PROPOSED.live_monitoring.2",
+      "instruction": "Detect reconciliation differences, exposure/risk budget breach and config drift"
+    },
+    {
+      "id": "live_monitoring.3",
+      "handler": "PROPOSED.live_monitoring.3",
+      "instruction": "Request/perform only preauthorized pause; propose further actions for operator"
+    }
+  ],
+  "outputs": [
+    "live_monitor_spec",
+    "incident_timeline"
+  ],
+  "qualification_criteria": [
+    "SPEC only here; no live runtime/transaction/watch task installed"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8ae1e03bb96e4951c38f087dee029efc542e979bd2f53802b8a03271798fe6f7 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#125:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/23_stale_invalidation.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF23",
+  "name": "stale_invalidation",
+  "title_ru": "Инвалидация по изменению inputs",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "repo_inventory"
+  ],
+  "inputs": [
+    "binding_before",
+    "binding_after",
+    "dependency_graph"
+  ],
+  "steps": [
+    {
+      "id": "stale_invalidation.1",
+      "handler": "PROPOSED.stale_invalidation.1",
+      "instruction": "Invalidate affected proofs on repo/config/data/provider/model/network/toolchain change"
+    },
+    {
+      "id": "stale_invalidation.2",
+      "handler": "PROPOSED.stale_invalidation.2",
+      "instruction": "Recompute only nodes whose explicit dependency fingerprint changed"
+    },
+    {
+      "id": "stale_invalidation.3",
+      "handler": "PROPOSED.stale_invalidation.3",
+      "instruction": "Keep earlier evidence readable as HISTORICAL, not current TRUE"
+    }
+  ],
+  "outputs": [
+    "invalidation_plan"
+  ],
+  "qualification_criteria": [
+    "No receipt reused across different binding without deliberate recomputation"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a649f5c13978f543d853d672028a0299e876f82611c11492a2784ea8598b671f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#126:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/24_incident_replay.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF24",
+  "name": "incident_replay",
+  "title_ru": "Incident→regression",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "fault_injection"
+  ],
+  "inputs": [
+    "incident_bundle",
+    "redacted_logs",
+    "state_anchor"
+  ],
+  "steps": [
+    {
+      "id": "incident_replay.1",
+      "handler": "PROPOSED.incident_replay.1",
+      "instruction": "Snapshot evidence without deleting originals"
+    },
+    {
+      "id": "incident_replay.2",
+      "handler": "PROPOSED.incident_replay.2",
+      "instruction": "Create minimal reproducer and deterministic test from observed failure"
+    },
+    {
+      "id": "incident_replay.3",
+      "handler": "PROPOSED.incident_replay.3",
+      "instruction": "Patch in separate worktree; compare before/after under same scenario"
+    }
+  ],
+  "outputs": [
+    "incident_case",
+    "regression_receipt"
+  ],
+  "qualification_criteria": [
+    "Patch claim linked to failing-before/passing-after evidence"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3110c1b165b02c7966723c330548cf04dff2c43749e682598c966214b58415c0 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#127:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/25_qualification_packet.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF25",
+  "name": "qualification_packet",
+  "title_ru": "Пакет решения readiness",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts",
+    "offline_replay",
+    "paper_observation",
+    "windows_device",
+    "stop_and_pause"
+  ],
+  "inputs": [
+    "all_explicit_receipts",
+    "reviewed_plan"
+  ],
+  "steps": [
+    {
+      "id": "qualification_packet.1",
+      "handler": "PROPOSED.qualification_packet.1",
+      "instruction": "Evaluate artifact integrity and exact bindings"
+    },
+    {
+      "id": "qualification_packet.2",
+      "handler": "PROPOSED.qualification_packet.2",
+      "instruction": "Report own and dependency status per stage"
+    },
+    {
+      "id": "qualification_packet.3",
+      "handler": "PROPOSED.qualification_packet.3",
+      "instruction": "Render TRUE/FALSE/UNKNOWN/NOT_RUN with reasons and no automatic live authorization"
+    }
+  ],
+  "outputs": [
+    "qualification.py report"
+  ],
+  "qualification_criteria": [
+    "Existing implemented offline verifier checks selected artifact contracts only"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 4c4455d6488d29a8f5e8fc4d0e9d764dc2e349437c20cee4ddd6cce8fdd825d2 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#128:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/26_coverage_holes.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF26",
+  "name": "coverage_holes",
+  "title_ru": "Поиск непроверенных требований",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "repo_inventory",
+    "static_smells"
+  ],
+  "inputs": [
+    "goal_ledger",
+    "requirements",
+    "tests",
+    "receipts"
+  ],
+  "steps": [
+    {
+      "id": "coverage_holes.1",
+      "handler": "PROPOSED.coverage_holes.1",
+      "instruction": "Join goal ids→repo paths→required cases→current receipts"
+    },
+    {
+      "id": "coverage_holes.2",
+      "handler": "PROPOSED.coverage_holes.2",
+      "instruction": "Distinguish no test, unexecuted test, failed test and stale result"
+    },
+    {
+      "id": "coverage_holes.3",
+      "handler": "PROPOSED.coverage_holes.3",
+      "instruction": "Laya routes candidate next task; deterministic ledger counts coverage"
+    }
+  ],
+  "outputs": [
+    "coverage_gap_queue"
+  ],
+  "qualification_criteria": [
+    "No semantic completeness claim from a keyword match"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d042f1538be41d77e91827847361e121b6fc42391500b81c1be3f38c51638a26 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#129:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/27_experiment_scheduler.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF27",
+  "name": "experiment_scheduler",
+  "title_ru": "Очередь R&D экспериментов",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "coverage_holes"
+  ],
+  "inputs": [
+    "experiment_matrix",
+    "cost_budget",
+    "resource_locks"
+  ],
+  "steps": [
+    {
+      "id": "experiment_scheduler.1",
+      "handler": "PROPOSED.experiment_scheduler.1",
+      "instruction": "Compile typed tasks into existing automation_core queue"
+    },
+    {
+      "id": "experiment_scheduler.2",
+      "handler": "PROPOSED.experiment_scheduler.2",
+      "instruction": "Parallelize read-only independent stages; isolate repo worktrees and shared devices"
+    },
+    {
+      "id": "experiment_scheduler.3",
+      "handler": "PROPOSED.experiment_scheduler.3",
+      "instruction": "Checkpoint progress and resume exact failed nodes with idempotency keys"
+    }
+  ],
+  "outputs": [
+    "experiment_queue_spec"
+  ],
+  "qualification_criteria": [
+    "No second canonical production executor; schedule not installed by this pack"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d6ca31f6335d3ad79a41a77b553e683768d6ac835471365a8ca657d523344dab | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#130:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/web3/workflows/28_voice_goal_binding.SPEC.json =====
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF28",
+  "name": "voice_goal_binding",
+  "title_ru": "Голосовая цель→проверяемый Web3 план",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [],
+  "inputs": [
+    "transcript",
+    "explicit_goal",
+    "current_context_manifest"
+  ],
+  "steps": [
+    {
+      "id": "voice_goal_binding.1",
+      "handler": "PROPOSED.voice_goal_binding.1",
+      "instruction": "Preserve transcript span/time and intent revision"
+    },
+    {
+      "id": "voice_goal_binding.2",
+      "handler": "PROPOSED.voice_goal_binding.2",
+      "instruction": "Retrieve cited requirements and repo snapshot; disambiguate observe/test/deploy/live"
+    },
+    {
+      "id": "voice_goal_binding.3",
+      "handler": "PROPOSED.voice_goal_binding.3",
+      "instruction": "Laya selects template or abstains; goal changes create new plan hash"
+    }
+  ],
+  "outputs": [
+    "typed_goal",
+    "qualification_plan_draft"
+  ],
+  "qualification_criteria": [
+    "Uncertain chain/asset/action stays unresolved; model does not self-authorize trading"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 28d154b3df7e0cc8afc6f82a61616d7586b918b50fbef43e26f05efe60e5c9a7 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#131:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W01.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W01",
+  "title_ru": "Импорт личной истории",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "export file or configured read scope"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "register_source_scope",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "preserve_raw",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "parse_roles_branches_attachments",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "reconcile_revisions",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "suggest_labels",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "6",
+      "handler_candidate": "report_coverage",
+      "depends_on": [
+        "5"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "inventory.jsonl",
+    "labels.jsonl",
+    "coverage.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 06a46952d6e513765b207cb1da5a75bba1dae71f14eada4a46e28f13fc2773fc | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#132:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W02.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W02",
+  "title_ru": "Вернуть забытые цели",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "authorized local history"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "search_user_messages",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "extract_goal_candidates_with_spans",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "link_decisions",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "find_counterevidence",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "propose_next_actions",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "goal_candidates.json",
+    "decision_timeline.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2b513a0a284f55e3909e9f60144bc0ec1940d520eeab3ad6ef9465d954d5bb2a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#133:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W03.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W03",
+  "title_ru": "Новые research идеи",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "query and source policy"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "collect_primary_signals",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "resolve_canonical_sources",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "record_dates_and_limitations",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "map_to_goal",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "design_experiment",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "research_signals.json",
+    "experiment_plan.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a09db188af533156553225eb1b699532931161d5f5d7b90a2251e8d170db3562 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#134:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W04.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W04",
+  "title_ru": "Обновить контекст после Git change",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "repo binding and new observed SHA"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "observe_head",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "diff_inventory",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "invalidate_changed_dependencies",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "rebuild_affected_context",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "schedule_required_checks",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "revision_diff.json",
+    "stale_evidence.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8750f8331824505a05a3d9e4125e06863d1da16ad40956da8b00f9ab6fd9cce3 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#135:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W05.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W05",
+  "title_ru": "Полный обзор repo по частям",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "complete snapshot and model budget policy"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "inventory_all",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "partition_lossless",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "review_each_part",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "review_cross_file_edges",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "check_coverage",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "6",
+      "handler_candidate": "emit_findings",
+      "depends_on": [
+        "5"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "review_ledger.json",
+    "findings.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 98eac711cdf8613a0f3a367ad7d69c9ff155fd32b4ee65e93badbad13e7d07de | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#136:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W06.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W06",
+  "title_ru": "Собрать текущий план дня",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "selected projects and day"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "load_active_goals",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "resolve_blockers",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "respect_dependencies",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "suggest_time_slots",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "record_operator_edits",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "daily_plan.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a96a07125e3bd6b9735409241bd6ecf9e7190b726f5bd050ec937ae329a97a3f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#137:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W07.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W07",
+  "title_ru": "Улучшить разметку на исправлениях",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "operator labels and training scope"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "capture_correction",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "freeze_gold_dataset",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "split_by_conversation_time",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "evaluate_candidates",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "compare_baseline",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "6",
+      "handler_candidate": "propose_model_revision",
+      "depends_on": [
+        "5"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "eval_receipt.json",
+    "model_proposal.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2676ff5eb1565891d5cbf4ab588e2ddab35011f60b4e7ae2cd6d5a525b67b449 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#138:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/rnd_v2/workflows/CTX-W08.SPEC.json =====
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W08",
+  "title_ru": "Найти пригодную функцию в OSS",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "goal and compatible source"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "discover_candidate",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "pin_commit",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "inspect_license_and_dependencies",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "compare_existing_owner",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "draft_adaptation",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "6",
+      "handler_candidate": "test_in_worktree",
+      "depends_on": [
+        "5"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "harvest_manifest.json",
+    "adaptation_request.txt"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6e9df9aa0ba3f3ea993dd296683aa4f9e5ec8b52457fc8064f20efa5848b52b5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#139:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/schemas/REVIEW_LEDGER.example.json =====
+{
+  "schema": "sce.review-ledger.v1",
+  "snapshot_id": "REPLACE",
+  "entries": [
+    {
+      "part": "context_00001.txt",
+      "sha256": "REPLACE",
+      "state": "NOT_SENT",
+      "response_sha256": null,
+      "paths_reviewed": [],
+      "missing_context": [],
+      "findings": [],
+      "verified": false
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 16a43fc8393b7f368bf55ccedff1173ecf9bf2e1f99650fd4db03698d2538ed5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#140:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/schemas/goal_evidence.example.json =====
+{
+  "goal_id": "IMPORT_FULL_REPO",
+  "goal_version": 1,
+  "criterion": "Все entries архива учтены с полными путями",
+  "truth": "NOT_RUN",
+  "source_refs": [],
+  "verifier": "inventory_and_hash_roundtrip",
+  "snapshot_sha": null,
+  "observed_at": null,
+  "model_probability": null,
+  "reason": "Запустите на реальном ZIP пользователя."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 91f9ecca3f9a85408f73d0e7af49791a6e1b353396bd15131dafd56e7472ceda | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#141:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/schemas/goal_evidence.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Goal evidence receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "goal_id",
+    "goal_version",
+    "criterion",
+    "truth",
+    "source_refs",
+    "verifier",
+    "snapshot_sha",
+    "observed_at"
+  ],
+  "properties": {
+    "goal_id": {
+      "type": "string"
+    },
+    "goal_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "criterion": {
+      "type": "string"
+    },
+    "truth": {
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN",
+        "NOT_RUN"
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verifier": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "snapshot_sha": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observed_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model_probability": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "reason": {
+      "type": "string"
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 45f6019f63c2862e1017006a2b041517a9ee452878cd2605d5720c74591df54b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#142:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/schemas/laya_questions.example.json =====
+{
+  "kind": "SDK_QUESTION_TEMPLATE_NOT_EXECUTABLE_WORKFLOW",
+  "model_runtime_status": "NOT_RUN",
+  "questions": {
+    "next_route": {
+      "type": "choice",
+      "instructions": "Select the next analysis route from the supplied evidence.",
+      "criteria": {
+        "need_context": "Sources or dependencies missing",
+        "static_review": "Code available, no reproducer",
+        "verify_test": "Reproducer ready",
+        "prepare_change": "Evidence supports scoped change",
+        "human_decision": "Goal or authority unresolved"
+      }
+    },
+    "goal_supported": {
+      "type": "noul",
+      "instructions": "Does the supplied evidence support the stated criterion? This probability is advisory and cannot mark verified completion."
+    },
+    "priority": {
+      "type": "score",
+      "instructions": "How urgent is this candidate relative to the current user goal?",
+      "criteria": [
+        "unrelated",
+        "useful later",
+        "blocks current goal"
+      ]
+    }
+  },
+  "postconditions": [
+    "Check truncation and source coverage",
+    "Apply calibrated abstention on held-out tasks",
+    "Use independent verifier for TRUE/FALSE"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3fc38956797cc84fe0fba4b1ef9150f54ceae04271d1786e97fa195ea3fcb6a5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#143:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/CURRENT_USER_REQUEST_V2_SUMMARY_RU.txt =====
+Summary, not verbatim transcript. User request 2026-10-03:
+Продолжить R&D ZIP по local Laya automation всего пути web3 бота к live; автоматизировать tests/qualification/data gathering; восстановить прошлые tagging/context идеи и придумать разметку любых данных; исследовать X/Twitter, Jev-like/Laya, Hugging Face; local Windows app слушает голос, делает transcription, собирает личную библиотеку ChatGPT/Grok/GoogleDocs/repo/privateTelegram, создаёт goal document, посылает coding agent/Grok, получает GitHub изменения, обновляет приложение/capabilities; accessibility и низкая latency/parallelism; после обновления ZIP перечислить новые функции.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e768dd2a8802e85c5b49ffd5649d8d7d0e0bd9e9db0df66230531625727a9ef5 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#144:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/CURRENT_USER_REQUEST_VERBATIM.txt =====
+my repo is about 4mb lets remove bounduries? lets everything to agregate as context to text from repo and dont lose nothing on anything like random limits on what context it could agregate? need entire path data, lets remove wire to chrome extensions and do via dell windows 11 compitable desktop app to agregate and data via library? also more than 20 max docs remove. agregate even bigger zip to find even older conversations where we discusing automating data gathering creating local library of content agregated from anywhere and competing with notion and collaborating with chatgpt (api inside app for any action within library app for text, repo, context) ; and agregate even bigger zip to solve for all problems? let this local app to have option to have library like google drive but have access to content like notion (previously discused in related conversation good open suorce ways) and access to actually have your local terminal to be wired to this app or directly integrate vs code because i wanna this app also to run my flashloan bot now just agregate context and data to resend to AI, but most important find all of my own messages and ideas i sended to you and your best outputs on ideas to run web3 bot via this app to agregate entire data on smells of code from the repo via laya in advance recieve automations jsons code to look for true or false aim's to accelerate our goals execution closer
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ea991d74581fc60d6d954de5cf236fa81d8ec55126b1a377fcf203f0656fd40e | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#145:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/HISTORICAL_OCC_FIRST_DOCUMENT_TO_CHATGPT_RU_2026-10-03.txt =====
+ЗАДАНИЕ ДЛЯ CHATGPT / CODEX: OCC-CONTEXT-FOUNDATION-01
+Статус: готовое техническое задание, не выданный документом доступ.
+
+МОЯ ЦЕЛЬ
+Довести BobIvans/scaling-chrome-extensions до одного завершённого сценария:
+выбрать репозиторий → получить полный проверяемый контекст → создать документ
+для AI → импортировать review → увидеть состояние и следующий шаг.
+После этого связать голос/текст с тем же сценарием и existing durable queue.
+Не начинать со смены всего стека или автоматического запуска торговли.
+
+ИСХОДНЫЕ ДАННЫЕ
+Приложен STUDIOUS_SCE_FULL_CONTEXT_RU_2026-10-03.zip.
+SCE baseline 23d14fa351e56c89b916c6853f955d562335e8f1; Studious baseline 7e83f3b416c3fae2b2ecf8111c7ed0574e7dac44.
+Это baseline, не требование откатить свежий main. Получи current main,
+сверь diff и открытые PR с владельцами ниже; сохрани актуальные улучшения.
+При drift пересобери affected context и назови новые SHA.
+
+ЧТО НУЖНО ПРОЧЕСТЬ
+Сначала 02, 03, 07, 09 и evidence/PROBES.json.
+В SCE: content-lab/content_lab.py, automation_core.py, context_review.py,
+native_adapter.py, occ_local.py; agent-bridge/durable.mjs;
+one-click-context/library/durable-ui.mjs, library.mjs и library.html;
+их текущие тесты; docs/automation/context-review-ledger.md.
+В Studious: src/mega_context_wave3.py и tests/test_mega_context_wave3.py.
+В архиве: tools/repo_workbench.py, build_full_context.py, extract_context.py.
+Они reference-инструменты: адаптировать к существующим owners, не копировать
+вторую библиотеку и отдельный сервер поверх content.sqlite3.
+
+ПЕРВЫЙ VERTICAL SLICE
+1. Git-backed full inventory без исполнения импортируемого кода. Учитывать
+tracked files, явные exclusions, ошибки, pending, deletions и exact SHA.
+Перезапуск продолжает persisted cursor; лимит не теряет хвост репозитория.
+2. Source chunks с file hash, start/end и стабильным logical ID. Byte-preserving
+partition + отдельный revision hash. Огромные функции/строки дробить явно.
+Использовать отдельные source roots SCE для локальных Python imports;
+external/dynamic/ambiguous edges не выдавать за разрешённые зависимости.
+3. Export document: goal, selected sources, relevant contracts/tests,
+coverage, missing dependencies, current SHA, accepted scope, acceptance.
+Большие архивные тома <=300k tokens не отправлять все в один запрос.
+4. Review UI поверх durable.review.create/import/list/get: список сессий,
+просмотр coverage/findings, changed/missing context и следующий запрос.
+Верификация Git HEAD и bytes — отдельный binding, не доверять baseRepoSha
+только потому, что его прислал клиент. Imported DONE не закрывает finding.
+
+ПАРАЛЛЕЛЬНЫЙ МАЛЫЙ REPAIR В STUDIOUS (отдельный PR)
+SP-CTX-001: deletion invalidates previous chunk; additions, renames и affected
+dependents явно обработаны. SP-CTX-002: missing inventory row не проходит
+полноту/roundtrip. Уточнить contracts SP-CTX-003/004: stable numbering только
+внутри snapshot; target_chars сейчас не hard limit и фактически использует bytes.
+Сначала regression tests, затем минимальная правка текущего владельца.
+
+ДОПУСТИМЫЕ ТЕХНОЛОГИЧЕСКИЕ РЕШЕНИЯ
+Сохранять JS extension + Python native adapters + SQLite/FTS/queue.
+Добавление Python AST/stdlib без model calls допустимо в объёме задания.
+Tree-sitter JS и tiktoken — предложенные optional dependencies; pin версии,
+опиши offline/cache/packaging и небольшой ADR перед добавлением в продукт.
+Новый cloud backend, новая DB, generic shell runner или auto trading — отдельное
+изменение области работ. Наличие этого файла их не разрешает.
+
+КАК ДАТЬ ДОСТУП
+Приложи этот документ к ChatGPT/Codex и укажи два GitHub repo. Подключение
+GitHub даёт только фактически предоставленные connector permissions: проверь
+read/write и наличие выполнения тестов. Для Windows нужен установленный local
+native host с operator profile и выбранными директориями. Текст документа
+не устанавливает host, не выдаёт OAuth scope и не открывает весь диск.
+API credential хранится локально в предназначенном secret mechanism, не в
+документе, ZIP, Git, browser content script или model prompt.
+На первом этапе paid_api_budget=0: архивирование и тесты работают локально.
+
+ПРИЁМКА
+A. Все tracked paths accounted; исходники собираются обратно byte-for-byte.
+B. Add/edit/delete/rename и смена HEAD делают связанные review/chunks stale.
+C. Context pack содержит зависимости либо явно missing dependencies.
+D. Restart не теряет progress и не возобновляет неизвестное действие повторно.
+E. Review session видна после restart, одинаковый import идемпотентен,
+   DONE без criterion-specific evidence остаётся открытым.
+F. UI: выбрать repo → scan → выбрать finding → export request → import review.
+G. GitHub Actions включает новый код и нужные paths, проверяет exact PR head.
+H. README сообщает tested platforms и отдельно установленный Windows receipt.
+
+ВЫХОД
+Небольшие coherent commits/PR по зависимостям, не новая волна номерных обещаний.
+Для каждого: owner, diff, regression evidence, current SHA, blockers и next step.
+Merge выполняется только в пределах актуального прямого поручения пользователя
+и после required checks. Этот шаблон не является самостоятельным поручением
+на merge, оплату API, отправку сообщений или финансовые операции.
+
+STOP REASONS
+MISSING_REPO_ACCESS; SOURCE_DRIFT; AMBIGUOUS_OWNER; CONTEXT_INCOMPLETE;
+MISSING_INSTALLED_HOST; REQUIRED_TEST_FAILED; UNKNOWN_EXTERNAL_OUTCOME.
+При blocker заверши доступную offline часть и дай конкретный следующий шаг.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b80a9516489854677b76e81c1b18629abbb3675a5dcbd2aa8fe35ff66eac0370 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#146:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/HISTORICAL_STUDIOUS_DAILY_RND_RU_2026-10-03.txt =====
+STUDIOUS И OCC — ПРОВЕРЯЕМЫЙ R&D РЕЗУЛЬТАТ
+3 октября 2026. Проверено в 01:22 UTC.
+
+Результат
+Старый разрыв «OCC #12 отсутствует в #32» больше не является задачей:
+OCC #34 merged, а в current main есть qualification adapter и native bridge.
+Следующий узкий job относится к существующему FAST-Q owner Studious:
+добавить явный валидируемый вход публичного адреса для offline проверки.
+Это handoff, не выполненный patch. Статус writer — BLOCKED_EXECUTION_TOOL:
+подключённого зарегистрированного исполнителя и текущего scoped profile нет.
+
+Что изменилось относительно сохранённой базы Wave33
+• Studious main: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0.
+  #562 merged 2026-10-02 23:07:26 UTC; #561 и #560 также merged.
+  На текущем main наблюдаются 5/5 успешных check runs; на head #562 — 26/26.
+  Это результаты GitHub CI, просмотренные сейчас; тесты мной не перезапускались.
+• OCC main: 23d14fa351e56c89b916c6853f955d562335e8f1.
+  #34 и #35 merged; старый #12 закрыт без merge. Старые Studious #545/#547
+  также закрыты без merge и заменены действующим qualifier, а не двумя инспекторами.
+• OCC #36 открыт, base 23d14fa351e56c89b916c6853f955d562335e8f1,
+  head 75115b57a0b22c919513056ca9b217415cb7561f; 2/2 head checks успешны на Ubuntu/Windows.
+  #33 также открыт с 2/2 успешными checks. На самом OCC main check runs=0,
+  combined status содержит pending при нуле statuses: это отсутствие CI evidence,
+  а не наблюдение упавшего теста. Diff #36 добавляет проверку main push.
+• В #36 есть Git inventory, byte-preserving chunks, SQLite cursor и durable review UI.
+  Документ этого PR явно оставляет installed Windows Chrome/native host NOT RUN,
+  JS/TS syntax — TEXT_ONLY, voice→queue и criterion evidence verifier — следующими задачами.
+• Оба main SHA повторно сверены после исследования; drift не обнаружен.
+
+Новое локальное доказательство
+На снимке src/qualification_report.py текущего main исследована только чистая
+функция _environment и её allowlist. Репозиторий не импортировался и bot worker
+не запускался. Реальные адреса, credentials и network inputs не использовались.
+Изолированный probe выполнил четыре проверки, все успешны:
+1. FLASHLOAN_WALLET_PUBLIC_KEY из синтетического parent env удаляется.
+2. qualify_and_report не имеет отдельного аргумента wallet/public_key.
+3. FLASHLOAN_SIGNER_REFERENCE, SOLANA_RPC_HTTP и SOLANA_RPC_WS не передаются.
+4. Paper mode и отключение live/Jupiter сохраняются.
+Source SHA256: af90d5b30f60d9261430337490c86349a993d0503c167c8b250bb9d3ae7b06bf.
+
+src/config/runtime.py уже содержит WalletConfig.public_key, validate_pubkey и
+binding FLASHLOAN_WALLET_PUBLIC_KEY. src/automation_cli_pr189.py вызывает
+qualify_and_report без public identity. Поэтому просьба «просто положить адрес
+в окружение» не исправит этот путь: нужен явный операторский вход существующего
+owner. Существующий валидатор следует переиспользовать, не создавать второй.
+
+Граница этого вывода
+Исторический installed receipt от 2 октября относится к b31fa445218900702c0d0c4202481488a259c6f8,
+а не к текущему main. В нём четыре preflight завершены, один offline paper-shadow
+pass заблокирован: paper-shadow:blocked_missing_wallet_public_key; candidates=0,
+transactions=0, qualified=false. В том же evidence отсутствуют atomic_stage_suite,
+exact_fee_workflow, verified_marginfi_provider и jupiter_v2_build.
+Этот receipt прочитан, а не воспроизведён сейчас. Публичный адрес не доказывает
+наличие остальных bindings и не даёт права включить MarginFi. Legacy имя
+verified_marginfi_provider не отменяет lender-neutral решения и MarginFi PAUSED.
+Проверка _environment не является ни установленной qualification, ни наблюдением
+реального рынка. Нельзя объявлять прибыль или PAPER_PASS на основании этого probe.
+
+Одно следующее задание
+ID: SPG-01-PUBLIC-IDENTITY-INPUT; прежняя цель SPG-01.
+Repo: BobIvans/studious-pancake.
+Base: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0.
+Owner: src/qualification_report.py; CLI src/automation_cli_pr189.py;
+валидация src/config/runtime.py и существующий validate_pubkey.
+Изменение: один optional operator-owned public identity input; нормализованный
+адрес включить в input_digest и передавать ребёнку только после валидации.
+Не расширять наследование environment, не менять provider/signer/sender policy.
+OCC должен впоследствии использовать тот же проверенный контракт и существующий
+bridge; добавлять второй executor или автоматически править оба repo не требуется.
+
+Приёмка
+1. Valid public identity reaches the child through the explicit input; a unit-test address is marked fixture, never user wallet or market evidence.
+2. Malformed identity fails existing canonical validation before subprocess creation; no arbitrary environment passthrough.
+3. Changing normalized identity changes input_digest; reusing request_id with another identity produces REQUEST_ID_INPUT_CONFLICT.
+4. Secret reference, RPC URLs, provider credentials, signer and sender remain unavailable; MarginFi remains disabled.
+5. Absent identity preserves the honest BLOCKED outcome; one supplied address does not invent the missing atomic/fee/lender/Jupiter bindings.
+6. Existing qualifier and CLI focused regression checks pass on actual changed head; installed receipt is a separate requirement, not inferred from tests.
+7. qualified=false, release_authorized=false, live_authorized=false, transactions_sent=0 remain invariant.
+
+Доступные входы: pinned source, свежие SHA, текущие CLI/WalletConfig, исторический
+installed receipt, текущий pure-function probe. Отсутствуют registered writer,
+operator profile, выбранная публичная идентичность и квалифицированные зависимости
+для настоящего установленного paper опыта. Фикстура адреса допустима в unit test,
+но не как подмена пользовательского входа для получения READY.
+Limits: provider budget=0; writers=1; attempts≤3; send_transactions=false;
+signer_access=false; auto_merge=false; push/PR/deploy запрещены в этом задании.
+Stop: SOURCE_DRIFT, PUBLIC_IDENTITY_INVALID, MISSING_OPERATOR_PROFILE,
+REQUIRED_TEST_FAILED, UNEXPECTED_NETWORK_OR_SIGNER_ACCESS, UNKNOWN_EXTERNAL_OUTCOME.
+Для code job нужен свежий наблюдаемый usage bucket. Нужного authenticated app-server
+или official UI capture здесь нет: actual quota UNKNOWN, model jobs не допущены.
+
+Производная память
+SPG-05: прежний integration gap заменён на BRIDGE_MERGED_DEVICE_QUALIFICATION_PENDING.
+SPG-01: остаётся заблокированной; уточнён public-identity ingress gap и отдельно
+сохранены прежние неподтверждённые runtime bindings.
+SPG-11: context foundation в открытом #36 с CI PASS, installed outcome NOT RUN.
+Новых пользовательских решений не выдумано. DEC-01…DEC-05 сохранены:
+qualification прежде расширения; MarginFi PAUSED; lender-neutral и Slumlord при
+необходимости и доказанной совместимости; Laya advisory; один OCC store/queue/owner;
+live promotion отдельно. Исторические balances не используются как бюджет.
+
+Охват и дедупликация
+Сохранённая сборка Wave33 найдена и восстановлена; прочитаны GOALS, DECISIONS,
+CONTINUATION_COVERAGE. У неё 183 уникальных блока и 14 целей; прежние 33 теста
+не выдаются за проверки этого запуска. Исходные 159-блочная сборка и отчёт целей
+найдены по metadata; их исходники не перезаписаны. 1199 file metadata не означают чаты.
+Прочитан один старый baseline TXT; восемь новых документов/выбранных членов архива
+и relevant diff snippets учтены в JSON. Полная история аккаунта не просматривалась.
+Один Personal Context поиск дал summaries с ролями и датами; заявления ассистента
+проверялись по GitHub и не принимались за новые разрешения. Общий вывод прежних
+обзоров — те же input/device blockers; новый каталог новостей не создавался.
+Предыдущий фактический daily receipt/cursor не найден: дедупликация неполная,
+использовано окно 48 часов. Пример DAILY_RECEIPT из ZIP не принят за реальный run.
+Сопутствующий новый receipt сохраняет SHA/cursor для следующего сравнения.
+
+Первичный технический источник
+Solana Accounts: https://solana.com/docs/core/accounts
+Проверен 3 октября: адрес аккаунта имеет 32 байта. Это существующая документация,
+дата изменения страницы не подтверждена; новой технологической новостью её не считаем.
+Публичная идентичность не является приватным ключом и не разрешает signing.
+Другие модели, ASR, GPU jobs и market APIs не запускались и не скачивались.
+
+Sources для следующего исполнителя
+BASE  libfile_d9d9279cd7808191ad3cca43fd1a70e2
+BUNDLE  libfile_50901f59b3b88191b2bb1af76d6b48b9
+REQ  libfile_41f25b2f95fc8191a67348300b5c3857
+QCODE  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/qualification_report.py
+CFG  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/config/runtime.py
+CLI  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/automation_cli_pr189.py
+HIST  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/release_artifacts/rnd_pr02/2026-10-02/installed-run/qualification_receipt.json
+BLOCK  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/docs/qualification/RND_PR02_CANONICAL_PAPER_BLOCKED_RU.md
+BRIDGE  https://github.com/BobIvans/scaling-chrome-extensions/blob/23d14fa351e56c89b916c6853f955d562335e8f1/agent-bridge/qualification_adapter.py
+NATIVE  https://github.com/BobIvans/scaling-chrome-extensions/blob/23d14fa351e56c89b916c6853f955d562335e8f1/agent-bridge/qualification.mjs
+FOUNDATION  https://github.com/BobIvans/scaling-chrome-extensions/blob/75115b57a0b22c919513056ca9b217415cb7561f/docs/automation/context-foundation.md
+SOLANA  https://solana.com/docs/core/accounts
+GitHub PR: https://github.com/BobIvans/studious-pancake/pull/562
+GitHub PR: https://github.com/BobIvans/scaling-chrome-extensions/pull/34
+GitHub PR: https://github.com/BobIvans/scaling-chrome-extensions/pull/36
+
+Фактически выполнено: чтение источников, проверка GitHub heads/CI, чистый probe,
+создание этого документа и производного receipt. Repository test suites=0,
+repository mutations=0, bot runs=0, device actions=0, transactions=0,
+дополнительные model/provider запросы=0, платные API=0. Внутренний расход модели
+текущего ответа платформой не наблюдается; значение квоты не выдумывается.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d15b6fa09fb0a79b33b1225bf1a92fabbde85f03234de72ee68c985d786e84d1 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#147:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/HISTORY_TAGGING_SEARCH_FRAGMENTS_2026-10-03.txt =====
+RETRIEVED SEARCH FRAGMENTS — NOT VERBATIM COMPLETE CHAT HISTORY. Historical implementation/PR statuses were not reverified in this request.
+
+[convo search]
+- [USER_FACT] [c0] U@2026-10-03T17:41:42Z, -0m: Ivan/BobIvans; проекты `scaling-chrome-extensions`, Windows 11 context library, Laya/voice/JeV-like intelligence, flashloan bot; нужен R&D ZIP без выдуманного восстановления истории.
+- [PRIOR_ASSISTANT_OUTPUT] [c0] A@2026-10-03T06:26:05Z, -11h: текущая цель/архитектура: один `automation_core`/SQLite/worker/native-host owner; voice/Laya только `DATA_ONLY`, `dispatch_allowed=false`; provenance должен bind’иться к exact SHA; `JS_DEPENDENCIES_NOT_PARSED`, installed Chrome/native-host `NOT_RUN`; #37 CI зелёный, но receipt SHA `2ee59f…` не совпадает с PR head `ef5ca7…`.
+- [PRIOR_ASSISTANT_OUTPUT] [c0] A@2026-10-02T23:30:51Z, -18h: #562 — `OFFLINE_REPLAY`/exact offline capacity evidence: immutable CPMM states, freshness/slot skew, fees/slippage/uncertainty ledger; no fetch/sign/send; `REAL_MARKET_PAPER_OBSERVATION` и `AUTHORIZED_LIVE` отсутствуют.
+- [PRIOR_ASSIST
+
+- [USER_FACT] [c1] U@2026-10-01T16:02:22Z, -2d: просил агрегировать ~100 артефактов/разговоров в TXT с тегами, provenance и графом; автоматическое обновление.
+- [PRIOR_ASSISTANT_OUTPUT] [c1] A@2026-10-01T16:14:07Z, -2d: реализован агрегатор: ALL_CONTEXT.txt, SOURCE_INDEX.json, GRAPH.json, RUN_REPORT.json; 17 файлов, 114 архивных элементов, 118 блоков, 6 дублей; эвристические категории, не полный архив.
+- [PRIOR_ASSISTANT_OUTPUT] [c1] A@2026-10-02T08:51:51Z, -1d: Market-of-Markets из обсуждений 21/24 сентября: `InstitutionPack`, Evidence-Service Procurement Arena; цепочка source→claim→action manifest→experiment→receipt; OCC/voice/Laya должны быть fail-closed, один store/queue/worker.
+
+- [USER_FACT] [c2] U@2026-10-01T06:18:29Z, -2d: проект scaling-chrome-extensions; автоматизация PC actions через “ai to voice to laya”; запрошено углубление по новым документам и последним 33 чатам.
+- [PRIOR_ASSISTANT_OUTPUT] [c2] A@2026-10-01T06:59:34Z, -2d: 2000 — карточки кандидатов (100 функций × 20 аспектов), не PR; планы PR11–20, PR21–24 и 12 экспериментов пересекаются. ZIP3: 560 реальных PR (546 Web3 + 14 OCC), новая волна 12 открытых; 8 спецификаций без кода; Wave33 — 1 реализация + 32 предложения.
+- [PRIOR_ASSISTANT_OUTPUT] [c2] A@2026-10-01T07:23:57Z, -2d: продолжение F-14/WAVE-02 UI поиска/context и долговечной очереди; F-13–F-29 заявлены реализованными в draft PR #14–#31, с тестами/CI; F-30 в `BLOCKED_INPUTS` до PASS receipt из Windows Chrome, F-31 не запускалась.
+
+- [USER_CONSTRAINT] [c3] U@2026-10-03T17:17:25Z, -24m: проект BobIvans/scaling-chrome-extensions; собрать больший R&D ZIP без потери контекста, локальную Windows 11 библиотеку, агрегирующую repo/ChatGPT/Grok/GoogleDocs/privateTelegram, с provenance, слоями intelligence/Laya, voice→automation и запуском flashloan/Web3-бота.
+- [PRIOR_ASSISTANT_OUTPUT] [c3] A@2026-10-03T17:20:45Z, -21m: Laya/Jev требуют отдельного проверяющего исполнителя; Laya может обрезать контекст; SCE-лимиты до 1000 файлов и 10 документов, нужен потоковый обход. Экспортёр прошёл 19 локальных тестов на 1007 файлах; Windows и репозитории ещё не запускались.
+- [PRIOR_ASSISTANT_OUTPUT] [c7] A@2026-10-02T20:48:27Z, -21h: PR #35 добавил local intake, сохраняемые review-сессии, импорт с проверкой хешей и Laya/voice proposals; 279 тестов прошли, CI Ubuntu/Windows зелёный; voice bridge и проверка установленного Chrome остаются незавершёнными.
+
+- [USER_CONSTRAINT] [c4] U@2026-10-03T17:08:43Z, -33m: проект `BobIvans/scaling-chrome-extensions`; Windows 11 desktop/local library, агрегировать полный repo и историю ChatGPT/Grok/GoogleDocs/privateTelegram без лимита 20/потери контекста; Laya для автоматизаций web3/flashloan.
+- [PRIOR_ASSISTANT_OUTPUT] [c4][c6] A@2026-10-03T17:24:38Z, -17m: 38 групп функций; 2 115 объектов/4 534 path-записи; provenance источников; полный текст репозиториев в 48 частях; различать исходный текст и восстановленное описание. PR #36 merged; qualification PR #37 готов, не merged.
+- [PRIOR_ASSISTANT_OUTPUT] [c5][c6] A@2026-10-03T15:57:18Z, -1h45m: qualification: Chrome→native host, repo scan→export→review, report output/hash/replay recovery; затем ASR, UIA и Laya. Windows device checks NOT RUN.
+
+[gmail]
+[INSUFFICIENT] Gmail search failed before it could retrieve matching emails.
+
+[files]
+Sources:
+[f0] occ_full_page_2026-09-30-19-20-40.txt
+[f1] 01_HISTORY_2000_AND_FUNCTIONS_RU_2026-10-01.txt
+
+Evidence:
+- [FILE_CONTENT] [f0] 30 сентября 2026: пользователь описал приложение как «похожим на Notion, просто немного более ориентировано под репозитории», которое постоянно агрегирует контекст репозитория в «библиотеку данных», преобразует его «по категориям», перечисляет направления дальнейшей работы, управляет репозиториями и отправляет собранный контекст в ИИ для создания новых функций.
+- [FILE_CONTENT] [f0] В том же разговоре пользователь спросил о близких open-source-решениях; прошлое предложение ассистента: «Самые близкие открытые варианты на GitHub — это AppFlowy и AFFiNE»; также названы BlockNote и BlockSuite как редакторы в стиле Notion.
+- [FILE_CONTENT] [f0] Прошлое предложение ассистента по ограничениям Notion: риск «substantially replicates» при параллельном хранении тех же данных; сбор контекста из репозиториев и передача его конкретному пользователю в сторонний ИИ описаны как обычно допустимые, но обучение неперсонализированных моделей на пользовательских данных — как отдельный риск.
+- [FILE_METADATA] [f1] Файл создан/изменён 2026-10-02 и повторяет этот материал; это сохранённое резюме/копия, а не отдельный подтверждённый разговор о тегах, provenance, goals/tasks/evidence, whole-repo labeling, ChatGPT/Grok/GoogleDocs/privateTelegram, Jev/Jeff-like intelligence или голосовом агенте.
+- [INSUFFICIENT] [f0] [f1] В найденных фрагментах нет конкретных прежних формулировок или решений по типам тегов/labeling, provenance-схеме, незавершённому R&D, flashloan/Laya и предпочтениям пользователя; их нельзя восстановить без выдумки.
+
+==== SECOND SEARCH ====
+
+[convo search]
+- [PRIOR_ASSISTANT_OUTPUT] [c0] A@2026-09-20T21:21:45Z, -13d: tagging-like provenance ideas: continuous qualification, evidence expiry, SDK/API/program drift, dependency/license provenance, reproducible qualification manifests; data-source quality, provider disagreement, derived-feature provenance, immutable dataset/replay manifests.
+- [PRIOR_ASSISTANT_OUTPUT] [c0] A@2026-09-20T22:10:20Z, -13d: distinction explicitly proposed: executable financial relation ≠ statistical correlation ≠ causal hypothesis; causal hypotheses must not be mixed with proven contract links.
+- [PRIOR_ASSISTANT_OUTPUT] [c0] A@2026-09-21T13:30:29Z, -12d: semantic labels proposed for world-model facts: OBSERVED, INFERRED, LATENT, UNKNOWN; unknown must not become zero. Related distinctions: predictive/causal/executable semantics.
+
+-
+
+- [PRIOR_ASSISTANT_OUTPUT] [c6] A@2026-09-20T00:36:15Z, -13d: tagging/provenance-relevant proposal: GitHub discovery → license filtering → local clone → call parsing → minimal dependency closure → AI integration; always record source and license.
+- [PRIOR_ASSISTANT_OUTPUT] [c6] A@2026-09-20T18:21:34Z, -13d: repeatable “Function Harvesting Pipeline”: candidate repos → exact source files/functions/commit → license → dependency graph/closure → architectural differences → reusable pieces → adaptation plan → tests → PR/CI/review/merge.
+- [PRIOR_ASSISTANT_OUTPUT] [c6] A@2026-09-20T18:21:34Z, -13d: minimal closure example tags dependencies (`builder.py::build_flashloan` → helper, params type, `PROGRAM_ID`), preserving source/provenance and license notes.
+
+- [PRIOR_ASSISTANT_OUTPUT] [c3] A@2026-09-21T02:10:08Z, -12d: предложен один PR-353 с 8 отключаемыми пакетами и 64 новыми функциями NF-1017–1080; направления вне AMM/CLOB, ликвидаций, LST/NAV, funding/basis, oracle/ML/MEV и cross-chain. U
+
+- [PRIOR_ASSISTANT_OUTPUT] [c4] A@2026-10-02T19:27:46Z, -1d: RND-PR-03: мигрировать LibraryStage в существующий OCC Content Lab/SQLite; 495 records/495 unique texts, 52 functions; source-linked search/context, revision lineage.
+- [PRIOR_ASSISTANT_OUTPUT] [c4] A@2026-10-02T19:32:30Z, -1d: архивный путь: ChatGPT/Telegram/docs/repo → source/capture → logical item → version/revision → SQLite/FTS; gates: idempotent re-import, edited revisions, evidence tombstones, duplicate bytes с provenance, backup/restore.
+- [PRIOR_ASSISTANT_OUTPUT] [c4] A@2026-10-02T18:56:21Z, -1d: каноническая схема tagging/lineage не восстановлена; зафиксирован source-linked memory → typed qualify_and_report → inspector → receipt → memory.
+
+- [PRIOR_ASSISTANT_OUTPUT] [c5] A@2026-09-21T21:16:43Z, -12d: Предложены категории ROLE/DOMAIN/TAGS; PR/Mega-файлы не вырывать из домена, а помечать `PR_ORIGIN`, `MEGA`, `TECH_DEBT_CANDIDATE`; `90_TECH_DEBT_INDEX`; canonical chunk, stubs, import/symbol graph, bridge files, dependency-closed chunks, zero-loss manifest, numbered `~k_est_tokens` chunks.
+- [PRIOR_ASSISTANT_OUTPUT] [c5] A@2026-09-21T22:46:48Z, -12d: Для незавершённых PR нужны `CURRENT_SNAPSHOT + GIT_LINEAGE`; предложены `Implementation Lineage`, `implementation_coverage_matrix`, deleted/rename/symbol lineage, duplicate families, incomplete/disabled/unreachable indexes, distinction candidate vs confirmed debt.
+- [PRIOR_ASSISTANT_OUTPUT] [c5] A@2026-09-22T00:01:14Z, -11d: В R&D V2 добавлены evidence-пакеты: требование→код→runtime→config→tests→results→protocol constraints; функции “что осталось от требования”, “не верь готово”, reuse-owner, README/config/code contradictions, counterevidence, issue pack, qualification blockers
+
+- [PRIOR_ASSISTANT_OUTPUT] [c7] A@2026-09-30T18:12:32Z, -3d: Предложены semantic entities `Person, Company, Repository, Commit, PR, Tweet/Post, Video, Transcript, Claim, Article, Idea, Decision, Goal, Task, Automation, Artifact, Evidence`; relations `MENTIONS, DERIVED_FROM, CONTRADICTS, SUPPORTS, FIRST_SEEN_IN, CREATED_TASK, BLOCKS, SATISFIES_GOAL, GENERATED_SCRIPT, EXECUTED_BY`.
+- [PRIOR_ASSISTANT_OUTPUT] [c7] A@2026-09-30T18:12:32Z, -3d: Provenance fields: `first_seen_at, published_at, author, canonical_url, references[], quoted_sources[], content_hash, claim_similarity, source_type, primary_source_probability`; provenance graph distinguishes earliest evidence, first official announcement, first X post, major media, creator.
+- [PRIOR_ASSISTANT_OUTPUT] [c7] A@2026-09-30T18:08:20Z, -3d: Universal records proposed fields `source, conversation, timestamp, goal, decision, task, dependency, artifact, status`; pipeline `Telegram → export → transcription/normalization → segmentation → task/decision extraction → context graph → automation queue`; architecture `Sources → Universal Context Library → Goal/Decision Graph →
+
+- [PRIOR_ASSISTANT_OUTPUT] [c8] A@2026-10-02T03:16:24Z, -1d14h: Wave34 tagging-adjacent repo model: Repository Scanner→`repository_catalog` from repos/docs/issues/commits/packages; Code Graph Builder maps repo→files→imports→dependencies→architecture graph; Issue Analyzer covers bugs, feature requests, technical debt.
+- [PRIOR_ASSISTANT_OUTPUT] [c8] A@2026-10-02T03:17:50Z, -1d14h: Wave36 Knowledge Graph OS: entities projects/technologies/goals/decisions/experiments; relations `depends_on`, `improves`, `caused_by`, `related_to`; graph Chat→Idea→Document→PR→Function→Experiment; timeline idea→document→PR→code change→result.
+- [PRIOR_ASSISTANT_OUTPUT] [c8] A@2026-10-02T03:17:06Z, -1d14h: Wave35 research tagging: Papers/GitHub/Docs/News/Experiments→`research_signals.json`; technology map; signal→trend→research opportunity→new experiment.
+
+- [PRIOR_ASSISTANT_OUTPUT] [c9] A@2026-09-21T01:51:32Z, -12d: Предложен единый `MEGA8-DEP-CLOSURE`: current-head dependency reconciliation, requalification MEGA8-02 после 01+SUPER-02, 05/06 после 04, reseal 07, cross-Mega tests, append-only receipt; исторические инверсии сохраняются.
+- [PRIOR_ASSISTANT_OUTPUT] [c9] A@2026-09-21T02:11:47Z, -12d: Реализовано в PR #529: `release_artifacts/mega8/dependency_reconciliation.json`, `src/release_gate/mega8_dependency_closure.py`, verifier в `verify_repo.py`; статусы `MERGED_REQUALIFIED`, exact SUPER-02→AGG-04 evidence.
+- [PRIOR_ASSISTANT_OUTPUT] [c9] A@2026-09-21T02:11:47Z, -12d: Сохранены immutable facts исторического merge-order; unresolved live/deployment evidence оставлены `BLOCKED/UNQUALIFIED`, не превращены в PASS.
+
+- [PRIOR_ASSISTANT_OUTPUT] [c10] A@2026-10-02T19:31:16Z, -1d: V7 artifacts: F17 ChatGPT export parser; F18 Chrome→SQLite versioned `durable.record`; F19 bounded attachment metadata inventory; F20 push-to-talk transcript preview; F21 independent terminal voice cancel; F22 typed fail-closed goal proposals; merges #19–#24, current main `d23af44…`.
+- [PRIOR_ASSISTANT_OUTPUT] [c10] A@2026-10-02T19:31:16Z, -1d: Explicit distinction: no real microphone/ASR, voice→shell, automatic action dispatch, or Laya authority; text/voice remains data, unsupported/ambiguous intent fail-closed.
+- [PRIOR_ASSISTANT_OUTPUT] [c10] A@2026-10-02T19:31:16Z, -1d: Next existing artifact: #25 F23 deterministic Laya advisory router, open draft/not merged; intended path `typed goal → deterministic advisory → registered action`, without arbitrary-command execution.
+
+- [PRIOR_ASSISTANT_OUTPUT] [c11] A@2026-09-21T12:02:04Z, -12d: Proposed PR-353 hardening: EIP-7002 fee math; explicit per-NF failure semantics; candidate lineage/net checks; EVO-09 taxonomy/clock/attribution guards.
+- [PRIOR_ASSISTANT_OUTPUT] [c11] A@2026-09-21T12:22:36Z, -12d: PR #537 `fix(pr353): close semantic conformance gaps across NF-1017–1088`, merged 2026-09-21 12:22:17 UTC; fixed 48 documented semantic/failure gaps across 42 NFs, added permanent verifier/tests; all EVO-01…09 remain disabled/default-off.
+
+- [PRIOR_ASSISTANT_OUTPUT] [c12] A@2026-10-01T16:14:07Z, -2d: предлагались `ALL_CONTEXT.txt`, `SOURCE_INDEX.json`, `GRAPH.json`, `RUN_REPORT.json`; категории keyword-based, provenance/raw bytes отдельно, дедупликация и идемпотентный refresh.
+- [PRIOR_ASSISTANT_OUTPUT] [c12] A@2026-10-02T08:51:51Z, -1d: типы тегируемых JSON: source/provenance, claim/evidence, action manifest, experiment plan, result receipt, rule-change proposal; статические code-smell tags: import cycles, duplicate bodies, oversized functions, `eval`/`exec`, `shell=True`, suppressed exceptions — только `STATIC_CANDIDATE`.
+- [PRIOR_ASSISTANT_OUTPUT] [c12] A@2026-10-02T08:51:51Z, -1d: Market-of-Markets/`InstitutionPack`: 21–24 Sep; рынки задач, данных, вычислений, проверки, исполнения, ликвидности и риска; `Evidence-Service Procurement Arena`; цепочка `MarketIntent → ServiceOffer → AllocationDecision → Artifact → VerificationReceipt → SettlementProposal`; субсидии удалить в проверке полезности.
+- [PRIOR_ASSISTANT_OUTPUT] [c12] A@2026
+
+-
+
+[gmail]
+[INSUFFICIENT] Gmail search failed before it could retrieve matching emails.
+
+[files]
+Sources:
+[f0] 01_HISTORY_2000_AND_FUNCTIONS_RU_2026-10-01.txt
+[f1] OCC_PREVIOUS_ZIP_AGGREGATED_RU_2026-10-02.txt
+
+Evidence:
+- [FILE_CONTENT] [f0] На 2026-10-01 зафиксирована схема тегов для исторических записей: `owner`, `compatibility`, `cost`, `web3`, `voice`, `qualification`, `docs`, `receipts`, `content`, `concurrency`, `hourly`, `coverage`, `campaign`, `traceability`; отдельно требовалось связывать функции/UI с repo owners, задачами, blockers и evidence, сохраняя старые ID.
+- [FILE_CONTENT] [f0] Для локального context library явно предложено: почасовой сбор изменений чатов, repo, документов, файлов и разрешённых транскрипций; 24-часовые qualification campaigns и Laya JSON.
+- [FILE_CONTENT] [f1] Историческое предложение от 2026-09-21: `Wave 15 — Autonomous Market Institution`; сначала небольшой рынок проверяемых услуг, а не собственная биржа.
+- [FILE_CONTENT] [f1] Историческое предложение от 2026-09-24: `Market-of-Markets / InstitutionPack` с блоками `intents, data, compute, verification, execution, liquidity, risk`; первые направления — `INST-01 Evidence-Service Procurement Arena` и `INST-13 subsidy removal`.
+- [INSUFFICIENT] [f0][f1] В найденных фрагментах нет точных восстановленных формулировок про категории `repo code smells`, различение `goals/aims/evidence/experiments/receipts`, `semantic tags`, `temporal tags` или отдельный `source/provenance graph`; также нет содержимого `ALL_CONTEXT.txt`, `SOURCE_INDEX.json`, `GRAPH.json` за 2026-10-01.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2b6425e6b41896e2a6eaeaf1ce7b808046c84652301f5c052d6edb459092bbc4 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#0:00_START_HERE_RU.md =====
+# LAYA R&D V2 — Chunk Library / Workflow UI / Context Orchestration
+
+Главный апгрейд после MEGA pack — сделать **Chunk Operating System** центральным ядром Laya.
+
+Не просто разрезать repo/chat/doc на куски, а хранить каждый chunk как объект со стабильным ID, источником, lineage, зависимостями, freshness, qualification, risk и связями с PR/tests/chats/docs.
+
+Новый основной путь:
+
+`SOURCE → INGEST → NORMALIZE → CHUNK → ENRICH → LINK → INDEX → LIBRARY → CONTEXT CART → CONTEXT PACK → AI/CODEX/WORK → RESULT → VERIFY → RECEIPT → MEMORY UPDATE → INVALIDATE/REBUILD`
+
+Без этого Library — архив. С этим Library становится операционной памятью агента.
+
+Главный UI: три панели — **Library Navigator / Chunk Workspace / Context Cart**.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 77f88603ee44851c8077245f7889a72aef596b64ac04a5c5107c47d6b35dfe1c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#1:01_GAP_ANALYSIS_RU.md =====
+# Что ещё нужно добавить
+
+## P0
+- Stable Chunk Identity
+- Chunk Lifecycle: CURRENT / STALE / SUPERSEDED / CONFLICTED / BLOCKED / QUALIFIED
+- Dependency closure
+- Reverse dependency index
+- Incremental invalidation
+- Context Cart
+- Context Pack Compiler
+- Result-to-Library
+- Truth roles: CANONICAL / SUPPORTING / SPECULATIVE / DERIVED
+- Qualification state per chunk
+- Token budget meter
+- Missing-context warnings
+- Conflict warnings
+- Retrieval explanation: why each chunk was selected
+- Repo change impact analysis
+- Chat→code and requirement→code coverage
+
+## P1
+- similarity map
+- semantic clustering
+- graph view
+- coverage heatmap
+- saved carts/templates
+- chunk annotations
+- multi-project links
+- task queue per chunk
+- unused-chunk review
+- context pack diff
+- automatic stale sweep
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 965be4f049edf069c452b31b5b7cd471e0c9c286b533a84f9b460c194ba55436 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#2:02_CHUNK_DATA_MODEL_V2.json =====
+{
+  "version": "2.0",
+  "Chunk": {
+    "id": "stable string",
+    "project_id": "string",
+    "source_id": "string",
+    "source_type": "repo|chat|doc|web|voice|run|receipt|research",
+    "source_version": "git sha/content hash/version",
+    "kind": "symbol|section|message|feature|test|config|decision|research|receipt|summary",
+    "title": "string",
+    "path": "optional",
+    "symbol": "optional",
+    "content_hash": "sha256",
+    "parent_chunk_id": "optional",
+    "dependency_ids": [],
+    "reverse_dependency_ids": [],
+    "related_chunk_ids": [],
+    "test_chunk_ids": [],
+    "config_chunk_ids": [],
+    "doc_chunk_ids": [],
+    "chat_chunk_ids": [],
+    "pr_refs": [],
+    "issue_refs": [],
+    "tags": [],
+    "effect_classes": [],
+    "risk_score": "0..100",
+    "freshness": "CURRENT|STALE|SUPERSEDED|CONFLICTED",
+    "qualification": "UNKNOWN|UNVERIFIED|TESTED|PAPER_OBSERVED|QUALIFIED|BLOCKED",
+    "truth_role": "CANONICAL|SUPPORTING|SPECULATIVE|DERIVED",
+    "token_estimates": {
+      "approx": "integer",
+      "by_model": {}
+    },
+    "created_at": "timestamp",
+    "updated_at": "timestamp"
+  },
+  "ContextCart": {
+    "id": "string",
+    "project_id": "string",
+    "goal": "string",
+    "selected_chunk_ids": [],
+    "auto_expand": "dependencies|tests|docs|all|none",
+    "filters": {},
+    "token_budget": "integer",
+    "provider_target": "string",
+    "saved": "boolean"
+  },
+  "ContextPack": {
+    "id": "string",
+    "cart_id": "string",
+    "repo_sha": "optional",
+    "ordered_chunk_ids": [],
+    "dropped_chunk_ids": [],
+    "auto_added_chunk_ids": [],
+    "conflicts": [],
+    "missing_dependencies": [],
+    "token_estimate": "integer",
+    "manifest_hash": "sha256"
+  }
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 e9746a00c9cc11391ab58e0c1cf6de560030ac1a4d60f70e0579e32c52b35cfb | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#3:03_CHUNK_LIFECYCLE_RU.md =====
+# Chunk lifecycle
+
+`DISCOVERED → NORMALIZED → CHUNKED → LINKED → INDEXED → CURRENT`
+
+Из CURRENT:
+- source changed → STALE
+- newer canonical owner → SUPERSEDED
+- contradictory truth → CONFLICTED
+- missing/failed evidence → BLOCKED
+- validated evidence → QUALIFIED
+
+## Repo rebuild
+Git diff → changed files → reparse → preserve IDs for unchanged symbols → supersede changed chunks → create replacements → walk reverse dependencies → invalidate derived summaries/context packs.
+
+## Derived content
+Every summary/embedding/classification stores `derived_from[]`. Any stale source makes derived data stale.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7e430194c6c416ee29c686e0af24b32edbd81d24e1203bada46a1a4f3a32d80e | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#4:04_UI_CHUNK_LIBRARY_SPEC.json =====
+{
+  "layout": {
+    "left": {
+      "name": "Library Navigator",
+      "sections": [
+        "Projects",
+        "Inbox",
+        "Repositories",
+        "Chats",
+        "Documents",
+        "Research",
+        "Runs",
+        "Receipts",
+        "Saved Carts",
+        "Context Packs"
+      ]
+    },
+    "center": {
+      "name": "Chunk Workspace",
+      "views": [
+        "List",
+        "Tree",
+        "Graph",
+        "Timeline",
+        "Diff",
+        "Coverage",
+        "Qualification"
+      ],
+      "actions": [
+        "Open",
+        "Preview",
+        "Add to Cart",
+        "Related",
+        "Dependencies",
+        "Tests",
+        "History",
+        "Compare",
+        "Ask",
+        "Fix",
+        "Qualify",
+        "Create Task"
+      ]
+    },
+    "right": {
+      "name": "Context Cart",
+      "sections": [
+        "Goal",
+        "Selected",
+        "Auto-added dependencies",
+        "Conflicts",
+        "Missing context",
+        "Token budget",
+        "Provider",
+        "Action"
+      ],
+      "buttons": [
+        "Build Pack",
+        "Ask AI",
+        "Send to Codex",
+        "Research",
+        "Create Task",
+        "Save Cart",
+        "Export"
+      ]
+    }
+  },
+  "repo_tabs": [
+    "Overview",
+    "Files",
+    "Functions",
+    "Graph",
+    "Tests",
+    "PRs",
+    "Requirements",
+    "Smells",
+    "Qualification",
+    "Chunks"
+  ],
+  "smart_views": [
+    "Unimplemented ideas",
+    "Code without tests",
+    "Stale context",
+    "Conflicted truth",
+    "Blocked qualification",
+    "Recently changed chunks",
+    "Never-used chunks"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 9154f80791c81e9af0add7cb96025828281946f92e8a57e1b5a2ea22ff4963d1 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#5:05_UI_WORKFLOW_RU.md =====
+# UI workflow
+
+Любой chunk показывает source, full content, dependencies, tests, PRs, chats, freshness, qualification и history.
+
+Quick actions:
+`ADD TO CART · ASK · COMPARE · FIND MISSING · FIX · IMPLEMENT · TEST · QUALIFY · RESEARCH · CREATE AUTOMATION`
+
+Voice example:
+“Собери всё по FAST-Q1, что ещё блокирует qualification.”
+
+Laya resolves project → finds FAST-Q1 chunks → expands evidence/dependency graph → excludes superseded → adds current truth → creates visible Context Cart.
+
+Context Cart → Build Pack → Codex/ChatGPT/Grok/Gemini/local → result import → verification → receipt → Library update.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 0884487b690ee02ee41de02e396ea2b31a0e22365716c81793905e9ea01669f8 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#6:06_NEW_FUNCTIONS_V2.json =====
+{
+  "count": 91,
+  "functions": [
+    {
+      "id": "V2-001",
+      "category": "chunk_core",
+      "name": "Stable Chunk ID",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-002",
+      "category": "chunk_core",
+      "name": "Chunk lineage",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-003",
+      "category": "chunk_core",
+      "name": "Freshness state",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-004",
+      "category": "chunk_core",
+      "name": "Dependency closure",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-005",
+      "category": "chunk_core",
+      "name": "Reverse dependency index",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-006",
+      "category": "chunk_core",
+      "name": "Derived invalidation",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-007",
+      "category": "chunk_core",
+      "name": "Chunk provenance",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-008",
+      "category": "chunk_core",
+      "name": "Truth role",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-009",
+      "category": "chunk_core",
+      "name": "Qualification state",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-010",
+      "category": "chunk_core",
+      "name": "Risk tags",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-011",
+      "category": "chunk_core",
+      "name": "Chunk annotations",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-012",
+      "category": "chunk_core",
+      "name": "Pin chunk",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-013",
+      "category": "chunk_core",
+      "name": "Chunk aliases",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-014",
+      "category": "chunk_core",
+      "name": "Version compare",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-015",
+      "category": "chunk_core",
+      "name": "Chunk history",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-016",
+      "category": "context_cart",
+      "name": "Persistent Context Cart",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-017",
+      "category": "context_cart",
+      "name": "Add related",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-018",
+      "category": "context_cart",
+      "name": "Add dependencies",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-019",
+      "category": "context_cart",
+      "name": "Add tests",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-020",
+      "category": "context_cart",
+      "name": "Add docs",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-021",
+      "category": "context_cart",
+      "name": "Add chats",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-022",
+      "category": "context_cart",
+      "name": "Deduplicate",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-023",
+      "category": "context_cart",
+      "name": "Truth-first ordering",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-024",
+      "category": "context_cart",
+      "name": "Token budget meter",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-025",
+      "category": "context_cart",
+      "name": "Missing-context warning",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-026",
+      "category": "context_cart",
+      "name": "Conflict warning",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-027",
+      "category": "context_cart",
+      "name": "Saved cart",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-028",
+      "category": "context_cart",
+      "name": "Cart templates",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-029",
+      "category": "context_cart",
+      "name": "Cart diff",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-030",
+      "category": "context_cart",
+      "name": "Auto-trim",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-031",
+      "category": "library",
+      "name": "Unified inbox",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-032",
+      "category": "library",
+      "name": "Source classification",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-033",
+      "category": "library",
+      "name": "Project assignment",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-034",
+      "category": "library",
+      "name": "Cross-project links",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-035",
+      "category": "library",
+      "name": "Backlinks",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-036",
+      "category": "library",
+      "name": "Saved filters",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-037",
+      "category": "library",
+      "name": "Smart collections",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-038",
+      "category": "library",
+      "name": "Stale collection",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-039",
+      "category": "library",
+      "name": "Conflict collection",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-040",
+      "category": "library",
+      "name": "Unimplemented collection",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-041",
+      "category": "library",
+      "name": "Coverage collection",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-042",
+      "category": "library",
+      "name": "Run collection",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-043",
+      "category": "library",
+      "name": "Bulk actions",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-044",
+      "category": "library",
+      "name": "Source preview",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-045",
+      "category": "library",
+      "name": "Offline FTS search",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-046",
+      "category": "retrieval",
+      "name": "Hybrid lexical retrieval",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-047",
+      "category": "retrieval",
+      "name": "Graph expansion",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-048",
+      "category": "retrieval",
+      "name": "Freshness boost",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-049",
+      "category": "retrieval",
+      "name": "Truth boost",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-050",
+      "category": "retrieval",
+      "name": "Risk-aware retrieval",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-051",
+      "category": "retrieval",
+      "name": "Goal-aware retrieval",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-052",
+      "category": "retrieval",
+      "name": "Provider-aware packing",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-053",
+      "category": "retrieval",
+      "name": "Retrieval explanation",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-054",
+      "category": "retrieval",
+      "name": "Negative filters",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-055",
+      "category": "retrieval",
+      "name": "Changed-since retrieval",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-056",
+      "category": "repo",
+      "name": "Feature slices",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-057",
+      "category": "repo",
+      "name": "Qualification slices",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-058",
+      "category": "repo",
+      "name": "PR slices",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-059",
+      "category": "repo",
+      "name": "Chat-to-code coverage",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-060",
+      "category": "repo",
+      "name": "Requirement-to-code coverage",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-061",
+      "category": "repo",
+      "name": "Unowned requirement detector",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-062",
+      "category": "repo",
+      "name": "Untested symbol detector",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-063",
+      "category": "repo",
+      "name": "Duplicate authority detector",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-064",
+      "category": "repo",
+      "name": "Effect map",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-065",
+      "category": "repo",
+      "name": "Repo change impact",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-066",
+      "category": "repo",
+      "name": "Context pack per PR",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-067",
+      "category": "repo",
+      "name": "Context pack per blocker",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-068",
+      "category": "automation",
+      "name": "Chunk-changed trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-069",
+      "category": "automation",
+      "name": "Pack-invalidated trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-070",
+      "category": "automation",
+      "name": "Conflict-found trigger",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-071",
+      "category": "automation",
+      "name": "Qualification-blocked trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-072",
+      "category": "automation",
+      "name": "Unimplemented-idea trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-073",
+      "category": "automation",
+      "name": "AI-result-import trigger",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-074",
+      "category": "automation",
+      "name": "PR-merged trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-075",
+      "category": "automation",
+      "name": "CI-failed trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-076",
+      "category": "automation",
+      "name": "Daily stale sweep",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-077",
+      "category": "automation",
+      "name": "Weekly compaction",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-078",
+      "category": "automation",
+      "name": "Project continuation trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-079",
+      "category": "automation",
+      "name": "Voice-to-cart",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-080",
+      "category": "ui",
+      "name": "Three-pane workspace",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-081",
+      "category": "ui",
+      "name": "Chunk graph",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-082",
+      "category": "ui",
+      "name": "Coverage heatmap",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-083",
+      "category": "ui",
+      "name": "Qualification board",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-084",
+      "category": "ui",
+      "name": "Context budget bar",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-085",
+      "category": "ui",
+      "name": "Chunk reason badge",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-086",
+      "category": "ui",
+      "name": "Freshness badge",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-087",
+      "category": "ui",
+      "name": "Truth badge",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-088",
+      "category": "ui",
+      "name": "Risk badge",
+      "priority": "P1"
+    },
+    {
+      "id": "V2-089",
+      "category": "ui",
+      "name": "Quick actions",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-090",
+      "category": "ui",
+      "name": "Voice focus",
+      "priority": "P0"
+    },
+    {
+      "id": "V2-091",
+      "category": "ui",
+      "name": "Run timeline",
+      "priority": "P1"
+    }
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 d66fe74c19b4efc168f3bd239bc773b301a53587f81120d589672b62380ed79a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#7:07_WORKFLOW_INDEX_V2.json =====
+{
+  "count": 27,
+  "workflows": [
+    "source_to_library",
+    "repo_incremental_reindex",
+    "voice_build_context_cart",
+    "cart_to_context_pack",
+    "pack_to_codex_roundtrip",
+    "doc_to_missing_code",
+    "chat_history_to_open_loops",
+    "research_to_library",
+    "research_idea_to_experiment",
+    "chunk_conflict_triage",
+    "qualification_blocker_to_fix_pack",
+    "pr_merge_refresh",
+    "ci_failure_pack",
+    "daily_stale_sweep",
+    "weekly_compaction",
+    "continue_project_v2",
+    "chunk_to_any_action",
+    "multi_chunk_compare",
+    "saved_cart_refresh",
+    "voice_add_to_cart",
+    "voice_fix_chunk",
+    "ai_result_feedback",
+    "unused_chunk_review",
+    "token_budget_optimizer",
+    "repo_feature_pack",
+    "repo_function_pack",
+    "library_inbox_triage"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 44b4811530bb90036f4020c79046a28b96d48df8208cb20eda8d4d3ff3995300 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#8:08_LIBRARY_QUERY_LANGUAGE_RU.md =====
+# Library query language
+
+Examples:
+`project:studious-pancake status:stale`
+`qualification:blocked`
+`source:chat tag:flashloan unresolved:true`
+`kind:symbol tests:none`
+`truth:speculative repo_owner:none`
+`changed_since:7d`
+`related_to:FAST-Q1`
+`used_in_pack:false`
+`risk:>=60`
+
+Voice:
+“Покажи все идеи из старых чатов про MarginFi, которых ещё нет в repo”
+
+→ query JSON:
+```json
+{"project":"studious-pancake","source_type":"chat","tags":["marginfi"],"implementation_state":"missing"}
+```
+
+Query engine should be local/deterministic. LLM only translates free speech into structured query.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 33cf067f7922dce0236ddecd3e426d17ba393c897731aeae6d20ef1fede8c1c9 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#9:09_CONTEXT_PACK_TEMPLATE.json =====
+{
+  "pack_version": "2.0",
+  "goal": "string",
+  "project_id": "string",
+  "repo_sha": "optional",
+  "truth_section": [],
+  "task_section": [],
+  "code_section": [],
+  "dependency_section": [],
+  "test_section": [],
+  "doc_section": [],
+  "chat_history_section": [],
+  "research_section": [],
+  "conflicts": [],
+  "missing_context": [],
+  "constraints": [],
+  "allowed_actions": [],
+  "forbidden_actions": [],
+  "token_budget": {
+    "target": 0,
+    "actual": 0
+  },
+  "source_manifest": [],
+  "manifest_hash": "sha256"
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 b65bdbac1c940cf781e4b708aa5f45b6b23123ad0c9fcabe198d35eaf76061f7 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#10:10_CHUNK_LIBRARY_BACKLOG.json =====
+{
+  "count": 110,
+  "tasks": [
+    {
+      "id": "CHUNK-001",
+      "area": "chunk_core",
+      "title": "Stable Chunk ID",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-002",
+      "area": "chunk_core",
+      "title": "Chunk lineage",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-003",
+      "area": "chunk_core",
+      "title": "Freshness state",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-004",
+      "area": "chunk_core",
+      "title": "Dependency closure",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-005",
+      "area": "chunk_core",
+      "title": "Reverse dependency index",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-006",
+      "area": "chunk_core",
+      "title": "Derived invalidation",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-007",
+      "area": "chunk_core",
+      "title": "Chunk provenance",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-008",
+      "area": "chunk_core",
+      "title": "Truth role",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-009",
+      "area": "chunk_core",
+      "title": "Qualification state",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-010",
+      "area": "chunk_core",
+      "title": "Risk tags",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-011",
+      "area": "chunk_core",
+      "title": "Chunk annotations",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-012",
+      "area": "chunk_core",
+      "title": "Pin chunk",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-013",
+      "area": "chunk_core",
+      "title": "Chunk aliases",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-014",
+      "area": "chunk_core",
+      "title": "Version compare",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-015",
+      "area": "chunk_core",
+      "title": "Chunk history",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-016",
+      "area": "context_cart",
+      "title": "Persistent Context Cart",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-017",
+      "area": "context_cart",
+      "title": "Add related",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-018",
+      "area": "context_cart",
+      "title": "Add dependencies",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-019",
+      "area": "context_cart",
+      "title": "Add tests",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-020",
+      "area": "context_cart",
+      "title": "Add docs",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-021",
+      "area": "context_cart",
+      "title": "Add chats",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-022",
+      "area": "context_cart",
+      "title": "Deduplicate",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-023",
+      "area": "context_cart",
+      "title": "Truth-first ordering",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-024",
+      "area": "context_cart",
+      "title": "Token budget meter",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-025",
+      "area": "context_cart",
+      "title": "Missing-context warning",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-026",
+      "area": "context_cart",
+      "title": "Conflict warning",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-027",
+      "area": "context_cart",
+      "title": "Saved cart",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-028",
+      "area": "context_cart",
+      "title": "Cart templates",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-029",
+      "area": "context_cart",
+      "title": "Cart diff",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-030",
+      "area": "context_cart",
+      "title": "Auto-trim",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-031",
+      "area": "library",
+      "title": "Unified inbox",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-032",
+      "area": "library",
+      "title": "Source classification",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-033",
+      "area": "library",
+      "title": "Project assignment",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-034",
+      "area": "library",
+      "title": "Cross-project links",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-035",
+      "area": "library",
+      "title": "Backlinks",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-036",
+      "area": "library",
+      "title": "Saved filters",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-037",
+      "area": "library",
+      "title": "Smart collections",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-038",
+      "area": "library",
+      "title": "Stale collection",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-039",
+      "area": "library",
+      "title": "Conflict collection",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-040",
+      "area": "library",
+      "title": "Unimplemented collection",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-041",
+      "area": "library",
+      "title": "Coverage collection",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-042",
+      "area": "library",
+      "title": "Run collection",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-043",
+      "area": "library",
+      "title": "Bulk actions",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-044",
+      "area": "library",
+      "title": "Source preview",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-045",
+      "area": "library",
+      "title": "Offline FTS search",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-046",
+      "area": "retrieval",
+      "title": "Hybrid lexical retrieval",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-047",
+      "area": "retrieval",
+      "title": "Graph expansion",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-048",
+      "area": "retrieval",
+      "title": "Freshness boost",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-049",
+      "area": "retrieval",
+      "title": "Truth boost",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-050",
+      "area": "retrieval",
+      "title": "Risk-aware retrieval",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-051",
+      "area": "retrieval",
+      "title": "Goal-aware retrieval",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-052",
+      "area": "retrieval",
+      "title": "Provider-aware packing",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-053",
+      "area": "retrieval",
+      "title": "Retrieval explanation",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-054",
+      "area": "retrieval",
+      "title": "Negative filters",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-055",
+      "area": "retrieval",
+      "title": "Changed-since retrieval",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-056",
+      "area": "repo",
+      "title": "Feature slices",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-057",
+      "area": "repo",
+      "title": "Qualification slices",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-058",
+      "area": "repo",
+      "title": "PR slices",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-059",
+      "area": "repo",
+      "title": "Chat-to-code coverage",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-060",
+      "area": "repo",
+      "title": "Requirement-to-code coverage",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-061",
+      "area": "repo",
+      "title": "Unowned requirement detector",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-062",
+      "area": "repo",
+      "title": "Untested symbol detector",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-063",
+      "area": "repo",
+      "title": "Duplicate authority detector",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-064",
+      "area": "repo",
+      "title": "Effect map",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-065",
+      "area": "repo",
+      "title": "Repo change impact",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-066",
+      "area": "repo",
+      "title": "Context pack per PR",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-067",
+      "area": "repo",
+      "title": "Context pack per blocker",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-068",
+      "area": "automation",
+      "title": "Chunk-changed trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-069",
+      "area": "automation",
+      "title": "Pack-invalidated trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-070",
+      "area": "automation",
+      "title": "Conflict-found trigger",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-071",
+      "area": "automation",
+      "title": "Qualification-blocked trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-072",
+      "area": "automation",
+      "title": "Unimplemented-idea trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-073",
+      "area": "automation",
+      "title": "AI-result-import trigger",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-074",
+      "area": "automation",
+      "title": "PR-merged trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-075",
+      "area": "automation",
+      "title": "CI-failed trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-076",
+      "area": "automation",
+      "title": "Daily stale sweep",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-077",
+      "area": "automation",
+      "title": "Weekly compaction",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-078",
+      "area": "automation",
+      "title": "Project continuation trigger",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-079",
+      "area": "automation",
+      "title": "Voice-to-cart",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-080",
+      "area": "ui",
+      "title": "Three-pane workspace",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-081",
+      "area": "ui",
+      "title": "Chunk graph",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-082",
+      "area": "ui",
+      "title": "Coverage heatmap",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-083",
+      "area": "ui",
+      "title": "Qualification board",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-084",
+      "area": "ui",
+      "title": "Context budget bar",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-085",
+      "area": "ui",
+      "title": "Chunk reason badge",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-086",
+      "area": "ui",
+      "title": "Freshness badge",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-087",
+      "area": "ui",
+      "title": "Truth badge",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-088",
+      "area": "ui",
+      "title": "Risk badge",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-089",
+      "area": "ui",
+      "title": "Quick actions",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-090",
+      "area": "ui",
+      "title": "Voice focus",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-091",
+      "area": "ui",
+      "title": "Run timeline",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-092",
+      "area": "core",
+      "title": "Implement stable chunk ID derivation",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-093",
+      "area": "core",
+      "title": "Implement lineage table",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-094",
+      "area": "core",
+      "title": "Implement reverse dependency table",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-095",
+      "area": "core",
+      "title": "Implement status transition validator",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-096",
+      "area": "library",
+      "title": "Add Context Cart persistence",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-097",
+      "area": "library",
+      "title": "Add Context Pack versions",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-098",
+      "area": "repo",
+      "title": "AST symbol-preserving reindex",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-099",
+      "area": "repo",
+      "title": "Git-diff incremental rebuild",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-100",
+      "area": "repo",
+      "title": "Feature slice builder",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-101",
+      "area": "repo",
+      "title": "Qualification slice builder",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-102",
+      "area": "ui",
+      "title": "Three-pane layout",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-103",
+      "area": "ui",
+      "title": "Chunk inspector",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-104",
+      "area": "ui",
+      "title": "Token budget visualization",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-105",
+      "area": "automation",
+      "title": "Stale/pack invalidation event bus",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-106",
+      "area": "retrieval",
+      "title": "Truth/freshness/risk scoring",
+      "priority": "P0"
+    },
+    {
+      "id": "CHUNK-107",
+      "area": "qualification",
+      "title": "Large-repo indexing benchmark",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-108",
+      "area": "qualification",
+      "title": "Incremental rebuild benchmark",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-109",
+      "area": "qualification",
+      "title": "Context-pack known-answer benchmark",
+      "priority": "P1"
+    },
+    {
+      "id": "CHUNK-110",
+      "area": "qualification",
+      "title": "24h library canary",
+      "priority": "P1"
+    }
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 69026e4771c0884b873b41645db2b183413136eae04aef050e39d3567622659c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#11:11_ARCHITECTURE_V2_RU.md =====
+# Architecture V2
+
+Voice/Text → Intent Compiler → Project Resolver → Local Context Library → Context Cart → Context Compiler → Context Pack → AI Router → Safe Executor → Verification → Receipt → Result back to Library.
+
+Recommended local stack:
+- Python 3.13
+- SQLite + FTS5
+- tree-sitter/native AST
+- git CLI read operations
+- FastAPI local daemon
+- Tauri shell
+- faster-whisper
+- watchdog
+- JSON Schema
+- append-only run events
+
+Performance rule:
+`hash → diff → FTS → graph → filters` first.
+Embeddings/LLM only after candidate set becomes small.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7c06adb3a1e17e9f9db746bd93f50b8595c3f2f6bd4685b0e84f045fbcbd7aff | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#12:12_EXAMPLES.json =====
+{
+  "voice": {
+    "utterance": "Собери старые идеи про Kamino, которых ещё нет в repo, добавь текущие блокеры и подготовь пакет для Codex.",
+    "intent": {
+      "project": "studious-pancake",
+      "goal": "implementation_context",
+      "sources": [
+        "chat",
+        "repo",
+        "qualification"
+      ],
+      "tags": [
+        "kamino"
+      ],
+      "implementation_state": "missing",
+      "target_provider": "codex"
+    }
+  },
+  "cart": {
+    "goal": "Implement missing safe evidence adapter",
+    "selected": [
+      "chat:...",
+      "repo:...",
+      "receipt:..."
+    ],
+    "auto_expand": [
+      "dependencies",
+      "tests",
+      "docs"
+    ],
+    "exclude": [
+      "superseded",
+      "vendor",
+      "generated",
+      "secrets"
+    ],
+    "token_budget": 80000
+  }
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 f4d3164330cca486a9e716df636eeba8a053d0a9198fe045939cabf15d8f810d | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#13:13_RECOMMENDED_NEXT_IMPLEMENTATION_RU.md =====
+# Следующие PR
+
+PR-A — Chunk Core: IDs, lineage, states, provenance, reverse deps.
+PR-B — Incremental Repo Index: git diff + AST + stable IDs + targeted invalidation.
+PR-C — Context Cart: selected chunks + dependencies/tests/docs + token meter.
+PR-D — Context Pack Compiler: truth-first, dedupe, conflicts, token trim, manifest.
+PR-E — Library UI: three panes.
+PR-F — AI Round Trip: pack → Codex/provider → result → verify → Library.
+PR-G — Voice: voice → query → Context Cart → action.
+PR-H — Automation: repo_changed / PR_merged / CI_failed / stale_chunk / blocker triggers.
+
+After these eight PRs the app starts solving the long-context problem in practice.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3890c13372379ee07b21a03332086ea32e13624e0da008565be705ac5c8edd16 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#14:MANIFEST.json =====
+{
+  "generated": "2026-10-02",
+  "files": [
+    {
+      "path": "00_START_HERE_RU.md",
+      "bytes": 987,
+      "sha256": "2b6425e6b41896e2a6eaeaf1ce7b808046c84652301f5c052d6edb459092bbc4"
+    },
+    {
+      "path": "01_GAP_ANALYSIS_RU.md",
+      "bytes": 816,
+      "sha256": "77f88603ee44851c8077245f7889a72aef596b64ac04a5c5107c47d6b35dfe1c"
+    },
+    {
+      "path": "02_CHUNK_DATA_MODEL_V2.json",
+      "bytes": 1708,
+      "sha256": "965be4f049edf069c452b31b5b7cd471e0c9c286b533a84f9b460c194ba55436"
+    },
+    {
+      "path": "03_CHUNK_LIFECYCLE_RU.md",
+      "bytes": 638,
+      "sha256": "e9746a00c9cc11391ab58e0c1cf6de560030ac1a4d60f70e0579e32c52b35cfb"
+    },
+    {
+      "path": "04_UI_CHUNK_LIBRARY_SPEC.json",
+      "bytes": 1584,
+      "sha256": "7e430194c6c416ee29c686e0af24b32edbd81d24e1203bada46a1a4f3a32d80e"
+    },
+    {
+      "path": "05_UI_WORKFLOW_RU.md",
+      "bytes": 684,
+      "sha256": "9154f80791c81e9af0add7cb96025828281946f92e8a57e1b5a2ea22ff4963d1"
+    },
+    {
+      "path": "06_NEW_FUNCTIONS_V2.json",
+      "bytes": 11210,
+      "sha256": "0884487b690ee02ee41de02e396ea2b31a0e22365716c81793905e9ea01669f8"
+    },
+    {
+      "path": "07_WORKFLOW_INDEX_V2.json",
+      "bytes": 793,
+      "sha256": "d66fe74c19b4efc168f3bd239bc773b301a53587f81120d589672b62380ed79a"
+    },
+    {
+      "path": "08_LIBRARY_QUERY_LANGUAGE_RU.md",
+      "bytes": 638,
+      "sha256": "44b4811530bb90036f4020c79046a28b96d48df8208cb20eda8d4d3ff3995300"
+    },
+    {
+      "path": "09_CONTEXT_PACK_TEMPLATE.json",
+      "bytes": 522,
+      "sha256": "33cf067f7922dce0236ddecd3e426d17ba393c897731aeae6d20ef1fede8c1c9"
+    },
+    {
+      "path": "10_CHUNK_LIBRARY_BACKLOG.json",
+      "bytes": 13710,
+      "sha256": "b65bdbac1c940cf781e4b708aa5f45b6b23123ad0c9fcabe198d35eaf76061f7"
+    },
+    {
+      "path": "11_ARCHITECTURE_V2_RU.md",
+      "bytes": 579,
+      "sha256": "69026e4771c0884b873b41645db2b183413136eae04aef050e39d3567622659c"
+    },
+    {
+      "path": "12_EXAMPLES.json",
+      "bytes": 869,
+      "sha256": "7c06adb3a1e17e9f9db746bd93f50b8595c3f2f6bd4685b0e84f045fbcbd7aff"
+    },
+    {
+      "path": "13_RECOMMENDED_NEXT_IMPLEMENTATION_RU.md",
+      "bytes": 700,
+      "sha256": "f4d3164330cca486a9e716df636eeba8a053d0a9198fe045939cabf15d8f810d"
+    },
+    {
+      "path": "workflows/ai_result_feedback.json",
+      "bytes": 222,
+      "sha256": "2ed6bba0de4ed567b15aa76244dcd645ee39f4dd44ff4c0657c6a4db06255da9"
+    },
+    {
+      "path": "workflows/cart_to_context_pack.json",
+      "bytes": 297,
+      "sha256": "179b7fa18aec62e39ae0653de9f382560bfc6d5157071303d6dd210f48d2e0fb"
+    },
+    {
+      "path": "workflows/chat_history_to_open_loops.json",
+      "bytes": 279,
+      "sha256": "1eaf30dc9fb09f0b880c12f328824b1dced0c227034dc8a4e6743a24adaba0bd"
+    },
+    {
+      "path": "workflows/chunk_conflict_triage.json",
+      "bytes": 242,
+      "sha256": "9aa847c71a05b14381f2ec1cf20457dd9c328246b43a0f9696f48df7b51d9c97"
+    },
+    {
+      "path": "workflows/chunk_to_any_action.json",
+      "bytes": 269,
+      "sha256": "21ff7b719b576d0a3b50d00a1bd46231b9afbbb169d051c658dd05f5b16f225f"
+    },
+    {
+      "path": "workflows/ci_failure_pack.json",
+      "bytes": 244,
+      "sha256": "4a2da5dd670050222d9c36ea450b5035cf9a0320bd46c12fb1c74344bea745d6"
+    },
+    {
+      "path": "workflows/continue_project_v2.json",
+      "bytes": 263,
+      "sha256": "bf87fec998636dd0bb880d2ccff8f45373d7ec3ea01156be8fb66c490cf792b8"
+    },
+    {
+      "path": "workflows/daily_stale_sweep.json",
+      "bytes": 192,
+      "sha256": "e71562816b5d7a559e524fae828452b63236be4103cd2d860574b8e85a5c2d09"
+    },
+    {
+      "path": "workflows/doc_to_missing_code.json",
+      "bytes": 267,
+      "sha256": "2d543da2df01544f4890a5131b71c9811e944c0f5a1e1ff4ed6537018d7971a3"
+    },
+    {
+      "path": "workflows/library_inbox_triage.json",
+      "bytes": 244,
+      "sha256": "4cba3b22b07e9cf4a20775d50b149c3a3fd3fc8c1d5fcef98113d5ef28853baa"
+    },
+    {
+      "path": "workflows/multi_chunk_compare.json",
+      "bytes": 229,
+      "sha256": "228343cf812929b91990e5a37f76be8e266183f62d9a1361d78ea2984c6d7b2e"
+    },
+    {
+      "path": "workflows/pack_to_codex_roundtrip.json",
+      "bytes": 289,
+      "sha256": "1570e1ae7c394e2603d82972b81a36fd267f7c5a018a2d45c291b03e158ccf18"
+    },
+    {
+      "path": "workflows/pr_merge_refresh.json",
+      "bytes": 230,
+      "sha256": "808b23c0110c2314ac4d19105c983db8bd22c16d2c9998cff2a6e2b69e1fc225"
+    },
+    {
+      "path": "workflows/qualification_blocker_to_fix_pack.json",
+      "bytes": 288,
+      "sha256": "cfcf5c6658dde628080ba8529b9f801f6a1bdd00d8d95a66537c3b5936f01d6b"
+    },
+    {
+      "path": "workflows/repo_feature_pack.json",
+      "bytes": 266,
+      "sha256": "b35d6a8733cbbd83a73b19f73057f56442cfb65c4a150dfda82635cb522a1d85"
+    },
+    {
+      "path": "workflows/repo_function_pack.json",
+      "bytes": 232,
+      "sha256": "ef3d329c82ef8e22184d692b9683baf5803fbf5d428cbb00aeba89aa2d2b74b3"
+    },
+    {
+      "path": "workflows/repo_incremental_reindex.json",
+      "bytes": 321,
+      "sha256": "3f93e348e6734f7cea5197f4974c10163696bff1bd540b2b81c3bba5573d65e2"
+    },
+    {
+      "path": "workflows/research_idea_to_experiment.json",
+      "bytes": 261,
+      "sha256": "b66b23d4ce9c5a95c82f0c5304578abbc05735209566a721241d3a1abe91a65a"
+    },
+    {
+      "path": "workflows/research_to_library.json",
+      "bytes": 261,
+      "sha256": "99a192a1e19d9392a3003f6ad156229f119316ee14bd0831c206a7e615daeb05"
+    },
+    {
+      "path": "workflows/saved_cart_refresh.json",
+      "bytes": 239,
+      "sha256": "8ff7db95c632897b051abb0ff7391023ae5af5c8907f3ceb2f092426a3601dd1"
+    },
+    {
+      "path": "workflows/source_to_library.json",
+      "bytes": 265,
+      "sha256": "c7acb4270929cd24c3a21c2f11e789c2977978ce1eb20d113af4978b5479f3d3"
+    },
+    {
+      "path": "workflows/token_budget_optimizer.json",
+      "bytes": 267,
+      "sha256": "b1dec92e004e85c60db79c7f0de0e88fde7651c98285d1e5fa9f81f35466c338"
+    },
+    {
+      "path": "workflows/unused_chunk_review.json",
+      "bytes": 213,
+      "sha256": "0bb8e53c36073d0b332b2d3306a388bd45b2b134b7ecbcac187a9dfe5c0d618a"
+    },
+    {
+      "path": "workflows/voice_add_to_cart.json",
+      "bytes": 201,
+      "sha256": "ece2b9c68adb8e94e3738b982757329cd298cb16ee87acfc65ffe1c3dab4bbfb"
+    },
+    {
+      "path": "workflows/voice_build_context_cart.json",
+      "bytes": 279,
+      "sha256": "63659adf0e29ff76745129fbe6af24aec163354930c01d4c15411e8128d7ffd4"
+    },
+    {
+      "path": "workflows/voice_fix_chunk.json",
+      "bytes": 218,
+      "sha256": "9d3b104eae59fcf44459d95b890116c9df329515d50e641b3d6fe0f1f118e044"
+    },
+    {
+      "path": "workflows/weekly_compaction.json",
+      "bytes": 225,
+      "sha256": "7065a1cf238174dce108759aecaf46f04b9fa81a34ad1ef74053c5f1ebdc61ea"
+    }
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 2ed6bba0de4ed567b15aa76244dcd645ee39f4dd44ff4c0657c6a4db06255da9 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#15:workflows/ai_result_feedback.json =====
+{
+  "id": "ai_result_feedback",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "import_result",
+    "link_used_chunks",
+    "mark_usefulness",
+    "record_missing_context",
+    "update_template"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 179b7fa18aec62e39ae0653de9f382560bfc6d5157071303d6dd210f48d2e0fb | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#16:workflows/cart_to_context_pack.json =====
+{
+  "id": "cart_to_context_pack",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_cart",
+    "dependency_closure",
+    "truth_first_order",
+    "conflict_scan",
+    "missing_context_scan",
+    "token_estimate",
+    "trim_to_budget",
+    "manifest",
+    "hash_pack"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 1eaf30dc9fb09f0b880c12f328824b1dced0c227034dc8a4e6743a24adaba0bd | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#17:workflows/chat_history_to_open_loops.json =====
+{
+  "id": "chat_history_to_open_loops",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "ingest_export",
+    "chunk_messages",
+    "extract_decisions",
+    "extract_todos",
+    "map_repo",
+    "dedupe",
+    "classify_done_open",
+    "create_collection"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 9aa847c71a05b14381f2ec1cf20457dd9c328246b43a0f9696f48df7b51d9c97 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#18:workflows/chunk_conflict_triage.json =====
+{
+  "id": "chunk_conflict_triage",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_conflicts",
+    "compare_authority",
+    "compare_freshness",
+    "human_review_if_needed",
+    "resolve",
+    "rebuild_packs"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 21ff7b719b576d0a3b50d00a1bd46231b9afbbb169d051c658dd05f5b16f225f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#19:workflows/chunk_to_any_action.json =====
+{
+  "id": "chunk_to_any_action",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "select_chunk",
+    "select_action",
+    "retrieve_neighbors",
+    "build_action_cart",
+    "policy_check",
+    "execute_or_approve",
+    "verify",
+    "receipt"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 4a2da5dd670050222d9c36ea450b5035cf9a0320bd46c12fb1c74344bea745d6 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#20:workflows/ci_failure_pack.json =====
+{
+  "id": "ci_failure_pack",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "ingest_ci_logs",
+    "link_changed_files",
+    "link_tests",
+    "retrieve_pr",
+    "build_cart",
+    "compile_pack",
+    "create_fix_task"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 bf87fec998636dd0bb880d2ccff8f45373d7ec3ea01156be8fb66c490cf792b8 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#21:workflows/continue_project_v2.json =====
+{
+  "id": "continue_project_v2",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_state",
+    "retrieve_truth",
+    "retrieve_receipts",
+    "retrieve_open_tasks",
+    "retrieve_changed_chunks",
+    "build_cart",
+    "propose_next"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 e71562816b5d7a559e524fae828452b63236be4103cd2d860574b8e85a5c2d09 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#22:workflows/daily_stale_sweep.json =====
+{
+  "id": "daily_stale_sweep",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "query_stale",
+    "group_project",
+    "rank_active_goals",
+    "create_review_queue"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 2d543da2df01544f4890a5131b71c9811e944c0f5a1e1ff4ed6537018d7971a3 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#23:workflows/doc_to_missing_code.json =====
+{
+  "id": "doc_to_missing_code",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "ingest_doc",
+    "chunk_doc",
+    "extract_requirements",
+    "map_repo_owners",
+    "map_tests",
+    "find_unowned",
+    "build_fix_cart",
+    "create_tasks"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 4cba3b22b07e9cf4a20775d50b149c3a3fd3fc8c1d5fcef98113d5ef28853baa | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#24:workflows/library_inbox_triage.json =====
+{
+  "id": "library_inbox_triage",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "detect_source_type",
+    "detect_project",
+    "tag_entities",
+    "find_duplicates",
+    "suggest_collection",
+    "review_ambiguous"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 228343cf812929b91990e5a37f76be8e266183f62d9a1361d78ea2984c6d7b2e | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#25:workflows/multi_chunk_compare.json =====
+{
+  "id": "multi_chunk_compare",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_selected",
+    "align_topics",
+    "detect_conflicts",
+    "detect_missing",
+    "compare",
+    "save_result_chunk"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 1570e1ae7c394e2603d82972b81a36fd267f7c5a018a2d45c291b03e158ccf18 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#26:workflows/pack_to_codex_roundtrip.json =====
+{
+  "id": "pack_to_codex_roundtrip",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_pack",
+    "create_worktree",
+    "send_codex",
+    "import_result",
+    "review_diff",
+    "run_tests",
+    "verify",
+    "store_result",
+    "link_result",
+    "receipt"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 808b23c0110c2314ac4d19105c983db8bd22c16d2c9998cff2a6e2b69e1fc225 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#27:workflows/pr_merge_refresh.json =====
+{
+  "id": "pr_merge_refresh",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "snapshot_repo",
+    "incremental_reindex",
+    "link_pr",
+    "close_tasks",
+    "invalidate_old_packs",
+    "refresh_truth"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 cfcf5c6658dde628080ba8529b9f801f6a1bdd00d8d95a66537c3b5936f01d6b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#28:workflows/qualification_blocker_to_fix_pack.json =====
+{
+  "id": "qualification_blocker_to_fix_pack",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_blocker",
+    "find_owner_chunks",
+    "find_tests",
+    "find_prior_prs",
+    "find_related_chats",
+    "build_cart",
+    "compile_pack",
+    "create_fix_task"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 b35d6a8733cbbd83a73b19f73057f56442cfb65c4a150dfda82635cb522a1d85 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#29:workflows/repo_feature_pack.json =====
+{
+  "id": "repo_feature_pack",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "resolve_feature",
+    "find_code",
+    "find_tests",
+    "find_config",
+    "find_docs",
+    "find_prs",
+    "find_chats",
+    "build_cart",
+    "compile_pack"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 ef3d329c82ef8e22184d692b9683baf5803fbf5d428cbb00aeba89aa2d2b74b3 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#30:workflows/repo_function_pack.json =====
+{
+  "id": "repo_function_pack",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "resolve_symbol",
+    "add_callers",
+    "add_callees",
+    "add_tests",
+    "add_config",
+    "add_docs",
+    "compile_pack"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 3f93e348e6734f7cea5197f4974c10163696bff1bd540b2b81c3bba5573d65e2 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#31:workflows/repo_incremental_reindex.json =====
+{
+  "id": "repo_incremental_reindex",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "git_diff",
+    "find_changed_files",
+    "reparse_changed",
+    "preserve_stable_ids",
+    "supersede_changed",
+    "walk_reverse_dependencies",
+    "invalidate_derived",
+    "rebuild_indexes",
+    "receipt"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 b66b23d4ce9c5a95c82f0c5304578abbc05735209566a721241d3a1abe91a65a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#32:workflows/research_idea_to_experiment.json =====
+{
+  "id": "research_idea_to_experiment",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_idea",
+    "retrieve_repo",
+    "find_equivalents",
+    "define_hypothesis",
+    "define_measurements",
+    "stop_rules",
+    "create_task"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 99a192a1e19d9392a3003f6ad156229f119316ee14bd0831c206a7e615daeb05 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#33:workflows/research_to_library.json =====
+{
+  "id": "research_to_library",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "fetch_fresh",
+    "source_classify",
+    "extract_claims",
+    "chunk_claims",
+    "link_topics",
+    "compare_repo",
+    "mark_speculative",
+    "save"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 8ff7db95c632897b051abb0ff7391023ae5af5c8907f3ceb2f092426a3601dd1 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#34:workflows/saved_cart_refresh.json =====
+{
+  "id": "saved_cart_refresh",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "load_cart",
+    "replace_superseded",
+    "add_current_dependencies",
+    "recalc_tokens",
+    "flag_conflicts",
+    "save_version"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 c7acb4270929cd24c3a21c2f11e789c2977978ce1eb20d113af4978b5479f3d3 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#35:workflows/source_to_library.json =====
+{
+  "id": "source_to_library",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "identify_source",
+    "hash_source",
+    "normalize",
+    "structure_parse",
+    "chunk",
+    "enrich",
+    "link",
+    "index",
+    "validate",
+    "receipt"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 b1dec92e004e85c60db79c7f0de0e88fde7651c98285d1e5fa9f81f35466c338 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#36:workflows/token_budget_optimizer.json =====
+{
+  "id": "token_budget_optimizer",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "group",
+    "score_relevance",
+    "score_truth",
+    "score_dependency",
+    "score_recency",
+    "drop_low_value",
+    "preserve_required",
+    "explain"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 0bb8e53c36073d0b332b2d3306a388bd45b2b134b7ecbcac187a9dfe5c0d618a | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#37:workflows/unused_chunk_review.json =====
+{
+  "id": "unused_chunk_review",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "find_never_retrieved",
+    "exclude_truth",
+    "exclude_recent",
+    "rank_size",
+    "suggest_archive"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 ece2b9c68adb8e94e3738b982757329cd298cb16ee87acfc65ffe1c3dab4bbfb | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#38:workflows/voice_add_to_cart.json =====
+{
+  "id": "voice_add_to_cart",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "transcribe",
+    "resolve_active_view",
+    "resolve_chunk",
+    "add_to_cart",
+    "readback"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 63659adf0e29ff76745129fbe6af24aec163354930c01d4c15411e8128d7ffd4 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#39:workflows/voice_build_context_cart.json =====
+{
+  "id": "voice_build_context_cart",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "transcribe",
+    "resolve_project",
+    "parse_goal",
+    "retrieve_truth",
+    "retrieve_chunks",
+    "graph_expand",
+    "dedupe",
+    "create_cart",
+    "open_ui"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 9d3b104eae59fcf44459d95b890116c9df329515d50e641b3d6fe0f1f118e044 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#40:workflows/voice_fix_chunk.json =====
+{
+  "id": "voice_fix_chunk",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "transcribe",
+    "resolve_chunk",
+    "build_fix_cart",
+    "compile_pack",
+    "approval",
+    "create_fix_task"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 7065a1cf238174dce108759aecaf46f04b9fa81a34ad1ef74053c5f1ebdc61ea | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#148:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/LAYA_RND_CHUNK_LIBRARY_UI_V2_2026-10-02.zip!#41:workflows/weekly_compaction.json =====
+{
+  "id": "weekly_compaction",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "find_duplicates",
+    "find_superseded",
+    "find_orphans",
+    "preserve_pinned",
+    "archive",
+    "rebuild_stats"
+  ]
+}
+===== END CONTENT =====
+
+===== CONTENT SHA256 504c876393eec7ee2838f34b42208bbaed6b1b29a225247fba965f468e995a63 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#149:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/ORIGINAL_SCE_AGGREGATOR_NEXT_FUNCTIONS.zip!#0:START_HERE_RU.txt =====
+ПАКЕТ РАЗВИТИЯ АГРЕГАТОРА SCE
+3 октября 2026 года
+
+Что находится в пакете
+AGGREGATOR_AUTOMATION_RU.docx — русский план целей, архитектуры, 16 новых задач, экспериментов и карты 38 групп функций.
+AGGREGATOR_AUTOMATION_RU.txt — то же содержание в переносимом текстовом формате.
+NEXT_FUNCTIONS_RU.json — полный backlog с owners, dependencies, acceptance и метриками.
+RECOVERED_LAYA_FUNCTIONS_2026-10-02.txt — полный найденный сохранённый список функций из предыдущего обсуждения. Это исторические предложения; внешние числа и факты в нём заново не подтверждались.
+MANIFEST.json — состав и SHA-256 файлов этого пакета.
+
+Контекст и цель
+Развиваем BobIvans/scaling-chrome-extensions как постоянный слой контекста, задач и проверяемых действий для разных AI. Путь: текст/финальный голос → TaskSpec → подключённые источники → context packet → AI proposal → registered action → independent verifier → receipt → память.
+SCE владеет canonical SQLite, очередью и Native Host. Studious хранит предметный bot runtime; использовать его semantic checks, checkpoints, blocker-to-owner mappings и bounded qualification bridge, а не переносить весь репозиторий.
+
+Проверенная исходная база
+SCE main: da6abf4c006e4e7d26fe45ef30fa9d07a356f396, PR37 merged.
+Studious main: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0.
+К началу разработки обязательно получить актуальные HEAD, changes и owner inventory.
+
+Как использовать с AI
+Передай DOCX или TXT и JSON. Попроси выбрать одну задачу по текущему blocker, прочитать relevant owners и запросить только реально отсутствующий контекст. Для реализации добавь актуальный checkout или соответствующий V4/V5 handoff; этот обзор не содержит весь код обоих репозиториев.
+Первый code candidate — SCE-NEXT-02, static JS/TS dependency closure. Первый device candidate — SCE-NEXT-01, installed Chrome → bound review → verified report.
+
+Требования к ответу coding AI
+Указать выбранный task ID, актуальную базу, owners, diff, проверки, реальные output observations, failures, remaining gaps и следующий шаг.
+Не считать claim DONE, валидный JSON, mock, exit 0 или число PR доказательством выполненной задачи.
+Не создавать вторую SQLite/очередь/Native Host. Не переименовывать task IDs в несуществующие номера PR.
+ASR, UIA, установленный Chrome и Laya inference требуют actual device evidence; при его отсутствии NOT_RUN.
+Пакет — план разработки. Он не запускает automations и не разрешает финансовое/live execution, публикацию или передачу новых личных данных.
+
+Что действительно восстановлено
+Найден полный сохранённый текст с 38 группами функций Laya и обсуждением X.com. Точное название исходного голосового чата не установлено. Доступна поисковая история связанных обсуждений, не полный архив всей жизни или всех 100 чатов.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 98da1c3b53db2295e8bf7570d35f0c59f98f650930a9b61be218fb8b9a04a101 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#149:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/ORIGINAL_SCE_AGGREGATOR_NEXT_FUNCTIONS.zip!#1:AGGREGATOR_AUTOMATION_RU.docx!#0:[Content_Types].xml =====
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="jpeg" ContentType="image/jpeg"/><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/customXml/itemProps1.xml" ContentType="application/vnd.openxmlformats-officedocument.customXmlProperties+xml"/><Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/><Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/><Override PartName="/word/fontTable.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.fontTable+xml"/><Override PartName="/word/footer1.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.footer+xml"/><Override PartName="/word/numbering.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.numbering+xml"/><Override PartName="/word/settings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.settings+xml"/><Override PartName="/word/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.styles+xml"/><Override PartName="/word/stylesWithEffects.xml" ContentType="application/vnd.ms-word.stylesWithEffects+xml"/><Override PartName="/word/theme/theme1.xml" ContentType="application/vnd.openxmlformats-officedocument.theme+xml"/><Override PartName="/word/webSettings.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.webSettings+xml"/></Types>
+===== END CONTENT =====
+
+===== CONTENT SHA256 a9ae57efe9186f07d48303bcac5d54c7e359bf3f503939c03ad2954e5c59a5c4 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#149:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/ORIGINAL_SCE_AGGREGATOR_NEXT_FUNCTIONS.zip!#1:AGGREGATOR_AUTOMATION_RU.docx!#1:_rels/.rels =====
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId3" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/><Relationship Id="rId4" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/><Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/thumbnail" Target="docProps/thumbnail.jpeg"/></Relationships>
+===== END CONTENT =====
+
+===== CONTENT SHA256 2bce83c8c97c237706cbb0a417f1508aa3b3623dd453f7d56edf81a129f772dd | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#149:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/ORIGINAL_SCE_AGGREGATOR_NEXT_FUNCTIONS.zip!#1:AGGREGATOR_AUTOMATION_RU.docx!#2:docProps/core.xml =====
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:dcterms="http://purl.org/dc/terms/" xmlns:dcmitype="http://purl.org/dc/dcmitype/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><dc:title>Агрегатор контекста и проверяемая автоматизация SCE</dc:title><dc:subject>Цели, архитектура и следующие функции агрегатора</dc:subject><dc:creator>BobIvans</dc:creator><cp:keywords/><dc:description>generated by python-docx</dc:description><cp:lastModifiedBy/><cp:revision>1</cp:revision><dcterms:created xsi:type="dcterms:W3CDTF">2013-12-23T23:15:00Z</dcterms:created><dcterms:modified xsi:type="dcterms:W3CDTF">2013-12-23T23:15:00Z</dcterms:modified><cp:category/></cp:coreProperties>
+===== END CONTENT =====
+
+===== CONTENT SHA256 be664981c3141cddfc59362beb287ebf20d0773660e2dd6faac5968a5930a081 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#149:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/ORIGINAL_SCE_AGGREGATOR_NEXT_FUNCTIONS.zip!#1:AGGREGATOR_AUTOMATION_RU.docx!#3:docProps/app.xml =====
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties" xmlns:vt="http://schemas.openxmlformats.org/officeDocument/2006/docPropsVTypes">
+  <Template>Normal.dotm</Template>
+  <TotalTime>0</TotalTime>
+  <Pages>1</Pages>
+  <Words>0</Words>
+  <Characters>0</Characters>
+  <Application>Microsoft Macintosh Word</Application>
+  <DocSecurity>0</DocSecurity>
+  <Lines>0</Lines>
+  <Paragraphs>0</Paragraphs>
+  <ScaleCrop>false</ScaleCrop>
+  <HeadingPairs>
+    <vt:vector size="2" baseType="variant">
+      <vt:variant>
+        <vt:lpstr>Title</vt:lpstr>
+      </vt:variant>
+      <vt:variant>
+        <vt:i4>1</vt:i4>
+      </vt:variant>
+    </vt:vector>
+  </HeadingPairs>
+  <TitlesOfParts>
+    <vt:vector size="1" baseType="lpstr">
+      <vt:lpstr/>
+    </vt:vector>
+  </TitlesOfParts>
+  <Manager/>
+  <Company/>
+  <LinksUpToDate>false</LinksUpToDate>
+  <CharactersWithSpaces>0</CharactersWithSpaces>
+  <SharedDoc>false</SharedDoc>
+  <HyperlinkBase/>
+  <HyperlinksChanged>false</HyperlinksChanged>
+  <AppVersion>14.0000</AppVersion>
+</Properties>
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 cf350079afb79df6f032aa8ce84ef17806a492fa968a96812d734a0b610b2c37 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#149:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/ORIGINAL_SCE_AGGREGATOR_NEXT_FUNCTIONS.zip!#1:AGGREGATOR_AUTOMATION_RU.docx!#4:word/document.xml =====
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+<w:document xmlns:wpc="http://schemas.microsoft.com/office/word/2010/wordprocessingCanvas" xmlns:mo="http://schemas.microsoft.com/office/mac/office/2008/main" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:mv="urn:schemas-microsoft-com:mac:vml" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:m="http://schemas.openxmlformats.org/officeDocument/2006/math" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:wp14="http://schemas.microsoft.com/office/word/2010/wordprocessingDrawing" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:w10="urn:schemas-microsoft-com:office:word" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:w14="http://schemas.microsoft.com/office/word/2010/wordml" xmlns:wpg="http://schemas.microsoft.com/office/word/2010/wordprocessingGroup" xmlns:wpi="http://schemas.microsoft.com/office/word/2010/wordprocessingInk" xmlns:wne="http://schemas.microsoft.com/office/word/2006/wordml" xmlns:wps="http://schemas.microsoft.com/office/word/2010/wordprocessingShape" mc:Ignorable="w14 wp14"><w:body><w:p><w:pPr><w:pStyle w:val="Title"/></w:pPr><w:r><w:t>Агрегатор контекста и проверяемая автоматизация SCE</w:t></w:r></w:p><w:p><w:r><w:rPr><w:b w:val="0"/></w:rPr><w:t>Рабочий план для BobIvans и AI разработчика</w:t></w:r></w:p><w:p><w:r><w:rPr><w:b w:val="0"/></w:rPr><w:t>3 октября 2026 года</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>1 Главное решение</w:t></w:r></w:p><w:p><w:r><w:rPr><w:b w:val="0"/></w:rPr><w:t>Развиваем SCE как постоянный слой между моими данными, задачами, компьютером и разными AI. Приложение хранит контекст и состояние выполнения; ChatGPT, Grok, Claude, локальная модель и Laya подключаются как сменяемые компоненты. Пользователь формулирует запрос текстом или голосом, система собирает относящиеся к нему источники, создаёт документ для AI, принимает структурированный ответ и выполняет доступный сценарий с проверкой результата.</w:t></w:r></w:p><w:p><w:r><w:rPr><w:b w:val="0"/></w:rPr><w:t>Наибольшую ожидаемую отдачу сейчас дают завершённые цепочки: восстановить решение из старых чатов; создать точное ТЗ; продолжить разработку на актуальном коде; получить проверенный документ; повторить уже освоенный сценарий на ПК. В этом плане 16 задач. Их ID обозначают backlog, а не созданные GitHub PR.</w:t></w:r></w:p><w:p><w:r><w:rPr><w:b w:val="0"/></w:rPr><w:t>«Автоматизировать что угодно» означает постепенно расширять набор поддержанных источников, приложений и проверяемых навыков. Новый неизвестный сценарий сначала становится конкретным заданием на разработку. Уровень агента оцениваем успешными задачами, временем и стоимостью. Оснований объявлять приложение самым сильным агентом среди всех существующих пока нет.</w:t></w:r></w:p><w:p><w:pPr><w:pStyle w:val="Heading1"/></w:pPr><w:r><w:t>2 Восстановленные обсуждения и список функций</w:t></w:r></w:p><w:p><w:r><w:rPr><w:b w:val="0"/></w:rPr><w:t>Найден сохранённый текст «Вставленный текст(20261002-194027).txt», созданный 2 октября 2026 года. Он содержит обсуждение Laya как слоя контекста и выполнения, упоминание исследования X.com и подробный список из 38 групп функций. Полный доступный текст включён в пакет отдельным файлом RECOVERED_LAYA_FUNCTIONS_2026-10-02.txt. Это восстановленный список идей из прежнего ответа, а не свидетельство их реализации.</w:t></w:r></w:p><w:p><w:r><w:rPr><w:b w:val="0"/></w:rPr><w:t>Поиск истории также вернул связанные фрагменты от 2 октября около 18:10–18:21 UTC про голос, X, ChatGPT/Grok, компьютер и общий контекст. Точное название исходного voice-mode разговора и его полная запись не установлены. Дата сохранения файла не заменяет дату отдельного сообщения.</w:t></w:r></w:p><w:tbl><w:tblPr><w:tblW w:type="auto" w:w="0"/><w:jc w:val="center"/><w:tblLayout w:type="fixed"/><w:tblLook w:firstColumn="1" w:firstRow="1" w:lastColumn="0" w:lastRow="0" w:noHBand="0" w:noVBand="1" w:val="04A0"/><w:tblBorders><w:top w:val="single" w:sz="4" w:color="D9D9D9"/><w:left w:val="single" w:sz="4" w:color="D9D9D9"/><w:bottom w:val="single" w:sz="4" w:color="D9D9D9"/><w:right w:val="single" w:sz="4" w:color="D9D9D9"/><w:insideH w:val="single" w:sz="4" w:color="D9D9D9"/><w:insideV w:val="single" w:sz="4" w:color="D9D9D9"/></w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="2952"/><w:gridCol w:w="4176"/><w:gridCol w:w="2952"/></w:tblGrid><w:tr><w:trPr><w:cantSplit/><w:tblHeader/></w:trPr><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="2952"/><w:vAlign w:val="center"/><w:tcMar><w:top w:w="85" w:type="dxa"/><w:bottom w:w="85" w:type="dxa"/><w:left w:w="105" w:type="dxa"/><w:right w:w="105" w:type="dxa"/></w:tcMar><w:shd w:fill="233E58"/></w:tcPr><w:p><w:pPr><w:spacing w:after="0" w:before="0" w:line="257" w:lineRule="auto"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="19"/></w:rPr><w:t>Найденный материал</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="4176"/><w:vAlign w:val="center"/><w:tcMar><w:top w:w="85" w:type="dxa"/><w:bottom w:w="85" w:type="dxa"/><w:left w:w="105" w:type="dxa"/><w:right w:w="105" w:type="dxa"/></w:tcMar><w:shd w:fill="233E58"/></w:tcPr><w:p><w:pPr><w:spacing w:after="0" w:before="0" w:line="257" w:lineRule="auto"/></w:pPr><w:r><w:rPr><w:rFonts w:ascii="Arial" w:hAnsi="Arial"/><w:b/><w:color w:val="FFFFFF"/><w:sz w:val="19"/></w:rPr><w:t>Что восстанавливает</w:t></w:r></w:p></w:tc><w:tc><w:tcPr><w:tcW w:type="dxa" w:w="2952"/><w:vAlign w:val="center"/><w:tcMar><w:top w:w="85" w:type="dxa"/><w:bottom w:w="85" w:type="dxa"/><w:left w:w="105" w:type="dxa"/><w:right w:w="105" w:type="dxa"/></w:tcMar><w:shd w:fill="233E58"/></w:tcPr><w:p><w:pPr><w:spacing w:after="0" w:before="0" w:line="257" w:lineRule="au

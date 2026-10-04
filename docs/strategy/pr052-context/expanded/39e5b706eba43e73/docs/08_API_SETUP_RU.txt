@@ -1,0 +1,44 @@
+OPENAI API В ПРОТОТИПЕ
+Используется POST https://api.openai.com/v1/responses, один выбранный TXT.
+UI: AI: выбранный TXT → файл → ID доступной модели → цель → max output tokens
+→ подтверждение конкретной отправки. Ответ/receipt сохраняются локально,
+answer.txt добавляется в библиотеку отдельным snapshot.
+
+Настройте OPENAI_API_KEY в окружении процесса на своём ПК. Не присылайте ключ
+в чат и не записывайте в repo, TXT, ZIP, workflow или .cmd. Приложение его не хранит.
+Запуск из PowerShell с вводом ключа без отображения:
+$sceKey = Read-Host 'OpenAI API key' -AsSecureString
+$scePtr = [Runtime.InteropServices.Marshal]::SecureStringToBSTR($sceKey)
+try {
+  $env:OPENAI_API_KEY = [Runtime.InteropServices.Marshal]::PtrToStringBSTR($scePtr)
+  py -3 appdesktop.py
+} finally {
+  [Runtime.InteropServices.Marshal]::ZeroFreeBSTR($scePtr)
+  Remove-Item Env:OPENAI_API_KEY -ErrorAction SilentlyContinue
+}
+
+CLI:
+py -3 appopenai_adapter.py --file "C:Contextcontext_00001.txt" --goal "Проверить код" --model "YOUR_AVAILABLE_MODEL_ID" --output "C:SCE-AI" --max-output-tokens 4000 --send
+
+store=false отключает сохранение Response для последующего API retrieval;
+это не обещание отсутствия всех provider logs/retention. truncation=disabled:
+переполнение окна должно быть ошибкой, а не молчаливым удалением контекста.
+Модель и output budget задаёт оператор. Фиксированного обещания цены нет.
+Реальный API, баланс аккаунта и доступность модели здесь NOT_RUN.
+Отправка использует API credentials; оплата/доступ определяются API аккаунтом.
+Не предполагать, что название подписки ChatGPT само разрешает API-запросы.
+
+РЕАЛЬНЫЕ ГРАНИЦЫ
+Это text request/response. Нет function calling, автономных library mutations,
+agent loop, tool execution, autosend всей библиотеки или автоматического retry.
+STOP во время HTTP не отменяет запрос у провайдера; timeout означает UNKNOWN.
+Одно сетевое ожидание до 180 секунд. UI остаётся в отдельном потоке, но закрытие
+после STOP ожидает завершения вызова. В production нужен cancellable transport.
+API input/response пока читаются в память; отправляйте подготовленные части.
+
+Следующий adapter: typed search/read/create_note/build_pack tools, version binding,
+tool result validation, request ledger, budget accounting и receipt. Терминал
+предоставляется отдельным executor; текст модели напрямую не запускается.
+
+Проверенная официальная документация:
+https://developers.openai.com/api/docs/guides/migrate-to-responses

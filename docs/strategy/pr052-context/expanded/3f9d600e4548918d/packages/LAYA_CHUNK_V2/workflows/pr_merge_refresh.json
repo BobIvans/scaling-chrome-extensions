@@ -1,0 +1,13 @@
+{
+  "id": "pr_merge_refresh",
+  "version": "2.0",
+  "trigger": "event_or_manual",
+  "steps": [
+    "snapshot_repo",
+    "incremental_reindex",
+    "link_pr",
+    "close_tasks",
+    "invalidate_old_packs",
+    "refresh_truth"
+  ]
+}

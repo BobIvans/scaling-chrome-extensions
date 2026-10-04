@@ -1,0 +1,164 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposed:backup_manifest:1",
+  "title": "Proposed backup_manifest v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "namespace": {
+      "type": "string",
+      "minLength": 1
+    },
+    "backup_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "data_schema_version": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "build_compatibility_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "db_artifact": {
+      "type": "object",
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 9007199254740991
+        }
+      },
+      "required": [
+        "path",
+        "sha256",
+        "bytes"
+      ],
+      "additionalProperties": false
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "object_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "object_id",
+          "path",
+          "sha256",
+          "bytes"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "event_applied_watermark": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "source_heads_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "relations_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "tombstone_epoch": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "derivation_policy": {
+      "type": "string",
+      "enum": [
+        "REBUILD",
+        "PRESERVE_VERIFIED"
+      ]
+    },
+    "encryption_profile_state": {
+      "type": "string",
+      "enum": [
+        "NONE_EXPLICIT",
+        "OPEN_NOT_QUALIFIED",
+        "QUALIFIED_EXTERNAL_PROFILE"
+      ]
+    },
+    "credential_material_included": {
+      "type": "boolean",
+      "enum": [
+        false
+      ]
+    },
+    "auto_dispatch_after_restore": {
+      "type": "boolean",
+      "enum": [
+        false
+      ]
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "STAGED",
+        "VERIFIED_COMPLETE"
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "namespace",
+    "backup_id",
+    "generation_id",
+    "data_schema_version",
+    "build_compatibility_ref",
+    "db_artifact",
+    "objects",
+    "event_applied_watermark",
+    "source_heads_digest",
+    "relations_digest",
+    "tombstone_epoch",
+    "derivation_policy",
+    "encryption_profile_state",
+    "credential_material_included",
+    "auto_dispatch_after_restore",
+    "state"
+  ],
+  "additionalProperties": false
+}

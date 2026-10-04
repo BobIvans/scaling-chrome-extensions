@@ -1,0 +1,2109 @@
+{
+  "schema": "proposed.workflow-ir.v2",
+  "language": "ru",
+  "count": 10,
+  "executable": false,
+  "laya_native_import": false,
+  "authorization_this_package": "local_prototype_and_documents_only; no external send, PR merge, live trade, installation or scheduled campaign executed",
+  "adapter_requirement": "Runtime executor is existing SCE Core; Laya is optional bounded router, not archive/chunking engine. Each capability requires audited exact command/API binding, scope and independent verifier.",
+  "global_invariants": [
+    "Existing matching grants apply without unnecessary repeat approval.",
+    "Unknown commands and new scopes cannot self-authorize.",
+    "Retrieved content and AIResult are data, not authority.",
+    "Any external effect with unknown outcome is reconciled before retry.",
+    "STOP prevents new dispatch and records outcomes of already-started effects.",
+    "Snapshot/contract/policy drift invalidates affected preconditions.",
+    "DAG completion requires observable criteria, not model success text."
+  ],
+  "workflows": [
+    {
+      "id": "WFV2-01",
+      "title": "Полный repo → связанные chunks → локальный export",
+      "trigger": "Кнопка «Разобрать весь репозиторий» либо разрешённая текстовая команда",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-002",
+        "V2-003",
+        "V2-005",
+        "V2-006",
+        "V2-007",
+        "V2-008",
+        "V2-011",
+        "V2-012",
+        "V2-013"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "scope",
+          "capability_id": "repo.snapshot_scope",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "repository_alias": "parameter",
+            "mode": "HEAD_or_explicit_overlay"
+          },
+          "outputs": [
+            "snapshot_id",
+            "scope_manifest"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Точный commit/profile/dirty origin закреплены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "inventory",
+          "capability_id": "repo.scan_continue",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "scope"
+          ],
+          "inputs": {
+            "snapshot": "scope.snapshot_id",
+            "cursor": "checkpoint_or_start"
+          },
+          "outputs": [
+            "inventory",
+            "coverage"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Каждый enumerated path имеет disposition; cursor достигает EOF.",
+          "failure_behavior": "pause_resume_with_remaining_paths",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "extract",
+          "capability_id": "repo.extract_static",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "inventory"
+          ],
+          "inputs": {
+            "entries": "inventory.inventory"
+          },
+          "outputs": [
+            "extractions",
+            "unresolved"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Raw hash сохранён; scanned source не выполнен.",
+          "failure_behavior": "retain_raw_and_mark_text_or_parse_error",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "graph",
+          "capability_id": "repo.graph_components",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "extract"
+          ],
+          "inputs": {
+            "extractions": "extract.extractions"
+          },
+          "outputs": [
+            "components",
+            "edges"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Python AST/SCC verified; unsupported edges помечены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "parts",
+          "capability_id": "repo.pack_related_chunks",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "graph"
+          ],
+          "inputs": {
+            "components": "graph.components",
+            "budget": "profile.chunk_budget"
+          },
+          "outputs": [
+            "parts",
+            "manifest"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Большие SCC имеют bridges; физические части не ограничивают corpus.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "verify",
+          "capability_id": "repo.verify_reconstruction",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "parts"
+          ],
+          "inputs": {
+            "manifest": "parts.manifest"
+          },
+          "outputs": [
+            "roundtrip_receipt"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Все разрешённые экспортируемые bytes восстанавливаются с исходными hashes.",
+          "failure_behavior": "mark_export_invalid",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "export",
+          "capability_id": "library.export_pack",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "verify"
+          ],
+          "inputs": {
+            "parts": "parts.parts",
+            "receipt": "verify.roundtrip_receipt"
+          },
+          "outputs": [
+            "archive",
+            "catalog_entry"
+          ],
+          "effect_profile": "local_file_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Архив, manifest и ссылки сохранены, external send не выполнялся.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Verified manifest доступен в UI и библиотеке.",
+        "Ошибки/exclusions остаются в coverage; COMPLETE scan не называется полным indexed coverage при наличии gaps."
+      ],
+      "remarks": [
+        "Продолжает существующий SCE cursor; 20 entries — размер одного запроса.",
+        "Первый runnable binding должен использовать существующего owner; portable chunker — reference implementation."
+      ]
+    },
+    {
+      "id": "WFV2-02",
+      "title": "Текстовая цель → проверяемый контекст для выбранного AI",
+      "trigger": "Поле цели и кнопка «Собрать контекст»",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-015",
+        "V2-016",
+        "V2-017",
+        "V2-018",
+        "V2-019",
+        "V2-020",
+        "V2-022"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "goal",
+          "capability_id": "goals.normalize",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "text": "user.original_text",
+            "target": "selected_project"
+          },
+          "outputs": [
+            "goal_request"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Original words сохранены; неизвестные constraints не выдуманы.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "retrieve",
+          "capability_id": "context.retrieve",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "goal"
+          ],
+          "inputs": {
+            "goal": "goal.goal_request",
+            "snapshot": "parameter.snapshot_id"
+          },
+          "outputs": [
+            "evidence",
+            "missing"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Refs привязаны к revisions; FTS/path/symbol/graph rationale сохранён.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "compile",
+          "capability_id": "context.compile",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "retrieve"
+          ],
+          "inputs": {
+            "goal": "goal.goal_request",
+            "sources": "retrieve.evidence",
+            "provider_profile": "parameter.provider_id"
+          },
+          "outputs": [
+            "context_pack"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Состав/omitted/missing/budget/continuation присутствуют.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "review",
+          "capability_id": "context.verify_coverage",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "compile"
+          ],
+          "inputs": {
+            "pack": "compile.context_pack"
+          },
+          "outputs": [
+            "coverage_receipt"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Каждое обязательное requirement имеет evidence либо явный blocker.",
+          "failure_behavior": "draft_with_missing_sources",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "save",
+          "capability_id": "library.save_handoff",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "review"
+          ],
+          "inputs": {
+            "pack": "compile.context_pack",
+            "receipt": "review.coverage_receipt"
+          },
+          "outputs": [
+            "prompt_file",
+            "attachments",
+            "handoff_id"
+          ],
+          "effect_profile": "local_file_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Файлы готовы для ручной передачи и индексированы.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Handoff имеет request ID, source SHA, критерии и шаблон AIResult.",
+        "Полный corpus остаётся локально; фактически передаваемый context имеет отдельное покрытие."
+      ],
+      "remarks": [
+        "Автоматическая отправка не является частью этого workflow.",
+        "Summary может дополнять pack, но не заменяет raw evidence."
+      ]
+    },
+    {
+      "id": "WFV2-03",
+      "title": "Импорт документа → extraction → автометки → поиск",
+      "trigger": "Добавить разрешённый файл в локальную библиотеку",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-004",
+        "V2-010",
+        "V2-011",
+        "V2-015",
+        "V2-016"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "ingest",
+          "capability_id": "library.ingest_blob",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "file": "user_selected_path",
+            "source_metadata": "parameter"
+          },
+          "outputs": [
+            "revision",
+            "blob_hash"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Полученные байты сохранены неизменно; duplicate bytes не плодят blob.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "extract",
+          "capability_id": "library.extract",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "ingest"
+          ],
+          "inputs": {
+            "revision": "ingest.revision"
+          },
+          "outputs": [
+            "projection",
+            "extraction_status"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Версия extractor и coverage присутствуют.",
+          "failure_behavior": "raw_retained_extraction_pending",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "labels",
+          "capability_id": "catalog.suggest_labels",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "extract"
+          ],
+          "inputs": {
+            "projection": "extract.projection"
+          },
+          "outputs": [
+            "label_proposals"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Автор/метод/основание и user-confirmed distinction сохраняются.",
+          "failure_behavior": "save_unlabeled_and_queue_review",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "goals",
+          "capability_id": "catalog.extract_goal_candidates",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "extract"
+          ],
+          "inputs": {
+            "projection": "extract.projection"
+          },
+          "outputs": [
+            "goal_candidates"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "AI suggestion не получает accepted-user-decision status.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "index",
+          "capability_id": "catalog.index_revision",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "labels",
+            "goals"
+          ],
+          "inputs": {
+            "revision": "ingest.revision",
+            "labels": "labels.label_proposals",
+            "goals": "goals.goal_candidates"
+          },
+          "outputs": [
+            "search_receipt"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Exact path/revision/spans открываются из результата.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Импортированный источник находится по пути/содержимому/меткам.",
+        "Unsupported extraction не означает потерю raw bytes."
+      ],
+      "remarks": [
+        "Классификатор может быть deterministic или выбранный AI adapter; внешняя обработка текста требует отдельный data-export grant.",
+        "Пользовательские метки не перезаписываются автопроцессом."
+      ]
+    },
+    {
+      "id": "WFV2-04",
+      "title": "Ручной AI handoff → ответ → независимая проверка",
+      "trigger": "Пользователь передаёт готовый пакет в выбранный AI и импортирует ответ",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-018",
+        "V2-019",
+        "V2-021",
+        "V2-024",
+        "V2-036"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "export",
+          "capability_id": "context.prepare_manual_handoff",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "pack_id": "parameter"
+          },
+          "outputs": [
+            "request_id",
+            "base_sha",
+            "attachments"
+          ],
+          "effect_profile": "local_file_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Пакет source-bound и имеет критерии.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "wait",
+          "capability_id": "human.external_exchange",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "export"
+          ],
+          "inputs": {
+            "request_id": "export.request_id"
+          },
+          "outputs": [
+            "returned_payload"
+          ],
+          "effect_profile": "no_programmatic_external_effect",
+          "required_grant": "none_manual_step",
+          "verifier": "Получение ответа не заявляется до фактического пользовательского импорта.",
+          "failure_behavior": "remain_waiting",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "import",
+          "capability_id": "review.import_typed_result",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "wait"
+          ],
+          "inputs": {
+            "payload": "wait.returned_payload",
+            "request_id": "export.request_id"
+          },
+          "outputs": [
+            "ai_result"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "ID/base/ref schema проверены; repeat import идемпотентен.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "criterion",
+          "capability_id": "review.verify_criteria",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "import"
+          ],
+          "inputs": {
+            "result": "import.ai_result",
+            "criteria": "export.request_id"
+          },
+          "outputs": [
+            "criterion_receipt"
+          ],
+          "effect_profile": "registered_local_audit",
+          "required_grant": "registered_audit_scope",
+          "verifier": "Claims и independently verified criteria различаются.",
+          "failure_behavior": "keep_unverified_criteria_open",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "next",
+          "capability_id": "context.make_next_request",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "criterion"
+          ],
+          "inputs": {
+            "receipt": "criterion.criterion_receipt"
+          },
+          "outputs": [
+            "next_context_or_completion"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Missing/stale/failed criteria дают конкретный next request.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Результат не закрывает finding по слову DONE.",
+        "Verified completion или конкретная открытая очередь следующего контекста сохранены."
+      ],
+      "remarks": [
+        "human.external_exchange является описанием ручного шага, не автоотправкой.",
+        "Существующий Core запускает только заранее зарегистрированный audit."
+      ]
+    },
+    {
+      "id": "WFV2-05",
+      "title": "Разрешённый Grok Build headless → связанный результат",
+      "trigger": "Пользователь выбирает подключённый Grok Build adapter",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-022",
+        "V2-024",
+        "V2-025",
+        "V2-028",
+        "V2-035",
+        "V2-036"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "preflight",
+          "capability_id": "provider.grok_build_preflight",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "adapter": "installed_version_binding",
+            "grant": "parameter.grant_id"
+          },
+          "outputs": [
+            "adapter_receipt"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Проверены CLI version/auth/schema/cwd/scope; документация не считается runtime receipt.",
+          "failure_behavior": "offer_manual_handoff",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "pack",
+          "capability_id": "context.compile",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "preflight"
+          ],
+          "inputs": {
+            "goal": "parameter.goal_request",
+            "snapshot": "parameter.snapshot_id"
+          },
+          "outputs": [
+            "context_pack"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Запрос привязан к exact source SHA и handoff hash.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "dispatch",
+          "capability_id": "provider.grok_build_dispatch",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "pack"
+          ],
+          "inputs": {
+            "pack": "pack.context_pack",
+            "binding": "preflight.adapter_receipt"
+          },
+          "outputs": [
+            "stream_id",
+            "operation_receipt"
+          ],
+          "effect_profile": "external_ai_request_and_bound_worktree_effects",
+          "required_grant": "grok_build_request_and_worktree_scope",
+          "verifier": "Фактический запуск/stream ID записан; exact argv приходит из registry.",
+          "failure_behavior": "unknown_then_reconcile",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "collect",
+          "capability_id": "provider.collect_bound_result",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "dispatch"
+          ],
+          "inputs": {
+            "stream": "dispatch.stream_id"
+          },
+          "outputs": [
+            "ai_result",
+            "patch_artifacts"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Streaming schema и terminal state проверены; late events связаны с operation ID.",
+          "failure_behavior": "partial_result_with_unknown_state",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "verify",
+          "capability_id": "review.verify_criteria",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "collect"
+          ],
+          "inputs": {
+            "result": "collect.ai_result"
+          },
+          "outputs": [
+            "criterion_receipt"
+          ],
+          "effect_profile": "registered_local_audit",
+          "required_grant": "registered_audit_scope",
+          "verifier": "Patch/tests/claims проверяются независимо по принятому scope.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Сохранён AIResult с source SHA, artifacts и criterion states.",
+        "Timeout/неполный stream не считаются success."
+      ],
+      "remarks": [
+        "Официально описаны grok -p, streaming-json и ACP; точный executable binding определяется установленной версией.",
+        "Это не generic send-to-any-chat и не доказательство настроенного UI-контроля."
+      ]
+    },
+    {
+      "id": "WFV2-06",
+      "title": "Новая возможность → проверенный PR → release → установленная capability",
+      "trigger": "Подтверждённый capability gap и действующие раздельные grants для выбранных этапов",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-024",
+        "V2-025",
+        "V2-036",
+        "V2-037",
+        "V2-038",
+        "V2-039",
+        "V2-040",
+        "V2-041"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "patch",
+          "capability_id": "code.prepare_bound_patch",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "goal": "parameter.goal",
+            "base_sha": "parameter.snapshot_id"
+          },
+          "outputs": [
+            "patch_bundle"
+          ],
+          "effect_profile": "isolated_worktree_write",
+          "required_grant": "code_edit_scope",
+          "verifier": "Diff, scope и evidence связаны с точным base SHA.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "audit",
+          "capability_id": "review.verify_criteria",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "patch"
+          ],
+          "inputs": {
+            "bundle": "patch.patch_bundle"
+          },
+          "outputs": [
+            "checks_receipt"
+          ],
+          "effect_profile": "registered_local_audit",
+          "required_grant": "registered_audit_scope",
+          "verifier": "Зарегистрированные проверки выполнены и artifacts сохранены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "pr",
+          "capability_id": "github.submit_or_bind_pr",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "audit"
+          ],
+          "inputs": {
+            "bundle": "patch.patch_bundle",
+            "checks": "audit.checks_receipt"
+          },
+          "outputs": [
+            "pr_identity"
+          ],
+          "effect_profile": "external_pr_write_if_authorized",
+          "required_grant": "specific_repo_pr_write_scope",
+          "verifier": "Точный repo/PR/base/head записан; публикация только при matching grant.",
+          "failure_behavior": "retain_reviewable_bundle",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "merge_verify",
+          "capability_id": "github.poll_exact_merge",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "pr"
+          ],
+          "inputs": {
+            "pr": "pr.pr_identity",
+            "policy": "required_checks_and_expected_head"
+          },
+          "outputs": [
+            "merge_receipt"
+          ],
+          "effect_profile": "external_read",
+          "required_grant": "specific_repo_read_scope",
+          "verifier": "merged/base/head/commit/checks и merge-method mapping проверены через GitHub.",
+          "failure_behavior": "pending_unknown_or_blocked",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "release",
+          "capability_id": "release.verify_provenance",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "merge_verify"
+          ],
+          "inputs": {
+            "merge": "merge_verify.merge_receipt"
+          },
+          "outputs": [
+            "release_manifest"
+          ],
+          "effect_profile": "external_read_and_local_download",
+          "required_grant": "trusted_release_download_scope",
+          "verifier": "Source commit, asset hash, signature/provenance policy и trusted channel соответствуют.",
+          "failure_behavior": "quarantine_unverified_release",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "stage",
+          "capability_id": "update.stage_and_test",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "release"
+          ],
+          "inputs": {
+            "release": "release.release_manifest"
+          },
+          "outputs": [
+            "stage_receipt",
+            "backup_id"
+          ],
+          "effect_profile": "local_staging_write",
+          "required_grant": "app_update_staging_scope",
+          "verifier": "Backup verified; migration on copy и smoke test прошли.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "install",
+          "capability_id": "update.activate",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "stage"
+          ],
+          "inputs": {
+            "stage": "stage.stage_receipt"
+          },
+          "outputs": [
+            "installed_receipt"
+          ],
+          "effect_profile": "local_app_update",
+          "required_grant": "app_update_scope",
+          "verifier": "Активная version и health наблюдаются; data compatibility проверена.",
+          "failure_behavior": "rollback_or_documented_recovery",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "capability",
+          "capability_id": "registry.verify_installed_capability",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "install"
+          ],
+          "inputs": {
+            "release": "release.release_manifest",
+            "install": "install.installed_receipt"
+          },
+          "outputs": [
+            "capability_receipt"
+          ],
+          "effect_profile": "registered_local_audit",
+          "required_grant": "capability_qualification_scope",
+          "verifier": "Actual installed capability проходит verifier; новые scopes не получены автоматически.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "merge_verified, release_verified, installed и capability_verified представлены раздельно.",
+        "Исходный goal закрывается только по установленному наблюдаемому эффекту."
+      ],
+      "remarks": [
+        "В DAG нет автоматического merge action: poll ждёт фактический merge, выполненный отдельным разрешённым процессом.",
+        "Голос «уже merged» и текст AI лишь инициируют проверку.",
+        "Если пользователь заранее дал совместимые grants, повторные вопросы на неизменные шаги не нужны; новые scopes не самовыдаются."
+      ]
+    },
+    {
+      "id": "WFV2-07",
+      "title": "Голос/текст → разрешённое действие конкретного приложения ПК",
+      "trigger": "Push-to-talk или текстовое поле",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-017",
+        "V2-024",
+        "V2-025",
+        "V2-026",
+        "V2-027",
+        "V2-028",
+        "V2-030",
+        "V2-031",
+        "V2-032",
+        "V2-033"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "intent",
+          "capability_id": "input.normalize_goal",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "text_or_transcript": "user_input"
+          },
+          "outputs": [
+            "goal_request"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Original words и corrected transcript сохранены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "route",
+          "capability_id": "router.classify_capability",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "intent"
+          ],
+          "inputs": {
+            "compact_goal": "intent.goal_request",
+            "candidates": "registry.bounded_shortlist"
+          },
+          "outputs": [
+            "candidate_id"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Laya/rules output проходит schema; abstain допустим.",
+          "failure_behavior": "offer_target_clarification",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "plan",
+          "capability_id": "workflow.validate_bind",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "route"
+          ],
+          "inputs": {
+            "candidate": "route.candidate_id",
+            "goal": "intent.goal_request"
+          },
+          "outputs": [
+            "bound_plan"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "DAG/capabilities/targets/inputs проверены; unknown command не исполняется.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "grant",
+          "capability_id": "policy.check_existing_grant",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "plan"
+          ],
+          "inputs": {
+            "plan": "plan.bound_plan",
+            "grant": "parameter.grant_id"
+          },
+          "outputs": [
+            "authorization_receipt"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Существующий grant покрывает effects/targets; без ненужного повторного вопроса.",
+          "failure_behavior": "report_specific_scope_gap",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "execute",
+          "capability_id": "desktop.execute_bound_action",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "grant"
+          ],
+          "inputs": {
+            "plan": "plan.bound_plan",
+            "authorization": "grant.authorization_receipt"
+          },
+          "outputs": [
+            "action_receipt"
+          ],
+          "effect_profile": "specific_desktop_effect",
+          "required_grant": "specific_app_action_scope",
+          "verifier": "App/window/focus проверены до ввода; STOP применён.",
+          "failure_behavior": "stop_and_reconcile_possible_effect",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "verify",
+          "capability_id": "desktop.verify_observed_outcome",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "execute"
+          ],
+          "inputs": {
+            "receipt": "execute.action_receipt"
+          },
+          "outputs": [
+            "outcome_receipt"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Actual target state подтверждён независимо от модели.",
+          "failure_behavior": "unknown_if_effect_cannot_be_observed",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "report",
+          "capability_id": "ui.accessible_result",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "verify"
+          ],
+          "inputs": {
+            "outcome": "verify.outcome_receipt"
+          },
+          "outputs": [
+            "user_visible_status"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Результат/ошибка доступны текстом/screen reader; voice output opt-in.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Либо observed outcome, либо явная причина невозможности.",
+        "Неподдерживаемое действие создаёт capability-gap task."
+      ],
+      "remarks": [
+        "Глобальный STOP вне DAG может остановить dispatch любого шага.",
+        "Имена незарегистрированных возможностей и retrieved content не имеют action authority."
+      ]
+    },
+    {
+      "id": "WFV2-08",
+      "title": "Read-only данные → replay/qualification → R&D отчёт",
+      "trigger": "Сохранённая кампания или ручной старт конкретного профиля",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-024",
+        "V2-025",
+        "V2-028",
+        "V2-042",
+        "V2-043",
+        "V2-044",
+        "V2-045",
+        "V2-046"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "preflight",
+          "capability_id": "campaign.validate_profile",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "campaign": "parameter.campaign_id",
+            "grant": "parameter.grant_id"
+          },
+          "outputs": [
+            "campaign_snapshot"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Точные capabilities, budget, data freshness и sender-free policy проверены.",
+          "failure_behavior": "blocked_profile_with_missing_fields",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "collect",
+          "capability_id": "data.collect_registered",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "preflight"
+          ],
+          "inputs": {
+            "sources": "preflight.campaign_snapshot.sources"
+          },
+          "outputs": [
+            "dataset_manifest"
+          ],
+          "effect_profile": "external_read_and_local_store",
+          "required_grant": "specific_sources_read_scope",
+          "verifier": "Время источника/получения, schema, gaps, hashes сохранены.",
+          "failure_behavior": "partial_dataset_with_gap_report",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "qualify",
+          "capability_id": "repo.run_registered_qualification",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "collect"
+          ],
+          "inputs": {
+            "dataset": "collect.dataset_manifest",
+            "profile": "preflight.campaign_snapshot"
+          },
+          "outputs": [
+            "qualification_artifacts"
+          ],
+          "effect_profile": "registered_sender_free_compute",
+          "required_grant": "specific_qualification_scope",
+          "verifier": "Exact command/version/profile; sender-free contract; expected metrics и completion predicate проверены.",
+          "failure_behavior": "failed_or_blocked_qualification",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "review",
+          "capability_id": "campaign.verify_outcomes",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "qualify"
+          ],
+          "inputs": {
+            "artifacts": "qualify.qualification_artifacts"
+          },
+          "outputs": [
+            "qualification_receipt"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Claims не подменяют actual tests/data coverage; cost assumptions явны.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "rnd",
+          "capability_id": "context.build_gap_brief",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "review"
+          ],
+          "inputs": {
+            "receipt": "review.qualification_receipt"
+          },
+          "outputs": [
+            "next_rnd_pack"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Следующие задачи происходят из evidence и имеют acceptance/dependencies.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "schedule",
+          "capability_id": "campaign.checkpoint_next_due",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "rnd"
+          ],
+          "inputs": {
+            "actual_intervals": "observed_runtime",
+            "budget": "remaining_budget"
+          },
+          "outputs": [
+            "campaign_checkpoint"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Timezone/offline/skipped/actual time сохранены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Получены воспроизводимые artifacts и следующий конкретный research gap.",
+        "Нет wallet/sender/live transition из общей фразы «все возможности»."
+      ],
+      "remarks": [
+        "Запуск всех файлов repo исключён: выбран лишь capability set кампании.",
+        "Windows sleep/offline учитываются; расписание не доказывает непрерывные 24h наблюдения."
+      ]
+    },
+    {
+      "id": "WFV2-09",
+      "title": "Изменился repo → пересчитать затронутый контекст и навыки",
+      "trigger": "Новый локальный commit/изменение либо подтверждённое GitHub событие",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-009",
+        "V2-016",
+        "V2-018",
+        "V2-019",
+        "V2-038",
+        "V2-048"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "snapshot",
+          "capability_id": "repo.capture_current_snapshot",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "repo": "parameter.project_id"
+          },
+          "outputs": [
+            "new_snapshot"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "HEAD/working-tree origin закреплены; event — trigger, не source proof.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "delta",
+          "capability_id": "repo.diff_snapshots",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "snapshot"
+          ],
+          "inputs": {
+            "old": "parameter.previous_snapshot",
+            "new": "snapshot.new_snapshot"
+          },
+          "outputs": [
+            "delta"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Add/edit/delete/inferred rename и affected refs имеют evidence.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "invalidate",
+          "capability_id": "catalog.invalidate_derived",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "delta"
+          ],
+          "inputs": {
+            "delta": "delta.delta"
+          },
+          "outputs": [
+            "stale_packs",
+            "stale_skills"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Затронутые summaries/packs/bindings/skills помечены stale; прошлые versions не удалены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "rebuild",
+          "capability_id": "context.rebuild_changed",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "invalidate"
+          ],
+          "inputs": {
+            "delta": "delta.delta",
+            "packs": "invalidate.stale_packs"
+          },
+          "outputs": [
+            "updated_packs"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Переиспользуются unchanged blobs; bridges/dependencies проверены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "verify",
+          "capability_id": "context.verify_coverage",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "rebuild"
+          ],
+          "inputs": {
+            "packs": "rebuild.updated_packs"
+          },
+          "outputs": [
+            "new_receipts"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Refs/budgets/omissions актуальны; неизвестные edges не скрыты.",
+          "failure_behavior": "retain_stale_until_fixed",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Поиск/контекст не ссылаются молча на старую revision как на актуальную.",
+        "Skills с изменёнными preconditions требуют повторной квалификации."
+      ],
+      "remarks": [
+        "Полный rescan fallback при ненадёжном diff; не опускать tail files ради скорости."
+      ]
+    },
+    {
+      "id": "WFV2-10",
+      "title": "Успешная автоматизация → проверенный повторяемый навык",
+      "trigger": "Накоплена verified execution receipt и повторяемый пользовательский сценарий",
+      "status": "proposed_not_executable",
+      "tasks": [
+        "V2-026",
+        "V2-029",
+        "V2-041",
+        "V2-045",
+        "V2-047",
+        "V2-048"
+      ],
+      "parameters": {
+        "project_id": "required",
+        "snapshot_id": "required_when_repo_bound",
+        "operation_id": "assigned_once",
+        "grant_id": "existing_matching_grant_or_local_profile",
+        "provider_id": "only_if_applicable"
+      },
+      "nodes": [
+        {
+          "id": "extract",
+          "capability_id": "skills.extract_candidate",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [],
+          "inputs": {
+            "receipt": "parameter.verified_receipt"
+          },
+          "outputs": [
+            "skill_candidate"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Параметры/effects/versions/evidence/grants и область применимости сохранены.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "fixtures",
+          "capability_id": "skills.select_heldout_cases",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "extract"
+          ],
+          "inputs": {
+            "candidate": "extract.skill_candidate"
+          },
+          "outputs": [
+            "qualification_plan"
+          ],
+          "effect_profile": "local_read",
+          "required_grant": "local_project_scope",
+          "verifier": "Новые cases/recovery cases отделены от исходного удачного примера.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "evaluate",
+          "capability_id": "skills.run_registered_qualification",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "fixtures"
+          ],
+          "inputs": {
+            "plan": "fixtures.qualification_plan"
+          },
+          "outputs": [
+            "skill_receipts"
+          ],
+          "effect_profile": "registered_test_effects",
+          "required_grant": "skill_qualification_scope",
+          "verifier": "Применяются зарегистрированные test adapters и допустимые grants.",
+          "failure_behavior": "retain_candidate_unpromoted",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "publish_local",
+          "capability_id": "skills.promote_local",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "evaluate"
+          ],
+          "inputs": {
+            "candidate": "extract.skill_candidate",
+            "receipts": "evaluate.skill_receipts"
+          },
+          "outputs": [
+            "versioned_skill"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Все required criteria verified; validity/invalidation policy присутствует.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        },
+        {
+          "id": "defer",
+          "capability_id": "goals.update_deferred_register",
+          "capability_binding": {
+            "status": "unbound_proposal",
+            "registry_version": null,
+            "exact_argv": null,
+            "cwd_profile": null,
+            "parameter_schema": null,
+            "note": "Заполняется только после текущего audit/registration; строка capability_id не является shell-командой."
+          },
+          "depends_on": [
+            "publish_local"
+          ],
+          "inputs": {
+            "new_skill": "publish_local.versioned_skill"
+          },
+          "outputs": [
+            "updated_roadmap"
+          ],
+          "effect_profile": "local_store_write",
+          "required_grant": "local_project_scope",
+          "verifier": "Зависимые задачи разблокированы, остальные идеи сохранены с return conditions.",
+          "failure_behavior": "stop_and_record",
+          "retry": {
+            "policy": "only_when_idempotent_or_effect_absence_verified",
+            "operation_id": "stable_for_same_logical_operation"
+          },
+          "checkpoint": "persist_inputs_outputs_and_observed_state"
+        }
+      ],
+      "success_criteria": [
+        "Навык доступен локально с конкретной областью и проверками.",
+        "Новые scopes не наследуются из факта promotion."
+      ],
+      "remarks": [
+        "Публичная публикация/marketplace не входят в workflow.",
+        "Negative runs и failure capsules сохраняются вместе с успехами."
+      ]
+    }
+  ]
+}

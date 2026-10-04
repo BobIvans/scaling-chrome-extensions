@@ -1,0 +1,33 @@
+PR-010+011 — одна библиотека источников и один проверяемый граф кода
+Репозиторий: https://github.com/BobIvans/scaling-chrome-extensions
+Canonical package ID: ROADMAP-PR-010-011. Это один целевой implementation PR.
+Номера ROADMAP-PR-010 и ROADMAP-PR-011 сохранены как aliases; отдельный №011 повторно не выполнять.
+
+Результат для пользователя: импортировать выбранные файлы/папки/архивы и наблюдаемые
+чаты, сохранить оригиналы, найти точный фрагмент нужной версии, исправить метки,
+связать свои цели с Python/JS/TS-кодом, tests/contracts/owners и видеть подтверждённые
+результаты отдельно от планов. Большой репозиторий обрабатывается порциями до конца;
+количество files/docs/pages/groups не ограничивается случайным общим числом 20.
+
+Читайте в порядке:
+1. 01_IMPLEMENTATION_RU.md — полное задание, данные, алгоритмы, migration и recovery.
+2. 02_FUNCTIONS_AND_USER_SCENARIOS_RU.md — конкретные функции и пользовательские вертикали.
+3. plan/PR_PLAN.json, plan/WORKSTREAMS.json, plan/COMMIT_SEQUENCE.json.
+4. contracts/, acceptance/, coverage/CRITERION_COVERAGE.json.
+5. EXECUTE_THIS_PR_RU.txt — готовая передача coding-чату.
+
+ZIP — спецификация реализации и corpus, а не уже внесённый код/merge.
+Actual HEAD/CI/device tests этим чатом не проверялись; все runtime outcomes NOT_RUN.
+Исторические snapshots сохранены с датой/областью. Не выдавать их за current main.
+Прочитать актуальный AGENTS/код до изменения, переиспользовать canonical SQLite/Core.
+Все шесть WS обязательны. Внутренние commits не являются шестью новыми roadmap PR.
+
+Полный backlog 160 tasks/164 features/28 goals/24 decisions сохранён в sources и
+original roadmap ZIP. Master ZIP содержит гораздо более широкий исторический raw
+архив; здесь сохранены его strategy_v5, все 164 original feature cards и digest
+исходного ZIP, но не продублированы сотни мегабайт всех исторических payloads.
+Для исследования всей старой истории приложите также исходный master ZIP.
+
+Проверка комплекта: python verification/validate_package.py
+Генерация большого corpus: python fixtures/generate_scale.py --output /chosen/fixture-dir --count 100000
+Эти команды проверяют/создают материалы задания. Они не проверяют приложение.

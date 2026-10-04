@@ -1,0 +1,1825 @@
+{
+  "original_dag": {
+    "note": "Package integration readiness. Internal WS dependencies and original task DAG remain authoritative for criterion closure. Past inputs #5–9 must be checked against actual implementation.",
+    "waves": [
+      [
+        10,
+        11
+      ],
+      [
+        12,
+        13
+      ],
+      [
+        14
+      ],
+      [
+        15
+      ],
+      [
+        16
+      ],
+      [
+        17
+      ],
+      [
+        18
+      ],
+      [
+        19
+      ],
+      [
+        20
+      ],
+      [
+        21
+      ]
+    ],
+    "nodes": [
+      {
+        "number": 10,
+        "requires": [
+          5,
+          9
+        ]
+      },
+      {
+        "number": 11,
+        "requires": [
+          5,
+          6,
+          7
+        ]
+      },
+      {
+        "number": 12,
+        "requires": [
+          1,
+          2,
+          3,
+          4,
+          11
+        ]
+      },
+      {
+        "number": 13,
+        "requires": [
+          10
+        ]
+      },
+      {
+        "number": 14,
+        "requires": [
+          2,
+          3,
+          10,
+          11,
+          13
+        ]
+      },
+      {
+        "number": 15,
+        "requires": [
+          8,
+          9,
+          10,
+          12,
+          14
+        ]
+      },
+      {
+        "number": 16,
+        "requires": [
+          13,
+          14,
+          15
+        ]
+      },
+      {
+        "number": 17,
+        "requires": [
+          14,
+          15,
+          16
+        ]
+      },
+      {
+        "number": 18,
+        "requires": [
+          11,
+          12,
+          14,
+          15,
+          17
+        ]
+      },
+      {
+        "number": 19,
+        "requires": [
+          11,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18
+        ]
+      },
+      {
+        "number": 20,
+        "requires": [
+          13,
+          14,
+          15,
+          16,
+          19
+        ]
+      },
+      {
+        "number": 21,
+        "requires": [
+          10,
+          11,
+          12,
+          13,
+          14,
+          15,
+          16,
+          17,
+          18,
+          19,
+          20
+        ]
+      }
+    ]
+  },
+  "edges": [
+    {
+      "consumer": 10,
+      "prerequisite": 5,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 6,
+        "github_pr": 42,
+        "roadmap_packages": [
+          5
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR005: classify whole sources and expose complete format eligibility coverage",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/42",
+        "merged_at_utc": "2026-10-04T13:14:49Z",
+        "merged_at_riga": "2026-10-04T16:14:49+03:00",
+        "merge_sha": "e6af765dcb94e9462c6adf071a3df8421e141cc5",
+        "head_sha_at_snapshot": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 10,
+      "prerequisite": 9,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 5,
+        "github_pr": 44,
+        "roadmap_packages": [
+          9
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR009: preserve selected ChatGPT originals and complete node fidelity",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/44",
+        "merged_at_utc": "2026-10-04T12:51:12Z",
+        "merged_at_riga": "2026-10-04T15:51:12+03:00",
+        "merge_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+        "head_sha_at_snapshot": "8c40778b97c5eb58700d64fc4d34b835cb68a914",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 11,
+      "prerequisite": 5,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 6,
+        "github_pr": 42,
+        "roadmap_packages": [
+          5
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR005: classify whole sources and expose complete format eligibility coverage",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/42",
+        "merged_at_utc": "2026-10-04T13:14:49Z",
+        "merged_at_riga": "2026-10-04T16:14:49+03:00",
+        "merge_sha": "e6af765dcb94e9462c6adf071a3df8421e141cc5",
+        "head_sha_at_snapshot": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 11,
+      "prerequisite": 6,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 9,
+        "github_pr": 46,
+        "roadmap_packages": [
+          6
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR006: complete Python SCC groups and immutable source-part catalogs",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/46",
+        "merged_at_utc": "2026-10-04T14:31:11Z",
+        "merged_at_riga": "2026-10-04T17:31:11+03:00",
+        "merge_sha": "eb99d1c2cbc0faccf5eb7fb19b331c9bb9d5f80f",
+        "head_sha_at_snapshot": "a5043918767908cfab9722f577889b72e68e9b31",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 11,
+      "prerequisite": 7,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 8,
+        "github_pr": 43,
+        "roadmap_packages": [
+          7
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR007: verified JS/TS static relations from captured repository bytes",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/43",
+        "merged_at_utc": "2026-10-04T14:06:57Z",
+        "merged_at_riga": "2026-10-04T17:06:57+03:00",
+        "merge_sha": "b56ab2561975685fa5a315852a138a284a98e0d9",
+        "head_sha_at_snapshot": "3f252cbf5a647a60a784a74cb16b62f4a619d965",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 12,
+      "prerequisite": 1,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 1,
+        "github_pr": 38,
+        "roadmap_packages": [
+          1
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR001: stream whole repositories with durable scan controls",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/38",
+        "merged_at_utc": "2026-10-04T10:04:33Z",
+        "merged_at_riga": "2026-10-04T13:04:33+03:00",
+        "merge_sha": "426f60b077fbaecc8745fcd6f22c0626b3fefafb",
+        "head_sha_at_snapshot": "dc3debed118ce4d51f94c802697d867b429d9f24",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 12,
+      "prerequisite": 2,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 2,
+        "github_pr": 39,
+        "roadmap_packages": [
+          2
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-002: complete repository manifest and byte-range index on the full-scan controller",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/39",
+        "merged_at_utc": "2026-10-04T10:29:52Z",
+        "merged_at_riga": "2026-10-04T13:29:52+03:00",
+        "merge_sha": "57885d4ede3a6e3f7057ff7ad9171fe3d8b35348",
+        "head_sha_at_snapshot": "6ee2f4b38fdee8e2e6a70e9eddd0daefc40ac756",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 12,
+      "prerequisite": 3,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 3,
+        "github_pr": 40,
+        "roadmap_packages": [
+          3
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR003: verified full-context ZIP64 export with atomic resume",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/40",
+        "merged_at_utc": "2026-10-04T10:46:27Z",
+        "merged_at_riga": "2026-10-04T13:46:27+03:00",
+        "merge_sha": "3abd9e6b37d9a654ef96b03357b7f0a7301d85c2",
+        "head_sha_at_snapshot": "e1082a739a575688afe88f4190b6fe813bffadc8",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 12,
+      "prerequisite": 4,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 4,
+        "github_pr": 41,
+        "roadmap_packages": [
+          4
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR004: stage complete Git inventories with bounded memory and atomic publication",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/41",
+        "merged_at_utc": "2026-10-04T11:32:08Z",
+        "merged_at_riga": "2026-10-04T14:32:08+03:00",
+        "merge_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
+        "head_sha_at_snapshot": "dc9f89e72cf547047de3345affb168c46caebb1a",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 12,
+      "prerequisite": 11,
+      "chronology": "NO_DEDICATED_PR_MERGE_FOR_UPSTREAM",
+      "consumer_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 13,
+      "prerequisite": 10,
+      "chronology": "NO_DEDICATED_PR_MERGE_FOR_UPSTREAM",
+      "consumer_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 14,
+      "prerequisite": 2,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 2,
+        "github_pr": 39,
+        "roadmap_packages": [
+          2
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-002: complete repository manifest and byte-range index on the full-scan controller",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/39",
+        "merged_at_utc": "2026-10-04T10:29:52Z",
+        "merged_at_riga": "2026-10-04T13:29:52+03:00",
+        "merge_sha": "57885d4ede3a6e3f7057ff7ad9171fe3d8b35348",
+        "head_sha_at_snapshot": "6ee2f4b38fdee8e2e6a70e9eddd0daefc40ac756",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 14,
+      "prerequisite": 3,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 3,
+        "github_pr": 40,
+        "roadmap_packages": [
+          3
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR003: verified full-context ZIP64 export with atomic resume",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/40",
+        "merged_at_utc": "2026-10-04T10:46:27Z",
+        "merged_at_riga": "2026-10-04T13:46:27+03:00",
+        "merge_sha": "3abd9e6b37d9a654ef96b03357b7f0a7301d85c2",
+        "head_sha_at_snapshot": "e1082a739a575688afe88f4190b6fe813bffadc8",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 14,
+      "prerequisite": 10,
+      "chronology": "NO_DEDICATED_PR_MERGE_FOR_UPSTREAM",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 14,
+      "prerequisite": 11,
+      "chronology": "NO_DEDICATED_PR_MERGE_FOR_UPSTREAM",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 14,
+      "prerequisite": 13,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 15,
+      "prerequisite": 8,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 7,
+        "github_pr": 45,
+        "roadmap_packages": [
+          8
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-008: Desktop stdio, Windows shell and uncapped manifest export",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/45",
+        "merged_at_utc": "2026-10-04T13:44:34Z",
+        "merged_at_riga": "2026-10-04T16:44:34+03:00",
+        "merge_sha": "1a528efc08f581195375668a5f17f71454ad515b",
+        "head_sha_at_snapshot": "4e59159c754233734adfcac1ce1baa1076ae8891",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 15,
+      "prerequisite": 9,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 5,
+        "github_pr": 44,
+        "roadmap_packages": [
+          9
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR009: preserve selected ChatGPT originals and complete node fidelity",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/44",
+        "merged_at_utc": "2026-10-04T12:51:12Z",
+        "merged_at_riga": "2026-10-04T15:51:12+03:00",
+        "merge_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+        "head_sha_at_snapshot": "8c40778b97c5eb58700d64fc4d34b835cb68a914",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 15,
+      "prerequisite": 10,
+      "chronology": "NO_DEDICATED_PR_MERGE_FOR_UPSTREAM",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 15,
+      "prerequisite": 12,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 15,
+      "prerequisite": 14,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 16,
+      "prerequisite": 13,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 16,
+      "prerequisite": 14,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 16,
+      "prerequisite": 15,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 17,
+      "prerequisite": 14,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 17,
+      "prerequisite": 15,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 17,
+      "prerequisite": 16,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 18,
+      "prerequisite": 11,
+      "chronology": "NO_DEDICATED_PR_MERGE_FOR_UPSTREAM",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 18,
+      "prerequisite": 12,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 18,
+      "prerequisite": 14,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_LATER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 18,
+      "prerequisite": 15,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_LATER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 18,
+      "prerequisite": 17,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_LATER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 19,
+      "prerequisite": 11,
+      "chronology": "NO_DEDICATED_PR_MERGE_FOR_UPSTREAM",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 19,
+      "prerequisite": 13,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 19,
+      "prerequisite": 14,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_LATER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 19,
+      "prerequisite": 15,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_LATER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 19,
+      "prerequisite": 16,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_LATER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 19,
+      "prerequisite": 17,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_LATER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 19,
+      "prerequisite": 18,
+      "chronology": "UPSTREAM_FIRST_SLICE_MERGED_EARLIER",
+      "consumer_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "upstream_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 20,
+      "prerequisite": 13,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 20,
+      "prerequisite": 14,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 20,
+      "prerequisite": 15,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 20,
+      "prerequisite": 16,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 20,
+      "prerequisite": 19,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 10,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 11,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 12,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 13,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 10,
+        "github_pr": 47,
+        "roadmap_packages": [
+          12,
+          13
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Draft PR012+013: bounded repository history and delta pages",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+        "merged_at_utc": "2026-10-04T15:27:18Z",
+        "merged_at_riga": "2026-10-04T18:27:18+03:00",
+        "merge_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+        "head_sha_at_snapshot": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 14,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 15,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 12,
+        "github_pr": 50,
+        "roadmap_packages": [
+          14,
+          15
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/50",
+        "merged_at_utc": "2026-10-04T16:21:37Z",
+        "merged_at_riga": "2026-10-04T19:21:37+03:00",
+        "merge_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+        "head_sha_at_snapshot": "579a670d7770cca751c492492479b679d7ad3fce",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 16,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 17,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 14,
+        "github_pr": 49,
+        "roadmap_packages": [
+          16,
+          17
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+        "merged_at_utc": "2026-10-04T17:49:14Z",
+        "merged_at_riga": "2026-10-04T20:49:14+03:00",
+        "merge_sha": "eda82b4a1a54bd0fa5c859c246c004edbbb4a882",
+        "head_sha_at_snapshot": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 18,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 19,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": {
+        "order": 11,
+        "github_pr": 48,
+        "roadmap_packages": [
+          18,
+          19
+        ],
+        "type": "IMPLEMENTATION_SLICE",
+        "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+        "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/48",
+        "merged_at_utc": "2026-10-04T15:55:34Z",
+        "merged_at_riga": "2026-10-04T18:55:34+03:00",
+        "merge_sha": "d897598af6064d174bcd0df73f8b00cc79a4490e",
+        "head_sha_at_snapshot": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b",
+        "ancestor_of_observed_main": true
+      },
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    },
+    {
+      "consumer": 21,
+      "prerequisite": 20,
+      "chronology": "NO_CONSUMER_MERGE",
+      "consumer_first_merge": null,
+      "upstream_first_merge": null,
+      "full_contract_acceptance": "NOT_PROVEN_FROM_TIMESTAMPS",
+      "interpretation": "Chronology diagnostic only; consumer can ship a partial or disabled slice while full acceptance remains open."
+    }
+  ]
+}

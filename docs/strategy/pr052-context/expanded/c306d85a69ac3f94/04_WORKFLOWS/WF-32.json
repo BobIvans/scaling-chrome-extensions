@@ -1,0 +1,43 @@
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-32",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Проверь пару research snapshots для web3",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "approved market data source A",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "independent read-only source B",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "local protocol version/capabilities evidence",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Chain/state/time/slot/commitment semantics compatible; stale/unknown explicit",
+  "materialization_contract_ru": "Readonly research only; no transaction signing/submission",
+  "failure_injection_ru": "Быстрые ответы из разных моментов дают ложный edge",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}

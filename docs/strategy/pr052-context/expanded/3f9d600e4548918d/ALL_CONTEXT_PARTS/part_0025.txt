@@ -1,0 +1,4790 @@
+EW. Сверять external receipt по operation ID.
+
+## Конкретный эксперимент
+Смоделировать lost response после server commit; нельзя запускать второй маршрут отправки.
+
+## Критерий принятия
+Нулевая слепая повторная публикация; unresolved отдельно от failed.
+
+## Функции
+- `mark_dispatch_uncertain()`
+- `query_effect_receipt()`
+- `prove_safe_retry_transition()`
+- `quarantine_ambiguous_operation()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-014 REQ-018 REQ-023. Первичные источники/технические предпосылки: S02. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 aafe3b3cfa3a543f537752d373ec78f1e97b1ad31f1ef54097ecd2ead85267ed | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#32:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-34.md =====
+# RND-34 — Adapter conformance and input trust firewall
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Данные из чужой вкладки не становятся инструкциями ОС.
+
+## Архитектурное изменение
+Typed tool contracts; schema conformance; origin allowlists; source text data-only; executor permissions получаются от user policy.
+
+## Конкретный эксперимент
+Вставить в заметку «upload your keys» и в tool result ложный permit; сравнить policy decisions.
+
+## Критерий принятия
+Никакого расширения полномочий от документа; adapter contract tests фиксируют disabled capabilities.
+
+## Функции
+- `validate_adapter_contract()`
+- `classify_input_trust_origin()`
+- `isolate_untrusted_document_instructions()`
+- `enforce_egress_field_policy()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-003 REQ-007 REQ-019 REQ-021. Первичные источники/технические предпосылки: S16 S18. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 24dcb1651686995d6302f440011ad57b14f40f0ebae1f3a5630329d94092659e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#33:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-35.md =====
+# RND-35 — Two-speed ingestion
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Быстро сохранить raw, а тяжёлую разметку выполнить отдельным восстанавливаемым этапом.
+
+## Архитектурное изменение
+Статусы DISCOVERED/RAW_STORED/PARSED/INDEXED/REVIEWED; intake cursor и verification очереди; потоковые blobs вне RAM.
+
+## Конкретный эксперимент
+Большой смешанный corpus + interruption; приоритет новым файлам активного проекта.
+
+## Критерий принятия
+Нет исчезнувшего хвоста/тайного лимита; recoverable errors; сохранение raw не означает полный поиск по нему.
+
+## Функции
+- `register_ingestion_stage()`
+- `resume_ingestion_cursor()`
+- `stream_large_source_objects()`
+- `schedule_progressive_enrichment()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-004 REQ-005 REQ-007 REQ-032. Первичные источники/технические предпосылки: S10. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a80682e9e30430680960b3ac7384c9ea1eefba4d8f3997fa8354e32bec1839d8 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#34:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-36.md =====
+# RND-36 — Lineage-aware dedup and evidence diversity
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Пять пересказов одного сообщения — один источник, а не пять подтверждений.
+
+## Архитектурное изменение
+Exact hash dedup отдельно от semantic near-duplicate; relationship derived_from/quotes/copies сохраняется.
+
+## Конкретный эксперимент
+Несколько AI summaries одного поста + одно независимое наблюдение; проверить счёт evidence.
+
+## Критерий принятия
+Не склеивать разные версии цели; не повышать confidence количеством копий одной цепочки.
+
+## Функции
+- `trace_information_lineage()`
+- `cluster_near_duplicate_claims()`
+- `compute_independent_evidence_count()`
+- `preserve_conflicting_source_versions()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-004 REQ-012 REQ-023. Первичные источники/технические предпосылки: S08. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8552eaddc88db0fab74f7c797f80563e703eb59c7e565dd5e43efeaaec266adf | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#35:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-37.md =====
+# RND-37 — Negative knowledge and failure memory
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Хранить доказанное «это здесь не работает» вместе с условиями и сроком.
+
+## Архитектурное изменение
+Отказ UI locator, missing dependency, unsupported model method, false lead; condition/expiry/recheck trigger.
+
+## Конкретный эксперимент
+Повторить известный failure на том же fingerprint, затем сменить версию и проверить expiry.
+
+## Критерий принятия
+Меньше бесполезных повторов без вечной блокировки исправленных возможностей.
+
+## Функции
+- `record_conditional_failure()`
+- `retrieve_negative_capability_evidence()`
+- `invalidate_obsolete_failure()`
+- `route_around_known_failure()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-012 REQ-015 REQ-017. Первичные источники/технические предпосылки: S14. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 59d122549b0ce68c7e590c280f1c57613d290d0da2b8b26294aae652c3315010 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#36:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-38.md =====
+# RND-38 — Skill minimization
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Успешную длинную траекторию сокращать до минимальной проверенной процедуры.
+
+## Архитектурное изменение
+Удалять redundant reads/clicks с offline replay и postcondition oracle; API/CLI замена GUI где подтверждено.
+
+## Конкретный эксперимент
+Длинный workflow vs minimized workflow на unseen fixtures и changed windows.
+
+## Критерий принятия
+Меньше действий/latency, одинаковый verified outcome; убрать шаг нельзя только по мнению LLM.
+
+## Функции
+- `slice_successful_trajectory()`
+- `eliminate_redundant_steps()`
+- `validate_minimized_skill()`
+- `compare_skill_behavioral_equivalence()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-013 REQ-015 REQ-017. Первичные источники/технические предпосылки: S12 S18. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a7137e31ac7fe522d057740d43a05606c47f068ebe942d10295ab9ec06760ae7 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#37:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-39.md =====
+# RND-39 — Permission-diff aware updater
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `hardening_of_prior_idea`.
+
+## Проблема
+Обновление функции не даёт автоматически новые права на весь компьютер.
+
+## Архитектурное изменение
+Проверить commit/artifact provenance, version, API contract, permissions diff; stage, healthcheck, single activation; откат только обратимого.
+
+## Конкретный эксперимент
+Кандидат просит новый filesystem root/network host; параллельно тест и attestation; activation должен остановиться.
+
+## Критерий принятия
+Никакого privilege creep; несовместимая DB migration требует отдельного плана.
+
+## Функции
+- `compute_capability_permission_diff()`
+- `verify_update_origin()`
+- `stage_skill_candidate()`
+- `activate_approved_skill_version()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-013 REQ-018 REQ-019. Первичные источники/технические предпосылки: S15. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 16108035bfc98ea04970067307708282f8d975843cfc825b36a226d7d24312b4 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#38:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-40.md =====
+# RND-40 — Cross-AI exchange contract
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Отправлять моделям один task contract, а не одинаково весь личный архив.
+
+## Архитектурное изменение
+Task ID, snapshot, context digest, allowed sources, expected response schema; chosen provider receives redacted scoped slice; return patch not direct merge.
+
+## Конкретный эксперимент
+Два model adapters + manual exported document; импорт неправильного snapshot и test claim.
+
+## Критерий принятия
+Одинаковая target binding; private data не уходит неразрешённому provider; imported DONE не закрывает задачу.
+
+## Функции
+- `compile_provider_scoped_handoff()`
+- `validate_ai_return_contract()`
+- `bind_ai_patch_to_snapshot()`
+- `merge_model_evidence_without_effects()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-003 REQ-010 REQ-013 REQ-021. Первичные источники/технические предпосылки: S16. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ba5f919d515d25497dd19c0a54ee1ae9c78f75941ad0ea540a955d4f7a79b30c | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#39:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-41.md =====
+# RND-41 — Capability drift monitoring
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Навык теряет валидность после обновления сайта, инструмента или модели.
+
+## Архитектурное изменение
+Fingerprint version/schema/UI selectors; canary read-only cases; quarantine broken adapter; fallback uses другой failure domain.
+
+## Конкретный эксперимент
+Изменить locator/API field/tool schema и проверить fast demotion старого skill.
+
+## Критерий принятия
+Нельзя продолжать по устаревшему cached capability; отдельные receipts для platform qualification.
+
+## Функции
+- `fingerprint_capability_environment()`
+- `run_readonly_capability_canary()`
+- `demote_drifted_executor()`
+- `schedule_adapter_requalification()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-013 REQ-017 REQ-026. Первичные источники/технические предпосылки: S03 S05 S16. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 78a7f746d3f196f94ad0a3819b039cc7ade78bfd9dfeeeb12a39a831b19a1a41 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#40:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-42.md =====
+# RND-42 — Offline context-and-skill optimizer
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Улучшать способы собирать контекст по результатам, не добавляя бездумно больше текста.
+
+## Архитектурное изменение
+DSPy/GEPA как optional offline optimizer для retrieval rules, labels, skill prompts; immutable holdout + cost/privacy constraints.
+
+## Конкретный эксперимент
+Одинаковый набор задач для baseline и learned context policy; reject reward hacking и критические regression.
+
+## Критерий принятия
+Promotion только по held-out verified outcomes, без изменения permissions и production policy.
+
+## Функции
+- `evaluate_context_policy_candidate()`
+- `optimize_offline_context_program()`
+- `audit_optimizer_data_leakage()`
+- `promote_validated_context_policy()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-015 REQ-017 REQ-026. Первичные источники/технические предпосылки: S11 S12 S13. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 9396af301eaa852857bde18401d79c8605edcb5e77f53571b334d475ed0c99ff | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#41:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-43.md =====
+# RND-43 — Multi-producer observation fabric
+**Статус:** new_detail_of_capture; proposed R&D, не установленная интеграция.
+
+## Зачем
+Много способов записи одного процесса должны дополнять друг друга, а не ждать первого победителя.
+
+## Устройство
+Append-only streams с ключом session/producer/sequence; bytes dedup отдельно от observation identity; один логически связанный capture session.
+
+## Эксперимент
+Один channel отвечает мгновенно, второй поздно, третий обрывается после части данных.
+
+## Acceptance
+Сохранить ранние и поздние события; ошибку и неполноту явно отобразить.
+
+## Функции
+- `open_observation_session()`
+- `append_source_observation()`
+- `correlate_observation_streams()`
+- `preserve_late_channel_evidence()`
+
+Requirements: REQ-033 REQ-007. Sources: S24 S25.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 0a83eb3fb7ddb73a3c96700fd6e3874872732f17649f0bde0ff653c76cc0f502 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#42:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-44.md =====
+# RND-44 — Capture portfolio by information gaps
+**Статус:** new; proposed R&D, не установленная интеграция.
+
+## Зачем
+Постоянная запись всех экранов не равна лучшему контексту.
+
+## Устройство
+Сначала дешёвые process/file/UIA/DOM metadata; audio/screenshot только разрешённо и по необходимости; отдельный coverage planner.
+
+## Эксперимент
+Сравнить always-on every-sensor и task-conditioned sensor portfolio на одинаковых задачах.
+
+## Acceptance
+Меньше peak RAM/CPU и privacy exposure при не худшем task-evidence recall.
+
+## Функции
+- `identify_capture_information_gap()`
+- `select_observation_portfolio()`
+- `measure_sensor_marginal_coverage()`
+- `retire_redundant_capture_channel()`
+
+Requirements: REQ-033 REQ-036. Sources: S24 S25.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b5d3065a76d3932c47680067410870df3ef5b4a07929a9f76cd2edf3399d0749 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#43:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-45.md =====
+# RND-45 — Join-semantics compiler
+**Статус:** new; proposed R&D, не установленная интеграция.
+
+## Зачем
+Нельзя использовать first-winner для всей агрегации и wait-all для каждой команды.
+
+## Устройство
+Каждому узлу задать UNION, REQUIRED_EVIDENCE_JOIN, FIRST_VERIFIED, PARTITIONED_MAP или PREPARE_COMMIT.
+
+## Эксперимент
+Одинаковую задачу выполнить с неправильным и правильным join mode.
+
+## Acceptance
+Ни потерянных поздних фактов, ни ожидания необязательного архива на critical path.
+
+## Функции
+- `classify_parallel_join_semantics()`
+- `compile_join_contract()`
+- `validate_route_merge_policy()`
+- `explain_join_wait_reason()`
+
+Requirements: REQ-035 REQ-034. Sources: S01 S02.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 51de0aae44721e3fbc523c42b745f5801bb93d39590d3aaa4b2c40dd818ede11 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#44:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-46.md =====
+# RND-46 — Evidence-ready streaming handoff
+**Статус:** refinement; proposed R&D, не установленная интеграция.
+
+## Зачем
+Не ждать «всю жизнь проиндексировали», прежде чем попросить AI исправить одну функцию.
+
+## Устройство
+Именованные required evidence slots; snapshot freeze; первая достаточная version; поздние данные — delta с parent digest.
+
+## Эксперимент
+Запросить patch до окончания full archive import; позже вернуть contradicting current source.
+
+## Acceptance
+Missing critical evidence блокирует ready; существенный delta отзывает stale patch.
+
+## Функции
+- `compute_minimum_evidence_frontier()`
+- `freeze_handoff_revision()`
+- `emit_late_evidence_delta()`
+- `invalidate_result_after_material_delta()`
+
+Requirements: REQ-038 REQ-010. Sources: S09 S16.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 56a33633af556a720fafb81ca9f4f21c96441897cd8a09ab2d5708c159694984 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#45:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-47.md =====
+# RND-47 — Authority-separated tagging lanes
+**Статус:** refinement; proposed R&D, не установленная интеграция.
+
+## Зачем
+Текст идеи, желание пользователя и фактический test receipt нельзя сводить одним уверенным labeler.
+
+## Устройство
+Lane A deterministic provenance; B user intent/requirements; C model proposals; D measured code/test state; сохранять conflicts.
+
+## Эксперимент
+Один AI говорит implemented, другой docs говорит planned, actual tests отсутствуют.
+
+## Acceptance
+Статус остаётся NOT_VERIFIED; majority summaries не порождает DONE.
+
+## Функции
+- `label_source_authority_lane()`
+- `distinguish_intent_from_world_state()`
+- `preserve_label_disagreements()`
+- `require_evidence_for_status_promotion()`
+
+Requirements: REQ-037 REQ-012. Sources: S06 S08.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 20a9550f1ee93e03a8851735575c31d111f26b0324b8eb43bc2579ae8bf23d7b | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#46:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-48.md =====
+# RND-48 — Context request-response protocol
+**Статус:** new; proposed R&D, не установленная интеграция.
+
+## Зачем
+Пакет может не знать заранее, какой dependency нужен следующей модели.
+
+## Устройство
+AI возвращает typed NEED_CONTEXT(symbol/path/date/reason), локальный compiler исполняет scoped retrieval и выдаёт delta.
+
+## Эксперимент
+Модель обнаруживает missing interface; сравнить весь repo resend с exact code dependency retrieval.
+
+## Acceptance
+Source-bound response, lower irrelevant bytes, незапрошенные private roots не раскрываются.
+
+## Функции
+- `parse_ai_context_request()`
+- `resolve_requested_symbol_context()`
+- `enforce_context_request_scope()`
+- `return_context_delta_receipt()`
+
+Requirements: REQ-040 REQ-003. Sources: S09 S16 S26.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 4acdc8960863bff9693e4b9e24d8c44e5261aa4d7d15316ec3fc6da7a46e81b3 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#47:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-49.md =====
+# RND-49 — Desired-state action equivalence
+**Статус:** new_detail; proposed R&D, не установленная интеграция.
+
+## Зачем
+Разные команды запуска могут быть одним и тем же методом с общим failure domain.
+
+## Устройство
+ActionSpec описывает desired state; registry связывает API/CLI/UIA с pre/postconditions; diversity измерять по восстановленным failures.
+
+## Эксперимент
+Открыть проект code CLI, OS URI handler и UIA; проверить одинаковый итог без тройного открытия.
+
+## Acceptance
+Победитель определяется target state; другой route не создаёт duplicate window.
+
+## Функции
+- `define_action_equivalence_class()`
+- `map_goal_to_reachable_state()`
+- `choose_shortest_verified_route()`
+- `reconcile_same_goal_effects()`
+
+Requirements: REQ-034 REQ-036. Sources: S02 S05.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 4eb0f7d2b637100eadaf12e4270d0e6cb9f4b1e15dae7ac42575d0de7de54f36 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#48:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-50.md =====
+# RND-50 — Foreground-preserving parallel workspace
+**Статус:** refinement; proposed R&D, не установленная интеграция.
+
+## Зачем
+Пользователь продолжает печатать, пока агенты читают и готовят код.
+
+## Устройство
+Фоновые API/FS workers не трогают focus; UI input lease выдаётся одной активной цепочке и отзывается при ручном вводе.
+
+## Эксперимент
+Во время ASR/retrieval/edit worktree пользователь работает в Chrome.
+
+## Acceptance
+Ни stolen focus, ни набора текста в чужом окне; independent tasks продолжаются.
+
+## Функции
+- `detect_foreground_user_activity()`
+- `lease_desktop_input_channel()`
+- `suspend_conflicting_gui_path()`
+- `continue_noninterfering_background_tasks()`
+
+Requirements: REQ-034 REQ-020. Sources: S03 S25.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b1e8ecb2cff2dd96cecfda1b82ad9c24fe8ea8f86e2d0c355ff3c8a5d817ce2b | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#49:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-51.md =====
+# RND-51 — Late arrivals and evidence watermarks
+**Статус:** new; proposed R&D, не установленная интеграция.
+
+## Зачем
+Источники приходят с разной задержкой; временной порядок не является причинностью.
+
+## Устройство
+Per-producer monotonic seq + source version + observed/ingested time; gaps и watermarks; late evidence не отбрасывается.
+
+## Эксперимент
+Перепутать arrival order, повторить событие, сменить source version.
+
+## Acceptance
+Никакого last-arrival-wins для истории решений; timestamps не склеивают разные commits.
+
+## Функции
+- `track_producer_watermark()`
+- `detect_capture_sequence_gap()`
+- `associate_causal_source_version()`
+- `reprocess_late_evidence_revision()`
+
+Requirements: REQ-033 REQ-038. Sources: S14.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 1b57a6836c48866ad4a706012cc67d6822d740dbdfdffabe0f460e754485b3b9 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#50:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-52.md =====
+# RND-52 — Recording-to-automation opportunity miner
+**Статус:** refinement; proposed R&D, не установленная интеграция.
+
+## Зачем
+Нужно понять, какие повторяющиеся действия действительно стоит автоматизировать.
+
+## Устройство
+Cross-source traces → user-confirmed task episode → estimated repeated work → candidate skill → separate verifier.
+
+## Эксперимент
+Из ручного CI triage выделить повторяемые части, не запоминая секретные случайные действия.
+
+## Acceptance
+Нет auto-enable только по наблюдению; saved manual effort измеряется после approved replay.
+
+## Функции
+- `segment_cross_source_task_episode()`
+- `rank_automation_opportunities()`
+- `draft_skill_from_correlated_episode()`
+- `measure_verified_manual_effort_saved()`
+
+Requirements: REQ-013 REQ-033. Sources: S24 S12.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f90c2d8c07682b2a08329999c7aa96dcc30a4519480215eb9409c06a0fb66c91 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#51:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-53.md =====
+# RND-53 — Fast local-first versus remote hedge calibration
+**Статус:** new_experiment; proposed R&D, не установленная интеграция.
+
+## Зачем
+На CPU laptop параллельные большие модели могут замедлить всё.
+
+## Устройство
+Benchmark rules/FTS alone, local Laya router, local+consented remote hedge; no unconditional fan-out; common resource budget.
+
+## Эксперимент
+Одинаковый held-out RU/EN command corpus; warm/cold, contention, slow API и offline fault.
+
+## Acceptance
+Выбирать по cost per verified success и p95 response; reject policy, ухудшающую critical commands.
+
+## Функции
+- `profile_on_device_route_budget()`
+- `compare_local_remote_hedge_policies()`
+- `track_quality_latency_pareto_frontier()`
+- `promote_empirically_better_portfolio()`
+
+Requirements: REQ-036 REQ-015. Sources: S01 S06 S22 S23.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5d6a5499407f6e695996ba3f0da8ebf63d8f311b9881cecb0c49ce64b79dc857 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#52:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-54.md =====
+# RND-54 — Whole-conversation strategy merge
+**Статус:** new_detail; proposed R&D, не установленная интеграция.
+
+## Зачем
+ZIP, текст чата и recovered notes могут содержать дубликаты и противоречивые устаревшие планы.
+
+## Устройство
+Canonical requirement IDs + original refs; latest explicit user instruction overrides prior proposal; no auto-closing based on assistant claims.
+
+## Эксперимент
+Импорт legacy ZIP и текущего уточнения multi-recorder; сверить inherited single-writer language.
+
+## Acceptance
+Новая стратегия соблюдает multi-producer capture и сохраняет безопасные effect boundaries.
+
+## Функции
+- `ingest_strategy_artifact_graph()`
+- `link_chat_requirement_to_archive()`
+- `reconcile_strategy_precedence()`
+- `compile_one_provider_neutral_master_handoff()`
+
+Requirements: REQ-037 REQ-039. Sources: S16.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 40dc157deaa3d49dae07352840f93ae257c06f26203cc35c3e56673df8577ecb | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#53:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/catalog.json =====
+[
+  {
+    "id": "RND-19",
+    "title": "Failure-domain diversity",
+    "problem_ru": "Не путать три обёртки pytest с тремя независимыми страховками.",
+    "novelty": "new",
+    "design_ru": "Добавить дерево общих зависимостей: interpreter, browser engine, remote account, model/provider, verifier, source lineage.",
+    "experiment_ru": "Сравнить 3 обёртки одного пути с 2 реально разными источниками evidence на fault-injection corpus.",
+    "acceptance_ru": "Записать co-failure matrix и marginal recovery каждого маршрута; не выводить независимость из названия инструмента.",
+    "functions": [
+      "route_dependency_fingerprint",
+      "estimate_cofailure_matrix",
+      "select_diverse_portfolio",
+      "record_marginal_recovery"
+    ],
+    "source_ids": [
+      "S01",
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-20",
+    "title": "Adaptive hedging",
+    "problem_ru": "Запускать запасной путь только при признаке задержки или нехватки evidence.",
+    "novelty": "new",
+    "design_ru": "Первая дешёвая read-попытка стартует сразу; второй путь после deadline/uncertainty trigger; отменить проигравших с receipt.",
+    "experiment_ru": "Сравнить serial, eager-parallel, delayed-hedge на фиксированном наборе read-only задач при одинаковом бюджете.",
+    "acceptance_ru": "Снизить p95 time-to-verified при заданном API/CPU бюджете; не допустить дублирующих внешних эффектов.",
+    "functions": [
+      "compute_hedge_trigger",
+      "reserve_speculation_budget",
+      "cancel_loser_candidates",
+      "audit_cancellation_completion"
+    ],
+    "source_ids": [
+      "S01"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-015"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-21",
+    "title": "Single-effect commit broker",
+    "problem_ru": "Результаты готовятся параллельно, эффект принадлежит одному брокеру.",
+    "novelty": "hardening_of_prior_idea",
+    "design_ru": "Уникальный operation_id, payload hash, snapshot revision, writer lease/fencing token, durable outbox и reconciliation.",
+    "experiment_ru": "Два кандидата для одного target; kill/retry вокруг локального commit; отдельно моделировать неизвестный внешний результат.",
+    "acceptance_ru": "Локальный commit ровно один в тестируемой SQLite-транзакции; внешние unknown не перезапускаются слепо.",
+    "functions": [
+      "issue_intent_operation_id",
+      "acquire_effect_lease",
+      "commit_verified_candidate",
+      "reconcile_unknown_effect"
+    ],
+    "source_ids": [
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-018"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-22",
+    "title": "Resource commutativity and foreground ownership",
+    "problem_ru": "Не дать агентам бороться за мышь, буфер и одну вкладку.",
+    "novelty": "new",
+    "design_ru": "Для каждого node указать read/write resource sets; разные документы параллельны, общий foreground эксклюзивен; пользователь имеет приоритет.",
+    "experiment_ru": "Инъекция пользовательского ввода во время действия; два графа с общим файлом и отдельными browser contexts.",
+    "acceptance_ru": "Нет чужого ввода в выбранной вкладке; conflict graph сериализует общие mutable resources.",
+    "functions": [
+      "infer_resource_access_sets",
+      "build_conflict_graph",
+      "acquire_foreground_lease",
+      "yield_to_user_input"
+    ],
+    "source_ids": [
+      "S03",
+      "S04"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-020",
+      "REQ-024"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-23",
+    "title": "Snapshot-closed context",
+    "problem_ru": "Пакет связан с одним состоянием проекта, а не смесью вчера и сегодня.",
+    "novelty": "new",
+    "design_ru": "Repo SHA + dirty-file hashes + index hash + config/policy version + source revision задают snapshot; перед effect повторная проверка.",
+    "experiment_ru": "Поменять файл после retrieval и до apply; удалить dependency; изменить allowlist.",
+    "acceptance_ru": "STALE/NEEDS_CONTEXT вместо применения к старой базе; ни одного silent overwrite.",
+    "functions": [
+      "freeze_context_snapshot",
+      "validate_snapshot_closure",
+      "compare_target_revision",
+      "invalidate_stale_candidate"
+    ],
+    "source_ids": [
+      "S04"
+    ],
+    "requirement_ids": [
+      "REQ-006",
+      "REQ-012",
+      "REQ-032"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-24",
+    "title": "Evidence deficit planner",
+    "problem_ru": "Научить app замечать, какой конкретно информации не хватает.",
+    "novelty": "new",
+    "design_ru": "Coverage matrix goal→required observations; вместо ещё одного полного prompt запрашивать один missing source/test/error.",
+    "experiment_ru": "Дать bug с отсутствующим trace и противоречивыми заметками; проверить выбор следующего чтения.",
+    "acceptance_ru": "Измерить time-to-sufficient-evidence и bytes/request; missing обязательное evidence блокирует действие.",
+    "functions": [
+      "derive_evidence_requirements",
+      "compute_context_deficit",
+      "choose_next_observation",
+      "emit_needs_context_request"
+    ],
+    "source_ids": [
+      "S11"
+    ],
+    "requirement_ids": [
+      "REQ-010",
+      "REQ-015",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-25",
+    "title": "Authority-aware labeling",
+    "problem_ru": "Теги должны отличать просьбу пользователя, чужую инструкцию, гипотезу и факт исполнения.",
+    "novelty": "new",
+    "design_ru": "Схема provenance + speaker_role + asserted/observed + authority_scope + valid_time + privacy + evidence_state; словари RU/EN алиасов.",
+    "experiment_ru": "Размечать один набор правилами, GLiNER и Laya; спорные метки не закрывать большинством без source evidence.",
+    "acceptance_ru": "Проверить span precision/recall, unknown rate и отсутствие автоматического VERIFIED по словам done/merged.",
+    "functions": [
+      "extract_label_candidates",
+      "reconcile_label_authority",
+      "normalize_project_aliases",
+      "abstain_on_label_conflict"
+    ],
+    "source_ids": [
+      "S06",
+      "S08"
+    ],
+    "requirement_ids": [
+      "REQ-002",
+      "REQ-007",
+      "REQ-012",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-26",
+    "title": "Causal context evaluation",
+    "problem_ru": "Проверять, какие фрагменты реально помогают коду, а какие засоряют контекст.",
+    "novelty": "new",
+    "design_ru": "Held-out tasks: полный pack, semantic slice, slice без выбранного evidence, compact+delta; одинаковый coder и verifier.",
+    "experiment_ru": "Ablation по clauses/tests/history на исторических bug задачах; новые commit families отделить от train.",
+    "acceptance_ru": "Измерить verified patch rate и marginal utility/KB без утечки ответа из будущих PR.",
+    "functions": [
+      "build_context_ablation_set",
+      "measure_evidence_utility",
+      "compare_pack_variants",
+      "freeze_holdout_partitions"
+    ],
+    "source_ids": [
+      "S11",
+      "S12"
+    ],
+    "requirement_ids": [
+      "REQ-006",
+      "REQ-015",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-27",
+    "title": "Incremental materialized context views",
+    "problem_ru": "Пересобирать только изменённую часть репозитория и зависимых context packs.",
+    "novelty": "new",
+    "design_ru": "Merkle identifiers на blobs/chunks/derivations; dependency invalidation; parser/schema version входят в cache key.",
+    "experiment_ru": "Изменить одну функцию в большом fixture corpus; сверить incremental output с полной пересборкой.",
+    "acceptance_ru": "Exact equality где детерминировано; явный unresolved для dynamic edges; raw objects никогда не теряются.",
+    "functions": [
+      "hash_derivation_inputs",
+      "invalidate_context_dependents",
+      "refresh_materialized_pack",
+      "compare_incremental_full_build"
+    ],
+    "source_ids": [
+      "S09"
+    ],
+    "requirement_ids": [
+      "REQ-004",
+      "REQ-006",
+      "REQ-032"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-28",
+    "title": "Verifier adequacy and counterexamples",
+    "problem_ru": "Не выбирать патч только потому, что он обошёл слабые тесты.",
+    "novelty": "new",
+    "design_ru": "Task-specific independent oracles + property/metamorphic tests; mutation-testing эксперименты; разделить test author и patch author.",
+    "experiment_ru": "Сделать intentionally wrong patch, который проходит прежний test; добавить проверку нарушенного инварианта.",
+    "acceptance_ru": "False-success ниже baseline; тесты не отключены, assertions не удалены, negative suite не деградирует.",
+    "functions": [
+      "generate_contract_counterexample",
+      "run_metamorphic_checks",
+      "measure_verifier_mutation_score",
+      "reject_test_weakening_patch"
+    ],
+    "source_ids": [
+      "S11"
+    ],
+    "requirement_ids": [
+      "REQ-011",
+      "REQ-017",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-29",
+    "title": "Critical-token ASR arbitration",
+    "problem_ru": "Ошибки в repo name, path, number и отрицании важнее общего word error rate.",
+    "novelty": "new",
+    "design_ru": "Команда имеет stable transcript prefix; domain vocabulary; второй ASR только на спорном span; low confidence не даёт финансовый effect.",
+    "experiment_ru": "RU/EN code-mixed команды: merge/not merge, main/branch, dry-run/live; фоновые голоса и поздние исправления.",
+    "acceptance_ru": "Semantic slot error и false command activation измеряются отдельно; не делать cloud-audio hedge без согласия.",
+    "functions": [
+      "identify_critical_voice_slots",
+      "request_selective_asr_check",
+      "reconcile_transcript_hypotheses",
+      "freeze_confirmed_intent_revision"
+    ],
+    "source_ids": [
+      "S06"
+    ],
+    "requirement_ids": [
+      "REQ-002",
+      "REQ-015",
+      "REQ-020",
+      "REQ-021"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-30",
+    "title": "Independent stop and intent revision",
+    "problem_ru": "Система должна быстро останавливаться и понимать «нет, не этот repo».",
+    "novelty": "new",
+    "design_ru": "Отдельный high-priority control channel; пересмотр intent отзывает pending plans и leases; committed эффекты не выдавать за undone.",
+    "experiment_ru": "Во время retrieval/patch подготовки/ожидания merge дать stop и смену проекта.",
+    "acceptance_ru": "Ни одного нового effect после подтверждённого stop; unknown external effects идут в reconciliation.",
+    "functions": [
+      "process_stop_signal",
+      "revoke_pending_intent_generation",
+      "supersede_running_plan",
+      "report_irreversible_boundary"
+    ],
+    "source_ids": [
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-002",
+      "REQ-018",
+      "REQ-020"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-31",
+    "title": "Proof-carrying skill packages",
+    "problem_ru": "Навык хранит не только скрипт, но и условия его применимости.",
+    "novelty": "hardening_of_prior_idea",
+    "design_ru": "Skill manifest: input/output schemas, preconditions, postconditions, provenance, environment fingerprint, permissions, expiry, rollback scope.",
+    "experiment_ru": "Повторить успешный навык на другой версии приложения и с другой ролью пользователя.",
+    "acceptance_ru": "Mismatched environment блокирует promotion; receipt содержит code hash и проверенные условия.",
+    "functions": [
+      "build_skill_contract",
+      "attach_skill_evidence_bundle",
+      "validate_skill_environment",
+      "expire_skill_qualification"
+    ],
+    "source_ids": [
+      "S15",
+      "S18"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-017",
+      "REQ-019"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-32",
+    "title": "Critical-path and attention-budget scheduling",
+    "problem_ru": "Ускорять итог задачи, а не максимальное число одновременно активных процессов.",
+    "novelty": "new",
+    "design_ru": "DAG priorities по критическому пути; RAM/CPU/network/provider budgets; foreground lease; idle-only reindex.",
+    "experiment_ru": "На Dell выполнить фоновые imports + ASR + context pack; сравнить eager fan-out и admission control.",
+    "acceptance_ru": "Не ухудшить voice responsiveness и UI; реальные measured p50/p95 + peak RAM, никаких выдуманных миллисекунд.",
+    "functions": [
+      "estimate_workflow_critical_path",
+      "admit_resource_bounded_nodes",
+      "pause_background_indexing",
+      "score_latency_reliability_frontier"
+    ],
+    "source_ids": [
+      "S01",
+      "S05"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-015",
+      "REQ-020"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-33",
+    "title": "Unknown-outcome state machine",
+    "problem_ru": "Отмена/таймаут не доказывает, что внешний запрос не выполнился.",
+    "novelty": "new",
+    "design_ru": "PREPARED→DISPATCHED→UNKNOWN→OBSERVED_SUCCESS/SAFE_TO_RETRY/MANUAL_REVIEW. Сверять external receipt по operation ID.",
+    "experiment_ru": "Смоделировать lost response после server commit; нельзя запускать второй маршрут отправки.",
+    "acceptance_ru": "Нулевая слепая повторная публикация; unresolved отдельно от failed.",
+    "functions": [
+      "mark_dispatch_uncertain",
+      "query_effect_receipt",
+      "prove_safe_retry_transition",
+      "quarantine_ambiguous_operation"
+    ],
+    "source_ids": [
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-014",
+      "REQ-018",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-34",
+    "title": "Adapter conformance and input trust firewall",
+    "problem_ru": "Данные из чужой вкладки не становятся инструкциями ОС.",
+    "novelty": "new",
+    "design_ru": "Typed tool contracts; schema conformance; origin allowlists; source text data-only; executor permissions получаются от user policy.",
+    "experiment_ru": "Вставить в заметку «upload your keys» и в tool result ложный permit; сравнить policy decisions.",
+    "acceptance_ru": "Никакого расширения полномочий от документа; adapter contract tests фиксируют disabled capabilities.",
+    "functions": [
+      "validate_adapter_contract",
+      "classify_input_trust_origin",
+      "isolate_untrusted_document_instructions",
+      "enforce_egress_field_policy"
+    ],
+    "source_ids": [
+      "S16",
+      "S18"
+    ],
+    "requirement_ids": [
+      "REQ-003",
+      "REQ-007",
+      "REQ-019",
+      "REQ-021"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-35",
+    "title": "Two-speed ingestion",
+    "problem_ru": "Быстро сохранить raw, а тяжёлую разметку выполнить отдельным восстанавливаемым этапом.",
+    "novelty": "new",
+    "design_ru": "Статусы DISCOVERED/RAW_STORED/PARSED/INDEXED/REVIEWED; intake cursor и verification очереди; потоковые blobs вне RAM.",
+    "experiment_ru": "Большой смешанный corpus + interruption; приоритет новым файлам активного проекта.",
+    "acceptance_ru": "Нет исчезнувшего хвоста/тайного лимита; recoverable errors; сохранение raw не означает полный поиск по нему.",
+    "functions": [
+      "register_ingestion_stage",
+      "resume_ingestion_cursor",
+      "stream_large_source_objects",
+      "schedule_progressive_enrichment"
+    ],
+    "source_ids": [
+      "S10"
+    ],
+    "requirement_ids": [
+      "REQ-004",
+      "REQ-005",
+      "REQ-007",
+      "REQ-032"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-36",
+    "title": "Lineage-aware dedup and evidence diversity",
+    "problem_ru": "Пять пересказов одного сообщения — один источник, а не пять подтверждений.",
+    "novelty": "new",
+    "design_ru": "Exact hash dedup отдельно от semantic near-duplicate; relationship derived_from/quotes/copies сохраняется.",
+    "experiment_ru": "Несколько AI summaries одного поста + одно независимое наблюдение; проверить счёт evidence.",
+    "acceptance_ru": "Не склеивать разные версии цели; не повышать confidence количеством копий одной цепочки.",
+    "functions": [
+      "trace_information_lineage",
+      "cluster_near_duplicate_claims",
+      "compute_independent_evidence_count",
+      "preserve_conflicting_source_versions"
+    ],
+    "source_ids": [
+      "S08"
+    ],
+    "requirement_ids": [
+      "REQ-004",
+      "REQ-012",
+      "REQ-023"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-37",
+    "title": "Negative knowledge and failure memory",
+    "problem_ru": "Хранить доказанное «это здесь не работает» вместе с условиями и сроком.",
+    "novelty": "new",
+    "design_ru": "Отказ UI locator, missing dependency, unsupported model method, false lead; condition/expiry/recheck trigger.",
+    "experiment_ru": "Повторить известный failure на том же fingerprint, затем сменить версию и проверить expiry.",
+    "acceptance_ru": "Меньше бесполезных повторов без вечной блокировки исправленных возможностей.",
+    "functions": [
+      "record_conditional_failure",
+      "retrieve_negative_capability_evidence",
+      "invalidate_obsolete_failure",
+      "route_around_known_failure"
+    ],
+    "source_ids": [
+      "S14"
+    ],
+    "requirement_ids": [
+      "REQ-012",
+      "REQ-015",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-38",
+    "title": "Skill minimization",
+    "problem_ru": "Успешную длинную траекторию сокращать до минимальной проверенной процедуры.",
+    "novelty": "new",
+    "design_ru": "Удалять redundant reads/clicks с offline replay и postcondition oracle; API/CLI замена GUI где подтверждено.",
+    "experiment_ru": "Длинный workflow vs minimized workflow на unseen fixtures и changed windows.",
+    "acceptance_ru": "Меньше действий/latency, одинаковый verified outcome; убрать шаг нельзя только по мнению LLM.",
+    "functions": [
+      "slice_successful_trajectory",
+      "eliminate_redundant_steps",
+      "validate_minimized_skill",
+      "compare_skill_behavioral_equivalence"
+    ],
+    "source_ids": [
+      "S12",
+      "S18"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-015",
+      "REQ-017"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-39",
+    "title": "Permission-diff aware updater",
+    "problem_ru": "Обновление функции не даёт автоматически новые права на весь компьютер.",
+    "novelty": "hardening_of_prior_idea",
+    "design_ru": "Проверить commit/artifact provenance, version, API contract, permissions diff; stage, healthcheck, single activation; откат только обратимого.",
+    "experiment_ru": "Кандидат просит новый filesystem root/network host; параллельно тест и attestation; activation должен остановиться.",
+    "acceptance_ru": "Никакого privilege creep; несовместимая DB migration требует отдельного плана.",
+    "functions": [
+      "compute_capability_permission_diff",
+      "verify_update_origin",
+      "stage_skill_candidate",
+      "activate_approved_skill_version"
+    ],
+    "source_ids": [
+      "S15"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-018",
+      "REQ-019"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-40",
+    "title": "Cross-AI exchange contract",
+    "problem_ru": "Отправлять моделям один task contract, а не одинаково весь личный архив.",
+    "novelty": "new",
+    "design_ru": "Task ID, snapshot, context digest, allowed sources, expected response schema; chosen provider receives redacted scoped slice; return patch not direct merge.",
+    "experiment_ru": "Два model adapters + manual exported document; импорт неправильного snapshot и test claim.",
+    "acceptance_ru": "Одинаковая target binding; private data не уходит неразрешённому provider; imported DONE не закрывает задачу.",
+    "functions": [
+      "compile_provider_scoped_handoff",
+      "validate_ai_return_contract",
+      "bind_ai_patch_to_snapshot",
+      "merge_model_evidence_without_effects"
+    ],
+    "source_ids": [
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-003",
+      "REQ-010",
+      "REQ-013",
+      "REQ-021"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-41",
+    "title": "Capability drift monitoring",
+    "problem_ru": "Навык теряет валидность после обновления сайта, инструмента или модели.",
+    "novelty": "new",
+    "design_ru": "Fingerprint version/schema/UI selectors; canary read-only cases; quarantine broken adapter; fallback uses другой failure domain.",
+    "experiment_ru": "Изменить locator/API field/tool schema и проверить fast demotion старого skill.",
+    "acceptance_ru": "Нельзя продолжать по устаревшему cached capability; отдельные receipts для platform qualification.",
+    "functions": [
+      "fingerprint_capability_environment",
+      "run_readonly_capability_canary",
+      "demote_drifted_executor",
+      "schedule_adapter_requalification"
+    ],
+    "source_ids": [
+      "S03",
+      "S05",
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-017",
+      "REQ-026"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-42",
+    "title": "Offline context-and-skill optimizer",
+    "problem_ru": "Улучшать способы собирать контекст по результатам, не добавляя бездумно больше текста.",
+    "novelty": "new",
+    "design_ru": "DSPy/GEPA как optional offline optimizer для retrieval rules, labels, skill prompts; immutable holdout + cost/privacy constraints.",
+    "experiment_ru": "Одинаковый набор задач для baseline и learned context policy; reject reward hacking и критические regression.",
+    "acceptance_ru": "Promotion только по held-out verified outcomes, без изменения permissions и production policy.",
+    "functions": [
+      "evaluate_context_policy_candidate",
+      "optimize_offline_context_program",
+      "audit_optimizer_data_leakage",
+      "promote_validated_context_policy"
+    ],
+    "source_ids": [
+      "S11",
+      "S12",
+      "S13"
+    ],
+    "requirement_ids": [
+      "REQ-015",
+      "REQ-017",
+      "REQ-026"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "See separate lab status; this card is not an installed integration."
+  },
+  {
+    "id": "RND-43",
+    "title": "Multi-producer observation fabric",
+    "problem_ru": "Много способов записи одного процесса должны дополнять друг друга, а не ждать первого победителя.",
+    "novelty": "new_detail_of_capture",
+    "design_ru": "Append-only streams с ключом session/producer/sequence; bytes dedup отдельно от observation identity; один логически связанный capture session.",
+    "experiment_ru": "Один channel отвечает мгновенно, второй поздно, третий обрывается после части данных.",
+    "acceptance_ru": "Сохранить ранние и поздние события; ошибку и неполноту явно отобразить.",
+    "functions": [
+      "open_observation_session",
+      "append_source_observation",
+      "correlate_observation_streams",
+      "preserve_late_channel_evidence"
+    ],
+    "source_ids": [
+      "S24",
+      "S25"
+    ],
+    "requirement_ids": [
+      "REQ-033",
+      "REQ-007"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-44",
+    "title": "Capture portfolio by information gaps",
+    "problem_ru": "Постоянная запись всех экранов не равна лучшему контексту.",
+    "novelty": "new",
+    "design_ru": "Сначала дешёвые process/file/UIA/DOM metadata; audio/screenshot только разрешённо и по необходимости; отдельный coverage planner.",
+    "experiment_ru": "Сравнить always-on every-sensor и task-conditioned sensor portfolio на одинаковых задачах.",
+    "acceptance_ru": "Меньше peak RAM/CPU и privacy exposure при не худшем task-evidence recall.",
+    "functions": [
+      "identify_capture_information_gap",
+      "select_observation_portfolio",
+      "measure_sensor_marginal_coverage",
+      "retire_redundant_capture_channel"
+    ],
+    "source_ids": [
+      "S24",
+      "S25"
+    ],
+    "requirement_ids": [
+      "REQ-033",
+      "REQ-036"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-45",
+    "title": "Join-semantics compiler",
+    "problem_ru": "Нельзя использовать first-winner для всей агрегации и wait-all для каждой команды.",
+    "novelty": "new",
+    "design_ru": "Каждому узлу задать UNION, REQUIRED_EVIDENCE_JOIN, FIRST_VERIFIED, PARTITIONED_MAP или PREPARE_COMMIT.",
+    "experiment_ru": "Одинаковую задачу выполнить с неправильным и правильным join mode.",
+    "acceptance_ru": "Ни потерянных поздних фактов, ни ожидания необязательного архива на critical path.",
+    "functions": [
+      "classify_parallel_join_semantics",
+      "compile_join_contract",
+      "validate_route_merge_policy",
+      "explain_join_wait_reason"
+    ],
+    "source_ids": [
+      "S01",
+      "S02"
+    ],
+    "requirement_ids": [
+      "REQ-035",
+      "REQ-034"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-46",
+    "title": "Evidence-ready streaming handoff",
+    "problem_ru": "Не ждать «всю жизнь проиндексировали», прежде чем попросить AI исправить одну функцию.",
+    "novelty": "refinement",
+    "design_ru": "Именованные required evidence slots; snapshot freeze; первая достаточная version; поздние данные — delta с parent digest.",
+    "experiment_ru": "Запросить patch до окончания full archive import; позже вернуть contradicting current source.",
+    "acceptance_ru": "Missing critical evidence блокирует ready; существенный delta отзывает stale patch.",
+    "functions": [
+      "compute_minimum_evidence_frontier",
+      "freeze_handoff_revision",
+      "emit_late_evidence_delta",
+      "invalidate_result_after_material_delta"
+    ],
+    "source_ids": [
+      "S09",
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-038",
+      "REQ-010"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-47",
+    "title": "Authority-separated tagging lanes",
+    "problem_ru": "Текст идеи, желание пользователя и фактический test receipt нельзя сводить одним уверенным labeler.",
+    "novelty": "refinement",
+    "design_ru": "Lane A deterministic provenance; B user intent/requirements; C model proposals; D measured code/test state; сохранять conflicts.",
+    "experiment_ru": "Один AI говорит implemented, другой docs говорит planned, actual tests отсутствуют.",
+    "acceptance_ru": "Статус остаётся NOT_VERIFIED; majority summaries не порождает DONE.",
+    "functions": [
+      "label_source_authority_lane",
+      "distinguish_intent_from_world_state",
+      "preserve_label_disagreements",
+      "require_evidence_for_status_promotion"
+    ],
+    "source_ids": [
+      "S06",
+      "S08"
+    ],
+    "requirement_ids": [
+      "REQ-037",
+      "REQ-012"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-48",
+    "title": "Context request-response protocol",
+    "problem_ru": "Пакет может не знать заранее, какой dependency нужен следующей модели.",
+    "novelty": "new",
+    "design_ru": "AI возвращает typed NEED_CONTEXT(symbol/path/date/reason), локальный compiler исполняет scoped retrieval и выдаёт delta.",
+    "experiment_ru": "Модель обнаруживает missing interface; сравнить весь repo resend с exact code dependency retrieval.",
+    "acceptance_ru": "Source-bound response, lower irrelevant bytes, незапрошенные private roots не раскрываются.",
+    "functions": [
+      "parse_ai_context_request",
+      "resolve_requested_symbol_context",
+      "enforce_context_request_scope",
+      "return_context_delta_receipt"
+    ],
+    "source_ids": [
+      "S09",
+      "S16",
+      "S26"
+    ],
+    "requirement_ids": [
+      "REQ-040",
+      "REQ-003"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-49",
+    "title": "Desired-state action equivalence",
+    "problem_ru": "Разные команды запуска могут быть одним и тем же методом с общим failure domain.",
+    "novelty": "new_detail",
+    "design_ru": "ActionSpec описывает desired state; registry связывает API/CLI/UIA с pre/postconditions; diversity измерять по восстановленным failures.",
+    "experiment_ru": "Открыть проект code CLI, OS URI handler и UIA; проверить одинаковый итог без тройного открытия.",
+    "acceptance_ru": "Победитель определяется target state; другой route не создаёт duplicate window.",
+    "functions": [
+      "define_action_equivalence_class",
+      "map_goal_to_reachable_state",
+      "choose_shortest_verified_route",
+      "reconcile_same_goal_effects"
+    ],
+    "source_ids": [
+      "S02",
+      "S05"
+    ],
+    "requirement_ids": [
+      "REQ-034",
+      "REQ-036"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-50",
+    "title": "Foreground-preserving parallel workspace",
+    "problem_ru": "Пользователь продолжает печатать, пока агенты читают и готовят код.",
+    "novelty": "refinement",
+    "design_ru": "Фоновые API/FS workers не трогают focus; UI input lease выдаётся одной активной цепочке и отзывается при ручном вводе.",
+    "experiment_ru": "Во время ASR/retrieval/edit worktree пользователь работает в Chrome.",
+    "acceptance_ru": "Ни stolen focus, ни набора текста в чужом окне; independent tasks продолжаются.",
+    "functions": [
+      "detect_foreground_user_activity",
+      "lease_desktop_input_channel",
+      "suspend_conflicting_gui_path",
+      "continue_noninterfering_background_tasks"
+    ],
+    "source_ids": [
+      "S03",
+      "S25"
+    ],
+    "requirement_ids": [
+      "REQ-034",
+      "REQ-020"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-51",
+    "title": "Late arrivals and evidence watermarks",
+    "problem_ru": "Источники приходят с разной задержкой; временной порядок не является причинностью.",
+    "novelty": "new",
+    "design_ru": "Per-producer monotonic seq + source version + observed/ingested time; gaps и watermarks; late evidence не отбрасывается.",
+    "experiment_ru": "Перепутать arrival order, повторить событие, сменить source version.",
+    "acceptance_ru": "Никакого last-arrival-wins для истории решений; timestamps не склеивают разные commits.",
+    "functions": [
+      "track_producer_watermark",
+      "detect_capture_sequence_gap",
+      "associate_causal_source_version",
+      "reprocess_late_evidence_revision"
+    ],
+    "source_ids": [
+      "S14"
+    ],
+    "requirement_ids": [
+      "REQ-033",
+      "REQ-038"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-52",
+    "title": "Recording-to-automation opportunity miner",
+    "problem_ru": "Нужно понять, какие повторяющиеся действия действительно стоит автоматизировать.",
+    "novelty": "refinement",
+    "design_ru": "Cross-source traces → user-confirmed task episode → estimated repeated work → candidate skill → separate verifier.",
+    "experiment_ru": "Из ручного CI triage выделить повторяемые части, не запоминая секретные случайные действия.",
+    "acceptance_ru": "Нет auto-enable только по наблюдению; saved manual effort измеряется после approved replay.",
+    "functions": [
+      "segment_cross_source_task_episode",
+      "rank_automation_opportunities",
+      "draft_skill_from_correlated_episode",
+      "measure_verified_manual_effort_saved"
+    ],
+    "source_ids": [
+      "S24",
+      "S12"
+    ],
+    "requirement_ids": [
+      "REQ-013",
+      "REQ-033"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-53",
+    "title": "Fast local-first versus remote hedge calibration",
+    "problem_ru": "На CPU laptop параллельные большие модели могут замедлить всё.",
+    "novelty": "new_experiment",
+    "design_ru": "Benchmark rules/FTS alone, local Laya router, local+consented remote hedge; no unconditional fan-out; common resource budget.",
+    "experiment_ru": "Одинаковый held-out RU/EN command corpus; warm/cold, contention, slow API и offline fault.",
+    "acceptance_ru": "Выбирать по cost per verified success и p95 response; reject policy, ухудшающую critical commands.",
+    "functions": [
+      "profile_on_device_route_budget",
+      "compare_local_remote_hedge_policies",
+      "track_quality_latency_pareto_frontier",
+      "promote_empirically_better_portfolio"
+    ],
+    "source_ids": [
+      "S01",
+      "S06",
+      "S22",
+      "S23"
+    ],
+    "requirement_ids": [
+      "REQ-036",
+      "REQ-015"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  },
+  {
+    "id": "RND-54",
+    "title": "Whole-conversation strategy merge",
+    "problem_ru": "ZIP, текст чата и recovered notes могут содержать дубликаты и противоречивые устаревшие планы.",
+    "novelty": "new_detail",
+    "design_ru": "Canonical requirement IDs + original refs; latest explicit user instruction overrides prior proposal; no auto-closing based on assistant claims.",
+    "experiment_ru": "Импорт legacy ZIP и текущего уточнения multi-recorder; сверить inherited single-writer language.",
+    "acceptance_ru": "Новая стратегия соблюдает multi-producer capture и сохраняет безопасные effect boundaries.",
+    "functions": [
+      "ingest_strategy_artifact_graph",
+      "link_chat_requirement_to_archive",
+      "reconcile_strategy_precedence",
+      "compile_one_provider_neutral_master_handoff"
+    ],
+    "source_ids": [
+      "S16"
+    ],
+    "requirement_ids": [
+      "REQ-037",
+      "REQ-039"
+    ],
+    "status": "PROPOSED_RND",
+    "implementation": "Observation/resource reference subset exists; complete integration NOT_IMPLEMENTED."
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f94b12b32cce39e24a3ca3c1341ec210ebfdfe308871b2dec38894576d68c6b4 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#54:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/MULTI_CAPTURE_EXAMPLES_V3_RU.md =====
+# Дополнительные параллельные сценарии V3
+
+## WF-21 — Записывай мою работу с AI и репозиторием
+Режим: `COMPLEMENTARY_UNION`.
+
+Параллельно: voice intent transcript; visible DOM or UIA text; file/Git events; terminal test receipts.
+
+Проверка: Per-channel source/version/sequence; не терять late events.
+
+Запись результата: Наблюдения в отдельных append keys; общий контекст — отдельная derived view.
+
+Fault injection: Один канал теряет связь после первых событий.
+
+## WF-22 — Расшифруй команду без ошибки в repo name
+Режим: `SELECTIVE_HEDGE`.
+
+Параллельно: one microphone stream + primary ASR; secondary ASR on ambiguous critical span; repository vocabulary matcher.
+
+Проверка: Critical slots and negation resolved; final intent revision.
+
+Запись результата: Raw audio записывается один раз; hypotheses сохраняются отдельно.
+
+Fault injection: Первый ASR перепутал not merge / merge.
+
+## WF-23 — Разметь новый разговор
+Режим: `COMPLEMENTARY_UNION`.
+
+Параллельно: deterministic origin/time/hash tags; entity/goal model labels; source-linked code/evidence status check.
+
+Проверка: Не promoted status без actual evidence.
+
+Запись результата: Label proposals append-only; каноническая view сохраняет conflict.
+
+Fault injection: Три пересказа одной идеи говорят DONE.
+
+## WF-24 — Подготовь минимальный пакет для исправления
+Режим: `REQUIRED_EVIDENCE_JOIN`.
+
+Параллельно: pinned target function + dependencies; actual failure or blocker receipt; latest accepted scope/constraint.
+
+Проверка: Минимальные required slots, отсутствие critical conflicts, current snapshot.
+
+Запись результата: Первая immutable handoff version; отдельные delta после.
+
+Fault injection: Полный импорт истории ещё идёт.
+
+## WF-25 — Одновременно сохрани отчёт и подготовь код
+Режим: `PARTITIONED_INDEPENDENT_EFFECTS`.
+
+Параллельно: save unique report artifact; create patch in isolated worktree A; prepare independent source research.
+
+Проверка: Resource read/write footprint intersection empty.
+
+Запись результата: Разные effect resources могут commit параллельно.
+
+Fault injection: Два исполнителя случайно выбрали один path.
+
+## WF-26 — Дай AI недостающий интерфейс
+Режим: `SCOPED_CONTEXT_RESPONSE`.
+
+Параллельно: exact definition search; static references and tests; history for active revision.
+
+Проверка: Requested symbol identity and source revision match.
+
+Запись результата: Scoped response packet; никакого произвольного shell от модели.
+
+Fault injection: Запрос от модели просит файл за allowed root.
+
+## WF-27 — Объедини этот ZIP и весь текст цели
+Режим: `COMPLEMENTARY_UNION`.
+
+Параллельно: archive requirements; current user clarification; source docs and previous decisions.
+
+Проверка: Preserve provenance/precedence; dedup lineage not erase history.
+
+Запись результата: Новый versioned master spec; исходники не перезаписываются.
+
+Fault injection: Legacy утверждает single writer для всей записи.
+
+## WF-28 — Продолжи Studious qualification research
+Режим: `REQUIRED_EVIDENCE_JOIN`.
+
+Параллельно: local pinned repo graph; supported capabilities/blockers; selected prior goals/decisions; approved offline tests when available.
+
+Проверка: Evidence bound to same source state, sender absent.
+
+Запись результата: Handoff/research artifacts only; separate future code branch.
+
+Fault injection: Readme proposal incorrectly read as runtime readiness.
+
+## WF-29 — Проверь будущую версию навыка
+Режим: `FIRST_VERIFIED_THEN_SINGLE_ACTIVATION`.
+
+Параллельно: artifact origin and digest check; sandbox contract/negative tests; permission diff and compatibility review.
+
+Проверка: All mandatory checks, version + code digest, approved capabilities.
+
+Запись результата: Одна activation на version target; test candidates параллельно.
+
+Fault injection: Новый skill требует доступ ко всему диску.
+
+## WF-30 — Восстанови недостающие логи
+Режим: `COMPLEMENTARY_UNION`.
+
+Параллельно: durable process stdout receipt; test framework result file; approved CI job log download.
+
+Проверка: Distinct source completeness, timestamp and run ID binding.
+
+Запись результата: Не перезапускать исходную работу лишь ради получения логов.
+
+Fault injection: Один log source пуст, второй содержит error tail.
+
+## WF-31 — Продолжай работать, пока я пишу в Chrome
+Режим: `PARTITIONED_INDEPENDENT_EFFECTS`.
+
+Параллельно: context reads and indexing; code proposals in worktrees; one paused GUI route awaiting lease.
+
+Проверка: No focus theft and scoped output writes.
+
+Запись результата: Foreground only with user lease; background routes продолжаются.
+
+Fault injection: Пользователь меняет active tab в середине GUI path.
+
+## WF-32 — Проверь пару research snapshots для web3
+Режим: `COMPLEMENTARY_UNION`.
+
+Параллельно: approved market data source A; independent read-only source B; local protocol version/capabilities evidence.
+
+Проверка: Chain/state/time/slot/commitment semantics compatible; stale/unknown explicit.
+
+Запись результата: Readonly research only; no transaction signing/submission.
+
+Fault injection: Быстрые ответы из разных моментов дают ложный edge.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 462cde061dfad1ff792cd089b889a906573304b7b8df2b6af53c81deb9c26dd3 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#55:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/PARALLEL_EXAMPLES_RU.md =====
+# 20 примеров параллельных автоматизаций
+
+Параллельны чтения и изолированные кандидаты. После проверки эффект один; строки ниже не запускают ПК, API или торговлю.
+
+## WF-01 — «Собери контекст для исправления функции»
+Путь A: Search exact symbols and call sites.
+
+Путь B: Retrieve relevant failing-test traces.
+
+Путь C: Retrieve source-bound historical decisions.
+
+Объединение: `join_required_evidence`.
+
+Один итог: Один review/handoff pack.
+
+Проверка: Pinned source hashes, обязательные refs, coverage/omissions, короткий WHY_THIS_PACKET.
+
+Fault test: Поиск быстрее завершился без нужного test trace.
+
+## WF-02 — «Пусть два AI предложат исправление одной ошибки»
+Путь A: Prepare patch in workspace A from same base.
+
+Путь B: Prepare patch in workspace B from same base.
+
+Путь C: Independent invariant/counterexample verifier.
+
+Объединение: `race_to_verified_candidate`.
+
+Один итог: Один принятый patch candidate; merge только отдельным разрешённым действием.
+
+Проверка: Patch target binding, failing test reproduction, regression, untouched permissions/tests.
+
+Fault test: Первый patch прошёл слабый test, но нарушил независимый инвариант.
+
+## WF-03 — «Разметь документ и свяжи с задачами»
+Путь A: Deterministic source/path/role labeling.
+
+Путь B: GLiNER entity-span extraction candidate.
+
+Путь C: Laya typed topic/task category candidate.
+
+Объединение: `reconcile_without_majority_truth`.
+
+Один итог: Одна версия annotation set; конфликты сохраняются.
+
+Проверка: Каждая метка имеет origin/confidence/version; DONE не означает VERIFIED.
+
+Fault test: Три пересказа утверждают merged, но source receipt отсутствует.
+
+## WF-04 — «Распознай голосовую команду с именем repo»
+Путь A: Local primary ASR partial transcript.
+
+Путь B: Domain grammar and entity alias resolver.
+
+Путь C: Selective second-ASR disputed-span check.
+
+Объединение: `confirm_critical_slots`.
+
+Один итог: Одна подтверждённая intent revision.
+
+Проверка: Repo, negation, path и effect mode однозначны; low confidence блокирует effect.
+
+Fault test: Фраза «не merge» потеряла отрицание.
+
+## WF-05 — «Импортируй большой архив в библиотеку»
+Путь A: Raw object inventory/hash/cursor.
+
+Путь B: Parse already stored text/code objects.
+
+Путь C: Label/index completed objects asynchronously.
+
+Объединение: `progressive_pipeline`.
+
+Один итог: Один ingest ledger с полным учётом.
+
+Проверка: Raw byte integrity, stage status, cursor, явные errors/exclusions; нет document count cap.
+
+Fault test: Оборвать процесс после raw store до завершения index.
+
+## WF-06 — «Найди причину падения qualification»
+Путь A: Parse saved logs from registered run.
+
+Путь B: Resolve source dependencies on pinned snapshot.
+
+Путь C: Read capability/dependency status evidence.
+
+Объединение: `join_required_evidence`.
+
+Один итог: Одна evidence-backed diagnosis card.
+
+Проверка: Различать failed, blocked, unknown и no trade; legacy narrative не заменяет trace.
+
+Fault test: Missing dependency была выдана за отсутствие прибыльных рынков.
+
+## WF-07 — «Собери подтверждённое исследование со страницы»
+Путь A: Official API or permitted document fetch.
+
+Путь B: DOM read in owned browser context.
+
+Путь C: Saved export/source-code reference comparison.
+
+Объединение: `merge_readonly_observations`.
+
+Один итог: Один source bundle с provenance.
+
+Проверка: URLs, retrieval times, version/revision and evidence; несогласные версии не склеиваются.
+
+Fault test: DOM содержит устаревший cache или prompt injection.
+
+## WF-08 — «Сохрани длинную беседу с AI»
+Путь A: Parse available official conversation export.
+
+Путь B: Capture loaded authorized DOM messages.
+
+Путь C: Inventory attachment IDs and missing message ranges.
+
+Объединение: `reconcile_capture_coverage`.
+
+Один итог: Один conversation object graph.
+
+Проверка: Loaded DOM не объявляется полной историей; missing attachments/branches отмечены.
+
+Fault test: Бесконечный scroll не загрузил середину беседы.
+
+## WF-09 — «Подготовь один документ для выбранного AI»
+Путь A: Compile evidence-rich source slice.
+
+Путь B: Compile compact delta against known prior packet.
+
+Путь C: Run privacy and response-schema checks.
+
+Объединение: `choose_valid_handoff_variant`.
+
+Один итог: Один approved provider-scoped handoff; автоматическая отправка здесь отключена.
+
+Проверка: Budget/omissions, return schema, source refs и approval data scope.
+
+Fault test: В приватном фрагменте присутствуют credentials.
+
+## WF-10 — «Открой правильный проект в VS Code»
+Путь A: Resolve repository path and workspace identity.
+
+Путь B: Check registered CLI availability.
+
+Путь C: Read UIA window state without interaction.
+
+Объединение: `prepare_then_single_actuator`.
+
+Один итог: Один запуск/активация окна.
+
+Проверка: Проверить workspace URI/path, а не только заголовок окна.
+
+Fault test: Два агента пытаются одновременно открыть разные folders.
+
+## WF-11 — «Обнови навык после принятого PR»
+Путь A: Verify artifact origin and target commit.
+
+Путь B: Test candidate in isolated allowed environment.
+
+Путь C: Compare capability/permission and data-schema diff.
+
+Объединение: `all_gates_then_single_activation`.
+
+Один итог: Одна activation на проверенный version ID.
+
+Проверка: Permission expansion требует approval; migration/rollback отдельно проверены.
+
+Fault test: Артефакт с правильным именем собран с чужого commit.
+
+## WF-12 — «Составь ежедневный план продолжения»
+Путь A: Read current repo state and saved failures.
+
+Путь B: Resolve active user goals and superseding decisions.
+
+Путь C: Read durable job receipts and outstanding blockers.
+
+Объединение: `join_active_goal_evidence`.
+
+Один итог: Один план с action proposals, без автоматического старта.
+
+Проверка: Не возвращать superseded задачу; source/ref на каждый пункт.
+
+Fault test: Старый AI summary предлагает уже отменённую архитектуру.
+
+## WF-13 — «Останови текущую автоматизацию»
+Путь A: Revoke active intent generation.
+
+Путь B: Ask workers to stop and verify termination.
+
+Путь C: Reconcile already-dispatched effect status.
+
+Объединение: `parallel_stop_observe`.
+
+Один итог: Одна итоговая stop receipt.
+
+Проверка: Не обещать rollback необратимого; новые эффекты после stop запрещены.
+
+Fault test: Запрос ушёл удалённому сервису до отмены.
+
+## WF-14 — «Запусти проверку проекта без лишних дублей»
+Путь A: Validate runtime/dependency environment.
+
+Путь B: Select changed-symbol test subset.
+
+Путь C: Read baseline receipts and choose independent invariant checks.
+
+Объединение: `join_preflight_then_budgeted_tests`.
+
+Один итог: Один registered test job per worktree/environment.
+
+Проверка: stdout/stderr/exit code/base SHA/env fingerprint; wrapper≠independent test.
+
+Fault test: PowerShell и MCP указывают на один сломанный Python.
+
+## WF-15 — «Покажи влияние изменения одной функции»
+Путь A: AST/local symbol analysis.
+
+Путь B: SCIP/LSP references from approved indexer.
+
+Путь C: Runtime coverage/error trace mapping.
+
+Объединение: `merge_typed_graph_edges`.
+
+Один итог: Один typed impact graph.
+
+Проверка: Observed/static/heuristic/unresolved edges разделены; affected tests не заявлены исполненными.
+
+Fault test: Dynamic import отсутствует в статическом call graph.
+
+## WF-16 — «Найди обещанные, но не реализованные функции»
+Путь A: Extract requirements from selected planning docs.
+
+Путь B: Read code symbols and registered capabilities.
+
+Путь C: Read exact-head test/installed evidence receipts.
+
+Объединение: `requirements_evidence_reconciliation`.
+
+Один итог: Один gap report и scoped next-change packet.
+
+Проверка: CODE_PRESENT, TESTED, INSTALLED_VERIFIED различаются; document claim не evidence.
+
+Fault test: Ранее assistant утверждал full merge по плану, но подтверждений нет.
+
+## WF-17 — «Разреши противоречие двух старых решений»
+Путь A: Find original user messages and timestamps.
+
+Путь B: Trace quote/summary lineage.
+
+Путь C: Read current implementation-related evidence.
+
+Объединение: `authority_temporal_reconciliation`.
+
+Один итог: Одна новая decision record с явной unresolved веткой.
+
+Проверка: User intent и implementation fact не смешиваются; uncertainty сохраняется.
+
+Fault test: Новая копия старой заметки ошибочно считается новым решением.
+
+## WF-18 — «Повтори знакомый workflow быстрее»
+Путь A: Reuse version-qualified compiled skill.
+
+Путь B: Prepare a source-checking fallback route.
+
+Путь C: Run independent current-state verifier.
+
+Объединение: `delayed_hedge_then_single_effect`.
+
+Один итог: Один результат при актуальном environment fingerprint.
+
+Проверка: Нет повторной генерации кода для известной способности; stale skill quarantined.
+
+Fault test: Сайт изменил поле/selector после последнего успеха.
+
+## WF-19 — «Работай, пока я использую Chrome»
+Путь A: Read local indexes without focus.
+
+Путь B: Prepare drafts in isolated owned browser/workspace.
+
+Путь C: Check user foreground/clipboard activity.
+
+Объединение: `resource_partitioned_execution`.
+
+Один итог: Background read/preparation; GUI input по единой аренде.
+
+Проверка: Не перехватывать пользовательский ввод; browser context не sandbox удалённого аккаунта.
+
+Fault test: Пользователь начинает печатать во время агентского шага.
+
+## WF-20 — «Продолжи R&D flashloan без live-операций»
+Путь A: Read documented capability/dependency state.
+
+Путь B: Analyse explicitly recorded market fixtures.
+
+Путь C: Generate test/evidence/patch handoff candidates.
+
+Объединение: `offline_evidence_join`.
+
+Один итог: Один R&D пакет; signer/sender не подключены.
+
+Проверка: Synthetic, historical и real observed market evidence разделены; live_authorized=false.
+
+Fault test: Агент предлагает включить live вместо исправления missing dependencies.
+===== END CONTENT =====
+
+===== CONTENT SHA256 d02165c3b773e0853b49cfb99ba5f9b8d0f2077f59b4ef5c0b4d240ab2b0833e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#56:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-01.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-01",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Собери контекст для исправления функции",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Search exact symbols and call sites",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Retrieve relevant failing-test traces",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Retrieve source-bound historical decisions",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "join_required_evidence",
+      "contract_ru": "Pinned source hashes, обязательные refs, coverage/omissions, короткий WHY_THIS_PACKET"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один review/handoff pack",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Поиск быстрее завершился без нужного test trace",
+  "requirement_ids": [
+    "REQ-006",
+    "REQ-010",
+    "REQ-011"
+  ],
+  "rnd_ids": [
+    "RND-23",
+    "RND-24",
+    "RND-27"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 beef6ca0b21c141c18393a1e0d33005ec65af0dd1c4ee58f27f81e88ccce9eec | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#57:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-02.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-02",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Пусть два AI предложат исправление одной ошибки",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Prepare patch in workspace A from same base",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Prepare patch in workspace B from same base",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Independent invariant/counterexample verifier",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "race_to_verified_candidate",
+      "contract_ru": "Patch target binding, failing test reproduction, regression, untouched permissions/tests"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один принятый patch candidate; merge только отдельным разрешённым действием",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Первый patch прошёл слабый test, но нарушил независимый инвариант",
+  "requirement_ids": [
+    "REQ-003",
+    "REQ-013",
+    "REQ-014"
+  ],
+  "rnd_ids": [
+    "RND-19",
+    "RND-21",
+    "RND-28"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 0e153d7f5a128b78f181b7c17ddf8c257e0245174ffee78bfdd55ca6ae68534c | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#58:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-03.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-03",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Разметь документ и свяжи с задачами",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Deterministic source/path/role labeling",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "GLiNER entity-span extraction candidate",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Laya typed topic/task category candidate",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "reconcile_without_majority_truth",
+      "contract_ru": "Каждая метка имеет origin/confidence/version; DONE не означает VERIFIED"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Одна версия annotation set; конфликты сохраняются",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Три пересказа утверждают merged, но source receipt отсутствует",
+  "requirement_ids": [
+    "REQ-007",
+    "REQ-012",
+    "REQ-023"
+  ],
+  "rnd_ids": [
+    "RND-25",
+    "RND-36"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f66aa304499dd5381669584f929c0a3471887b2c620bcc7a4c68a330a9b3b489 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#59:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-04.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-04",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Распознай голосовую команду с именем repo",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Local primary ASR partial transcript",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Domain grammar and entity alias resolver",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Selective second-ASR disputed-span check",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "confirm_critical_slots",
+      "contract_ru": "Repo, negation, path и effect mode однозначны; low confidence блокирует effect"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Одна подтверждённая intent revision",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Фраза «не merge» потеряла отрицание",
+  "requirement_ids": [
+    "REQ-002",
+    "REQ-020"
+  ],
+  "rnd_ids": [
+    "RND-29",
+    "RND-30"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 196ba59db43a80bb499302380a85b0746630673f18fb0dd713a6544abf2fd2f3 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#60:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-05.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-05",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Импортируй большой архив в библиотеку",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Raw object inventory/hash/cursor",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Parse already stored text/code objects",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Label/index completed objects asynchronously",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "progressive_pipeline",
+      "contract_ru": "Raw byte integrity, stage status, cursor, явные errors/exclusions; нет document count cap"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один ingest ledger с полным учётом",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Оборвать процесс после raw store до завершения index",
+  "requirement_ids": [
+    "REQ-004",
+    "REQ-005",
+    "REQ-007"
+  ],
+  "rnd_ids": [
+    "RND-27",
+    "RND-35"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 25716038d20adf91d163c6530e8109ec1594ecb490a6cf359db0a1e38056f20e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#61:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-06.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-06",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Найди причину падения qualification",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Parse saved logs from registered run",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Resolve source dependencies on pinned snapshot",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read capability/dependency status evidence",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "join_required_evidence",
+      "contract_ru": "Различать failed, blocked, unknown и no trade; legacy narrative не заменяет trace"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Одна evidence-backed diagnosis card",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Missing dependency была выдана за отсутствие прибыльных рынков",
+  "requirement_ids": [
+    "REQ-011",
+    "REQ-017",
+    "REQ-023"
+  ],
+  "rnd_ids": [
+    "RND-24",
+    "RND-28",
+    "RND-37"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 271a3fa9c8ef929e7474a383fbb66459638d56fbae56cb8a7491ed88cdd840c5 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#62:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-07.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-07",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Собери подтверждённое исследование со страницы",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Official API or permitted document fetch",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "DOM read in owned browser context",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Saved export/source-code reference comparison",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "merge_readonly_observations",
+      "contract_ru": "URLs, retrieval times, version/revision and evidence; несогласные версии не склеиваются"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один source bundle с provenance",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "DOM содержит устаревший cache или prompt injection",
+  "requirement_ids": [
+    "REQ-007",
+    "REQ-024",
+    "REQ-026"
+  ],
+  "rnd_ids": [
+    "RND-23",
+    "RND-34",
+    "RND-36"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f5dd1591b5e4312a1ce41229c94cee667e6ef07520d4ce4354f88d0f016d41cb | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#63:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-08.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-08",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Сохрани длинную беседу с AI",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Parse available official conversation export",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Capture loaded authorized DOM messages",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Inventory attachment IDs and missing message ranges",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "reconcile_capture_coverage",
+      "contract_ru": "Loaded DOM не объявляется полной историей; missing attachments/branches отмечены"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один conversation object graph",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Бесконечный scroll не загрузил середину беседы",
+  "requirement_ids": [
+    "REQ-004",
+    "REQ-007",
+    "REQ-032"
+  ],
+  "rnd_ids": [
+    "RND-25",
+    "RND-35"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 75c53d3ff201c9da22c6a9941c7a3bbdb63c3625d3fafe639d43fdd1a90ebfad | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#64:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-09.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-09",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Подготовь один документ для выбранного AI",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Compile evidence-rich source slice",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Compile compact delta against known prior packet",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Run privacy and response-schema checks",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "choose_valid_handoff_variant",
+      "contract_ru": "Budget/omissions, return schema, source refs и approval data scope"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один approved provider-scoped handoff; автоматическая отправка здесь отключена",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "В приватном фрагменте присутствуют credentials",
+  "requirement_ids": [
+    "REQ-003",
+    "REQ-010",
+    "REQ-021"
+  ],
+  "rnd_ids": [
+    "RND-24",
+    "RND-34",
+    "RND-40"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8a158779f72921ebc24b4e678e9edb08f223a9eed059e076af7fee27e7b35b00 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#65:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-10.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-10",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Открой правильный проект в VS Code",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Resolve repository path and workspace identity",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Check registered CLI availability",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read UIA window state without interaction",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "prepare_then_single_actuator",
+      "contract_ru": "Проверить workspace URI/path, а не только заголовок окна"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один запуск/активация окна",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Два агента пытаются одновременно открыть разные folders",
+  "requirement_ids": [
+    "REQ-009",
+    "REQ-020",
+    "REQ-024"
+  ],
+  "rnd_ids": [
+    "RND-22",
+    "RND-30"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8750c7ac208e86d30dfbece9886e2fbdce5eb8a415311c1c9378e51658af643e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#66:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-11.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-11",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Обнови навык после принятого PR",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Verify artifact origin and target commit",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Test candidate in isolated allowed environment",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Compare capability/permission and data-schema diff",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "all_gates_then_single_activation",
+      "contract_ru": "Permission expansion требует approval; migration/rollback отдельно проверены"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Одна activation на проверенный version ID",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Артефакт с правильным именем собран с чужого commit",
+  "requirement_ids": [
+    "REQ-013",
+    "REQ-018",
+    "REQ-019"
+  ],
+  "rnd_ids": [
+    "RND-31",
+    "RND-39"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 71297e8d9f60d27774a79088e4b419605fbc76fa534ab843dafed839df4d4fad | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#67:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-12.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-12",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Составь ежедневный план продолжения",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read current repo state and saved failures",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Resolve active user goals and superseding decisions",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read durable job receipts and outstanding blockers",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "join_active_goal_evidence",
+      "contract_ru": "Не возвращать superseded задачу; source/ref на каждый пункт"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один план с action proposals, без автоматического старта",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Старый AI summary предлагает уже отменённую архитектуру",
+  "requirement_ids": [
+    "REQ-012",
+    "REQ-025",
+    "REQ-023"
+  ],
+  "rnd_ids": [
+    "RND-25",
+    "RND-36",
+    "RND-37"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 695730f73c99d1cbc386eae92d2ca734faa71301cd7fc0626240ce5e5a063865 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#68:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-13.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-13",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Останови текущую автоматизацию",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Revoke active intent generation",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Ask workers to stop and verify termination",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Reconcile already-dispatched effect status",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "parallel_stop_observe",
+      "contract_ru": "Не обещать rollback необратимого; новые эффекты после stop запрещены"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Одна итоговая stop receipt",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Запрос ушёл удалённому сервису до отмены",
+  "requirement_ids": [
+    "REQ-018",
+    "REQ-020"
+  ],
+  "rnd_ids": [
+    "RND-22",
+    "RND-30",
+    "RND-33"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b79810250efd9e745df167d65f4582ad55215e41428504c3c15df0a0bd62848f | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#69:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-14.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-14",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Запусти проверку проекта без лишних дублей",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Validate runtime/dependency environment",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Select changed-symbol test subset",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read baseline receipts and choose independent invariant checks",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "join_preflight_then_budgeted_tests",
+      "contract_ru": "stdout/stderr/exit code/base SHA/env fingerprint; wrapper≠independent test"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один registered test job per worktree/environment",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "PowerShell и MCP указывают на один сломанный Python",
+  "requirement_ids": [
+    "REQ-011",
+    "REQ-014",
+    "REQ-017"
+  ],
+  "rnd_ids": [
+    "RND-19",
+    "RND-28",
+    "RND-32"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 732c27ee18b357eef4599fa420a0d9a7e626056a2d6c7b1903e71836e285a49e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#70:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-15.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-15",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Покажи влияние изменения одной функции",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "AST/local symbol analysis",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "SCIP/LSP references from approved indexer",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Runtime coverage/error trace mapping",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "merge_typed_graph_edges",
+      "contract_ru": "Observed/static/heuristic/unresolved edges разделены; affected tests не заявлены исполненными"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один typed impact graph",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Dynamic import отсутствует в статическом call graph",
+  "requirement_ids": [
+    "REQ-006",
+    "REQ-010"
+  ],
+  "rnd_ids": [
+    "RND-23",
+    "RND-27"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 af88e9072eee51fd1eb1a23b256af64c0723d87280ee5f0e09467de724be1117 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#71:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-16.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-16",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Найди обещанные, но не реализованные функции",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Extract requirements from selected planning docs",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read code symbols and registered capabilities",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read exact-head test/installed evidence receipts",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "requirements_evidence_reconciliation",
+      "contract_ru": "CODE_PRESENT, TESTED, INSTALLED_VERIFIED различаются; document claim не evidence"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один gap report и scoped next-change packet",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Ранее assistant утверждал full merge по плану, но подтверждений нет",
+  "requirement_ids": [
+    "REQ-011",
+    "REQ-012",
+    "REQ-023"
+  ],
+  "rnd_ids": [
+    "RND-24",
+    "RND-25",
+    "RND-28"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 39a5014219267075a7857ce32bddc45dc20b30ea27af66bdc268eeec6885e78e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#72:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-17.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-17",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Разреши противоречие двух старых решений",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Find original user messages and timestamps",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Trace quote/summary lineage",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read current implementation-related evidence",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "authority_temporal_reconciliation",
+      "contract_ru": "User intent и implementation fact не смешиваются; uncertainty сохраняется"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Одна новая decision record с явной unresolved веткой",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Новая копия старой заметки ошибочно считается новым решением",
+  "requirement_ids": [
+    "REQ-012",
+    "REQ-023"
+  ],
+  "rnd_ids": [
+    "RND-25",
+    "RND-36"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 93c16cae71a6cc667c271f33cea713c9590280aa8eb6fce1edd9fe696748a4db | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#73:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-18.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-18",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Повтори знакомый workflow быстрее",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Reuse version-qualified compiled skill",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Prepare a source-checking fallback route",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Run independent current-state verifier",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "delayed_hedge_then_single_effect",
+      "contract_ru": "Нет повторной генерации кода для известной способности; stale skill quarantined"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один результат при актуальном environment fingerprint",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Сайт изменил поле/selector после последнего успеха",
+  "requirement_ids": [
+    "REQ-013",
+    "REQ-015",
+    "REQ-017"
+  ],
+  "rnd_ids": [
+    "RND-20",
+    "RND-38",
+    "RND-41"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 37c82b790d9af3a20f02a63af6dda61c68cb1c890d5506e5fe1f5b92de004f7e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#74:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-19.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-19",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Работай, пока я использую Chrome",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read local indexes without focus",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Prepare drafts in isolated owned browser/workspace",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Check user foreground/clipboard activity",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "resource_partitioned_execution",
+      "contract_ru": "Не перехватывать пользовательский ввод; browser context не sandbox удалённого аккаунта"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Background read/preparation; GUI input по единой аренде",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Пользователь начинает печатать во время агентского шага",
+  "requirement_ids": [
+    "REQ-014",
+    "REQ-020",
+    "REQ-024"
+  ],
+  "rnd_ids": [
+    "RND-22",
+    "RND-32"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 1be3250caa9aa644e377978fc7390a269c01309a212a8a4bee2b80fb076887e3 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#75:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-20.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-20",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Продолжи R&D flashloan без live-операций",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read documented capability/dependency state",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Analyse explicitly recorded market fixtures",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Generate test/evidence/patch handoff candidates",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "offline_evidence_join",
+      "contract_ru": "Synthetic, historical и real observed market evidence разделены; live_authorized=false"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один R&D пакет; signer/sender не подключены",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Агент предлагает включить live вместо исправления missing dependencies",
+  "requirement_ids": [
+    "REQ-011",
+    "REQ-018",
+    "REQ-026"
+  ],
+  "rnd_ids": [
+    "RND-24",
+    "RND-28",
+    "RND-40"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ffd39cacb2dd4069fbe6f76ef8bcb6f923328039dbd4a2602ef1ae86190c1106 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#76:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-21.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-21",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Записывай мою работу с AI и репозиторием",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "voice intent transcript",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "visible DOM or UIA text",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "file/Git events",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_4",
+      "description": "terminal test receipts",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Per-channel source/version/sequence; не терять late events",
+  "materialization_contract_ru": "Наблюдения в отдельных append keys; общий контекст — отдельная derived view",
+  "failure_injection_ru": "Один канал теряет связь после первых событий",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 49012c52801e05c7c7847f58928460a0e8a208e6c4c75382619229a0adb85a02 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#77:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-22.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-22",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Расшифруй команду без ошибки в repo name",
+  "parallel_mode": "SELECTIVE_HEDGE",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "one microphone stream + primary ASR",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "secondary ASR on ambiguous critical span",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "repository vocabulary matcher",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Critical slots and negation resolved; final intent revision",
+  "materialization_contract_ru": "Raw audio записывается один раз; hypotheses сохраняются отдельно",
+  "failure_injection_ru": "Первый ASR перепутал not merge / merge",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3e7f30943bf753cbe12d8fcae61a02a09a7f157a80b8e5d281051566125efffa | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#78:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-23.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-23",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Разметь новый разговор",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "deterministic origin/time/hash tags",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "entity/goal model labels",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "source-linked code/evidence status check",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Не promoted status без actual evidence",
+  "materialization_contract_ru": "Label proposals append-only; каноническая view сохраняет conflict",
+  "failure_injection_ru": "Три пересказа одной идеи говорят DONE",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 edfe521c102f89403c96929480aaac81e9a30d07ca38c1b2f593a0a3c2235175 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#79:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-24.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-24",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Подготовь минимальный пакет для исправления",
+  "parallel_mode": "REQUIRED_EVIDENCE_JOIN",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "pinned target function + dependencies",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "actual failure or blocker receipt",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "latest accepted scope/constraint",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Минимальные required slots, отсутствие critical conflicts, current snapshot",
+  "materialization_contract_ru": "Первая immutable handoff version; отдельные delta после",
+  "failure_injection_ru": "Полный импорт истории ещё идёт",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d8c9558430aac0f9f7dcb11f217eae3679cd219a1938117d100d51989892ccb5 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#80:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-25.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-25",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Одновременно сохрани отчёт и подготовь код",
+  "parallel_mode": "PARTITIONED_INDEPENDENT_EFFECTS",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "save unique report artifact",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "create patch in isolated worktree A",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "prepare independent source research",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Resource read/write footprint intersection empty",
+  "materialization_contract_ru": "Разные effect resources могут commit параллельно",
+  "failure_injection_ru": "Два исполнителя случайно выбрали один path",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 21e508c137785a2dd468973638540324bdbb0d87a0aa86f1fc917ea6655629c4 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#81:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-26.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-26",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Дай AI недостающий интерфейс",
+  "parallel_mode": "SCOPED_CONTEXT_RESPONSE",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "exact definition search",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "static references and tests",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "history for active revision",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Requested symbol identity and source revision match",
+  "materialization_contract_ru": "Scoped response packet; никакого произвольного shell от модели",
+  "failure_injection_ru": "Запрос от модели просит файл за allowed root",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 edb56303ee61cc72accfdbd2f0d23a57dacb6522f87c52c3ad5599c8fde98128 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#82:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-27.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-27",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Объедини этот ZIP и весь текст цели",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "archive requirements",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "current user clarification",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "source docs and previous decisions",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Preserve provenance/precedence; dedup lineage not erase history",
+  "materialization_contract_ru": "Новый versioned master spec; исходники не перезаписываются",
+  "failure_injection_ru": "Legacy утверждает single writer для всей записи",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 562f8bcbb71ad97fb0cb3e1884fcfddc886221ff6504bd22efac4f81f6d54941 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#83:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-28.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-28",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Продолжи Studious qualification research",
+  "parallel_mode": "REQUIRED_EVIDENCE_JOIN",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "local pinned repo graph",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "supported capabilities/blockers",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "selected prior goals/decisions",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_4",
+      "description": "approved offline tests when available",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Evidence bound to same source state, sender absent",
+  "materialization_contract_ru": "Handoff/research artifacts only; separate future code branch",
+  "failure_injection_ru": "Readme proposal incorrectly read as runtime readiness",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7591a1b2e910b589619776b28ed7bf0dc381fc734105228ee13cf17fc614753d | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#84:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-29.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-29",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Проверь будущую версию навыка",
+  "parallel_mode": "FIRST_VERIFIED_THEN_SINGLE_ACTIVATION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "artifact origin and digest check",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "sandbox contract/negative tests",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "permission diff and compatibility review",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "All mandatory checks, version + code digest, approved capabilities",
+  "materialization_contract_ru": "Одна activation на version target; test candidates параллельно",
+  "failure_injection_ru": "Новый skill требует доступ ко всему диску",
+  "join_policy": {
+    "cancel_after_first_result": true,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6401de6ff6a4d17e1364bac95d745eb94a31060508e3f09a15f24d81de0997cf | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#85:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-30.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-30",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Восстанови недостающие логи",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "durable process stdout receipt",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "test framework result file",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "approved CI job log download",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Distinct source completeness, timestamp and run ID binding",
+  "materialization_contract_ru": "Не перезапускать исходную работу лишь ради получения логов",
+  "failure_injection_ru": "Один log source пуст, второй содержит error tail",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 269f0e9b2907ee9698fc95e2933c134b0e366e1c040a9e08c8e18a4d80f7b532 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#86:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-31.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-31",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Продолжай работать, пока я пишу в Chrome",
+  "parallel_mode": "PARTITIONED_INDEPENDENT_EFFECTS",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "context reads and indexing",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "code proposals in worktrees",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "one paused GUI route awaiting lease",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "No focus theft and scoped output writes",
+  "materialization_contract_ru": "Foreground only with user lease; background routes продолжаются",
+  "failure_injection_ru": "Пользователь меняет active tab в середине GUI path",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7683c173ad723a850ea7ad18c16faac6d5fc272bf48cdd1d91a72462df1d5b9b | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#87:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/WF-32.json =====
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-32",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Проверь пару research snapshots для web3",
+  "parallel_mode": "COMPLEMENTARY_UNION",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "approved market data source A",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "independent read-only source B",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "local protocol version/capabilities evidence",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Chain/state/time/slot/commitment semantics compatible; stale/unknown explicit",
+  "materialization_contract_ru": "Readonly research only; no transaction signing/submission",
+  "failure_injection_ru": "Быстрые ответы из разных моментов дают ложный edge",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d50dfa5ff0a7274fa4cd17fdac60515b3b07325f47729da309b13f88b1d7ec23 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#88:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/04_WORKFLOWS/index.json =====
+[
+  {
+    "id": "WF-01",
+    "path": "WF-01.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-02",
+    "path": "WF-02.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-03",
+    "path": "WF-03.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-04",
+    "path": "WF-04.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-05",
+    "path": "WF-05.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-06",
+    "path": "WF-06.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-07",
+    "path": "WF-07.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-08",
+    "path": "WF-08.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-09",
+    "path": "WF-09.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-10",
+    "path": "WF-10.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-11",
+    "path": "WF-11.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-12",
+    "path": "WF-12.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-13",
+    "path": "WF-13.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-14",
+    "path": "WF-14.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-15",
+    "path": "WF-15.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-16",
+    "path": "WF-16.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-17",
+    "path": "WF-17.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-18",
+    "path": "WF-18.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-19",
+    "path": "WF-19.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-20",
+    "path": "WF-20.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-21",
+    "path": "WF-21.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-22",
+    "path": "WF-22.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-23",
+    "path": "WF-23.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-24",
+    "path": "WF-24.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-25",
+    "path": "WF-25.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-26",
+    "path": "WF-26.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-27",
+    "path": "WF-27.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-28",
+    "path": "WF-28.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-29",
+    "path": "WF-29.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-30",
+    "path": "WF-30.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-31",
+    "path": "WF-31.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  },
+  {
+    "id": "WF-32",
+    "path": "WF-32.json",
+    "status": "DESIGN_SPEC_NOT_EXECUTABLE"
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 1f744fbdf73d167e4a83c4f62a5d3fb04c1cf127b4ea107a9fe95f6f5c568a22 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#89:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/STATE_MACHINES_RU.md =====
+# Статусы без ложного DONE
+
+## Ingestion
+DISCOVERED → RAW_STORED → PARSED → INDEXED → REVIEWED. Ошибки/исключения имеют отдельные записи; RAW_STORED не равно searchable. Resume cursor относится к snapshot и версии parser/schema.
+
+## Evidence
+ASSERTED / OBSERVED / INFERRED / VERIFIED_BY_BOUND_RECEIPT / DISPUTED / UNKNOWN. Это не одна линейная шкала уверенности: подтверждённый факт устаревает и не становится правом на действие. Source authority и truth status независимы.
+
+## Execution
+PROPOSED → CONTEXT_BOUND → PREPARED → VERIFIED_CANDIDATE → COMMIT_AUTHORIZED → DISPATCHED → OBSERVED_SUCCESS.
+DISPATCHED → UNKNOWN при потере ответа. UNKNOWN → RECONCILED_SUCCESS либо PROVEN_NOT_APPLIED либо MANUAL_REVIEW. Только PROVEN_NOT_APPLIED или согласованный receiver idempotency contract позволяют повтор.
+
+CANCEL_REQUESTED не равно CANCEL_CONFIRMED. Отмена после effect не отменяет effect. FAILED_TEST не означает FAILED_MARKET; code status не означает installed qualification.
+
+## Update
+DOWNLOADED → ORIGIN_VERIFIED → PERMISSIONS_DIFFED → TESTED → STAGED → HEALTHCHECKED → ACTIVATED. Новые permissions и необратимая DB migration требуют отдельного решения. Подпись подтверждает происхождение, не безопасность.
+
+## Single-writer scope
+Локальная SQLite транзакция может атомарно записать свой эффект и квитанцию. Между SQLite, GitHub, браузером и сетью нет общей транзакции. Внешний executor требует idempotency/reconciliation; универсальное exactly-once не заявляется.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 37d7b667eaf3b381be9c11cd9982d9ba5939f72a138fa1f24826a93d79357d0b | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#90:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/TAGGING_AND_CONTEXT_RU.md =====
+# Labeling: не один мешок тегов, а несколько независимых осей
+
+## Обязательные оси
+Источник (system/file/message/URL), exact span, raw content hash, project/entity, speaker role, content role, source authority, epistemic state, valid/observed/ingested time, privacy/allowed recipients, parser/model/schema version, provenance lineage, current repo binding.
+
+## Дополнительные оси для автоматизации
+Actionability (informational/proposal/registered action), effect class, resource read/write sets, failure domain, applicability conditions, skill qualification expiry, task relevance, evidence cost, contradiction/supersedes, cache dependencies, unknown/unresolved reason.
+
+**Не смешивать:** topic confidence с truth confidence; вероятность маршрутизатора с execution authority; «похожий документ» с одинаковым источником; repo code present с installed/device verified; historical market observation с fresh state.
+
+## Три параллельных маршрута разметки
+Правила дают источник/роль/commit/path. GLiNER [S08] выделяет entity spans по заданным labels. Laya [S06] предлагает typed категории на небольшом релевантном тексте. Reconciler сохраняет различия, а не делает majority vote истинностью.
+
+Например, фраза assistant «PR полностью внедрён» получает `speaker=assistant`, `role=result`, `state=ASSERTED`, `authority=DATA_ONLY`. Проверенный GitHub merge receipt подтверждает состояние PR, но ещё не доказывает Windows execution или корректность каждого requirement.
+
+Alias map: studious-pancake, Studio Spancake, flashloan bot → candidate project identity. При нескольких репозиториях с одинаковым alias требуется resolve by configured repo identity; не подменять операторский filesystem root данными из документа.
+
+## Контекстный пакет
+Task and acceptance → required evidence slots → parallel exact/semantic/temporal/source search → source integrity check → version closure → relevance ranking → contradiction ledger → selected sources + omissions → WHY_THIS_PACKET.
+
+Неполноту показывать явно. Нельзя «подтянуть ещё всё» без ограничения рабочей памяти и API budget; можно догружать по continuation cursor сколько потребуется, сохраняя полную библиотеку.
+
+## Быстрая библиотека
+Raw intake и enrichment разделены. Inverted exact search/символы — первый маршрут. Embeddings, temporal graph и learned ranking добавляются по доказанной пользе. Хеши input/transform version обеспечивают incremental cache invalidation. Новая версия summary не стирает старую decision history.
+
+## Пример короткого заголовка handoff
+Зачем: локализовать failure, а не переписать весь repo.
+Что дано: exact error, affected symbols/tests, source/decision refs.
+Что неизвестно: актуальный installed device receipt.
+Что требуется: минимальный patch proposal и независимые проверки.
+Что запрещено: отключение тестов, live/sender, автоматическое расширение прав.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 149e90c66c87e7b7b58203a00fd7704507c65b5686aff9fdffaa32f903422309 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#91:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/TAGGING_V3_RU.md =====
+# Теги V3: не единственная плоская классификация
+
+Детерминированные поля: source URI, object hash, full original path, source revision, offsets/message IDs, capture producer, observed/ingested times, MIME, size, ingest status. Эти поля нельзя «предсказывать» Laya, если источник уже даёт их точно.
+
+Предлагаемые моделью поля: project candidates, entity spans, intent/goal, role (idea/requirement/decision/code/evidence), topic, likely duplicate, contradictions, relevance to this task. Каждый такой label имеет model/version, input hash, confidence/calibration scope и source span. Ненадёжный label — CANDIDATE, не authoritative fact.
+
+Authority: USER_INSTRUCTION / SOURCE_CODE / OBSERVED_RESULT / THIRD_PARTY_CLAIM / ASSISTANT_PROPOSAL. Proposed future behavior отделён от фактического состояния.
+
+Execution state: PLANNED, IMPLEMENTED_UNVERIFIED, OFFLINE_VERIFIED, DEVICE_VERIFIED, BLOCKED, STALE, SUPERSEDED. Переход к verified требует receipt того же commit/env/task, а не голосования summaries.
+
+Availability: AVAILABLE, PARTIAL, NOT_CAPTURED, UNSUPPORTED, DENIED, MISSING_DEPENDENCY, STALE, ERROR. «Нет информации» не равно «информация ложная».
+
+Context quality — вектор, а не один магический score: source authority, freshness, task relevance, required-slot coverage, integrity, contradiction count, provenance, privacy eligibility. Hard constraints сначала; ranker выбирает внутри допустимого множества.
+
+Relations: requires, implements, tested_by, observed_in, derived_from, copied_from, contradicts, supersedes, blocked_by, repairs. Copies одного сообщения не становятся независимыми confirmations.
+
+Для web3-контекста добавить chain/protocol/version/state reference/timestamp и evidence type (fixture, offline replay, paper observation). Read-only market data и live execution authority никогда не смешиваются одним `financial` tag.
+
+User deletes/retention requests должны удалять соответствующие originals и derived indexes согласно policy. «Immutable» здесь означает отсутствие скрытой перезаписи истории, а не запрет пользователю управлять своей информацией.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ead2f863cc0903f37f3e3af2467dc343c7cae0e30fafc9439124ac91fd1e8f02 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#92:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/action_spec.example.json =====
+{
+  "schema_version": "agentos.action-spec/0.2",
+  "operation_id": "fixture-intent-0001",
+  "intent_revision": 0,
+  "goal": "Compile a source-bound handoff, not apply code",
+  "target": "fixture://handoff/1",
+  "effect_class": "ISOLATED_PREPARE",
+  "candidate_routes": [
+    "exact_symbols",
+    "error_traces",
+    "historical_decisions"
+  ],
+  "expected_revision": 0,
+  "external_write_enabled": false,
+  "required_postconditions": [
+    "Required source references exist",
+    "Snapshot binding unchanged",
+    "Private data export approved or withheld"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3884ad5fa360bc875c9d558eefdff6b8aa9d55ced4c67c0aaa9de983ffbfd700 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#93:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/action_spec.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ActionSpec",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "operation_id",
+    "intent_revision",
+    "goal",
+    "target",
+    "effect_class",
+    "candidate_routes",
+    "expected_revision",
+    "external_write_enabled",
+    "required_postconditions"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agentos.action-spec/0.2"
+    },
+    "operation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "goal": {
+      "type": "string"
+    },
+    "target": {
+      "type": "string"
+    },
+    "effect_class": {
+      "enum": [
+        "READ",
+        "ISOLATED_PREPARE",
+        "EXTERNAL_WRITE_REQUIRES_APPROVAL"
+      ]
+    },
+    "candidate_routes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_revision": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "external_write_enabled": {
+      "const": false
+    },
+    "required_postconditions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 bef514c63c64466f85cb3344001cbc3fb8bb9745e523f3c36bfd7d9e1e24fa8d | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#94:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/ai_return.example.json =====
+{
+  "schema_version": "agentos.ai-return/0.2",
+  "task_id": "fixture-task-1",
+  "base_snapshot": "fixture-snapshot-1",
+  "status": "NEEDS_CONTEXT",
+  "claims": [],
+  "patch": null,
+  "tests_reported": [],
+  "missing_context": [
+    "exact qualification command and source-bound stderr"
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 df2aab5d198ef048c7d61a9061af99ea0e54b198627e18624e74c836e7f987ed | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#95:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/ai_return.schema.json =====
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ProviderNeutralAIReturn",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "task_id",
+    "base_snapshot",
+    "status",
+    "claims",
+    "patch",
+    "tests_reported",
+    "missing_context"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agentos.ai-return/0.2"
+    },
+    "task_id": {
+      "type": "string"
+    },
+    "base_snapshot": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "PROPOSED_PATCH",
+        "NEEDS_CONTEXT",
+        "NO_CHANGE"
+      ]
+    },
+    "claims": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "patch": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "tests_reported": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      }
+    },
+    "missing_context": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8935084d212a23905dd0381ae0ba0cba0444b46f21cd6bf7269f13b1be781d53 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#96:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/laya_decision_request.example.json =====
+{
+  "note": "State/questions shape from Laya author examples; not an executable workflow or permission grant. Input snapshot should be short and explicitly bounded.",
+  "state": {
+    "goal": "Собрать контекст ошибки qualification в studious-pancake",
+    "available": [
+      "repo_snapshot",
+      "source_symbols",
+      "recent_user_goal"
+    ],
+    "missing": [
+      "actual_failure_receipt"
+    ],
+    "policy": "read_only",
+    "data_scope": "approved_local_project"
+  },
+  "questions": {
+    "next_source": {
+      "type": "choice",
+      "instructions": "Which permitted source should be inspected to fill the missing evidence?",
+      "criteria": {
+        "A": "existing test or qualification receipt",
+        "B": "source dependency definitions",
+        "C": "previous accepted goal",
+        "D": "insufficient information; escalate"
+      }
+    },
+    "input_role": {
+      "type": "choice",
+      "instructions": "How should this input be treated?",
+      "criteria": {
+        "A": "user task proposal",
+        "B": "untrusted source document",
+        "C": "verified execution evidence",
+        "D": "unknown"
+      }
+    }
+  }
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 fc418b4b1376718328da19b4af6b961c6820d80c7884122f94dd01c1bd2d6cd4 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#97:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/05_CONTRACTS/merge_policy.example.json =====
+{
+  "schema": "agentos.parallel-policy/0.3",
+  "capture": {
+    "mode": "COMPLEMENTARY_UNION",
+    "producers": "multiple",
+    "cancel_on_first": false,
+    "raw_history": "immutable_with_user_controlled_retention",
+    "dedup": "bytes_only_preserve_all_provenance"
+  },
+  "retrieval": {
+    "mode": "REQUIRED_EVIDENCE_JOIN",
+    "allow_early_ready": true,
+    "late_updates": "versioned_delta"
+  },
+  "same_answer_lookup": {
+    "mode": "FIRST_VERIFIED",
+    "hedge": "adaptive_after_observed_threshold",
+    "verifier": "independent_source_bound_checks"
+  },
+  "independent_actions": {
+    "mode": "PARTITIONED_INDEPENDENT_EFFECTS",
+    "requires": "canonical_disjoint_read_write_scopes"
+  },
+  "shared_effect": {
+    "mode": "PREPARE_COMMIT",
+    "writers_per_effect_target": 1,
+    "unknown_response": "reconcile_before_retry"
+  },
+  "laya": {
+    "role": "advisory",
+    "may_grant_permissions": false
+  },
+  "external_writes_enabled": false,
+  "native_laya_import_format": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 47cf08877477ce287df086396fe8ab2db79da988

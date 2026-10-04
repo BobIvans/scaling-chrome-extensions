@@ -1,0 +1,33 @@
+{
+  "artifact": "repo_smells.py",
+  "scanner_version": "1.0.0",
+  "date": "2026-10-03",
+  "runtime_environment": "Linux; Python in execution workspace",
+  "unit_tests": {
+    "status": "PASSED",
+    "command": "python -m unittest discover -s rnd_work/smells -p 'test_repo_smells.py' -v",
+    "test_count": 9,
+    "exit_code": 0,
+    "reported_seconds": 0.224,
+    "scope": "Temporary synthetic repositories only"
+  },
+  "evidence": [
+    "321 Python files are included without a 300-file cap",
+    "2500-node cycle graph processed without recursive graph traversal",
+    "Source file with a write-on-execution statement is parsed without executing it",
+    "Original source bytes unchanged after scanning",
+    "Nested repeated basenames retain separate paths",
+    "Binary, decode, syntax and simulated permission errors have explicit statuses",
+    "File and directory symlinks skipped without following a loop",
+    "Relative src-layout imports and local import cycles are reported",
+    "External, ambiguous and dynamic imports remain explicitly unresolved",
+    "Actual CLI writes JSON report and rejects an output path inside repository"
+  ],
+  "user_flashloan_repository_scan": "NOT_RUN",
+  "windows_11_execution": "NOT_RUN",
+  "windows_junction_integration_test": "NOT_RUN",
+  "laya_model_inference": "NOT_RUN",
+  "security_audit_pass": "NOT_RUN",
+  "runtime_bot_tests": "NOT_RUN",
+  "live_bot_readiness": "NOT_RUN"
+}

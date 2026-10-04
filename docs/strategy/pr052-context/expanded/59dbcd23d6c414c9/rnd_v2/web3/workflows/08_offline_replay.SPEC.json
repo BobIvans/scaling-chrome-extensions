@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF08",
+  "name": "offline_replay",
+  "title_ru": "Детерминированный replay",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts"
+  ],
+  "inputs": [
+    "immutable_market_dataset",
+    "replay_clock",
+    "strategy_config"
+  ],
+  "steps": [
+    {
+      "id": "offline_replay.1",
+      "handler": "PROPOSED.offline_replay.1",
+      "instruction": "Replay recorded event ordering with clock control"
+    },
+    {
+      "id": "offline_replay.2",
+      "handler": "PROPOSED.offline_replay.2",
+      "instruction": "Compare decisions against expected behavior and aggregate reproducibility hashes"
+    },
+    {
+      "id": "offline_replay.3",
+      "handler": "PROPOSED.offline_replay.3",
+      "instruction": "Track dropped/out-of-order events and rejected opportunities"
+    }
+  ],
+  "outputs": [
+    "replay_receipt",
+    "decision_log"
+  ],
+  "qualification_criteria": [
+    "OFFLINE_REPLAY only; does not satisfy paper observation"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

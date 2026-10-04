@@ -1,0 +1,33 @@
+{
+  "outcome": "PASS",
+  "checks": 1678,
+  "criteria": 213,
+  "cases": 251,
+  "scope": "PACKAGE_INTEGRITY_AND_DESIGN_COVERAGE_ONLY",
+  "application_tests": "NOT_RUN",
+  "device_tests": "NOT_RUN",
+  "negative_integrity_cases": [
+    {
+      "case": "raw_hash_tamper",
+      "outcome": "PASS_EXPECTED_REJECTION",
+      "observed": "AssertionError: hash:fixtures/normal/source_utf8_bom_crlf.txt"
+    },
+    {
+      "case": "missing_criterion",
+      "outcome": "PASS_EXPECTED_REJECTION",
+      "observed": "AssertionError: all-original-criteria-exact"
+    },
+    {
+      "case": "wrong_schema_type",
+      "outcome": "PASS_EXPECTED_REJECTION",
+      "observed": "AssertionError"
+    }
+  ],
+  "scale_generator_smoke": {
+    "outcome": "PASS_INPUT_GENERATOR_ONLY",
+    "file_entries": 41,
+    "cycle_entries": 41,
+    "large_source_bytes": 3145722,
+    "application_tests": "NOT_RUN"
+  }
+}

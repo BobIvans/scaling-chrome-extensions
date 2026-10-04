@@ -1,0 +1,181 @@
+Создай большой подробный ZIP ROADMAP-PR-019: «Долгие параллельные кампании и R&D: scheduler, leases, budgets, resume и next briefs».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Развить текущий scheduler/Core, измерить concurrency, связывать источники с экспериментами и продолжать кампанию по checkpoints без повторных effects.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: G3-010, UI3-015, PAR3-002, PAR3-004, PAR3-006, PAR3-007, PAR3-008, PAR3-011, PAR3-014, PAR3-016, PAR3-019, PAR3-020, PAR3-021, PAR3-023, EVO3-021, EVO3-022, TAB4-17, LAYA4-028, ACTION5-25, ACTION5-26
+Feature cards: LIB-034, LIB-049, ACT-016, ACT-017, ACT-018, ACT-019, ACT-020, ACT-021, ACT-024, ACT-025, ACT-027, ACT-040, ACT-045, ACT-049, ACT-055, RND-024, RND-025, RND-026, RND-036, RND-038, RND-044, RND-045
+Decisions: DEC5-21, DEC5-22
+Goals: GOAL5-10, GOAL5-20, GOAL5-21, GOAL5-24, GOAL5-26
+Dependencies: PR-011, PR-013, PR-014, PR-015, PR-016, PR-017, PR-018
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-025 — Durable расписания и долгие кампании: offline, sleep, restart и budgets
+Scope:
+- Versioned schedules, occurrence identity и Europe/Riga DST
+- Skip/latest/bounded catch-up и resource/cost admission
+- Checkpoint resume, deadlines, retries, cancellation и no-progress stop
+Граница: В main уже существуют schedule_tick/supervisor/Core: сначала gap audit и reuse. Это развитие существующего scheduler, не новый runtime.
+Приёмка:
+- DST/sleep/clock drift не дублируют occurrence
+- Cancelled intent не оживает
+- Unknown external effect сначала сверяется
+- Policy/source drift инвалидирует нужный checkpoint
+- Перегрузка ставит работу в очередь без отбрасывания corpus
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-026 — Ресурсные конфликты, leases, fencing и управляемая параллельность Dell
+Scope:
+- Canonical identities для DB/UI/repo/files/provider/capital resources
+- Conflict graph, atomic leases и fencing
+- Admission по измеренным CPU/RAM/IO/quotas и foreground priority
+Граница: Production Core остаётся serial до доказанной qualification. Worktree integration №32 и updater №33 сохраняют единственного владельца.
+Приёмка:
+- Истёкший worker не может commit результат как новый owner
+- Два alias одного ресурса распознаются
+- UI focus и DB writer остаются согласованными
+- Измерения на Dell определяют concurrency profile
+- Общий baseline и ресурсы не учитываются дважды
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-027 — Параллельные campaign DAG: общий контекст, ветви, resume и журнал решений
+Scope:
+- Immutable campaign manifest и общие доказательства/cache
+- Branch compare/join semantics, deferred fallback и aging
+- Resume DAG, selective invalidation и доступная панель
+Граница: Это интеграция №34/35 и существующих owners. Независимая подготовка документов не служит доказательством параллельного PC execution.
+Приёмка:
+- Все ветви сравниваются на одном замороженном input
+- Повтор derived data не считается независимым evidence
+- Restart продолжает только валидный остаток DAG
+- Применяется один итоговый effect к target
+- Fault pilot проверяет leases, STOP, updater и UI writer вместе
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-028 — Автоматический R&D цикл: источники → гипотеза → эксперимент → следующий PR brief
+Scope:
+- Claim→primary source→experiment и technology/media scout
+- Next brief из unmet criterion, negative trial и data gap
+- Ограниченный improvement loop и портфель экспериментов по информационной пользе
+Граница: Использует проверенные merge/update/qualification пути. Публикация контента и произвольный live execution не добавляются автоматически из R&D предложения.
+Приёмка:
+- Каждый claim имеет provenance либо UNKNOWN
+- Пересказы одного источника группируются
+- Новые aims не теряют прежние goal IDs
+- Brief содержит owner/input/acceptance/recovery
+- Loop останавливается при no-progress/budget/unknown effect и сохраняет попытку
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+G3-010 — Создавать следующий R&D brief по новым данным
+- У задачи есть gap, новая evidence delta и критерий результата.
+- Повтор без новых данных не создаёт бесконечную кампанию; бюджет/stop condition соблюдены.
+UI3-015 — Распараллелить подготовку и проверку с одним UI-писателем
+- Два worker не изменяют один composer одновременно; разные чаты не обходят desktop-session mutex.
+- Конфликт по файлам/результатам становится интеграционной задачей.
+PAR3-002 — Неизменяемые входы и общий manifest кампании
+- Каждый узел ссылается на snapshot ID, commit и хеш входного manifest.
+- Полнота raw capture, unresolved graph edges и omissions представлены отдельно.
+- Два работника получают один и тот же зафиксированный вход, даже если current main изменился.
+PAR3-004 — Каноническая идентичность ресурсов Windows
+- Case aliases, separator aliases, UNC, volume, symlink и junction проходят реальные Windows fixtures.
+- Read/write scopes привязаны к физической идентичности или отмечены unknown.
+- Clipboard, window/chat и Git metadata имеют устойчивые resource IDs.
+PAR3-006 — Граф конфликтов исполнения и будущей интеграции
+- Read/read одного immutable snapshot допускается параллельно; write/read и write/write пересечения сериализуются.
+- execution_write_set и integration_write_set независимы: разные worktree могут готовить будущий конфликтующий patch.
+- Unknown runtime effects получают эксклюзивное выполнение; поздний фактический diff заменяет предположение о merge overlap.
+PAR3-007 — Admission control для CPU, RAM, UI и провайдеров
+- Начальный профиль Dell отмечен proposal; каждое решение сохраняет свободную и зарезервированную ёмкость.
+- Нельзя получить lease, если превышены worker, memory estimate, heavy, UI или provider slots.
+- Базовые UI/STOP не зависят от свободного рабочего слота.
+PAR3-008 — Атомарные leases, fencing и единственный DB writer
+- Выдача lease и resource reservation атомарны в существующем store.
+- Каждая попытка получает новый fencing token и checkpoint references.
+- Истёкший worker не подтверждает success и не перезаписывает новую ревизию.
+PAR3-011 — Общий кеш доказательств и безопасное переиспользование
+- Ключ включает source snapshot, selected input hashes, goal, parser/rules и capability version.
+- Raw данные не скачиваются повторно для независимых потребителей одного ключа без необходимости.
+- Кеш подтверждает hashes, completeness и freshness; derived claims остаются атрибутированы.
+PAR3-014 — Резервирование бюджета и ограничения backlog
+- Перед платным эффектом резервируются configured верхние оценки запросов, входа/выхода и стоимости.
+- Unknown price/quota не считается нулём; UI и API budgets не смешиваются.
+- Одинаковые не начатые события coalesce; stale jobs становятся superseded с сохранением исходных намерений.
+PAR3-016 — Resume с верификацией входов и остатка DAG
+- После restart проверены hashes, SHA, grants, capability version и неопределённые эффекты.
+- Успешные подтверждённые узлы переиспользуются, остальной DAG перепланируется.
+- Истёкшие reservations освобождены только после определения судьбы эффекта.
+PAR3-019 — Планирование по доступным возможностям и aging
+- Недоступная версия/доступ/квота блокирует только затронутый узел с точной причиной.
+- Приоритет задаёт доступность/STOP, reconciliation, interactive, background; aging уменьшает голодание background.
+- Laya выбирает только разрешённые candidate IDs и может abstain; она не меняет grants или budgets.
+PAR3-020 — Журнал решений и представление зависимостей
+- Каждый transition содержит campaign/node/attempt/revision, hashes, evidence и причину.
+- UI объясняет ready/running/waiting/blocked/unknown и владельца конфликтного ресурса.
+- Projection перестраивается из событий; метки поиска сохраняют provenance и ручные исправления.
+PAR3-021 — Доступный контроль очереди; голосовой parity как отдельное расширение
+- Queue, причины ожидания, локальный STOP, исправление текстовой цели и resume доступны клавиатурой и выбранным screen reader.
+- Полный базовый сценарий завершается без ASR, микрофона, голосовой модели или voice adapter.
+- Клавиатурная проверка выполнена на Windows устройстве с реальными результатами, не только по атрибутам UI.
+PAR3-023 — Инвалидация устаревших исследовательских ветвей
+- Новый snapshot или capability version инвалидирует зависимые claims/skills по lineage.
+- Исторические результаты остаются доступными; текущие задачи получают явный refresh requirement.
+- Непокрытые критерии формируют следующий evidence-linked R&D brief.
+EVO3-021 — Следующий R&D документ из доказанных gaps
+- Brief различает missing evidence, missing code, missing release и missing device binding; каждый gap имеет цель и источник.
+- Выполненные и deferred требования сохраняются в index; повторная реализация закрытой функции не предлагается без причины.
+- Приоритет сравнивает полезность, снятие блокировки, стоимость и uncertainty; веса прозрачны и изменяемы.
+- Brief строится до release/install/usable: достаточно текущего ledger с manual checkpoint или verified evidence. Данные установленного устройства добавляются при наличии; их отсутствие отражается как gap.
+EVO3-022 — Координатор параллельных proposals
+- Worker получает snapshot/request/goal IDs, read scope, predicted write set, contract dependency set и return contract.
+- Конфликты по файлам и общим контрактам приводят к integration task; stale base не применяется молча.
+- Сумма зелёных worker tests не заменяет qualification интегрированной ревизии; UI send/install/schema write serial leases.
+- Подготовка parallel proposals доступна до install/usable и не зависит от готового следующего brief; если worker требует внешнего эффекта, применяется отдельный activation gate.
+TAB4-17 — Ограниченный автономный цикл улучшений
+- Цикл имеет явные max iterations/time/transfers и список критериев завершения; бесконечное выполнение не является режимом по умолчанию.
+- Следующий запрос формируется из незакрытых критериев, подтверждённых изменений и конкретных ошибок.
+- Один чат, одно дерево записи и одна установка имеют одного владельца действия; исследовательский параллелизм не обходит max_parallel Core.
+- Нет прогресса, повтор ошибки или изменение scope останавливают цикл с конкретным следующим шагом.
+- Перезапуск продолжает подтверждённое состояние, а не начинает все действия заново.
+LAYA4-028 — Следующий R&D brief из проверенных gaps и целей
+- Каждое исходное требование имеет task/evidence/deferred link; пересказ не заменяет original user words.
+- Brief выбирает bottleneck и next evidence с явным rationale, dependencies и proposed acceptance.
+- Implemented, locally tested, installed, provider connected и usable представлены раздельными статусами.
+- Неизвестные/missing/history gaps не удаляются из общего ZIP; supersedes связи сохраняются.
+- Подготовка brief не отправляет его и не запускает capability update; destination and update owners продолжают UI3/EVO3 flow.
+ACTION5-25 — Зафиксировать durable расписание и offline catch-up
+- Timezone Europe/Riga, DST, sleep/offline и clock change fixtures не создают duplicate occurrence.
+- Для missed runs явно выбран skip/latest/bounded catch-up; нет неконтролируемого backlog.
+- После policy/version drift schedule paused до revalidation.
+- Schedule edit создаёт новую revision и не переписывает результаты старых occurrences.
+ACTION5-26 — Продолжать work после restart с resource и checkpoint checks
+- Restart не оживляет cancelled intent и не возобновляет unknown send до reconciliation.
+- Changed HEAD/source/grant инвалидирует затронутый checkpoint; unaffected read-only work может продолжаться.
+- Foreground user input сохраняет приоритет; пределы RAM/CPU и concurrency измерены на Dell, не заявлены заранее.
+- Queue перегрузка показывается как waiting/budget blocker, исходный корпус не обрезается.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

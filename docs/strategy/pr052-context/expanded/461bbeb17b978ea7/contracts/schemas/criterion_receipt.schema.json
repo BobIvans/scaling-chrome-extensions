@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposal:criterion_receipt:v1",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "sce.criterion-receipt.proposal.v1"
+    },
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "criterion_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "criterion_revision_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "namespace",
+        "profile_id",
+        "project_ids"
+      ],
+      "additionalProperties": false
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "subject_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "build_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "input_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "config_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "verifier_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verifier_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_at": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "PACKAGE",
+        "UNIT",
+        "INTEGRATION",
+        "CI",
+        "DEVICE"
+      ]
+    },
+    "outcome": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "UNKNOWN",
+        "STALE",
+        "NOT_RUN"
+      ]
+    },
+    "artifact_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          }
+        },
+        "required": [
+          "path",
+          "sha256"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "validity_inputs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  },
+  "required": [
+    "schema",
+    "receipt_id",
+    "criterion_id",
+    "criterion_revision_sha256",
+    "scope",
+    "attempt_id",
+    "subject_revision",
+    "build_sha256",
+    "input_sha256",
+    "config_sha256",
+    "verifier_id",
+    "verifier_version",
+    "observed_at",
+    "mode",
+    "outcome",
+    "artifact_refs",
+    "validity_inputs",
+    "limitations"
+  ],
+  "additionalProperties": false
+}

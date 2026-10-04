@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ImmutablePacketRef",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "packet-ref.v1"
+    },
+    "packet_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "packet_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "manifest_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "part_count": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "source_snapshot_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "projection_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "immutability_receipt_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "packet_id",
+    "packet_sha256",
+    "manifest_ref",
+    "manifest_sha256",
+    "part_count",
+    "source_snapshot_refs",
+    "projection_version",
+    "immutability_receipt_ref"
+  ],
+  "additionalProperties": false
+}

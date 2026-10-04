@@ -1,0 +1,19 @@
+﻿id,experiment,intervention,failure_signal,candidate_acceptance,mode,execution_status
+W3-E01,Replay reproducibility,same event dataset+seed+clock,different decision/artifact digests,exact match or explained nondeterminism,OFFLINE_ONLY,NOT_RUN
+W3-E02,Stale quote rejection,delay quotes above reviewed budget,accepted stale candidate,zero such acceptances over recorded cases,OFFLINE_ONLY,NOT_RUN
+W3-E03,Full cost accounting,sweep each fee and token decimals,accepted net below configured threshold,integer recomputation and matching accounting unit,OFFLINE_ONLY,NOT_RUN
+W3-E04,Repayment boundaries,principal/fee/rounding edge cases,invariant failure / unauthorized callback,required cases execute with true machine receipts,CHAIN_ADAPTER_REQUIRED,NOT_RUN
+W3-E05,Stateful invariant non-vacuity,handler runs/depth/corpus,zero useful handler calls or hidden revert loop,reviewed campaign coverage reached,CHAIN_ADAPTER_REQUIRED,NOT_RUN
+W3-E06,Provider inconsistency,same-anchor responses from distinct upstreams,unexpected divergence,divergence yields UNKNOWN and pause candidate,READ_ONLY_NETWORK_SPEC,NOT_RUN
+W3-E07,Reorg/slot change,replace canonical anchor or source view,old proof stays TRUE,invalidate affected evidence by exact binding,OFFLINE_ONLY,NOT_RUN
+W3-E08,Observation vs replay,supply replay artifact for paper stage,replay classified as market observation,refuse mode mismatch,OFFLINE_ONLY,NOT_RUN
+W3-E09,RPC quota and disconnect,429/timeout/drop,unbounded retry or cursor loss,bounded backoff + explicit gap ledger,ISOLATED_RUNNER_SPEC,NOT_RUN
+W3-E10,Stop latency,voice/button stop under CPU load,post-trigger forbidden dispatch,measured latency distribution within reviewed target,WINDOWS_DEVICE_REQUIRED,NOT_RUN
+W3-E11,Update rollback,failed migration/new version health check,library corruption or inability to restore,copy migration + tested compatible rollback,WINDOWS_DEVICE_REQUIRED,NOT_RUN
+W3-E12,Wrong network protection,network/genesis mismatch,receipt passes despite wrong chain,UNKNOWN mismatch and no side effect,OFFLINE_ONLY,NOT_RUN
+W3-E13,Evidence corruption,alter one artifact byte,same TRUE status,FALSE hash integrity status,OFFLINE_ONLY,NOT_RUN
+W3-E14,False claim robustness,success=true / AI text / empty JUnit,any automatic ready-for-live,UNKNOWN or FALSE; live_authorized always false,OFFLINE_ONLY,NOT_RUN
+W3-E15,Device sustained performance,Dell CPU/RAM/GPU heating + voice + indexing,p99 delay exceeds actual target,measured local profile; no remote extrapolation,WINDOWS_DEVICE_REQUIRED,NOT_RUN
+W3-E16,Worktree isolation,two parallel patch/test tasks,shared state/test pollution,separate roots+locked shared resources+exact versions,LOCAL_RUNNER_SPEC,NOT_RUN
+W3-E17,Secret isolation,fixture fake key in repository/log,key in model context or exported text,secret policy catches fixtures; authorized raw retained locally,SYNTHETIC_FIXTURES_ONLY,NOT_RUN
+W3-E18,Paper economics honesty,modeled fills vs observed quotes,hypothetical PnL labeled realized,separate metrics and assumptions stored,READ_ONLY_NETWORK_SPEC,NOT_RUN

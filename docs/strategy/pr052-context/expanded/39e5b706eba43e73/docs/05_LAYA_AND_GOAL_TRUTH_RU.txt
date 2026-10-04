@@ -1,0 +1,49 @@
+LAYA: РЕШЕНИЯ ПО ДАННЫМ, ПРОВЕРКА ЦЕЛЕЙ ПО ДОКАЗАТЕЛЬСТВАМ
+
+Роль: classification/routing/priority/uncertainty. Использовать typed choice,
+score и noul из закреплённой версии Laya. Реальный inference в пакете NOT_RUN.
+Модель не распаковывает ZIP, не владеет SQLite, не пишет код и не исполняет JSON.
+Сначала deterministic hash/diff/FTS/AST, затем небольшое описание кандидата Laya,
+затем сложные неоднозначные задачи — большой AI с исходниками.
+
+ЧТО ПОДАВАТЬ
+goal ID/version; file/chunk refs; snapshot SHA; static finding; текущие test receipts;
+coverage gaps; previous decisions. Полный repo не надо сжимать в короткое окно Laya.
+Следить за usage.truncated/state_tokens_dropped; неполное чтение → UNKNOWN.
+
+TRUE/FALSE/UNKNOWN/NOT_RUN
+TRUE: критерий проверен конкретным verifier на нужной версии источника.
+FALSE: есть воспроизводимое опровержение критерия.
+UNKNOWN: источник неполон, противоречив или stale; не подменять false.
+NOT_RUN: проверка ещё не запускалась.
+Laya confidence/answer_confidence — оценка модели, не verified_truth.
+Даже очень высокая вероятность не присваивает полномочия shell/trading.
+
+ПРИМЕРЫ ПОЛЕЗНЫХ ПРОВЕРОК
+«Все файлы repo учтены?» — inventory + hashes, без модели.
+«Полные пути сохранены?» — сравнение manifest с archive entries.
+«Требование реализовано?» — code references + behavioral test + exact SHA.
+«У code smell есть риск?» — static candidate; решение после контекста/reproducer.
+«Нужна новая функция?» — current owner search + requirement mapping + duplicate check.
+«Бот готов к paper?» — domain verifier, dependencies/data freshness и paper receipt.
+«Стратегия прибыльна?» — UNKNOWN без измеренного outcome с комиссиями/ошибками;
+вероятность Laya и симуляция сами по себе не дают live authorization.
+
+R&D НА DELL
+Сравнить rules-only, Laya multilingual и большой AI на одинаковых примерах.
+Выборка: RU/EN запросы, устаревшие receipts, недостающий контекст, ложные DONE,
+повторные задачи, ошибочные отрицания, код/комментарии с prompt injection.
+Train/calibration/test разделить по проекту и источнику; не обучать на test answers.
+Метрики: routing accuracy, selective error при abstention, false TRUE, recall
+реальных blockers, p50/p95 latency, RAM, время до verified result, цена API.
+Нет доказанного выигрыша → оставить deterministic route и собирать ошибки.
+
+CODE SMELLS
+Static tools создают candidates, а не автоматические приговоры: широкие except,
+дублирующие runtime owners, циклы imports, неиспользуемые ветки, огромные функции,
+несогласованные схемы, молчаливое усечение, mocked success и отсутствие verifier.
+Слои: lint/type/AST → dependency graph → requirements/PR archaeology → AI review
+→ воспроизводимый тест → patch → повторная проверка → receipt.
+Выходы: High_Risk_Bugs.txt, Architecture_Flaws.txt, DUPLICATE_IMPLEMENTATION_INDEX,
+90_TECH_DEBT_INDEX, REQUIREMENT_COVERAGE.json и BLOCKERS.json — целевые deliverables,
+а не уже выполненный аудит studious-pancake.

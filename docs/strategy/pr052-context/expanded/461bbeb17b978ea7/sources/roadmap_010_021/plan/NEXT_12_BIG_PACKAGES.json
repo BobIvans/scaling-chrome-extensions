@@ -1,0 +1,2595 @@
+[
+  {
+    "number": 10,
+    "package_id": "ROADMAP-PR-010",
+    "title": "Единая библиотека источников: точный поиск, версии, метки, цели и импорт файлов/чатов",
+    "user_outcome": "Закрыть source fidelity/import/search debt №5/8/9 и получить полезную локальную библиотеку с originals, SourceAddress, TXT/folders/archives, ChatGPT/Telegram branches и goal overlays.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      5,
+      9
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Точные ссылки на источники, поиск и ручные метки",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "SourceAddress: source/version/extraction/range/hash",
+          "ID/path/exact-quote/FTS с фильтрами namespace/project/time",
+          "Версии автоматических меток, ручные overrides, сохранённые представления"
+        ],
+        "acceptance": [
+          "Цитата открывает ту же версию после restart",
+          "Ошибочные bounds/hash/namespace отклоняются",
+          "Нет утечки snippets за пределы scope",
+          "Ручная метка переживает повторную extraction",
+          "Все страницы выдачи доступны, включая хвост",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "№9 хранит оригиналы ChatGPT JSON; здесь добавляются точные адреса и поисковый контракт. Семантическая lifetime retrieval — №24; полные importer adapters — №16–20.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-008",
+          "LAYA4-015",
+          "LAYA4-016",
+          "ACTION5-10",
+          "ACTION5-11"
+        ],
+        "feature_ids": [
+          "LIB-014",
+          "LIB-017",
+          "LIB-018",
+          "LIB-050"
+        ],
+        "decision_ids": [
+          "DEC5-15"
+        ],
+        "goal_ids": [
+          "GOAL5-06",
+          "GOAL5-09"
+        ],
+        "workstream_id": "WS-001",
+        "parent_package": "ROADMAP-PR-010",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [],
+        "original_package_inputs": [
+          9
+        ]
+      },
+      {
+        "title": "Общий импорт файлов: TXT, папки, архивы, кодировки и специальные Git payloads",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Importer registry и extractor queue в canonical store",
+          "Streamed TXT/folder checkpoints/encodings и archive provenance graph",
+          "Raw unsupported originals, attachments, local LFS payload verification и submodule identities"
+        ],
+        "acceptance": [
+          "Каждый entry имеет outcome/reason без молчаливого пропуска",
+          "Повтор/rename/delete/resume сохраняют source lineage",
+          "Archive traversal/cycle/resource cases дают явный результат",
+          "LFS pointer и payload имеют отдельные hash/size identities",
+          "TXT и кодировки возвращают точные оригинальные bytes",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Закрывает оставшийся TXT scope №8: итоговый №9 реализует план ChatGPT JSON, а не TXT. PDF/Office — №18, media — №19; retrieval — №10/24. Acquisition выполняется только в выбранном source scope.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "LAYA4-004",
+          "LAYA4-013",
+          "LAYA4-014",
+          "ACTION5-06",
+          "ACTION5-09"
+        ],
+        "feature_ids": [
+          "LIB-006",
+          "LIB-007",
+          "LIB-009",
+          "LIB-010",
+          "LIB-015",
+          "LIB-016",
+          "LIB-041",
+          "LIB-047"
+        ],
+        "decision_ids": [
+          "DEC5-16"
+        ],
+        "goal_ids": [
+          "GOAL5-03",
+          "GOAL5-08"
+        ],
+        "workstream_id": "WS-007",
+        "parent_package": "ROADMAP-PR-010",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-001"
+        ],
+        "original_package_inputs": [
+          9
+        ]
+      },
+      {
+        "title": "Полная история чатов и Telegram: scroll, ветви, правки, авторы и вложения",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "CaptureEnvelope для автора, цитат, времени и edit revisions",
+          "Продолжение virtualized/full-scroll capture после restart",
+          "ChatGPT/Telegram export adapters, attachments и unknown-branch ledger"
+        ],
+        "acceptance": [
+          "Повторные DOM fragments не дублируют сообщения",
+          "Обе наблюдаемые ветви и структурные nodes сохранены",
+          "Цитата не становится репликой другого автора",
+          "Payload missing и недоступные ветви видны",
+          "UI capture сравнивается с доступным export без заявления о невидимой истории",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Расширяет source fidelity №9. Передача в AI chat — №31; не смешивать reading capture с отправкой.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "ACTION5-04",
+          "ACTION5-05"
+        ],
+        "feature_ids": [
+          "LIB-012",
+          "LIB-013",
+          "LIB-042"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-06"
+        ],
+        "workstream_id": "WS-008",
+        "parent_package": "ROADMAP-PR-010",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-007"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Реестр целей, противоречий, заметок и покрытия требований",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "GoalRequest и RU/EN goal revisions с exact user sources",
+          "Questions/terms/contradictions/notes как отдельные overlays",
+          "Goal→source→code→test→result dashboard и устойчивые namespaces"
+        ],
+        "acceptance": [
+          "Новая редакция цели сохраняет предыдущую",
+          "Assistant proposal не маркируется user quote",
+          "Противоречащие источники видны вместе с временем",
+          "Редактирование заметки не меняет импортный оригинал",
+          "Proposed/implemented/tested/installed/usable различаются",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Ручные labels принадлежат №10; automated next brief — №37. Финальный no-goal-left-behind audit — №45.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-002",
+          "G3-009",
+          "EVO3-002",
+          "EVO3-012"
+        ],
+        "feature_ids": [
+          "LIB-019",
+          "LIB-020",
+          "LIB-021",
+          "LIB-022",
+          "LIB-048",
+          "LIB-052",
+          "LIB-058",
+          "ACT-056",
+          "RND-002"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-09",
+          "GOAL5-10"
+        ],
+        "workstream_id": "WS-012",
+        "parent_package": "ROADMAP-PR-010",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-001"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "G3-002",
+      "G3-008",
+      "G3-009",
+      "EVO3-002",
+      "EVO3-012",
+      "LAYA4-004",
+      "LAYA4-013",
+      "LAYA4-014",
+      "LAYA4-015",
+      "LAYA4-016",
+      "ACTION5-04",
+      "ACTION5-05",
+      "ACTION5-06",
+      "ACTION5-09",
+      "ACTION5-10",
+      "ACTION5-11"
+    ],
+    "feature_ids": [
+      "LIB-006",
+      "LIB-007",
+      "LIB-009",
+      "LIB-010",
+      "LIB-012",
+      "LIB-013",
+      "LIB-014",
+      "LIB-015",
+      "LIB-016",
+      "LIB-017",
+      "LIB-018",
+      "LIB-019",
+      "LIB-020",
+      "LIB-021",
+      "LIB-022",
+      "LIB-041",
+      "LIB-042",
+      "LIB-047",
+      "LIB-048",
+      "LIB-050",
+      "LIB-052",
+      "LIB-058",
+      "ACT-056",
+      "RND-002"
+    ],
+    "decision_ids": [
+      "DEC5-15",
+      "DEC5-16"
+    ],
+    "goal_ids": [
+      "GOAL5-03",
+      "GOAL5-06",
+      "GOAL5-08",
+      "GOAL5-09",
+      "GOAL5-10"
+    ]
+  },
+  {
+    "number": 11,
+    "package_id": "ROADMAP-PR-011",
+    "title": "Полный граф кода: JS/TS resolver, Python SCC, owners, tests, contracts и code smells",
+    "user_outcome": "Довести №6/7 до единого provenance graph, расширить aliases/workspaces/CommonJS и сохранить большие связанные группы без потери raw bytes.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      5,
+      6,
+      7
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Полный статический JS/TS resolver: aliases, workspaces, exports и CommonJS",
+        "lane": "Репозиторий",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Версионированные resolution modes и pinned конфигурации",
+          "TS extensions, aliases/workspaces/package exports",
+          "Scope-aware CommonJS и явные dynamic/ambiguous/external outcomes"
+        ],
+        "acceptance": [
+          "Parser/resolver не исполняет код исследуемого repo",
+          "Каждый resolved edge имеет source span и правило разрешения",
+          "Unresolved не выдаётся за отсутствие зависимости",
+          "Независимый holdout дополняет synthetic corpus №7",
+          "Parser pin/install проверены на выбранной Windows сборке",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "№7 даёт AST и ограниченные relations. №13 расширяет resolver; mixed-language graph и UI owners остаются №14.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "LAYA4-005"
+        ],
+        "feature_ids": [],
+        "decision_ids": [
+          "DEC5-06"
+        ],
+        "goal_ids": [
+          "GOAL5-04"
+        ],
+        "workstream_id": "WS-004",
+        "parent_package": "ROADMAP-PR-011",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [],
+        "original_package_inputs": [
+          5,
+          7
+        ]
+      },
+      {
+        "title": "Единый граф Python/JS/TS, owners, tests, contracts и подтверждаемые code smells",
+        "lane": "Репозиторий",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Адаптация двух relation dialects №6/7 в один provenance graph",
+          "Стабильные SCC/groups, continuation и mixed-language queries",
+          "Owners/tests/contracts picker и кандидаты code smells с доказательствами"
+        ],
+        "acceptance": [
+          "Старые raw chunk hashes/IDs не меняются",
+          "Declared, static, heuristic и observed связи различаются",
+          "Unrelated addition не перенумеровывает группы",
+          "Большой SCC имеет полный membership и все части",
+          "Каждый smell содержит source range, проверку и контрпример",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Переиспользовать Python SCC/planner №6. Автоматическое объединение JS relations с Python topology в №7 отсутствовало. Capability становится доступной только через №26/33.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "LAYA4-006",
+          "LAYA4-007",
+          "LAYA4-008"
+        ],
+        "feature_ids": [
+          "RND-001",
+          "RND-003",
+          "RND-004"
+        ],
+        "decision_ids": [
+          "DEC5-07"
+        ],
+        "goal_ids": [
+          "GOAL5-04"
+        ],
+        "workstream_id": "WS-005",
+        "parent_package": "ROADMAP-PR-011",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-004"
+        ],
+        "original_package_inputs": [
+          6
+        ]
+      }
+    ],
+    "source_task_ids": [
+      "LAYA4-005",
+      "LAYA4-006",
+      "LAYA4-007",
+      "LAYA4-008"
+    ],
+    "feature_ids": [
+      "RND-001",
+      "RND-003",
+      "RND-004"
+    ],
+    "decision_ids": [
+      "DEC5-06",
+      "DEC5-07"
+    ],
+    "goal_ids": [
+      "GOAL5-04"
+    ]
+  },
+  {
+    "number": 12,
+    "package_id": "ROADMAP-PR-012",
+    "title": "Repo engine до конца: Core jobs, streaming, полные страницы, delta, CAS и resume",
+    "user_outcome": "Свести №1–4 в устойчивый repo lifecycle, закрыть paging/delta/history ограничения и добавить reuse/invalidation, сохранив готовый exporter и inventory.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      1,
+      2,
+      3,
+      4,
+      11
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Долгие repo-задания через существующий Core: прогресс, отмена и resume",
+        "lane": "Репозиторий",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Registered scan/inventory job в текущем Core",
+          "START/STATUS/PAUSE/RESUME/CANCEL возвращают job identity",
+          "Перезапуск клиента/процесса и проверяемые checkpoints"
+        ],
+        "acceptance": [
+          "UI остаётся отзывчивым при долгом Git tree",
+          "Disconnect не теряет job identity",
+          "Cancel не оживает после restart",
+          "Повтор START не создаёт второй job",
+          "Inventory/capture используют владельцев №1/4",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Native progress и streaming START уже есть в main; проверить недостающий durable lifecycle. Не создавать второй scheduler/executor и не переделывать inventory.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "LAYA4-002"
+        ],
+        "feature_ids": [],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-02"
+        ],
+        "workstream_id": "WS-002",
+        "parent_package": "ROADMAP-PR-012",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [],
+        "original_package_inputs": [
+          1,
+          4
+        ]
+      },
+      {
+        "title": "Полная выдача repo, delta и истории без скрытых общих лимитов",
+        "lane": "Репозиторий",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Полная пагинация snapshots, selections и delta paths",
+          "Потоковые проверки всего manifest и экспорт через №2/3",
+          "Аудит всех entrypoints на cap, потерю хвоста и накопление памяти"
+        ],
+        "acceptance": [
+          "Более 20 snapshots и более 20 delta paths доступны до EOF",
+          "Точное восстановление последнего source и последнего chunk",
+          "Размер page/frame ограничивает порцию, а не корпус",
+          "Fault/disk-full не публикует частичный успех",
+          "Нет повторной реализации уже потоковых blob/index/proof путей",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "В main уже потоковые blobs, index_matches_head и verify_roundtrip_db. Реальные остатки: list_snapshots LIMIT 20 и snapshot_changes с массивами и [:20]. Инвалидация производных и CAS — №15.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "LAYA4-003",
+          "LAYA4-009",
+          "LAYA4-010"
+        ],
+        "feature_ids": [
+          "LIB-002",
+          "LIB-003",
+          "LIB-004",
+          "LIB-024"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-02",
+          "GOAL5-03"
+        ],
+        "workstream_id": "WS-003",
+        "parent_package": "ROADMAP-PR-012",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-002"
+        ],
+        "original_package_inputs": [
+          2,
+          3,
+          4
+        ]
+      },
+      {
+        "title": "Инкрементальные snapshots, CAS, delta-context и инвалидация доказательств",
+        "lane": "Репозиторий",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Переиспользование immutable blobs без потери нескольких origins",
+          "Версии commit/dirty/history и rename/delete semantics",
+          "Dependency-based stale graph для extraction, packet, tests и skills"
+        ],
+        "acceptance": [
+          "Неизменившиеся bytes переиспользуются по hash",
+          "Изменения сохраняют предыдущие версии",
+          "Delta перечисляет added/replaced/deleted ranges полностью",
+          "Инвалидируются зависимые evidence, независимые сохраняются",
+          "Dirty/LFS/submodule scope объявлен отдельно от HEAD",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "№12 отвечает за полную выдачу и потоковую обработку; здесь — semantics reuse и invalidation. Получение специальных payloads принадлежит №16.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "EVO3-010",
+          "TAB4-18",
+          "LAYA4-011",
+          "LAYA4-012"
+        ],
+        "feature_ids": [
+          "LIB-008",
+          "LIB-011",
+          "LIB-023",
+          "LIB-028"
+        ],
+        "decision_ids": [
+          "DEC5-08",
+          "DEC5-09"
+        ],
+        "goal_ids": [
+          "GOAL5-05",
+          "GOAL5-15"
+        ],
+        "workstream_id": "WS-006",
+        "parent_package": "ROADMAP-PR-012",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-003",
+          "WS-005"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "EVO3-010",
+      "TAB4-18",
+      "LAYA4-002",
+      "LAYA4-003",
+      "LAYA4-009",
+      "LAYA4-010",
+      "LAYA4-011",
+      "LAYA4-012"
+    ],
+    "feature_ids": [
+      "LIB-002",
+      "LIB-003",
+      "LIB-004",
+      "LIB-008",
+      "LIB-011",
+      "LIB-023",
+      "LIB-024",
+      "LIB-028"
+    ],
+    "decision_ids": [
+      "DEC5-08",
+      "DEC5-09"
+    ],
+    "goal_ids": [
+      "GOAL5-02",
+      "GOAL5-03",
+      "GOAL5-05",
+      "GOAL5-15"
+    ]
+  },
+  {
+    "number": 13,
+    "package_id": "ROADMAP-PR-013",
+    "title": "Импорт документов и внешних источников: PDF/Office/OCR, media, RSS/web и GitHub history",
+    "user_outcome": "Расширить importer registry форматными adapters с точными page/cell/time ranges, полными cursors и provenance всех наблюдений.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      10
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "PDF, Office, OCR и таблицы с точными ссылками и проверкой чисел",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Ленивые PDF/Office extractors с версиями",
+          "Page/table/cell/text spans и обратная связь с оригиналом",
+          "OCR uncertainty, units/numbers/table fidelity corpus"
+        ],
+        "acceptance": [
+          "Оригинал остаётся неизменным",
+          "Цитата ведёт к нужной странице/ячейке",
+          "OCR не перезаписывает подтверждённый текст",
+          "Неизвестный mapping явно UNKNOWN",
+          "Cancel/retry не теряет source identity",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Использует SourceAddress №10 и importer protocol №16. Не объявлять все форматы поддержанными по одному fixture; у каждого adapter своя support matrix.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "ACTION5-07"
+        ],
+        "feature_ids": [
+          "LIB-045",
+          "LIB-059"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-07"
+        ],
+        "workstream_id": "WS-009",
+        "parent_package": "ROADMAP-PR-013",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-007"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Аудио и видео: импорт, транскрипция и временные ссылки",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Media originals и версии transcript/ASR",
+          "Time spans, авторы/speaker uncertainty и metadata",
+          "Ленивая очередь, cancel/resume и corpus RU/EN/code-switch"
+        ],
+        "acceptance": [
+          "Text span открывает соответствующий time range",
+          "ASR output связан с exact media hash/model/config",
+          "Ошибки и недоступные media сохранены в ledger",
+          "Повтор не создаёт ложную source version",
+          "Качество и стоимость измерены на реальном corpus",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Это обработка сохранённых media. Живой микрофон/hotkey и intent — №28. Конкретные media/ASR зависимости выбирать по актуальным primary docs.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "ACTION5-08"
+        ],
+        "feature_ids": [
+          "LIB-046",
+          "RND-037"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-07",
+          "GOAL5-26"
+        ],
+        "workstream_id": "WS-010",
+        "parent_package": "ROADMAP-PR-013",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-007"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "RSS, web snapshots и история GitHub PR/issues/CI с полной пагинацией",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Версии web/RSS body и provenance",
+          "Полная история GitHub PR/issues/reviews/CI и неудачных попыток",
+          "Incremental cursors, rate limits, partial/freshness ledger"
+        ],
+        "acceptance": [
+          "Все страницы обработаны до явного EOF",
+          "Редакции страницы и PR не затирают историю",
+          "Отсутствие данных отличается от no-match",
+          "Повторная синдикация не считается новым первоисточником",
+          "Backoff/resume сохраняют cursor и raw responses",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Read-only сбор. PR patch/merge workflow — №32; news-to-experiment и сценарии — №37.",
+        "application_code_changed": false,
+        "source_task_ids": [],
+        "feature_ids": [
+          "LIB-043",
+          "LIB-044",
+          "RND-005"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-05",
+          "GOAL5-26"
+        ],
+        "workstream_id": "WS-011",
+        "parent_package": "ROADMAP-PR-013",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-007"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "ACTION5-07",
+      "ACTION5-08"
+    ],
+    "feature_ids": [
+      "LIB-043",
+      "LIB-044",
+      "LIB-045",
+      "LIB-046",
+      "LIB-059",
+      "RND-005",
+      "RND-037"
+    ],
+    "decision_ids": [],
+    "goal_ids": [
+      "GOAL5-05",
+      "GOAL5-07",
+      "GOAL5-26"
+    ]
+  },
+  {
+    "number": 14,
+    "package_id": "ROADMAP-PR-014",
+    "title": "Долговременный контекст: AI packets, NEED_CONTEXT, retrieval, backup/restore и sync",
+    "user_outcome": "Собрать управляемый контекст для разных AI, проверяемый task/result roundtrip, temporal retrieval большого архива и восстанавливаемую библиотеку.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      2,
+      3,
+      10,
+      11,
+      13
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Единый AI-пакет: task/result, WHY_THIS_PACKET, NEED_CONTEXT и share projection",
+        "lane": "Контекст",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Provider-neutral immutable task document и проверяемый result contract",
+          "Selection basket, WHY_THIS_PACKET, share/redaction preview",
+          "Все части, exact range NEED_CONTEXT, typed read-only library gateway"
+        ],
+        "acceptance": [
+          "Preview и export имеют один digest",
+          "Любой обязательный source вне текущей части остаётся в manifest",
+          "Ответ связан с task/packet/criterion revision",
+          "Supplied/read/used не смешиваются",
+          "Ручной roundtrip работает до подключения UI automation",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Переиспользовать существующие handoff/review/manifest/export owners. Реальные provider/API/CLI/UI adapters имеют независимую qualification; их лимиты не задают лимит архива.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-003",
+          "G3-004",
+          "G3-006",
+          "UI3-003",
+          "UI3-004",
+          "EVO3-003",
+          "EVO3-006",
+          "TAB4-05",
+          "TAB4-19",
+          "LAYA4-019",
+          "LAYA4-020",
+          "LAYA4-021",
+          "ACTION5-13",
+          "ACTION5-14"
+        ],
+        "feature_ids": [
+          "LIB-005",
+          "LIB-025",
+          "LIB-026",
+          "LIB-027",
+          "LIB-037",
+          "LIB-038",
+          "LIB-040",
+          "ACT-005",
+          "ACT-009",
+          "ACT-010"
+        ],
+        "decision_ids": [
+          "DEC5-05",
+          "DEC5-13"
+        ],
+        "goal_ids": [
+          "GOAL5-04",
+          "GOAL5-11",
+          "GOAL5-12"
+        ],
+        "workstream_id": "WS-013",
+        "parent_package": "ROADMAP-PR-014",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-001",
+          "WS-005",
+          "WS-012"
+        ],
+        "original_package_inputs": [
+          2,
+          3
+        ]
+      },
+      {
+        "title": "Backup, restore, миграции, retention и опциональная синхронизация",
+        "lane": "Библиотека",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Согласованные DB/blob/event backups и проверка восстановления",
+          "Tombstones/retention/derived cleanup и conflicts",
+          "Portable snapshot sync с явными namespaces и rehearsal миграций"
+        ],
+        "acceptance": [
+          "Restore сравнивает hashes/heads/overlays/relations",
+          "Повреждённый или неполный backup не активируется",
+          "Старый backup не resurrect удалённые current sources",
+          "Два профиля не становятся competing writers",
+          "Каждая migration/rollback проверена на копии",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Это жизненный цикл данных. Переключение исполняемого release и canary — №33. Опциональный sync не должен требоваться для локальной работы.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "EVO3-014",
+          "LAYA4-017",
+          "LAYA4-027",
+          "ACTION5-15",
+          "ACTION5-16",
+          "ACTION5-17"
+        ],
+        "feature_ids": [
+          "LIB-030",
+          "LIB-035",
+          "LIB-036",
+          "LIB-051"
+        ],
+        "decision_ids": [
+          "DEC5-10",
+          "DEC5-11",
+          "DEC5-12"
+        ],
+        "goal_ids": [
+          "GOAL5-08",
+          "GOAL5-23"
+        ],
+        "workstream_id": "WS-014",
+        "parent_package": "ROADMAP-PR-014",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-007"
+        ],
+        "original_package_inputs": [
+          9
+        ]
+      },
+      {
+        "title": "Долговременная память: поиск по времени, версиям и большим корпусам",
+        "lane": "Контекст",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Goal-directed retrieval с exact ranges и temporal applicability",
+          "Frozen relevance corpus, hard negatives и conflicting versions",
+          "Объяснение выбора контекста и bounded retrieval из растущего архива"
+        ],
+        "acceptance": [
+          "На собственных вопросах возвращается нужная версия источника",
+          "Устаревшее и противоречивое не сливается в один факт",
+          "Manual corrections сохраняются",
+          "Cold/warm latency и RAM имеют corpus denominator",
+          "Missing evidence вызывает точный запрос, а не выдуманный ответ",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "№10 реализует базовый поиск; №24 квалифицирует lifetime retrieval. Расширяемый corpus не означает, что один AI-запрос прочитал все данные.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "LAYA4-018",
+          "LAYA4-025",
+          "ACTION5-12"
+        ],
+        "feature_ids": [
+          "ACT-052"
+        ],
+        "decision_ids": [
+          "DEC5-14"
+        ],
+        "goal_ids": [
+          "GOAL5-09",
+          "GOAL5-23"
+        ],
+        "workstream_id": "WS-015",
+        "parent_package": "ROADMAP-PR-014",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-001",
+          "WS-008",
+          "WS-009",
+          "WS-010",
+          "WS-011",
+          "WS-012",
+          "WS-014"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "G3-003",
+      "G3-004",
+      "G3-006",
+      "UI3-003",
+      "UI3-004",
+      "EVO3-003",
+      "EVO3-006",
+      "EVO3-014",
+      "TAB4-05",
+      "TAB4-19",
+      "LAYA4-017",
+      "LAYA4-018",
+      "LAYA4-019",
+      "LAYA4-020",
+      "LAYA4-021",
+      "LAYA4-025",
+      "LAYA4-027",
+      "ACTION5-12",
+      "ACTION5-13",
+      "ACTION5-14",
+      "ACTION5-15",
+      "ACTION5-16",
+      "ACTION5-17"
+    ],
+    "feature_ids": [
+      "LIB-005",
+      "LIB-025",
+      "LIB-026",
+      "LIB-027",
+      "LIB-030",
+      "LIB-035",
+      "LIB-036",
+      "LIB-037",
+      "LIB-038",
+      "LIB-040",
+      "LIB-051",
+      "ACT-005",
+      "ACT-009",
+      "ACT-010",
+      "ACT-052"
+    ],
+    "decision_ids": [
+      "DEC5-05",
+      "DEC5-10",
+      "DEC5-11",
+      "DEC5-12",
+      "DEC5-13",
+      "DEC5-14"
+    ],
+    "goal_ids": [
+      "GOAL5-04",
+      "GOAL5-08",
+      "GOAL5-09",
+      "GOAL5-11",
+      "GOAL5-12",
+      "GOAL5-23"
+    ]
+  },
+  {
+    "number": 15,
+    "package_id": "ROADMAP-PR-015",
+    "title": "Полноценный Windows desktop: installer, единый Core, capabilities, templates и STOP",
+    "user_outcome": "Развить desktop pilot №8 в установленный клиент с canonical writes, recovery, keyboard accessibility и исполнением зарегистрированных capabilities.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      8,
+      9,
+      10,
+      12,
+      14
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Полноценный Windows desktop: установка, canonical writes и восстановление",
+        "lane": "Desktop",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Выбор shell/runtime по measurement и самостоятельная per-user установка",
+          "Typed stdio/API к текущим owners, canonical task/write intents",
+          "Virtualized library, keyboard/screen reader, status и recovery panel"
+        ],
+        "acceptance": [
+          "Приложение запускается с закрытым Chrome без зависимости от cwd",
+          "Search/import/task/result используют один профиль",
+          "Unknown write сверяется по прежнему idempotency key",
+          "Crash/reconnect не теряет задачу и не создаёт второй writer",
+          "Install/uninstall/upgrade/restore подтверждены на Windows",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "№8 — минимальный Tk/stdio read-only pilot. Переиспользовать его доказанные части; не переносить второй store из архивного prototype. Долгие jobs — №11, updater — №33.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-001",
+          "G3-005",
+          "UI3-017",
+          "EVO3-023",
+          "TAB4-01",
+          "ACTION5-01",
+          "ACTION5-02",
+          "ACTION5-03"
+        ],
+        "feature_ids": [
+          "LIB-001",
+          "LIB-029",
+          "LIB-031",
+          "LIB-032",
+          "ACT-033",
+          "ACT-050",
+          "ACT-057"
+        ],
+        "decision_ids": [
+          "DEC5-01"
+        ],
+        "goal_ids": [
+          "GOAL5-01",
+          "GOAL5-08",
+          "GOAL5-12",
+          "GOAL5-19",
+          "GOAL5-28"
+        ],
+        "workstream_id": "WS-016",
+        "parent_package": "ROADMAP-PR-015",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-001",
+          "WS-002",
+          "WS-013",
+          "WS-014"
+        ],
+        "original_package_inputs": [
+          8,
+          9
+        ]
+      },
+      {
+        "title": "Capabilities, execution templates, scope и независимый STOP",
+        "lane": "Автоматизация",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Версионированный registry capabilities/effects/resources/evidence",
+          "Operator templates для API/CLI/terminal/VS Code и credential references",
+          "Idempotent operation identity, grant checks, read-first tool gateway и STOP"
+        ],
+        "acceptance": [
+          "Доступна только capability подходящей build/qualification",
+          "Document/AI result не задаёт произвольный executable",
+          "STOP работает без ASR/model/Chrome",
+          "Повтор intent не удваивает effect",
+          "Grant/adapter/build drift делает qualification stale",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Сохраняет существующий Core/policy owner. Laya/planner — №27, real UI bindings — №30, release activation — №33.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "PAR3-001",
+          "PAR3-003",
+          "PAR3-015",
+          "EVO3-001",
+          "EVO3-017",
+          "EVO3-019",
+          "TAB4-02",
+          "LAYA4-001",
+          "ACTION5-18",
+          "ACTION5-19",
+          "ACTION5-21"
+        ],
+        "feature_ids": [
+          "LIB-033",
+          "LIB-039",
+          "ACT-002",
+          "ACT-003",
+          "ACT-004",
+          "ACT-015",
+          "ACT-032",
+          "ACT-038",
+          "ACT-051",
+          "ACT-054",
+          "RND-011"
+        ],
+        "decision_ids": [
+          "DEC5-02",
+          "DEC5-18",
+          "DEC5-19"
+        ],
+        "goal_ids": [
+          "GOAL5-01",
+          "GOAL5-15",
+          "GOAL5-16",
+          "GOAL5-17",
+          "GOAL5-19"
+        ],
+        "workstream_id": "WS-017",
+        "parent_package": "ROADMAP-PR-015",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-016"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "G3-001",
+      "G3-005",
+      "UI3-017",
+      "PAR3-001",
+      "PAR3-003",
+      "PAR3-015",
+      "EVO3-001",
+      "EVO3-017",
+      "EVO3-019",
+      "EVO3-023",
+      "TAB4-01",
+      "TAB4-02",
+      "LAYA4-001",
+      "ACTION5-01",
+      "ACTION5-02",
+      "ACTION5-03",
+      "ACTION5-18",
+      "ACTION5-19",
+      "ACTION5-21"
+    ],
+    "feature_ids": [
+      "LIB-001",
+      "LIB-029",
+      "LIB-031",
+      "LIB-032",
+      "LIB-033",
+      "LIB-039",
+      "ACT-002",
+      "ACT-003",
+      "ACT-004",
+      "ACT-015",
+      "ACT-032",
+      "ACT-033",
+      "ACT-038",
+      "ACT-050",
+      "ACT-051",
+      "ACT-054",
+      "ACT-057",
+      "RND-011"
+    ],
+    "decision_ids": [
+      "DEC5-01",
+      "DEC5-02",
+      "DEC5-18",
+      "DEC5-19"
+    ],
+    "goal_ids": [
+      "GOAL5-01",
+      "GOAL5-08",
+      "GOAL5-12",
+      "GOAL5-15",
+      "GOAL5-16",
+      "GOAL5-17",
+      "GOAL5-19",
+      "GOAL5-28"
+    ]
+  },
+  {
+    "number": 16,
+    "package_id": "ROADMAP-PR-016",
+    "title": "Текст и голос → действия: IntentSpec, Laya, ASR, corrections и planner/retriever/critic",
+    "user_outcome": "Дать один проверяемый plan для text/voice, подключить сменные Laya/ASR adapters и измерить реальные critical-slot errors на Windows.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      13,
+      14,
+      15
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Текст → план действий: IntentSpec, Laya и роли planner/retriever/critic",
+        "lane": "Автоматизация",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Общий typed IntentSpec и deterministic route известных команд",
+          "Laya как заменяемый advisory adapter",
+          "Раздельные planning/retrieval/critique outputs и запрос недостающих slots"
+        ],
+        "acceptance": [
+          "Одинаковый исправленный input даёт тот же plan при тех же версиях",
+          "Неоднозначные repo/recipient/effect не угадываются",
+          "Correction отзывает старый неисполненный intent",
+          "Unknown capability создаёт связанный development request",
+          "Laya proposal не обходит registry/template validation",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Контракты выбранного Laya adapter проверить по фактически доступной интеграции; не выдавать предложенный JSON за уже поддерживаемый vendor API. Voice — №28.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "PAR3-005",
+          "LAYA4-022",
+          "ACTION5-20"
+        ],
+        "feature_ids": [
+          "ACT-001",
+          "ACT-006",
+          "ACT-007",
+          "ACT-008"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-17"
+        ],
+        "workstream_id": "WS-018",
+        "parent_package": "ROADMAP-PR-016",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-013",
+          "WS-017"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Голосовое управление Windows: hotkey, ASR, исправления и STOP",
+        "lane": "Автоматизация",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Один capture stream и push-to-talk",
+          "Сменный ASR RU/EN/code-switch и critical slots",
+          "Text/voice parity, correction revisions, TTS/background rejection"
+        ],
+        "acceptance": [
+          "Повтор hotkey не открывает второй микрофон",
+          "Микрофон освобождается после crash/stop",
+          "Critical-slot errors измерены отдельно от WER",
+          "Текстовое исправление меняет intent revision до effect",
+          "STOP и keyboard path работают при отказе ASR",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Media extraction №19 переиспользуется; live capture имеет собственный device receipt. Не считать Linux fixture измерением микрофона Dell.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "TAB4-16",
+          "LAYA4-023",
+          "ACTION5-22"
+        ],
+        "feature_ids": [
+          "ACT-028",
+          "ACT-029",
+          "ACT-030",
+          "ACT-031",
+          "ACT-034",
+          "ACT-058"
+        ],
+        "decision_ids": [
+          "DEC5-17"
+        ],
+        "goal_ids": [
+          "GOAL5-18",
+          "GOAL5-19"
+        ],
+        "workstream_id": "WS-019",
+        "parent_package": "ROADMAP-PR-016",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-010",
+          "WS-018"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "PAR3-005",
+      "TAB4-16",
+      "LAYA4-022",
+      "LAYA4-023",
+      "ACTION5-20",
+      "ACTION5-22"
+    ],
+    "feature_ids": [
+      "ACT-001",
+      "ACT-006",
+      "ACT-007",
+      "ACT-008",
+      "ACT-028",
+      "ACT-029",
+      "ACT-030",
+      "ACT-031",
+      "ACT-034",
+      "ACT-058"
+    ],
+    "decision_ids": [
+      "DEC5-17"
+    ],
+    "goal_ids": [
+      "GOAL5-17",
+      "GOAL5-18",
+      "GOAL5-19"
+    ]
+  },
+  {
+    "number": 17,
+    "package_id": "ROADMAP-PR-017",
+    "title": "Выбранные AI-вкладки и навыки: Grok delivery, outbox, recovery и demonstration replay",
+    "user_outcome": "Квалифицировать targets/PC adapters, надёжно передавать все части и ответы, затем превращать наблюдаемые сценарии в versioned skills.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      14,
+      15,
+      16
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Навыки из демонстраций, failure memory и выборочная requalification",
+        "lane": "Автоматизация",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Recording→portable skill с preconditions/effects/recovery",
+          "Оптимизация шагов с сохранением проверяемых инвариантов",
+          "Failure capsules, permission diff и selective stale/repair"
+        ],
+        "acceptance": [
+          "Replay skill проходит normal/fault cases",
+          "Secrets представлены references",
+          "Координаты и tab ID не подменяют устойчивую identity",
+          "Изменение adapter/permission инвалидирует зависимые навыки",
+          "Новая skill version сохраняет отрицательные попытки",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Отдельные навыки могут начинаться с локальных templates; browser skills ждут №30/31. Не создавать второй executor.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "UI3-019",
+          "PAR3-024",
+          "LAYA4-024",
+          "ACTION5-23",
+          "ACTION5-24"
+        ],
+        "feature_ids": [
+          "LIB-054",
+          "ACT-041",
+          "ACT-042",
+          "ACT-043",
+          "ACT-044",
+          "ACT-048",
+          "RND-042",
+          "RND-043"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-16",
+          "GOAL5-22"
+        ],
+        "workstream_id": "WS-020",
+        "parent_package": "ROADMAP-PR-017",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-018",
+          "WS-019",
+          "WS-021",
+          "WS-022"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Выбранные Grok/GitHub targets и квалифицированные PC/browser adapters",
+        "lane": "UI-интеграция",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Account/workspace/chat/repo/branch binding выбранных targets",
+          "Маршрутизация API/CLI/UIA/DOM и управление focus",
+          "Canary, target drift, rebind и adapter qualification"
+        ],
+        "acceptance": [
+          "Wrong account/chat/repo обнаруживается до effect",
+          "Restart не полагается только на tab ID",
+          "User focus получает приоритет",
+          "UI drift блокирует только затронутый adapter",
+          "Capabilities выбранной среды, включая доступ Grok к repo, реально проверены",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Здесь target discovery и adapter identity. Durable доставка/повтор — №31, Git changes — №32. Discovery можно проектировать параллельно с desktop.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "UI3-001",
+          "UI3-002",
+          "UI3-006",
+          "TAB4-03",
+          "TAB4-04"
+        ],
+        "feature_ids": [
+          "ACT-035",
+          "ACT-036",
+          "ACT-037",
+          "ACT-039"
+        ],
+        "decision_ids": [
+          "DEC5-03",
+          "DEC5-04"
+        ],
+        "goal_ids": [
+          "GOAL5-13",
+          "GOAL5-19"
+        ],
+        "workstream_id": "WS-021",
+        "parent_package": "ROADMAP-PR-017",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-017"
+        ],
+        "original_package_inputs": [
+          8
+        ]
+      },
+      {
+        "title": "Надёжная доставка в AI UI: outbox, части, ответы и unknown-send recovery",
+        "lane": "UI-интеграция",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Durable outbox к текущему Core и единственный UI writer",
+          "Draft/upload/send/result observations по каждой части",
+          "Unknown effect reconciliation, STOP и реестр полученного/использованного контекста"
+        ],
+        "acceptance": [
+          "Lost acknowledgement не вызывает blind duplicate send",
+          "Upload сверяется с packet/part hash",
+          "Ответ принадлежит выбранному task/chat",
+          "Cancel сохраняет неопределённость уже возможного effect",
+          "Receipt получения не считается доказательством использования всех частей",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Использует неизменяемый пакет №22. Разные провайдеры подключаются как adapters с отдельными receipts; нет общего скрытого потолка частей.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "UI3-005",
+          "UI3-007",
+          "UI3-008",
+          "UI3-009",
+          "UI3-010",
+          "UI3-011",
+          "UI3-012",
+          "UI3-016",
+          "PAR3-009",
+          "PAR3-010",
+          "EVO3-004",
+          "TAB4-06",
+          "TAB4-07",
+          "TAB4-08"
+        ],
+        "feature_ids": [
+          "LIB-057",
+          "ACT-022",
+          "ACT-023"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-11",
+          "GOAL5-12",
+          "GOAL5-13"
+        ],
+        "workstream_id": "WS-022",
+        "parent_package": "ROADMAP-PR-017",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-013",
+          "WS-018",
+          "WS-021"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "UI3-001",
+      "UI3-002",
+      "UI3-005",
+      "UI3-006",
+      "UI3-007",
+      "UI3-008",
+      "UI3-009",
+      "UI3-010",
+      "UI3-011",
+      "UI3-012",
+      "UI3-016",
+      "UI3-019",
+      "PAR3-009",
+      "PAR3-010",
+      "PAR3-024",
+      "EVO3-004",
+      "TAB4-03",
+      "TAB4-04",
+      "TAB4-06",
+      "TAB4-07",
+      "TAB4-08",
+      "LAYA4-024",
+      "ACTION5-23",
+      "ACTION5-24"
+    ],
+    "feature_ids": [
+      "LIB-054",
+      "LIB-057",
+      "ACT-022",
+      "ACT-023",
+      "ACT-035",
+      "ACT-036",
+      "ACT-037",
+      "ACT-039",
+      "ACT-041",
+      "ACT-042",
+      "ACT-043",
+      "ACT-044",
+      "ACT-048",
+      "RND-042",
+      "RND-043"
+    ],
+    "decision_ids": [
+      "DEC5-03",
+      "DEC5-04"
+    ],
+    "goal_ids": [
+      "GOAL5-11",
+      "GOAL5-12",
+      "GOAL5-13",
+      "GOAL5-16",
+      "GOAL5-19",
+      "GOAL5-22"
+    ]
+  },
+  {
+    "number": 18,
+    "package_id": "ROADMAP-PR-018",
+    "title": "Код → проверенный PR/merge → установленное обновление с canary и rollback",
+    "user_outcome": "Замкнуть worktree/diff/tests/CI/final-tree/release/install цикл с одним integrator/updater и qualification новых capabilities.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      11,
+      12,
+      14,
+      15,
+      17
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "AI patch → worktree → проверки → PR/CI → подтверждённый merge",
+        "lane": "Разработка",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Изолированный worktree и source fence для каждого изменения",
+          "Registered verifier, diff/review и точная связь final tree с CI",
+          "GitHub merge observer для merge/squash/rebase и ручного внедрения"
+        ],
+        "acceptance": [
+          "Проверяется фактический artifact, а не фраза AI",
+          "Base drift вызывает rebase/revalidation",
+          "Повторное наблюдение не создаёт второй effect",
+          "CI связан с окончательной ревизией",
+          "Manual «я внедрил» проверяет реальную версию",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Историю read-only собирает №20. Пакет сам не доказывает установленное обновление; это №33. Один интегратор владеет итоговой веткой.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-007",
+          "UI3-013",
+          "UI3-014",
+          "PAR3-012",
+          "PAR3-013",
+          "PAR3-017",
+          "EVO3-005",
+          "EVO3-007",
+          "EVO3-008",
+          "EVO3-009",
+          "EVO3-011",
+          "TAB4-09",
+          "TAB4-10",
+          "TAB4-11",
+          "TAB4-12"
+        ],
+        "feature_ids": [
+          "ACT-011",
+          "ACT-012",
+          "RND-006",
+          "RND-007"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-05",
+          "GOAL5-14",
+          "GOAL5-15"
+        ],
+        "workstream_id": "WS-023",
+        "parent_package": "ROADMAP-PR-018",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-005",
+          "WS-006",
+          "WS-013",
+          "WS-017",
+          "WS-022"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Воспроизводимый release, staged updater, canary и проверенный rollback",
+        "lane": "Обновления",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Source/build/assets provenance и получение exact candidate",
+          "Rehearsal migration, quiescence и атомарная активация",
+          "Installed receipt, capability diff, canary и rollback"
+        ],
+        "acceptance": [
+          "Release связан с точным source и asset hash",
+          "Работающий component не заменяется посреди операции",
+          "Сбой миграции оставляет рабочую предыдущую версию",
+          "Canary измеряет функцию на устройстве",
+          "Usable capability связана с installed build и qualification",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Переиспользует data backup №23 и registry №26. Merge/download не заполняет installed/usable статус.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "UI3-020",
+          "PAR3-018",
+          "EVO3-013",
+          "EVO3-015",
+          "EVO3-016",
+          "EVO3-018",
+          "EVO3-020",
+          "TAB4-13",
+          "TAB4-14",
+          "TAB4-15"
+        ],
+        "feature_ids": [
+          "ACT-046",
+          "ACT-047",
+          "RND-008"
+        ],
+        "decision_ids": [
+          "DEC5-20"
+        ],
+        "goal_ids": [
+          "GOAL5-15",
+          "GOAL5-16"
+        ],
+        "workstream_id": "WS-024",
+        "parent_package": "ROADMAP-PR-018",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-014",
+          "WS-016",
+          "WS-017",
+          "WS-023"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "G3-007",
+      "UI3-013",
+      "UI3-014",
+      "UI3-020",
+      "PAR3-012",
+      "PAR3-013",
+      "PAR3-017",
+      "PAR3-018",
+      "EVO3-005",
+      "EVO3-007",
+      "EVO3-008",
+      "EVO3-009",
+      "EVO3-011",
+      "EVO3-013",
+      "EVO3-015",
+      "EVO3-016",
+      "EVO3-018",
+      "EVO3-020",
+      "TAB4-09",
+      "TAB4-10",
+      "TAB4-11",
+      "TAB4-12",
+      "TAB4-13",
+      "TAB4-14",
+      "TAB4-15"
+    ],
+    "feature_ids": [
+      "ACT-011",
+      "ACT-012",
+      "ACT-046",
+      "ACT-047",
+      "RND-006",
+      "RND-007",
+      "RND-008"
+    ],
+    "decision_ids": [
+      "DEC5-20"
+    ],
+    "goal_ids": [
+      "GOAL5-05",
+      "GOAL5-14",
+      "GOAL5-15",
+      "GOAL5-16"
+    ]
+  },
+  {
+    "number": 19,
+    "package_id": "ROADMAP-PR-019",
+    "title": "Долгие параллельные кампании и R&D: scheduler, leases, budgets, resume и next briefs",
+    "user_outcome": "Развить текущий scheduler/Core, измерить concurrency, связывать источники с экспериментами и продолжать кампанию по checkpoints без повторных effects.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      11,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Durable расписания и долгие кампании: offline, sleep, restart и budgets",
+        "lane": "Автоматизация",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Versioned schedules, occurrence identity и Europe/Riga DST",
+          "Skip/latest/bounded catch-up и resource/cost admission",
+          "Checkpoint resume, deadlines, retries, cancellation и no-progress stop"
+        ],
+        "acceptance": [
+          "DST/sleep/clock drift не дублируют occurrence",
+          "Cancelled intent не оживает",
+          "Unknown external effect сначала сверяется",
+          "Policy/source drift инвалидирует нужный checkpoint",
+          "Перегрузка ставит работу в очередь без отбрасывания corpus",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "В main уже существуют schedule_tick/supervisor/Core: сначала gap audit и reuse. Это развитие существующего scheduler, не новый runtime.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "PAR3-014",
+          "ACTION5-25",
+          "ACTION5-26"
+        ],
+        "feature_ids": [
+          "LIB-034",
+          "ACT-024",
+          "ACT-025",
+          "ACT-049",
+          "ACT-055",
+          "RND-024"
+        ],
+        "decision_ids": [
+          "DEC5-21"
+        ],
+        "goal_ids": [
+          "GOAL5-20"
+        ],
+        "workstream_id": "WS-025",
+        "parent_package": "ROADMAP-PR-019",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-017",
+          "WS-018"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Ресурсные конфликты, leases, fencing и управляемая параллельность Dell",
+        "lane": "Автоматизация",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Canonical identities для DB/UI/repo/files/provider/capital resources",
+          "Conflict graph, atomic leases и fencing",
+          "Admission по измеренным CPU/RAM/IO/quotas и foreground priority"
+        ],
+        "acceptance": [
+          "Истёкший worker не может commit результат как новый owner",
+          "Два alias одного ресурса распознаются",
+          "UI focus и DB writer остаются согласованными",
+          "Измерения на Dell определяют concurrency profile",
+          "Общий baseline и ресурсы не учитываются дважды",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Production Core остаётся serial до доказанной qualification. Worktree integration №32 и updater №33 сохраняют единственного владельца.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "UI3-015",
+          "PAR3-004",
+          "PAR3-006",
+          "PAR3-007",
+          "PAR3-008",
+          "PAR3-019"
+        ],
+        "feature_ids": [
+          "ACT-016",
+          "ACT-020",
+          "ACT-021",
+          "ACT-027",
+          "RND-026"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-21"
+        ],
+        "workstream_id": "WS-026",
+        "parent_package": "ROADMAP-PR-019",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-005",
+          "WS-017",
+          "WS-025"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Параллельные campaign DAG: общий контекст, ветви, resume и журнал решений",
+        "lane": "Автоматизация",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Immutable campaign manifest и общие доказательства/cache",
+          "Branch compare/join semantics, deferred fallback и aging",
+          "Resume DAG, selective invalidation и доступная панель"
+        ],
+        "acceptance": [
+          "Все ветви сравниваются на одном замороженном input",
+          "Повтор derived data не считается независимым evidence",
+          "Restart продолжает только валидный остаток DAG",
+          "Применяется один итоговый effect к target",
+          "Fault pilot проверяет leases, STOP, updater и UI writer вместе",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Это интеграция №34/35 и существующих owners. Независимая подготовка документов не служит доказательством параллельного PC execution.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "PAR3-002",
+          "PAR3-011",
+          "PAR3-016",
+          "PAR3-020",
+          "PAR3-021",
+          "PAR3-023",
+          "EVO3-022"
+        ],
+        "feature_ids": [
+          "ACT-017",
+          "ACT-018",
+          "ACT-019",
+          "ACT-040",
+          "RND-025"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-20",
+          "GOAL5-21"
+        ],
+        "workstream_id": "WS-027",
+        "parent_package": "ROADMAP-PR-019",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-020",
+          "WS-022",
+          "WS-023",
+          "WS-024",
+          "WS-025",
+          "WS-026"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Автоматический R&D цикл: источники → гипотеза → эксперимент → следующий PR brief",
+        "lane": "Исследования",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Claim→primary source→experiment и technology/media scout",
+          "Next brief из unmet criterion, negative trial и data gap",
+          "Ограниченный improvement loop и портфель экспериментов по информационной пользе"
+        ],
+        "acceptance": [
+          "Каждый claim имеет provenance либо UNKNOWN",
+          "Пересказы одного источника группируются",
+          "Новые aims не теряют прежние goal IDs",
+          "Brief содержит owner/input/acceptance/recovery",
+          "Loop останавливается при no-progress/budget/unknown effect и сохраняет попытку",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Использует проверенные merge/update/qualification пути. Публикация контента и произвольный live execution не добавляются автоматически из R&D предложения.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-010",
+          "EVO3-021",
+          "TAB4-17",
+          "LAYA4-028"
+        ],
+        "feature_ids": [
+          "LIB-049",
+          "ACT-045",
+          "RND-036",
+          "RND-038",
+          "RND-044",
+          "RND-045"
+        ],
+        "decision_ids": [
+          "DEC5-22"
+        ],
+        "goal_ids": [
+          "GOAL5-10",
+          "GOAL5-24",
+          "GOAL5-26"
+        ],
+        "workstream_id": "WS-028",
+        "parent_package": "ROADMAP-PR-019",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-010",
+          "WS-011",
+          "WS-012",
+          "WS-013",
+          "WS-015",
+          "WS-018",
+          "WS-024",
+          "WS-025"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "G3-010",
+      "UI3-015",
+      "PAR3-002",
+      "PAR3-004",
+      "PAR3-006",
+      "PAR3-007",
+      "PAR3-008",
+      "PAR3-011",
+      "PAR3-014",
+      "PAR3-016",
+      "PAR3-019",
+      "PAR3-020",
+      "PAR3-021",
+      "PAR3-023",
+      "EVO3-021",
+      "EVO3-022",
+      "TAB4-17",
+      "LAYA4-028",
+      "ACTION5-25",
+      "ACTION5-26"
+    ],
+    "feature_ids": [
+      "LIB-034",
+      "LIB-049",
+      "ACT-016",
+      "ACT-017",
+      "ACT-018",
+      "ACT-019",
+      "ACT-020",
+      "ACT-021",
+      "ACT-024",
+      "ACT-025",
+      "ACT-027",
+      "ACT-040",
+      "ACT-045",
+      "ACT-049",
+      "ACT-055",
+      "RND-024",
+      "RND-025",
+      "RND-026",
+      "RND-036",
+      "RND-038",
+      "RND-044",
+      "RND-045"
+    ],
+    "decision_ids": [
+      "DEC5-21",
+      "DEC5-22"
+    ],
+    "goal_ids": [
+      "GOAL5-10",
+      "GOAL5-20",
+      "GOAL5-21",
+      "GOAL5-24",
+      "GOAL5-26"
+    ]
+  },
+  {
+    "number": 20,
+    "package_id": "ROADMAP-PR-020",
+    "title": "SCE → Studious: datasets, qualification, replay/paper и новые web3 research packs",
+    "user_outcome": "Подключить реальные Studious handlers, данные и qualification campaigns; добавить воспроизводимые atomic и delayed-capital research packs текущего roadmap.",
+    "repository": "BobIvans/scaling-chrome-extensions + BobIvans/studious-pancake",
+    "prerequisite_packages": [
+      13,
+      14,
+      15,
+      16,
+      19
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "SCE → Studious: каталог реальных функций и qualification bridge",
+        "lane": "Web3",
+        "repository": "BobIvans/scaling-chrome-extensions + BobIvans/studious-pancake",
+        "scope": [
+          "Актуальная карта command/function/test handlers обоих repo",
+          "Typed READ_ONLY/REPLAY/PAPER profiles через существующий qualification owner",
+          "Dataset/config/repo identities и UI результатов в SCE"
+        ],
+        "acceptance": [
+          "Каждый handler найден в actual code либо помечен GAP",
+          "Нет второго trading runtime или market-data owner",
+          "Result сохраняет exact config/dataset/build",
+          "Missing credentials/data показаны отдельным blocker",
+          "Read-only/replay/paper режимы не смешиваются",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "SCE владеет контекстом и orchestration; Studious — рыночными/qualification handlers. Этот аудит не был выполнен текущим документом; #38 должен прочитать оба repo.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "ACTION5-27"
+        ],
+        "feature_ids": [
+          "RND-009",
+          "RND-010"
+        ],
+        "decision_ids": [
+          "DEC5-24"
+        ],
+        "goal_ids": [
+          "GOAL5-24"
+        ],
+        "workstream_id": "WS-029",
+        "parent_package": "ROADMAP-PR-020",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-017",
+          "WS-018"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Рыночные datasets: broker, freshness, point-in-time и независимые views",
+        "lane": "Web3",
+        "repository": "BobIvans/studious-pancake + SCE adapter",
+        "scope": [
+          "Адаптация существующего market-data owner к research observations",
+          "Raw/provider/version/time/hash и point-in-time anchors",
+          "Backpressure/quotas/completeness, opportunity identity и общий dataset cache"
+        ],
+        "acceptance": [
+          "Missing/stale data не объявляется отсутствием opportunity",
+          "Provider views имеют независимое происхождение",
+          "Look-ahead исключён проверкой времени входов",
+          "Повтор dataset не увеличивает число независимых наблюдений",
+          "Offline fixtures и реальный acquisition имеют разные receipts",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Аудитировать и развивать текущий Studious broker; SCE сохраняет references/receipts. Цены и live APIs изучать заново при создании detailed ZIP.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "ACTION5-28"
+        ],
+        "feature_ids": [
+          "RND-015",
+          "RND-016",
+          "RND-017",
+          "RND-018",
+          "RND-027"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-24"
+        ],
+        "workstream_id": "WS-030",
+        "parent_package": "ROADMAP-PR-020",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-011",
+          "WS-025",
+          "WS-029"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Replay/paper qualification: repayment, экономика, holdout и stateful campaigns",
+        "lane": "Web3",
+        "repository": "BobIvans/studious-pancake + SCE adapter",
+        "scope": [
+          "Exact dataset/config replay и PAPER/SHADOW outputs",
+          "Repayment/boundary/fuzz/stateful corpus",
+          "Fees/slippage/latency/units, all-trial registry и time/venue holdout"
+        ],
+        "acceptance": [
+          "Replay воспроизводим по hashes/config",
+          "Stateful campaign непустая и проверяет инварианты",
+          "Полная экономика включает заявленные затраты",
+          "Неудачные trials и unknown включены в denominator",
+          "Paper/replay outcome не маркируется live profit",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Переиспользовать реализованные qualification commands Studious. Не добавлять автоматический money-moving маршрут как условие закрытия исследовательского scope.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "ACTION5-29"
+        ],
+        "feature_ids": [
+          "RND-012",
+          "RND-013",
+          "RND-014",
+          "RND-019",
+          "RND-020",
+          "RND-022",
+          "RND-028",
+          "RND-029"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-24",
+          "GOAL5-25"
+        ],
+        "workstream_id": "WS-031",
+        "parent_package": "ROADMAP-PR-020",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-013",
+          "WS-029",
+          "WS-030"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Research packs: circular/triangular, liquidation и peg/wrapper opportunities",
+        "lane": "Web3",
+        "repository": "BobIvans/studious-pancake + SCE workflow",
+        "scope": [
+          "Atlas рынков/протоколов и eligibility каждого route",
+          "Сопоставимые packs circular/triangular, liquidation+swap, stable peg/wrappers",
+          "Atomic boundary, costs, liquidity/settlement и отрицательные cases"
+        ],
+        "acceptance": [
+          "Каждый pack имеет dataset, hypothesis и verifier contract",
+          "Неподдерживаемый protocol явно GAP",
+          "Route repayment/settlement проверяется в своей модели",
+          "Независимый holdout сохранён",
+          "Opportunity не выдаётся за исполнимую прибыль без evidence",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Это конечный набор research packs текущих feature cards RND-030..033, не обещание всех будущих протоколов. SCE содержит workflows; экономический код принадлежит Studious.",
+        "application_code_changed": false,
+        "source_task_ids": [],
+        "feature_ids": [
+          "RND-021",
+          "RND-030",
+          "RND-031",
+          "RND-032",
+          "RND-033"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-25"
+        ],
+        "workstream_id": "WS-032",
+        "parent_package": "ROADMAP-PR-020",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-031"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Research packs: intent/clearing, cross-chain, basis и funding",
+        "lane": "Web3",
+        "repository": "BobIvans/studious-pancake + SCE workflow",
+        "scope": [
+          "Intent/clearing/coincidence-of-wants solver experiment",
+          "Cross-chain/basis/funding с моделью времени, капитала и settlement",
+          "Сравнение с атомарными pack baselines и failure cases"
+        ],
+        "acceptance": [
+          "Atomic и delayed-capital модели разделены",
+          "Capital lock/finality/hedging assumptions заданы явно",
+          "Нет look-ahead в funding/venue данных",
+          "Settlement failure и stale quote входят в corpus",
+          "Результат имеет mode и scope, пригодный для повторной проверки",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Закрывает определения и проверяемые эксперименты RND-034/035. Для реальных protocol execution adapters потребуются подтверждённые отдельные scopes.",
+        "application_code_changed": false,
+        "source_task_ids": [],
+        "feature_ids": [
+          "RND-034",
+          "RND-035"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-25"
+        ],
+        "workstream_id": "WS-033",
+        "parent_package": "ROADMAP-PR-020",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-031"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "ACTION5-27",
+      "ACTION5-28",
+      "ACTION5-29"
+    ],
+    "feature_ids": [
+      "RND-009",
+      "RND-010",
+      "RND-012",
+      "RND-013",
+      "RND-014",
+      "RND-015",
+      "RND-016",
+      "RND-017",
+      "RND-018",
+      "RND-019",
+      "RND-020",
+      "RND-021",
+      "RND-022",
+      "RND-027",
+      "RND-028",
+      "RND-029",
+      "RND-030",
+      "RND-031",
+      "RND-032",
+      "RND-033",
+      "RND-034",
+      "RND-035"
+    ],
+    "decision_ids": [
+      "DEC5-24"
+    ],
+    "goal_ids": [
+      "GOAL5-24",
+      "GOAL5-25"
+    ]
+  },
+  {
+    "number": 21,
+    "package_id": "ROADMAP-PR-021",
+    "title": "Закрытие продукта: Windows scale/fault qualification, польза, стоимость и все критерии V5",
+    "user_outcome": "Проверить конечные пользовательские вертикали, исправить реальные integration faults и сверить все 160 задач/164 карточки/28 целей/24 решения.",
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "prerequisite_packages": [
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "status": "PROPOSED_BIG_PACKAGE",
+    "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+    "implementation_hours": null,
+    "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+    "workstreams": [
+      {
+        "title": "Сквозная квалификация Windows 11: масштаб, сбои, UI, voice и обновления",
+        "lane": "Качество",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Общий corpus wrong-target/stale/cancel/unknown/restore/mic-denied",
+          "Scale profiles Dell 16 GB и реальные installed receipts",
+          "Вертикали repo→context→AI→change→update и text/voice→research"
+        ],
+        "acceptance": [
+          "Каждый тест связан с exact build/device/config",
+          "Большой корпус не теряет хвосты и origins",
+          "STOP/crash/offline/restart проходят на устройстве",
+          "Установка/rollback/canary подтверждены отдельно от CI",
+          "Отсутствующий device/API receipt остаётся NOT_RUN",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Этот пакет выполняет квалификацию конечных вертикалей и исправляет подтверждённые faults; профильные владельцы сохраняются. CI не подменяет реальный Windows запуск.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-011",
+          "UI3-018",
+          "PAR3-022",
+          "EVO3-024",
+          "TAB4-21",
+          "LAYA4-026"
+        ],
+        "feature_ids": [
+          "LIB-060",
+          "ACT-053",
+          "RND-023"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-01",
+          "GOAL5-02",
+          "GOAL5-03",
+          "GOAL5-04",
+          "GOAL5-05",
+          "GOAL5-06",
+          "GOAL5-07",
+          "GOAL5-09",
+          "GOAL5-12",
+          "GOAL5-13",
+          "GOAL5-14",
+          "GOAL5-15",
+          "GOAL5-16",
+          "GOAL5-17",
+          "GOAL5-18",
+          "GOAL5-19",
+          "GOAL5-20",
+          "GOAL5-21",
+          "GOAL5-22",
+          "GOAL5-23",
+          "GOAL5-26",
+          "GOAL5-28"
+        ],
+        "workstream_id": "WS-034",
+        "parent_package": "ROADMAP-PR-021",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-003",
+          "WS-004",
+          "WS-005",
+          "WS-006",
+          "WS-008",
+          "WS-009",
+          "WS-010",
+          "WS-011",
+          "WS-014",
+          "WS-015",
+          "WS-016",
+          "WS-019",
+          "WS-020",
+          "WS-022",
+          "WS-024",
+          "WS-027",
+          "WS-028",
+          "WS-029",
+          "WS-030",
+          "WS-031",
+          "WS-032",
+          "WS-033"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Полезность и стоимость: benchmarks, ablation, manual baseline и все попытки",
+        "lane": "Качество",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Frozen corpus собственных retrieval/coding/research задач",
+          "Manual/no-action baseline, context ablation и независимые оценки",
+          "Cost/latency/RAM/interventions/unknown/failure accounting"
+        ],
+        "acceptance": [
+          "В знаменатель входят все начатые попытки",
+          "Критерии успеха заморожены до запуска",
+          "Количество PR не подменяет измеренную пользу",
+          "Повторные источники не считаются независимыми оценками",
+          "Отчёт показывает scope, confidence и next missing evidence",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "Измеряет пользу реализованных функций; не требует придумывать прибыль или идеальный benchmark. Приёмочные пороги согласуются по данным corpus.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "TAB4-20"
+        ],
+        "feature_ids": [
+          "LIB-055",
+          "ACT-013",
+          "ACT-014",
+          "ACT-026",
+          "RND-039",
+          "RND-040",
+          "RND-041"
+        ],
+        "decision_ids": [
+          "DEC5-23"
+        ],
+        "goal_ids": [
+          "GOAL5-15",
+          "GOAL5-21",
+          "GOAL5-25",
+          "GOAL5-27"
+        ],
+        "workstream_id": "WS-035",
+        "parent_package": "ROADMAP-PR-021",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-015",
+          "WS-027",
+          "WS-028",
+          "WS-031",
+          "WS-032",
+          "WS-033",
+          "WS-034"
+        ],
+        "original_package_inputs": []
+      },
+      {
+        "title": "Закрытие V5: все 160 задач, 164 карточки, 28 целей и выпуск продукта",
+        "lane": "Качество",
+        "repository": "BobIvans/scaling-chrome-extensions",
+        "scope": [
+          "Criterion-level reconciliation всех каталогов и decision records",
+          "Исправление оставшихся integration defects и stale documentation",
+          "Delivery/handoff, release notes, registry и точные named blockers"
+        ],
+        "acceptance": [
+          "Ни один исходный ID не потерян",
+          "У каждого обязательного критерия есть пригодный receipt или открытый blocker",
+          "DEFERRED не считается выполнением",
+          "Delivered/installed/usable различаются",
+          "Полное закрытие объявляется только после фактической приёмки обязательных критериев",
+          "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+          "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+          "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+        ],
+        "boundary": "№45 — финальная сверка и интеграционные исправления. Новые несвязанные продуктовые идеи создают следующую версию roadmap; их нельзя тихо включать или использовать для бесконечного продления V5.",
+        "application_code_changed": false,
+        "source_task_ids": [
+          "G3-012",
+          "TAB4-22",
+          "ACTION5-30"
+        ],
+        "feature_ids": [
+          "LIB-053",
+          "LIB-056",
+          "RND-046"
+        ],
+        "decision_ids": [],
+        "goal_ids": [
+          "GOAL5-10",
+          "GOAL5-27",
+          "GOAL5-28"
+        ],
+        "workstream_id": "WS-036",
+        "parent_package": "ROADMAP-PR-021",
+        "status": "PLANNED_INTERNAL_STAGE",
+        "prerequisite_workstreams": [
+          "WS-034",
+          "WS-035"
+        ],
+        "original_package_inputs": []
+      }
+    ],
+    "source_task_ids": [
+      "G3-011",
+      "G3-012",
+      "UI3-018",
+      "PAR3-022",
+      "EVO3-024",
+      "TAB4-20",
+      "TAB4-21",
+      "TAB4-22",
+      "LAYA4-026",
+      "ACTION5-30"
+    ],
+    "feature_ids": [
+      "LIB-053",
+      "LIB-055",
+      "LIB-056",
+      "LIB-060",
+      "ACT-013",
+      "ACT-014",
+      "ACT-026",
+      "ACT-053",
+      "RND-023",
+      "RND-039",
+      "RND-040",
+      "RND-041",
+      "RND-046"
+    ],
+    "decision_ids": [
+      "DEC5-23"
+    ],
+    "goal_ids": [
+      "GOAL5-01",
+      "GOAL5-02",
+      "GOAL5-03",
+      "GOAL5-04",
+      "GOAL5-05",
+      "GOAL5-06",
+      "GOAL5-07",
+      "GOAL5-09",
+      "GOAL5-10",
+      "GOAL5-12",
+      "GOAL5-13",
+      "GOAL5-14",
+      "GOAL5-15",
+      "GOAL5-16",
+      "GOAL5-17",
+      "GOAL5-18",
+      "GOAL5-19",
+      "GOAL5-20",
+      "GOAL5-21",
+      "GOAL5-22",
+      "GOAL5-23",
+      "GOAL5-25",
+      "GOAL5-26",
+      "GOAL5-27",
+      "GOAL5-28"
+    ]
+  }
+]

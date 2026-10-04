@@ -1,0 +1,978 @@
+[
+  {
+    "case_id": "INT-PARITY",
+    "workstream": "WS-018",
+    "category": "normal",
+    "stimulus": "Одинаковый corrected RU/EN text/transcript, разные modality provenance",
+    "expected": "Semantic plan/slots/hash совпадают при одинаковых versions; source records различны",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-AMBIGUOUS",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Два repo/chat aliases, missing effect/amount",
+    "expected": "NEEDS_INPUT; no dispatch; missing slots перечислены",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-DAG",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Cycle, duplicate step IDs, missing dependency/input, version mismatch",
+    "expected": "Каждый дефект отвергнут до enqueue",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-NEGATION",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Не merge; main/branch; dry-run/live; 0.1 SOL",
+    "expected": "Отрицание, branch, режим и decimal+unit сохранены; no unintended effect",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-RETRIEVAL",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Обязательный source отсутствует, retrieved text содержит executable argv/root/grant",
+    "expected": "Retrieval gap виден; text не становится командой; critic возвращает retrieval required",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-LAYA",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Laya proposal known/unknown, unavailable/version unknown",
+    "expected": "Typed compiler validation; fallback direct UI; no invented vendor import",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-REVISION",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Correction после enqueue до effect boundary",
+    "expected": "Old revision superseded и не проходит fence; new plan использует новые exact slots",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-RACE",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Correction одновременно с possible send/remote commit",
+    "expected": "Old possible effect сохраняется UNKNOWN; новые dependent effects blocked до reconciliation",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-UNKNOWN",
+    "workstream": "WS-018",
+    "category": "normal",
+    "stimulus": "Unknown capability",
+    "expected": "Bounded DevelopmentRequest связан с intent; no arbitrary shell/install",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-REPEAT",
+    "workstream": "WS-018",
+    "category": "normal",
+    "stimulus": "Повтор known command при fixed registry/template versions",
+    "expected": "Один и тот же route/plan; generation кода не требуется",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "INT-ROLES",
+    "workstream": "WS-018",
+    "category": "fault",
+    "stimulus": "Planner/critic пытаются изменить цель, grant/recipient/verifier",
+    "expected": "Отдельные outputs; изменённые полномочия отвергнуты; goal preserved",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "VOICE-ONE",
+    "workstream": "WS-019",
+    "category": "fault",
+    "stimulus": "Held hotkey, repeated press, release loss, hotkey conflict",
+    "expected": "Один stream; explicit stop и fallback работают; conflict показан",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "VOICE-RELEASE",
+    "workstream": "WS-019",
+    "category": "fault",
+    "stimulus": "Stop, capture crash, restart, mic disconnect",
+    "expected": "Handles освобождены; persisted session ABORTED/DEVICE_LOST; no fake continuous capture",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "VOICE-GAPS",
+    "workstream": "WS-019",
+    "category": "fault",
+    "stimulus": "Device switch и Windows sleep/resume",
+    "expected": "Gaps/ranges видимы; новая device identity; no false command confirmation",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "VOICE-GOLD",
+    "workstream": "WS-019",
+    "category": "device",
+    "stimulus": "Held-out gold audio RU/EN/code-switch, похожие slots",
+    "expected": "WER/critical-slot errors/latency/all attempts measured on exact Windows mic",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "VOICE-TTS",
+    "workstream": "WS-019",
+    "category": "device",
+    "stimulus": "PTT с TTS command playback, шумом/фоновой речью/фоновым да",
+    "expected": "No granted effect from background/TTS; uncertain slots видны и исправимы",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "VOICE-CORRECTION",
+    "workstream": "WS-019",
+    "category": "device",
+    "stimulus": "Transcript wrong repo/chat/effect исправлен текстом перед action",
+    "expected": "Original/corrected provenance раздельны; new intent revision; exact preview перед effect",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "VOICE-OFFLINE",
+    "workstream": "WS-019",
+    "category": "fault",
+    "stimulus": "Local/cloud ASR failure или network outage",
+    "expected": "Текстовый путь сохранён; не включается скрытый cloud audio route",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "UI-KEYBOARD",
+    "workstream": "WS-019",
+    "category": "device",
+    "stimulus": "Keyboard-only repo selection→scan→part→preview→bind→run/pause/cancel",
+    "expected": "Все действия доступны без drag-and-drop/mic/Chrome extension",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "UI-A11Y",
+    "workstream": "WS-019",
+    "category": "device",
+    "stimulus": "Narrator focus traversal, operation statuses/errors",
+    "expected": "Names/order/live status/text errors доступны; state не теряется при ASR failure",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "STOP-INDEPENDENT",
+    "workstream": "WS-019",
+    "category": "fault",
+    "stimulus": "ASR/LLM worker stalled, STOP в длительном state",
+    "expected": "Новые effects заблокированы без model response; ресурсы released; unknown retained",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-DUPLICATE",
+    "workstream": "WS-021",
+    "category": "fault",
+    "stimulus": "Два chats с одинаковым title/URL fragment",
+    "expected": "Qualified stable identity различает либо auto-send unavailable",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-DRIFT",
+    "workstream": "WS-021",
+    "category": "fault",
+    "stimulus": "Account/workspace/chat сменён до upload или до Send",
+    "expected": "REBIND_REQUIRED; no next effect; old binding сохранён",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-RESTART",
+    "workstream": "WS-021",
+    "category": "fault",
+    "stimulus": "Restart, reused tab ID, move/close/navigation",
+    "expected": "Проверяется stable identity; move допускается только после match; ambiguity blocked",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-ROUTE",
+    "workstream": "WS-021",
+    "category": "device",
+    "stimulus": "Discovery API/CLI/UIA/DOM, selected web target",
+    "expected": "Actual capabilities/limits measured; no silent route switch; repository access verified отдельно",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-CANARY",
+    "workstream": "WS-021",
+    "category": "fault",
+    "stimulus": "Changed composer/button/CLI flag/UI digest",
+    "expected": "Affected adapter quarantined before Send; stale receipt не переиспользуется",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-LOGIN",
+    "workstream": "WS-021",
+    "category": "fault",
+    "stimulus": "Expired session или unsupported upload/history/identity",
+    "expected": "NEEDS_LOGIN/UNSUPPORTED сохраняет job; manual export доступен",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-FOCUS",
+    "workstream": "WS-021",
+    "category": "device",
+    "stimulus": "Manual focus/tab switch в середине draft",
+    "expected": "No further typing/click into stale target; USER_TAKEOVER виден",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-CLIPBOARD",
+    "workstream": "WS-021",
+    "category": "device",
+    "stimulus": "Второй job и manual clipboard copy во время writer",
+    "expected": "Один owner; restore только operation-owned value; новая user copy сохранена",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "TARGET-MULTILINE",
+    "workstream": "WS-021",
+    "category": "device",
+    "stimulus": "Многострочная вставка в qualified composer",
+    "expected": "Paste не вызывает Send; actual input controls квалифицированы",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "OUTBOX-TX",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Crash до/после SQLite commit, disk full",
+    "expected": "Нет runnable half record; после commit same operation/revision восстановлены",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "OUTBOX-LEASE",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Lease expires после SEND_ARMED; два browser contexts",
+    "expected": "Старый writer остановлен; lease renewal не вызывает duplicate Send",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "OUTBOX-ENVELOPE",
+    "workstream": "WS-022",
+    "category": "normal",
+    "stimulus": "Draft→observed send, exact packet/snapshot/part refs",
+    "expected": "Один composer writer; envelope хранит target/operation/hashes/current revision",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "DRAFT-CONFLICT",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Чужой draft/attachment или target drift до attach",
+    "expected": "Draft не затёрт; local packet сохранён; conflict/blocked state",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "DRAFT-VERIFY",
+    "workstream": "WS-022",
+    "category": "normal",
+    "stimulus": "Preview+supported upload known local bytes",
+    "expected": "Target/prompt/parts видны до Send; local hash vs filename/remote evidence различены",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "DRAFT-NOUPLOAD",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Upload unavailable/part too large",
+    "expected": "Manual export/rechunk explicit; local path не послан как attachment; no truncation",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-SCOPE",
+    "workstream": "WS-022",
+    "category": "normal",
+    "stimulus": "Согласованный workflow с несколькими parts",
+    "expected": "Повторных одинаковых scope questions нет; separate persisted send intent",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-PROVENANCE",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "AI response/document предлагает новый recipient/root/grant",
+    "expected": "Новая область не наследует scope; no external action из data",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-ONCE",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Repeated client request/restart после possible click",
+    "expected": "Same attempt returned; <=1 local Send invocation per attempt",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-OBSERVE",
+    "workstream": "WS-022",
+    "category": "normal",
+    "stimulus": "Outgoing history и похожее unrelated message",
+    "expected": "Только correlated task/attempt message; evidence grade сохранён",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-UNKNOWN",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Lost acknowledgement после remote commit/timeout after click",
+    "expected": "EFFECT_UNKNOWN; no blind retry; dedicated reconciliation next action",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-RECONCILE",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Unique/full, multiple matches и incomplete history",
+    "expected": "Unique→observed; multiple→conflict; incomplete→unknown; no manufactured success/failure",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-CANCEL",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Cancel/STOP до arm, после arm и после observed message",
+    "expected": "Unsent blocked; possible sent remains unknown; local stop не remote cancellation",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SEND-SOURCE",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Source revision/packet/profile изменён",
+    "expected": "Exact immutable packet retained; current-source policy blocks stale dispatch; new packet/revision явны",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "PART-COVERAGE",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Missing last part, generic всё прочитал, old source read receipt",
+    "expected": "Отдельные delivery/received/use claims; missing IDs видны; new version не covered старым receipt",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "PART-SCALE",
+    "workstream": "WS-022",
+    "category": "scale",
+    "stimulus": "Manifests N=1,21,257,4097,parametric N with restart/backpressure",
+    "expected": "Все IDs учтены, resident pages bounded; no total 20 cap; counts/hashes/cursors exact",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "RESULT-CORRELATION",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Wrong task/packet/attempt/chat; streaming partial/truncated JSON",
+    "expected": "No completion/import head advance; raw evidence retained with reason",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "RESULT-IDEMPOTENT",
+    "workstream": "WS-022",
+    "category": "normal",
+    "stimulus": "Same response повторно и old response после new head",
+    "expected": "Exactly one durable import event per key; new result head не откатывается",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "RESULT-DATA",
+    "workstream": "WS-022",
+    "category": "fault",
+    "stimulus": "Valid result содержит shell command/grant/path/DONE",
+    "expected": "Data only; no command execution; DONE остаётся claim",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-RECORD",
+    "workstream": "WS-020",
+    "category": "normal",
+    "stimulus": "Allowed demonstration с preconditions/effects/recovery",
+    "expected": "Versioned SkillCandidate имеет only observed steps и source receipt",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-SECRET",
+    "workstream": "WS-020",
+    "category": "fault",
+    "stimulus": "Password/token/private window в demonstration",
+    "expected": "No raw secret/unallowed window durable; credential refs instead; coordinates not identity",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-UNSEEN",
+    "workstream": "WS-020",
+    "category": "device",
+    "stimulus": "Новый input/repo плюс device replay normal/fault",
+    "expected": "Independent outcome receipt tied exact skill code/dependencies; не literal one-demo promotion",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-OPTIMIZE",
+    "workstream": "WS-020",
+    "category": "fault",
+    "stimulus": "Убрать redundant step vs authorization/STOP/evidence step",
+    "expected": "Only invariant-preserving optimization admitted после corpus rerun",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-DRIFT",
+    "workstream": "WS-020",
+    "category": "fault",
+    "stimulus": "Adapter/template/permission change перед invocation",
+    "expected": "Dependent skill STALE до admission; unrelated requires proven independence",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-SCOPE",
+    "workstream": "WS-020",
+    "category": "fault",
+    "stimulus": "Upgrade добавил host/root/effect; unchanged compatible scope",
+    "expected": "Growth не активируется old grant; unchanged не требует redundant setup",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-FAILURE",
+    "workstream": "WS-020",
+    "category": "normal",
+    "stimulus": "Counterexample failure, затем tool repair/version change",
+    "expected": "Capsules сохранены; bounded retry по applicability; new version не eternal-blocked",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-RECIPE",
+    "workstream": "WS-020",
+    "category": "normal",
+    "stimulus": "Prepare/find/export skill через Core jobs/restart",
+    "expected": "Нет второго worker/queue; capability/projection/repo alias versions; no duplicate effects",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "SKILL-NEGATIVE",
+    "workstream": "WS-020",
+    "category": "fault",
+    "stimulus": "Новая skill version оптимизирована на positive cases",
+    "expected": "Retained negative corpus автоматически входит в qualification; reproducible hashes",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "COMPAT-UPSTREAM",
+    "workstream": "ALL",
+    "category": "integration",
+    "stimulus": "Actual PR-013/014/015 DTO versions и activation receipts",
+    "expected": "Contract compatibility checked at real handlers; mock receipt не activates runtime",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "COMPAT-DOWNSTREAM",
+    "workstream": "ALL",
+    "category": "integration",
+    "stimulus": "PR-018 UpdateCase и PR-019/021 qualification consumption",
+    "expected": "Structured refs/outcomes/dependencies accepted; broad product goals remain open",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  },
+  {
+    "case_id": "ALL-RESTART",
+    "workstream": "ALL",
+    "category": "fault",
+    "stimulus": "Repeat/restart/cancel/source drift across all WS",
+    "expected": "Раздельные outcomes/events; no lost revision/evidence/uncertainty; source criteria coverage retained",
+    "oracle": "Независимый gold/observer по описанному expected; не output handler и не model DONE",
+    "evidence_required": [
+      "exact build/schema/adapter/environment versions",
+      "input hashes and all attempts",
+      "observed outcome + negative assertions",
+      "receipt/artifact hash"
+    ],
+    "runtime_status": "NOT_RUN",
+    "evidence_ref": null
+  }
+]

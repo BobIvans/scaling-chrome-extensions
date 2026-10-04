@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:labels:record:v1",
+  "title": "SCE source/span/message derivative label record",
+  "type": "object",
+  "required": ["schema", "id", "kind", "source_id", "revision_id", "source_sha256", "locator", "labels", "text", "text_state"],
+  "properties": {
+    "schema": {"const": "sce.labels.v1"},
+    "id": {"type": "string"},
+    "kind": {"enum": ["source", "span", "message"]},
+    "source_id": {"type": "string", "pattern": "^source:[a-f0-9]{64}$"},
+    "revision_id": {"type": "string", "pattern": "^revision:[a-f0-9]{64}$"},
+    "content_revision_id": {"type": "string"},
+    "annotation_revision_id": {"type": "string"},
+    "source_sha256": {"type": ["string", "null"]},
+    "locator": {
+      "type": "object", "required": ["path", "duplicate_occurrence", "entry", "ordinal", "snapshot", "original_object"],
+      "properties": {
+        "path": {"type": "string"},
+        "duplicate_occurrence": {"type": "integer", "minimum": 0},
+        "unit": {"const": "decoded_unicode_codepoints"},
+        "start": {"type": "integer", "minimum": 0},
+        "end": {"type": "integer", "minimum": 0},
+        "encoding": {"type": "string"}
+      }
+    },
+    "text": {"type": ["string", "null"]},
+    "text_state": {"type": "string"},
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object", "required": ["facet", "value", "tag", "status", "basis", "confidence"],
+        "properties": {
+          "facet": {"enum": ["source", "authorship", "semantic_type", "project", "goal", "time", "status", "evidence", "confidence", "sensitivity", "machine_parse", "language", "execution", "custom"]},
+          "value": {"type": "string"}, "tag": {"type": "string"},
+          "status": {"enum": ["ASSERTED", "SUGGESTED", "UNKNOWN"]},
+          "basis": {"type": "string"},
+          "confidence": {"type": ["number", "null"], "minimum": 0, "maximum": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}

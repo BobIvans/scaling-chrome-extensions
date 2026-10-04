@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposal:search_request:v1",
+  "type": "object",
+  "properties": {
+    "schema": {
+      "const": "sce.search-request.proposal.v1"
+    },
+    "scope": {
+      "type": "object",
+      "properties": {
+        "namespace": {
+          "type": "string",
+          "minLength": 1
+        },
+        "profile_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "namespace",
+        "profile_id",
+        "project_ids"
+      ],
+      "additionalProperties": false
+    },
+    "query": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "EXACT_ID",
+        "EXACT_PATH",
+        "EXACT_QUOTE",
+        "FTS"
+      ]
+    },
+    "revision_selector": {
+      "type": "string",
+      "minLength": 1
+    },
+    "time_field": {
+      "type": "string",
+      "enum": [
+        "SOURCE_EVENT",
+        "CAPTURE",
+        "INFERRED"
+      ]
+    },
+    "filters": {
+      "type": "object",
+      "properties": {
+        "source_types": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "topics": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "goals": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "statuses": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "required": [
+        "source_types",
+        "topics",
+        "goals",
+        "statuses"
+      ],
+      "additionalProperties": false
+    },
+    "page_size": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "cursor": {
+      "anyOf": [
+        {
+          "type": "object",
+          "properties": {
+            "query_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "scope_sha256": {
+              "type": "string",
+              "pattern": "^[a-f0-9]{64}$"
+            },
+            "generation": {
+              "type": "string",
+              "minLength": 1
+            },
+            "last_sort_key": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "query_sha256",
+            "scope_sha256",
+            "generation",
+            "last_sort_key"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "scope",
+    "query",
+    "mode",
+    "revision_selector",
+    "time_field",
+    "filters",
+    "page_size",
+    "cursor"
+  ],
+  "additionalProperties": false
+}

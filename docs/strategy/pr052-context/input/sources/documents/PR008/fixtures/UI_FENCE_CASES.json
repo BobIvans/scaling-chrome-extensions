@@ -1,0 +1,113 @@
+{
+  "schema": "occ.pr008-ui-fence-fixtures.v1",
+  "current": {
+    "generation": 2,
+    "request_id": "fixture-read-2",
+    "namespace": "code",
+    "query_revision": 3,
+    "expected_operation": "durable.search",
+    "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+    "store_identity": "e5063d6f424743c4d89ea40182b1ce4ee002db9d178ef6ae0eba43dd23f69d81",
+    "adapter_sha256": "f6e5a318a71b58694aef1c0533c8599e02e3cbddc888cb7966cca2c583be8022"
+  },
+  "cases": [
+    {
+      "id": "current",
+      "event": {
+        "generation": 2,
+        "request_id": "fixture-read-2",
+        "namespace": "code",
+        "query_revision": 3,
+        "expected_operation": "durable.search",
+        "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+        "store_identity": "e5063d6f424743c4d89ea40182b1ce4ee002db9d178ef6ae0eba43dd23f69d81",
+        "adapter_sha256": "f6e5a318a71b58694aef1c0533c8599e02e3cbddc888cb7966cca2c583be8022"
+      },
+      "expected": "APPLY"
+    },
+    {
+      "id": "late_generation",
+      "event": {
+        "generation": 1,
+        "request_id": "fixture-read-2",
+        "namespace": "code",
+        "query_revision": 3,
+        "expected_operation": "durable.search",
+        "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+        "store_identity": "e5063d6f424743c4d89ea40182b1ce4ee002db9d178ef6ae0eba43dd23f69d81",
+        "adapter_sha256": "f6e5a318a71b58694aef1c0533c8599e02e3cbddc888cb7966cca2c583be8022"
+      },
+      "expected": "DISCARD"
+    },
+    {
+      "id": "old_request",
+      "event": {
+        "generation": 2,
+        "request_id": "fixture-read-1",
+        "namespace": "code",
+        "query_revision": 3,
+        "expected_operation": "durable.search",
+        "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+        "store_identity": "e5063d6f424743c4d89ea40182b1ce4ee002db9d178ef6ae0eba43dd23f69d81",
+        "adapter_sha256": "f6e5a318a71b58694aef1c0533c8599e02e3cbddc888cb7966cca2c583be8022"
+      },
+      "expected": "DISCARD"
+    },
+    {
+      "id": "old_query",
+      "event": {
+        "generation": 2,
+        "request_id": "fixture-read-2",
+        "namespace": "code",
+        "query_revision": 2,
+        "expected_operation": "durable.search",
+        "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+        "store_identity": "e5063d6f424743c4d89ea40182b1ce4ee002db9d178ef6ae0eba43dd23f69d81",
+        "adapter_sha256": "f6e5a318a71b58694aef1c0533c8599e02e3cbddc888cb7966cca2c583be8022"
+      },
+      "expected": "DISCARD"
+    },
+    {
+      "id": "other_namespace",
+      "event": {
+        "generation": 2,
+        "request_id": "fixture-read-2",
+        "namespace": "another",
+        "query_revision": 3,
+        "expected_operation": "durable.search",
+        "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+        "store_identity": "e5063d6f424743c4d89ea40182b1ce4ee002db9d178ef6ae0eba43dd23f69d81",
+        "adapter_sha256": "f6e5a318a71b58694aef1c0533c8599e02e3cbddc888cb7966cca2c583be8022"
+      },
+      "expected": "DISCARD"
+    },
+    {
+      "id": "other_store",
+      "event": {
+        "generation": 2,
+        "request_id": "fixture-read-2",
+        "namespace": "code",
+        "query_revision": 3,
+        "expected_operation": "durable.search",
+        "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+        "store_identity": "c8e86ecf02c2d1234c1eb753c3e5876a52331e9c153bd3a8eb185bc9479e66e1",
+        "adapter_sha256": "f6e5a318a71b58694aef1c0533c8599e02e3cbddc888cb7966cca2c583be8022"
+      },
+      "expected": "DISCARD"
+    },
+    {
+      "id": "other_adapter",
+      "event": {
+        "generation": 2,
+        "request_id": "fixture-read-2",
+        "namespace": "code",
+        "query_revision": 3,
+        "expected_operation": "durable.search",
+        "profile_digest": "0651c684049228c7caf0c20db0e196ee27a7d5d785196be6345a1777a6424a15",
+        "store_identity": "e5063d6f424743c4d89ea40182b1ce4ee002db9d178ef6ae0eba43dd23f69d81",
+        "adapter_sha256": "cb64614d8c4fbd8ebb20b2ff2af2fc7e9e49469162cc97d23d1c70bf5f4eb7f2"
+      },
+      "expected": "DISCARD"
+    }
+  ]
+}

@@ -1,0 +1,552 @@
+[
+  {
+    "goal_id": "GOAL5-01",
+    "title": "Локальное доступное приложение на Windows",
+    "packages": [
+      15,
+      21
+    ],
+    "acceptance_criteria": [
+      "Desktop shell использует существующие service operations и один canonical store.",
+      "Закрытие Chrome не останавливает локальный поиск и подготовку TASK.",
+      "На Windows сохранён receipt установки, запуска и текстового управления."
+    ],
+    "criterion_ids": [
+      "GOAL5-01-AC1",
+      "GOAL5-01-AC2",
+      "GOAL5-01-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-02",
+    "title": "Полный учёт репозитория одной кнопкой",
+    "packages": [
+      12,
+      21
+    ],
+    "acceptance_criteria": [
+      "Множество entries соответствует tree выбранного SHA; exclusions/errors показаны отдельно.",
+      "Перезапуск продолжает тот же snapshot cursor, смена HEAD создаёт новую версию.",
+      "Каждый INDEXED blob восстанавливается по chunks byte-for-byte."
+    ],
+    "criterion_ids": [
+      "GOAL5-02-AC1",
+      "GOAL5-02-AC2",
+      "GOAL5-02-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-03",
+    "title": "Большие, binary и специальные источники без потери учёта",
+    "packages": [
+      10,
+      12,
+      21
+    ],
+    "acceptance_criteria": [
+      "Unsupported/binary/LFS/submodule/link имеют отдельную причину и область покрытия.",
+      "Размер/вложенность архивов ограничивают processing, но не скрывают неучтённые entries.",
+      "Превышение лимита даёт явный pending/error и следующий допустимый путь."
+    ],
+    "criterion_ids": [
+      "GOAL5-03-AC1",
+      "GOAL5-03-AC2",
+      "GOAL5-03-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-04",
+    "title": "Связанные части кода для AI",
+    "packages": [
+      11,
+      14,
+      21
+    ],
+    "acceptance_criteria": [
+      "Group manifest ссылается на pinned paths/revisions/ranges; часть не выдаётся за всё repo.",
+      "Resolved, ambiguous, external и dynamic edges различаются.",
+      "Пакеты сохраняют related tests/contracts и все заявленные gaps."
+    ],
+    "criterion_ids": [
+      "GOAL5-04-AC1",
+      "GOAL5-04-AC2",
+      "GOAL5-04-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-05",
+    "title": "Инкрементальные изменения и история разработки",
+    "packages": [
+      12,
+      13,
+      18,
+      21
+    ],
+    "acceptance_criteria": [
+      "Изменение байтов/commit/branch инвалидирует соответствующие производные.",
+      "Rename/delete отражены в provenance, старый источник остаётся историческим.",
+      "Delta packet перечисляет заменённые/добавленные/удалённые ranges, а не молча редактирует baseline."
+    ],
+    "criterion_ids": [
+      "GOAL5-05-AC1",
+      "GOAL5-05-AC2",
+      "GOAL5-05-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-06",
+    "title": "Точная история чатов и авторство",
+    "packages": [
+      9,
+      10,
+      21
+    ],
+    "acceptance_criteria": [
+      "Оригинал и извлечение имеют собственные ID/версии; цитата не становится новой репликой автора.",
+      "Ветви/редактирования/недоступные сообщения учитываются отдельно.",
+      "Полнота UI-scroll проверяется сравнением с доступным authoritative export, когда он есть."
+    ],
+    "criterion_ids": [
+      "GOAL5-06-AC1",
+      "GOAL5-06-AC2",
+      "GOAL5-06-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-07",
+    "title": "Документы и медиа с проверяемыми ссылками",
+    "packages": [
+      13,
+      21
+    ],
+    "acceptance_criteria": [
+      "Extractor version и page/time spans сохранены.",
+      "OCR/ASR output не перезаписывает оригинал; uncertain text и числа видимы.",
+      "Ленивое извлечение, отмена и повторный запуск не создают ложную новую source identity."
+    ],
+    "criterion_ids": [
+      "GOAL5-07-AC1",
+      "GOAL5-07-AC2",
+      "GOAL5-07-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-08",
+    "title": "Одна библиотека оригиналов, версий и происхождения",
+    "packages": [
+      9,
+      10,
+      14,
+      15
+    ],
+    "acceptance_criteria": [
+      "Source identity, raw object и extraction revision разделены.",
+      "Одинаковые bytes могут иметь несколько provenance refs; это не несколько независимых доказательств.",
+      "Миграция schema и конфликт restore проверяются до изменения canonical heads."
+    ],
+    "criterion_ids": [
+      "GOAL5-08-AC1",
+      "GOAL5-08-AC2",
+      "GOAL5-08-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-09",
+    "title": "Поиск, метки, коллекции и временная применимость",
+    "packages": [
+      10,
+      14,
+      21
+    ],
+    "acceptance_criteria": [
+      "Поиск возвращает source/version/range, а не только summary.",
+      "Ручное исправление метки переживает повторную extraction/classification.",
+      "Противоречивые/устаревшие сведения показаны с датой применимости."
+    ],
+    "criterion_ids": [
+      "GOAL5-09-AC1",
+      "GOAL5-09-AC2",
+      "GOAL5-09-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-10",
+    "title": "Цели и требования не теряются",
+    "packages": [
+      10,
+      19,
+      21
+    ],
+    "acceptance_criteria": [
+      "Каждое требование связано с исходником либо помечено assistant-derived.",
+      "Новый handoff сохраняет goal revision и непокрытые требования.",
+      "Состояния proposed/implemented/tested/installed/usable различаются."
+    ],
+    "criterion_ids": [
+      "GOAL5-10-AC1",
+      "GOAL5-10-AC2",
+      "GOAL5-10-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-11",
+    "title": "Пакеты для разных AI и точный дозапрос",
+    "packages": [
+      14,
+      17
+    ],
+    "acceptance_criteria": [
+      "Один provider-neutral manifest, отдельный qualified transport каждого адресата.",
+      "Пакет имеет goal/source/destination scope и declared gaps.",
+      "NEED_CONTEXT указывает версию и диапазон; supplied не означает read/used."
+    ],
+    "criterion_ids": [
+      "GOAL5-11-AC1",
+      "GOAL5-11-AC2",
+      "GOAL5-11-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-12",
+    "title": "Сохранённая задача и надёжная ручная передача",
+    "packages": [
+      14,
+      15,
+      17,
+      21
+    ],
+    "acceptance_criteria": [
+      "Идемпотентные task/event keys и immutable packet сохраняются.",
+      "Unknown outcome требует сверки, cancel сохраняет неопределённость.",
+      "Ответ связан с task/session/packet; DONE не закрывает критерий."
+    ],
+    "criterion_ids": [
+      "GOAL5-12-AC1",
+      "GOAL5-12-AC2",
+      "GOAL5-12-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-13",
+    "title": "Выбранная вкладка Grok и управление её интерфейсом",
+    "packages": [
+      17,
+      21
+    ],
+    "acceptance_criteria": [
+      "Account/chat/session binding перепроверяется перед эффектом.",
+      "Draft/upload/send имеют разные receipts; потеря наблюдения не вызывает blind retry.",
+      "После UI drift adapter теряет qualification до canary/rebinding."
+    ],
+    "criterion_ids": [
+      "GOAL5-13-AC1",
+      "GOAL5-13-AC2",
+      "GOAL5-13-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-14",
+    "title": "GitHub, изменения и фактический merge",
+    "packages": [
+      18,
+      21
+    ],
+    "acceptance_criteria": [
+      "Review/patch/PR связываются с конкретным base и change identity.",
+      "Squash/rebase/merge сопоставляются по фактическим artifacts и policy.",
+      "Фраза о merge и UI title сами по себе не заменяют проверку remote SHA."
+    ],
+    "criterion_ids": [
+      "GOAL5-14-AC1",
+      "GOAL5-14-AC2",
+      "GOAL5-14-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-15",
+    "title": "Независимые проверки результата",
+    "packages": [
+      12,
+      15,
+      18,
+      21
+    ],
+    "acceptance_criteria": [
+      "Local tests, CI, merge, installation и device outcome имеют отдельные bindings.",
+      "Изменение input/template/policy/registry/bytes делает связанные evidence stale.",
+      "Проверка измеряет сам критерий, а не доверяет модели или одному exit code без test binding."
+    ],
+    "criterion_ids": [
+      "GOAL5-15-AC1",
+      "GOAL5-15-AC2",
+      "GOAL5-15-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-16",
+    "title": "Обновление приложения и новые проверенные возможности",
+    "packages": [
+      15,
+      17,
+      18,
+      21
+    ],
+    "acceptance_criteria": [
+      "Release/source/assets имеют проверяемую связь.",
+      "Staging, schema migration и rollback проходят репетицию.",
+      "Capability registry связан с установленной build и device qualification."
+    ],
+    "criterion_ids": [
+      "GOAL5-16-AC1",
+      "GOAL5-16-AC2",
+      "GOAL5-16-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-17",
+    "title": "Текст в зарегистрированные действия и Laya-маршрутизация",
+    "packages": [
+      15,
+      16,
+      21
+    ],
+    "acceptance_criteria": [
+      "Intent slots, capability version, scope и input references проверяются до enqueue.",
+      "Laya advisory result не расширяет полномочия и может вернуть unknown.",
+      "Неизвестная capability создаёт bounded coding/research request."
+    ],
+    "criterion_ids": [
+      "GOAL5-17-AC1",
+      "GOAL5-17-AC2",
+      "GOAL5-17-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-18",
+    "title": "Голос с исправлением намерения",
+    "packages": [
+      16,
+      21
+    ],
+    "acceptance_criteria": [
+      "Capture/ASR/intent отделены; версия намерения меняется при исправлении.",
+      "Неуверенные критические slots не превращаются в тихое действие.",
+      "TTS/background speech и lifecycle микрофона входят в qualification corpus."
+    ],
+    "criterion_ids": [
+      "GOAL5-18-AC1",
+      "GOAL5-18-AC2",
+      "GOAL5-18-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-19",
+    "title": "Доступное управление PC и независимая остановка",
+    "packages": [
+      15,
+      16,
+      17,
+      21
+    ],
+    "acceptance_criteria": [
+      "Keyboard/text path доступен для каждого важного voice action.",
+      "STOP и отмена не ждут ответа облачной модели; uncertain внешние effects сохраняются.",
+      "Focus ownership и передача управления пользователю проверяются на устройстве."
+    ],
+    "criterion_ids": [
+      "GOAL5-19-AC1",
+      "GOAL5-19-AC2",
+      "GOAL5-19-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-20",
+    "title": "Расписания и длительные кампании",
+    "packages": [
+      19,
+      21
+    ],
+    "acceptance_criteria": [
+      "Missed-run/catch-up policy и input freshness сохраняются в campaign manifest.",
+      "Нет повторного внешнего эффекта при restart/clock drift.",
+      "Бюджет, deadline и отсутствие прогресса дают явную остановку."
+    ],
+    "criterion_ids": [
+      "GOAL5-20-AC1",
+      "GOAL5-20-AC2",
+      "GOAL5-20-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-21",
+    "title": "Параллельное исследование с учётом ресурсов",
+    "packages": [
+      19,
+      21
+    ],
+    "acceptance_criteria": [
+      "Read/write/UI/shared-repo resources имеют canonical identity и leases.",
+      "Cross-branch results сравниваются на одном immutable baseline.",
+      "Admission измеряется на Dell; production parallelism меняется только после qualification."
+    ],
+    "criterion_ids": [
+      "GOAL5-21-AC1",
+      "GOAL5-21-AC2",
+      "GOAL5-21-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-22",
+    "title": "Навыки из демонстраций и их устаревание",
+    "packages": [
+      17,
+      21
+    ],
+    "acceptance_criteria": [
+      "Demonstration сохраняет inputs, scope, preconditions и outcome evidence.",
+      "Навык проходит тесты normal/fault cases перед регистрацией.",
+      "UI/code/policy changes инвалидируют затронутую версию навыка."
+    ],
+    "criterion_ids": [
+      "GOAL5-22-AC1",
+      "GOAL5-22-AC2",
+      "GOAL5-22-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-23",
+    "title": "Долговременный архив, восстановление и выборочная передача",
+    "packages": [
+      14,
+      21
+    ],
+    "acceptance_criteria": [
+      "Backup включает schema, bytes, versions и heads; restore проверяет hashes/conflicts.",
+      "Retention/delete учитывает производные и backup scope.",
+      "Размер корпуса не подменяется размером AI packet; retrieval остаётся bounded."
+    ],
+    "criterion_ids": [
+      "GOAL5-23-AC1",
+      "GOAL5-23-AC2",
+      "GOAL5-23-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-24",
+    "title": "Автоматизация исследований Studious через библиотеку",
+    "packages": [
+      19,
+      20
+    ],
+    "acceptance_criteria": [
+      "Repo/function/test handler подтверждён по actual source и registered profile.",
+      "Read-only/replay/paper режимы и их data receipts явно различаются.",
+      "Следующий brief основан на конкретном blocker, data gap и experiment result."
+    ],
+    "criterion_ids": [
+      "GOAL5-24-AC1",
+      "GOAL5-24-AC2",
+      "GOAL5-24-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-25",
+    "title": "Будущие web3-стратегии как проверяемые эксперименты",
+    "packages": [
+      20,
+      21
+    ],
+    "acceptance_criteria": [
+      "Point-in-time inputs, costs, units, holdout и dependency boundaries заморожены.",
+      "Flashloan/atomic, delayed capital и market-maker hypotheses не смешиваются как один execution path.",
+      "Replay/paper results не объявляются прибылью live системы; qualification для каждого adapter отдельная."
+    ],
+    "criterion_ids": [
+      "GOAL5-25-AC1",
+      "GOAL5-25-AC2",
+      "GOAL5-25-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-26",
+    "title": "Медиа, новости и технологические источники",
+    "packages": [
+      13,
+      19,
+      21
+    ],
+    "acceptance_criteria": [
+      "Source snapshot, timestamp и claim/quote identity сохраняются.",
+      "Пересказы одного источника не считаются независимым подтверждением.",
+      "Контентный workflow возвращает документ/сценарий с источниками и coverage report."
+    ],
+    "criterion_ids": [
+      "GOAL5-26-AC1",
+      "GOAL5-26-AC2",
+      "GOAL5-26-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-27",
+    "title": "Измерение пользы, стоимости и успеха",
+    "packages": [
+      21
+    ],
+    "acceptance_criteria": [
+      "Все начатые attempts, unknown, failures, repeats и human interventions входят в отчёт.",
+      "Сравнение manual/no-action baseline и ablation использует фиксированный corpus.",
+      "Порог принятия задаётся до experiment; proposals и measured results различаются."
+    ],
+    "criterion_ids": [
+      "GOAL5-27-AC1",
+      "GOAL5-27-AC2",
+      "GOAL5-27-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  },
+  {
+    "goal_id": "GOAL5-28",
+    "title": "Доставка продукта и понятное продолжение работы",
+    "packages": [
+      15,
+      21
+    ],
+    "acceptance_criteria": [
+      "Start page ведёт к актуальной стратегии и preserved history.",
+      "Код, proposal, тест, installed release и пользовательская доступность имеют разные статусы.",
+      "Следующий запрос содержит конкретный unmet goal и evidence gap."
+    ],
+    "criterion_ids": [
+      "GOAL5-28-AC1",
+      "GOAL5-28-AC2",
+      "GOAL5-28-AC3"
+    ],
+    "status": "RECEIPTS_REQUIRED"
+  }
+]

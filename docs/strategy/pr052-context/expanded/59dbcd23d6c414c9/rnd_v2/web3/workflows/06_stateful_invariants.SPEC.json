@@ -1,0 +1,51 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF06",
+  "name": "stateful_invariants",
+  "title_ru": "Stateful invariants",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "unit_contracts"
+  ],
+  "inputs": [
+    "invariant_spec",
+    "handler_config"
+  ],
+  "steps": [
+    {
+      "id": "stateful_invariants.1",
+      "handler": "PROPOSED.stateful_invariants.1",
+      "instruction": "Проверять balance accounting, authorization boundaries, atomic repayment, cleanup after revert"
+    },
+    {
+      "id": "stateful_invariants.2",
+      "handler": "PROPOSED.stateful_invariants.2",
+      "instruction": "Измерять reachable handlers and non-vacuous execution"
+    },
+    {
+      "id": "stateful_invariants.3",
+      "handler": "PROPOSED.stateful_invariants.3",
+      "instruction": "В Foundry учитывать runs/depth; для Solana выбрать отдельный harness после repo discovery"
+    }
+  ],
+  "outputs": [
+    "invariant_campaign",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "No violation in recorded campaign; invariants not claimed exhaustive"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

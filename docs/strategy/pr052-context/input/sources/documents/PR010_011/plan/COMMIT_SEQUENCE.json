@@ -1,0 +1,121 @@
+[
+  {
+    "stage_id": "S0",
+    "commit_subject": "Current audit and source criteria freeze",
+    "requires_stages": [],
+    "deliverables": [
+      "Actual AGENTS/HEAD/owners/PR005–009 compatibility",
+      "Baseline and source receipts; no planned-to-done promotion"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S1",
+    "commit_subject": "Shared source addresses/schema/legacy adapters",
+    "requires_stages": [
+      "S0"
+    ],
+    "deliverables": [
+      "Canonical migration rehearsal",
+      "Range/scope/hash contracts; immutable identities"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S2",
+    "commit_subject": "Importer queue/TXT/folder/archive/LFS",
+    "requires_stages": [
+      "S1"
+    ],
+    "deliverables": [
+      "Resume/cancel/source drift",
+      "Complete entry ledger+raw proof"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S3",
+    "commit_subject": "Search/tags/views/timeline",
+    "requires_stages": [
+      "S1",
+      "S2"
+    ],
+    "deliverables": [
+      "Scope-safe search all pages",
+      "Manual overlays and exact quote offsets"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S4",
+    "commit_subject": "Chat exports/scroll/branches",
+    "requires_stages": [
+      "S2"
+    ],
+    "deliverables": [
+      "Observed branches/edits/authors/gaps",
+      "Resume on correct target"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S5",
+    "commit_subject": "Pinned JS/TS parser/resolver",
+    "requires_stages": [
+      "S1"
+    ],
+    "deliverables": [
+      "Aliases/workspaces/CommonJS support matrix",
+      "Independent holdout+Windows parser evidence"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S6",
+    "commit_subject": "Dialect graph/SCC/owners/tests/contracts/smells",
+    "requires_stages": [
+      "S5",
+      "S2"
+    ],
+    "deliverables": [
+      "Complete graph membership/continuations",
+      "Raw IDs preserved, related UI anchors"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S7",
+    "commit_subject": "Goals/notes/contradictions/evidence UI",
+    "requires_stages": [
+      "S3",
+      "S4",
+      "S6"
+    ],
+    "deliverables": [
+      "Deterministic coverage projection",
+      "Typed source→code→test→result chain"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  },
+  {
+    "stage_id": "S8",
+    "commit_subject": "Integrated fault/scale/migration/CI handoff",
+    "requires_stages": [
+      "S7"
+    ],
+    "deliverables": [
+      "All scoped runtime checks reconciled",
+      "One combined PR and actual merge receipt when authorised"
+    ],
+    "status": "PLANNED",
+    "separate_pr_required": false
+  }
+]

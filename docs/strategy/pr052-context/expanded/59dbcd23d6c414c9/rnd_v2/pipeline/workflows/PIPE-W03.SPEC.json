@@ -1,0 +1,214 @@
+{
+  "schema_version": "1.0",
+  "id": "PIPE-W03",
+  "name_ru": "Проверенный release → local staging → healthcheck → rollback",
+  "mode": "SPEC_ONLY",
+  "dispatch_allowed": false,
+  "function_ids": [
+    "PIPE-11",
+    "PIPE-12",
+    "PIPE-13",
+    "PIPE-14",
+    "PIPE-15"
+  ],
+  "requires_implementation": [
+    "typed_handler_registry",
+    "policy_broker",
+    "receipt_store",
+    "dag_scheduler"
+  ],
+  "steps": [
+    {
+      "id": "release",
+      "operation": "github.resolve_release_commit",
+      "depends_on": [],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "artifact",
+      "operation": "update.download_to_staging",
+      "depends_on": [
+        "release"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "verify",
+      "operation": "update.verify_signature_and_provenance",
+      "depends_on": [
+        "artifact"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "hash_valid AND trusted_signer AND expected_repository AND expected_workflow AND source_commit_matches",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "diff",
+      "operation": "capability.compute_permission_diff",
+      "depends_on": [
+        "verify"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "grants",
+      "operation": "policy.resolve_existing_grants",
+      "depends_on": [
+        "diff"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "required_grants_present OR state == AVAILABLE_NOT_CONFIGURED",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "checkpoint",
+      "operation": "queue.quiesce_checkpoint",
+      "depends_on": [
+        "verify"
+      ],
+      "resource_locks": [
+        "library_write"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "backup",
+      "operation": "library.backup_consistent_snapshot",
+      "depends_on": [
+        "checkpoint"
+      ],
+      "resource_locks": [
+        "library_write"
+      ],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "migration",
+      "operation": "update.migrate_copy",
+      "depends_on": [
+        "backup",
+        "grants"
+      ],
+      "resource_locks": [
+        "update_staging"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "health",
+      "operation": "update.run_staging_healthcheck",
+      "depends_on": [
+        "migration"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "switch",
+      "operation": "update.switch_version",
+      "depends_on": [
+        "health"
+      ],
+      "resource_locks": [
+        "application_update"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "postcheck",
+      "operation": "update.verify_started_version",
+      "depends_on": [
+        "switch"
+      ],
+      "resource_locks": [],
+      "mutates_external_state": false,
+      "retry_policy": "bounded_retry_with_checkpoint",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "receipt.outputs_match_declared_hashes",
+      "on_failure": "continue_to_recover_with_failure_receipt",
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "recover",
+      "operation": "update.rollback_on_failed_postcheck",
+      "depends_on": [
+        "postcheck"
+      ],
+      "resource_locks": [
+        "application_update",
+        "library_write"
+      ],
+      "mutates_external_state": true,
+      "retry_policy": "reconcile_before_retry",
+      "idempotency_key": "${mission.id}:${step.id}:${inputs.sha256}",
+      "verification": "previous_binary_usable AND data_preserved_or_recovery_required",
+      "on_failure": "checkpoint_and_report",
+      "status": "NOT_RUN",
+      "run_if": "postcheck.state in [FALSE,UNKNOWN]",
+      "on_success": "report_ROLLED_BACK_or_RECOVERY_REQUIRED"
+    }
+  ],
+  "invariants": [
+    "Manifest cannot grant scopes.",
+    "This is conditional graph: recover runs only when postcheck failed; successful postcheck finalizes.",
+    "No downgrade/replay unless explicitly permitted release/rollback target.",
+    "DB rollback must account for writes after backup; never discard them silently."
+  ],
+  "result_statuses": [
+    "TRUE",
+    "FALSE",
+    "UNKNOWN",
+    "NOT_RUN"
+  ]
+}

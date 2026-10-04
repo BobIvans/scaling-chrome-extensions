@@ -1,0 +1,52 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF11",
+  "name": "oracle_freshness",
+  "title_ru": "Oracle и quote freshness",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "market_collect"
+  ],
+  "inputs": [
+    "oracle_config",
+    "feed_identity",
+    "freshness_budget"
+  ],
+  "steps": [
+    {
+      "id": "oracle_freshness.1",
+      "handler": "PROPOSED.oracle_freshness.1",
+      "instruction": "Check timestamp/slot/block against configured source semantics"
+    },
+    {
+      "id": "oracle_freshness.2",
+      "handler": "PROPOSED.oracle_freshness.2",
+      "instruction": "Inject stale quote and delayed oracle updates"
+    },
+    {
+      "id": "oracle_freshness.3",
+      "handler": "PROPOSED.oracle_freshness.3",
+      "instruction": "Record every reject and any accepted stale candidate"
+    }
+  ],
+  "outputs": [
+    "freshness_cases",
+    "economics_samples.v1"
+  ],
+  "qualification_criteria": [
+    "No accepted candidate exceeds explicit freshness policy"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,3 @@
+Проверка specification package: python verification/verify_package.py из распакованного ZIP. Нужен Python и jsonschema 4.x (requirements.txt). Проверяется manifest SHA/size/file set, JSON/schema, authored valid/invalid fixtures, полнота и точный текст исходных criteria, case/function references и полный task/feature backlog.
+Это НЕ application/runtime/device suite. Acceptance cases являются планом runtime checks со статусом NOT_RUN. Schemas/fixtures показывают форму DTO, не installed Laya/Grok integration.
+Результат первичной проверки в PACKAGE_VALIDATION.json. Verification metadata описывает подготовку и не закрывает source criterion.

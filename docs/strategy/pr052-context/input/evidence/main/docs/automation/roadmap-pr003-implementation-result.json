@@ -1,0 +1,239 @@
+{
+  "schema": "occ.roadmap-pr003.implementation-result.v1",
+  "package_id": "ROADMAP-PR-003",
+  "source_task": "LAYA4-010",
+  "date": "2026-10-04",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "observed_initial_main": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+  "integrated_base": "57885d4ede3a6e3f7057ff7ad9171fe3d8b35348",
+  "inherited_scanner_pr": 38,
+  "source_package_sha256": "03517c11625ecacdc3c8f1d8b8feda13807c365bf0c8a86fbbbe7f1593d4e39f",
+  "status": "IMPLEMENTED_FOREGROUND_RAW_ARCHIVE_SLICE",
+  "installed_code": [
+    "content-lab/repo_archive.py",
+    "content-lab/repo_archive_input.py",
+    "content-lab/repo_artifacts.py",
+    "content-lab/repo_scan.py"
+  ],
+  "source_owner": "Existing content.sqlite3 repo_snapshots/repo_entries/repo_chunks; read-only consistent export view",
+  "new_source_database": false,
+  "native_payload_endpoint_added": false,
+  "fixed_total_file_cap": null,
+  "fixed_total_part_cap": null,
+  "fixed_total_archive_bytes_cap": null,
+  "claims": {
+    "inventory_complete": "Verified current frozen snapshot ledger",
+    "captured_export_complete": "Every INDEXED raw part reconstructed and Git OID verified",
+    "all_tracked_bytes_exportable": "True only for zero-gap snapshots",
+    "ai_delivery": "NOT_PERFORMED",
+    "ai_read": "UNKNOWN",
+    "dependencies": "NOT_GENERATED"
+  },
+  "local_validation": [
+    {
+      "command": "python -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "passed": 225,
+      "result": "PASS"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "passed": 46,
+      "result": "PASS"
+    },
+    {
+      "command": "python -m unittest discover -s agent-bridge -p 'test_qualification_adapter.py' -v",
+      "passed": 8,
+      "result": "PASS"
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "passed": 112,
+      "result": "PASS"
+    },
+    {
+      "command": "git diff --check",
+      "result": "PASS"
+    }
+  ],
+  "acceptance": [
+    {
+      "case": "A003-01",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_real_cli_all_50_entries_78_parts_exact_bytes_zip64_and_sorted_outputs"
+      ]
+    },
+    {
+      "case": "A003-02",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_real_cli_all_50_entries_78_parts_exact_bytes_zip64_and_sorted_outputs",
+        "test_manifest_rejects_corrupt_git_oid_ranges_revision_and_missing_empty_part"
+      ]
+    },
+    {
+      "case": "A003-03",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_atomic_part_crash_before_and_after_rename_and_lost_checkpoint"
+      ]
+    },
+    {
+      "case": "A003-04",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_crash_during_zip_rebuild_preserves_parts"
+      ]
+    },
+    {
+      "case": "A003-05",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_disk_full_and_permission_at_real_part_and_zip_boundaries_then_resume"
+      ]
+    },
+    {
+      "case": "A003-06",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_concurrent_writer_kernel_lock_and_duplicate_completed_build"
+      ]
+    },
+    {
+      "case": "A003-07",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_corrupt_staged_parts_only_rewrite_affected_payloads"
+      ]
+    },
+    {
+      "case": "A003-08",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_tampered_metadata_profile_pending_proof_and_checkpoint_refuse_publication",
+        "test_checkpoint_identity_mismatch_never_resets",
+        "test_profile_revocation_at_publish_blocks_before_final_rename"
+      ]
+    },
+    {
+      "case": "A003-09",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_cancel_requires_new_run_retaining_prior_terminal_receipt",
+        "test_real_ctrl_c_preserves_cancel_tombstone"
+      ]
+    },
+    {
+      "case": "A003-10",
+      "status": "PASS_WITH_STATED_SCOPE",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_offline_relocated_links_hostile_metadata_all_source_and_part_pages"
+      ],
+      "scope": "Moved-directory HTML/fragment walker; rendered user-device browser opening NOT_RUN"
+    },
+    {
+      "case": "A003-11",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_orphan_or_non_indexed_raw_chunks_never_export"
+      ]
+    },
+    {
+      "case": "A003-12",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_rename_before_receipt_reconciles_without_replacing_archive",
+        "test_damaged_or_extra_member_final_blocks_without_overwrite"
+      ]
+    },
+    {
+      "case": "A003-13",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_declared_disk_and_time_budgets_and_small_copy_buffer",
+        "test_real_cli_all_50_entries_78_parts_exact_bytes_zip64_and_sorted_outputs"
+      ]
+    },
+    {
+      "case": "A003-14",
+      "status": "PASS_LOCAL",
+      "test_module": "content-lab/test_repo_archive.py",
+      "tests": [
+        "test_legacy_scan_and_manifest_cli_idempotent_after_archive",
+        "test_installed_cli_modules_support_foreground_scan_manifest_archive"
+      ]
+    },
+    {
+      "case": "A003-15",
+      "status": "NOT_RUN",
+      "reason": "No user Windows 11 local browser opening receipt"
+    },
+    {
+      "case": "A003-16",
+      "status": "NOT_RUN",
+      "reason": "No Dell-class user-device corpus/RSS/latency receipt"
+    }
+  ],
+  "scale_qualification": {
+    "schema": "occ.pr003.scale-qualification.v1",
+    "scope": "CURRENT_PR002_OWNER_SYNTHETIC_CAPTURED_SQLITE_LEDGER_NOT_GIT_SCAN",
+    "parts": 66000,
+    "entries": 1,
+    "zip_members": 69309,
+    "captured_bytes": 66000,
+    "zip_bytes": 38506268,
+    "zip_sha256": "385f50ec952012b0d6a8b12ea489035ec1733765cf81cdf07d854d3d31fd9cb9",
+    "peak_process_rss_bytes": 112005120,
+    "elapsed_build_seconds": 47.282,
+    "elapsed_resume_seconds": 23.38,
+    "reused_parts": 66000,
+    "written_parts_on_resume": 0,
+    "archive_reconstruction": "PASS",
+    "zip64_member_count": "PASS",
+    "larger_than_4gib": "NOT_RUN",
+    "windows_device": "NOT_RUN"
+  },
+  "current_code_scale_resume": {
+    "state": "PUBLISHED",
+    "reused_parts": 66000,
+    "written_parts": 0,
+    "archive_sha256": "385f50ec952012b0d6a8b12ea489035ec1733765cf81cdf07d854d3d31fd9cb9",
+    "elapsed_seconds": 23.38,
+    "scope": "CURRENT_PR002_OWNER_SYNTHETIC_CAPTURED_SQLITE_LEDGER_NOT_GIT_SCAN"
+  },
+  "resources": {
+    "raw_copy_buffer_bytes_default": 65536,
+    "offline_page_rows": 20,
+    "optional_syntax_window_bytes_inherited": 2097152,
+    "zip_metadata_memory": "Stdlib central directory proportional to number of members",
+    "disk_time_budgets": "Optional operator configuration; explicit blocker, no hidden corpus cap"
+  },
+  "remote_evidence": "Actual PR and Actions history are authoritative for remote CI and merge; this local receipt does not assert a remote result.",
+  "deferred": [
+    "Windows 11 manual browser opening",
+    "Dell device corpus performance",
+    "Actual >4GiB corpus run",
+    "Native/desktop scan-to-archive orchestration",
+    "Semantic dependency groups",
+    "Grok/voice/Web3 execution",
+    "Remaining 159 roadmap tasks"
+  ],
+  "broad_laya4_010_closed": false,
+  "m5_02_closed": false,
+  "whole_160_task_roadmap_closed": false,
+  "inherited_manifest_pr": 39,
+  "manifest_owner": "content-lab/repo_manifest.py from PR-002; archive input adapter preserves exact metadata bytes and text item eligibility"
+}

@@ -1,0 +1,54 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF16",
+  "name": "paper_observation",
+  "title_ru": "Реальное paper-наблюдение",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "market_collect",
+    "offline_replay"
+  ],
+  "inputs": [
+    "real_market_window",
+    "read_only_runtime",
+    "candidate_log"
+  ],
+  "steps": [
+    {
+      "id": "paper_observation.1",
+      "handler": "PROPOSED.paper_observation.1",
+      "instruction": "Observe current market via pinned provider config without signing or sending"
+    },
+    {
+      "id": "paper_observation.2",
+      "handler": "PROPOSED.paper_observation.2",
+      "instruction": "Record gap/freshness/decision latencies and hypothetical outcomes with caveats"
+    },
+    {
+      "id": "paper_observation.3",
+      "handler": "PROPOSED.paper_observation.3",
+      "instruction": "Separate actual observed quotes from modeled fills and offline replay"
+    }
+  ],
+  "outputs": [
+    "observation_window.v1",
+    "paper_economics",
+    "raw_rpc_manifest"
+  ],
+  "qualification_criteria": [
+    "Minimum chosen observation window/coverage met; simulated fills are not realized PnL"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

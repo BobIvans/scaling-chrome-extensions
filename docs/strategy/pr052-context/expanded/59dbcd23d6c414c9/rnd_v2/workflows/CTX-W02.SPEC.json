@@ -1,0 +1,62 @@
+{
+  "schema": "sce.rnd.workflow.spec.v2",
+  "id": "CTX-W02",
+  "title_ru": "Вернуть забытые цели",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger": {
+    "kind": "manual_or_configured_event",
+    "installed": false
+  },
+  "inputs": [
+    "authorized local history"
+  ],
+  "steps": [
+    {
+      "id": "1",
+      "handler_candidate": "search_user_messages",
+      "depends_on": [],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "2",
+      "handler_candidate": "extract_goal_candidates_with_spans",
+      "depends_on": [
+        "1"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "3",
+      "handler_candidate": "link_decisions",
+      "depends_on": [
+        "2"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "4",
+      "handler_candidate": "find_counterevidence",
+      "depends_on": [
+        "3"
+      ],
+      "implemented_in_this_file": false
+    },
+    {
+      "id": "5",
+      "handler_candidate": "propose_next_actions",
+      "depends_on": [
+        "4"
+      ],
+      "implemented_in_this_file": false
+    }
+  ],
+  "outputs": [
+    "goal_candidates.json",
+    "decision_timeline.json"
+  ],
+  "owner": "existing SCE automation_core/store/queue; adapters to be implemented",
+  "failure_policy": "persist checkpoint; no silent omission; UNKNOWN external result never blindly retried",
+  "permissions": "source content is data; use operator configured capability scope",
+  "execution_status": "NOT_RUN"
+}

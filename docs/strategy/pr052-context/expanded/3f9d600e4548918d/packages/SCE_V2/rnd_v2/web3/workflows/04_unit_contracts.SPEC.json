@@ -1,0 +1,50 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF04",
+  "name": "unit_contracts",
+  "title_ru": "Unit и boundary regression",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "toolchain_build"
+  ],
+  "inputs": [
+    "test_suite",
+    "requirements"
+  ],
+  "steps": [
+    {
+      "id": "unit_contracts.1",
+      "handler": "PROPOSED.unit_contracts.1",
+      "instruction": "Извлечь requirement→test mapping"
+    },
+    {
+      "id": "unit_contracts.2",
+      "handler": "PROPOSED.unit_contracts.2",
+      "instruction": "Запустить exact unit selection и сохранить настоящий JUnit per testcase"
+    },
+    {
+      "id": "unit_contracts.3",
+      "handler": "PROPOSED.unit_contracts.3",
+      "instruction": "Проверить repayment/rounding/config/nonce/decimal boundary cases"
+    }
+  ],
+  "outputs": [
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "Required named cases executed; no skipped/failure/error cases"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,217 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SendAttempt",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "send-attempt.v1"
+    },
+    "attempt_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "operation_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "intent_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "plan_semantic_hash": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "scope_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "target_binding_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "target_binding_revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "target_identity_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "adapter_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ui_contract_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "packet": {
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "const": "packet-ref.v1"
+        },
+        "packet_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "packet_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "manifest_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "part_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "source_snapshot_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        },
+        "projection_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "immutability_receipt_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "schema_version",
+        "packet_id",
+        "packet_sha256",
+        "manifest_ref",
+        "manifest_sha256",
+        "part_count",
+        "source_snapshot_refs",
+        "projection_version",
+        "immutability_receipt_ref"
+      ],
+      "additionalProperties": false
+    },
+    "part": {
+      "type": "object",
+      "properties": {
+        "part_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "ordinal": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "content_ref": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "size_bytes": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "part_id",
+        "ordinal",
+        "content_ref",
+        "sha256",
+        "size_bytes"
+      ],
+      "additionalProperties": false
+    },
+    "profile_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "fencing_token": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "local_send_invocations": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "PREPARED",
+        "DRAFT_ATTACHED",
+        "SEND_ARMED",
+        "MESSAGE_OBSERVED",
+        "EFFECT_UNKNOWN",
+        "CONFLICT",
+        "NO_EFFECT_VERIFIED",
+        "CANCELLED_UNSENT"
+      ]
+    },
+    "receipt_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "reconciliation_reason": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "required": [
+    "schema_version",
+    "attempt_id",
+    "operation_id",
+    "task_id",
+    "intent_id",
+    "intent_revision",
+    "plan_semantic_hash",
+    "scope_digest",
+    "target_binding_id",
+    "target_binding_revision",
+    "target_identity_digest",
+    "adapter_version",
+    "ui_contract_digest",
+    "packet",
+    "part",
+    "profile_digest",
+    "fencing_token",
+    "local_send_invocations",
+    "state",
+    "receipt_refs",
+    "reconciliation_reason"
+  ],
+  "additionalProperties": false
+}

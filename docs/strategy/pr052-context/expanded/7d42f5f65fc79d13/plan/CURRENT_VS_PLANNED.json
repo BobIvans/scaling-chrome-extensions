@@ -1,0 +1,2072 @@
+{
+  "actual_checkout_read": false,
+  "current_head_sha": null,
+  "current_handler_map": null,
+  "historical_input_main_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
+  "historical_scope_note": "Provided numbered roadmap evidence, not current checkout verification",
+  "source_feature_statuses": [
+    {
+      "feature_id": "LIB-054",
+      "title": "Капсулы неудачных попыток",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-10"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Повторить похожий запрос с сохранённой failure capsule и без неё.",
+      "measurement": "Repeated-known-error rate; recovery time.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-057",
+      "title": "Учёт реально прочитанного контекста по версии",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-11",
+        "GOAL5-27"
+      ],
+      "new_decision_ids": [
+        "DEC5-05"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-05"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-006",
+        "LAYA4-004",
+        "LAYA4-009",
+        "LAYA4-014",
+        "LAYA4-019",
+        "LAYA4-021",
+        "TAB4-05",
+        "TAB4-19",
+        "UI3-004",
+        "UI3-011"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Новый reviewer читает выборочно 3 из 10 parts; проверить coverage statement.",
+      "measurement": "False reviewed claims=0; explicit unread bytes/ranges.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-001",
+      "title": "Единый IntentSpec для текста и голоса",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-17"
+      ],
+      "new_decision_ids": [
+        "DEC5-17"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-20"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-002",
+        "LAYA4-022",
+        "LAYA4-023",
+        "PAR3-005",
+        "TAB4-16"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Разметить 30 команд с отрицаниями, названиями repo и исправлениями и проверить сериализацию.",
+      "measurement": "Точность критических слотов; число неявных значений; доля воспроизводимых разборов.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-006",
+      "title": "Детерминированный маршрут известных команд",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-17"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [
+        "ACTION5-19"
+      ],
+      "candidate_inherited_task_ids": [
+        "LAYA4-022",
+        "LAYA4-024",
+        "PAR3-003",
+        "TAB4-02"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Сравнить простой rule router с ручной эталонной разметкой команд.",
+      "measurement": "Intent accuracy; p50/p95 routing; число лишних model calls.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-007",
+      "title": "Laya как сменный advisory adapter",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-17"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [
+        "ACTION5-20"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-002",
+        "LAYA4-022",
+        "LAYA4-023",
+        "PAR3-005"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "На одном RU/EN code-switch corpus измерить routing quality локально после проверки реального интерфейса выбранного инструмента.",
+      "measurement": "False confident routing; стоимость; latency; доля abstain.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-008",
+      "title": "Раздельные роли planner, retriever и critic",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-11"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "На одном дефекте сравнить monolithic ответ и роли с одинаковым бюджетом.",
+      "measurement": "False acceptance; число обнаруженных gap; verified outcome на затраченный бюджет.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-022",
+      "title": "Транзакционный outbox состояния и заданий",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-12"
+      ],
+      "new_decision_ids": [
+        "DEC5-21"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "PAR3-007",
+        "PAR3-008",
+        "PAR3-014",
+        "PAR3-016",
+        "PAR3-019",
+        "PAR3-022"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "PARTIAL",
+      "verified_scope": "SQLite intent/events и reference-only UI cache работают для ручной передачи; автоматический executor не добавлен.",
+      "evidence_refs": [
+        "content-lab/context_tasks.py",
+        "one-click-context/library/context-task-ui.mjs"
+      ],
+      "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "next_experiment": "Fault injection до/после каждой локальной транзакционной границы.",
+      "measurement": "Lost jobs; orphan outbox; replay convergence.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-023",
+      "title": "UNKNOWN и сверка внешнего результата",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-12"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "PARTIAL",
+      "verified_scope": "Unknown/manual observation восстанавливается, включая cancel; remote reconciliation adapter ещё не подключён.",
+      "evidence_refs": [
+        "content-lab/context_tasks.py"
+      ],
+      "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "next_experiment": "Смоделировать сервер, выполнивший запрос и потерявший ответ.",
+      "measurement": "Слепые повторы; время resolution; unresolved age.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-028",
+      "title": "Push-to-talk и единый capture stream",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-18"
+      ],
+      "new_decision_ids": [
+        "DEC5-17"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-22"
+      ],
+      "candidate_inherited_task_ids": [
+        "LAYA4-023",
+        "PAR3-005",
+        "PAR3-021",
+        "TAB4-16",
+        "UI3-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Провести одно voice-to-handoff действие на Windows, включая остановку записи.",
+      "measurement": "Capture activation errors; dropped frames; end-to-end latency.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-029",
+      "title": "Сменный ASR и корпус RU/EN/code-switch",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-18"
+      ],
+      "new_decision_ids": [
+        "DEC5-17"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-08",
+        "ACTION5-22"
+      ],
+      "candidate_inherited_task_ids": [
+        "LAYA4-013",
+        "LAYA4-014",
+        "LAYA4-023",
+        "PAR3-005",
+        "PAR3-021",
+        "TAB4-16",
+        "UI3-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Сравнить минимум два реальных кандидата или один кандидат и baseline на одном corpus.",
+      "measurement": "WER; critical-slot error; endpointing latency; RAM; real-time factor.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-030",
+      "title": "Арбитраж критических голосовых слотов",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-18"
+      ],
+      "new_decision_ids": [
+        "DEC5-17"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-20",
+        "ACTION5-22"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-002",
+        "LAYA4-022",
+        "LAYA4-023",
+        "PAR3-005",
+        "PAR3-021",
+        "TAB4-16",
+        "UI3-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Корпус minimal pairs с отрицаниями, близкими именами и фоновыми голосами.",
+      "measurement": "Critical-slot error; false activation; количество уточнений на задачу.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-031",
+      "title": "Исправление intent и отзыв старой revision",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-18"
+      ],
+      "new_decision_ids": [
+        "DEC5-17"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-20"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-002",
+        "LAYA4-022",
+        "LAYA4-023",
+        "PAR3-005",
+        "TAB4-16"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Подать позднее отрицание во время подготовки action.",
+      "measurement": "Stale-intent commits; correction latency; потерянные revisions.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-034",
+      "title": "Жизненный цикл микрофона и хранения аудио",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-18"
+      ],
+      "new_decision_ids": [
+        "DEC5-12",
+        "DEC5-17"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-08",
+        "ACTION5-22"
+      ],
+      "candidate_inherited_task_ids": [
+        "LAYA4-013",
+        "LAYA4-014",
+        "LAYA4-017",
+        "LAYA4-023",
+        "LAYA4-027",
+        "PAR3-005",
+        "PAR3-021",
+        "TAB4-16",
+        "UI3-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Сменить устройство, усыпить ПК и отключить аудио во время записи.",
+      "measurement": "Lost audio interval; recovery time; неверные статусы capture.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-035",
+      "title": "Выбор API, CLI, UIA, DOM и визуального маршрута",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-13",
+        "GOAL5-19"
+      ],
+      "new_decision_ids": [
+        "DEC5-04"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "TAB4-04",
+        "TAB4-06",
+        "TAB4-07",
+        "TAB4-08",
+        "UI3-006",
+        "UI3-018",
+        "UI3-019"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Одно безопасное действие выполнить через два подготовительных маршрута и сравнить verified результат.",
+      "measurement": "Task success по route; drift sensitivity; false action; latency.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-036",
+      "title": "Владение focus и уступка пользователю",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-13",
+        "GOAL5-19"
+      ],
+      "new_decision_ids": [
+        "DEC5-03",
+        "DEC5-18"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-21"
+      ],
+      "candidate_inherited_task_ids": [
+        "PAR3-009",
+        "PAR3-015",
+        "PAR3-021",
+        "TAB4-03",
+        "TAB4-16",
+        "TAB4-21",
+        "UI3-002",
+        "UI3-016",
+        "UI3-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Во время rehearsal переключить окно и вручную изменить clipboard.",
+      "measurement": "Wrong-window inputs; user-interruption recovery; lease violations.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-037",
+      "title": "Browser adapter как опциональная возможность",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-13"
+      ],
+      "new_decision_ids": [
+        "DEC5-03"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "PAR3-009",
+        "TAB4-03",
+        "UI3-002"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Проверить один браузерный read workflow и один rehearsal submit без реальной публикации.",
+      "measurement": "Session binding errors; duplicate submit; capture coverage.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-039",
+      "title": "Canary и карантин при дрейфе интерфейса",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-13",
+        "GOAL5-22"
+      ],
+      "new_decision_ids": [
+        "DEC5-04"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-24"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-010",
+        "PAR3-023",
+        "TAB4-04",
+        "TAB4-06",
+        "TAB4-07",
+        "TAB4-08",
+        "TAB4-13",
+        "UI3-006",
+        "UI3-018",
+        "UI3-019"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Изменить API field, UIA name и CLI flag в controlled fixtures.",
+      "measurement": "Drift detection recall; false quarantine; время восстановления.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-041",
+      "title": "Контракт переносимого навыка",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-22"
+      ],
+      "new_decision_ids": [
+        "DEC5-19"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-23"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-017",
+        "EVO3-018",
+        "G3-010",
+        "LAYA4-024",
+        "PAR3-003",
+        "PAR3-024",
+        "TAB4-13",
+        "TAB4-22"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Один known workflow воспроизвести с другим project path и версией fixture app.",
+      "measurement": "Replay success; contract mismatch detection; skills с полными manifests.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-042",
+      "title": "Демонстрация пользователя в проверяемый навык",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-22"
+      ],
+      "new_decision_ids": [
+        "DEC5-19"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-23"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-017",
+        "EVO3-018",
+        "G3-010",
+        "LAYA4-024",
+        "PAR3-003",
+        "PAR3-024",
+        "TAB4-13",
+        "TAB4-22"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Записать один локальный file workflow и воспроизвести на другом имени файла.",
+      "measurement": "Time-to-skill; held-out success; hidden parameter leakage.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-043",
+      "title": "Сокращение навыка с сохранением инвариантов",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-22"
+      ],
+      "new_decision_ids": [
+        "DEC5-19"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-23"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-017",
+        "EVO3-018",
+        "G3-010",
+        "LAYA4-024",
+        "PAR3-003",
+        "PAR3-024",
+        "TAB4-13",
+        "TAB4-22"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Сравнить длинный и минимизированный file workflow при изменённых путях и окнах.",
+      "measurement": "Step count; time-to-verified; regression rate.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-044",
+      "title": "Память неудачных попыток с условиями применимости",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-22"
+      ],
+      "new_decision_ids": [
+        "DEC5-04"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-24"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-010",
+        "PAR3-023",
+        "TAB4-04",
+        "TAB4-06",
+        "TAB4-07",
+        "TAB4-08",
+        "TAB4-13",
+        "UI3-006",
+        "UI3-018",
+        "UI3-019"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Повторить один failure, затем исправить fixture version и проверить requalification.",
+      "measurement": "Avoided repeats; stale negative blocks; recovery after version change.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-048",
+      "title": "Permission diff при обновлении навыка",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-16"
+      ],
+      "new_decision_ids": [
+        "DEC5-19"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-24"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-010",
+        "EVO3-017",
+        "EVO3-018",
+        "PAR3-003",
+        "PAR3-023",
+        "TAB4-13",
+        "TAB4-22",
+        "UI3-019"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Обновить skill с одним новым read root и проверить поведение политики.",
+      "measurement": "Privilege creep; корректность diff; лишние confirmations.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "ACT-058",
+      "title": "Защита от собственного TTS и фоновой речи",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-18"
+      ],
+      "new_decision_ids": [
+        "DEC5-17"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-22"
+      ],
+      "candidate_inherited_task_ids": [
+        "LAYA4-023",
+        "PAR3-005",
+        "PAR3-021",
+        "TAB4-16",
+        "UI3-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Проиграть агентский TTS и фоновые minimal pairs одновременно с capture fixture.",
+      "measurement": "Self-trigger rate; background false activation; blocked valid speech.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "RND-042",
+      "title": "Избирательная requalification при drift",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-15",
+        "GOAL5-24",
+        "GOAL5-25"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [
+        "ACTION5-24"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-010",
+        "PAR3-023",
+        "TAB4-13",
+        "UI3-019"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Изменить source schema и затем unrelated doc в fixture графе.",
+      "measurement": "Selective invalidation precision и unsafe reuse count.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "RND-043",
+      "title": "Корпус контрпримеров и капсулы неудач",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-15",
+        "GOAL5-22",
+        "GOAL5-24",
+        "GOAL5-25"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [
+        "ACTION5-30"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-021",
+        "EVO3-024",
+        "G3-009",
+        "G3-010",
+        "G3-011",
+        "G3-012",
+        "LAYA4-026",
+        "TAB4-20",
+        "TAB4-21"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Минимизировать один failing market fixture и один broken code handoff.",
+      "measurement": "Failure replay success и повторные ранее известные ошибки.",
+      "implementation_changed_in_v5": false
+    }
+  ],
+  "planned_functions": [
+    {
+      "function_id": "F001",
+      "proposed_symbol": "captureInputRevision",
+      "workstream": "WS-018",
+      "input_output": "original source + corrected text → InputRevision",
+      "state_error_recovery": "Append-only provenance/revision; INPUT_INVALID",
+      "verification_case_ids": [
+        "INT-PARITY"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F002",
+      "proposed_symbol": "resolveCriticalSlots",
+      "workstream": "WS-018",
+      "input_output": "text + selected aliases → resolved/uncertain slots",
+      "state_error_recovery": "No guessed repo/chat/effect/amount; NEEDS_INPUT",
+      "verification_case_ids": [
+        "INT-AMBIGUOUS"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F003",
+      "proposed_symbol": "routeKnownCommand",
+      "workstream": "WS-018",
+      "input_output": "typed slots + pinned registry → template route",
+      "state_error_recovery": "Deterministic route; unknown→development request",
+      "verification_case_ids": [
+        "INT-REPEAT"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F004",
+      "proposed_symbol": "retrievePlanEvidence",
+      "workstream": "WS-018",
+      "input_output": "allowlisted source refs → EvidenceBundle",
+      "state_error_recovery": "Missing mandatory refs→retrieval required; content untrusted",
+      "verification_case_ids": [
+        "INT-RETRIEVAL"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F005",
+      "proposed_symbol": "proposePlan",
+      "workstream": "WS-018",
+      "input_output": "IntentSpec + evidence → PlanProposal",
+      "state_error_recovery": "Separate author/version; cannot create grants",
+      "verification_case_ids": [
+        "INT-ROLES"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F006",
+      "proposed_symbol": "critiquePlan",
+      "workstream": "WS-018",
+      "input_output": "proposal + criteria → Verdict",
+      "state_error_recovery": "Reject missing source/scopes; goal unchanged",
+      "verification_case_ids": [
+        "INT-ROLES"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F007",
+      "proposed_symbol": "discoverLayaAdapter",
+      "workstream": "WS-018",
+      "input_output": "installed interface → capability receipt",
+      "state_error_recovery": "UNKNOWN/UNAVAILABLE→direct UI; no guessed vendor API",
+      "verification_case_ids": [
+        "INT-LAYA"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F008",
+      "proposed_symbol": "validateLayaProposal",
+      "workstream": "WS-018",
+      "input_output": "proposal → typed known operations",
+      "state_error_recovery": "Registry/template/grant checks before dispatch",
+      "verification_case_ids": [
+        "INT-LAYA"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F009",
+      "proposed_symbol": "compileIntentDag",
+      "workstream": "WS-018",
+      "input_output": "validated intent → versioned steps/hash",
+      "state_error_recovery": "Cycles/duplicates/missing/version mismatch rejected",
+      "verification_case_ids": [
+        "INT-DAG"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F010",
+      "proposed_symbol": "canonicalizeSemanticPlan",
+      "workstream": "WS-018",
+      "input_output": "normalized semantic payload → SHA256",
+      "state_error_recovery": "Modality metadata separate; decimals strings, versions pinned",
+      "verification_case_ids": [
+        "INT-PARITY"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F011",
+      "proposed_symbol": "reviseIntent",
+      "workstream": "WS-018",
+      "input_output": "correction + expected revision → new revision",
+      "state_error_recovery": "Atomic revoke unexecuted old jobs; race→unknown/reconcile",
+      "verification_case_ids": [
+        "INT-REVISION",
+        "ALL-RESTART"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F012",
+      "proposed_symbol": "admitCurrentRevision",
+      "workstream": "WS-018",
+      "input_output": "current Core state + grant → admitted/fenced",
+      "state_error_recovery": "Recheck STOP/revision/qualification at effect boundary",
+      "verification_case_ids": [
+        "INT-RACE"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F013",
+      "proposed_symbol": "createDevelopmentRequest",
+      "workstream": "WS-018",
+      "input_output": "unknown capability → bounded request",
+      "state_error_recovery": "Linked exact intent/criteria; no arbitrary shell/install",
+      "verification_case_ids": [
+        "INT-UNKNOWN"
+      ],
+      "owner_role": "Core intent/compiler owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F014",
+      "proposed_symbol": "startPushToTalk",
+      "workstream": "WS-019",
+      "input_output": "physical hotkey/device → CaptureSession",
+      "state_error_recovery": "Single stream; reentrant call returns same ID",
+      "verification_case_ids": [
+        "VOICE-ONE"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F015",
+      "proposed_symbol": "stopCapture",
+      "workstream": "WS-019",
+      "input_output": "stop/release → final segment or aborted",
+      "state_error_recovery": "Always release device handle; explicit stop fallback",
+      "verification_case_ids": [
+        "VOICE-RELEASE"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F016",
+      "proposed_symbol": "recoverCaptureLifecycle",
+      "workstream": "WS-019",
+      "input_output": "crash/sleep/device change → gaps/new session",
+      "state_error_recovery": "Persisted incomplete ranges do not become valid audio",
+      "verification_case_ids": [
+        "VOICE-GAPS",
+        "ALL-RESTART"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F017",
+      "proposed_symbol": "transcribeAudio",
+      "workstream": "WS-019",
+      "input_output": "audio_ref + pinned ASR → transcript revisions",
+      "state_error_recovery": "Consume iterator; failure preserves text path",
+      "verification_case_ids": [
+        "VOICE-OFFLINE"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F018",
+      "proposed_symbol": "guardTtsBackground",
+      "workstream": "WS-019",
+      "input_output": "activation/segments → accepted/uncertain",
+      "state_error_recovery": "Background/TTS no execution grant; preview required",
+      "verification_case_ids": [
+        "VOICE-TTS"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F019",
+      "proposed_symbol": "reviewVoiceSlots",
+      "workstream": "WS-019",
+      "input_output": "transcript/gold slots → preview/correction",
+      "state_error_recovery": "Exact repo/chat/path/effect/amount; old revision fenced",
+      "verification_case_ids": [
+        "VOICE-CORRECTION"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F020",
+      "proposed_symbol": "dispatchIndependentStop",
+      "workstream": "WS-019",
+      "input_output": "keyboard/Core stop → blocked admission",
+      "state_error_recovery": "No ASR dependency; unknown remote effects retained",
+      "verification_case_ids": [
+        "STOP-INDEPENDENT"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F021",
+      "proposed_symbol": "measureCriticalSlotErrors",
+      "workstream": "WS-019",
+      "input_output": "held-out gold/attempts → device metrics",
+      "state_error_recovery": "Separate WER/slots/false admission/latency; missing null",
+      "verification_case_ids": [
+        "VOICE-GOLD"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F022",
+      "proposed_symbol": "provideKeyboardParity",
+      "workstream": "WS-019",
+      "input_output": "desktop controls → same intent operations",
+      "state_error_recovery": "Names/focus/status/errors; no drag requirement",
+      "verification_case_ids": [
+        "UI-KEYBOARD",
+        "UI-A11Y"
+      ],
+      "owner_role": "Windows voice/accessibility owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F023",
+      "proposed_symbol": "bindSelectedTarget",
+      "workstream": "WS-021",
+      "input_output": "user selection+observation → TargetBinding",
+      "state_error_recovery": "Observable stable identity; missing→rebind/manual",
+      "verification_case_ids": [
+        "TARGET-DUPLICATE"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F024",
+      "proposed_symbol": "revalidateTarget",
+      "workstream": "WS-021",
+      "input_output": "binding+current observation → match/rebind",
+      "state_error_recovery": "Before upload/Send; tab handles not identity",
+      "verification_case_ids": [
+        "TARGET-DRIFT"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F025",
+      "proposed_symbol": "resolveTargetAfterRestart",
+      "workstream": "WS-021",
+      "input_output": "persisted binding → qualified handle",
+      "state_error_recovery": "Duplicate title/account/reused ID block guessed match",
+      "verification_case_ids": [
+        "TARGET-RESTART",
+        "ALL-RESTART"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F026",
+      "proposed_symbol": "discoverAdapterCapabilities",
+      "workstream": "WS-021",
+      "input_output": "route/environment → actual capabilities",
+      "state_error_recovery": "Separate API/CLI/UIA/DOM qualification; no silent switch",
+      "verification_case_ids": [
+        "TARGET-ROUTE",
+        "TARGET-LOGIN",
+        "COMPAT-UPSTREAM"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F027",
+      "proposed_symbol": "runAdapterCanary",
+      "workstream": "WS-021",
+      "input_output": "UI contract+environment → qualification receipt",
+      "state_error_recovery": "Drift invalidates only affected adapter",
+      "verification_case_ids": [
+        "TARGET-CANARY",
+        "TARGET-MULTILINE"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F028",
+      "proposed_symbol": "acquireComposerOwnership",
+      "workstream": "WS-021",
+      "input_output": "target resource key → lease/fence",
+      "state_error_recovery": "One writer across contexts; user focus priority",
+      "verification_case_ids": [
+        "OUTBOX-LEASE"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F029",
+      "proposed_symbol": "yieldFocusToUser",
+      "workstream": "WS-021",
+      "input_output": "manual takeover → paused operation",
+      "state_error_recovery": "Block next keystroke/click; retain task/draft",
+      "verification_case_ids": [
+        "TARGET-FOCUS"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F030",
+      "proposed_symbol": "restoreOwnedClipboard",
+      "workstream": "WS-021",
+      "input_output": "saved clipboard/current version → restore/noop",
+      "state_error_recovery": "Never overwrite new user clipboard value",
+      "verification_case_ids": [
+        "TARGET-CLIPBOARD"
+      ],
+      "owner_role": "Browser target/adapter owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F031",
+      "proposed_symbol": "enqueueImmutableDelivery",
+      "workstream": "WS-022",
+      "input_output": "packet/binding/intent → durable outbox",
+      "state_error_recovery": "Same operation keys; atomic commit; local hashes verified",
+      "verification_case_ids": [
+        "OUTBOX-TX",
+        "OUTBOX-ENVELOPE",
+        "COMPAT-UPSTREAM"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F032",
+      "proposed_symbol": "inspectDraftConflict",
+      "workstream": "WS-022",
+      "input_output": "current composer → empty/owned/conflict",
+      "state_error_recovery": "Do not overwrite foreign draft",
+      "verification_case_ids": [
+        "DRAFT-CONFLICT"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F033",
+      "proposed_symbol": "prepareAndAttachDraft",
+      "workstream": "WS-022",
+      "input_output": "supported parts/prompt → draft evidence",
+      "state_error_recovery": "Separate local hashes and observable upload grades",
+      "verification_case_ids": [
+        "DRAFT-VERIFY",
+        "DRAFT-NOUPLOAD"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F034",
+      "proposed_symbol": "armSendAttempt",
+      "workstream": "WS-022",
+      "input_output": "validated current state → SEND_ARMED",
+      "state_error_recovery": "Persist before click; separate intent; STOP/revision check",
+      "verification_case_ids": [
+        "SEND-SCOPE",
+        "SEND-PROVENANCE"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F035",
+      "proposed_symbol": "dispatchSingleSend",
+      "workstream": "WS-022",
+      "input_output": "armed attempt → one invocation+observation",
+      "state_error_recovery": "No retries per attempt even after lease loss",
+      "verification_case_ids": [
+        "SEND-ONCE"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F036",
+      "proposed_symbol": "observeOutgoingMessage",
+      "workstream": "WS-022",
+      "input_output": "qualified history → observed evidence",
+      "state_error_recovery": "Match exact task/attempt/packet; no similar unrelated reply",
+      "verification_case_ids": [
+        "SEND-OBSERVE"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F037",
+      "proposed_symbol": "reconcileUnknownSend",
+      "workstream": "WS-022",
+      "input_output": "attempt+history → observed/no-effect/unknown/conflict",
+      "state_error_recovery": "Incomplete history remains unknown; no blind retry",
+      "verification_case_ids": [
+        "SEND-RECONCILE",
+        "SEND-UNKNOWN"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F038",
+      "proposed_symbol": "recordPartCoverage",
+      "workstream": "WS-022",
+      "input_output": "part+observation/claim → typed ledger",
+      "state_error_recovery": "Received/use claims not inferred from attach or generic reply",
+      "verification_case_ids": [
+        "PART-COVERAGE"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F039",
+      "proposed_symbol": "iteratePacketParts",
+      "workstream": "WS-022",
+      "input_output": "manifest+cursor → bounded pages",
+      "state_error_recovery": "No hidden total cap; backpressure/checkpoints preserve all IDs",
+      "verification_case_ids": [
+        "PART-SCALE"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F040",
+      "proposed_symbol": "importCorrelatedResult",
+      "workstream": "WS-022",
+      "input_output": "final response+task/packet → result event",
+      "state_error_recovery": "Schema/correlation/current-head checks; idempotent; data only",
+      "verification_case_ids": [
+        "RESULT-CORRELATION",
+        "RESULT-IDEMPOTENT",
+        "RESULT-DATA",
+        "COMPAT-DOWNSTREAM"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F041",
+      "proposed_symbol": "cancelDelivery",
+      "workstream": "WS-022",
+      "input_output": "Core cancel/STOP → per-attempt outcomes",
+      "state_error_recovery": "Remote unknown retained; next parts not dispatched",
+      "verification_case_ids": [
+        "SEND-CANCEL"
+      ],
+      "owner_role": "Core outbox/reconciliation owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F042",
+      "proposed_symbol": "recordScopedDemonstration",
+      "workstream": "WS-020",
+      "input_output": "allowed UI events → candidate recording",
+      "state_error_recovery": "Sanitize before persistence; credential refs only",
+      "verification_case_ids": [
+        "SKILL-SECRET"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F043",
+      "proposed_symbol": "compilePortableSkill",
+      "workstream": "WS-020",
+      "input_output": "recording+contracts → versioned skill",
+      "state_error_recovery": "Same Core compiler; stable identity not recorded coordinates",
+      "verification_case_ids": [
+        "SKILL-RECORD"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F044",
+      "proposed_symbol": "qualifySkillReplay",
+      "workstream": "WS-020",
+      "input_output": "normal/unseen/fault cases → scoped receipt",
+      "state_error_recovery": "Bind exact code/environment/dependency hashes",
+      "verification_case_ids": [
+        "SKILL-UNSEEN"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F045",
+      "proposed_symbol": "optimizeSkillSteps",
+      "workstream": "WS-020",
+      "input_output": "candidate step diff+verifier → optimized version",
+      "state_error_recovery": "Mandatory checks/STOP/effect invariant preserved",
+      "verification_case_ids": [
+        "SKILL-OPTIMIZE"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F046",
+      "proposed_symbol": "appendFailureCapsule",
+      "workstream": "WS-020",
+      "input_output": "failed attempt → immutable capsule",
+      "state_error_recovery": "All negative attempts survive success/repair",
+      "verification_case_ids": [
+        "SKILL-FAILURE"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F047",
+      "proposed_symbol": "computePermissionDiff",
+      "workstream": "WS-020",
+      "input_output": "old/new scopes → unchanged/reduced/grown",
+      "state_error_recovery": "No implicit scope growth; compatible reuse allowed",
+      "verification_case_ids": [
+        "SKILL-SCOPE"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F048",
+      "proposed_symbol": "invalidateDependentSkills",
+      "workstream": "WS-020",
+      "input_output": "changed dependency → STALE closure",
+      "state_error_recovery": "Selective index; independence proven before retaining receipt",
+      "verification_case_ids": [
+        "SKILL-DRIFT"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F049",
+      "proposed_symbol": "repairSkillVersion",
+      "workstream": "WS-020",
+      "input_output": "capsules+repair → new version",
+      "state_error_recovery": "Old version/receipts/failures retained; requalify negative corpus",
+      "verification_case_ids": [
+        "SKILL-NEGATIVE"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    },
+    {
+      "function_id": "F050",
+      "proposed_symbol": "invokeQualifiedRecipe",
+      "workstream": "WS-020",
+      "input_output": "skill+scope+current refs → Core plan",
+      "state_error_recovery": "Reuse jobs/leases/cancel/reconcile; no second executor",
+      "verification_case_ids": [
+        "SKILL-RECIPE",
+        "ALL-RESTART",
+        "COMPAT-UPSTREAM",
+        "COMPAT-DOWNSTREAM"
+      ],
+      "owner_role": "Skill registry/qualification owner",
+      "actual_path": null,
+      "actual_handler": null,
+      "implementation_status": "PLANNED_NOT_ENGINEERED",
+      "mapping_action": "reuse/extend existing owner after actual checkout audit"
+    }
+  ],
+  "required_next_action": "Read actual AGENTS/HEAD/Core owners and mark reuse/extend/new per function; attach actual tests/device receipts"
+}

@@ -1,0 +1,5036 @@
+сле timeout.
+
+**С чем сравнить:** Автоматический повтор любого failed task
+
+**Доказательства:** versioned inputs/config, raw logs, независимая проверка результата, held-out negative cases. **Источники:** G07.
+
+## EXP-044 · Windows sleep/crash recovery
+**Гипотеза:** Leases и повторная проверка evidence позволяют восстановиться без ложного DONE.
+
+**С чем сравнить:** Только process status in memory
+
+**Доказательства:** versioned inputs/config, raw logs, независимая проверка результата, held-out negative cases. **Источники:** G03.
+
+## EXP-045 · Least-privilege process boundary
+**Гипотеза:** Reviewed profiles и sandbox блокируют запись/сеть вне разрешённой области даже при неверном плане.
+
+**С чем сравнить:** shell=False как единственная защита
+
+**Доказательства:** versioned inputs/config, raw logs, независимая проверка результата, held-out negative cases. **Источники:** S31, G03.
+
+## EXP-046 · Sanitized export reproducibility
+**Гипотеза:** Две manifests raw/share сохраняют проверяемую полноту без отправки secret contents.
+
+**С чем сравнить:** Публично отправлять raw ради полноты
+
+**Доказательства:** versioned inputs/config, raw logs, независимая проверка результата, held-out negative cases. **Источники:** Новая проектная гипотеза; не утверждение существующего benchmark.
+
+## EXP-047 · Token/API cost admission
+**Гипотеза:** Предварительный budget и reserved output allowance предотвращают незаметный перерасход на R&D.
+
+**С чем сравнить:** Непрерывные запросы по наличию API key
+
+**Доказательства:** versioned inputs/config, raw logs, независимая проверка результата, held-out negative cases. **Источники:** S30, S32.
+
+## EXP-048 · Версионирование learned skills
+**Гипотеза:** Pinned adapter/tests с rollback переживают dependency/UI update лучше mutable latest skill.
+
+**С чем сравнить:** Автообновление production по свежему release
+
+**Доказательства:** versioned inputs/config, raw logs, независимая проверка результата, held-out negative cases. **Источники:** S04, S05.
+
+===== END FILE =====
+
+===== FILE {"path": "research/SOURCES.json", "bytes": 16117, "sha256": "0e7c01636ad1e53f3ff507cbe4a5a2403902309548a25da5fd2746467d93191a"} =====
+[
+  {
+    "id": "S01",
+    "title": "TypeSafe: Introducing System One Models & Jev",
+    "url": "https://typesafe.ai/blog/introducing-system-one-models-and-jev",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Creator announcement; published 2026-09-15. Decision model, not a PC executor.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S02",
+    "title": "LangChain: Building a harness with Jev",
+    "url": "https://www.langchain.com/blog/building-a-harness-with-jev",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Primary integration example; published 2026-09-17. Harness is distinct from decision model.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S03",
+    "title": "Laya model card",
+    "url": "https://huggingface.co/convaiinnovations/laya",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Creator-reported context, benchmark and calibration limitations. See the concise source note; no Dell benchmark performed.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S04",
+    "title": "Laya source repository",
+    "url": "https://github.com/NandhaKishorM/laya",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Official implementation and integration reference. Pin a reviewed revision, not an unbounded latest dependency.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S05",
+    "title": "Microsoft UFO",
+    "url": "https://github.com/microsoft/UFO",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Current README presents UFO³ Galaxy and retained UFO² Windows support. Architectural research reference.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S06",
+    "title": "OpenAdapt",
+    "url": "https://github.com/OpenAdaptAI/OpenAdapt",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Demonstration-to-program automation; independent result verification is an important design pattern.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S07",
+    "title": "Simular Agent-S",
+    "url": "https://github.com/simular-ai/Agent-S",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Computer-use agent framework. Candidate for controlled benchmark comparisons.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S08",
+    "title": "ByteDance UI-TARS",
+    "url": "https://github.com/bytedance/UI-TARS",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "GUI-agent research. Not assumed suitable for real-time inference on this Dell.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S09",
+    "title": "Microsoft Fara-7B",
+    "url": "https://huggingface.co/microsoft/Fara-7B",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Computer-use research model; separate browser tasks from general Windows desktop claims.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S10",
+    "title": "Microsoft Playwright MCP",
+    "url": "https://github.com/microsoft/playwright-mcp",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Browser automation integration; structured browser state before screenshot fallback.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S11",
+    "title": "browser-use",
+    "url": "https://github.com/browser-use/browser-use",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Browser-agent implementation candidate; evaluate authority and state-verification boundaries.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S12",
+    "title": "Windows UI Automation",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Official Windows accessibility/automation API reference.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S13",
+    "title": "FlaUI",
+    "url": "https://github.com/FlaUI/FlaUI",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Windows .NET UI Automation library; candidate for native desktop adapter.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S14",
+    "title": "pywinauto",
+    "url": "https://github.com/pywinauto/pywinauto",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Python Windows automation library; alternative adapter for a Python-first prototype.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S15",
+    "title": "NVDA",
+    "url": "https://github.com/nvaccess/nvda",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Screen-reader project; target for keyboard and accessibility validation, not merely visual inspection.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S16",
+    "title": "LangGraph persistence",
+    "url": "https://docs.langchain.com/oss/python/langgraph/persistence",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "State persistence/checkpoint design reference; not required to replace the existing SCE owner.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S17",
+    "title": "Hugging Face smolagents",
+    "url": "https://huggingface.co/docs/smolagents/index",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Code-agent framework; generated code still needs isolation, permissions and evaluation.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S18",
+    "title": "faster-whisper",
+    "url": "https://github.com/SYSTRAN/faster-whisper",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "CTranslate2 transcription implementation; CPU/int8 is a candidate baseline, not a measured speed claim.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S19",
+    "title": "Qwen3-ASR-0.6B",
+    "url": "https://huggingface.co/Qwen/Qwen3-ASR-0.6B",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Small ASR research candidate. Verify the supported runtime, language and streaming mode actually used.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S20",
+    "title": "FunctionGemma 270M",
+    "url": "https://huggingface.co/google/functiongemma-270m-it",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Small function-calling specialist; review Gemma terms and domain adaptation needs.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S21",
+    "title": "LFM2.5-1.2B-Instruct",
+    "url": "https://huggingface.co/LiquidAI/LFM2.5-1.2B-Instruct",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Compact local generation candidate; measure actual end-to-end latency and memory.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S22",
+    "title": "SmolVLM-256M-Instruct",
+    "url": "https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Small visual-description/triage candidate, not assumed to be a reliable full-PC operator.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S23",
+    "title": "Qwen3-Embedding-0.6B",
+    "url": "https://huggingface.co/Qwen/Qwen3-Embedding-0.6B",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Semantic retrieval candidate; compare against lexical retrieval before adding runtime cost.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S24",
+    "title": "Docling",
+    "url": "https://github.com/docling-project/docling",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Document conversion and structure extraction; keep originals separately.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S25",
+    "title": "Microsoft MarkItDown",
+    "url": "https://github.com/microsoft/markitdown",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Document-to-Markdown extraction option; extracted text is a projection, not the original.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S26",
+    "title": "Surya",
+    "url": "https://github.com/datalab-to/surya",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "OCR/layout fallback research; review code and model licensing separately.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S27",
+    "title": "AFFiNE",
+    "url": "https://github.com/toeverything/AFFiNE",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Workspace/editor reference; compare adoption cost and licences rather than rewrite every editor component.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S28",
+    "title": "AppFlowy",
+    "url": "https://github.com/AppFlowy-IO/AppFlowy",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Workspace/editor reference; do not conflate a good editor with an automation evidence engine.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S29",
+    "title": "VS Code command-line interface",
+    "url": "https://code.visualstudio.com/docs/configure/command-line",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "External editor integration using CLI; a smaller initial surface than embedding an IDE.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S30",
+    "title": "OpenAI function calling",
+    "url": "https://developers.openai.com/api/docs/guides/function-calling",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Official API tool-call reference. The application executes and verifies tools.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S31",
+    "title": "OpenAI computer use",
+    "url": "https://developers.openai.com/api/docs/guides/tools-computer-use",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Official computer-use reference; isolate execution and review high-impact actions.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S32",
+    "title": "ChatGPT Plus and API billing",
+    "url": "https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Official plan help: API usage is separate from ChatGPT subscription billing; do not infer quota from a chat plan.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S33",
+    "title": "Solana transactions",
+    "url": "https://solana.com/docs/core/transactions",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Atomic transaction and account model reference for strategy/execution separation.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "S34",
+    "title": "Jito low-latency transaction send",
+    "url": "https://docs.jito.wtf/lowlatencytxnsend/",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Bundle and submission reference. Verify current provider limits/fees before any live design.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G01",
+    "title": "scaling-chrome-extensions/da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/commit/da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Pinned branch metadata: PR37 merged, 2026-10-03T15:58:25Z.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G02",
+    "title": "studious-pancake/67d3852cbc4cb1b24582df45adbf6a42d4da2af0",
+    "url": "https://github.com/BobIvans/studious-pancake/commit/67d3852cbc4cb1b24582df45adbf6a42d4da2af0",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Pinned branch metadata: PR562 merged, 2026-10-02T23:07:26Z.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G03",
+    "title": "scaling-chrome-extensions/content-lab/automation_core.py",
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/automation_core.py",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Read lines 1–260; actual sync/context/one-writer policy limits.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G04",
+    "title": "scaling-chrome-extensions/content-lab/context_review.py",
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/context_review.py",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Read lines 1–150; review context pack uses 48,000 bytes.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G05",
+    "title": "scaling-chrome-extensions/content-lab/repo_context.py",
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/repo_context.py",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Read lines 1–240; resumable pages, 8 MiB file cap, 20 is page size.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G06",
+    "title": "scaling-chrome-extensions/content-lab/occ-config/paper_campaign.plan.json",
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/occ-config/paper_campaign.plan.json",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Full proposal read; explicitly BLOCKED_NOT_STARTED and not native-adapter compatible.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G07",
+    "title": "scaling-chrome-extensions/agent-bridge/QUALIFICATION_ADAPTER_RU.md",
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/agent-bridge/QUALIFICATION_ADAPTER_RU.md",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Full document read; direct CLI works without Chrome; no live permissions.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G08",
+    "title": "studious-pancake/scripts/run_occ_memory_qualification.py",
+    "url": "https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/scripts/run_occ_memory_qualification.py",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Full script read; exact wrapper arguments and domain exit codes.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G09",
+    "title": "studious-pancake/src/occ_memory_qualification_bridge.py",
+    "url": "https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/occ_memory_qualification_bridge.py",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Read lines 1–210; exact schemas/operator profile and FAST-Q1 ownership.",
+    "independent_runtime_test_in_this_delivery": false
+  },
+  {
+    "id": "G10",
+    "title": "studious-pancake/src/qualification_report.py",
+    "url": "https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/qualification_report.py",
+    "checked_on": "2026-10-03",
+    "source_kind": "primary",
+    "note": "Read lines 1–240; exact preflight argv and paper-only environment.",
+    "independent_runtime_test_in_this_delivery": false
+  }
+]
+
+===== END FILE =====
+
+===== FILE {"path": "research/SOURCES.md", "bytes": 8819, "sha256": "860edca3a51e51b4d9efea9052785acb4f60b94f7214e450801582e6c2ad14e9"} =====
+# Проверенные первичные источники
+
+Дата проверки: 3 октября 2026 года. Ссылки [Sxx]/[Gxx] в документах раскрываются здесь. Это список источников, не копия сторонних репозиториев или моделей. Тексты документации могут изменяться.
+
+## S01 — TypeSafe: Introducing System One Models & Jev
+https://typesafe.ai/blog/introducing-system-one-models-and-jev
+
+Creator announcement; published 2026-09-15. Decision model, not a PC executor.
+
+## S02 — LangChain: Building a harness with Jev
+https://www.langchain.com/blog/building-a-harness-with-jev
+
+Primary integration example; published 2026-09-17. Harness is distinct from decision model.
+
+## S03 — Laya model card
+https://huggingface.co/convaiinnovations/laya
+
+Creator-reported context, benchmark and calibration limitations. See the concise source note; no Dell benchmark performed.
+
+## S04 — Laya source repository
+https://github.com/NandhaKishorM/laya
+
+Official implementation and integration reference. Pin a reviewed revision, not an unbounded latest dependency.
+
+## S05 — Microsoft UFO
+https://github.com/microsoft/UFO
+
+Current README presents UFO³ Galaxy and retained UFO² Windows support. Architectural research reference.
+
+## S06 — OpenAdapt
+https://github.com/OpenAdaptAI/OpenAdapt
+
+Demonstration-to-program automation; independent result verification is an important design pattern.
+
+## S07 — Simular Agent-S
+https://github.com/simular-ai/Agent-S
+
+Computer-use agent framework. Candidate for controlled benchmark comparisons.
+
+## S08 — ByteDance UI-TARS
+https://github.com/bytedance/UI-TARS
+
+GUI-agent research. Not assumed suitable for real-time inference on this Dell.
+
+## S09 — Microsoft Fara-7B
+https://huggingface.co/microsoft/Fara-7B
+
+Computer-use research model; separate browser tasks from general Windows desktop claims.
+
+## S10 — Microsoft Playwright MCP
+https://github.com/microsoft/playwright-mcp
+
+Browser automation integration; structured browser state before screenshot fallback.
+
+## S11 — browser-use
+https://github.com/browser-use/browser-use
+
+Browser-agent implementation candidate; evaluate authority and state-verification boundaries.
+
+## S12 — Windows UI Automation
+https://learn.microsoft.com/en-us/windows/win32/winauto/entry-uiauto-win32
+
+Official Windows accessibility/automation API reference.
+
+## S13 — FlaUI
+https://github.com/FlaUI/FlaUI
+
+Windows .NET UI Automation library; candidate for native desktop adapter.
+
+## S14 — pywinauto
+https://github.com/pywinauto/pywinauto
+
+Python Windows automation library; alternative adapter for a Python-first prototype.
+
+## S15 — NVDA
+https://github.com/nvaccess/nvda
+
+Screen-reader project; target for keyboard and accessibility validation, not merely visual inspection.
+
+## S16 — LangGraph persistence
+https://docs.langchain.com/oss/python/langgraph/persistence
+
+State persistence/checkpoint design reference; not required to replace the existing SCE owner.
+
+## S17 — Hugging Face smolagents
+https://huggingface.co/docs/smolagents/index
+
+Code-agent framework; generated code still needs isolation, permissions and evaluation.
+
+## S18 — faster-whisper
+https://github.com/SYSTRAN/faster-whisper
+
+CTranslate2 transcription implementation; CPU/int8 is a candidate baseline, not a measured speed claim.
+
+## S19 — Qwen3-ASR-0.6B
+https://huggingface.co/Qwen/Qwen3-ASR-0.6B
+
+Small ASR research candidate. Verify the supported runtime, language and streaming mode actually used.
+
+## S20 — FunctionGemma 270M
+https://huggingface.co/google/functiongemma-270m-it
+
+Small function-calling specialist; review Gemma terms and domain adaptation needs.
+
+## S21 — LFM2.5-1.2B-Instruct
+https://huggingface.co/LiquidAI/LFM2.5-1.2B-Instruct
+
+Compact local generation candidate; measure actual end-to-end latency and memory.
+
+## S22 — SmolVLM-256M-Instruct
+https://huggingface.co/HuggingFaceTB/SmolVLM-256M-Instruct
+
+Small visual-description/triage candidate, not assumed to be a reliable full-PC operator.
+
+## S23 — Qwen3-Embedding-0.6B
+https://huggingface.co/Qwen/Qwen3-Embedding-0.6B
+
+Semantic retrieval candidate; compare against lexical retrieval before adding runtime cost.
+
+## S24 — Docling
+https://github.com/docling-project/docling
+
+Document conversion and structure extraction; keep originals separately.
+
+## S25 — Microsoft MarkItDown
+https://github.com/microsoft/markitdown
+
+Document-to-Markdown extraction option; extracted text is a projection, not the original.
+
+## S26 — Surya
+https://github.com/datalab-to/surya
+
+OCR/layout fallback research; review code and model licensing separately.
+
+## S27 — AFFiNE
+https://github.com/toeverything/AFFiNE
+
+Workspace/editor reference; compare adoption cost and licences rather than rewrite every editor component.
+
+## S28 — AppFlowy
+https://github.com/AppFlowy-IO/AppFlowy
+
+Workspace/editor reference; do not conflate a good editor with an automation evidence engine.
+
+## S29 — VS Code command-line interface
+https://code.visualstudio.com/docs/configure/command-line
+
+External editor integration using CLI; a smaller initial surface than embedding an IDE.
+
+## S30 — OpenAI function calling
+https://developers.openai.com/api/docs/guides/function-calling
+
+Official API tool-call reference. The application executes and verifies tools.
+
+## S31 — OpenAI computer use
+https://developers.openai.com/api/docs/guides/tools-computer-use
+
+Official computer-use reference; isolate execution and review high-impact actions.
+
+## S32 — ChatGPT Plus and API billing
+https://help.openai.com/en/articles/6950777-what-is-chatgpt-plus
+
+Official plan help: API usage is separate from ChatGPT subscription billing; do not infer quota from a chat plan.
+
+## S33 — Solana transactions
+https://solana.com/docs/core/transactions
+
+Atomic transaction and account model reference for strategy/execution separation.
+
+## S34 — Jito low-latency transaction send
+https://docs.jito.wtf/lowlatencytxnsend/
+
+Bundle and submission reference. Verify current provider limits/fees before any live design.
+
+## G01 — scaling-chrome-extensions/da6abf4c006e4e7d26fe45ef30fa9d07a356f396
+https://github.com/BobIvans/scaling-chrome-extensions/commit/da6abf4c006e4e7d26fe45ef30fa9d07a356f396
+
+Pinned branch metadata: PR37 merged, 2026-10-03T15:58:25Z.
+
+## G02 — studious-pancake/67d3852cbc4cb1b24582df45adbf6a42d4da2af0
+https://github.com/BobIvans/studious-pancake/commit/67d3852cbc4cb1b24582df45adbf6a42d4da2af0
+
+Pinned branch metadata: PR562 merged, 2026-10-02T23:07:26Z.
+
+## G03 — scaling-chrome-extensions/content-lab/automation_core.py
+https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/automation_core.py
+
+Read lines 1–260; actual sync/context/one-writer policy limits.
+
+## G04 — scaling-chrome-extensions/content-lab/context_review.py
+https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/context_review.py
+
+Read lines 1–150; review context pack uses 48,000 bytes.
+
+## G05 — scaling-chrome-extensions/content-lab/repo_context.py
+https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/repo_context.py
+
+Read lines 1–240; resumable pages, 8 MiB file cap, 20 is page size.
+
+## G06 — scaling-chrome-extensions/content-lab/occ-config/paper_campaign.plan.json
+https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/content-lab/occ-config/paper_campaign.plan.json
+
+Full proposal read; explicitly BLOCKED_NOT_STARTED and not native-adapter compatible.
+
+## G07 — scaling-chrome-extensions/agent-bridge/QUALIFICATION_ADAPTER_RU.md
+https://github.com/BobIvans/scaling-chrome-extensions/blob/da6abf4c006e4e7d26fe45ef30fa9d07a356f396/agent-bridge/QUALIFICATION_ADAPTER_RU.md
+
+Full document read; direct CLI works without Chrome; no live permissions.
+
+## G08 — studious-pancake/scripts/run_occ_memory_qualification.py
+https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/scripts/run_occ_memory_qualification.py
+
+Full script read; exact wrapper arguments and domain exit codes.
+
+## G09 — studious-pancake/src/occ_memory_qualification_bridge.py
+https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/occ_memory_qualification_bridge.py
+
+Read lines 1–210; exact schemas/operator profile and FAST-Q1 ownership.
+
+## G10 — studious-pancake/src/qualification_report.py
+https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/qualification_report.py
+
+Read lines 1–240; exact preflight argv and paper-only environment.
+
+===== END FILE =====
+
+===== FILE {"path": "schemas/CAPABILITY_CANDIDATES.json", "bytes": 22762, "sha256": "4a9f24922a4cd519dfbc0f1e4ae0390d0f0ddb97c254c86ef6e4f7e68e59e12b"} =====
+[
+  {
+    "id": "api.readonly_tool_session",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "archive.verify",
+    "implementation": "tools/archive_tool.py verify",
+    "state": "BUNDLED_CLI_NOT_WORKFLOW_WIRED",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "bot.existing_qualification_adapter",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "browser.approved_dom_read",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "code.resolve_symbol_span",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "code.static_catalog",
+    "implementation": "tools/archive_tool.py catalog",
+    "state": "BUNDLED_CLI_NOT_WORKFLOW_WIRED",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "context.full_export",
+    "implementation": "tools/archive_tool.py text",
+    "state": "BUNDLED_CLI_NOT_WORKFLOW_WIRED",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "context.reconstruct_verify",
+    "implementation": "tools/archive_tool.py verify-text",
+    "state": "BUNDLED_CLI_NOT_WORKFLOW_WIRED",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "context.select_evidence",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "desktop.observe_uia",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "desktop.perform_registered_action",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "desktop.record_authorized_trace",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "editor.open_registered_goto",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "evidence.freeze_results",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "evidence.independent_verify",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "evidence.observe_actual_state",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "evidence.read_domain_receipt",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "evidence.validate_source_refs",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "history.requirement_extract",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "history.version_link",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "intent.advisory_route",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "intent.deterministic_route",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "jobs.inspect_stale_run",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "jobs.propose",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "library.index_projection",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "library.search_related_attempts",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.approve_frozen_dataset",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.capture_consent",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.check_api_budget_consent",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.check_data_rights_budget",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.check_desktop_profile",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.check_operator_profile",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.check_source_allowlist",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "policy.decide_reconciliation",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "privacy.review_scope",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "privacy.sanitized_projection",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "reports.compose",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "research.compare_revisions",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "research.cost_and_holdout_check",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "research.fetch_primary_metadata",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "research.license_compatibility_review",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "research.parallel_read_workers",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "research.register_trial",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "research.replay_alternatives",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "skills.draft_candidate",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "skills.propose_effect_contract",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.attachment_inventory",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.chat_export_import",
+    "implementation": "tools/archive_tool.py chats",
+    "state": "BUNDLED_CLI_NOT_WORKFLOW_WIRED",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.folder_snapshot",
+    "implementation": "tools/archive_tool.py folder",
+    "state": "BUNDLED_CLI_NOT_WORKFLOW_WIRED",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.git_snapshot",
+    "implementation": "tools/archive_tool.py git",
+    "state": "BUNDLED_CLI_NOT_WORKFLOW_WIRED",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.prefer_official_api",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.shared_pit_feed",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.verify_exact_installation",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "source.verify_exact_revision",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "tests.propose_acceptance",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "tests.propose_sandbox_profile",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "tests.replay_in_isolation",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "voice.capture_consent",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  },
+  {
+    "id": "voice.final_transcript",
+    "implementation": null,
+    "state": "REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION",
+    "authority": "NO_AUTOMATIC_GRANT",
+    "effects_to_review": [
+      "read",
+      "write",
+      "network",
+      "execute"
+    ],
+    "risk_and_postcondition": "Must be reviewed per capability, not inferred from this illustrative catalog."
+  }
+]
+
+===== END FILE =====
+
+===== FILE {"path": "schemas/openai_tools.responses.json", "bytes": 2190, "sha256": "897c4608fc3b96414847bc4dde1ff4e9563279c2d01db2dfe16004605758a315"} =====
+[
+  {
+    "type": "function",
+    "name": "library_search",
+    "description": "Search only approved indexed sources.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "query",
+        "cursor"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "type": "function",
+    "name": "library_read_span",
+    "description": "Read a bounded span from a permitted exact source revision.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "source_id": {
+          "type": "string"
+        },
+        "revision": {
+          "type": "string"
+        },
+        "byte_start": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "byte_end": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "source_id",
+        "revision",
+        "byte_start",
+        "byte_end"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "type": "function",
+    "name": "jobs_propose",
+    "description": "Create a proposal only. This tool never executes code or grants permissions.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "capability_id": {
+          "type": "string"
+        },
+        "goal": {
+          "type": "string"
+        },
+        "source_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "capability_id",
+        "goal",
+        "source_ids"
+      ],
+      "additionalProperties": false
+    }
+  },
+  {
+    "type": "function",
+    "name": "jobs_status",
+    "description": "Read the current job status and independent outcome evidence.",
+    "strict": true,
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "job_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "job_id"
+      ],
+      "additionalProperties": false
+    }
+  }
+]
+
+===== END FILE =====
+
+===== FILE {"path": "tests/test_archive_tool.py", "bytes": 9790, "sha256": "814012d3e64d89815150bbabf1a171742c1a8c39eeb3a9e462710ddea3a53217"} =====
+import contextlib
+import hashlib
+import io
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / 'tools'))
+import archive_tool as a
+
+
+class ArchiveTests(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.base = Path(self.tmp.name)
+        self.src = self.base / 'source'
+        self.src.mkdir()
+        self.out = self.base / 'archive'
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def collect(self, ref=None):
+        with contextlib.redirect_stdout(io.StringIO()):
+            return a.collect(self.src, self.out, ref)
+
+    def test_more_than_1000_files_no_document_cap(self):
+        for n in range(1007):
+            (self.src / f'{n}.txt').write_text(f'file {n}\n', encoding='utf-8')
+        receipt = self.collect()
+        self.assertEqual(receipt['counts']['stored_files'], 1007)
+        self.assertEqual(a.verify(self.out)['state'], 'VERIFIED')
+
+    def test_large_single_line_and_unicode_reconstruction(self):
+        (self.src / 'русский 🐈.md').write_text('😀Яé' * 40000 + '\nlast line\r\n', encoding='utf-8')
+        self.collect()
+        dest = self.base / 'text'
+        result = a.export_text(self.out, dest, 19)
+        self.assertGreater(result['parts'], 20)
+        self.assertEqual(a.verify_text(self.out, dest)['state'], 'VERIFIED')
+
+    def test_empty_binary_utf16_and_dotfile(self):
+        (self.src / 'empty').write_bytes(b'')
+        (self.src / 'binary.bin').write_bytes(bytes(range(256)))
+        (self.src / 'utf16.txt').write_bytes('Привет'.encode('utf-16'))
+        (self.src / '.hidden').write_text('included')
+        self.collect()
+        dest = self.base / 'text'
+        result = a.export_text(self.out, dest, 100)
+        self.assertEqual(result['non_utf8_or_binary_files'], 2)
+        self.assertEqual(result['text_files'], 2)
+        self.assertEqual(a.verify_text(self.out, dest)['state'], 'VERIFIED')
+
+    def test_no_extension_filter(self):
+        (self.src / 'file.rs').write_text('fn main() {}')
+        (self.src / 'LICENSE').write_text('license')
+        self.assertEqual(self.collect()['counts']['stored_files'], 2)
+
+    def test_git_pinned_snapshot_not_working_edits(self):
+        subprocess.run(['git', 'init', '-q', str(self.src)], check=True)
+        subprocess.run(['git', '-C', str(self.src), 'config', 'user.email', 'test@example.invalid'], check=True)
+        subprocess.run(['git', '-C', str(self.src), 'config', 'user.name', 'Test'], check=True)
+        p = self.src / 'nested'; p.mkdir()
+        (p / 'hello.txt').write_bytes(b'committed\r\n')
+        subprocess.run(['git', '-C', str(self.src), 'add', '.'], check=True)
+        subprocess.run(['git', '-C', str(self.src), 'commit', '-qm', 'test'], check=True)
+        (p / 'hello.txt').write_text('uncommitted')
+        receipt = self.collect('HEAD')
+        rows = [x for x in a.manifest_rows(self.out) if x['status'] == 'STORED']
+        self.assertEqual(a.object_path(self.out, rows[0]['sha256']).read_bytes(), b'committed\r\n')
+        self.assertEqual(receipt['scope'], 'PINNED_GIT_TREE')
+        self.assertEqual(a.verify(self.out)['state'], 'VERIFIED')
+
+    def test_symlink_target_never_read(self):
+        target = self.base / 'outside.txt'; target.write_text('SECRET TARGET')
+        try:
+            os.symlink(target, self.src / 'link')
+        except OSError:
+            self.skipTest('symlinks unavailable')
+        result = self.collect()
+        self.assertEqual(result['counts']['stored_files'], 0)
+        self.assertEqual(result['counts']['metadata_only'], 1)
+
+    def test_raw_secret_named_file_private_not_omitted(self):
+        (self.src / '.env').write_text('TEST_ONLY=example-not-a-real-key')
+        result = self.collect()
+        self.assertEqual(result['counts']['possible_secret_names'], 1)
+        self.assertEqual(result['share_state'], 'PRIVATE_UNREVIEWED')
+        self.assertEqual(result['counts']['stored_files'], 1)
+
+    def test_corrupted_object_detected(self):
+        (self.src / 'a.txt').write_text('abc')
+        self.collect()
+        row = next(a.manifest_rows(self.out))
+        a.object_path(self.out, row['sha256']).write_text('bad')
+        self.assertEqual(a.verify(self.out)['state'], 'FAILED')
+
+    def test_corrupted_manifest_detected(self):
+        (self.src / 'a.txt').write_text('abc')
+        self.collect()
+        (self.out / 'manifest.jsonl').write_text('')
+        self.assertEqual(a.verify(self.out)['state'], 'FAILED')
+
+    def test_export_tamper_detected(self):
+        (self.src / 'a.txt').write_text('abc')
+        self.collect(); dest = self.base / 'text'
+        a.export_text(self.out, dest)
+        (dest / 'ALL_TEXT.txt').write_text('lost')
+        self.assertEqual(a.verify_text(self.out, dest)['state'], 'FAILED')
+
+    def test_output_inside_source_refused(self):
+        with self.assertRaises(ValueError):
+            a.collect(self.src, self.src / 'out')
+
+    def test_rescan_keeps_old_cas_revisions(self):
+        p = self.src / 'a.txt'; p.write_text('old')
+        self.collect()
+        old = next(a.manifest_rows(self.out))['sha256']
+        p.write_text('new'); self.collect()
+        self.assertTrue(a.object_path(self.out, old).exists())
+        self.assertEqual(a.verify(self.out)['state'], 'VERIFIED')
+
+    def test_no_code_execution_in_static_catalog(self):
+        marker = self.base / 'MUST_NOT_EXIST'
+        code = f"from pathlib import Path\nPath({str(marker)!r}).touch()\nimport argparse\np=argparse.ArgumentParser()\np.add_argument('--paper')\ndef main():\n    try:\n        pass\n    except:\n        pass\n"
+        (self.src / 'script.py').write_text(code)
+        self.collect()
+        result = a.catalog(self.out, self.base / 'catalog')
+        self.assertFalse(marker.exists())
+        self.assertEqual(result['symbols'], 1)
+        self.assertEqual(result['command_candidates'], 1)
+        self.assertGreaterEqual(result['signals'], 2)
+
+    def test_all_chat_branches_preserved(self):
+        value = [{'id':'c','title':'conversation','mapping':{
+            'root': {'parent':None,'children':['a','b'],'message':None},
+            'a': {'parent':'root','children':[],'message':{'author':{'role':'user'},'content':{'parts':['one']}}},
+            'b': {'parent':'root','children':[],'message':{'author':{'role':'assistant'},'content':{'parts':['alternate']}}}}}]
+        src = self.base / 'chats.json'; src.write_text(json.dumps(value))
+        result = a.chats(src, self.base / 'import')
+        self.assertEqual(result['nodes'], 3)
+        self.assertEqual(hashlib.sha256(src.read_bytes()).hexdigest(), result['original_sha256'])
+
+    def test_unsupported_chat_shape_keeps_original(self):
+        src = self.base / 'chats.json'; src.write_text('[{"messages":[]}]')
+        with self.assertRaises(ValueError):
+            a.chats(src, self.base / 'import')
+        self.assertTrue((self.base / 'import' / 'original.json').exists())
+        self.assertNotEqual(json.loads((self.base/'import'/'import_status.json').read_text())['state'], 'COMPLETE')
+
+    def test_writer_lock_blocks_second_writer(self):
+        self.out.mkdir(); (self.out / '.writer.lock').write_text('test')
+        with self.assertRaises(FileExistsError):
+            self.collect()
+
+    def test_archive_path_escape_blocked(self):
+        self.out.mkdir()
+        for bad in ('../secret', '/etc/passwd', 'C:/keys', '..\\keys'):
+            with self.assertRaises(ValueError):
+                a.safe_child(self.out, bad)
+
+    def test_empty_folder(self):
+        self.assertEqual(self.collect()['counts']['entries'], 0)
+        self.assertEqual(a.verify(self.out)['state'], 'VERIFIED')
+
+    def test_lfs_pointer_explicit(self):
+        (self.src/'large.bin').write_text('version https://git-lfs.github.com/spec/v1\noid sha256:'+'a'*64+'\nsize 99999999\n')
+        result = self.collect()
+        self.assertEqual(result['counts']['lfs_pointers'], 1)
+        self.assertFalse(result['lfs_payloads_resolved'])
+
+
+    def test_file_larger_than_eight_mib(self):
+        size = 8*1024*1024 + 123
+        with (self.src/'large.txt').open('wb') as f:
+            for _ in range(8): f.write(b'x' * (1024*1024))
+            f.write(b'y' * 123)
+        result = self.collect()
+        self.assertEqual(result['counts']['bytes'], size)
+        dest = self.base/'text'
+        a.export_text(self.out,dest)
+        self.assertEqual(a.verify_text(self.out,dest)['state'],'VERIFIED')
+
+    def test_special_posix_path_bytes_preserved(self):
+        if os.name != 'posix': self.skipTest('POSIX path-byte fixture')
+        name = b'odd\tline\nname-\xff.txt'
+        raw = os.fsencode(self.src)+b'/'+name
+        with open(raw,'wb') as f: f.write(b'raw path test')
+        self.collect()
+        row = next(a.manifest_rows(self.out))
+        import base64
+        self.assertEqual(base64.b64decode(row['path_bytes_b64']),name)
+        self.assertEqual(a.verify(self.out)['state'],'VERIFIED')
+
+    def test_unfinished_new_scan_prevents_success(self):
+        (self.src/'x').write_text('x'); self.collect()
+        (self.out/'in_progress.json').write_text('{"state":"INTERRUPTED"}')
+        self.assertEqual(a.verify(self.out)['state'],'FAILED')
+
+    def test_invalid_git_ref_rejected(self):
+        with self.assertRaises(ValueError): self.collect('HEAD;echo injection')
+
+    def test_duplicate_chat_json_not_silently_accepted(self):
+        src=self.base/'chats.json'
+        src.write_text('[{"mapping":{"a":{},"a":{}}}]')
+        with self.assertRaises(ValueError): a.chats(src,self.base/'import')
+        self.assertTrue((self.base/'import'/'original.json').exists())
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
+
+===== END FILE =====
+
+===== FILE {"path": "tools/README_RU.md", "bytes": 6658, "sha256": "d00ba3132c5902d54840bd074f3d85f155b1e5c269a66a2432c68850e0756c30"} =====
+# Запускаемые инструменты: Python 3.10+, Git для Git-режима
+
+Все команды запускаются вручную. Утилиты не вызывают OpenAI/Laya, не отправляют архив в сеть и не исполняют код из анализируемого repo. Исключение — явно запускаемый `windows/Acquire-Repos.ps1`: он скачивает публичные Git-репозитории и затем вызывает архиватор.
+
+## Быстрый запуск на Windows
+
+Открой терминал в распакованной папке ZIP. Используй свой установленный Python 3.10+ (`python`, либо замени на `py -3`).
+
+```powershell
+python -m unittest discover -s tests -v
+python tools/desktop_archive.py
+```
+
+Desktop front-end предназначен для архивирования/проверки/экспорта, не для произвольного terminal control. Он не `.exe` и не production UI; Tk должен быть установлен вместе с Python. Voice/API/NVDA/Windows target tests пока NOT_RUN.
+
+## Полный закреплённый Git snapshot
+
+```powershell
+python tools/archive_tool.py git `
+  --source C:/Repos/scaling-chrome-extensions `
+  --ref da6abf4c006e4e7d26fe45ef30fa9d07a356f396 `
+  --out C:/OCCData/sce-20261003
+
+python tools/archive_tool.py verify --archive C:/OCCData/sce-20261003
+
+python tools/archive_tool.py text `
+  --archive C:/OCCData/sce-20261003 `
+  --out C:/OCCData/sce-text-20261003
+
+python tools/archive_tool.py verify-text `
+  --archive C:/OCCData/sce-20261003 `
+  --out C:/OCCData/sce-text-20261003
+
+python tools/archive_tool.py catalog `
+  --archive C:/OCCData/sce-20261003 `
+  --out C:/OCCData/sce-catalog-20261003
+```
+
+Путь output должен быть вне source. `text` требует новую/пустую output-папку, чтобы старые parts не перемешались с новым export. Размер фрагмента по умолчанию 262144 bytes, не число токенов. Нет лимита числа файлов/частей и нет отбрасывания конца большой строки.
+
+Для скачивания обоих публичных repo без checkout и запуска их кода:
+
+```powershell
+./windows/Acquire-Repos.ps1 -RepoRoot C:/OCCRepos -ArchiveRoot C:/OCCData -Python python
+```
+
+Скрипт не сбрасывает существующие каталоги и не запускает пакетную установку. Старые SHA в примерах намеренно зафиксированы. Работа Git-прокси/интернета на твоём ПК не проверялась здесь.
+
+## Обычная папка и dirty workspace
+
+```powershell
+python tools/archive_tool.py folder --source C:/MyDocuments --out C:/OCCData/documents-20261003
+```
+
+Собираются все обычные файлы, включая dotfiles и неизвестные расширения; ссылки не обходятся. **Не выбирать весь диск/домашний профиль автоматически.** Секреты могут попасть в локальные raw originals. Для dirty repo, где `.git` не нужен, лучше отдельная экспортируемая папка или Git-режим; folder-режим намеренно не скрывает `.git`.
+
+## ChatGPT JSON export
+
+```powershell
+python tools/archive_tool.py chats --input C:/Exports/conversations.json --out C:/OCCData/chat-import-20261003
+```
+
+Сохраняет original.json и все mapping nodes, включая альтернативные ветки и metadata. Не скачивает отсутствующие вложения и не получает доступ к аккаунту. Parser JSON работает in-memory; для огромного JSON может потребоваться streaming parser. При ошибке оригинал остаётся, COMPLETE не выставляется. Не выдавать импорт одного export за гарантию всех прошлых разговоров аккаунта.
+
+## Выходные файлы
+
+`manifest.jsonl`: все обнаруженные paths, bytes/hash/type/status. `objects/`: raw CAS originals. `receipt.json`: scope/completeness. `ALL_TEXT.txt`: полная доступная UTF-8-проекция с source headers. `parts`: те же spans отдельно. `coverage.jsonl`: что попало в текст и что осталось raw. `symbols/commands/signals.jsonl`: статические candidates, не разрешение на выполнение.
+
+## Recovery и известные ограничения
+
+Каждый collect имеет exclusive `.writer.lock`. Обычное завершение/ошибка снимают его; после kill/power-loss сначала убедись, что writer действительно не работает, затем вручную архивируй/удали stale lock. `in_progress.json` запрещает считать предыдущий receipt новым успехом. Повтор collect повторяет enumeration и переиспользует hash-verified blobs. Для независимой истории manifests используй новую output-папку.
+
+Folder scan не защищён от всех adversarial ancestor/reparse races и не является VSS/filesystem snapshot; нужен контролируемый источник, лучше immutable Git. CAS hashes — integrity, не authenticity/signature. Text verification загружает метаданные text-source в память; большого общего fixed cap нет, но физическая RAM конечна. Static AST parser читает один файл в память; unsupported/parse failure фиксируется, не означает «код проверен».
+
+Процесс чтения Git в прототипе не имеет production job supervisor: зависший локальный Git требует ручного вмешательства. Нужны Windows Job Objects/timeout/cancellation/recovery в production, а не слепое расширение полномочий. Не запускать этот прототип как системный service с привилегиями администратора.
+
+===== END FILE =====
+
+===== FILE {"path": "tools/archive_tool.py", "bytes": 32622, "sha256": "23cf14675c4f4ddcb82a3f98b7acd31df9777f0331c7587074a133ba3fc95230"} =====
+#!/usr/bin/env python3
+"""Portable, local-only repository/folder evidence archive. Python 3.10+.
+
+This is an offline export artifact format, NOT a replacement for SCE's durable DB.
+No model calls, uploads, shell execution of source code, or file-count ceilings.
+Regular-file originals stay byte-exact; links are never followed. See README.
+"""
+from __future__ import annotations
+import argparse
+import ast
+import base64
+import codecs
+import hashlib
+import json
+import os
+from pathlib import Path
+import re
+import shutil
+import stat
+import subprocess
+import sys
+import tempfile
+import time
+from typing import BinaryIO, Iterator
+
+BLOCK = 1024 * 1024
+SCHEMA = "occ.portable-archive.v1"
+SECRET_NAME = re.compile(r"(^|/)(\.env($|\.)|id_rsa$|id_ed25519$|credentials\.json$|keypair\.json$)|\.(pem|p12|pfx|key)$", re.I)
+
+
+def js(value: object) -> str:
+    # ASCII escaping preserves even POSIX surrogate-escaped names in valid JSON.
+    return json.dumps(value, ensure_ascii=True, sort_keys=True, allow_nan=False)
+
+
+def dump(path: Path, value: object) -> None:
+    temporary = path.with_name(path.name + ".writing")
+    temporary.write_text(js(value) + "\n", encoding="utf-8")
+    os.replace(temporary, path)
+
+
+def hash_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as f:
+        for data in iter(lambda: f.read(BLOCK), b""):
+            h.update(data)
+    return h.hexdigest()
+
+
+def safe_child(root: Path, relative: str) -> Path:
+    """Reject traversal and symlinked archive objects; archives are untrusted."""
+    p = Path(relative)
+    if p.is_absolute() or ".." in p.parts or "\\" in relative or ":" in relative:
+        raise ValueError("UNSAFE_ARCHIVE_REFERENCE")
+    target = root / p
+    if any(x.is_symlink() for x in [target, *target.parents] if x != root.parent):
+        raise ValueError("ARCHIVE_SYMLINK_BLOCKED")
+    if not target.resolve().is_relative_to(root.resolve()):
+        raise ValueError("ARCHIVE_PATH_ESCAPE")
+    return target
+
+
+def object_path(root: Path, digest: str) -> Path:
+    if not re.fullmatch(r"[0-9a-f]{64}", digest):
+        raise ValueError("INVALID_OBJECT_DIGEST")
+    return safe_child(root, f"objects/{digest[:2]}/{digest}")
+
+
+def raw_path_fields(raw: bytes) -> dict:
+    return {"path": raw.decode("utf-8", "backslashreplace"),
+            "path_bytes_b64": base64.b64encode(raw).decode("ascii")}
+
+
+def put_stream(root: Path, stream: BinaryIO, expected_size: int | None = None) -> dict:
+    """Bounded RAM, no per-file cap. Atomic CAS object publication."""
+    tmpdir = safe_child(root, "temporary")
+    tmpdir.mkdir(exist_ok=True)
+    fd, name = tempfile.mkstemp(dir=tmpdir, prefix="object-")
+    tmp = Path(name)
+    h, n, utf8 = hashlib.sha256(), 0, True
+    decoder = codecs.getincrementaldecoder("utf-8")("strict")
+    prefix = bytearray()
+    try:
+        with os.fdopen(fd, "wb") as out:
+            for block in iter(lambda: stream.read(BLOCK), b""):
+                out.write(block)
+                h.update(block)
+                n += len(block)
+                if len(prefix) < 200:
+                    prefix.extend(block[:200 - len(prefix)])
+                if utf8:
+                    try:
+                        decoder.decode(block)
+                        if b"\x00" in block:
+                            utf8 = False
+                    except UnicodeDecodeError:
+                        utf8 = False
+            out.flush()
+            os.fsync(out.fileno())
+        if utf8:
+            try:
+                decoder.decode(b"", final=True)
+            except UnicodeDecodeError:
+                utf8 = False
+        if expected_size is not None and expected_size != n:
+            raise ValueError("SOURCE_SIZE_CHANGED")
+        digest = h.hexdigest()
+        target = object_path(root, digest)
+        target.parent.mkdir(parents=True, exist_ok=True)
+        if target.exists() and hash_file(target) == digest:
+            tmp.unlink()
+        else:
+            os.replace(tmp, target)
+        return {"sha256": digest, "size": n, "utf8_text": utf8,
+                "object": target.relative_to(root).as_posix(),
+                "lfs_pointer": bytes(prefix).startswith(b"version https://git-lfs.github.com/spec/v1\n")}
+    finally:
+        tmp.unlink(missing_ok=True)
+
+
+def check_output(source: Path, out: Path) -> None:
+    if source.is_symlink() or not source.is_dir():
+        raise ValueError("SOURCE_MUST_BE_A_REGULAR_DIRECTORY")
+    if out.resolve() == source.resolve() or out.resolve().is_relative_to(source.resolve()):
+        raise ValueError("OUTPUT_MUST_BE_OUTSIDE_SOURCE")
+    # Stop following existing directory symlinks in output ancestry.
+    for p in [out, *out.parents]:
+        if p.is_symlink():
+            raise ValueError("OUTPUT_SYMLINK_BLOCKED")
+    out.mkdir(parents=True, exist_ok=True)
+
+
+def folder_entries(source: Path) -> Iterator[tuple[dict, Path | None]]:
+    """Enumerate every directory entry, including dotfiles. Do not follow links."""
+    pending = [source]
+    while pending:
+        parent = pending.pop()
+        try:
+            with os.scandir(parent) as listing:
+                for e in listing:
+                    p = Path(e.path)
+                    rel = os.fsencode(os.path.relpath(p, source))
+                    if os.sep == "\\":
+                        rel = rel.replace(b"\\", b"/")
+                    row = raw_path_fields(rel)
+                    try:
+                        s = e.stat(follow_symlinks=False)
+                        row.update(mode=oct(stat.S_IMODE(s.st_mode)))
+                        reparse = bool(getattr(s, "st_file_attributes", 0) & 0x400)
+                        if stat.S_ISLNK(s.st_mode) or reparse:
+                            row.update(kind="link", status="METADATA_ONLY", reason="LINK_NOT_FOLLOWED")
+                            try:
+                                target = os.readlink(p)
+                                row["target_bytes_b64"] = base64.b64encode(os.fsencode(target)).decode("ascii")
+                            except OSError as ex:
+                                row["target_read_error"] = str(ex)
+                            yield row, None
+                        elif stat.S_ISDIR(s.st_mode):
+                            row.update(kind="directory", status="METADATA_ONLY")
+                            yield row, None
+                            pending.append(p)
+                        elif stat.S_ISREG(s.st_mode):
+                            row.update(kind="file", status="PENDING")
+                            yield row, p
+                        else:
+                            row.update(kind="special", status="METADATA_ONLY", reason="SPECIAL_FILE_NOT_READ")
+                            yield row, None
+                    except OSError as ex:
+                        row.update(kind="unknown", status="ERROR", reason=str(ex))
+                        yield row, None
+        except OSError as ex:
+            rel = os.fsencode(os.path.relpath(parent, source))
+            yield {**raw_path_fields(rel), "kind": "directory", "status": "ERROR",
+                   "reason": "ENUMERATION_FAILED: " + str(ex)}, None
+
+
+def git_env() -> dict[str, str]:
+    env = {k: v for k, v in os.environ.items() if k in
+           {"PATH", "SystemRoot", "SYSTEMROOT", "WINDIR", "TEMP", "TMP", "HOME"}}
+    env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
+               GIT_NO_REPLACE_OBJECTS="1", GIT_NO_LAZY_FETCH="1", GIT_OPTIONAL_LOCKS="0",
+               GIT_TERMINAL_PROMPT="0", LC_ALL="C")
+    return env
+
+
+def git_args(source: Path, *args: str) -> list[str]:
+    return ["git", "-c", "core.fsmonitor=false", "-C", str(source), *args]
+
+
+def nul_records(stream: BinaryIO) -> Iterator[bytes]:
+    pending = b""
+    for block in iter(lambda: stream.read(65536), b""):
+        pending += block
+        parts = pending.split(b"\0")
+        yield from parts[:-1]
+        pending = parts[-1]
+    if pending:
+        raise ValueError("INCOMPLETE_GIT_TREE_RECORD")
+
+
+def git_entries(source: Path, commit: str) -> Iterator[dict]:
+    with tempfile.TemporaryFile() as err:
+        proc = subprocess.Popen(git_args(source, "ls-tree", "-r", "-t", "-l", "-z", "--full-tree", commit),
+                                stdout=subprocess.PIPE, stderr=err, env=git_env(), shell=False)
+        try:
+            assert proc.stdout is not None
+            for record in nul_records(proc.stdout):
+                meta, raw_path = record.split(b"\t", 1)
+                mode, kind, oid, size = meta.split()
+                yield {**raw_path_fields(raw_path), "mode": mode.decode(),
+                       "git_kind": kind.decode(), "git_oid": oid.decode(),
+                       "git_size": int(size) if size != b"-" else None}
+            if proc.wait() != 0:
+                raise ValueError("GIT_TREE_ENUMERATION_FAILED")
+        finally:
+            if proc.poll() is None:
+                proc.kill()
+                proc.wait()
+            if proc.stdout is not None:
+                proc.stdout.close()
+
+
+def manifest_rows(out: Path) -> Iterator[dict]:
+    with (out / "manifest.jsonl").open(encoding="utf-8") as f:
+        for line in f:
+            if line.strip():
+                yield json.loads(line)
+
+
+def collect(source: Path, out: Path, git_ref: str | None = None) -> dict:
+    source, out = source.absolute(), out.absolute()
+    check_output(source, out)
+    # Exclusive writer; stale lock deliberately requires operator reconciliation.
+    lock = out / ".writer.lock"
+    fd = os.open(lock, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
+    os.write(fd, str(os.getpid()).encode())
+    os.close(fd)
+    started = time.time()
+    commit = None
+    counts = {"entries": 0, "stored_files": 0, "bytes": 0, "errors": 0,
+              "metadata_only": 0, "possible_secret_names": 0, "lfs_pointers": 0}
+    manifest_tmp = out / "manifest.pending.jsonl"
+    try:
+        if git_ref is not None:
+            if git_ref != "HEAD" and not re.fullmatch(r"[0-9a-fA-F]{40}", git_ref):
+                raise ValueError("REF_MUST_BE_HEAD_OR_FULL_SHA")
+            commit = subprocess.check_output(git_args(source, "rev-parse", "--verify", "--end-of-options", git_ref + "^{commit}"),
+                                             env=git_env(), timeout=30).decode().strip()
+        dump(out / "in_progress.json", {"schema": SCHEMA, "source": str(source), "started": started,
+                                        "state": "SCANNING", "commit": commit})
+        with manifest_tmp.open("w", encoding="utf-8", newline="\n") as manifest:
+            def emit(row: dict) -> None:
+                row["ordinal"] = counts["entries"]
+                row["possible_secret_name"] = bool(SECRET_NAME.search(row["path"]))
+                counts["entries"] += 1
+                counts["possible_secret_names"] += int(row["possible_secret_name"])
+                if row["status"] == "STORED":
+                    counts["stored_files"] += 1
+                    counts["bytes"] += row["size"]
+                    counts["lfs_pointers"] += int(row["lfs_pointer"])
+                elif row["status"] == "ERROR":
+                    counts["errors"] += 1
+                else:
+                    counts["metadata_only"] += 1
+                manifest.write(js(row) + "\n")
+                if counts["entries"] % 100 == 0:
+                    manifest.flush()
+                    print(js({"progress": counts}), flush=True)
+            if commit:
+                for row in git_entries(source, commit):
+                    if row["git_kind"] != "blob":
+                        row.update(kind="directory" if row["git_kind"] == "tree" else "submodule",
+                                   status="METADATA_ONLY", reason="GIT_TREE_OR_GITLINK_ONLY")
+                    else:
+                        row["kind"] = "git_symlink_blob" if row["mode"] == "120000" else "file"
+                        try:
+                            with tempfile.TemporaryFile() as err:
+                                proc = subprocess.Popen(git_args(source, "cat-file", "blob", row["git_oid"]),
+                                                        stdout=subprocess.PIPE, stderr=err, env=git_env(), shell=False)
+                                try:
+                                    assert proc.stdout is not None
+                                    stored = put_stream(out, proc.stdout, row["git_size"])
+                                    if proc.wait() != 0:
+                                        raise ValueError("GIT_BLOB_READ_FAILED")
+                                    row.update(stored, status="STORED")
+                                finally:
+                                    if proc.poll() is None:
+                                        proc.kill(); proc.wait()
+                                    if proc.stdout is not None:
+                                        proc.stdout.close()
+                        except (OSError, ValueError) as ex:
+                            row.update(status="ERROR", reason=str(ex))
+                    emit(row)
+            else:
+                for row, p in folder_entries(source):
+                    if p is not None:
+                        try:
+                            before = p.lstat()
+                            # O_NOFOLLOW protects POSIX final component; ancestor races need a filesystem snapshot.
+                            flags = os.O_RDONLY | getattr(os, "O_BINARY", 0) | getattr(os, "O_NOFOLLOW", 0)
+                            fno = os.open(p, flags)
+                            with os.fdopen(fno, "rb") as stream:
+                                opened = os.fstat(stream.fileno())
+                                if not stat.S_ISREG(opened.st_mode) or (before.st_dev, before.st_ino) != (opened.st_dev, opened.st_ino):
+                                    raise ValueError("SOURCE_REPLACED_DURING_OPEN")
+                                stored = put_stream(out, stream, before.st_size)
+                                after_fd = os.fstat(stream.fileno())
+                            after = p.lstat()
+                            identity = lambda s: (s.st_size, s.st_mtime_ns, s.st_ino, s.st_dev)
+                            if identity(before) != identity(after) or identity(before) != identity(after_fd):
+                                raise ValueError("SOURCE_CHANGED_DURING_READ")
+                            row.update(stored, status="STORED", mtime_ns=before.st_mtime_ns)
+                        except (OSError, ValueError) as ex:
+                            row.update(status="ERROR", reason=str(ex))
+                    emit(row)
+            manifest.flush(); os.fsync(manifest.fileno())
+        os.replace(manifest_tmp, out / "manifest.jsonl")
+        receipt = {"schema": SCHEMA, "state": "COMPLETE" if counts["errors"] == 0 else "INCOMPLETE",
+                   "source": str(source), "scope": "PINNED_GIT_TREE" if commit else "FOLDER_NONATOMIC",
+                   "commit": commit, "counts": counts, "manifest_sha256": hash_file(out / "manifest.jsonl"),
+                   "started": started, "finished": time.time(), "share_state": "PRIVATE_UNREVIEWED",
+                   "semantic_review_complete": False, "external_link_targets_included": False,
+                   "lfs_payloads_resolved": False, "submodule_contents_included": False,
+                   "git_history_included": False, "browser_or_chat_account_access": False,
+                   "resume_semantics": "Fresh enumeration; reuse verified content-addressed originals. Not a frozen live-folder snapshot."}
+        dump(out / "receipt.json", receipt)
+        (out / "in_progress.json").unlink(missing_ok=True)
+        return receipt
+    except BaseException as ex:
+        dump(out / "in_progress.json", {"schema": SCHEMA, "state": "INTERRUPTED", "commit": commit,
+                                        "error_type": type(ex).__name__, "counts_so_far": counts})
+        raise
+    finally:
+        lock.unlink(missing_ok=True)
+
+
+def verify(out: Path) -> dict:
+    errors = []
+    receipt = json.loads((out / "receipt.json").read_text(encoding="utf-8"))
+    if (out / "in_progress.json").exists():
+        errors.append("UNFINISHED_NEW_SCAN")
+    if hash_file(out / "manifest.jsonl") != receipt["manifest_sha256"]:
+        errors.append("MANIFEST_DIGEST_MISMATCH")
+    entries = 0
+    for row in manifest_rows(out):
+        if row.get("ordinal") != entries:
+            errors.append("ORDINAL_SEQUENCE_MISMATCH")
+        entries += 1
+        if row["status"] == "ERROR":
+            errors.append("SOURCE_ERROR:" + row["path"])
+        if row["status"] != "STORED":
+            continue
+        try:
+            obj = object_path(out, row["sha256"])
+            if row["object"] != obj.relative_to(out).as_posix():
+                raise ValueError("OBJECT_REFERENCE_MISMATCH")
+            if obj.stat().st_size != row["size"] or hash_file(obj) != row["sha256"]:
+                errors.append("OBJECT_MISMATCH:" + row["path"])
+        except (OSError, ValueError) as ex:
+            errors.append("OBJECT_ERROR:" + row["path"] + ":" + str(ex))
+    if entries != receipt["counts"]["entries"]:
+        errors.append("ENTRY_COUNT_MISMATCH")
+    return {"schema": "occ.archive-verification.v1", "state": "VERIFIED" if not errors else "FAILED",
+            "entries_checked": entries, "errors": errors,
+            "authenticity_note": "Hashes detect integrity changes; this is not a signed proof of source authenticity."}
+
+
+def text_fragments(path: Path, block_bytes: int) -> Iterator[bytes]:
+    decoder = codecs.getincrementaldecoder("utf-8")("strict")
+    produced = False
+    with path.open("rb") as f:
+        for raw in iter(lambda: f.read(block_bytes), b""):
+            text = decoder.decode(raw)
+            if text:
+                produced = True
+                yield text.encode("utf-8")
+        final = decoder.decode(b"", final=True)
+        if final:
+            produced = True
+            yield final.encode("utf-8")
+    if not produced:
+        yield b""
+
+
+def export_text(out: Path, dest: Path, chunk_bytes: int = 262144) -> dict:
+    if chunk_bytes < 4:
+        raise ValueError("CHUNK_BYTES_MUST_BE_AT_LEAST_FOUR")
+    checked = verify(out)
+    if checked["state"] != "VERIFIED":
+        raise ValueError("ARCHIVE_MUST_VERIFY_BEFORE_EXPORT")
+    dest = dest.absolute()
+    if dest.exists() and any(dest.iterdir()):
+        raise ValueError("EXPORT_DIRECTORY_MUST_BE_NEW_OR_EMPTY")
+    dest.mkdir(parents=True, exist_ok=True)
+    n, text_files, binary_files, text_bytes = 0, 0, 0, 0
+    with (dest / "chunks.jsonl").open("w", encoding="utf-8") as index, \
+         (dest / "coverage.jsonl").open("w", encoding="utf-8") as coverage, \
+         (dest / "ALL_TEXT.txt").open("wb") as all_text:
+        for row in manifest_rows(out):
+            if row["status"] != "STORED" or not row["utf8_text"]:
+                coverage.write(js({"ordinal": row["ordinal"], "path": row["path"],
+                                   "text_status": "METADATA_ONLY" if row["status"] != "STORED" else "RAW_BINARY_OR_NON_UTF8_PRESERVED",
+                                   "sha256": row.get("sha256")}) + "\n")
+                binary_files += int(row["status"] == "STORED")
+                continue
+            text_files += 1
+            offset, line = 0, 1
+            for raw in text_fragments(object_path(out, row["sha256"]), chunk_bytes):
+                n += 1
+                name = f"part-{n:07d}.txt"
+                fragment = {"source_ordinal": row["ordinal"], "path": row["path"],
+                            "path_bytes_b64": row["path_bytes_b64"], "source_sha256": row["sha256"],
+                            "source_byte_start": offset, "source_byte_end": offset + len(raw),
+                            "start_line": line, "end_line": line + raw.count(b"\n"),
+                            "chunk_sha256": hashlib.sha256(raw).hexdigest(), "file": name}
+                header = ("\n===== SOURCE FRAGMENT " + js(fragment) + " =====\n").encode("utf-8")
+                fragment["payload_byte_start"] = len(header)
+                fragment["payload_bytes"] = len(raw)
+                with (dest / name).open("wb") as f:
+                    f.write(header); f.write(raw); f.write(b"\n===== END FRAGMENT =====\n")
+                all_text.write(header); all_text.write(raw); all_text.write(b"\n===== END FRAGMENT =====\n")
+                index.write(js(fragment) + "\n")
+                offset += len(raw); line += raw.count(b"\n"); text_bytes += len(raw)
+            coverage.write(js({"ordinal": row["ordinal"], "path": row["path"], "text_status": "FULL_UTF8",
+                               "sha256": row["sha256"], "bytes": offset}) + "\n")
+    result = {"schema": "occ.full-text-export.v1", "parts": n, "text_files": text_files,
+              "non_utf8_or_binary_files": binary_files, "text_bytes": text_bytes,
+              "source_manifest_sha256": hash_file(out / "manifest.jsonl"),
+              "chunks_sha256": hash_file(dest / "chunks.jsonl"),
+              "all_text_sha256": hash_file(dest / "ALL_TEXT.txt"),
+              "silent_truncation": False, "token_count": None,
+              "note": "Byte-sized presentation fragments, NOT token-sized model prompts. Binary originals remain in source archive."}
+    dump(dest / "export_receipt.json", result)
+    return result
+
+
+def verify_text(out: Path, dest: Path) -> dict:
+    expected = {r["ordinal"]: r for r in manifest_rows(out) if r["status"] == "STORED" and r["utf8_text"]}
+    progress: dict[int, tuple[object, int]] = {}
+    errors = []
+    if verify(out)["state"] != "VERIFIED":
+        errors.append("SOURCE_ARCHIVE_NOT_VERIFIED")
+    receipt = json.loads((dest / "export_receipt.json").read_text())
+    if hash_file(out / "manifest.jsonl") != receipt["source_manifest_sha256"]:
+        errors.append("SOURCE_MANIFEST_CHANGED")
+    if hash_file(dest / "chunks.jsonl") != receipt["chunks_sha256"]:
+        errors.append("CHUNKS_INDEX_CHANGED")
+    if hash_file(dest / "ALL_TEXT.txt") != receipt["all_text_sha256"]:
+        errors.append("ALL_TEXT_CHANGED")
+    with (dest / "chunks.jsonl").open(encoding="utf-8") as f:
+        for line in f:
+            item = json.loads(line)
+            ordinal = item["source_ordinal"]
+            if ordinal not in expected:
+                errors.append("UNEXPECTED_SOURCE"); continue
+            if item["path_bytes_b64"] != expected[ordinal]["path_bytes_b64"] or item["source_sha256"] != expected[ordinal]["sha256"]:
+                errors.append("FRAGMENT_SOURCE_BINDING_MISMATCH")
+            h, offset = progress.setdefault(ordinal, (hashlib.sha256(), 0))
+            if offset != item["source_byte_start"]:
+                errors.append("GAP_OR_OVERLAP")
+            with safe_child(dest, item["file"]).open("rb") as part:
+                part.seek(item["payload_byte_start"])
+                raw = part.read(item["payload_bytes"])
+            if len(raw) != item["payload_bytes"] or hashlib.sha256(raw).hexdigest() != item["chunk_sha256"]:
+                errors.append("FRAGMENT_MISMATCH")
+            h.update(raw)
+            progress[ordinal] = (h, offset + len(raw))
+    for ordinal, row in expected.items():
+        h, n = progress.get(ordinal, (hashlib.sha256(), -1))
+        if n != row["size"] or h.hexdigest() != row["sha256"]:
+            errors.append("SOURCE_RECONSTRUCTION_MISMATCH:" + row["path"])
+    return {"state": "VERIFIED" if not errors else "FAILED", "text_files_reconstructed": len(expected), "errors": errors}
+
+
+def catalog(out: Path, dest: Path) -> dict:
+    """Static inventory only. Signals are not confirmed bugs; never import code."""
+    if verify(out)["state"] != "VERIFIED":
+        raise ValueError("ARCHIVE_NOT_VERIFIED")
+    dest.mkdir(parents=True, exist_ok=True)
+    counts = {"python_files": 0, "symbols": 0, "command_candidates": 0, "signals": 0, "parse_errors": 0}
+    with (dest / "symbols.jsonl").open("w", encoding="utf-8") as symbols, \
+         (dest / "commands.jsonl").open("w", encoding="utf-8") as commands, \
+         (dest / "signals.jsonl").open("w", encoding="utf-8") as signals:
+        def signal(row: dict, kind: str, line: int, detail: str) -> None:
+            counts["signals"] += 1
+            signals.write(js({"path": row["path"], "sha256": row["sha256"], "line": line,
+                              "kind": kind, "detail": detail, "verdict": "REVIEW_REQUIRED_NOT_PROVEN_BUG"}) + "\n")
+        for row in manifest_rows(out):
+            if row["status"] != "STORED" or not row["utf8_text"]:
+                continue
+            path = row["path"]
+            if not (path.endswith(".py") or path.rsplit("/", 1)[-1] == "package.json"):
+                continue
+            raw = object_path(out, row["sha256"]).read_bytes()
+            try:
+                if path.endswith(".py"):
+                    counts["python_files"] += 1
+                    tree = ast.parse(raw, filename=path)
+                    for node in ast.walk(tree):
+                        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+                            counts["symbols"] += 1
+                            symbols.write(js({"path": path, "sha256": row["sha256"], "name": node.name,
+                                              "kind": type(node).__name__, "line": node.lineno,
+                                              "end_line": getattr(node, "end_lineno", node.lineno)}) + "\n")
+                        if isinstance(node, ast.ExceptHandler) and node.type is None:
+                            signal(row, "BARE_EXCEPT", node.lineno, "May intentionally catch BaseException; inspect scope.")
+                        if isinstance(node, ast.ExceptHandler) and node.body and all(isinstance(x, ast.Pass) for x in node.body):
+                            signal(row, "EXCEPTION_PASS", node.lineno, "Swallowed exception; evidence and intended fallback required.")
+                        if isinstance(node, ast.Call):
+                            fname = ast.unparse(node.func)
+                            if fname in {"eval", "exec"}:
+                                signal(row, "DYNAMIC_EVAL", node.lineno, "Inspect trust boundary; static presence alone is not an exploit.")
+                            if any(k.arg == "shell" and isinstance(k.value, ast.Constant) and k.value.value is True for k in node.keywords):
+                                signal(row, "SHELL_TRUE", node.lineno, "Trace command provenance and input escaping.")
+                            if fname.endswith(".add_argument"):
+                                counts["command_candidates"] += 1
+                                commands.write(js({"path": path, "sha256": row["sha256"], "line": node.lineno,
+                                                   "kind": "argparse_definition", "expression": ast.unparse(node),
+                                                   "execution_status": "NOT_AUTHORIZED_NOT_RUN"}) + "\n")
+                    for number, text in enumerate(raw.decode("utf-8-sig").splitlines(), 1):
+                        if re.search(r"\b(TODO|FIXME|HACK)\b", text):
+                            signal(row, "COMMENT_MARKER", number, text.strip())
+                else:
+                    value = json.loads(raw)
+                    for name, command in value.get("scripts", {}).items():
+                        counts["command_candidates"] += 1
+                        commands.write(js({"path": path, "sha256": row["sha256"], "kind": "package_script",
+                                           "name": name, "command": command, "execution_status": "NOT_AUTHORIZED_NOT_RUN"}) + "\n")
+            except (ValueError, SyntaxError, UnicodeError, MemoryError, RecursionError) as ex:
+                counts["parse_errors"] += 1
+                signal(row, "PARSER_ERROR", 0, type(ex).__name__ + ": " + str(ex))
+    result = {"schema": "occ.static-catalog.v1", **counts, "exhaustive_runtime_command_discovery": False,
+              "supported": ["Python AST symbols and argparse definitions", "package.json scripts"],
+              "not_implemented": ["runtime plugins", "complete call graph", "Click/Typer command resolution", "shell/Makefile/CI semantic analysis"],
+              "source_code_executed": False}
+    dump(dest / "catalog_receipt.json", result)
+    return result
+
+
+def chats(source: Path, out: Path) -> dict:
+    """Preserve full source JSON plus EVERY mapping node, including inactive branches.
+
+JSON parsing is in-memory; a MemoryError leaves original.json intact and no COMPLETE
+receipt. It is not a zero-memory streaming parser. No attachment bytes are invented.
+"""
+    if out.resolve() == source.resolve() or source.resolve().is_relative_to(out.resolve()):
+        raise ValueError("CHAT_OUTPUT_MUST_NOT_CONTAIN_INPUT")
+    out.mkdir(parents=True, exist_ok=True)
+    if any(out.iterdir()):
+        raise ValueError("CHAT_OUTPUT_MUST_BE_EMPTY")
+    shutil.copyfile(source, out / "original.json")
+    digest = hash_file(out / "original.json")
+    dump(out / "import_status.json", {"state": "RAW_PRESERVED_PARSING_PENDING", "sha256": digest})
+    with (out / "original.json").open(encoding="utf-8-sig") as f:
+        def no_duplicates(pairs):
+            result = {}
+            for key, val in pairs:
+                if key in result:
+                    raise ValueError("DUPLICATE_JSON_KEY_RAW_PRESERVED")
+                result[key] = val
+            return result
+        value = json.load(f, object_pairs_hook=no_duplicates)
+    conversations = value if isinstance(value, list) else value.get("conversations", [value])
+    total = 0
+    with (out / "nodes.jsonl").open("w", encoding="utf-8") as nodes, \
+         (out / "conversations.jsonl").open("w", encoding="utf-8") as metadata:
+        for ordinal, conversation in enumerate(conversations):
+            if not isinstance(conversation, dict):
+                raise ValueError("CONVERSATION_OBJECT_REQUIRED")
+            mapping = conversation.get("mapping")
+            if not isinstance(mapping, dict):
+                raise ValueError("UNSUPPORTED_EXPORT_SHAPE_RAW_IS_PRESERVED")
+            metadata.write(js({"ordinal": ordinal, "metadata": {k: v for k, v in conversation.items() if k != "mapping"}}) + "\n")
+            for node_id, node in mapping.items():
+                nodes.write(js({"conversation_ordinal": ordinal, "conversation_id": conversation.get("id"),
+                                "node_id": node_id, "node": node}) + "\n")
+                total += 1
+    result = {"schema": "occ.chat-import.v1", "state": "COMPLETE", "conversations": len(conversations),
+              "nodes": total, "original_sha256": digest, "all_mapping_branches_preserved": True,
+              "remote_or_missing_attachment_bytes_fetched": False, "account_history_completeness_known": False}
+    dump(out / "import_status.json", result)
+    return result
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    sub = parser.add_subparsers(dest="command", required=True)
+    for mode in ("folder", "git"):
+        p = sub.add_parser(mode)
+        p.add_argument("--source", type=Path, required=True)
+        p.add_argument("--out", type=Path, required=True)
+        if mode == "git":
+            p.add_argument("--ref", default="HEAD")
+    for mode in ("verify", "text", "verify-text", "catalog"):
+        p = sub.add_parser(mode)
+        p.add_argument("--archive", type=Path, required=True)
+        if mode != "verify":
+            p.add_argument("--out", type=Path, required=True)
+        if mode == "text":
+            p.add_argument("--chunk-bytes", type=int, default=262144)
+    p = sub.add_parser("chats")
+    p.add_argument("--input", type=Path, required=True)
+    p.add_argument("--out", type=Path, required=True)
+    a = parser.parse_args()
+    try:
+        if a.command in {"folder", "git"}:
+            result = collect(a.source, a.out, a.ref if a.command == "git" else None)
+        elif a.command == "verify": result = verify(a.archive)
+        elif a.command == "text": result = export_text(a.archive, a.out, a.chunk_bytes)
+        elif a.command == "verify-text": result = verify_text(a.archive, a.out)
+        elif a.command == "catalog": result = catalog(a.archive, a.out)
+        else: result = chats(a.input, a.out)
+        print(json.dumps(result, ensure_ascii=True, indent=2))
+        return 0 if result.get("state") not in {"FAILED", "INCOMPLETE"} else 3
+    except (OSError, ValueError, subprocess.SubprocessError, KeyError) as ex:
+        print(js({"state": "ERROR", "error": type(ex).__name__, "detail": str(ex)}), file=sys.stderr)
+        return 2
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+
+===== END FILE =====
+
+===== FILE {"path": "tools/desktop_archive.py", "bytes": 4797, "sha256": "3077d14ab7cc544a5ce6c37426daf8ff903ce5d40747f43d722b7438c37c4fae"} =====
+#!/usr/bin/env python3
+"""Small local desktop FRONT-END prototype for the bundled archive CLI.
+No Chrome, model, internet, voice control, bot execution or general-purpose shell.
+UI availability and screen-reader behavior must be tested on the target Windows PC.
+"""
+from pathlib import Path
+import json
+import queue
+import subprocess
+import sys
+import threading
+import tkinter as tk
+from tkinter import filedialog, messagebox, ttk
+
+class Desktop(tk.Tk):
+    def __init__(self):
+        super().__init__()
+        self.title('OCC — Local Evidence Archive (prototype)')
+        self.geometry('1000x680')
+        self.events = queue.Queue()
+        self.running = False
+        self.source, self.archive = tk.StringVar(), tk.StringVar()
+        self.status = tk.StringVar(value='Local only. Originals may contain private data. Do not upload without review.')
+        frame = ttk.Frame(self, padding=12); frame.pack(fill='both', expand=True)
+        for row, title, variable in [(0, 'Source folder / Git repository', self.source), (1, 'Archive folder (outside source)', self.archive)]:
+            ttk.Label(frame, text=title).grid(row=row*2, column=0, sticky='w')
+            entry = ttk.Entry(frame, textvariable=variable); entry.grid(row=row*2+1, column=0, sticky='ew', pady=(0,10))
+            ttk.Button(frame, text='Browse '+str(row+1), command=lambda v=variable:self.browse(v)).grid(row=row*2+1, column=1, padx=6)
+        frame.columnconfigure(0, weight=1)
+        actions = ttk.Frame(frame); actions.grid(row=4, column=0, columnspan=2, sticky='ew')
+        options = [('Archive folder', 'folder'), ('Archive Git HEAD', 'git'), ('Verify archive', 'verify'),
+                   ('Export all UTF-8 text', 'text'), ('Static code catalog', 'catalog')]
+        for title, command in options:
+            ttk.Button(actions, text=title, command=lambda c=command:self.launch(c)).pack(side='left', padx=3, pady=8)
+        ttk.Label(frame, textvariable=self.status, wraplength=940).grid(row=5,column=0,columnspan=2,sticky='w',pady=8)
+        self.log = tk.Text(frame, wrap='word', height=24, state='disabled')
+        self.log.grid(row=6, column=0, columnspan=2, sticky='nsew')
+        frame.rowconfigure(6,weight=1)
+        self.protocol('WM_DELETE_WINDOW', self.close)
+        self.after(100, self.poll)
+
+    def browse(self, var):
+        value = filedialog.askdirectory(mustexist=False)
+        if value: var.set(value)
+
+    def launch(self, command):
+        if self.running:
+            messagebox.showinfo('Already running', 'This prototype allows one archive task at a time.'); return
+        if not self.archive.get() or (command in {'folder','git'} and not self.source.get()):
+            messagebox.showerror('Missing path', 'Select the source and archive folders.'); return
+        args = [sys.executable, str(Path(__file__).with_name('archive_tool.py')), command]
+        if command in {'folder','git'}:
+            args += ['--source', self.source.get(), '--out', self.archive.get()]
+        else:
+            args += ['--archive', self.archive.get()]
+            if command in {'text','catalog'}:
+                dest = filedialog.askdirectory(title='Select new or empty export folder', mustexist=False)
+                if not dest: return
+                args += ['--out',dest]
+        self.running=True
+        self.status.set('Running local archive operation. No cloud or bot commands are invoked.')
+        def worker():
+            try:
+                p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+                                     encoding='utf-8', errors='replace', shell=False)
+                assert p.stdout is not None
+                for line in p.stdout: self.events.put(('log',line))
+                self.events.put(('done',p.wait()))
+            except OSError as exc:
+                self.events.put(('log',str(exc)+'\n')); self.events.put(('done',2))
+        threading.Thread(target=worker,daemon=True).start()
+
+    def poll(self):
+        try:
+            while True:
+                kind,value=self.events.get_nowait()
+                if kind=='log':
+                    self.log.configure(state='normal'); self.log.insert('end',value); self.log.see('end'); self.log.configure(state='disabled')
+                else:
+                    self.running=False; self.status.set(f'Finished. Exit code: {value}. Inspect the receipt; completion does not mean semantic correctness.')
+        except queue.Empty: pass
+        self.after(100,self.poll)
+
+    def close(self):
+        if self.running:
+            messagebox.showinfo('Operation active','Do not interrupt a write by closing this prototype. Inspect the terminal if recovery is needed.'); return
+        self.destroy()
+
+if __name__=='__main__':
+    Desktop().mainloop()
+
+===== END FILE =====
+
+===== FILE {"path": "tools/validate_workflows.py", "bytes": 1312, "sha256": "445645ec259cc16139348e4fa4529012f313b55672da38138c977138a03cd060"} =====
+#!/usr/bin/env python3
+"""Validate R&D proposal consistency only. No capability is executed."""
+from pathlib import Path
+import json
+import sys
+root=Path(__file__).resolve().parents[1]
+known={c['id'] for c in json.loads((root/'schemas/CAPABILITY_CANDIDATES.json').read_text())}
+errors=[]; count=0
+for path in sorted((root/'workflows').glob('*.json')):
+    count+=1
+    try:
+        p=json.loads(path.read_text(encoding='utf-8'))
+        assert p['schema']=='occ.rnd.workflow.v1'
+        assert p['status']=='PROPOSAL_NOT_EXECUTED'
+        assert p['ready_for_automatic_execution'] is False
+        assert p['native_laya_request'] is False
+        assert p['money_budget']==0 and not p['signer_access'] and not p['live_trading']
+        seen=set()
+        for node in p['nodes']:
+            assert node['id'] not in seen
+            assert node['capability_id'] in known
+            assert set(node['depends_on']) <= seen
+            assert node['on_failure']=='BLOCK_AND_REPORT'
+            seen.add(node['id'])
+    except (AssertionError,KeyError,ValueError) as e:
+        errors.append(path.name+': '+type(e).__name__)
+print(json.dumps({'state':'VALIDATED_PROPOSALS_ONLY' if not errors else 'FAILED',
+                  'workflows_checked':count,'executed':0,'errors':errors},indent=2))
+sys.exit(bool(errors))
+
+===== END FILE =====
+
+===== FILE {"path": "tools/verify_package.py", "bytes": 900, "sha256": "8cabfc88887e47befbf0fb8ae427a1b29c7a4d5e009da0a143d5de7cbc178340"} =====
+#!/usr/bin/env python3
+"""Verify delivery files against PACKAGE_MANIFEST.json; no downloads/execution."""
+import hashlib
+import json
+from pathlib import Path
+import sys
+root = Path(__file__).resolve().parents[1]
+manifest = json.loads((root/'PACKAGE_MANIFEST.json').read_text(encoding='utf-8'))
+errors=[]
+for row in manifest['files']:
+    p=root/row['path']
+    if p.is_symlink() or not p.resolve().is_relative_to(root) or not p.is_file():
+        errors.append(row['path']+': missing or unsafe'); continue
+    h=hashlib.sha256()
+    with p.open('rb') as f:
+        for raw in iter(lambda:f.read(1024*1024),b''): h.update(raw)
+    if h.hexdigest()!=row['sha256'] or p.stat().st_size!=row['bytes']:
+        errors.append(row['path']+': mismatch')
+print(json.dumps({'state':'VERIFIED' if not errors else 'FAILED','files_checked':len(manifest['files']),'errors':errors},indent=2))
+sys.exit(bool(errors))
+
+===== END FILE =====
+
+===== FILE {"path": "windows/Acquire-Repos.ps1", "bytes": 1713, "sha256": "4e9adbcba5ec9ef24c8bef9ee65550eedad20b33917bafb2092082a41fbbb4e8"} =====
+# Downloads PUBLIC Git data only when you explicitly run this script.
+# No checkout, tests, package installation, model, browser or trading execution.
+param(
+  [Parameter(Mandatory=$true)][string]$RepoRoot,
+  [Parameter(Mandatory=$true)][string]$ArchiveRoot,
+  [string]$Python = "python"
+)
+$ErrorActionPreference = "Stop"
+$tool = Join-Path $PSScriptRoot "..\tools\archive_tool.py"
+New-Item -ItemType Directory -Force -Path $RepoRoot,$ArchiveRoot | Out-Null
+$env:GIT_TERMINAL_PROMPT = "0"
+$repos = @(
+  @{Name="scaling-chrome-extensions"; Sha="da6abf4c006e4e7d26fe45ef30fa9d07a356f396"},
+  @{Name="studious-pancake"; Sha="67d3852cbc4cb1b24582df45adbf6a42d4da2af0"}
+)
+foreach ($repo in $repos) {
+  $checkout = Join-Path $RepoRoot $repo.Name
+  if (!(Test-Path $checkout)) {
+    & git clone --no-checkout --no-recurse-submodules --config core.longpaths=true "https://github.com/BobIvans/$($repo.Name).git" $checkout
+    if ($LASTEXITCODE -ne 0) { throw "Clone failed; nothing has been qualified." }
+  }
+  # Existing directories are not reset, cleaned, updated or executed.
+  & git -C $checkout cat-file -e "$($repo.Sha)^{commit}"
+  if ($LASTEXITCODE -ne 0) { throw "Pinned commit unavailable. Fetch/review the repository separately; this script will not reset it." }
+  $archive = Join-Path $ArchiveRoot "$($repo.Name)-$($repo.Sha.Substring(0,12))"
+  & $Python $tool git --source $checkout --ref $repo.Sha --out $archive
+  if ($LASTEXITCODE -ne 0) { throw "Archive incomplete; inspect receipt/manifest." }
+  & $Python $tool verify --archive $archive
+  if ($LASTEXITCODE -ne 0) { throw "Archive verification failed." }
+}
+Write-Output "Private raw archives collected. Review secrets and sharing scope before uploading."
+
+===== END FILE =====
+
+===== FILE {"path": "windows/Run-Tests.ps1", "bytes": 213, "sha256": "116d498c6fee76bcfa69b1c7e8c6b054f095503b35134c14818a42b449e6e9a8"} =====
+$ErrorActionPreference = "Stop"
+Push-Location (Join-Path $PSScriptRoot "..")
+try {
+  python -m unittest discover -s tests -v
+  if ($LASTEXITCODE -ne 0) { throw "Toolkit tests failed." }
+} finally { Pop-Location }
+
+===== END FILE =====
+
+===== FILE {"path": "windows/Start-Desktop.cmd", "bytes": 74, "sha256": "5dca1d23f3a5083db22eaf4cb4f032a1115289d239547c4236d20e65ea856564"} =====
+@echo off
+python "%~dp0..\tools\desktop_archive.py"
+if errorlevel 1 pause
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/01_full_repo.json", "bytes": 2764, "sha256": "d543ae6b5c88537c666c0ebefc28115dbba833fbd7e93d59ef1cfd8114c133c8"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "01_full_repo",
+  "title_ru": "Полный контекст Git",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "source.git_snapshot",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "archive.verify",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "code.static_catalog",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "context.full_export",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "context.reconstruct_verify",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/02_local_library.json", "bytes": 2432, "sha256": "6b2a7afd655e26c7ac4a3a707a8e682ff4070312bdbc270025e96aaf3921a528"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "02_local_library",
+  "title_ru": "Локальная библиотека файлов",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "source.folder_snapshot",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "archive.verify",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "library.index_projection",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "privacy.review_scope",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/03_history_import.json", "bytes": 2460, "sha256": "9f4833d1c6e89b57f08417db0caa7a8ee9d2b206b68b2fd58a2fbf7291fe3c78"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "03_history_import",
+  "title_ru": "Все доступные ветки старых чатов",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "source.chat_export_import",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "source.attachment_inventory",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "history.requirement_extract",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "history.version_link",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/04_voice_proposal.json", "bytes": 2770, "sha256": "f1f1dcc2bdc0b883361e7fb7996c3d06411d358d6721457f83155be2b705e912"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "04_voice_proposal",
+  "title_ru": "Голос → typed proposal",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "voice.capture_consent",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "voice.final_transcript",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "intent.deterministic_route",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "intent.advisory_route",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "jobs.propose",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/05_repo_review.json", "bytes": 2445, "sha256": "2198bfc53ac35e514b277430d21a25a69c671c713475143ca77d1eadf287a60f"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "05_repo_review",
+  "title_ru": "Проверка предполагаемых code smells",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "source.git_snapshot",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "code.static_catalog",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "context.select_evidence",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "tests.propose_sandbox_profile",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/06_qualification.json", "bytes": 2475, "sha256": "c143386ee10b29aabefae92d95b23a6c80713dafdae3b1b77e6c64224639b648"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "06_qualification",
+  "title_ru": "Существующая qualification без Chrome",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "policy.check_operator_profile",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "source.verify_exact_installation",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "bot.existing_qualification_adapter",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "evidence.read_domain_receipt",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/07_paper_campaign.json", "bytes": 2839, "sha256": "5c8339b7b97758e6b76de3f93c4eccf245a7cd675ad99de1bbafa5914d5cfab3"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "07_paper_campaign",
+  "title_ru": "Sender-free исследовательская кампания",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "policy.check_data_rights_budget",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "source.shared_pit_feed",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "research.parallel_read_workers",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "research.cost_and_holdout_check",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "evidence.freeze_results",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/08_latest_research.json", "bytes": 2835, "sha256": "76c06c2527a02aa38432222ad96ab7b78ad76cbd06357e343d78b615ead1cfd7"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "08_latest_research",
+  "title_ru": "Обновление официальных research sources",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "policy.check_source_allowlist",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "research.fetch_primary_metadata",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "research.compare_revisions",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "research.license_compatibility_review",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "jobs.propose",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/09_demonstration_skill.json", "bytes": 2825, "sha256": "7044ec1c643d544a040d9f08a31e132c0c9b90f32ae4d640d25c034727e87f5a"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "09_demonstration_skill",
+  "title_ru": "Демонстрация → проверяемый skill",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "policy.capture_consent",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "desktop.record_authorized_trace",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "tests.replay_in_isolation",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "evidence.independent_verify",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "skills.draft_candidate",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "jobs.propose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/10_windows_task.json", "bytes": 2794, "sha256": "c73dad19432df11bc59083ae1919fdbc240dbb87be29770b68ce3c6f02240ec7"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "10_windows_task",
+  "title_ru": "Действие через UIA",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "policy.check_desktop_profile",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "desktop.observe_uia",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "desktop.perform_registered_action",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "desktop.observe_uia",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "evidence.independent_verify",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/11_browser_acquisition.json", "bytes": 2805, "sha256": "cb457ffac9d2fdefc4b1aecd9540e4c2b0a63605d523ba16eb18c72332d51440"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "11_browser_acquisition",
+  "title_ru": "Browser/API сбор без extension",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "policy.check_source_allowlist",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "source.prefer_official_api",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "browser.approved_dom_read",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "privacy.review_scope",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "library.index_projection",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/12_vscode_handoff.json", "bytes": 2093, "sha256": "64170d115f55155efdadb99322b6b85bc6944e23900fcf29801ec6c2d9ac2b24"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "12_vscode_handoff",
+  "title_ru": "Открыть точную строку в VS Code",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "source.verify_exact_revision",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "code.resolve_symbol_span",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "editor.open_registered_goto",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/13_api_context.json", "bytes": 2832, "sha256": "927359d1170c2409900eb9c6677a61afe2c0d7545b8da46f2218140e2ec5aca7"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "13_api_context",
+  "title_ru": "Передать разрешённый контекст API",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "context.select_evidence",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "privacy.sanitized_projection",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "policy.check_api_budget_consent",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "api.readonly_tool_session",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "evidence.validate_source_refs",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/14_implementation_request.json", "bytes": 2856, "sha256": "bf9a4075b184e8252c7e8b0daa3d7bf51665d144ac30a3b24fae92dca73427cd"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "14_implementation_request",
+  "title_ru": "Недостающая возможность → пакет для кодинга",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "library.search_related_attempts",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "source.git_snapshot",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "context.select_evidence",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "skills.propose_effect_contract",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "tests.propose_acceptance",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/15_reconciliation.json", "bytes": 2100, "sha256": "dca8b120dfd387bea48bad2bf59ff0c1e65ca33cb18f932dec20f812d8b17c18"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "15_reconciliation",
+  "title_ru": "Не повторять неизвестный side effect",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "jobs.inspect_stale_run",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "evidence.observe_actual_state",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "policy.decide_reconciliation",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/16_strategy_replay.json", "bytes": 2804, "sha256": "a8d4a598901fca1e44e729c5a7ce150e61c14214c426cf6ca05f03938989c103"} =====
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "16_strategy_replay",
+  "title_ru": "Counterfactual strategy replay",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "policy.approve_frozen_dataset",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "research.register_trial",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "research.replay_alternatives",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "research.cost_and_holdout_check",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "evidence.freeze_results",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}
+
+===== END FILE =====
+
+===== FILE {"path": "workflows/README_RU.md", "bytes": 1440, "sha256": "4bb38894574f08077693a2472d22495e88c73d3a21e8df41681bd56b482b4855"} =====
+# 16 workflow-планов — декларативное R&D
+
+Это собственная schema `occ.rnd.workflow.v1`, НЕ Laya/Jev state/questions и не совместимый native bot request. Планы не подключены к scheduler/executor. Наличие `nodes` не означает реализованных adapters; `ready_for_automatic_execution=false` обязательно.
+
+Некоторые capabilities уже представлены CLI в данном ZIP (полный сбор, verify, text, catalog, chats); другие требуют интеграции с существующим SCE owner или разработки. `schemas/CAPABILITY_CANDIDATES.json` показывает это различие. JSON не должен сам разрешать выполнение.
+
+Для каждого узла production-версия должна назначить отдельный reviewed профиль, точную schema входов/выходов, области записи/сети, budget, таймаут, idempotency и проверяемую postcondition. Generic строка в prototype-плане не является acceptance implementation.
+
+`python tools/validate_workflows.py` проверяет структуру, ссылки на capability IDs, зависимости и запрет live в этих R&D-файлах; это НЕ выполнение workflow.
+
+===== END FILE =====
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 4c308c78f89378d97741b58aa14595c7217db996428b5f15b5b4a101210cb6a9 | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#3:OCC_DESKTOP_RND_2026-10-03/INDEX.json =====
+{
+  "schema": "occ.rnd.index.v1",
+  "date": "2026-10-03",
+  "start": "00_START_HERE_RU.txt",
+  "next_ai_handoff": "AI_HANDOFF_RU.txt",
+  "all_authored_text": "ALL_AUTHORED_CONTEXT.txt",
+  "important_scope": "R&D and tooling; complete user repository snapshots and complete chat history are NOT included.",
+  "sources": 44,
+  "experiments": 48,
+  "workflow_proposals": 16,
+  "capability_candidates": 59,
+  "toolkit_tests_passed": 24,
+  "files": [
+    {
+      "path": "00_START_HERE_RU.txt",
+      "section": "entrypoint",
+      "bytes": 1805
+    },
+    {
+      "path": "AI_HANDOFF_RU.txt",
+      "section": "entrypoint",
+      "bytes": 10944
+    },
+    {
+      "path": "ALL_AUTHORED_CONTEXT.txt",
+      "section": "entrypoint",
+      "bytes": 385480
+    },
+    {
+      "path": "README_RU.md",
+      "section": "entrypoint",
+      "bytes": 4837
+    },
+    {
+      "path": "docs/01_REPO_FINDINGS_RU.md",
+      "section": "docs",
+      "bytes": 5734
+    },
+    {
+      "path": "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+      "section": "docs",
+      "bytes": 6183
+    },
+    {
+      "path": "docs/03_LAYERED_INTELLIGENCE_RU.md",
+      "section": "docs",
+      "bytes": 8360
+    },
+    {
+      "path": "docs/04_LOSSLESS_CONTEXT_RU.md",
+      "section": "docs",
+      "bytes": 6540
+    },
+    {
+      "path": "docs/05_ACCESSIBILITY_RU.md",
+      "section": "docs",
+      "bytes": 5843
+    },
+    {
+      "path": "docs/06_MODEL_AND_STACK_OPTIONS_RU.md",
+      "section": "docs",
+      "bytes": 5345
+    },
+    {
+      "path": "docs/07_QUALIFICATION_RU.md",
+      "section": "docs",
+      "bytes": 5135
+    },
+    {
+      "path": "docs/08_PARALLEL_WEB3_RU.md",
+      "section": "docs",
+      "bytes": 5812
+    },
+    {
+      "path": "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+      "section": "docs",
+      "bytes": 4293
+    },
+    {
+      "path": "docs/10_OPENAI_AND_AUTOMATION_CONTRACTS_RU.md",
+      "section": "docs",
+      "bytes": 3828
+    },
+    {
+      "path": "docs/11_SECURITY_AND_TRUTH_RU.md",
+      "section": "docs",
+      "bytes": 4062
+    },
+    {
+      "path": "docs/12_IMPLEMENTATION_PLAN_RU.md",
+      "section": "docs",
+      "bytes": 4748
+    },
+    {
+      "path": "docs/13_RESEARCH_METHOD_AND_NEXT_SEARCHES_RU.md",
+      "section": "docs",
+      "bytes": 4086
+    },
+    {
+      "path": "evidence/REQUIREMENTS_LEDGER.json",
+      "section": "evidence",
+      "bytes": 2841
+    },
+    {
+      "path": "evidence/STATUS.json",
+      "section": "evidence",
+      "bytes": 1744
+    },
+    {
+      "path": "evidence/TEST_SCOPE_RU.md",
+      "section": "evidence",
+      "bytes": 1272
+    },
+    {
+      "path": "evidence/TOOLKIT_TEST_LOG.txt",
+      "section": "evidence",
+      "bytes": 2777
+    },
+    {
+      "path": "evidence/VERIFIED_COMMAND_CANDIDATES.json",
+      "section": "evidence",
+      "bytes": 4508
+    },
+    {
+      "path": "evidence/VERIFIED_LIMITS.json",
+      "section": "evidence",
+      "bytes": 2061
+    },
+    {
+      "path": "evidence/WORKFLOW_VALIDATION.json",
+      "section": "evidence",
+      "bytes": 102
+    },
+    {
+      "path": "examples/README_RU.md",
+      "section": "examples",
+      "bytes": 1245
+    },
+    {
+      "path": "examples/laya-prediction-request.example.json",
+      "section": "examples",
+      "bytes": 997
+    },
+    {
+      "path": "examples/qualification-profile.example.json",
+      "section": "examples",
+      "bytes": 463
+    },
+    {
+      "path": "examples/qualification-request.example.json",
+      "section": "examples",
+      "bytes": 203
+    },
+    {
+      "path": "history/CURRENT_REQUEST_VERBATIM.txt",
+      "section": "history",
+      "bytes": 3247
+    },
+    {
+      "path": "history/MISSING_ASSETS_RU.md",
+      "section": "history",
+      "bytes": 1403
+    },
+    {
+      "path": "history/RECOVERED_IDEAS.json",
+      "section": "history",
+      "bytes": 6635
+    },
+    {
+      "path": "history/TIMELINE_RU.md",
+      "section": "history",
+      "bytes": 6894
+    },
+    {
+      "path": "research/EXPERIMENTS.json",
+      "section": "research",
+      "bytes": 73796
+    },
+    {
+      "path": "research/EXPERIMENTS_RU.md",
+      "section": "research",
+      "bytes": 24782
+    },
+    {
+      "path": "research/SOURCES.json",
+      "section": "research",
+      "bytes": 16117
+    },
+    {
+      "path": "research/SOURCES.md",
+      "section": "research",
+      "bytes": 8819
+    },
+    {
+      "path": "schemas/CAPABILITY_CANDIDATES.json",
+      "section": "schemas",
+      "bytes": 22762
+    },
+    {
+      "path": "schemas/openai_tools.responses.json",
+      "section": "schemas",
+      "bytes": 2190
+    },
+    {
+      "path": "tests/test_archive_tool.py",
+      "section": "tests",
+      "bytes": 9790
+    },
+    {
+      "path": "tools/README_RU.md",
+      "section": "tools",
+      "bytes": 6658
+    },
+    {
+      "path": "tools/archive_tool.py",
+      "section": "tools",
+      "bytes": 32622
+    },
+    {
+      "path": "tools/desktop_archive.py",
+      "section": "tools",
+      "bytes": 4797
+    },
+    {
+      "path": "tools/validate_workflows.py",
+      "section": "tools",
+      "bytes": 1312
+    },
+    {
+      "path": "tools/verify_package.py",
+      "section": "tools",
+      "bytes": 900
+    },
+    {
+      "path": "windows/Acquire-Repos.ps1",
+      "section": "windows",
+      "bytes": 1713
+    },
+    {
+      "path": "windows/Run-Tests.ps1",
+      "section": "windows",
+      "bytes": 213
+    },
+    {
+      "path": "windows/Start-Desktop.cmd",
+      "section": "windows",
+      "bytes": 74
+    },
+    {
+      "path": "workflows/01_full_repo.json",
+      "section": "workflows",
+      "bytes": 2764
+    },
+    {
+      "path": "workflows/02_local_library.json",
+      "section": "workflows",
+      "bytes": 2432
+    },
+    {
+      "path": "workflows/03_history_import.json",
+      "section": "workflows",
+      "bytes": 2460
+    },
+    {
+      "path": "workflows/04_voice_proposal.json",
+      "section": "workflows",
+      "bytes": 2770
+    },
+    {
+      "path": "workflows/05_repo_review.json",
+      "section": "workflows",
+      "bytes": 2445
+    },
+    {
+      "path": "workflows/06_qualification.json",
+      "section": "workflows",
+      "bytes": 2475
+    },
+    {
+      "path": "workflows/07_paper_campaign.json",
+      "section": "workflows",
+      "bytes": 2839
+    },
+    {
+      "path": "workflows/08_latest_research.json",
+      "section": "workflows",
+      "bytes": 2835
+    },
+    {
+      "path": "workflows/09_demonstration_skill.json",
+      "section": "workflows",
+      "bytes": 2825
+    },
+    {
+      "path": "workflows/10_windows_task.json",
+      "section": "workflows",
+      "bytes": 2794
+    },
+    {
+      "path": "workflows/11_browser_acquisition.json",
+      "section": "workflows",
+      "bytes": 2805
+    },
+    {
+      "path": "workflows/12_vscode_handoff.json",
+      "section": "workflows",
+      "bytes": 2093
+    },
+    {
+      "path": "workflows/13_api_context.json",
+      "section": "workflows",
+      "bytes": 2832
+    },
+    {
+      "path": "workflows/14_implementation_request.json",
+      "section": "workflows",
+      "bytes": 2856
+    },
+    {
+      "path": "workflows/15_reconciliation.json",
+      "section": "workflows",
+      "bytes": 2100
+    },
+    {
+      "path": "workflows/16_strategy_replay.json",
+      "section": "workflows",
+      "bytes": 2804
+    },
+    {
+      "path": "workflows/README_RU.md",
+      "section": "workflows",
+      "bytes": 1440
+    }
+  ]
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 39b869dcf600373a2626cc2151261c4fd894182f0735340c74926152b4b681b9 | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#4:OCC_DESKTOP_RND_2026-10-03/PACKAGE_MANIFEST.json =====
+{
+  "schema": "occ.delivery-manifest.v1",
+  "files": [
+    {
+      "path": "00_START_HERE_RU.txt",
+      "bytes": 1805,
+      "sha256": "272218fff42d0b9425cbbcb8401fc1590b76f853f5557a8c8ea9478d117a7700"
+    },
+    {
+      "path": "AI_HANDOFF_RU.txt",
+      "bytes": 10944,
+      "sha256": "be714af5add4caf40d7f925de0c15bdb4b6e8b3d39bb989a31ba7d71c571cd36"
+    },
+    {
+      "path": "ALL_AUTHORED_CONTEXT.txt",
+      "bytes": 385480,
+      "sha256": "f1854688013a294af47e58e2a89a891ea421526a8c24d989b0ac00c61b882b1d"
+    },
+    {
+      "path": "INDEX.json",
+      "bytes": 7412,
+      "sha256": "4c308c78f89378d97741b58aa14595c7217db996428b5f15b5b4a101210cb6a9"
+    },
+    {
+      "path": "README_RU.md",
+      "bytes": 4837,
+      "sha256": "e0aa29cd09cd35da9be75e67256202f3bcee82ad9d27d1a759e31217ec159f1a"
+    },
+    {
+      "path": "docs/01_REPO_FINDINGS_RU.md",
+      "bytes": 5734,
+      "sha256": "1a804c815bd34d88af453e48f4aae63b306793fe04a2befb11b3dab439ea2466"
+    },
+    {
+      "path": "docs/02_DESKTOP_ARCHITECTURE_RU.md",
+      "bytes": 6183,
+      "sha256": "5a0d15468cfadcdf2d6f4bafc3f747058a585dbb0b164a2504b6acfcb38d0cb1"
+    },
+    {
+      "path": "docs/03_LAYERED_INTELLIGENCE_RU.md",
+      "bytes": 8360,
+      "sha256": "56a8e8dce126e3f560f8f72c98aa4aa4e2a395e7f37599be3d07946e0b7eb6dd"
+    },
+    {
+      "path": "docs/04_LOSSLESS_CONTEXT_RU.md",
+      "bytes": 6540,
+      "sha256": "c70467144e0cf72e0a9c942a736f56ebef05a486f5f73072d38073b43811dea2"
+    },
+    {
+      "path": "docs/05_ACCESSIBILITY_RU.md",
+      "bytes": 5843,
+      "sha256": "bbbadc393737f98d0dd8cd00668785e68660210323717805ba559e5296e46418"
+    },
+    {
+      "path": "docs/06_MODEL_AND_STACK_OPTIONS_RU.md",
+      "bytes": 5345,
+      "sha256": "d16f0b679b48beeabd6a4c6381ccc372669e0d02124e4409db7d6440d63bea81"
+    },
+    {
+      "path": "docs/07_QUALIFICATION_RU.md",
+      "bytes": 5135,
+      "sha256": "6336e26f03ed759974c2bc056c9fa1b9bfc090721e106d00352bb1eabf3d1aaf"
+    },
+    {
+      "path": "docs/08_PARALLEL_WEB3_RU.md",
+      "bytes": 5812,
+      "sha256": "493496a8347d7d4d95c0f86a0462cd016239385d63d0dfb4d4ba1d832e6b00e1"
+    },
+    {
+      "path": "docs/09_LIBRARY_AND_COMPETITION_RU.md",
+      "bytes": 4293,
+      "sha256": "9b201d985f41bbfa11576bd5821e1bcebf721a400b8db750d719dd45181315e1"
+    },
+    {
+      "path": "docs/10_OPENAI_AND_AUTOMATION_CONTRACTS_RU.md",
+      "bytes": 3828,
+      "sha256": "3bb54f01515c38a1ab16a2b4ffd1a0328ebafb56341927d8af7d802e73c12426"
+    },
+    {
+      "path": "docs/11_SECURITY_AND_TRUTH_RU.md",
+      "bytes": 4062,
+      "sha256": "3f7946ca348725477bf0a42318d9ef9277c344dd8ac0f18b2e9f55efaff64705"
+    },
+    {
+      "path": "docs/12_IMPLEMENTATION_PLAN_RU.md",
+      "bytes": 4748,
+      "sha256": "5aae2a32a324066a3de87692cd32b55d1cb4208bbb8c1b90f243261241431c93"
+    },
+    {
+      "path": "docs/13_RESEARCH_METHOD_AND_NEXT_SEARCHES_RU.md",
+      "bytes": 4086,
+      "sha256": "9e16a420bf033f3aaf787c332356fb9398ab77369d68d7b8fd7b30d4fabc13a9"
+    },
+    {
+      "path": "evidence/REQUIREMENTS_LEDGER.json",
+      "bytes": 2841,
+      "sha256": "b6d1eeb9d53415a0b45a66b32ab0a08430e4fc7f3ab96a0d96097a9f39421256"
+    },
+    {
+      "path": "evidence/STATUS.json",
+      "bytes": 1744,
+      "sha256": "b8550db196b3984bd96612a9ebb24583a26e3efee6a43bb45a2b8a96546ca4ad"
+    },
+    {
+      "path": "evidence/TEST_SCOPE_RU.md",
+      "bytes": 1272,
+      "sha256": "2ed36dbe7e6ac302a5ca553db3272dedcba49a3200cbb8f225cbc814002b0b90"
+    },
+    {
+      "path": "evidence/TOOLKIT_TEST_LOG.txt",
+      "bytes": 2777,
+      "sha256": "9ca06ebc29a63995e3ba143361b32ad3824f4ff15670a336eecb81ca0d6b7ad8"
+    },
+    {
+      "path": "evidence/VERIFIED_COMMAND_CANDIDATES.json",
+      "bytes": 4508,
+      "sha256": "aa21f759020288f84a5a18fc38c62d2af047c51bc5a9b7b9ea3ae642ce3e412e"
+    },
+    {
+      "path": "evidence/VERIFIED_LIMITS.json",
+      "bytes": 2061,
+      "sha256": "a9c326ac33bfe1cf85392d2d211db84dc0ff74504037aa89b8f13abc7e45aa75"
+    },
+    {
+      "path": "evidence/WORKFLOW_VALIDATION.json",
+      "bytes": 102,
+      "sha256": "cc1db4703f15df2418d125bf519b49d6806f942cad24a6a08801be87d31cffe2"
+    },
+    {
+      "path": "examples/README_RU.md",
+      "bytes": 1245,
+      "sha256": "4b72e44e0b720a3498445aca3b8df64b8f429344cd20967750dd64453e8c36af"
+    },
+    {
+      "path": "examples/laya-prediction-request.example.json",
+      "bytes": 997,
+      "sha256": "9089ae82433d7432136a847d652610319039a0530d60a0ac307ef8c2344098c7"
+    },
+    {
+      "path": "examples/qualification-profile.example.json",
+      "bytes": 463,
+      "sha256": "ccf549601d1b2fede30eef4d4fe7eb6ef4200fbfa973213ac353ce0e15db34eb"
+    },
+    {
+      "path": "examples/qualification-request.example.json",
+      "bytes": 203,
+      "sha256": "27ee609b90d05c53ff48abe36b0acbe94b1a560b3ffbf890ee487885509c29bd"
+    },
+    {
+      "path": "history/CURRENT_REQUEST_VERBATIM.txt",
+      "bytes": 3247,
+      "sha256": "23095c6b42532c5ce46261fe836865dd3265eb32973ae3e590eea0164a312e21"
+    },
+    {
+      "path": "history/MISSING_ASSETS_RU.md",
+      "bytes": 1403,
+      "sha256": "5a9d7fe0e5ee6374b3b4095ef13ad409645219705ca6ff402fee4a099b5a6a65"
+    },
+    {
+      "path": "history/RECOVERED_IDEAS.json",
+      "bytes": 6635,
+      "sha256": "d9feb14619395efde442b4342de500703dea6ac28e307aedbd104bfe8ff55a08"
+    },
+    {
+      "path": "history/TIMELINE_RU.md",
+      "bytes": 6894,
+      "sha256": "de32defe096b9f1b7f19b3b9230dadb8a009f7487c50e1a8126298ede9fd1d58"
+    },
+    {
+      "path": "research/EXPERIMENTS.json",
+      "bytes": 73796,
+      "sha256": "899b302a2e653e4e951db3aa40494139fe3c86d0b3085a5168abcd2103954442"
+    },
+    {
+      "path": "research/EXPERIMENTS_RU.md",
+      "bytes": 24782,
+      "sha256": "c1107574cb2ab40b2a605938988286d7aa0631c7aae75b8088532b44df002548"
+    },
+    {
+      "path": "research/SOURCES.json",
+      "bytes": 16117,
+      "sha256": "0e7c01636ad1e53f3ff507cbe4a5a2403902309548a25da5fd2746467d93191a"
+    },
+    {
+      "path": "research/SOURCES.md",
+      "bytes": 8819,
+      "sha256": "860edca3a51e51b4d9efea9052785acb4f60b94f7214e450801582e6c2ad14e9"
+    },
+    {
+      "path": "schemas/CAPABILITY_CANDIDATES.json",
+      "bytes": 22762,
+      "sha256": "4a9f24922a4cd519dfbc0f1e4ae0390d0f0ddb97c254c86ef6e4f7e68e59e12b"
+    },
+    {
+      "path": "schemas/openai_tools.responses.json",
+      "bytes": 2190,
+      "sha256": "897c4608fc3b96414847bc4dde1ff4e9563279c2d01db2dfe16004605758a315"
+    },
+    {
+      "path": "tests/test_archive_tool.py",
+      "bytes": 9790,
+      "sha256": "814012d3e64d89815150bbabf1a171742c1a8c39eeb3a9e462710ddea3a53217"
+    },
+    {
+      "path": "tools/README_RU.md",
+      "bytes": 6658,
+      "sha256": "d00ba3132c5902d54840bd074f3d85f155b1e5c269a66a2432c68850e0756c30"
+    },
+    {
+      "path": "tools/archive_tool.py",
+      "bytes": 32622,
+      "sha256": "23cf14675c4f4ddcb82a3f98b7acd31df9777f0331c7587074a133ba3fc95230"
+    },
+    {
+      "path": "tools/desktop_archive.py",
+      "bytes": 4797,
+      "sha256": "3077d14ab7cc544a5ce6c37426daf8ff903ce5d40747f43d722b7438c37c4fae"
+    },
+    {
+      "path": "tools/validate_workflows.py",
+      "bytes": 1312,
+      "sha256": "445645ec259cc16139348e4fa4529012f313b55672da38138c977138a03cd060"
+    },
+    {
+      "path": "tools/verify_package.py",
+      "bytes": 900,
+      "sha256": "8cabfc88887e47befbf0fb8ae427a1b29c7a4d5e009da0a143d5de7cbc178340"
+    },
+    {
+      "path": "windows/Acquire-Repos.ps1",
+      "bytes": 1713,
+      "sha256": "4e9adbcba5ec9ef24c8bef9ee65550eedad20b33917bafb2092082a41fbbb4e8"
+    },
+    {
+      "path": "windows/Run-Tests.ps1",
+      "bytes": 213,
+      "sha256": "116d498c6fee76bcfa69b1c7e8c6b054f095503b35134c14818a42b449e6e9a8"
+    },
+    {
+      "path": "windows/Start-Desktop.cmd",
+      "bytes": 74,
+      "sha256": "5dca1d23f3a5083db22eaf4cb4f032a1115289d239547c4236d20e65ea856564"
+    },
+    {
+      "path": "workflows/01_full_repo.json",
+      "bytes": 2764,
+      "sha256": "d543ae6b5c88537c666c0ebefc28115dbba833fbd7e93d59ef1cfd8114c133c8"
+    },
+    {
+      "path": "workflows/02_local_library.json",
+      "bytes": 2432,
+      "sha256": "6b2a7afd655e26c7ac4a3a707a8e682ff4070312bdbc270025e96aaf3921a528"
+    },
+    {
+      "path": "workflows/03_history_import.json",
+      "bytes": 2460,
+      "sha256": "9f4833d1c6e89b57f08417db0caa7a8ee9d2b206b68b2fd58a2fbf7291fe3c78"
+    },
+    {
+      "path": "workflows/04_voice_proposal.json",
+      "bytes": 2770,
+      "sha256": "f1f1dcc2bdc0b883361e7fb7996c3d06411d358d6721457f83155be2b705e912"
+    },
+    {
+      "path": "workflows/05_repo_review.json",
+      "bytes": 2445,
+      "sha256": "2198bfc53ac35e514b277430d21a25a69c671c713475143ca77d1eadf287a60f"
+    },
+    {
+      "path": "workflows/06_qualification.json",
+      "bytes": 2475,
+      "sha256": "c143386ee10b29aabefae92d95b23a6c80713dafdae3b1b77e6c64224639b648"
+    },
+    {
+      "path": "workflows/07_paper_campaign.json",
+      "bytes": 2839,
+      "sha256": "5c8339b7b97758e6b76de3f93c4eccf245a7cd675ad99de1bbafa5914d5cfab3"
+    },
+    {
+      "path": "workflows/08_latest_research.json",
+      "bytes": 2835,
+      "sha256": "76c06c2527a02aa38432222ad96ab7b78ad76cbd06357e343d78b615ead1cfd7"
+    },
+    {
+      "path": "workflows/09_demonstration_skill.json",
+      "bytes": 2825,
+      "sha256": "7044ec1c643d544a040d9f08a31e132c0c9b90f32ae4d640d25c034727e87f5a"
+    },
+    {
+      "path": "workflows/10_windows_task.json",
+      "bytes": 2794,
+      "sha256": "c73dad19432df11bc59083ae1919fdbc240dbb87be29770b68ce3c6f02240ec7"
+    },
+    {
+      "path": "workflows/11_browser_acquisition.json",
+      "bytes": 2805,
+      "sha256": "cb457ffac9d2fdefc4b1aecd9540e4c2b0a63605d523ba16eb18c72332d51440"
+    },
+    {
+      "path": "workflows/12_vscode_handoff.json",
+      "bytes": 2093,
+      "sha256": "64170d115f55155efdadb99322b6b85bc6944e23900fcf29801ec6c2d9ac2b24"
+    },
+    {
+      "path": "workflows/13_api_context.json",
+      "bytes": 2832,
+      "sha256": "927359d1170c2409900eb9c6677a61afe2c0d7545b8da46f2218140e2ec5aca7"
+    },
+    {
+      "path": "workflows/14_implementation_request.json",
+      "bytes": 2856,
+      "sha256": "bf9a4075b184e8252c7e8b0daa3d7bf51665d144ac30a3b24fae92dca73427cd"
+    },
+    {
+      "path": "workflows/15_reconciliation.json",
+      "bytes": 2100,
+      "sha256": "dca8b120dfd387bea48bad2bf59ff0c1e65ca33cb18f932dec20f812d8b17c18"
+    },
+    {
+      "path": "workflows/16_strategy_replay.json",
+      "bytes": 2804,
+      "sha256": "a8d4a598901fca1e44e729c5a7ce150e61c14214c426cf6ca05f03938989c103"
+    },
+    {
+      "path": "workflows/README_RU.md",
+      "bytes": 1440,
+      "sha256": "4bb38894574f08077693a2472d22495e88c73d3a21e8df41681bd56b482b4855"
+    }
+  ],
+  "note": "Integrity inventory, not a digital signature; this manifest excludes itself."
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e0aa29cd09cd35da9be75e67256202f3bcee82ad9d27d1a759e31217ec159f1a | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#5:OCC_DESKTOP_RND_2026-10-03/README_RU.md =====
+# OCC Desktop R&D — 3 октября 2026
+
+**Начать с `00_START_HERE_RU.txt`, затем `AI_HANDOFF_RU.txt`.**
+
+Это R&D-пакет для `BobIvans/scaling-chrome-extensions` и связанного `studious-pancake`: проверенные выборочные факты кода, восстановленная история идей, архитектура Windows-библиотеки, экспериментальные задания, JSON-контракты и работающий локальный архиватор.
+
+## Что внутри действительно сделано
+
+В `tools/archive_tool.py` реализованы сбор папки без потолка числа файлов, чтение закреплённого Git-дерева без импорта его кода, хранение исходных байтов, инвентарь всех обнаруженных путей, SHA-256, потоковый экспорт ВСЕГО UTF-8-текста, фрагменты без отбрасывания хвоста, проверка восстановления текста, статический каталог Python/argparse/package.json и импорт всех mapping-веток ChatGPT JSON. Есть тесты и небольшой desktop front-end на Tk.
+
+**Это не полный исходный снимок двух репозиториев и не полный экспорт твоих прошлых чатов.** Через подключённый GitHub прочитаны закреплённые фрагменты и документы; полное скачивание в среду не удалось. Вложения прошлых чатов не были доступны как файлы. Сохранённые в `history` записи — явно помеченные восстановленные summaries, не придуманные дословные сообщения. На ПК полный Git-снимок собирает `windows/Acquire-Repos.ps1`.
+
+## Что не выполнено
+
+Нет commit/PR/merge. Нет запуска твоего бота, реального paper-campaign, торгов, кошелька или подписанта. Нет теста на Dell/Windows, микрофона, NVDA, Laya/Jev, Hugging Face моделей или OpenAI API. JSON workflow-планы не исполняются автоматически. Успешные тесты относятся только к приложенному архиватору и синтетическим фикстурам Linux.
+
+## Приватность прежде передачи в AI
+
+Архиватор **сохраняет оригиналы локально**, включая потенциально чувствительные обычные файлы выбранной папки. Полнота локального архива не означает разрешение отправить его в облако. `possible_secret_name` — слабая подсказка, НЕ полноценный поиск секретов. Не выбирай весь диск и не загружай получившийся raw-архив без проверки. Следующий production-слой должен делать отдельную sanitized-проекцию с журналом исключений и явным разрешением на передачу.
+
+## Чтение по задачам
+
+`docs/01_REPO_FINDINGS_RU.md` — что уже существует и какие лимиты действительно найдены.
+
+`docs/02_DESKTOP_ARCHITECTURE_RU.md` — минимальная desktop-архитектура без обязательного Chrome.
+
+`docs/03_LAYERED_INTELLIGENCE_RU.md` и `research/EXPERIMENTS.json` — как превращать цель в проверяемую автоматизацию, а не только в ответ модели.
+
+`docs/04_LOSSLESS_CONTEXT_RU.md` и `tools/README_RU.md` — оригиналы, пути, полный текст, контроль пропусков и команды запуска.
+
+`docs/07_QUALIFICATION_RU.md` — существующие команды бота; `docs/08_PARALLEL_WEB3_RU.md` — безопасное масштабирование исследований.
+
+`docs/12_IMPLEMENTATION_PLAN_RU.md` — интеграция в существующих владельцев данных SCE, а не создание параллельной несовместимой системы.
+
+`research/SOURCES.md` — официальные источники, проверенные 2026-10-03; `evidence/STATUS.json` — пределы фактически выполненной проверки.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 1a804c815bd34d88af453e48f4aae63b306793fe04a2befb11b3dab439ea2466 | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#6:OCC_DESKTOP_RND_2026-10-03/docs/01_REPO_FINDINGS_RU.md =====
+# Проверенное состояние и ограничения
+
+Дата чтения: 2026-10-03. Состояние может измениться после закреплённых SHA. Источники [G01–G10] раскрыты в `research/SOURCES.md`. Это выборочная проверка фактических функций, а не объявление полного аудита каждого файла.
+
+## Закреплённые состояния
+
+SCE: `da6abf4c006e4e7d26fe45ef30fa9d07a356f396`, merge #37, 2026-10-03T15:58:25Z. Studious: `67d3852cbc4cb1b24582df45adbf6a42d4da2af0`, merge #562, 2026-10-02T23:07:26Z. Эти SHA занесены в примеры; новые ветки требуют новой проверки, а не молчаливого обновления профиля.
+
+## Найденные ограничения — не все одного типа
+
+| Место | Фактическое поведение | Что делать |
+|---|---|---|
+| `automation_core.sync` [G03] | По умолчанию 100 файлов, валидатор не допускает больше 1 000; бюджет обхода 10 000 entries | Полный manifest отдельно от размера рабочей страницы; продолжение по durable cursor |
+| `automation_core.sync` [G03] | Скрытые файлы/директории и многие suffix не включаются; `node_modules` пропускается | Все пути перечислять; политику включения отражать явными статусами, не скрытыми фильтрами |
+| `automation_core.context_pack` [G03] | Только 1–10 уникальных IDs; default 100 000 bytes, максимум 1 000 000 | Создать новую потоковую multi-part проекцию; не менять контракт старого single-pack молча |
+| `context_review.create_session` [G04] | Запрашивает `context_pack(..., max_bytes=48_000)` | Сессия должна ссылаться на bundle manifest и точные части, а не держать весь корпус в одном JSON |
+| `repo_context.scan_page` [G05] | `limit=20`, разрешены 1–100 записей на страницу | **Это НЕ максимум 20 документов во всей библиотеке.** Проверить цикл до завершения cursor |
+| `repo_context` [G05] | `MAX_FILE=8 MiB`, `MAX_TREE=32 MiB`; Git helper собирает stdout до проверки лимита | Потоковый `ls-tree`/`cat-file`, raw storage, отдельные лимиты parser/model с явным PARTIAL |
+| `repo_context.source_path` [G05] | Ограничения UTF-8, длины и допустимых символов | Хранить сырой путь как bytes/base64 и безопасный display-path; не применять исходный путь при распаковке |
+| `automation_core.validate_policy` [G03] | Один writer и нулевой money budget | Сохранить до введения доказанных leases/изоляции/ресурсных пулов; это не произвольный лимит документов |
+| `paper_campaign.plan.json` [G06] | `BLOCKED_NOT_STARTED`, `native_adapter_compatible=false` | Не запускать как Laya-request или готовую команду; сначала реализовать admission/сбор evidence |
+
+## Уже есть полезный фундамент
+
+`repo_context` уже привязывает записи к Git-объектам, хранит entries/chunks, состояние обхода и byte offsets. `automation_core` уже имеет SQLite owner, версии источников, задачи, lease, checkpoint и события. `context_review` отличает review-утверждение от подтверждённого результата. Это нужно расширять, а не обходить вторым production-хранилищем. [G03–G05]
+
+`agent-bridge/QUALIFICATION_ADAPTER_RU.md` описывает прямой вызов CLI без Chrome. Следовательно, переносить надо транспорт/UI и политику capabilities, а не переписывать существующую qualification-логику. [G07]
+
+## Статические сигналы и настоящие дефекты
+
+`except: pass`, длинная функция, TODO или одинаковые имена не доказывают ошибку. Для каждого сигнала нужен путь, SHA, line range, ожидаемое поведение, минимальный тест, фактический результат и версия среды. Отдельно классифицировать `CODE_DEFECT`, `MISSING_EVIDENCE`, `ENVIRONMENT_BLOCKER`, `PROPOSAL_ONLY`. Старый PR или красивый markdown не меняют status автоматически.
+
+## Чего эта проверка не установила
+
+Полное число файлов/функций, точное покрытие всей кодовой базы, статус всех PR/CI, содержимое недоступных старых ZIP, работоспособность на твоём Dell и прибыльность бота здесь не установлены. Инструмент полного локального сбора приложен именно для закрытия этих пробелов без выдумывания totals.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5a0d15468cfadcdf2d6f4bafc3f747058a585dbb0b164a2504b6acfcb38d0cb1 | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#7:OCC_DESKTOP_RND_2026-10-03/docs/02_DESKTOP_ARCHITECTURE_RU.md =====
+# Windows-приложение вместо обязательного Chrome extension
+
+## Предлагаемое решение
+
+Один desktop-shell, существующее Python-ядро SCE и один canonical store. Chrome-extension сохраняется только как необязательный способ захвата отдельных страниц; отсутствие extension не должно блокировать импорт файлов, Git, библиотеку, API, terminal jobs или qualification.
+
+Первый вертикальный срез: выбрать репозиторий → получить immutable snapshot → построить пути/поиск/каталог → сформировать полный context export → открыть конкретный символ в VS Code → запустить одну заранее проверенную qualification-команду → вернуть receipt в библиотеку. Голос подключается к этому же typed API, не образует второй механизм исполнения.
+
+## Границы модулей
+
+| Модуль | Ответственность | Не имеет права |
+|---|---|---|
+| Desktop UI | Файлы, поиск, задачи, previews, согласия, состояние очереди | Самостоятельно подписывать транзакции/менять полномочия |
+| Ingestion adapters | Файлы, ChatGPT/Telegram export, Git/API, аудио | Исполнять инструкции из прочитанного документа |
+| Canonical store | Original blobs, versions, paths, refs, ACL/privacy, journal | Считать summary заменой оригинала |
+| Context compiler | Выбор доказательств, частей, gaps, token accounting | Прятать неотправленные части под словом «полный» |
+| Capability registry | Реальные команды, эффекты, pre/postconditions, owners | Автоматически разрешать всё найденное AST-сканером |
+| Planner/router | Предложение typed intent/плана | Определять свой executable, cwd, signer, бюджет |
+| Executor | Только одобренные profiles; leases, cancellation, receipts | Считать текст LLM авторитетной политикой |
+| Independent verifier | Проверка реального изменения состояния | Подменять результат повторным мнением той же модели |
+
+Это проект архитектуры, а не утверждение, что перечисленные слои уже реализованы в репозитории.
+
+## UI, ориентированный на реальные операции
+
+Левая панель: Sources, Library, Repositories, Runs, Skills, Research, Privacy. Центральная область: список без потолка документов, виртуализированные строки и пагинация. Правая: preview исходника, SHA/время/путь, origin, выбранные spans, текущие права. Внизу: job log с понятными стадиями и аварийной остановкой.
+
+Library: папки, теги, backlinks, сохранённые queries, коллекции и attachments. Repository: дерево всех путей, функции/imports, snapshot diff, «почему этот файл включён», «что ещё не проверено». Runs: proposed/running/blocked/failed/verified; не один зелёный флаг на всё. Skills: декларативные входы/выходы/права/тесты/версии. Research: гипотеза, baseline, датасет, измерения, отрицательный результат и следующий запрос данных.
+
+## Выбор оболочки
+
+На старте сохранить Python backend и сделать тонкую Windows UI. Приложенный Tk front-end — только запускаемый архивный прототип, не конечная рекомендация дизайна и не сертифицированная accessibility-среда. Для production отдельно сравнить native .NET UI + UIA adapter и доступный webview-shell; измерять установку, клавиатуру, screen-reader, idle RAM, crash recovery, signing/update story.
+
+Не встраивать целый IDE в первом срезе. Внешний VS Code можно связать с evidence path/line через его CLI; это уменьшает объём собственной разработки. [S29] Предлагаемые действия: `open_file`, `open_diff`, `reveal_repo`, `show_run_log`; каждый с фиксированным adapter и проверенным root.
+
+## Терминал — это две разные функции
+
+Интерактивный терминал пользователя можно показать отдельно, с явным индикатором что ввод делает человек. Автоматические jobs должны идти через command registry, а не через строку терминала. Команда имеет id, executable, argv-template, cwd, переменные окружения, таймаут, сеть, область записи, ожидаемый exit/domain verdict и output contract.
+
+Git worktree отделяет изменения исходников, но не защищает ПК от исполняемого кода. Неизвестные тесты/пакеты требуют отдельной sandbox/VM/container-среды с минимальными правами; её наличие надо доказать на конкретном Windows edition и окружении.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 56a8e8dce126e3f560f8f72c98aa4aa4e2a395e7f37599be3d07946e0b7eb6dd | FIRST SOURCE original_archives/OCC_DESKTOP_RND_2026-10-03.zip!#8:OCC_DESKTOP_RND_2026-10-03/docs/03_LAYERED_INTELLIGENCE_RU.md =====
+# Как программировать layered intelligence для автоматизации
+
+Ниже — наш предлагаемый проект. «System 1», «System 2» и «слои интеллекта» обозначают инженерные роли; это не обещание AGI, безошибочного агента или выполнения любой задачи.
+
+## Что изменилось в доступных инструментах
+
+Jev описан разработчиком как модель структурированных решений; пример LangChain показывает её внутри отдельного harness. Объявление датировано 15 сентября 2026, пример — 17 сентября. Практический вывод: быстрый выбор следующего действия не заменяет инструменты, durable state и проверки результата. [S01, S02]
+
+Laya — локальный кандидат для той же узкой роли. Multilingual-вариант по умолчанию ограничивает вход 1 024 токенами; для большего входа явно настраивается до 8 192. Карточка предупреждает о слабом zero-shot typed-decisions, необходимости калибровки и бесполезном `action.act_probability`. Поэтому это advisory-router, не механизм выдачи прав. GPU latency разработчика не является измерением на Dell. [S03]
+
+## Рабочая последовательность
+
+1. **Observation:** получаем реальный файл/API/UIA/DOM state и provenance, а не только пересказ пользователя.
+2. **Input normalization:** финализируем ASR, сохраняем оригинал и альтернативы, разрешаем опечатки имён из локального registry.
+3. **Deterministic fast path:** точные команды и уже зарегистрированные навыки обрабатываются без LLM.
+4. **Typed routing:** небольшой классификатор выбирает семейство задачи, missing-data category и необходимость эскалации. Его ответ остаётся предположением.
+5. **Context compilation:** для выбранного семейства собираются актуальные источники, версии, предыдущие неудачные попытки и ограничения.
+6. **Planning:** LLM составляет DAG из доступных capabilities. Неизвестный capability становится proposal на разработку, не придуманной командой.
+7. **Admission:** JSON Schema + эффектные типы + policy + права на источник + budget + exact SHA + risk проверяются обычным кодом.
+8. **Execution:** API/CLI/UIA/DOM adapter выполняет короткий шаг и возвращает наблюдаемое состояние.
+9. **Verification:** отдельный oracle проверяет postcondition. Exit 0 или текст «готово» не достаточны для всех задач.
+10. **Learning:** trace превращается в пример для offline-обучения/нового навыка после независимого review и holdout-теста.
+
+Слой добавляется только когда улучшает измеряемую задачу. Не нужно запускать десять моделей на каждую короткую команду.
+
+## Типизированные эффекты вместо «модель уверена

@@ -1,0 +1,43 @@
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-26",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Дай AI недостающий интерфейс",
+  "parallel_mode": "SCOPED_CONTEXT_RESPONSE",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "exact definition search",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "static references and tests",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "history for active revision",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "Requested symbol identity and source revision match",
+  "materialization_contract_ru": "Scoped response packet; никакого произвольного shell от модели",
+  "failure_injection_ru": "Запрос от модели просит файл за allowed root",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}

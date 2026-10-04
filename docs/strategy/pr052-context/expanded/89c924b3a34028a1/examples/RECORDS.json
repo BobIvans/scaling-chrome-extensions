@@ -1,0 +1,218 @@
+{
+  "note": "Synthetic illustrative records. Not product/device evidence. Node/edge arrays contain references to canonical node records. This minimal schema is a proposed DTO baseline; semantic validity needs application checks.",
+  "records": [
+    {
+      "kind": "operation_intent",
+      "record": {
+        "operation_id": "fixture:operation_id",
+        "intent_revision": 1,
+        "kind": "fixture:kind",
+        "target_identity": "fixture:target_identity",
+        "input_digest": "fixture:input_digest",
+        "policy_digest": "fixture:policy_digest",
+        "idempotency_key": "fixture:idempotency_key",
+        "state": "fixture:state",
+        "record_revision": 1,
+        "lease_epoch": 1,
+        "evidence_refs": []
+      }
+    },
+    {
+      "kind": "verification_receipt",
+      "record": {
+        "receipt_id": "fixture:receipt_id",
+        "repository_id": "fixture:repository_id",
+        "source_commit": "fixture:source_commit",
+        "source_tree": "fixture:source_tree",
+        "overlay_digest": "fixture:overlay_digest",
+        "verifier_version": "fixture:verifier_version",
+        "template_binding": "fixture:template_binding",
+        "environment_digest": "fixture:environment_digest",
+        "fixture_digest": "fixture:fixture_digest",
+        "criteria_ids": [],
+        "artifact_refs": [],
+        "result": "fixture:result"
+      }
+    },
+    {
+      "kind": "merge_observation",
+      "record": {
+        "observation_id": "fixture:observation_id",
+        "repository_id": "fixture:repository_id",
+        "target_ref": "fixture:target_ref",
+        "origin_kind": "fixture:origin_kind",
+        "pr_id": "fixture:pr_id",
+        "head_commit": "fixture:head_commit",
+        "base_commit": "fixture:base_commit",
+        "result_commit": "fixture:result_commit",
+        "result_tree": "fixture:result_tree",
+        "mapping_evidence_refs": [],
+        "observation_revision": 1,
+        "observed_at_utc": "fixture:observed_at_utc",
+        "state": "fixture:state"
+      }
+    },
+    {
+      "kind": "release_binding",
+      "record": {
+        "binding_id": "fixture:binding_id",
+        "repository_id": "fixture:repository_id",
+        "resolved_tag_commit": "fixture:resolved_tag_commit",
+        "source_tree": "fixture:source_tree",
+        "asset_id": "fixture:asset_id",
+        "asset_sha256": "fixture:asset_sha256",
+        "build_manifest_digest": "fixture:build_manifest_digest",
+        "toolchain_digest": "fixture:toolchain_digest",
+        "dependency_lock_digest": "fixture:dependency_lock_digest",
+        "provenance_refs": [],
+        "reproducibility_state": "fixture:reproducibility_state",
+        "verification_refs": [],
+        "target_profile": "fixture:target_profile"
+      }
+    },
+    {
+      "kind": "installed_receipt",
+      "record": {
+        "receipt_id": "fixture:receipt_id",
+        "operation_id": "fixture:operation_id",
+        "device_id": "fixture:device_id",
+        "installation_id": "fixture:installation_id",
+        "os_build": "fixture:os_build",
+        "active_asset_sha256": "fixture:active_asset_sha256",
+        "source_commit": "fixture:source_commit",
+        "data_schema_version": 1,
+        "host_version": "fixture:host_version",
+        "adapter_version": "fixture:adapter_version",
+        "observed_process_ref": "fixture:observed_process_ref",
+        "previous_asset_sha256": "fixture:previous_asset_sha256",
+        "canary_refs": [],
+        "rollback_plan_ref": "fixture:rollback_plan_ref",
+        "state": "OBSERVED_ONLY_NOT_QUALIFIED"
+      }
+    },
+    {
+      "kind": "schedule_spec",
+      "record": {
+        "schedule_id": "fixture:schedule_id",
+        "revision": 1,
+        "timezone": "Europe/Riga",
+        "local_trigger": "daily@03:30",
+        "gap_policy": "SKIP",
+        "fold_policy": "FIRST",
+        "catch_up": "LATEST",
+        "catch_up_limit": 1,
+        "catch_up_window_seconds": 1,
+        "template_binding": "fixture:template_binding",
+        "scope_digest": "fixture:scope_digest",
+        "policy_digest": "fixture:policy_digest",
+        "budget_account": "fixture:budget_account",
+        "cursor_utc": "2026-10-24T00:00:00Z",
+        "state": "PAUSED_DRAFT"
+      }
+    },
+    {
+      "kind": "lease_receipt",
+      "record": {
+        "lease_id": "fixture:lease_id",
+        "owner_attempt": "fixture:owner_attempt",
+        "epoch": 1,
+        "resource_ids": [],
+        "resource_modes": [],
+        "reservation_id": "fixture:reservation_id",
+        "profile_revision": 1,
+        "expires_at_utc": "fixture:expires_at_utc",
+        "boot_id": "fixture:boot_id",
+        "record_revision": 1,
+        "state": "fixture:state"
+      }
+    },
+    {
+      "kind": "campaign_manifest",
+      "record": {
+        "campaign_id": "fixture:campaign_id",
+        "revision": 1,
+        "goal_ids": [
+          "GOAL5-20"
+        ],
+        "criterion_ids": [],
+        "source_snapshot_refs": [],
+        "input_digest": "fixture:input_digest",
+        "omission_refs": [],
+        "nodes": [
+          "prepare",
+          "verify",
+          "join"
+        ],
+        "edges": [
+          "prepare->verify",
+          "verify->join"
+        ],
+        "join_policy": "ALL_VERIFIED_REQUIRED",
+        "contract_bindings": [],
+        "max_iterations": 3,
+        "max_elapsed_seconds": 86400,
+        "max_transfers": 6,
+        "budget_minor_units": 0,
+        "budget_currency": "EUR",
+        "no_progress_limit": 2,
+        "scope_digest": "fixture:scope_digest"
+      }
+    },
+    {
+      "kind": "checkpoint",
+      "record": {
+        "checkpoint_id": "fixture:checkpoint_id",
+        "campaign_id": "fixture:campaign_id",
+        "node_id": "fixture:node_id",
+        "attempt_id": "fixture:attempt_id",
+        "intent_revision": 1,
+        "input_digest": "fixture:input_digest",
+        "source_commit": "fixture:source_commit",
+        "policy_digest": "fixture:policy_digest",
+        "capability_binding": "fixture:capability_binding",
+        "output_refs": [],
+        "effect_intent_refs": [],
+        "lease_epoch": 1,
+        "state": "fixture:state"
+      }
+    },
+    {
+      "kind": "claim",
+      "record": {
+        "claim_id": "fixture:claim_id",
+        "revision": 1,
+        "source_locator": "fixture:source_locator",
+        "source_digest": "fixture:source_digest",
+        "span_ref": "fixture:span_ref",
+        "primary_source_ref": "fixture:primary_source_ref",
+        "lineage_refs": [],
+        "correlation_group_id": "fixture:correlation_group_id",
+        "verification_state": "fixture:verification_state",
+        "observed_at_utc": "fixture:observed_at_utc",
+        "experiment_refs": []
+      }
+    },
+    {
+      "kind": "next_brief",
+      "record": {
+        "brief_id": "fixture:brief_id",
+        "revision": 1,
+        "goal_ids": [],
+        "task_ids": [],
+        "gap_ids": [],
+        "gap_classifications": [],
+        "evidence_delta_digest": "fixture:evidence_delta_digest",
+        "input_refs": [],
+        "rationale": "fixture:rationale",
+        "owner": "fixture:owner",
+        "dependencies": [],
+        "acceptance": [],
+        "recovery": [],
+        "estimated_cost_state": "fixture:estimated_cost_state",
+        "stop_conditions": [],
+        "supersedes": [],
+        "state": "DRAFT_NOT_SENT"
+      }
+    }
+  ]
+}

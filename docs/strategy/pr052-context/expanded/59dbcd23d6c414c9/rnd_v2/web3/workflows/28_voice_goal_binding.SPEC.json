@@ -1,0 +1,50 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF28",
+  "name": "voice_goal_binding",
+  "title_ru": "Голосовая цель→проверяемый Web3 план",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [],
+  "inputs": [
+    "transcript",
+    "explicit_goal",
+    "current_context_manifest"
+  ],
+  "steps": [
+    {
+      "id": "voice_goal_binding.1",
+      "handler": "PROPOSED.voice_goal_binding.1",
+      "instruction": "Preserve transcript span/time and intent revision"
+    },
+    {
+      "id": "voice_goal_binding.2",
+      "handler": "PROPOSED.voice_goal_binding.2",
+      "instruction": "Retrieve cited requirements and repo snapshot; disambiguate observe/test/deploy/live"
+    },
+    {
+      "id": "voice_goal_binding.3",
+      "handler": "PROPOSED.voice_goal_binding.3",
+      "instruction": "Laya selects template or abstains; goal changes create new plan hash"
+    }
+  ],
+  "outputs": [
+    "typed_goal",
+    "qualification_plan_draft"
+  ],
+  "qualification_criteria": [
+    "Uncertain chain/asset/action stays unresolved; model does not self-authorize trading"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,41 @@
+Реализуй один PR в BobIvans/scaling-chrome-extensions по ZIP-004:
+streaming Git inventory через operator CLI, bounded memory и atomic SQLite
+publication. План focused build на 60 минут; estimate не гарантия длительности.
+Сначала прочитай actual AGENTS.md, проверь HEAD и existing owners.
+Архивный da6abf4 — reference, local V4 5574ab7 не считается current checkout.
+
+Сделай:
+1. content-lab/repo_inventory.py: binary Popen reader с отдельным bounded
+   stderr drain, NUL-record parser, staging и CLI. Не import/execute source repo.
+2. repo_context.start_scan(..., *, inventory_budget=None, progress=None):
+   явный opt-in нового пути; None сохраняет legacy explicit 32 MiB cap.
+   Pin HEAD один раз; tree получай от pinned head, не от движущегося HEAD.
+   Snapshot ID/digest, states и схема existing authoritative tables неизменны.
+3. Временный SQLite stage в private directory вне source, с bounded batches (≤256 rows и ≤256 KiB),
+   uniqueness и обратимыми unsupported paths. Это disposable stage, не новый
+   metadata owner. До корректного EOF+exit=0 никаких visible snapshot rows.
+4. Attach/read stage и publish snapshot + все entries в одной transaction
+   existing content.sqlite3; проверяй exact ordinal/count и HEAD до publish.
+   Duplicate valid existing snapshot переиспользуется. Incomplete existing
+   snapshot — explicit CONTEXT_INCOMPLETE, без OR IGNORE и repair-on-read.
+5. CLI использует existing native_adapter.operator_profile для binding
+   namespace/alias/store/policy. Budget — отдельный operator JSON.
+   Proposed command:
+   python -B content-lab/repo_inventory.py --operator-profile /absolute/path/native-profile.json --repository sce --budget /absolute/path/inventory-budget.json
+   stdout: compact receipt JSON. READY означает inventory_ready, не capture COMPLETE.
+6. Добавь focused runtime tests и cold/warm large-tree receipt. Сверь сохранённые
+   contracts PR-001/002 и сообщение параллельного PR-003. Сохрани compatibility:
+   inventory -> persisted scan pages -> manifest -> captured payload export.
+
+Оставь в этом diff legacy Native start bounded; не увеличивай timeout и не
+добавляй worker, scheduler, новые Native endpoints, JS/TS resolver или ZIP exporter.
+Большой Native/Core job и index_matches_head stream — обязательные follow-ups
+для whole LAYA4-003; их отсутствие отражай в implementation receipt.
+
+Не copy archived repo в actual checkout. Переноси contracts/fixtures как tests
+и реализуй по actual owners. Fixture oracle проверяет test data, не служит
+готовым subprocess/staging adapter. Run application checks в actual repo.
+Заполни receipts/IMPLEMENTATION_RESULT_TEMPLATE.json: SHA, diff, test results,
+large resource observations, 16 cases, outstanding follow-ups. Не закрывай
+LAYA4-003 или остальные 160 tasks одним часовым срезом. Prepare PR description
+из PR_DESCRIPTION_RU.md с фактическими evidence; публикация здесь не выполнена.

@@ -1,0 +1,110 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposed:capability_binding:1",
+  "title": "Proposed capability_binding v1",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "enum": [
+        1
+      ]
+    },
+    "capability_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "capability_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registered_adapter_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "registered_entrypoint_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "installed_build_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "input_schema_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "output_schema_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "effects": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "READ_ONLY",
+          "LOCAL_WRITE",
+          "REMOTE_SEND",
+          "MONEY_MOVING"
+        ]
+      },
+      "minItems": 1
+    },
+    "resource_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verifier_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "qualification_state": {
+      "type": "string",
+      "enum": [
+        "PLANNED",
+        "UNKNOWN",
+        "QUALIFIED",
+        "STALE"
+      ]
+    },
+    "grant_revision": {
+      "type": "string",
+      "minLength": 1
+    },
+    "credential_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "enabled": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema_version",
+    "capability_id",
+    "capability_version",
+    "registered_adapter_id",
+    "registered_entrypoint_id",
+    "adapter_digest",
+    "installed_build_digest",
+    "input_schema_digest",
+    "output_schema_digest",
+    "effects",
+    "resource_policy_ref",
+    "verifier_digest",
+    "qualification_state",
+    "grant_revision",
+    "credential_refs",
+    "enabled"
+  ],
+  "additionalProperties": false
+}

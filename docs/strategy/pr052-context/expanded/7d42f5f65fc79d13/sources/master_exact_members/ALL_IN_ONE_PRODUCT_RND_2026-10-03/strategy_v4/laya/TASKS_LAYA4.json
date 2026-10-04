@@ -1,0 +1,1794 @@
+{
+  "schema": "proposed.laya-context-strategy-tasks.v4",
+  "language": "ru",
+  "created_date": "2026-10-04",
+  "task_count": 28,
+  "status": "STRATEGY_ADDENDUM",
+  "implementation_status_policy": {
+    "IMPLEMENTED_EXISTING": "Source-inspected code exists at pinned commit; not a new runtime/device qualification claim.",
+    "PLANNED": "New task or extension; acceptance and thresholds are proposed, not achieved."
+  },
+  "source_baseline": {
+    "repository": "BobIvans/scaling-chrome-extensions",
+    "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+    "checkout_state_observed": "clean",
+    "source_inspection_only": true,
+    "tests_run_by_this_strategy_contribution": false,
+    "provider_actions_performed": false,
+    "repository_mutations_performed": false,
+    "publication_state": "LOCAL_UNPUBLISHED",
+    "overall_v4_implementation_status_ref": "implementation/STATUS.json",
+    "scope_note": "Source inspection for this strategy adds no code changes; V4 overall contains prior local implementation and repo smoke receipts in implementation/STATUS.json."
+  },
+  "dependency_policy": "dependencies contain LAYA4 tasks only. optional_extensions do not block initial slice. related_v3_tasks preserve recognized cross-version references without rewriting or claiming completion of old cards.",
+  "existing_capabilities": [
+    {
+      "capability_id": "LAYA4-EX-01",
+      "title": "Tracked Git inventory, persisted scan pages, chunks и roundtrip",
+      "implementation_status": "IMPLEMENTED_EXISTING",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E02",
+        "L4-E14"
+      ],
+      "limit": "Полнота inventory отличается от exportability; одна scan page на нынешнее UI действие."
+    },
+    {
+      "capability_id": "LAYA4-EX-02",
+      "title": "Python import graph и SCC",
+      "implementation_status": "IMPLEMENTED_EXISTING",
+      "source_evidence_refs": [
+        "L4-E02"
+      ],
+      "limit": "JS/TS, dynamic/external edges не разрешены; tests по имени являются предложениями."
+    },
+    {
+      "capability_id": "LAYA4-EX-03",
+      "title": "Bounded repo export/review/task/local evidence cycle",
+      "implementation_status": "IMPLEMENTED_EXISTING",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E05",
+        "L4-E06",
+        "L4-E07",
+        "L4-E13"
+      ],
+      "limit": "Ручная передача; local tests verification не доказывает provider delivery/merge/install."
+    },
+    {
+      "capability_id": "LAYA4-EX-04",
+      "title": "Shared SQLite/FTS, versions и current-head namespace search",
+      "implementation_status": "IMPLEMENTED_EXISTING",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E04",
+        "L4-E15",
+        "L4-E16"
+      ],
+      "limit": "Не является готовым единым lifetime catalog/search UI; ingestion support зависит от формата."
+    },
+    {
+      "capability_id": "LAYA4-EX-05",
+      "title": "Локальный intake и Laya/voice proposals",
+      "implementation_status": "IMPLEMENTED_EXISTING",
+      "source_evidence_refs": [
+        "L4-E09",
+        "L4-E10",
+        "L4-E11"
+      ],
+      "limit": "Не installed Laya adapter; intake MAX_SCAN=2000 не заменяет repo inventory."
+    }
+  ],
+  "source_evidence": [
+    {
+      "evidence_id": "L4-E01",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/repo_context.py",
+      "sha256": "03dece47c9b731fbccd08d3661d1a324ba75be6ab51c23877d6fd588d18b842d",
+      "symbols": [
+        "start_scan",
+        "scan_page",
+        "get_snapshot",
+        "verify_roundtrip_db"
+      ],
+      "observation": "Полный tracked HEAD inventory и byte roundtrip для INDEXED blobs; один вызов scan ограничен порцией.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E02",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/repo_source.py",
+      "sha256": "374fa8a24602635cd9f6ca7798db778dcbef7d3e4958eae135979a6a0d38b811",
+      "symbols": [
+        "analyze",
+        "partition",
+        "import_graph",
+        "components"
+      ],
+      "observation": "Python AST/import graph/SCC и byte partitions; JS/TS явно TEXT_ONLY.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E03",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/content_lab.py",
+      "sha256": "ddf3cb22ab841543e46aeb1fb39ecb5fc831d7c3449694b1eb88f886c57aec7b",
+      "symbols": [
+        "_insert_item",
+        "import_chatgpt_export",
+        "apply_library_record"
+      ],
+      "observation": "Общие items/FTS, версии выбранных записей и ChatGPT export, provenance и tombstones.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E04",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/automation_core.py",
+      "sha256": "1f2409de8892c23d78322fc096f3c56f8b48aef56ccc259cd294a02b6c27f6da",
+      "symbols": [
+        "connection",
+        "search",
+        "context_pack",
+        "Core"
+      ],
+      "observation": "Единый SQLite/Core owner; namespace-scoped current-head search, bounded context pack, существующие jobs.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E05",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/context_review.py",
+      "sha256": "1721922f26b26a8794bb2faa216aedf4f726682fd95587caf36475aef7af451a",
+      "symbols": [
+        "create_session",
+        "get_session",
+        "import_review"
+      ],
+      "observation": "Immutable review, source bindings, coverage и stale detection.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E06",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/context_tasks.py",
+      "sha256": "dd7e7a150e6c4d05bb754c6f836f12ac350edf312d2244526a6ddaae52426500",
+      "symbols": [
+        "create_task",
+        "get_task",
+        "record_event",
+        "import_result",
+        "verify_criterion"
+      ],
+      "observation": "Сохранённая task, immutable packet, ручной outbox, импорт и ссылки на проверку локального evidence.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E07",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/context_evidence.py",
+      "sha256": "6ce13982750700cd7da56cf270e9ec83055eea8aa297f89e19fee076ded024f1",
+      "symbols": [
+        "verify_local_job"
+      ],
+      "observation": "Read-only независимая перепроверка зарегистрированного local job; не provider/merge/device receipt.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E08",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "one-click-context/library/repo-review-ui.mjs",
+      "sha256": "23cb01f82fd4ce20b52598939e3599e98a20df1b297e6d74e9582cc9ed45ea61",
+      "symbols": [
+        "RepoReviewSession.scan",
+        "RepoReviewSession.export",
+        "attachContextTaskView"
+      ],
+      "observation": "UI продолжает одну scan page за действие и экспортирует ограниченную selection/continuation.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E09",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/occ_local.py",
+      "sha256": "f8c33af9bf36b222f8df9b4c3057e507297251cea23b818d647538706774ff97",
+      "symbols": [
+        "enumerate_files",
+        "inspect",
+        "TOPICS"
+      ],
+      "observation": "Локальный intake staging, MAX_SCAN=2000, keyword topics; не production repo scanner и не Laya executor.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E10",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/occ-config/laya_request.example.json",
+      "sha256": "b8329a42ad86af3926108ddc918f23edc40bc518e2377f1d6d3d407760158d36",
+      "symbols": [],
+      "observation": "Пример предложений Laya, не installed adapter или разрешение исполнения.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E11",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/occ_proposal.py",
+      "sha256": "704e32e8fd8a42ccb97d58e48efc19b224585bb602d06e7f6e49811ea75c23c3",
+      "symbols": [],
+      "observation": "Ограниченные proposals; существование validator не доказывает autonomous dispatch.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E12",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/native_adapter.py",
+      "sha256": "2a601b59b5226b6c4ad0550c83a5b7bc718d2088ae03cdfd49409fd705566594",
+      "symbols": [],
+      "observation": "Существующий профиль/namespace transport owner и ограниченный native envelope.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E13",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "docs/automation/context-tasks.md",
+      "sha256": "823683349c2d689782e6260fe3a7a496c1220f42dd7760f0d11701e61db826d7",
+      "symbols": [],
+      "observation": "Текущая документированная граница task/local evidence и ручной передачи.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E14",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/test_repo_context.py",
+      "sha256": "4623536b9675e3b74bbbd518be6c1099c464db03dec3b4aee0ca9990a0384aeb",
+      "symbols": [],
+      "observation": "Fixtures inventory, roundtrip, drift, continuation, graph и restart; файл прочитан, в этой стратегии тесты не запускались.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E15",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/test_library_records.py",
+      "sha256": "7e2f1f096ea1cd936e6807bb74ccd710ec4549bcee4dab48d42f23b7f4a9ff63",
+      "symbols": [],
+      "observation": "Fixtures version CAS, provenance, tombstone и hash limits; без нового запуска в этой работе.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    },
+    {
+      "evidence_id": "L4-E16",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "path": "content-lab/test_chatgpt_export.py",
+      "sha256": "2c57c3339af46d6bcb6b017cf5affe2596f552713bf09a5d4bd0f43e2910da08",
+      "symbols": [],
+      "observation": "Fixtures exact reimport, history, missing attachment inventory; без нового запуска в этой работе.",
+      "verification": "SOURCE_INSPECTION_ONLY",
+      "runtime_qualified_here": false
+    }
+  ],
+  "proposed_experiments": [
+    {
+      "experiment_id": "LX4-01",
+      "title": "Полнота inventory/raw coverage",
+      "workload": "2 005 и 10 000 entries; mixed formats",
+      "proposed_threshold": "100% entries accounted; 100% INDEXED roundtrip; 0 silent omissions",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-02",
+      "title": "Restart/replay",
+      "workload": "100 остановок на транзакционных границах",
+      "proposed_threshold": "0 потерянных/лишних entries/parts; deterministic final digest",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-03",
+      "title": "JS/TS resolution",
+      "workload": "200 размеченных fixtures",
+      "proposed_threshold": "Все известных dynamic cases unresolved; >=98% precision supported local-static edges; report recall",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-04",
+      "title": "Useful grouping",
+      "workload": "30 задач, одинаковый byte budget против plain file order",
+      "proposed_threshold": ">=90% обязательных refs в packet+explicit next refs; 0 непомеченных inference edges",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-05",
+      "title": "Incremental correctness",
+      "workload": "1% edits + rename/delete/parser/resolver update",
+      "proposed_threshold": "Same semantic index as rebuild; >=80% unchanged parse outputs reused; 0 stale-as-current",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-06",
+      "title": "Windows resource budget",
+      "workload": "Dell 5400 16 GB SSD; 10 000 files/250 MiB; 1/2 workers",
+      "proposed_threshold": "Backend peak RSS <=1.5 GiB; UI input p95 <=200 ms; progress <=1 s interval; Stop ack <=2 s; throughput measured",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-07",
+      "title": "Catalog retrieval",
+      "workload": "100 000 source versions/1 000 000 chunks; 100 queries",
+      "proposed_threshold": "Warm p95 <=500 ms; >=95% exact-source targets in top5; 0 cross-scope hits; cold reported",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-08",
+      "title": "Lifetime working set",
+      "workload": "50 questions across 4 projects/3 periods",
+      "proposed_threshold": "100% factual answers source-linked or unknown; >=90% required source recall in bounded set",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-09",
+      "title": "Share projection",
+      "workload": "100 protected/mixed-project/policy-change fixtures",
+      "proposed_threshold": "0 known prohibited bytes exported; all policy changes invalidate/update readiness",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-10",
+      "title": "Accessibility",
+      "workload": "10 keyboard-only + 10 corrected-voice workflows",
+      "proposed_threshold": "100% core actions without mouse/voice; 0 changed target after correction; Stop everywhere",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-11",
+      "title": "Multi-AI multipart",
+      "workload": "One manifest; three adapter profiles",
+      "proposed_threshold": "Identity retained; all omissions accounted; 0 false delivered/read/verified states",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    },
+    {
+      "experiment_id": "LX4-12",
+      "title": "Restore",
+      "workload": "Before/after migration; corruption/deleted source/old replay",
+      "proposed_threshold": "Hashes/versions restored; 0 stale resurrection; corruption localized",
+      "status": "PROPOSED_NOT_MEASURED",
+      "baseline_measurement": null
+    }
+  ],
+  "first_usable_slice": [
+    "LAYA4-001",
+    "LAYA4-002",
+    "LAYA4-004",
+    "LAYA4-008",
+    "LAYA4-009",
+    "LAYA4-010",
+    "LAYA4-019",
+    "LAYA4-020",
+    "LAYA4-023",
+    "LAYA4-026"
+  ],
+  "tasks": [
+    {
+      "task_id": "LAYA4-001",
+      "title": "Закрепить владельцев и контракты Laya/context batch",
+      "goal": "Уточнить текущие API, данные и migration boundary до изменения scan/catalog UI; связать Laya с существующим владельцем состояния.",
+      "dependencies": [],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "В implementation PR указан точный current HEAD и diff к основанию 5574ab7; все используемые symbols проверены по текущему коду.",
+        "Таблицы source/batch/labels принадлежат существующему content.sqlite3; executable jobs принадлежат Core, другого runtime/scheduler нет.",
+        "Для новых DTO определены schema/version, limits, namespace и несовместимые изменения; прежние repo/review/task данные читаются.",
+        "Фактический Laya/Voice Agent OS interface отмечен AVAILABLE, UNAVAILABLE или UNKNOWN с observed version; пример JSON не принимается за adapter."
+      ],
+      "failure_recovery": [
+        "При смене API сохранить owner diff и остановить только зависящие изменения; прежние источники и jobs остаются доступны."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Owner/API map pinned to implementation SHA.",
+        "Migration compatibility fixture and rollback description.",
+        "Local Laya interface observation, если adapter заявлен доступным."
+      ],
+      "stage": "L4-S0",
+      "owner_layer": "Content Lab + Core + native adapter",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E04",
+        "L4-E06",
+        "L4-E10",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "G3-001",
+        "PAR3-001",
+        "EVO3-001"
+      ],
+      "experiments": [],
+      "deliverables": [
+        "OWNER_MAP.json",
+        "BATCH_CONTRACT_PROPOSAL.json"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-002",
+      "title": "Одна кнопка продолжает scan всего выбранного HEAD",
+      "goal": "Автоматически пройти существующий persisted cursor до полного учёта repo без повторных кликов и потери доступного управления.",
+      "dependencies": [
+        "LAYA4-001"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Один start intent фиксирует repo/profile/HEAD; UI последовательно вызывает bounded scan_page до terminal state.",
+        "Double click и network timeout не создают новый snapshot/run intent; перезапуск продолжает сохранённый cursor.",
+        "Экран показывает total/accounted/pending/errors/excluded; progress и Pause/Continue/Stop доступны с клавиатуры.",
+        "Изменение HEAD или revoked profile сохраняет SOURCE_DRIFT/BLOCKED; разные commits не смешиваются.",
+        "Локальное окно можно закрыть без потери ledger; продолжение не требует повторного чтения уже committed pages."
+      ],
+      "failure_recovery": [
+        "После прерывания проверить snapshot identity и повторить только незакоммиченную page.",
+        "На source drift создать новую revision после явного выбора текущего snapshot, сохранив историю."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Restart/double-click/timeout fixture.",
+        "Native-to-UI integration receipt.",
+        "Windows keyboard and progress receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_context.scan_page + repo-review UI",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E08",
+        "L4-E12",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "G3-005",
+        "UI3-017"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-06",
+        "LX4-10"
+      ],
+      "deliverables": [
+        "Bounded scan controller",
+        "Persisted scan run reference"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-003",
+      "title": "Масштабировать inventory без скрытого усечения",
+      "goal": "Обработать repositories, превышающие текущий 32 MiB enumeration output, сохраняя полный manifest и bounded memory.",
+      "dependencies": [
+        "LAYA4-001"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Текущий предел остаётся явной ошибкой, пока streaming reader не прошёл отдельную квалификацию.",
+        "Streaming Git enumeration сохраняет NUL-safe пути, mode/OID/size и exact HEAD; частичный inventory не публикуется COMPLETE.",
+        "Поток имеет bounded buffer, timeout, stderr budget и temp-stage до atomic publish; subprocess завершён перед restart.",
+        "Неоднозначные/неподдерживаемые paths представлены metadata с причиной и исходным reversible path encoding.",
+        "Cold/warm resource measurements включают большой tree; введён configurable budget вместо безлимитного считывания."
+      ],
+      "failure_recovery": [
+        "Сбой stream удаляет незавершённый staging inventory, оставляя прежний complete snapshot.",
+        "Превышение configured budget возвращает конкретный limit reason без усечённого success."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Large-tree fixture above previous limit.",
+        "Interrupted stream fault injection.",
+        "Peak memory/device receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_context Git read/inventory owner",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "PAR3-002",
+        "PAR3-007"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-06"
+      ],
+      "deliverables": [
+        "Streaming enumeration ADR",
+        "Bounded inventory implementation"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-004",
+      "title": "Полный ledger форматов, gaps и защищённых данных",
+      "goal": "Каждый tracked file и извлекаемый объект должен иметь явную disposition, даже если его текст нельзя отправить.",
+      "dependencies": [
+        "LAYA4-001"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Для каждого entry есть одна disposition: indexed, excluded, unsupported, missing, error, deferred или pending; pending исключает completion.",
+        "LFS pointer отличается от available payload; submodule/symlink metadata не выдаются за содержимое target.",
+        "Binary/non-UTF8, oversize, parse error, credential heuristic и operator exclusion сохраняют reason и исходный hash, когда он доступен.",
+        "Zero omission проверяет accounted==tracked_total; all_tracked_bytes_exportable имеет отдельное значение.",
+        "Exclusion policy не запрещает обычные исходники по случайной подстроке; секретные bytes не дублируются в diagnostic log."
+      ],
+      "failure_recovery": [
+        "При неизвестном формате сохранить metadata и condition for revisit.",
+        "При missing blob не выполнять скрытый fetch; отдельный acquisition scope нужен для получения данных."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Mixed-format and false-positive fixtures.",
+        "Per-entry count reconciliation.",
+        "Export bytes review for known protected fixtures."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_context + extraction policy",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E02",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "PAR3-002"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-09"
+      ],
+      "deliverables": [
+        "GAPS.jsonl schema",
+        "Coverage projection"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-005",
+      "title": "Квалифицировать статический JS/TS parser и resolver",
+      "goal": "Закрыть явный JS/TS text-only gap для связанных repo chunks без запуска исходного кода.",
+      "dependencies": [
+        "LAYA4-001",
+        "LAYA4-004"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "ADR сравнивает parser candidates по JS/TS/JSX/TSX, offline packaging, Windows memory, pins и лицензии; package выбран по измерению.",
+        "Parser извлекает symbols/ranges и imports; resolver поддерживает явно перечисленные ESM/CommonJS/relative/workspace/alias правила.",
+        "Computed imports, unsupported exports, dynamic require и runtime injection представлены unresolved, не guessed exact edges.",
+        "Ни import scanned module, ни install scripts, ни repository hooks во время анализа не запускаются.",
+        "Размеченный corpus достигает предложенного precision gate LX4-03; recall и неподдерживаемые формы публикуются отдельно."
+      ],
+      "failure_recovery": [
+        "При parser crash/time budget сохранить text fallback и PARSER_FAILED.",
+        "Изменение parser/resolver version инвалидирует только затронутые derived outputs и graph interpretation."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "ADR and pinned dependency/package receipt.",
+        "200 labelled resolver fixtures and independent expected edges.",
+        "Windows offline installation receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_source static parsing; existing packaging",
+      "source_evidence_refs": [
+        "L4-E02",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "PAR3-002",
+        "PAR3-011"
+      ],
+      "experiments": [
+        "LX4-03",
+        "LX4-06"
+      ],
+      "deliverables": [
+        "JS/TS parser adapter",
+        "Resolver support matrix"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-006",
+      "title": "Объединить Python и JS/TS связи в provenance graph",
+      "goal": "Дать chunk planner проверяемые связи файлов, symbols и unresolved dependencies с источником каждого ребра.",
+      "dependencies": [
+        "LAYA4-001",
+        "LAYA4-004"
+      ],
+      "optional_extensions": [
+        "LAYA4-005"
+      ],
+      "acceptance_criteria": [
+        "Edge хранит type, source range/hash, parser/resolver version и evidence class.",
+        "Python static, JS/TS static, declared contract и heuristic candidate не смешиваются в один unqualified relation.",
+        "Unresolved/dynamic/ambiguous links доступны в graph query и packet gaps.",
+        "Graph построен детерминированно из pinned snapshot; SCC не зависит от directory enumeration order.",
+        "Rebuild на одинаковых inputs даёт одинаковый graph digest; цикл не вызывает unbounded traversal."
+      ],
+      "failure_recovery": [
+        "Неполный parser поддерживает graph с явной coverage границей.",
+        "При повреждённом graph пересобрать derived index из immutable sources, сохраняя предыдущий digest."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Graph schema and edge provenance fixtures.",
+        "SCC/oracle regression plus mixed-language fixture.",
+        "Deterministic rebuild digest receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_source.import_graph/components + SQLite derived index",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E02",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "PAR3-002",
+        "PAR3-006"
+      ],
+      "experiments": [
+        "LX4-03",
+        "LX4-04"
+      ],
+      "deliverables": [
+        "RELATIONS.jsonl",
+        "Graph query API"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-007",
+      "title": "Связать owners, tests, contracts и capability candidates",
+      "goal": "При выборе функции показывать проверяемые соседние contracts/tests и происхождение предложения.",
+      "dependencies": [
+        "LAYA4-001",
+        "LAYA4-006"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Name heuristic, declared mapping и observed test coverage имеют разные relation types.",
+        "Тесты/контракты разрешаются только внутри выбранного snapshot/scope; внешний missing contract остаётся gap.",
+        "У registration/API/schema adapters есть owner mapping, уменьшающий риск изменения только одной стороны интерфейса.",
+        "Capability candidate из parser не получает статус enabled/installed; для него показано missing qualification.",
+        "UI позволяет открыть источник связи и явно включить tests/contracts в packet."
+      ],
+      "failure_recovery": [
+        "Если mapping устарел, предложить обновление по новым source refs без переписывания истории.",
+        "Неподтверждённую связь оставить candidate и не закрывать criterion."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Owner-contract integration fixtures.",
+        "Labelled relevant-test set.",
+        "No false enabled capability assertion test."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo selection + graph + capability projection",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E02",
+        "L4-E05",
+        "L4-E07"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "PAR3-003",
+        "EVO3-017"
+      ],
+      "experiments": [
+        "LX4-04"
+      ],
+      "deliverables": [
+        "OWNER_CONTRACT_MAP.json",
+        "Related-source picker"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-008",
+      "title": "Планировать связанные группы и bounded chunks",
+      "goal": "Собрать читаемые группы owner/dependencies/tests/contracts и упорядоченные части без потери raw coverage.",
+      "dependencies": [
+        "LAYA4-001",
+        "LAYA4-004"
+      ],
+      "optional_extensions": [
+        "LAYA4-005",
+        "LAYA4-006",
+        "LAYA4-007"
+      ],
+      "acceptance_criteria": [
+        "MVP работает с текущим Python graph и честно отмечает JS/TS gaps; новый resolver не блокирует первый release.",
+        "SCC рассматривается как logical group; oversized SCC делится на bounded parts с neighbour references.",
+        "Каждый group имеет reason/owner/source refs; эвристики явно отмечены.",
+        "Raw byte coverage проверяется отдельно от повторных explanatory snippets в нескольких docs.",
+        "Порядок и IDs детерминированы snapshot/planner version; добавление несвязанного файла не перенумеровывает все logical source IDs."
+      ],
+      "failure_recovery": [
+        "Если edge неизвестен, сохранить файл в самостоятельной группе с unresolved refs.",
+        "При budget overflow добавить продолжение вместо обрезания tail или исключения обязательного owner."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Cyclic/oversized/missing-edge grouping fixtures.",
+        "Stable-ID comparison.",
+        "Same-budget context usefulness experiment."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_source + repo_context selection planner",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E02",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "PAR3-002"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-04"
+      ],
+      "deliverables": [
+        "GROUPS.json",
+        "Deterministic group planner"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-009",
+      "title": "Собрать manifest всего repo и обратный индекс частей",
+      "goal": "Связать все tracked entries с chunks/groups/packets и gaps в одной переносимой схеме.",
+      "dependencies": [
+        "LAYA4-002",
+        "LAYA4-004",
+        "LAYA4-008"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "REPO_MANIFEST содержит все tracked entries, включая errors/exclusions; accounted равен pinned inventory total.",
+        "PARTS_INDEX хранит hashes/bytes/ranges/dependencies и позволяет из части перейти к исходнику и обратно.",
+        "Batch identity включает snapshot, goal revision, grouping/parser versions и export policy.",
+        "Каждая текстовая omission имеет reason: budget/unsupported/protected/missing/selected_out; их нельзя превратить в read coverage.",
+        "Manifest validation не требует размещения всех data bytes в одном native response; текущие transport limits сохраняются."
+      ],
+      "failure_recovery": [
+        "Повреждённый manifest блокирует release batch; валидные immutable sources остаются доступны.",
+        "При source drift сохранить старый batch и создать новый digest/version."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Full inventory reconciliation report.",
+        "Per-part hashes/ranges and roundtrip check.",
+        "Transport envelope limit test."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_context + batch projection over existing SQLite",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E04",
+        "L4-E12",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "G3-004",
+        "PAR3-002"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02"
+      ],
+      "deliverables": [
+        "BATCH.json",
+        "REPO_MANIFEST.jsonl",
+        "PARTS_INDEX.jsonl"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-010",
+      "title": "Сделать resumable сборку ZIP и offline index",
+      "goal": "Получить полный repo context bundle после одного запуска с продолжением при restart и удобным локальным просмотром.",
+      "dependencies": [
+        "LAYA4-009"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Part publication atomic: staged bytes проверены, затем manifest head указывает на finished part.",
+        "Resume повторно проверяет hashes завершённых parts и не генерирует дубликаты при replay.",
+        "Количество частей определяется размером/бюджетом, фиксированного потолка 20/39 частей нет.",
+        "Offline index открывает цель, группы, gaps, source paths и relative part references; portable ZIP не зависит от абсолютного пути машины.",
+        "ZIP manifest перечисляет каждый output; archive checksum и reconstruction report сохраняются отдельно от утверждений AI."
+      ],
+      "failure_recovery": [
+        "При disk full оставить recoverable staging и counts; после освобождения места продолжить недостающие части.",
+        "Повреждённую часть пересоздать из pinned sources, не перезаписывая неподтверждённо другой batch."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Crash/disk-full/duplicate resume fixture.",
+        "ZIP extraction and manifest checksum report.",
+        "Offline Windows opening receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "existing store export owner + local UI",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E04",
+        "L4-E06",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "G3-005",
+        "G3-012",
+        "PAR3-016"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-12"
+      ],
+      "deliverables": [
+        "Repo context ZIP",
+        "Offline index",
+        "Batch resume receipt"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-011",
+      "title": "Инвалидировать только затронутые sources и evidence",
+      "goal": "Обновлять source→group→packet→evidence связи после изменения repo и личного источника.",
+      "dependencies": [
+        "LAYA4-006",
+        "LAYA4-009"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Изменение bytes/parser/resolver/policy учитывается отдельными input hashes; старые results не объявляются current.",
+        "Добавления/удаления/rename сохраняют lineage; old path identity не переписывается задним числом.",
+        "Affected dependents строятся по доказанным edges; unresolved dynamic relations добавляют uncertainty.",
+        "Packets и criterion evidence показывают STALE/RECHECK_REQUIRED с конкретным changed input.",
+        "Clean rebuild и incremental rebuild дают эквивалентный семантический graph/manifest для одинакового source snapshot."
+      ],
+      "failure_recovery": [
+        "При неполном dependency graph расширить область recheck и объяснить why.",
+        "Отсутствующий source остаётся missing; reuse не восстанавливает удалённый current head."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Edit/delete/rename/parser-update fixtures.",
+        "Incremental versus clean rebuild comparison.",
+        "Evidence invalidation integration receipt."
+      ],
+      "stage": "L4-S2",
+      "owner_layer": "repo_context versions + review/task evidence",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E05",
+        "L4-E06",
+        "L4-E07"
+      ],
+      "related_v3_tasks": [
+        "PAR3-011",
+        "PAR3-023",
+        "EVO3-010"
+      ],
+      "experiments": [
+        "LX4-05"
+      ],
+      "deliverables": [
+        "Invalidation graph",
+        "Change impact view"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-012",
+      "title": "Переиспользовать immutable blobs и ограничить RAM",
+      "goal": "Сократить повторное чтение/парсинг и удержать подготовку большого repo в бюджете 16 GB ПК.",
+      "dependencies": [
+        "LAYA4-009",
+        "LAYA4-011"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Parse cache keyed by raw hash/parser version/resolver config/extraction policy; отсутствие ключа запрещает reuse.",
+        "Один DB writer; read workers ограничены memory/CPU admission, не самостоятельными schedulers.",
+        "Новые cache links не дублируют raw blob; cache eviction удаляет derived data, не origin evidence.",
+        "UI paginated; backlog fragments и hot cache bounded; весь archive не загружается в память.",
+        "Current Core max_parallel=1 не ослаблен; parser parallel extension имеет отдельный measured gate."
+      ],
+      "failure_recovery": [
+        "Memory pressure снижает worker count и ставит pending work на паузу, сохраняя cursor.",
+        "Повреждённый cache отбрасывается и пересчитывается из проверяемых bytes."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Peak RSS/cold-warm receipt.",
+        "Cache key invalidation fixture.",
+        "Single-writer/concurrency conflict fixture."
+      ],
+      "stage": "L4-S2",
+      "owner_layer": "existing SQLite/Core ownership + read-only analysis workers",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E02",
+        "L4-E04"
+      ],
+      "related_v3_tasks": [
+        "PAR3-007",
+        "PAR3-008",
+        "PAR3-011"
+      ],
+      "experiments": [
+        "LX4-05",
+        "LX4-06"
+      ],
+      "deliverables": [
+        "Resource profile",
+        "Content-addressed derived cache"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-013",
+      "title": "Добавить каталог источников с intent и lifetime policy",
+      "goal": "Сохранять происхождение, project scope, назначение capture и правила хранения личных и проектных материалов.",
+      "dependencies": [
+        "LAYA4-001"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Record отделяет raw/extracted/transcript/summary/claim/evidence и имеет стабильные source/revision IDs.",
+        "Сохраняются original user text, capture intent, source_event_at и captured_at; неизвестное время не выдумывается.",
+        "Project/lifetime scope и share/retention policy закреплены отдельно от auto labels.",
+        "Namespace/profile границы существующего store применяются ко всем каталожным queries.",
+        "Импорт одного материала не делает его автоматически доступным всем future automations."
+      ],
+      "failure_recovery": [
+        "Недостающий locator/time/right записать как unknown; не угадывать личные сведения.",
+        "Изменение intent/policy создаёт revision и инвалидирует готовые share projections."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Catalog schema/migration fixture.",
+        "Source provenance and original text roundtrip.",
+        "Cross-scope query rejection test."
+      ],
+      "stage": "L4-S3",
+      "owner_layer": "Content Lab items/sync_versions/library_record owner",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E04",
+        "L4-E15",
+        "L4-E16"
+      ],
+      "related_v3_tasks": [
+        "G3-002",
+        "G3-008",
+        "EVO3-002"
+      ],
+      "experiments": [
+        "LX4-07",
+        "LX4-09"
+      ],
+      "deliverables": [
+        "Source catalog schema",
+        "Capture intent form"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-014",
+      "title": "Организовать extractor очередь и gap reconciliation",
+      "goal": "Превратить выбранные документы/чаты/логи/аудио в индексируемый текст без потери оригинала и тихих пропусков.",
+      "dependencies": [
+        "LAYA4-004",
+        "LAYA4-013"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Каждый extractor имеет format/version/limits и pure input→derived output contract; output ссылается на raw hash/ranges.",
+        "Existing ChatGPT export/selected record paths используются повторно; raw transcript и исправленный текст не смешиваются.",
+        "PDF/OCR/ASR/image/unsupported inputs имеют явное состояние READY/PENDING/UNSUPPORTED/FAILED/MISSING.",
+        "Bulk import resumable и идемпотентен; network/model invocation обозначен capability и scope, не происходит скрытно.",
+        "Неизвестный attachment учитывается до извлечения; OCR/ASR confidence не объявляется доказанным содержимым."
+      ],
+      "failure_recovery": [
+        "Сбой extractor сохраняет raw и error reason, позволяет retry после изменения версии.",
+        "Reimport не стирает ручные исправления и source lineage."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Per-format corpus and extraction coverage report.",
+        "Restart/reimport fixture.",
+        "Optional local model/device receipt for each activated extractor."
+      ],
+      "stage": "L4-S3",
+      "owner_layer": "Content Lab ingestion + Core registered work",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E04",
+        "L4-E09",
+        "L4-E16"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "PAR3-003"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-08"
+      ],
+      "deliverables": [
+        "Extractor registry",
+        "Import/gaps panel"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-015",
+      "title": "Автоматические метки с источником и user overlay",
+      "goal": "Упростить сохранение и поиск, не превращая модельные догадки в факты или теряя пользовательскую классификацию.",
+      "dependencies": [
+        "LAYA4-013",
+        "LAYA4-014"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Label хранит dimension/value/source_ref/extractor_version/assigned_at/evidence class.",
+        "Детерминированный path match, keyword rule, AI inference и user label различаются.",
+        "User overlay имеет приоритет и сохраняется после reindex; конфликт виден и откатывается.",
+        "Dimensions включают project/topic/goal/module/capability candidate/evidence/freshness/delivery/next action.",
+        "Implemented/enabled/usable выводятся из evidence owner; слова из исходного чата не устанавливают их напрямую."
+      ],
+      "failure_recovery": [
+        "При неуверенной классификации сохранить candidate/unclassified вместо обязательной категории.",
+        "Обновление модели даёт новую derived label version без переписывания user corrections."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Label provenance and reindex fixtures.",
+        "Conflicting user/model assignment fixture.",
+        "No false completion/capability label test."
+      ],
+      "stage": "L4-S3",
+      "owner_layer": "Catalog projection over existing items and evidence",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E06",
+        "L4-E07",
+        "L4-E09"
+      ],
+      "related_v3_tasks": [
+        "G3-008",
+        "EVO3-012"
+      ],
+      "experiments": [
+        "LX4-07",
+        "LX4-08"
+      ],
+      "deliverables": [
+        "Label schema",
+        "User correction UI"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-016",
+      "title": "Единый поиск, фильтры и timeline с source links",
+      "goal": "Быстро находить цитату, repo symbol, задачу, результат AI и историческое решение в выбранном scope.",
+      "dependencies": [
+        "LAYA4-013",
+        "LAYA4-015"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Namespace/project-aware current search использует existing Core search owner; legacy item shapes не приводят к KeyError/потере результата.",
+        "Есть exact ID/path/quote, FTS, project/type/topic/date/status filters и version selector.",
+        "Каждый hit показывает excerpt, origin, revision/freshness и основание попадания.",
+        "Timeline отличает source_event_at от captured_at и не размещает unknown event time как точную дату.",
+        "Пагинация стабильна; private project фильтр применяется до поиска/reranking, не только после выдачи."
+      ],
+      "failure_recovery": [
+        "При недоступном optional semantic index остаётся exact/FTS path.",
+        "Corrupt derived index можно rebuild без потери raw/catalog versions."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Mixed item-shape fixture.",
+        "100 query relevance set and scope isolation report.",
+        "Warm/cold performance receipt."
+      ],
+      "stage": "L4-S3",
+      "owner_layer": "automation_core.search + shared FTS/catalog UI",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E04",
+        "L4-E15",
+        "L4-E16"
+      ],
+      "related_v3_tasks": [
+        "G3-008",
+        "G3-009"
+      ],
+      "experiments": [
+        "LX4-07"
+      ],
+      "deliverables": [
+        "Search/filter API",
+        "Timeline/source preview"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-017",
+      "title": "Dedup, версии, tombstones и управляемое хранение",
+      "goal": "Хранить большой архив без потери разных источников и не воскрешать удалённые данные после reimport.",
+      "dependencies": [
+        "LAYA4-013",
+        "LAYA4-014"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Exact raw dedup может объединять physical bytes, сохраняя все origin refs и индивидуальные policies.",
+        "Semantic similarity создаёт duplicate candidate; разные решения/версии не сливаются автоматически.",
+        "Current head, deleted/tombstoned и historical versions имеют разные projections.",
+        "Retention/delete распространяется на raw/derived/cache/backups по явному manifest; shared blobs удаляются только при отсутствии допустимых refs.",
+        "Local deletion не заявляет удаление внешней копии; external delivery receipt остаётся объяснимым и минимальным."
+      ],
+      "failure_recovery": [
+        "Stale import после tombstone не восстанавливает source без новой явно выбранной revision.",
+        "Неудалённая backup copy отмечается pending expiration, а не falsely erased."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Dedup multi-origin fixture.",
+        "Tombstone and replay regression.",
+        "Retention/refcount/backup policy report."
+      ],
+      "stage": "L4-S3",
+      "owner_layer": "Existing items/sync_versions/library_record lineage",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E15",
+        "L4-E16"
+      ],
+      "related_v3_tasks": [
+        "G3-008",
+        "EVO3-014"
+      ],
+      "experiments": [
+        "LX4-12"
+      ],
+      "deliverables": [
+        "Retention/lineage policy",
+        "Dedup and deletion projections"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-018",
+      "title": "Bounded retrieval из архива всей жизни",
+      "goal": "Собирать нужный working set для конкретной цели, сохраняя пути к исходникам вместо обещания infinite model memory.",
+      "dependencies": [
+        "LAYA4-016",
+        "LAYA4-017"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Pipeline применяет goal/project/time scope, exact/FTS retrieval, graph neighbours и budget selection перед optional semantic rerank.",
+        "Project/episode/lifetime summaries имеют source refs и expand-to-original; изменение источника помечает summary stale.",
+        "Conflicts, uncertainty и missing facts переносятся в ответ и packet; summary не удаляет альтернативные свидетельства.",
+        "Budget, selected refs и excluded reasons видны пользователю; запрос дополнительных частей ограничен текущим scope.",
+        "Quality evaluation проверяет source recall и evidence correctness, а не только stylistic AI judgement."
+      ],
+      "failure_recovery": [
+        "Если нужных данных нет, показать missing source request вместо inferred personal facts.",
+        "При budget exhaustion продолжить multipart/session plan с manifest, не обрезая незаметно tail."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "50-question labelled lifetime corpus.",
+        "Summary citation resolution and stale tests.",
+        "Memory/budget selection receipt."
+      ],
+      "stage": "L4-S3",
+      "owner_layer": "Catalog/FTS/graph retrieval + context pack",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E04",
+        "L4-E05"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "G3-010",
+        "EVO3-021"
+      ],
+      "experiments": [
+        "LX4-08"
+      ],
+      "deliverables": [
+        "Bounded retrieval planner",
+        "Summary-to-source navigation"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-019",
+      "title": "Provider-neutral packet и профили Grok/ChatGPT/Gemini",
+      "goal": "Использовать один immutable source/goal manifest для разных AI и явно ограниченных document parts.",
+      "dependencies": [
+        "LAYA4-009"
+      ],
+      "optional_extensions": [
+        "LAYA4-018"
+      ],
+      "acceptance_criteria": [
+        "Core packet содержит goal/scope/criteria/source refs/gaps/result contract независимо от provider UI.",
+        "Provider profile задаёт observed input/attachment limits и version; неизвестный лимит не выдаётся за факт.",
+        "Bytes, exact tokens при наличии qualified tokenizer и token estimate method различаются.",
+        "Передача части не меняет source identity; provider projection имеет собственный digest.",
+        "Carry-over в новую session содержит decisions/open issues/source refs; не утверждает прежнее чтение моделью."
+      ],
+      "failure_recovery": [
+        "При изменении provider limit пересобрать projection с новыми part IDs/digest, сохранив source batch.",
+        "Unsupported attachment route предлагает разрешённый local download/copy без фиктивного send."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "One manifest across three provider profile fixtures.",
+        "Boundary budget and multipart reassembly test.",
+        "Result contract binding test."
+      ],
+      "stage": "L4-S4",
+      "owner_layer": "Existing context pack/review/task + provider projection",
+      "source_evidence_refs": [
+        "L4-E04",
+        "L4-E05",
+        "L4-E06",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "UI3-003",
+        "UI3-004",
+        "EVO3-003"
+      ],
+      "experiments": [
+        "LX4-11"
+      ],
+      "deliverables": [
+        "Provider-neutral packet schema",
+        "Provider profile contract"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-020",
+      "title": "Preview share projection и быстрый локальный экспорт",
+      "goal": "Показать какие данные и части уходят выбранному получателю, затем сохранить/copy/download проверяемый документ.",
+      "dependencies": [
+        "LAYA4-004",
+        "LAYA4-019"
+      ],
+      "optional_extensions": [
+        "LAYA4-013",
+        "LAYA4-015"
+      ],
+      "acceptance_criteria": [
+        "Preview показывает goal/source projects/data categories/destination binding revision/parts/bytes/gaps.",
+        "Raw archive и share projection имеют разные IDs; redaction не меняет оригинал и меняет share digest.",
+        "Explicit scope и protected fields проверяются вместе с heuristic scan; heuristic не обещает полного нахождения секретов.",
+        "Смена recipient/account/chat или расширение scope инвалидирует old ready projection, не удаляя локальный archive.",
+        "После одной настройки routine export в прежнем scope не требует повторной настройки; send остаётся отдельным UI adapter эффектом."
+      ],
+      "failure_recovery": [
+        "Несовпадение projection hash блокирует передачу и даёт regenerate action.",
+        "Unknown destination оставляет доступными local copy/download, без статуса connected/sent."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Known protected-byte fixture report.",
+        "Policy/recipient change invalidation test.",
+        "Accessible preview/copy/download receipt."
+      ],
+      "stage": "L4-S4",
+      "owner_layer": "Task packet + export policy + existing UI",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E06",
+        "L4-E08",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "G3-005",
+        "UI3-002",
+        "UI3-007",
+        "UI3-008"
+      ],
+      "experiments": [
+        "LX4-09",
+        "LX4-10",
+        "LX4-11"
+      ],
+      "deliverables": [
+        "Share projection preview",
+        "Export receipt"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-021",
+      "title": "Следующие части и bounded запрос missing context",
+      "goal": "По запросу AI находить дополнительные source parts из того же snapshot и вести общий coverage ledger.",
+      "dependencies": [
+        "LAYA4-009",
+        "LAYA4-019"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "AI request принимает part/source identifiers из manifest, reason и критерий; произвольный filesystem path не открывается.",
+        "Следующая часть привязана к той же goal/source revision или явно supersedes её.",
+        "Inventory/captured/selected/delivered/model-declared-reviewed/criterion-verified ведутся раздельно.",
+        "Out-of-scope/missing/stale запросы показывают конкретный blocker и не запускают скрытый gather.",
+        "Repeated request возвращает прежний immutable part при совпадающих inputs, не создаёт новую delivery attempt."
+      ],
+      "failure_recovery": [
+        "При смене HEAD предложение продолжения отмечается stale и требует new source packet.",
+        "После unknown send parts не пересылаются вслепую; delivery reconciliation остаётся у UI owner."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Valid/unknown/out-of-scope part request fixtures.",
+        "Cross-part result coverage test.",
+        "Replay and stale snapshot integration receipt."
+      ],
+      "stage": "L4-S4",
+      "owner_layer": "repo continuation + review/task owner",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E05",
+        "L4-E06",
+        "L4-E08"
+      ],
+      "related_v3_tasks": [
+        "G3-006",
+        "UI3-010",
+        "UI3-011",
+        "UI3-012"
+      ],
+      "experiments": [
+        "LX4-11"
+      ],
+      "deliverables": [
+        "Context request contract",
+        "Batch coverage view"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-022",
+      "title": "Подключить Laya через typed intent adapter",
+      "goal": "Превратить текстовый/голосовой запрос в проверяемый план существующих контекстных действий без второго executor.",
+      "dependencies": [
+        "LAYA4-001",
+        "LAYA4-019",
+        "LAYA4-020"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Обнаружены фактическая local Laya version/interface и capability; UNKNOWN/UNAVAILABLE имеют рабочий direct UI fallback.",
+        "Adapter понимает prepare_repo_context/find_context/compile_ai_packet/show_packet/request_more_context/inspect_result как typed operations.",
+        "Intent хранит original text/transcript revision, repo/scope/goal/criteria; интерпретация имеет отдельное author/version поле.",
+        "Document/repo content не может добавить executable argv, grant, recipient, root или verifier registration.",
+        "Existing operator scope применяется перед Core/native вызовом; free-form Laya answer остаётся proposal до компиляции известной capability."
+      ],
+      "failure_recovery": [
+        "Если Laya unavailable/timeout, сохранить intent и продолжить direct typed UI flow.",
+        "Ошибочное распознавание изменяет intent revision и инвалидирует prepared side effects."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Observed adapter/version receipt.",
+        "Intent schema and prompt-in-source isolation tests.",
+        "Same request via direct UI/Laya equivalence receipt."
+      ],
+      "stage": "L4-S4",
+      "owner_layer": "Voice Agent OS/Laya adapter → existing Core/native interfaces",
+      "source_evidence_refs": [
+        "L4-E04",
+        "L4-E10",
+        "L4-E11",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "G3-002",
+        "PAR3-005",
+        "UI3-017"
+      ],
+      "experiments": [
+        "LX4-10"
+      ],
+      "deliverables": [
+        "Laya adapter contract",
+        "Intent compiler"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-023",
+      "title": "Доступный единый text/voice контроль",
+      "goal": "Обеспечить выполнение core сценария без мыши, без обязательного голоса и без потери Stop/Resume.",
+      "dependencies": [
+        "LAYA4-002",
+        "LAYA4-019"
+      ],
+      "optional_extensions": [
+        "LAYA4-022"
+      ],
+      "acceptance_criteria": [
+        "Keyboard-only пользователь выбирает repo, задаёт цель, запускает scan, открывает part, preview и копирует документ.",
+        "Controls имеют имена, focus order, live status и text error; drag-and-drop необязателен.",
+        "Voice correction показывает точные repo/destination/scope до дальнейшего действия и создаёт versioned intent.",
+        "Stop доступен независимо от модели/ASR и во всех длительных состояниях.",
+        "Падение ASR не блокирует текстовый путь; статус данных и выполняемой операции не теряется."
+      ],
+      "failure_recovery": [
+        "После ошибки ввода фокус переходит к конкретному полю без сброса остальных данных.",
+        "После cancellation сохраняются завершённые source parts и честный unfinished state."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Keyboard-only + screen-reader review.",
+        "Voice correction fixtures.",
+        "Windows Stop/Resume device receipt."
+      ],
+      "stage": "L4-S4",
+      "owner_layer": "Existing library UI + voice input adapter",
+      "source_evidence_refs": [
+        "L4-E08",
+        "L4-E10",
+        "L4-E11",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "G3-005",
+        "UI3-016",
+        "UI3-017",
+        "PAR3-021"
+      ],
+      "experiments": [
+        "LX4-10"
+      ],
+      "deliverables": [
+        "Accessible controls",
+        "Shared intent entry UI"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-024",
+      "title": "Сохранить повторяемые контекстные automation recipes",
+      "goal": "Запускать известный bounded workflow по короткой команде внутри заранее настроенного scope.",
+      "dependencies": [
+        "LAYA4-002",
+        "LAYA4-010",
+        "LAYA4-020",
+        "LAYA4-022",
+        "LAYA4-023"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Recipe связывает version, repo alias, data scope, goal template, provider projection и required capabilities.",
+        "Routine повтор внутри согласованного scope идёт без повторных setup вопросов; новые полномочия не выводятся из free-form документа.",
+        "Recipe использует существующие Core jobs/leases/cancel/reconciliation; отдельного worker или бесконечной queue не создаёт.",
+        "Рецепты подготовка/поиск/экспорт квалифицируются до live send/update; реальные UI routes связаны с UI3 receipts.",
+        "Повторный запуск учитывает source change/unknown send и не дублирует внешние эффекты."
+      ],
+      "failure_recovery": [
+        "Недоступная capability оставляет понятный missing prerequisite и resumable plan.",
+        "Изменение workflow/profile version требует requalification recipe, а не автоматического расширения прав."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Recipe replay/scope change fixtures.",
+        "Core ownership/lease integration test.",
+        "Device qualification for each activated recipe."
+      ],
+      "stage": "L4-S4",
+      "owner_layer": "Existing Core capability/recipe projection",
+      "source_evidence_refs": [
+        "L4-E04",
+        "L4-E06",
+        "L4-E10",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "PAR3-003",
+        "PAR3-009",
+        "PAR3-016",
+        "PAR3-024",
+        "UI3-008"
+      ],
+      "experiments": [
+        "LX4-02",
+        "LX4-10",
+        "LX4-11"
+      ],
+      "deliverables": [
+        "Recipe catalog",
+        "Recipe readiness view"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-025",
+      "title": "Объяснимое «найди нужный контекст для этой цели»",
+      "goal": "Дать пользователю быстрый answer-to-source путь с явными пробелами и возможностью добрать выбранные данные.",
+      "dependencies": [
+        "LAYA4-016",
+        "LAYA4-019",
+        "LAYA4-021"
+      ],
+      "optional_extensions": [
+        "LAYA4-018"
+      ],
+      "acceptance_criteria": [
+        "Каждый factual answer указывает source revision/range или явно unknown; model-generated citation валидируется на существование.",
+        "Панель why-selected показывает exact match/filter/graph/summary reason.",
+        "Запрос дополнительных данных предлагает конкретные missing source categories и ожидаемую пользу для критерия.",
+        "Goal/source conflict не скрывается summary; пользователь может открыть обе версии и изменить scope.",
+        "Ответ сам по себе не вызывает repo execution/provider send и не помечает цель achieved."
+      ],
+      "failure_recovery": [
+        "Broken citation блокирует verified projection ответа и сохраняет unverified draft.",
+        "При отсутствии необходимых источников возвращается source collection task без выдуманного содержимого."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Citation existence/range corruption fixtures.",
+        "50-question retrieval evaluation.",
+        "Goal conflict and missing-source UI receipt."
+      ],
+      "stage": "L4-S4",
+      "owner_layer": "Catalog/FTS/graph + task next_request projection",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E04",
+        "L4-E05",
+        "L4-E06"
+      ],
+      "related_v3_tasks": [
+        "G3-009",
+        "G3-010",
+        "EVO3-021"
+      ],
+      "experiments": [
+        "LX4-08"
+      ],
+      "deliverables": [
+        "Why-selected/source navigator",
+        "Missing-context brief"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-026",
+      "title": "Квалифицировать repo batch на Windows 16 GB",
+      "goal": "Превратить предложенные thresholds в наблюдаемые результаты конкретной установленной сборки.",
+      "dependencies": [
+        "LAYA4-010",
+        "LAYA4-020",
+        "LAYA4-023"
+      ],
+      "optional_extensions": [
+        "LAYA4-003",
+        "LAYA4-005",
+        "LAYA4-007",
+        "LAYA4-012",
+        "LAYA4-018",
+        "LAYA4-022",
+        "LAYA4-024"
+      ],
+      "acceptance_criteria": [
+        "Device receipt содержит exact app/repo build, OS/CPU/RAM/SSD, corpus digest и active capability versions.",
+        "Core inventory/roundtrip/restart/export/accessibility сценарии проходят LX4-01/02/06/09/10; прочие эксперименты применяются только к включённым расширениям.",
+        "Публикуются peak memory, p50/p95 latency, throughput, counts/gaps; слова fastest/infinite не подменяют измерения.",
+        "Installed native host и browser/desktop integration проходят end-to-end; unit fixtures не выдаются за device qualification.",
+        "Один успешный chunk run не устанавливает provider sent/merge/update/usable статусы."
+      ],
+      "failure_recovery": [
+        "Провал порога возвращает bottleneck task и сохраняет measured receipt; допускается меньший qualified corpus/profile.",
+        "Для отсутствующего live UI route сохранить NOT_RUN, не блокируя отдельно квалифицированный offline export."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Signed/hashed local device receipt with exact versions.",
+        "Fault injection and resource report.",
+        "Accessible end-to-end recording or structured observations."
+      ],
+      "stage": "L4-S5",
+      "owner_layer": "Qualification owner + existing local UI/native host",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E08",
+        "L4-E12",
+        "L4-E13",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-011",
+        "UI3-018",
+        "PAR3-022",
+        "EVO3-024"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-06",
+        "LX4-09",
+        "LX4-10"
+      ],
+      "deliverables": [
+        "WINDOWS_CONTEXT_QUALIFICATION.json",
+        "Measured resource report"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-027",
+      "title": "Backup, restore и миграции личного каталога",
+      "goal": "Сделать накопленный lifetime corpus переносимым и восстанавливаемым без потери provenance и пользовательских corrections.",
+      "dependencies": [
+        "LAYA4-013",
+        "LAYA4-017"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Backup manifest связывает SQLite snapshot, raw blobs, derived indexes policy, schema versions и hashes.",
+        "Consistent snapshot не смешивает поколения DB/blob publication; backup проверяется до отметки complete.",
+        "Restore сверяет hashes/lineage/tombstones/user labels; никаких stale source resurrection.",
+        "Migration имеет preflight/free-space/rollback point; старый archive читается или даёт явный unsupported schema.",
+        "Restore не восстанавливает grants, credentials или active external sends автоматически; data continuity отделена от execution state."
+      ],
+      "failure_recovery": [
+        "Повреждённый blob локализуется в restore report; валидные источники остаются доступны с gaps.",
+        "Неуспешная migration откатывается к проверенному snapshot без двойных DB owners."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Backup-under-import consistency fixture.",
+        "Corruption/migration/rollback drill.",
+        "Portable restore receipt on Windows."
+      ],
+      "stage": "L4-S3",
+      "owner_layer": "Existing content.sqlite3 and artifact ownership",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E04",
+        "L4-E15",
+        "L4-E16"
+      ],
+      "related_v3_tasks": [
+        "EVO3-014",
+        "EVO3-015",
+        "PAR3-016"
+      ],
+      "experiments": [
+        "LX4-12"
+      ],
+      "deliverables": [
+        "Backup manifest/restore tool contract",
+        "Migration qualification report"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    },
+    {
+      "task_id": "LAYA4-028",
+      "title": "Следующий R&D brief из проверенных gaps и целей",
+      "goal": "Автоматически готовить полезное продолжение стратегии по незакрытым пользовательским требованиям и фактическим ограничениям.",
+      "dependencies": [
+        "LAYA4-011",
+        "LAYA4-015",
+        "LAYA4-021",
+        "LAYA4-026"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Каждое исходное требование имеет task/evidence/deferred link; пересказ не заменяет original user words.",
+        "Brief выбирает bottleneck и next evidence с явным rationale, dependencies и proposed acceptance.",
+        "Implemented, locally tested, installed, provider connected и usable представлены раздельными статусами.",
+        "Неизвестные/missing/history gaps не удаляются из общего ZIP; supersedes связи сохраняются.",
+        "Подготовка brief не отправляет его и не запускает capability update; destination and update owners продолжают UI3/EVO3 flow."
+      ],
+      "failure_recovery": [
+        "При incomplete evidence brief помечается draft с конкретными missing receipts.",
+        "Повторный generation с теми же inputs не создаёт ложные новые цели; changed evidence даёт новую revision."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Goal-to-task coverage audit.",
+        "No-claim-promotion fixture.",
+        "Source-linked generated brief review."
+      ],
+      "stage": "L4-S5",
+      "owner_layer": "Task/goal/catalog/evidence projection",
+      "source_evidence_refs": [
+        "L4-E03",
+        "L4-E05",
+        "L4-E06",
+        "L4-E07"
+      ],
+      "related_v3_tasks": [
+        "G3-009",
+        "G3-010",
+        "G3-012",
+        "EVO3-021"
+      ],
+      "experiments": [
+        "LX4-08",
+        "LX4-12"
+      ],
+      "deliverables": [
+        "NEXT_RND_BRIEF.json",
+        "Goal coverage/delayed register"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:sce:proposed:source_ref:1",
+  "title": "Proposed source_ref v1",
+  "type": "object",
+  "properties": {
+    "namespace": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "blob_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "offset_space": {
+      "type": "string",
+      "enum": [
+        "raw_bytes",
+        "derived_utf8_bytes"
+      ]
+    },
+    "start": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "end": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  },
+  "required": [
+    "namespace",
+    "source_id",
+    "revision_id",
+    "blob_sha256",
+    "offset_space",
+    "start",
+    "end"
+  ],
+  "additionalProperties": false
+}

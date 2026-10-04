@@ -1,0 +1,382 @@
+{
+  "schema": "sce.context-automation.roadmap.v1",
+  "created_at": "2026-10-03",
+  "language": "ru",
+  "kind": "PLANNING_DOCUMENT_NOT_EXECUTABLE",
+  "repositories": {
+    "sce": {
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions",
+      "main_sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+      "pr37": "MERGED"
+    },
+    "studious": {
+      "url": "https://github.com/BobIvans/studious-pancake",
+      "main_sha": "67d3852cbc4cb1b24582df45adbf6a42d4da2af0"
+    }
+  },
+  "constraints": [
+    "Reuse existing canonical SQLite, queue and Native Host.",
+    "User instruction and evidence authority remain separate.",
+    "No financial/live trading execution in this document.",
+    "Do not claim all personal data/chats imported.",
+    "Current-user Windows ASR/UIA/Laya qualification NOT_RUN.",
+    "Planning task IDs are not GitHub PR numbers."
+  ],
+  "next_tasks": [
+    {
+      "id": "SCE-NEXT-01",
+      "priority": "P0",
+      "title": "Проверить установленный путь от задачи до отчёта",
+      "owners": [
+        "agent-bridge/Install.ps1",
+        "content-lab/native_adapter.py",
+        "content-lab/review_report.py",
+        "one-click-context/library/repo-review-ui.mjs"
+      ],
+      "depends": [],
+      "value": "Получить первый достоверный результат на пользовательском Windows ПК и найти реальные разрывы установки.",
+      "acceptance": [
+        "На установленном Chrome экспортировать связанный handoff, вернуть review, создать отчёт через existing worker и проверить байты.",
+        "STOP, reconnect и повтор task key не создают второй результат.",
+        "Неправильный или отсутствующий файл отображается как FAILED/BLOCKED с next step; сохранить device receipt."
+      ],
+      "metric": "Доля успешных задач на устройстве и минуты до проверенного отчёта",
+      "status": "DEVICE_NOT_RUN"
+    },
+    {
+      "id": "SCE-NEXT-02",
+      "priority": "P0",
+      "title": "Завершить выбранные JS и TS зависимости",
+      "owners": [
+        "content-lab/repo_context.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [],
+      "value": "Снять подтверждённый JS_DEPENDENCIES_NOT_PARSED для review кода Chrome расширения.",
+      "acceptance": [
+        "Разбирать статические import/export/re-export закреплённым AST parser и версией resolver.",
+        "Поддержать .js/.mjs/.ts и локальные относительные imports; aliases/config явно описать профилем.",
+        "Dynamic/external/ambiguous edges остаются gaps; изменение dependency делает review stale.",
+        "Не заявлять полный runtime call graph и не игнорировать неполноту."
+      ],
+      "metric": "Доля выбранных code review задач с достаточной closure",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "SCE-NEXT-03",
+      "priority": "P0",
+      "title": "Реестр подключённых источников и инкрементальный импорт",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/content.js"
+      ],
+      "depends": [],
+      "value": "Перестать повторно собирать одинаковые архивы и путать видимый чат со всей историей.",
+      "acceptance": [
+        "Начать с одного реального ChatGPT JSON/HTML export и выбранной папки документов.",
+        "Стабильные source/message IDs, content hash, версии, deleted/tombstone, checkpoint и coverage.",
+        "Повторный импорт не удваивает записи; прерванный продолжается; parser failures видны.",
+        "Grok/Telegram/почта добавляются отдельными adapters после доступных примеров и проверки доступа."
+      ],
+      "metric": "Минуты ручного сбора и доля источников с известным покрытием",
+      "status": "PARTIAL_EXISTING"
+    },
+    {
+      "id": "SCE-NEXT-04",
+      "priority": "P0",
+      "title": "Единая спецификация запроса и компилятор документов",
+      "owners": [
+        "one-click-context/library/goal-normalizer.mjs",
+        "content-lab/context_review.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03"
+      ],
+      "value": "Один текстовый запрос создаёт понятное любому AI задание с источниками и проверками.",
+      "acceptance": [
+        "Сохранить verbatim request, goal version, scope, ограничения, acceptance, authority и бюджет.",
+        "Режимы выполнить / подготовить сценарий / подготовить ТЗ используют одну TaskSpec.",
+        "Создавать TXT, DOCX и manifest из одного snapshot; generic contract адаптировать к existing V4/V5.",
+        "Нельзя объявлять пропущенный источник прочитанным; scope/goal/revision drift отклоняет ответ."
+      ],
+      "metric": "Время от запроса до пригодного задания и число уточнений AI",
+      "status": "PARTIAL_EXISTING"
+    },
+    {
+      "id": "SCE-NEXT-05",
+      "priority": "P0",
+      "title": "Адресный поиск и запрос недостающего контекста",
+      "owners": [
+        "content-lab/repo_context.py",
+        "content-lab/context_handoff.py",
+        "content-lab/occ_v5/context.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03",
+        "SCE-NEXT-04"
+      ],
+      "value": "Давать модели нужные доказательства вместо всей жизни и всех ZIP.",
+      "acceptance": [
+        "FTS + project/time/type filters + source expansion; точные spans и omissions.",
+        "NEXT_CONTEXT_REQUEST указывает конкретный источник, зачем он нужен и бюджет.",
+        "Лимит rounds/bytes; повтор без нового evidence заканчивается BLOCKED.",
+        "Сводки сохраняют ссылки на originals; модель получает возможность дозагрузки."
+      ],
+      "metric": "Recall доказательств при фиксированном бюджете и доля закрытых gaps",
+      "status": "PARTIAL_EXISTING"
+    },
+    {
+      "id": "SCE-NEXT-06",
+      "priority": "P0",
+      "title": "Проверяемая память целей и решений",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/context_review.py"
+      ],
+      "depends": [
+        "SCE-NEXT-03"
+      ],
+      "value": "Команда продолжить проект восстанавливает реальные решения и незавершённую работу.",
+      "acceptance": [
+        "Goal → decision → task → function → PR → receipt связать stable IDs в existing SQLite.",
+        "Отделять user instruction, source observation, model proposal и verified result.",
+        "Хранить valid_from/valid_to, supersedes, conflicts и исходные spans; старое решение не выигрывает автоматически.",
+        "Явное исправление предпочтения и forget исключают производные записи из retrieval."
+      ],
+      "metric": "Точность ответов что решили и что ещё не сделано",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "SCE-NEXT-07",
+      "priority": "P0",
+      "title": "Независимые проверки результата и восстановление",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/review_report.py",
+        "content-lab/context_review.py"
+      ],
+      "depends": [
+        "SCE-NEXT-01"
+      ],
+      "value": "Преобразовать успех модели или exit code в проверенный результат каждого типа действия.",
+      "acceptance": [
+        "Registered verifier получает action version, request binding и actual observation.",
+        "Отдельные checks для файла, структурированного результата, Git/CI и UI postcondition.",
+        "Неизвестный эффект после crash означает reconcile до retry.",
+        "Receipt различает PASSED/FAILED/UNKNOWN/BLOCKED/NOT_RUN и доступен в UI."
+      ],
+      "metric": "Ложные SUCCESS и доля recovery без повторного эффекта",
+      "status": "PARTIAL_EXISTING"
+    },
+    {
+      "id": "SCE-NEXT-08",
+      "priority": "P1",
+      "title": "Переносимый цикл работы с несколькими AI",
+      "owners": [
+        "content-lab/context_handoff.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/library/repo-review-ui.mjs"
+      ],
+      "depends": [
+        "SCE-NEXT-04",
+        "SCE-NEXT-05",
+        "SCE-NEXT-07"
+      ],
+      "value": "Продолжать ту же задачу в ChatGPT/Grok/Claude без потери состояния.",
+      "acceptance": [
+        "Сначала export/manual import; затем отдельный официальный API adapter и read-only MCP.",
+        "Capability profile каждого adapter: input formats, tools, context budget, auth, cost, citations.",
+        "Одинаковый response envelope и import с request/snapshot binding.",
+        "Выбор другого провайдера не расширяет права и не переносит секреты в документы."
+      ],
+      "metric": "Доля успешно импортируемых ответов и цена проверенной задачи",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "SCE-NEXT-09",
+      "priority": "P1",
+      "title": "Настоящий голосовой ввод в общий goal",
+      "owners": [
+        "one-click-context/library/voice-preview.mjs",
+        "one-click-context/library/goal-normalizer.mjs",
+        "content-lab/asr_cpu_experiment.py"
+      ],
+      "depends": [
+        "SCE-NEXT-01",
+        "SCE-NEXT-04"
+      ],
+      "value": "Говорить задачу и корректировать её без отдельного голосового планировщика.",
+      "acceptance": [
+        "Один local ASR worker; final transcript редактируемый; dictation и command различаются.",
+        "STOP/goal epoch отбрасывают поздний transcript; partial не запускает действия.",
+        "На Dell измерить RU/EN latency p50/p95, RAM и ошибки чисел/отрицаний.",
+        "Проверить реальный микрофон и доступность controls; Qwen/Laya не обязательны."
+      ],
+      "metric": "Минуты до корректной задачи и ошибки смысла транскрипции",
+      "status": "DEVICE_NOT_RUN"
+    },
+    {
+      "id": "SCE-NEXT-10",
+      "priority": "P1",
+      "title": "Один проверяемый сценарий Windows UIA и DOM",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/native_adapter.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-01",
+        "SCE-NEXT-07"
+      ],
+      "value": "Начать реальное управление PC с измеримого сохранения документа.",
+      "acceptance": [
+        "Выбранные PID/window/control или tab/origin/frame bind к действию.",
+        "Пример: открыть выбранный editor, вставить заданный текст, сохранить в заданную папку, readback.",
+        "Смена target, неоднозначный selector или STOP блокирует следующие steps.",
+        "DOM/UIA/API предпочтительны; OCR fallback только с explicit target и independent check."
+      ],
+      "metric": "Доля повторов сценария без ручной коррекции",
+      "status": "DEVICE_NOT_RUN"
+    },
+    {
+      "id": "SCE-NEXT-11",
+      "priority": "P1",
+      "title": "Рецепты и создание новых функций из задачи",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/context_handoff.py",
+        "content-lab/schedule_supervisor.py"
+      ],
+      "depends": [
+        "SCE-NEXT-07",
+        "SCE-NEXT-10"
+      ],
+      "value": "Один успешно исполненный сценарий становится повторяемым навыком.",
+      "acceptance": [
+        "Recipe содержит typed parameters, version, capabilities, preconditions, verifier и effect class.",
+        "Сначала обнаружить existing owner; иначе создать точное ТЗ и staging change.",
+        "Reproducer/focused tests/device canary предшествуют регистрации; rollback версии.",
+        "Запрос новых функций и данные источников не исполняются как shell-команды."
+      ],
+      "metric": "Частота повторного использования и минуты коррекции на запуск",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "SCE-NEXT-12",
+      "priority": "P1",
+      "title": "Панель открытых задач и событийное продолжение",
+      "owners": [
+        "content-lab/automation_core.py",
+        "content-lab/schedule_supervisor.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-06",
+        "SCE-NEXT-07",
+        "SCE-NEXT-11"
+      ],
+      "value": "Не терять задачу при перезапуске, CI blocker или появлении нового файла.",
+      "acceptance": [
+        "Текущие выполнено/blocked/next evidence привязаны к receipts и goal version.",
+        "New-source/CI/file triggers используют existing queue, stop/budget и дедупликацию.",
+        "Нет бесконечного повторения без прогресса; 24/7 требует реально работающего host.",
+        "Проверить restart и гонку двух triggers на одной task."
+      ],
+      "metric": "Закрытые open loops за неделю и ручные напоминания",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "SCE-NEXT-13",
+      "priority": "P1",
+      "title": "Оценка отдачи и выбор модели на реальных задачах",
+      "owners": [
+        "content-lab/context_review.py",
+        "docs/automation/runs"
+      ],
+      "depends": [
+        "SCE-NEXT-04",
+        "SCE-NEXT-07",
+        "SCE-NEXT-08"
+      ],
+      "value": "Выбирать архитектуру по результатам вместо заявления самый умный агент.",
+      "acceptance": [
+        "30 замороженных задач: память 10, документы/код 10, повторяемые действия 10.",
+        "Одинаковые inputs, budget, acceptance; blinded checks, failures и corrections в итогах.",
+        "Baseline manual/current app; варианты FTS, retrieval, model, router сравнивать по одному изменению.",
+        "Стартовый planning gate: нет ложного SUCCESS в 30 кейсах; это не доказательство отсутствия риска вне выборки."
+      ],
+      "metric": "Чистое сэкономленное время и стоимость одного verified outcome",
+      "status": "EXPERIMENT_NOT_RUN"
+    },
+    {
+      "id": "SCE-NEXT-14",
+      "priority": "P2",
+      "title": "Исследование X и web с превращением сигнала в эксперимент",
+      "owners": [
+        "content-lab/content_lab.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-05",
+        "SCE-NEXT-06",
+        "SCE-NEXT-13"
+      ],
+      "value": "Превращать новые идеи в проверяемый backlog по существующим целям.",
+      "acceptance": [
+        "Официальный/разрешённый источник, source URL/author/time/captured_at и query coverage.",
+        "X post → первичная документация/код → gap в current repo → гипотеза → эксперимент.",
+        "Дата/handles/source filters и watermark; архивы не называются свежим поиском.",
+        "Лайки не являются ROI; кандидат не включает новую функцию автоматически."
+      ],
+      "metric": "Verified полезные изменения на час исследования",
+      "status": "PROPOSED"
+    },
+    {
+      "id": "SCE-NEXT-15",
+      "priority": "P2",
+      "title": "Recorder действий с генерацией проверяемого навыка",
+      "owners": [
+        "content-lab/automation_core.py",
+        "one-click-context/library"
+      ],
+      "depends": [
+        "SCE-NEXT-10",
+        "SCE-NEXT-11",
+        "SCE-NEXT-13"
+      ],
+      "value": "Команда повторяй как я уменьшает ручное программирование routine.",
+      "acceptance": [
+        "Запись только выбранного app/task; selectors и state preconditions вместо координат.",
+        "Удалять credentials из trace, параметризовать values; preview recipe.",
+        "Повтор на изменённых inputs и held-out UI state; неуспех не ведёт к слепому click.",
+        "Наблюдение демонстрации создаёт proposal, canary подтверждает навык."
+      ],
+      "metric": "Время создания навыка и устойчивость на новых inputs",
+      "status": "EXPERIMENT_NOT_RUN"
+    },
+    {
+      "id": "SCE-NEXT-16",
+      "priority": "P2",
+      "title": "Laya advisory и ограниченный критик",
+      "owners": [
+        "content-lab/occ_proposal.py",
+        "content-lab/context_handoff.py"
+      ],
+      "depends": [
+        "SCE-NEXT-08",
+        "SCE-NEXT-13"
+      ],
+      "value": "Использовать дополнительный интеллект там, где измерено преимущество.",
+      "acceptance": [
+        "Проверить установленный Laya API; сравнить rules/local/router на одинаковых 30 cases.",
+        "Critic вызывается по конкретному unresolved claim при бюджете rounds/time/cost.",
+        "Agreement не заменяет primary evidence; disagreement порождает узкий проверочный запрос.",
+        "При отсутствии прироста оставить deterministic маршрут."
+      ],
+      "metric": "Прирост verified success относительно затрат",
+      "status": "EXPERIMENT_NOT_RUN"
+    }
+  ]
+}

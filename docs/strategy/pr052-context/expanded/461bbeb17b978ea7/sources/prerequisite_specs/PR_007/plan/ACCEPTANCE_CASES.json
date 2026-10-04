@@ -1,0 +1,135 @@
+{
+  "schema": "roadmap.runtime-cases.v1",
+  "count": 16,
+  "cases": [
+    {
+      "criterion_id": "P007-AC01",
+      "title": "Immutable capture inputs",
+      "expected": "Read only exact scoped captured bytes; verify ranges/file hashes; working tree modification cannot change analysis input.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC02",
+      "title": "Parser provenance and isolation",
+      "expected": "Exact trusted package/helper/options pin, license receipt; scanned node_modules/hooks/config never execute.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC03",
+      "title": "JS/TS/JSX/TSX AST support",
+      "expected": "Real AST extractor accounts for declarations/imports/re-exports; syntax error yields file fallback and no provisional exact edges.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC04",
+      "title": "UTF16 to raw UTF8 evidence",
+      "expected": "BOM/CRLF/RU/astral/escaped literal boundaries and source slice hashes exact; symbols point into preserved raw bytes.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC05",
+      "title": "Static literal source refs",
+      "expected": "Default/named/side-effect/namespace/re-export references resolve only exact eligible manifest source paths with supported policy.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC06",
+      "title": "Type and symbol uncertainty",
+      "expected": "TYPE_ONLY edges separate from runtime SCC; imported/exported symbol binding NOT_TYPECHECKED; no false callable claim.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC07",
+      "title": "TS compiler-mode gaps",
+      "expected": "TS .js/.mjs/.cjs imports unresolved even with exact file present; do not choose .ts/.d.ts without qualified mode.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC08",
+      "title": "Unresolved dynamic/CommonJS/config forms",
+      "expected": "100% known dynamic unresolved; CJS/shadowed require, aliases/workspaces and unsupported forms never guessed exact.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC09",
+      "title": "Scope/missing/eligibility coverage",
+      "expected": "Scope escape/case mismatch/missing or ineligible targets explicit; every relevant file has analysis outcome, pending prevents readiness.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC10",
+      "title": "Fake syntax and parser recovery",
+      "expected": "Comments/string literals containing import text create no AST refs; recovered parse diagnostics mark parser_failed.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC11",
+      "title": "Deterministic IDs/digests/invalidation",
+      "expected": "Same input/options repeat digest; shuffled enumeration irrelevant; unrelated file preserves logical IDs; interpretation/target changes revise outputs.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC12",
+      "title": "Budgets/lifecycle/cancel",
+      "expected": "Input/output/stderr/memory measurement/deadlines enforced; timeout stops child; per-file fallback vs global abort distinct; no leaked worker.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC13",
+      "title": "Atomic derived publication",
+      "expected": "Crash/disk-full/cancel before commit leaves no complete derived directory and preserves previous bundle/raw ledger; corrupted reuse rejected.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC14",
+      "title": "LX4-03 actual extractor metrics",
+      "expected": "Run 200 labelled variants with real adapter; >=98% supported precision, all dynamic unresolved; recall/20 families/holdout/zero-denominator reported.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC15",
+      "title": "PR005/006/003 semantic integration",
+      "expected": "Actual eligibility+group schemas received/versioned; type-only/unresolved omitted from runtime SCC; raw export hashes/IDs unaffected; do not PASS without artifacts.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P007-AC16",
+      "title": "Windows/offline resource evidence",
+      "expected": "Actual parser offline load and parent/child RSS on Dell-class Windows; source LX4-06 recorded separately, unavailable device cases NOT_RUN.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    }
+  ],
+  "package_validator_is_not_application_test": true
+}

@@ -1,0 +1,43 @@
+{
+  "schema_version": "voice-agentos.workflow/0.3",
+  "id": "WF-31",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Продолжай работать, пока я пишу в Chrome",
+  "parallel_mode": "PARTITIONED_INDEPENDENT_EFFECTS",
+  "branches": [
+    {
+      "id": "branch_1",
+      "description": "context reads and indexing",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_2",
+      "description": "code proposals in worktrees",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    },
+    {
+      "id": "branch_3",
+      "description": "one paused GUI route awaiting lease",
+      "effect_scope": "BIND_EXACT_RESOURCES_BEFORE_EXECUTION",
+      "enabled": false
+    }
+  ],
+  "verify_contract_ru": "No focus theft and scoped output writes",
+  "materialization_contract_ru": "Foreground only with user lease; background routes продолжаются",
+  "failure_injection_ru": "Пользователь меняет active tab в середине GUI path",
+  "join_policy": {
+    "cancel_after_first_result": false,
+    "preserve_late_evidence": true,
+    "allow_duplicate_external_effect": false
+  },
+  "safety": {
+    "external_writes_enabled": false,
+    "recording_consent_required": true,
+    "foreground_policy": "PER_RESOURCE_LEASE",
+    "live_trading": false
+  },
+  "native_laya_import_format": false,
+  "laya_role": "advisory_route_or_label_selection_not_permission_authority"
+}

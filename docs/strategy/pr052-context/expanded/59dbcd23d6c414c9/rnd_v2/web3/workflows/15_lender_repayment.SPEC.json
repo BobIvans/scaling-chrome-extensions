@@ -1,0 +1,51 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF15",
+  "name": "lender_repayment",
+  "title_ru": "Lender-neutral repayment contract",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "route_atomicity"
+  ],
+  "inputs": [
+    "lender_adapter",
+    "repayment_cases"
+  ],
+  "steps": [
+    {
+      "id": "lender_repayment.1",
+      "handler": "PROPOSED.lender_repayment.1",
+      "instruction": "Verify principal+fee handling on exact adapter and chain"
+    },
+    {
+      "id": "lender_repayment.2",
+      "handler": "PROPOSED.lender_repayment.2",
+      "instruction": "Inject insufficient repayment, authorization mismatch and wrong callback origin"
+    },
+    {
+      "id": "lender_repayment.3",
+      "handler": "PROPOSED.lender_repayment.3",
+      "instruction": "Keep MarginFi work PAUSED unless separate current instruction resumes it"
+    }
+  ],
+  "outputs": [
+    "repayment_receipt",
+    "junit_xml.v1"
+  ],
+  "qualification_criteria": [
+    "No claim that a paused lender is implemented or live qualified"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

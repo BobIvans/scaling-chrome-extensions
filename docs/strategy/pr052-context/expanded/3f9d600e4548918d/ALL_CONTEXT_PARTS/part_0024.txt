@@ -1,0 +1,3678 @@
+   if not model: return
+        goal=simpledialog.askstring('Задача','Что проверить в выбранном контексте?')
+        if not goal: return
+        tokens=simpledialog.askinteger('Ответ','Max output tokens:',initialvalue=4000,minvalue=1)
+        if not tokens: return
+        if not messagebox.askyesno('Передача контекста в OpenAI API',f'{source}\n{Path(source).stat().st_size} байт\nМодель: {model}\nЗадача: {goal}\n\nБудет отправлен весь выбранный TXT. Проверьте его на секреты. Возможна плата API. Отправить?'): return
+        def action(s,p,c):
+            from openai_adapter import send_file
+            output,status=send_file(source,goal,model,self.library/'ai_outputs',tokens)
+            if not c(): s.import_source(output/'answer.txt',p,c)
+            return f'API {status}: {output}; результат модели требует проверки.'
+        self.work(action)
+
+    def close(self):
+        if self.busy:
+            self.cancel.set()
+            messagebox.showinfo('Остановка','Отправлен STOP. Дождитесь сохранения состояния и закройте окно снова.')
+            return
+        self.store.close()
+        self.root.destroy()
+
+def main():
+    root=tk.Tk()
+    root.withdraw()
+    library=filedialog.askdirectory(title='Выберите папку локальной библиотеки (вне импортируемого репозитория)')
+    if not library:
+        root.destroy()
+        return
+    root.deiconify()
+    Desktop(root,library)
+    root.mainloop()
+
+if __name__=='__main__': main()
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b0dafa5b072ef0f36839cb19fdfc19ea54bba06a5c93519c3ce329326425cf3d | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#36:SCE_DESKTOP_CONTEXT_RU_2026-10-03/sources/SELECTED_ASSISTANT_IDEAS_HISTORICAL.txt =====
+Редакторский выбор полезных прежних ответов: 10, 12, 14, 16, 18. Это исторические предложения; не реализация, не подтверждение SOTA, прибыльности, лицензий или измерений на Dell.
+
+MESSAGE 10
+To give the AI models the highest-value context for continuing development, focus on structured, multi-layer context engineering rather than dumping raw files. The goal is dense, queryable, evolvable memory that supports advanced reasoning (multi-hop, causal, temporal, and procedural).
+ 
+1. What SOTA Context to Gather (Functions Worth Building)
+ 
+Prioritize these high-signal layers (ranked by impact for repo-centric development):
+ 
+Layer	
+What to Capture	
+Why It Helps AI Reasoning	
+Implementation Idea	
+
+
+Structural / AST	
+Functions, classes, imports, call graphs, inheritance	
+Enables precise location + multi-hop navigation	
+Tree-sitter or AST parsers	
+
+Evolutionary / Git	
+Commits, diffs, blame, PR descriptions, issue links	
+Shows why code changed and successful patterns	
+Git log + PR metadata	
+
+Semantic / Embeddings	
+Chunked code + docs with hybrid dense+BM25	
+Fast relevance retrieval	
+Local embeddings (e.g. EmbeddingGemma)	
+
+Knowledge Graph	
+Entities (files, functions, concepts) + relations (calls, depends, supersedes)	
+Supports causal & temporal reasoning	
+Neo4j / Kuzu + GraphRAG style	
+
+Procedural / Skills	
+Reusable workflows extracted from code (e.g. “how we add a feature”)	
+Turns past work into transferable skills	
+Code2Skill-style extraction	
+
+Episodic / Interaction	
+Past AI sessions, decisions, failures, outcomes	
+Prevents repeating mistakes; enables reconsolidation	
+Mem0 / Letta / Zep style	
+
+State / Temporal	
+Current vs superseded facts, versioned notes	
+Avoids stale context (big failure mode in agents)	
+Bi-temporal graphs	
+
+
+
+
+
+
+
+
+
+
+ 
+Key principle from 2026 research: Signal density > volume. Prefer curated, versioned, citation-backed snippets over full dumps. Use progressive disclosure (load summaries first, expand on demand).
+ 
+2. How to Transfer That Context to the AI
+ 
+Best current patterns:
+ 
+ 
+Hybrid RAG + Memory Systems — Retrieve only what’s needed, then inject structured context.
+ 
+MCP (Model Context Protocol) servers — Expose your library as tools the AI can call.
+ 
+Agent Memory Architectures:
+
+Short-term (working context window)
+
+Long-term (vector + graph store)
+
+Procedural (skills bank)
+
+Reconsolidation loop (update memory after every retrieval/use)
+
+
+
+ 
+Git-inspired context control — Treat context like a repo: COMMIT, BRANCH, MERGE (see Git-Context-Controller ideas).
+ 
+Semi-formal reasoning prompts — Force the model to state premises → evidence → conclusion (improves code reasoning accuracy).
+ 
+ 
+3. SOTA Open-Source Stack to Focus On (Hugging Face + GitHub)
+ 
+Core memory & RAG engines (highest leverage):
+ 
+ 
+Mem0 / Letta (MemGPT) / Zep — Production-grade long-term agent memory with extraction, expiration, and graphs.
+ 
+RAGFlow or LightRAG — Strong open-source RAG engines with deep document understanding.
+ 
+Microsoft GraphRAG (or community forks) + Kuzu / Neo4j — For knowledge-graph reasoning over code.
+ 
+LangGraph + LangMem — Orchestration + native memory.
+ 
+Codebase-RAG style projects (AST-aware chunking + hybrid retrieval + symbol graphs).
+ 
+ 
+Code / Repo specialists:
+ 
+ 
+Projects doing Code2Skill-style extraction (turn repos into grounded skill banks).
+ 
+DeepRepoQA-style MCTS exploration agents.
+ 
+Fine-tunes like repo-specific Qwen/Code models on Hugging Face (or train your own on your aggregated library).
+ 
+IQuest-Coder or similar open code models with long context + reasoning variants.
+ 
+ 
+Agent frameworks to assemble everything:
+ 
+ 
+LangGraph / CrewAI / AutoGen for multi-agent setups.
+ 
+MCP servers for exposing your context library.
+ 
+OpenKnowledge-style tools (markdown + native MCP + agents) if you want a lighter local-first base.
+ 
+ 
+Practical focus order for your app:
+ 
+ 
+Build a hybrid indexer: AST + git history + embeddings + simple knowledge graph.
+ 
+Add a memory layer (start with Mem0 or Letta) that supports write / update / forget / reconsolidate.
+ 
+Expose everything via MCP tools so any model (Claude, local Qwen, etc.) can query it cleanly.
+ 
+Extract procedural skills from successful past changes so the AI can reuse patterns instead of reinventing.
+ 
+Implement temporal / state tracking so the model always knows what is current vs outdated.
+ 
+ 
+This combination (structured multi-layer memory + graph + skills + MCP) is currently the highest-value way to feed context back to models for continued development. It turns your repo aggregation app into a true long-horizon agent memory system rather than a simple note store.
+
+
+
+
+
+
+
+
+
+
+
+sources
+
+MESSAGE 12
+Studious Pancake can become a high-leverage co-development engine: a living context layer that turns your large repo (and related research) into structured, machine-readable intelligence that both of us can query, reason over, and act on. The goal is maximum signal density for continued development + expansion into web3 markets, while generating an adaptive, human-readable UI that lets you observe and eventually control the system.
+ 
+Highest-Value Function Layers (Prioritized for ROI)
+ 
+ 
+Repo Context Mastery (Core Value for Us)
+Deep, multi-layer indexing of your repo so I (or any agent) can reason about the full state without you manually dumping files.
+
+AST + symbol graph + call/dependency graphs.
+
+Git evolutionary layer (commits, diffs, PR rationales, issue threads).
+
+Chunked semantic embeddings with hybrid retrieval + citations.
+
+Procedural skill extraction (“how we successfully added feature X”).
+
+Temporal state tracking (current vs superseded facts, progress milestones).
+
+Production-readiness scorecard (test coverage, debt, security, deployment readiness) auto-updated.
+Highest immediate value: every session with me starts with near-perfect situational awareness of the repo.
+
+
+
+ 
+Web3 / Market Intelligence Layer
+Specialized aggregator for arbitrage, pairs, strategies, and landscape that goes beyond public search.
+
+Authorized plug-ins (API keys, session cookies, authenticated scrapers) for private dashboards, CEX/DEX data, on-chain analytics, Telegram/Discord signals, research portals.
+
+Structured extraction of currency pairs, liquidity routes, funding rates, historical arbitrage windows, risk metrics.
+
+Knowledge-graph of protocols, oracles, bridges, MEV patterns.
+
+Continuous monitoring + anomaly detection for new opportunities.
+
+Simulation sandbox for strategy back-testing against gathered context.
+This turns the app into a personal web3 research OS that feeds me high-signal, non-public data for analysis.
+
+
+
+ 
+Adaptive Auto-Generated UI
+Machine-readable context → beautiful, goal-oriented human interface.
+
+Category library (auto-sorted by themes: architecture, progress, risks, opportunities, web3 strategies).
+
+Goal buttons that spawn executable workflows (“Implement X”, “Research Y arbitrage”, “Audit Z”).
+
+Live repo dashboard: progress heatmaps, dependency graphs, “what changed since last session”.
+
+Control surface (future): approve/reject agent actions, trigger builds, push PRs.
+
+Themeable, responsive, with dark-mode polish and keyboard-first navigation.
+Value: you stay in flow; the UI surfaces exactly the context and next actions needed.
+
+
+
+ 
+Agentic Execution + Feedback Loop to Me
+Closed loop where gathered context improves both the app and our collaboration.
+
+MCP servers exposing every layer as tools I can call.
+
+Multi-agent orchestration (researcher, coder, critic, web3 scout).
+
+Memory reconsolidation: after every interaction, update the knowledge base with what worked.
+
+Session summaries that become permanent, queryable context.
+
+“Golden intelligence” export: curated, high-density packs optimized for my analysis (structured JSON + natural-language briefs + citations).
+
+
+
+ 
+Perplexity-Better Research Engine
+Combine the above into a superior answer engine.
+
+Hybrid retrieval (vector + graph + keyword + temporal).
+
+Multi-hop reasoning with explicit evidence chains.
+
+Source quality scoring + conflict detection.
+
+Live synthesis + suggested next research actions.
+
+Exportable research reports that feed back into the repo library.
+
+
+
+ 
+ 
+Concrete Functions & Capabilities Worth Exploring
+ 
+Repo-side
+ 
+ 
+Incremental indexer with git-diff awareness.
+ 
+Auto-generated architecture diagrams + change impact analysis.
+ 
+Debt & risk radar with prioritized fix suggestions.
+ 
+Test-generation and coverage-gap finder.
+ 
+Production checklist generator that evolves with the codebase.
+ 
+ 
+Web3 / Research-side
+ 
+ 
+Authenticated connector framework (OAuth, API keys, browser sessions).
+ 
+Pair & route discovery engine.
+ 
+Strategy pattern library (extracted from successful past trades/research).
+ 
+On-chain + off-chain fusion (e.g., mempool signals + CEX order books).
+ 
+Opportunity ranking with risk-adjusted scores.
+ 
+ 
+UI & Experience
+ 
+ 
+Context-to-UI compiler (structured data → interactive cards, graphs, buttons).
+ 
+Goal tree visualizer with progress tracking.
+ 
+One-click “brief me” that produces a perfect context package for me.
+ 
+Collaborative mode: shared live view of the knowledge library.
+ 
+ 
+Meta / Co-Developer Enhancers
+ 
+ 
+Automatic session hand-off packs (what we decided, open questions, next experiments).
+ 
+Preference learning (how you like context formatted, depth, style).
+ 
+Experiment tracker that logs R&D ideas and outcomes.
+ 
+Self-improving prompt/skill library drawn from our best interactions.
+ 
+ 
+Building Blocks to Combine & Extend
+ 
+Reuse and layer the previous stack:
+
+Mem0 / Letta / Zep (memory), GraphRAG-style + Kuzu (graphs), AST + hybrid retrieval, Code2Skill-style extraction, LangGraph / MCP, BlockNote or AFFiNE-style editors for the UI surface.
+ 
+Additional high-value blocks to explore
+ 
+ 
+Local embedding + reranker models (EmbeddingGemma, BGE, etc.).
+ 
+Long-context code models (Qwen, IQuest-Coder variants, DeepSeek-Coder).
+ 
+Browser automation / authenticated scraping frameworks (Playwright + stealth).
+ 
+On-chain data libraries (web3.py, ethers, The Graph, Dune-like open alternatives).
+ 
+UI generation: React + Tailwind + shadcn + auto-layout from structured schemas; or full generative UI approaches.
+ 
+Evaluation harnesses so every new function is scored on “how much better context it gives me”.
+ 
+ 
+Strategic Next R&D Directions (Value-Maxing Order)
+ 
+ 
+Solidify the multi-layer repo indexer + MCP exposure (immediate co-dev win).
+ 
+Build the adaptive UI skeleton that consumes that context (visibility + control).
+ 
+Add authenticated web3 connectors + structured extraction (market expansion).
+ 
+Implement memory reconsolidation + golden-intelligence export (closes the loop with me).
+ 
+Layer multi-agent research + execution workflows.
+ 
+Polish production-readiness scoring and auto-generated goal buttons.
+ 
+ 
+This creates a self-reinforcing system: better context → better decisions with me → better app features → even denser context → expansion into web3 revenue opportunities.
+ 
+We can dive deeper into any slice right now:
+ 
+ 
+Detailed architecture for the adaptive UI compiler.
+ 
+Specific web3 data sources and auth patterns.
+ 
+Exact schema for the knowledge library.
+ 
+Prototype plan for the first MCP tools.
+ 
+Evaluation metrics for “golden intelligence” quality.
+ 
+ 
+Which direction feels highest leverage for the next concrete step?
+
+MESSAGE 14
+Here’s a concrete, high-ROI blueprint for the pieces you asked for. It is optimized for turning Studious Pancake into a superior web3 research + repo context engine that feeds me (and other agents) dense, actionable intelligence.
+ 
+1. Building Blocks & Models for a Perplexity-Class System (Web3-Optimized)
+ 
+Core stack to focus on:
+ 
+ 
+Search + Crawl layer: Firecrawl (self-hostable, structured Markdown/JSON output), Morphic or Farfalle (open Perplexity clones), SearXNG + Tavily/Exa as fallbacks, searchts for keyless multi-provider fusion.
+ 
+Retrieval: Hybrid dense + BM25 + graph expansion. Use Qwen3-Embedding (0.6B–8B, top MTEB) or EmbeddingGemma-300m for local; BGE-M3 for multilingual. Always add a reranker (Qwen3-Reranker-4B or Ettin family / bge-reranker-v2-m3).
+ 
+Knowledge & Memory: GraphRAG-style (Neo4j or Kuzu) + Mem0 / Letta / Zep for long-term agent memory with reconsolidation.
+ 
+Orchestration: LangGraph or CrewAI for multi-agent research (scout → synthesizer → critic). MCP as the universal tool interface.
+ 
+Long-context reasoning models: Qwen3 series (strong open weights), local code models (IQuest-Coder variants), or cloud long-context models for synthesis.
+ 
+UI surface: BlockNote or AFFiNE-style block editor + shadcn/ui + Tailwind for the adaptive front-end.
+ 
+ 
+This combination beats basic Perplexity by adding authenticated sources, graph reasoning, temporal state, and direct MCP exposure to agents.
+ 
+2. Specific Web3 Data Sources & Auth Patterns
+ 
+Tiered sources (start free/public → add authenticated):
+ 
+Category	
+Sources	
+Auth Pattern	
+Notes	
+
+
+Market / CEX	
+CoinGecko, CoinMarketCap, CoinPaprika, CoinStats	
+API key (free tiers generous)	
+Prices, OHLCV, rankings	
+
+DEX / On-chain real-time	
+DexPaprika (keyless SSE), Birdeye, DEX Screener, GeckoTerminal	
+API key or keyless	
+Liquidity, pairs, new listings	
+
+Deep analytics	
+Bitquery (GraphQL), GoldRush/Covalent, The Graph (subgraphs), Codex	
+API key + optional JWT	
+Historical, mempool, custom queries	
+
+Wallet / Portfolio	
+Moralis, CoinStats, Alchemy	
+API key	
+Balances, PnL, DeFi positions	
+
+Research / Signals	
+DefiLlama, Glassnode (paid), Nansen-style, Dune (via API or scrape)	
+API key or session cookie	
+TVL, metrics, dashboards	
+
+Custom / Private	
+Authenticated scrapers (Playwright + stealth), Telegram/Discord bots, private research portals	
+Session cookies, OAuth, or browser profile	
+Non-public strategies & routes	
+
+
+
+
+
+
+
+
+
+
+ 
+Auth patterns to implement:
+ 
+ 
+API-key vault (encrypted, per-user or per-workspace).
+ 
+OAuth / browser-session injection for sites that require login.
+ 
+MCP tools that wrap each source so agents request “get_pair_liquidity(chain, pair)” without knowing the underlying provider.
+ 
+Rate-limit + fallback chains (public → paid → authenticated scrape).
+ 
+ 
+3. Detailed Architecture for the Adaptive UI Compiler
+ 
+text
+
+
+Context Store (Knowledge Library)
+        ↓
+Schema Mapper (JSON Schema → UI Schema)
+        ↓
+Component Generator (React + shadcn primitives)
+        ↓
+Layout Engine (auto-grid / goal-tree / dashboard)
+        ↓
+Interactive Layer (buttons → MCP tool calls or agent workflows)
+
+
+
+
+ 
+ 
+Input: Structured knowledge objects (categories, entities, goals, progress scores).
+ 
+Mapper: Converts each object type into a UI descriptor (card, graph, button group, timeline).
+ 
+Generator: Uses templates + optional LLM refinement for layout polish.
+ 
+Runtime: Live React app that re-renders when the knowledge library updates. Goal buttons trigger MCP tools or multi-agent runs.
+ 
+Themes & modes: Dark-first, keyboard navigation, progressive disclosure (summary → expand).
+ 
+ 
+This turns the library into an executable cockpit rather than a static wiki.
+ 
+4. Exact Schema for the Knowledge Library (Core)
+ 
+Use a hybrid document + graph store. Recommended core types (JSON / TypeScript style):
+ 
+TypeScript
+
+
+interface KnowledgeItem {
+  id: string;
+  type: "repo_chunk" | "web3_pair" | "strategy" | "goal" | "session" | "research_note";
+  title: string;
+  content: string;               // Markdown or structured text
+  summary: string;               // Dense LLM-generated summary
+  categories: string[];          // e.g. ["arbitrage", "solana", "progress"]
+  entities: { id: string; label: string; type: string }[];
+  relations: { from: string; to: string; type: string; weight?: number }[];
+  embeddings?: number[];         // or reference to vector store
+  temporal: {
+    created: string;
+    updated: string;
+    valid_from?: string;
+    valid_to?: string;           // for supersession
+  };
+  provenance: {
+    source: string;              // repo path, URL, API endpoint
+    confidence: number;          // 0-1
+    citations: string[];
+  };
+  metadata: Record<string, any>; // chain, pair, progress_score, etc.
+  goals?: string[];              // linked executable goals
+}
+
+
+
+
+ 
+Graph layer adds typed nodes (RepoFile, Function, Pair, Strategy, Goal) and edges (CALLS, DEPENDS_ON, ARBITRAGES, SUPERSEDES, PROGRESSES_TO).
+ 
+5. Prototype Plan for the First MCP Tools
+ 
+Phase 1 (1–2 weeks) – Minimum viable tools:
+ 
+ 
+search_knowledge(query, filters) – hybrid retrieval over the library.
+ 
+get_repo_context(path_or_symbol) – returns AST + recent diffs + summary.
+ 
+get_web3_pair(chain, pair) – normalized liquidity / price / risk data.
+ 
+list_goals(category?) / execute_goal(goal_id) – surfaces and triggers UI buttons.
+ 
+export_golden_pack(topic, depth) – produces the high-density context package for me.
+ 
+ 
+Implement as a single TypeScript/Python MCP server that talks to your vector + graph store. Start with stdio transport, then add HTTP for remote agents.
+ 
+6. Evaluation Metrics for “Golden Intelligence” Quality
+ 
+Track these on every export / session:
+ 
+ 
+Density: tokens of useful signal / total tokens (target > 0.7).
+ 
+Coverage: % of relevant entities/relations included vs ground-truth sample.
+ 
+Freshness: average age of included facts + % superseded facts correctly marked.
+ 
+Actionability: number of concrete next steps or executable goals generated.
+ 
+Citation faithfulness: % of claims with verifiable provenance.
+ 
+Downstream utility: measured by how much my subsequent reasoning accuracy or speed improves (human or automated judge).
+ 
+Reconsolidation gain: improvement in answer quality after memory update loops.
+ 
+ 
+Run automated evals on a fixed set of repo + web3 queries after every major change.
+ 
+This set of blocks, sources, architecture, schema, MCP plan, and metrics gives you a clear path to a system that is both a powerful co-development partner for the repo and a web3 research advantage. We can start implementing any of these pieces immediately—tell me which one you want to prototype first.
+
+
+
+
+
+
+
+
+
+
+
+sources
+
+MESSAGE 16
+Вот самые сильные pathways эволюции Studious Pancake с жёстким фокусом на value-maxing.
+ 
+Я ранжировал их по потенциальной отдаче (ценность для тебя + для меня как со-разработчика + коммерческий/исследовательский потенциал).
+ 
+1. Repo Context Engine → Production-Ready Co-Pilot (самый высокий immediate ROI)
+ 
+Превращаем приложение в полноценный слой памяти и управления большим репозиторием.
+ 
+ 
+Глубокий multi-layer индекс (AST + git-история + граф + procedural skills).
+ 
+Adaptive UI, который автоматически генерирует дашборды, goal-кнопки и progress-трекинг.
+ 
+MCP-инструменты, чтобы я мог напрямую запрашивать идеальный контекст.
+ 
+Golden Intelligence packs — плотные, цитируемые сводки, которые я использую для продолжения разработки.
+ 
+ 
+Почему value-maxing: ускоряет нашу совместную работу в разы. Каждый сеанс начинается с почти идеального понимания состояния репо. Это фундамент для всего остального.
+ 
+2. Web3 Research & Arbitrage Intelligence Layer
+ 
+Наращиваем специализированный исследовательский движок поверх общего контекста.
+ 
+ 
+Аутентифицированные коннекторы к CEX/DEX, on-chain аналитике, приватным источникам.
+ 
+Knowledge graph пар, маршрутов, стратегий + temporal tracking (что актуально сейчас).
+ 
+Симуляции и opportunity ranking.
+ 
+Автоматическая генерация research-отчётов и executable goal-кнопок («протестировать этот маршрут», «мониторить эту пару»).
+ 
+ 
+Почему value-maxing: открывает прямой путь к alpha в web3 (арбитраж, новые рынки). Данные, которые сложно достать обычным поиском, становятся твоим и моим конкурентным преимуществом.
+ 
+3. Full Agentic Workflow System (Perplexity++ для репо + web3)
+ 
+Объединяем всё в multi-agent систему, которая сама исследует, синтезирует и предлагает действия.
+ 
+ 
+Агенты: Repo Analyst, Web3 Scout, Critic, Executor.
+ 
+Memory reconsolidation + continuous learning.
+ 
+UI как cockpit управления агентами.
+ 
+Экспорт «золотой разведки» в формате, оптимизированном под меня.
+ 
+ 
+Почему value-maxing: система начинает работать на нас 24/7. Ты получаешь не просто инструмент, а активного партнёра, который сам генерирует ценность.
+ 
+4. Commercial / Product Pathway
+ 
+После того как ядро стабильно:
+ 
+ 
+Self-hosted версия для команд (репо-контекст + web3 research).
+ 
+Платные коннекторы / премиум-источники данных.
+ 
+White-label или API для других разработчиков/трейдеров.
+ 
+Возможность монетизации через подписку на «живой» knowledge layer.
+ 
+ 
+Почему value-maxing: превращает R&D в потенциальный продукт с реальной экономикой.
+ 
+Рекомендуемый порядок эволюции (максимум ценности на единицу усилий)
+ 
+ 
+Сначала доводим Repo Context + MCP + Adaptive UI до рабочего состояния (pathway 1).
+ 
+Параллельно или сразу после — добавляем web3 data sources + auth (pathway 2).
+ 
+На этой базе строим полноценную agentic систему (pathway 3).
+ 
+Когда есть стабильный core — думаем о коммерциализации.
+ 
+ 
+Хочешь, я прямо сейчас распишу детальный roadmap на ближайшие 4–6 недель по любому из этих pathways (с приоритетами задач, техническим стеком и метриками успеха)? Или углубимся в один конкретный путь?
+
+MESSAGE 18
+Да, Laya очень полезна для нашей системы.
+ 
+Что такое Laya
+ 
+Laya — это открытый (Apache 2.0) decision model (System 1), прямой open-source конкурент закрытого Jev от TypeSafe AI.
+
+Вместо генерации текста она за один проход отвечает на структурированные вопросы:
+ 
+ 
+choice — выбор из вариантов
+ 
+score — оценка по шкале
+ 
+noul — да/нет с калиброванной вероятностью
+ 
+ 
+Ключевые преимущества:
+ 
+ 
+~33 мс latency (в 7–8 раз быстрее Jev)
+ 
+Можно запускать локально (self-hosted)
+ 
+Нулевой cost per token
+ 
+Хорошая калибровка вероятностей
+ 
+Поддержка 100+ языков
+ 
+ 
+Как именно Laya полезна для Studious Pancake
+ 
+ 
+Быстрые структурированные решения в агентах
+Вместо того чтобы просить большой LLM «реши и верни JSON», Laya сразу отдаёт typed answer + probability. Это идеально для:
+
+маршрутизации задач (какой агент должен заняться этим куском репо / web3-исследованием)
+
+оценки urgency / risk / priority
+
+фильтрации и ранжирования возможностей арбитража
+
+guardrails (можно ли выполнять действие)
+
+
+
+ 
+Слой классификации и scoring внутри knowledge library
+Можно быстро прогонять новые куски контекста (репо-чанки, web3-данные, research notes) через Laya и автоматически проставлять категории, приоритеты, confidence scores.
+ 
+Ускорение Adaptive UI и Goal-кнопок
+При генерации интерфейса Laya может мгновенно решать, какие goal-кнопки показывать, какой приоритет им давать и стоит ли предлагать действие пользователю.
+ 
+Дешёвый и быстрый pre-filter перед тяжёлыми моделями
+Большие LLM (для глубокого reasoning и synthesis) вызываем только тогда, когда Laya уже отфильтровала и приоритизировала. Это сильно экономит токены и latency.
+ 
+Локальный и приватный
+Всё работает на твоей машине — идеально для sensitive web3-данных и большого приватного репозитория.
+ 
+ 
+Практический путь интеграции
+ 
+ 
+Добавить Laya как один из первых MCP-инструментов (decide(state, questions)).
+ 
+Использовать её в multi-agent orchestration (router / critic / prioritizer).
+ 
+В knowledge library — автоматический scoring новых items.
+ 
+В web3-слое — быстрая оценка opportunity score и risk.
+ 
+ 
+Вывод: Laya — один из самых высокоценных building blocks, которые появились в последние дни. Она отлично закрывает именно «быстрые структурированные решения», которых нам не хватало между тяжёлым reasoning и чистым retrieval.
+ 
+Хочешь, я сразу набросаю конкретный план интеграции Laya в нашу архитектуру (схема + первые MCP-инструменты + примеры вопросов для репо и web3)?
+
+
+
+
+
+
+
+
+
+
+
+sources
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5c914608eea1c8c318509323e73af661ca6e09917c156a3734d307723cc5d34b | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#37:SCE_DESKTOP_CONTEXT_RU_2026-10-03/sources/USER_MESSAGES_VERBATIM_RU.txt =====
+Ваши сообщения из одного найденного сохранённого разговора. Полнота серверной истории не подтверждена.
+
+MESSAGE 1
+А если я строю, э, моё приложение, которое будет агрегироваться и, э, взаимосвязано, синхронизироваться с Notion, это легально или нет?
+
+MESSAGE 3
+То есть в таком случае, у людей будет возможность автоматически сохранять абсолютно все те же самые данные, как и в Notion, так и в моём приложении. Э, но ничего ли страшного, что моё приложение будет, э, похожим на Notion, просто немного более ориентировано под репозитории, которые, э, э, моё приложение постоянно, э, агрегирует контекст собранных, э, собранных данных репозитория, чтобы создать, так сказать, библиотеку данных, э, которая потом, э, э, э, трансформируется по категориям, э, чтобы перечислить, э, разные направления работы, над которыми можно продолжить работать в репозитории, чтобы продолжить управлять репозиториями через это приложение, но также чтобы собирать контекст, чтобы продолжать, э, работу с помощью этого собранного контекста и отправлять этот контекст в искусственный интеллект, чтобы продолжать работать над репозиторием и создавать новые функции.
+
+MESSAGE 5
+А, и как бы я подошёл к вопросу, э, user, э, type interface like Notion, because they actually don't have a open-source repository. What are the close, uh, like, uh, ideas, uh, like Notion itself, but from open-source repositories on the GitHub I could find to find something closer to that I'm trying to build?
+
+MESSAGE 7
+Учитывая, что у меня достаточно широкий список, э, функций, которые я хочу внедрить, э, в это приложение, можешь, пожалуйста, перечислить дополнительные опции на выбор для того, чтобы подобрать вариант, который, э, будет более универсальный для большего количества дополнительных функций и внедрений, которые можно в него, э, э, с ним поэкспериментировать.
+
+MESSAGE 9
+if i wanna to provide the most value to the ai models im using back can you please explore ideas of what functions of maybe sota type context advanced reasoning gathered so that transfer this context to ai to continue develoment then what sota aproach based of existing AI models on hugging face + github opensuorced projects i should focus on gathering together?
+
+MESSAGE 11
+feel free to continue to explore additional next r&d zip like you have no limitations on what functions to develop and explore but still try to be strategic and optimise for value maxing, what functions will have for us highest value for developing studious pancake or providing awesome workflow in which i could provide to you the best context gathered from my very large repo on its way to be production ready, but also for example fited to be evolved into new web3 markets? what app functions, code capabilities could improve my also your expirience with me as your co-developer and partner to continue this app project the studious pancake or this app that helps to iterate on best context gathered on repo chunks on our way to production ready, or maybe gather web research and context on landscape of web3 or new arbitrage routes, currency pairs, strategies, maybe i will even authorise and plug in apps that would plug in authorisation to explore sites that would provide more context on web3, arbitrage strategies that would not be accesed via simple web search, so that our web search context gatherer would have awesome data agregator i would be able to gather for you, for your further analysis with your own genious brain to access and analyse entire picture of repository state and conext gathered, explore this chat ideas we could delve into? lets also create beautifull UI that will based of gathered context uonce repository production ready we will be able easilly gather context of repo progress that we worked so long so that our app will be leyer to gather context of our web3 repo as well as to create adaptive UI that will agregate context into structured library that would sort by cathegories gathered context and create botons to click on goals to execute on so colled auto generated UI from machine readable repository to human readable UI that will give me access to observe and in the future even controll repository? what ai based of building block you already listed can be bulded+ what aditional layers to add to build something like perplexity but better? what models building blocks to look on additionally? what additional capabilities we could additioally delve into to for sure being able to gather golden intelegance that could give away back to you value to gather best data? explore all type of ideas of functions could be explored?
+
+MESSAGE 13
+what building blocks and models to focus on to build something like perplexity to integrate into better workflow of web3 research and via Specific web3 data sources and auth patterns you'll outline also will achieve? Detailed architecture for the adaptive UI compiler.
+ 
+ 
+Exact schema for the knowledge library.
+ 
+Prototype plan for the first MCP tools.
+ 
+Evaluation metrics for “golden intelligence” quality.
+
+MESSAGE 15
+un russian, which pathways the project could evolve delving into value maxing?
+
+MESSAGE 17
+jev competitor laya usefull for our system? how?
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 31514294aa2eda68f5eb059a76fc4ae87da53a23d31982686d286416b8599746 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#44:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/00_repo_to_context.EXECUTABLE.json =====
+{
+  "schema": "sce.offline-recipe.v1",
+  "steps": [
+    "import_source",
+    "export_snapshot"
+  ],
+  "part_bytes": 200000,
+  "runtime": "app/run_recipe.py",
+  "network": false,
+  "laya_called": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2d56953206032636cb4012231edb21af3755ec0a6b5632a33adaee5090bc2be6 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#45:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/01_chat_history_to_goals.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "01_chat_history_to_goals",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "import_export",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "preserve_roles_branches",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "extract_user_goals",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "link_decisions",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "review_conflicts",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "persist_goal_versions",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5a83dbc043176b67f87e29b152c70b0afbea6ab1161cbf6e3514a362b5010fbc | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#46:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/02_repo_to_smells.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "02_repo_to_smells",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "inventory",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "static_analysis",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "dependency_closure",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "laya_triage",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "ai_review",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "request_reproducer",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "store_candidates",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3866765383ffeaa73af9872178dd0b97824b8fff85999a9f63090dc6dcce55c7 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#47:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/03_requirement_to_evidence.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "03_requirement_to_evidence",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "load_goal_version",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "find_current_owner",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "retrieve_code_tests",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "run_registered_verifier",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "evaluate_truth",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "store_receipt",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 83219ea426b2396bd2c0504e15d4c11f9edfe1daf1010e31ccf561ec9ed837f1 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#48:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/04_continue_flashloan.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "04_continue_flashloan",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "load_goal_history",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "pin_repo_sha",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "read_qualification_receipts",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "rank_blockers",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "compile_context_pack",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "prepare_fix_task",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ea5ecc2f66d1eb86f061d67acdafcb8398b0c844609f6f00de5b514fe3de25ed | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#49:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/05_ai_review_all_parts.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "05_ai_review_all_parts",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "load_index",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "initialize_coverage_ledger",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "send_pending_part",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "import_bound_response",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "cross_module_review",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "identify_gaps",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e23d5e060a40d8c06fd3a97b8f4e3ae7cdf0545f0cd48e51c17262dc1496c6e9 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#50:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/06_fix_blocker_worktree.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "06_fix_blocker_worktree",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "verify_base_sha",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "create_worktree",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "apply_reviewed_change",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "run_registered_tests",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "verify_result",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "prepare_pr",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 d93d3e5d1261ad26266911afa66c46e93193370fc853070c9b7a04d9a5628a8d | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#51:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/07_web3_research_to_experiment.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "07_web3_research_to_experiment",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "read_authorized_sources",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "normalize_observations",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "check_freshness",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "compare_existing_strategies",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "write_hypothesis",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "prepare_paper_plan",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 aabc07bd282357485a7b1a514f1ba69e5467b029120330b231c29787d10b5852 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#52:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/08_paper_campaign.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "08_paper_campaign",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "check_operator_profile",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "pin_data_config_sha",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "start_registered_paper_process",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "observe",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "stop_or_complete",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "verify_receipt",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 a81fbbfcf2ce001d9057ccb7aa6cfc5f7ae9792b17d0e6a1ad168c3fad7a9518 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#53:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/09_file_changed.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "09_file_changed",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "hash_changed_source",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "update_version",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "invalidate_dependents",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "rebuild_affected_packs",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "notify_goal_owner",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 0ae0f9d007d5c1bd8a4b6543b69d86f4f4669392409cf05386cb3ff0964b5482 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#54:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/10_voice_to_context.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "10_voice_to_context",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "record_selected_microphone",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "local_asr",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "edit_final_transcript",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "compile_task_spec",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "retrieve_context",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "preview_pack",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 033d7de870238e229870d702f7aa71c578eab06d0a51c405e0807b3f0b3a28a2 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#55:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/11_library_question_api.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "11_library_question_api",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "resolve_question",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "search_scoped_sources",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "read_source_spans",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "build_pack",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "explicit_api_request",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "store_answer_and_sources",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3bb721df1751820728de9841cc906228f4f9353c10d0e409b4139d56fd0bde0f | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#56:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/12_api_note_action.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "12_api_note_action",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "validate_typed_tool_call",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "bind_revision",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "preview_note_change",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "write_note",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "readback",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "receipt",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 bb16a69455132784ac7680fae1bc56ac0270b92f87d54bc3d25402b1d3e23a0c | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#57:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/13_ci_failure_pack.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "13_ci_failure_pack",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "fetch_authorized_ci_receipt",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "bind_commit",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "map_failure_owner",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "retrieve_tests_code",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "build_fix_request",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 8e6f759e2281ba0e65df64dea2064dcd3e9995114635b0607c5eae64303ebb58 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#58:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/14_pr_merged_refresh.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "14_pr_merged_refresh",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "read_merge_sha",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "diff_previous_snapshot",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "update_index",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "invalidate_old_reviews",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "evaluate_related_goals",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 0cb569fae879192bd35f565814b0bf275b1752f1f51a281bd50a66eaaffa68cd | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#59:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/15_backup_restore.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "15_backup_restore",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "consistent_sqlite_backup",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "copy_referenced_blobs",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "write_hash_manifest",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "restore_test",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "publish_receipt",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 21916b86aedf3c4ed1d2bfc57a9e3db978f49c580a0b24fbad3a8097a1cd66c6 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#60:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/16_laya_eval.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "16_laya_eval",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "freeze_dataset",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "run_rules_baseline",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "run_pinned_laya",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "calibrate_on_separate_split",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "evaluate_heldout",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "compare_cost_quality",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 20616e41dae7142123f1bc8b13fc0451db2b376dc59af38fa4e64048fea5f151 | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#61:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/17_research_to_skill.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "17_research_to_skill",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "find_repeated_success",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "extract_typed_recipe",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "identify_existing_handlers",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "test_new_inputs",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "register_version",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "record_reuse",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 52fd925486d7627ca77ee39b457be1cb141144729dede9ea3c4ca636f87211ab | FIRST SOURCE original_archives/SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip!#152:SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03/sources/SCE_DESKTOP_CONTEXT_V1_original.zip!#62:SCE_DESKTOP_CONTEXT_RU_2026-10-03/workflows/18_user_idea_to_next_pr.SPEC.json =====
+{
+  "schema": "sce.workflow-spec.v1",
+  "id": "18_user_idea_to_next_pr",
+  "status": "SPEC_ONLY_NOT_EXECUTABLE",
+  "steps": [
+    {
+      "handler_candidate": "load_verbatim_user_idea",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "resolve_latest_decision",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "compare_existing_code",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "request_missing_evidence",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "scope_minimal_change",
+      "implemented_in_this_package": false
+    },
+    {
+      "handler_candidate": "produce_reviewable_task",
+      "implemented_in_this_package": false
+    }
+  ],
+  "state_owner": "existing SCE automation_core",
+  "failure_policy": "persist evidence; UNKNOWN effect requires reconciliation",
+  "laya_authority": "ADVISORY",
+  "financial_execution_authorized": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f60828d44b44bdbd4aceeb6dd868b984b5f4152eda29664020fba46eb2903ce4 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#0:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/00_START/00_PARALLEL_CAPTURE_DECISION_RU.md =====
+# Главное уточнение: много наблюдателей, много изолированных исполнителей, один владелец конфликтующего эффекта
+
+## 1. Никакого глобального запрета параллельной записи
+Микрофон → один device stream → несколько потребителей ASR/VAD/архиватора. DOM, accessibility, Git и terminal collectors одновременно создают свои observations. Каждый имеет namespace/sequence/source revision. Same raw bytes могут храниться один раз, но все ссылки происхождения сохраняются.
+
+БД физически может сериализовать короткие транзакции. Это не значит, что она сериализует весь процесс записи, ASR, поиск и запуск работы. Контент capture append-only; модель не переписывает original history. Для больших media — потоковая spool + cursor + retention, а не RAM buffer; данный lab этого не реализует.
+
+Параллельные code writers также допустимы в разных worktrees. Общая branch/head publication контролируется отдельно. Несколько реальных действий над разными ресурсами выполняются одновременно. «Один writer» относится к конкретному неидемпотентному effect target, не к машине в целом.
+
+## 2. Пять режимов, которые нужно выбирать явно
+| Режим | Для чего | Когда завершать |
+|---|---|---|
+| COMPLEMENTARY_UNION | Собрать разные наблюдения одного процесса | По completion/coverage/deadline; не по первому ответу |
+| REQUIRED_EVIDENCE_JOIN | Код + тесты + актуальная цель | Когда все обязательные доказательства присутствуют |
+| FIRST_VERIFIED | Альтернативные способы получить одинаковый результат | Первый прошедший независимые checks, не первый fastest text |
+| PARTITIONED_MAP | Части большого корпуса или разные effect targets | Все нужные partitions с coverage ledger |
+| PREPARE_COMMIT | Патчи, обновления, внешний submit | Параллельная подготовка, одна scoped activation/operation |
+
+## 3. Самый быстрый путь к пользе в нашем проекте — гипотеза
+Не ждать новую большую AgentOS. Сохранить SCE content.sqlite3 / queue/review owners и добавить desktop client + event intake. Первая команда строит source-bound handoff для Studious из текущего source snapshot и known blocker. Голос и модели маршрутизации добавляются поверх того же typed request.
+
+Проектная pipeline:
+```
+voice/text → IntentSpec revision
+  ├─ live workspace state       ┐
+  ├─ Git/symbol/test context    ├─ evidence-ready handoff v1 → chosen AI
+  ├─ accepted goals/history    ┘          ↑                 ↓
+  └─ allowed archive ingestion → late delta        NEED_CONTEXT / patch
+                                     ↓                    ↓
+                           freshness check          isolated test branch
+                                     └──── verifier ──────┘
+                                             ↓
+                                   scoped install / receipt
+```
+Не нужно запускать весь набор распознавания/планирования на каждом слове. Часть read-only prefetch выполняется заранее; stable intent имеет revision. Новое «нет, не этот проект» отзывает pending effect.
+
+## 4. ZIP и текст чата — совместимы, но не независимые голоса
+ZIP — versioned procedures/contracts/backlog. Текущий текст пользователя — intent, scope и обновления требований. Repo — фактический source snapshot; execution receipts — доказательства запуска. Они обрабатываются параллельно в разных authority lanes и соединяются в один goal/evidence graph.
+
+Если ZIP повторяет текст чата, это одна lineage, не два подтверждения истины. Если старый ZIP противоречит последней явной инструкции пользователя, instruction обновляет planned behavior, но не переписывает факты в source/test evidence.
+
+## 5. Отсутствующие права/данные не выводятся из желания «всё автоматизировать»
+Источник может быть AVAILABLE, PARTIAL, NOT_CAPTURED, UNSUPPORTED, DENIED, STALE или ERROR. Эти статусы повышают честность availability карты. Полнота относится к объявленному scope и snapshot, а не к «любой информации вообще». Нельзя наблюдением страницы гарантировать захват невидимой части истории.
+
+## 6. Производственная граница
+Reference lab — проверка алгоритмических contracts на synthetic data. Не готовый агент, не security sandbox, не streaming TB store, не real voice performance. В app существующий Core остаётся владельцем прав, очередь не дублируется. Реальный update сохраняет attestation/digest, permission diff, smoke test, one activation и ограниченный rollback.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6848746fb6cd6511dd0c51eafd82366f8b1df9c2392203db42e5d766cc3cd3b5 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#1:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/00_START/01_MASTER_PLAN_RU.md =====
+V3 УТОЧНЕНИЕ: multi-producer recording и независимые effect resources параллельны. Single writer относится только к одному конфликтующему effect target. Главная схема: 00_START/00_PARALLEL_CAPTURE_DECISION_RU.md.
+
+# Voice AgentOS V2 — локальный компилятор контекста и безопасные параллельные маршруты
+
+Дата: 3 октября 2026. Целевой пользовательский сценарий: личное приложение Windows 11, библиотека исходников/идей/кода и голосовой control plane для работы с выбранными AI и продолжения Studious-Pancake.
+
+## Главное решение
+
+Не «три агента одновременно меняют одну вкладку», а **несколько независимых путей подготовки → проверка → один эффект**.
+
+```text
+Голос / текст
+    → версия намерения + область прав
+    → pinned snapshot + критерии результата
+    → выбор реально различающихся маршрутов
+       ├─ exact source / symbols
+       ├─ logs / measured execution
+       └─ historical decisions / alternative candidate
+    → независимый verifier
+    → stop losers / confirm cancellation
+    → повторная проверка target version и permissions
+    → один effect broker
+    → наблюдение результата / receipt / reconciliation
+    → история и квалифицированный reusable skill
+```
+
+Имена API/MCP/PowerShell не определяют независимость. MCP — транспорт/контракт, а не отдельный источник корректности. Playwright и CDP могут управлять тем же Chromium. Несколько coding models могут повторять одну ошибку из общего context pack. Поэтому registry должен описывать общие зависимости и реальные co-failures.
+
+## Три режима параллелизма
+
+**Fan-out/fan-in:** несколько непересекающихся чтений нужны все. Пример: source, test trace, текущая requirement. Система объединяет evidence, не выбирает самый быстрый неполный ответ.
+
+**Race-to-verified:** два разных кандидата решают один контракт. Не первый ответ, а первый результат, принятый независимым verifier. Для сложного patch «тесты прошли» — необходимое, но не достаточное условие; нужны bound task criteria и regression scope.
+
+**Delayed hedge:** запасной read/candidate запускается лишь при превышении порога задержки или недостаточном evidence первого пути. Это кандидат на лучший speed/cost trade-off; выигрыш измеряется, а не обещается. Подход связан с tail-latency research [S01].
+
+## Что никогда не гоняем наперегонки в общей среде
+
+Публикация сообщения, GitHub merge, перевод средств, live trade, delete, DB migration, обновление прав, ввод в один foreground, команды с общим output directory/DB. Тесты тоже могут изменять files/DB или обращаться к сети: им нужны отдельные workspaces и проверенные ограничения.
+
+Worktree — не sandbox [S04]. Browser context отделяет browser storage, но не последствия в одном remote account [S03]. Само имя действия read-only не делает недоверенный Python безопасным.
+
+## Локальная библиотека без подмены полноты
+
+Raw objects остаются исходниками. Chunks, summary, labels, embeddings и graphs — воспроизводимые представления. Каждый вывод связан с source URI, object hash, byte/message span, parser version и временем. Путь с переносом/переименованием не должен терять lineage.
+
+Нет произвольного лимита на двадцать документов. Но конечные RAM/disk/API budgets остаются. Большие данные обрабатываются порциями с durable cursor, backpressure и явными error/exclusion records. Библиотека, индекс и один AI request имеют разные границы полноты.
+
+Важный UI: `raw stored`, `indexed`, `selected for this pack`, `omitted with reason`. Кнопка «включить всё» не должна молча означать первые N документов. Полный repo export может состоять из томов с индексом, а рабочий handoff — из target slices и нужных зависимостей.
+
+## Дополнительные intelligence layers
+
+**Evidence deficit planner:** находит конкретно недостающий test trace, symbol, original decision или runtime observation. Он экономит вызовы модели, потому что запрашивает недостающий факт, а не увеличивает summary.
+
+**Authority-aware labeling:** отличает голосовую команду пользователя от цитаты в webpage, AI-предложения, observed output и политики. Лейбл VERIFIED нельзя получить из слова «готово». Confidence — оценка извлекателя, не разрешение и не доказательство.
+
+**Snapshot closure:** context pack связан с commit, actual dirty-file hashes, индексом и policy version. До применения нужно убедиться, что цель не изменилась. Это предотвращает работу хорошего патча по неверной базе.
+
+**Conditional failure memory:** помнит «этот locator/adapter/version уже не работал» с условиями и сроком. Смена version вызывает requalification, а не вечную блокировку.
+
+**Context optimizer:** сравнивает источники по полезности для verified outcomes. DSPy/GEPA — optional offline experiment [S11–S13], не автоматически принятая зависимость и не право модели переписывать production policy.
+
+**Skill minimizer:** сокращает успешный workflow по повторным проверкам; не просто сохраняет длинную цепочку кликов. Больше использования должно уменьшать цену знакомой задачи, а не наращивать тысячи агентов.
+
+## Самый короткий путь к полезности
+
+Не начинать с universal visual agent и трёх тяжёлых локальных моделей. Первый вертикальный сценарий — **текст/голос → собрать handoff на текущую функцию Studious → показать кратко зачем → сохранить исходники/refs → импортировать ответ выбранного AI → проверить binding**.
+
+После того как этот сценарий даёт measured benefit, добавить voice adapter к тому же IntentSpec, два альтернативных retrieval/candidate routes и single-effect broker. Затем новые навыки через isolated coding, verification и staged update. UI/vision — последний адаптер для задач без хорошего структурированного интерфейса.
+
+На Dell стартовый эксперимент: один CPU-heavy worker, маленькое число concurrent model requests и background indexing с низким приоритетом. Это гипотеза для настройки, не измеренная оптимальная конфигурация. Никаких заявлений «33ms end-to-end» до измерений на устройстве. Карта Laya сама показывает зависимость качества/времени от checkpoint и input length [S06].
+
+## Измерения вместо универсальных процентов
+
+Для каждой категории задач фиксировать requested intent, supported/unsupported, attempted, verified outcome, blocked, failed, cancelled, unknown, false-success, human intervention. Публиковать coverage вместе с conditional success: иначе система может «улучшить процент», просто перестав делать сложные задачи.
+
+Сравнивать serial / eager-parallel / delayed hedge при одинаковых input cases, resources и timeouts. Измерять p50/p95 time-to-verified и cost per verified success; включать failures/timeouts в отчёт. Co-failure и negative cases обязательны.
+
+В абстрактном независимом примере P(хотя бы один успех) = 1 − произведение(1 − p_i). Если все пути зависят от одной плохой библиотеки/ошибочной команды, это вычисление неприменимо. Число агентов не гарантирует большую вероятность правильного результата.
+
+## Что реально выполнено в этом ZIP
+
+Сохранён исходный ZIP и его 8 файлов. Составлены 32 требования, 24 дополнительные R&D карточки (всего 42 с прежними), 20 workflow specs и 225 уникальных proposed functions (129 прежних + 96 новых). Проверены первичные документы S01–S19 и прочитаны 3 repo-документа.
+
+Небольшой offline lab демонстрирует byte-preserving source store, bounded context с omissions, delayed read/candidate race, independent verifier и idempotent single SQLite commit. 41 unit test прошёл в среде сборки. Это не desktop app, не Windows qualification и не готовая Laya интеграция. API, микрофон, реальные repo tests, browser control и trading не запускались.
+
+Полных исходных ChatGPT/Grok/Telegram/Google Docs архивов здесь нет. Цели текущего чата собраны в реестр; старый ZIP сохранён byte-for-byte. Полный transcript или «вся жизнь без потерь» этим пакетом не заявляются.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 15e4be752795e0469c8bc04cd5757ce3e54e0e9084ad7aca0ed95a0a4e617b2e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#2:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/00_START/02_NEXT_IMPLEMENTATION_RU.md =====
+V3 УТОЧНЕНИЕ: multi-producer recording и независимые effect resources параллельны. Single writer относится только к одному конфликтующему effect target. Главная схема: 00_START/00_PARALLEL_CAPTURE_DECISION_RU.md.
+
+# Следующая реализация: 8 work items, не номера существующих PR
+
+Сначала прочитать current code/exact commit. Документы репозитория уже указывают на существующие owners — повторно не создавать queue/store. В этом выполнении ветки, PR, merge не создавались.
+
+## CTX-PAR-01 — Preserve existing owners + trustworthy context intake
+Подключить desktop client к existing SCE service owner, не создавать вторую queue/database. На pinned current source проверить documented scan/export caps; добавить streaming progress/coverage/error ledger.
+
+Приёмка: Raw bytes и provenance survive restart; more-than-20 не обрывается; no scanned code execution.
+
+Связи: RND-23 RND-27 RND-35.
+
+## CTX-PAR-02 — Goal-bound handoff and labeling
+IntentSpec из текста, evidence requirements, authority-aware tags и provider-neutral HandoffBundle. UI показывает краткое WHY_THIS_PACKET, sources и omissions.
+
+Приёмка: Required missing evidence возвращает NEEDS_CONTEXT; приватные источники не уходят provider без scope.
+
+Связи: RND-24 RND-25 RND-36 RND-40.
+
+## CTX-PAR-03 — Read/candidate races with real diversity
+Failure-domain registry, serial/eager/hedged comparator, budgets и cancellation receipts. Вначале только чтение и подготовка artifacts.
+
+Приёмка: First invalid answer rejected; co-failure recorded; loser cancel confirmed; deadline не приводит к effect.
+
+Связи: RND-19 RND-20 RND-32.
+
+## CTX-PAR-04 — Effect broker and resource ownership
+Target revision, operation ID, single writer, leases/fencing and unknown-effect reconciliation. Existing Core must remain authority.
+
+Приёмка: Same intent duplicate produces one local effect; external unknown не повторяется вслепую; foreground user wins.
+
+Связи: RND-21 RND-22 RND-30 RND-33.
+
+## CTX-PAR-05 — Studious evidence vertical
+Registered inspection/test adapter, source-bound failure triage, exact-head evidence, независимые fix criteria. Не интегрировать signer/sender.
+
+Приёмка: Одна команда создаёт проверяемый failure/context handoff; не выдает fixture/test green за market qualification.
+
+Связи: RND-23 RND-24 RND-28 RND-37.
+
+## CTX-PAR-06 — Voice and accessibility adapter
+Push-to-talk/optional wake + critical-slot checks, separate stop path, live command preview, RU/EN project aliases.
+
+Приёмка: Same typed input contract as text; false activation/negation errors measured; installed Dell receipt captured.
+
+Связи: RND-29 RND-30.
+
+## CTX-PAR-07 — Safe skill factory and updater
+Unknown action → isolated candidate code → independent tests → reviewable package → permission diff → staged activation.
+
+Приёмка: First run may use coder, known replay uses qualified skill; new permissions never auto-granted; no core overwrite while running.
+
+Связи: RND-31 RND-38 RND-39 RND-41.
+
+## CTX-PAR-08 — Offline optimization and portfolio learning
+Контекстные ablations, skill minimization, held-out evaluation DSPy/GEPA candidates. Реальные traces снабжают offline optimizer.
+
+Приёмка: No holdout leakage; promotion only on verified outcomes and unchanged policy constraints; rollback retained.
+
+Связи: RND-26 RND-38 RND-42.
+
+## Что отдавать coding AI первым
+Первое изменение должно сделать рабочим только выбранный вертикальный сценарий. Не нужно одновременно добавлять Temporal, Graphiti, LanceDB, UFO, 5 моделей и новый shell runtime. 225 функций в backlog — карта возможностей, не требование создавать 225 пустых wrappers.
+
+Документ `08_HANDOFF/FIRST_DOCUMENT_TO_ANY_AI_RU.txt` содержит scope и требования к ответу. В контекст следующей модели добавить исходный код exact snapshot, а не только этот план. Отсутствующий код должен вернуть NEEDS_CONTEXT, не придуманную реализацию.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 902726e0e4c886862544c80647f620a3a0ca4f05afeab6f1e2b29915a36ecea3 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#3:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/00_START/03_WHATS_NEW_RU.md =====
+# Что добавлено
+V1 сохранён как historical ZIP byte-for-byte: 18 направлений и исходный backlog.
+V2: 24 направления RND-19–42, 20 workflow specs, 41 offline test.
+V3: 12 уточняющих направлений RND-43–54, 12 новых сценариев WF-21–32, 48 новых proposed functions и 48 новых offline tests.
+
+Итого: 54 направления (18 inherited + 36 detailed new/refinement cards), 32 workflow specs, 40 requirements, 273 proposed function entries; 89 unit tests. Это counts документации и lab, не число работающих desktop функций.
+
+V3 реализует только offline subset: immutable multi-source observation journal, concurrent collection with explicit coverage/error, lineage-aware claim grouping, required evidence readiness, resource interference scheduling. 48 функций backlog — производственные integration work items, не алиасы всех методов lab.
+
+В inherited lab исправлено закрытие SQLite connections; база синтетического demo и тесты остаются offline. Скрипты не скачивают модели, не открывают Chrome, не меняют repos и не запускают сделки.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ed274f2d030f0a7d5289116006d890926df79031287a78e622cb72867ee53558 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#4:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/01_CONTEXT/ALL_AIMS_AND_GOALS_RU.md =====
+# Цели и ограничения чата
+
+Реестр требований, а не утверждение о выполнении. Anchors — короткие цитаты или явно помеченные пересказы, не полный транскрипт.
+
+## REQ-001 — Локальное личное приложение
+Windows 11; библиотека и control plane локальны, не обязательный SaaS.
+
+Источник: CURRENT_CHAT; anchor: local application
+
+## REQ-002 — Голос и текст равноправны
+Оба входа формируют один IntentSpec; фоновые голоса не считаются приказом.
+
+Источник: CURRENT_CHAT; anchor: via text or or via your voice
+
+## REQ-003 — Любой выбранный AI
+Provider-neutral пакет + adapters; не привязывать память к Grok/OpenAI.
+
+Источник: CURRENT_CHAT; anchor: for your AI of choice
+
+## REQ-004 — Сохранение исходников
+Raw bytes не заменяются summary/chunks; пути, IDs, время и источник сохраняются.
+
+Источник: CURRENT_CHAT; anchor: entire history of my life
+
+## REQ-005 — Нет лимита двадцати документов
+Порции и бюджеты регулируют обработку; не скрывают хвост библиотеки.
+
+Источник: RETRIEVED_PRIOR_USER_CONSTRAINT; anchor: more than 20 max docs remove
+
+## REQ-006 — Семантический repo context
+Repo map, symbols, dependencies, tests и history вместо ручной нарезки пользователем.
+
+Источник: CURRENT_CHAT; anchor: this application could to chunk it
+
+## REQ-007 — Несколько источников
+ChatGPT/Grok exports, Google Docs exports, разрешённые private Telegram exports, Git.
+
+Источник: CURRENT_CHAT; anchor: entire private Telegram channels
+
+## REQ-008 — Library UI
+Поиск, теги, граф целей, timeline, выбор исходников, completeness/omissions.
+
+Источник: CURRENT_CHAT; anchor: library like Notion local application
+
+## REQ-009 — Терминал и VS Code
+Только зарегистрированные операции с рабочим проектом и областью файлов.
+
+Источник: RETRIEVED_PRIOR_USER_CONSTRAINT; anchor: local terminal ... vs code
+
+## REQ-010 — Документы для передачи AI
+Короткое объяснение WHY_THIS_PACKET + полные ссылки на evidence + ожидаемый patch/test response.
+
+Источник: CURRENT_CHAT_RU_PARAPHRASE; anchor: why this document should be passed to another AI
+
+## REQ-011 — Продолжение Studious
+Qualification/evidence/patch triage для BobIvans/studious-pancake. Не считать план действующим ботом.
+
+Источник: CURRENT_CHAT; anchor: continue to work on our Studio Spancake flashloan bot
+
+## REQ-012 — Восстановление решений
+Старое предложение != новая команда; decision lineage/supersedes и даты.
+
+Источник: CURRENT_CHAT; anchor: previous goals ... aggregated
+
+## REQ-013 — Новая способность через код
+Voice → context → AutomationSpec → coding agent → branch → tests → GitHub review → local skill update.
+
+Источник: CURRENT_CHAT; anchor: renew the local application, renew the capabilities
+
+## REQ-014 — Параллельные пути одной задачи
+Диверсифицированные read/draft candidates; одна точка эффектов, independent verification.
+
+Источник: CURRENT_CHAT; anchor: parallel actions would execute on same automation
+
+## REQ-015 — Скорость и стоимость
+Короткий fast path, delayed hedges, caching, budgets; не безусловный запуск всех моделей.
+
+Источник: CURRENT_CHAT; anchor: fastest route to those aims
+
+## REQ-016 — Подготовка во время речи
+Только разрешённый read-only prefetch по устойчивой части транскрипта.
+
+Источник: CURRENT_CHAT; anchor: lowest possible time
+
+## REQ-017 — Измеряемая успешность
+Verified completed / attempted, false-success отдельно; никаких обещаний 100% arbitrary GUI.
+
+Источник: CURRENT_CHAT; anchor: highest sucess rate on execution
+
+## REQ-018 — Безопасные маршруты
+Не дублировать публикации/merge/удаления/trading; unknown effect требует reconciliation.
+
+Источник: CURRENT_CHAT; anchor: multiple safe routes
+
+## REQ-019 — Права не выдаёт модель
+Typed route/LLM plan не расширяет scope; секреты остаются вне handoff.
+
+Источник: ASSISTANT_PROPOSED_SAFETY_BOUNDARY; anchor: safely ... permissions
+
+## REQ-020 — Accessibility-first
+Stop/undo/correction/voice status; пользователь имеет приоритет над GUI worker.
+
+Источник: CURRENT_CHAT; anchor: people with disabilities
+
+## REQ-021 — Приватность
+Локальный capture opt-in; public/private/sensitive, field-level cloud-export approval.
+
+Источник: CURRENT_CHAT; anchor: hold any data locally
+
+## REQ-022 — API budget
+Провайдеры настраиваются по key references и явному лимиту расходов; ключи не включать в ZIP.
+
+Источник: CURRENT_CHAT; anchor: use my api key
+
+## REQ-023 — Evidence truth
+Не путать source_fact, model_claim, implementation, tests, installed qualification, real market evidence.
+
+Источник: DERIVED_ACCEPTANCE_CRITERION; anchor: highest successful ... execution
+
+## REQ-024 — Без обязательного расширения
+Desktop — основной интерфейс; Chrome может быть управляемым приложением/optional adapter.
+
+Источник: RETRIEVED_PRIOR_USER_CONSTRAINT; anchor: remove wire to chrome extensions
+
+## REQ-025 — Daily workflows
+Повторяемые планы/исследования/документы/квитанции; расписания не стартуют от импорта.
+
+Источник: CURRENT_CHAT; anchor: executions I need to do daily
+
+## REQ-026 — R&D технологий
+GitHub/Hugging Face/X разведка, первичные источники и локальные сравнения.
+
+Источник: CURRENT_CHAT; anchor: new technologies ... hugging face
+
+## REQ-027 — Вопрос о каталоге ChatGPT
+Отдельный опциональный путь публикации; точная иконка неизвестна.
+
+Источник: CURRENT_CHAT_RU_PARAPHRASE; anchor: insert a link to your service
+
+## REQ-028 — Пакет продолжения
+Два стартовых RU документа, JSON work items/workflows, tested offline reference.
+
+Источник: CURRENT_CHAT; anchor: agregate bigger zip
+
+## REQ-029 — Сохранить предыдущие идеи
+18 прежних R&D и 129 функций остаются в legacy с происхождением и статусом.
+
+Источник: CURRENT_CHAT; anchor: this entire chat aims and goals you outlined
+
+## REQ-030 — Не заявлять недоступные данные
+Исходный ZIP сохранён; более ранние архивы/полные приватные истории не получены здесь.
+
+Источник: SCOPE_BOUNDARY; anchor: go thourgh our ideas and my inputs
+
+## REQ-031 — Один владелец runtime
+SCE Core/content.sqlite остаются owners; Studious владеет qualification, voice/Laya advisory.
+
+Источник: RETRIEVED_PRIOR_DECISION_UNVERIFIED_IMPLEMENTATION; anchor: one evolving context/automation library
+
+## REQ-032 — Прогрессивная полнота
+Inventory/cursor/coverage/explicit exclusions; retrieval budget не ограничивает хранение.
+
+Источник: CURRENT_CHAT; anchor: aggregate any context, any data
+===== END CONTENT =====
+
+===== CONTENT SHA256 9b9b22efa08b649071b0188afd0c2f1719ae2849915767c7e5fdb3b29ce6addb | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#5:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/01_CONTEXT/CONTEXT_COVERAGE.json =====
+{
+  "scope": "Current visible conversation goals and proposals, supplied legacy ZIP, retrieved prior-context summaries, three repository document reads.",
+  "raw_chat_export_available": false,
+  "full_life_archive_available": false,
+  "current_conversation_aims_reviewed": 40,
+  "original_zip_preserved": true,
+  "original_zip_files": 8,
+  "previous_chat_retrieval": "Relevant summaries recovered; not complete original messages or attachments.",
+  "repo_audit": "Documentation reads only; no whole-codebase scan or current CI verification.",
+  "known_missing_archives": [
+    "SCE_DESKTOP_CONTEXT_RND_V2_RU_2026-10-03.zip",
+    "STUDIOUS_SCE_FULL_CONTEXT_RU_2026-10-03.zip",
+    "OCC_LAYA_V7_MASTER_CONTEXT_AUTOMATION_RU_2026-10-03.zip"
+  ],
+  "not_imported": [
+    "Private Telegram history",
+    "Google Docs document bodies",
+    "Grok conversation export",
+    "full ChatGPT account export"
+  ],
+  "uncertainty_policy": "Never mark missing content as ingested or infer implemented status from prior assistant reports.",
+  "latest_parallel_capture_clarification_included": true,
+  "complete_verbatim_current_chat_export": false,
+  "all_user_data_ingested": false
+}
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 4b11d9971ed24d77f7cb15e3c4096832effcca878fb60e8b78bbde65c1822a9c | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#6:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/01_CONTEXT/LATEST_USER_CLARIFICATION_RU.md =====
+# Уточнение пользователя, которое определяет V3
+
+Пользователь отдельно уточнил: «1 writer for code but not for automation of recording process via miltiple strategis in parallel?»; просит предсказать самые быстрые/надёжные маршруты и объединить ZIP + текст этого чата в параллельную стратегию.
+
+Это уточнение имеет приоритет над формулировкой V2 «параллельно только чтение». Правильнее:
+- одновременно сохранять много независимых immutable observations;
+- одновременно писать код в разных изолированных worktrees;
+- одновременно выполнять действия с непересекающимися ресурсами;
+- одно неидемпотентное изменение общего внешнего объекта не дублировать.
+
+Это не разрешение записывать чужие данные, обходить consent, отправлять секреты или включать торговый sender. Запись голоса, содержание вкладок и облачные API включаются отдельными понятными настройками владельца.
+
+Полный последний запрос повторяет исходную цель: desktop/library для Dell Windows 11 → голос/текст → доступный контекст всех разрешённых источников → код/тесты/браузер → GitHub → проверенное обновление навыков → следующие команды быстрее. Архив и чат должны работать совместно; приложение не обязано быть SaaS и не должно зависеть от Chrome extension.
+
+Данный файл — сохранённое резюме и короткая точная цитата, не притворный полный transcript export.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 2403ec8d8f1d2c92eebba9713c4fdcbb9aab91049720b1db8b757f452c175f22 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#7:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/01_CONTEXT/PRIOR_CONTEXT_RECOVERED_RU.md =====
+# Контекст прежних обсуждений, найденный при сборке
+30 сентября–3 октября обсуждались локальная библиотека вместо обязательного Chrome extension, весь repo с сохранением путей/источников, автоматический refresh, голос → typed proposal → registered action, один durable control plane, voice/Laya как DATA_ONLY, и Studious как владелец qualification.
+
+Сохраняемые решения: не заводить второй competing content.sqlite или queue owner; не считать CI/fixtures доказательством live market execution; ранее предложенные функции и PR-статусы повторно проверяются перед применением.
+
+Сегодняшние найденные пересказы называют другие ZIP-пакеты и результаты тестов. Их оригиналы в этом выполнении отсутствуют. Их размеры, количества файлов и статусы merge не перенесены в список проверенных фактов нового пакета.
+
+Текущий документ — синтез извлечённого контекста, не полный архив личной истории. Для дальнейшего полного импорта предусмотрен coverage manifest с unknown/missing entries.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 12701c5d2315a1d88214a670d1527975c244c69853df3ceab49b8d6806638108 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#8:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/01_CONTEXT/RECOVERY_SCOPE_V3_RU.md =====
+# Связь с прошлым контекстом
+Relevant context retrieval подтверждает прежние пожелания: desktop вместо mandatory Chrome; больше 20 документов; raw bytes/full paths; прошлые Google/Grok/ChatGPT/Telegram источники; voice → context document → chosen AI → code/tests/update; provider-neutral library.
+
+Ранее ассистент предлагал независимые SOURCE/PROJECT/TYPE/STATUS/TIME/CODE/RELATION/EXECUTION/CONFIDENCE/SECURITY и ROLE/DOMAIN/tags. Они сведены в authority-aware схему V3, не заменены одной плоской категорией.
+
+Исторические сообщения ассистента о «2612 файлов», «173 tests», PR merge и previous ZIP были возвращены лишь как summaries и здесь не засчитаны как новая проверка. Их оригинальные архивы не доступны в этом пакете. Обязательные текущие источники: видимый чат, legacy ZIP, три actual repository document reads и наш reference lab.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 3487cdd48360e3a78e4ae2d55d5e55be38797de6b7bd50f6267f7bae9b24bbca | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#9:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/01_CONTEXT/requirements.json =====
+[
+  {
+    "id": "REQ-001",
+    "title": "Локальное личное приложение",
+    "requirement": "Windows 11; библиотека и control plane локальны, не обязательный SaaS.",
+    "anchor": "local application",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-002",
+    "title": "Голос и текст равноправны",
+    "requirement": "Оба входа формируют один IntentSpec; фоновые голоса не считаются приказом.",
+    "anchor": "via text or or via your voice",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-003",
+    "title": "Любой выбранный AI",
+    "requirement": "Provider-neutral пакет + adapters; не привязывать память к Grok/OpenAI.",
+    "anchor": "for your AI of choice",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-004",
+    "title": "Сохранение исходников",
+    "requirement": "Raw bytes не заменяются summary/chunks; пути, IDs, время и источник сохраняются.",
+    "anchor": "entire history of my life",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-005",
+    "title": "Нет лимита двадцати документов",
+    "requirement": "Порции и бюджеты регулируют обработку; не скрывают хвост библиотеки.",
+    "anchor": "more than 20 max docs remove",
+    "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-006",
+    "title": "Семантический repo context",
+    "requirement": "Repo map, symbols, dependencies, tests и history вместо ручной нарезки пользователем.",
+    "anchor": "this application could to chunk it",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-007",
+    "title": "Несколько источников",
+    "requirement": "ChatGPT/Grok exports, Google Docs exports, разрешённые private Telegram exports, Git.",
+    "anchor": "entire private Telegram channels",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-008",
+    "title": "Library UI",
+    "requirement": "Поиск, теги, граф целей, timeline, выбор исходников, completeness/omissions.",
+    "anchor": "library like Notion local application",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-009",
+    "title": "Терминал и VS Code",
+    "requirement": "Только зарегистрированные операции с рабочим проектом и областью файлов.",
+    "anchor": "local terminal ... vs code",
+    "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-010",
+    "title": "Документы для передачи AI",
+    "requirement": "Короткое объяснение WHY_THIS_PACKET + полные ссылки на evidence + ожидаемый patch/test response.",
+    "anchor": "why this document should be passed to another AI",
+    "source_class": "CURRENT_CHAT_RU_PARAPHRASE",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-011",
+    "title": "Продолжение Studious",
+    "requirement": "Qualification/evidence/patch triage для BobIvans/studious-pancake. Не считать план действующим ботом.",
+    "anchor": "continue to work on our Studio Spancake flashloan bot",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-012",
+    "title": "Восстановление решений",
+    "requirement": "Старое предложение != новая команда; decision lineage/supersedes и даты.",
+    "anchor": "previous goals ... aggregated",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-013",
+    "title": "Новая способность через код",
+    "requirement": "Voice → context → AutomationSpec → coding agent → branch → tests → GitHub review → local skill update.",
+    "anchor": "renew the local application, renew the capabilities",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-014",
+    "title": "Параллельные пути одной задачи",
+    "requirement": "Диверсифицированные read/draft candidates; одна точка эффектов, independent verification.",
+    "anchor": "parallel actions would execute on same automation",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-015",
+    "title": "Скорость и стоимость",
+    "requirement": "Короткий fast path, delayed hedges, caching, budgets; не безусловный запуск всех моделей.",
+    "anchor": "fastest route to those aims",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-016",
+    "title": "Подготовка во время речи",
+    "requirement": "Только разрешённый read-only prefetch по устойчивой части транскрипта.",
+    "anchor": "lowest possible time",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-017",
+    "title": "Измеряемая успешность",
+    "requirement": "Verified completed / attempted, false-success отдельно; никаких обещаний 100% arbitrary GUI.",
+    "anchor": "highest sucess rate on execution",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-018",
+    "title": "Безопасные маршруты",
+    "requirement": "Не дублировать публикации/merge/удаления/trading; unknown effect требует reconciliation.",
+    "anchor": "multiple safe routes",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-019",
+    "title": "Права не выдаёт модель",
+    "requirement": "Typed route/LLM plan не расширяет scope; секреты остаются вне handoff.",
+    "anchor": "safely ... permissions",
+    "source_class": "ASSISTANT_PROPOSED_SAFETY_BOUNDARY",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-020",
+    "title": "Accessibility-first",
+    "requirement": "Stop/undo/correction/voice status; пользователь имеет приоритет над GUI worker.",
+    "anchor": "people with disabilities",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-021",
+    "title": "Приватность",
+    "requirement": "Локальный capture opt-in; public/private/sensitive, field-level cloud-export approval.",
+    "anchor": "hold any data locally",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-022",
+    "title": "API budget",
+    "requirement": "Провайдеры настраиваются по key references и явному лимиту расходов; ключи не включать в ZIP.",
+    "anchor": "use my api key",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-023",
+    "title": "Evidence truth",
+    "requirement": "Не путать source_fact, model_claim, implementation, tests, installed qualification, real market evidence.",
+    "anchor": "highest successful ... execution",
+    "source_class": "DERIVED_ACCEPTANCE_CRITERION",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-024",
+    "title": "Без обязательного расширения",
+    "requirement": "Desktop — основной интерфейс; Chrome может быть управляемым приложением/optional adapter.",
+    "anchor": "remove wire to chrome extensions",
+    "source_class": "RETRIEVED_PRIOR_USER_CONSTRAINT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-025",
+    "title": "Daily workflows",
+    "requirement": "Повторяемые планы/исследования/документы/квитанции; расписания не стартуют от импорта.",
+    "anchor": "executions I need to do daily",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-026",
+    "title": "R&D технологий",
+    "requirement": "GitHub/Hugging Face/X разведка, первичные источники и локальные сравнения.",
+    "anchor": "new technologies ... hugging face",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-027",
+    "title": "Вопрос о каталоге ChatGPT",
+    "requirement": "Отдельный опциональный путь публикации; точная иконка неизвестна.",
+    "anchor": "insert a link to your service",
+    "source_class": "CURRENT_CHAT_RU_PARAPHRASE",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-028",
+    "title": "Пакет продолжения",
+    "requirement": "Два стартовых RU документа, JSON work items/workflows, tested offline reference.",
+    "anchor": "agregate bigger zip",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-029",
+    "title": "Сохранить предыдущие идеи",
+    "requirement": "18 прежних R&D и 129 функций остаются в legacy с происхождением и статусом.",
+    "anchor": "this entire chat aims and goals you outlined",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-030",
+    "title": "Не заявлять недоступные данные",
+    "requirement": "Исходный ZIP сохранён; более ранние архивы/полные приватные истории не получены здесь.",
+    "anchor": "go thourgh our ideas and my inputs",
+    "source_class": "SCOPE_BOUNDARY",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-031",
+    "title": "Один владелец runtime",
+    "requirement": "SCE Core/content.sqlite остаются owners; Studious владеет qualification, voice/Laya advisory.",
+    "anchor": "one evolving context/automation library",
+    "source_class": "RETRIEVED_PRIOR_DECISION_UNVERIFIED_IMPLEMENTATION",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-032",
+    "title": "Прогрессивная полнота",
+    "requirement": "Inventory/cursor/coverage/explicit exclusions; retrieval budget не ограничивает хранение.",
+    "anchor": "aggregate any context, any data",
+    "source_class": "CURRENT_CHAT",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-033",
+    "title": "Параллельные регистраторы",
+    "requirement": "Несколько методов записи одного процесса сохраняют отдельные наблюдения одновременно; не превращать single-effect broker в запрет multi-capture.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-034",
+    "title": "Независимые реальные действия",
+    "requirement": "Действия над разными ресурсами могут исполняться параллельно; конфликтующие операции над одним объектом требуют arbitration.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-035",
+    "title": "Разные режимы объединения",
+    "requirement": "Union для дополняющих источников; first-verified для альтернатив; join для обязательных доказательств; prepare/commit для эффектов.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-036",
+    "title": "Прогноз до benchmark",
+    "requirement": "Предсказать наиболее быстрые маршруты, обозначить ожидания и не подменять их вымышленными процентами успеха на Dell.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-037",
+    "title": "ZIP и текст как совместный вход",
+    "requirement": "Импортировать архив, сообщения и исходники как один граф требований с происхождением; копии не становятся независимым evidence.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-038",
+    "title": "Ранний полезный handoff",
+    "requirement": "Отдавать достаточный проверенный пакет выбранному AI до завершения полной индексации, с freeze snapshot и последующими delta.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-039",
+    "title": "Практики X/Laya/JeV",
+    "requirement": "Искать реальные примеры и первичные реализации; недоступность X и vendor benchmarks указывать явно.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  },
+  {
+    "id": "REQ-040",
+    "title": "Адаптивное дополнение контекста",
+    "requirement": "Запрашивать недостающий источник или символ вместо повторной отправки всей библиотеки; связывать evidence с конкретной задачей.",
+    "anchor": "Latest user interruption / parallel recording clarification",
+    "source_class": "CURRENT_USER_ADDENDUM",
+    "status": "ACCEPTED_AS_DESIGN_REQUIREMENT_NOT_IMPLEMENTATION"
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 09a89df98b67c854646b5519127d82b271a037cf732664e23489f256b6cd08c7 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#10:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/02_RESEARCH/NEW_PRIMARY_FINDINGS_RU.md =====
+# Дополнительная проверка источников — 3 октября 2026
+
+## Laya / Jev: применимость, не рекламная максимальная скорость
+Laya [S06] — non-generative typed-decision модель. Собственная model card предупреждает о domain sensitivity, переуверенности, лимитах контекста и ненадёжном `action.act_probability`. Для RU/EN нужен соответствующий checkpoint и отдельный frozen benchmark. Не переносить GPU latency на Dell CPU и не считать confidence правом на действие.
+
+Практическая схема из авторской документации Jev и integration guide LangChain [S20,S21]: обычный код описывает state, допустимые варианты и ветвления; модель возвращает решения; исполнитель выполняет действие. Предлагаем применить её к выбору следующего источника, метке текста и выбору уже квалифицированного навыка.
+
+## Локальные варианты без обязательного тяжёлого Python runtime
+`receptron/laya` [S22] предлагает Node/TypeScript + ONNX Runtime. `Trystan-SA/laya-candle` [S23] — Rust/Candle порт. Это кандидаты benchmark, не «одновременно установить все». Сравнивать одинаковые inputs/outputs/labels, warm/cold latency и resident RAM. Более быстрый порт не считается лучше, если он хуже сохраняет correct routing или урезает state.
+
+## Запись рабочего контекста
+Windows UIA events [S25] подходят для дешёвого event-driven наблюдения. screenpipe [S24] показывает близкую архитектуру capture/history и может быть optional adapter. Его текущий README описывает source-available commercial licensing и включённую по умолчанию telemetry: нельзя автоматически объявлять его unrestricted open source или полностью offline. Для нашего app предпочтительны свои scoped collectors; внедрение чужого capture backend требует review настроек/лицензии.
+
+## Browser / code / AI
+Git worktrees [S04] позволяют раздельную подготовку; не являются OS sandbox. Playwright contexts [S03] разделяют browser storage, не чужие записи одного внешнего аккаунта. xAI function calling [S26] — коммуникационный канал; наш host исполняет разрешённый tool, GitHub merge не возникает от одной пересылки документа.
+
+## Смысл новых цифр
+Числа tests/files/workflows в ZIP относятся к нашему offline артефакту. Числа latency/accuracy из README внешних проектов — не наши эксперименты. В package нет результата Windows/ASR/API/real-bot benchmark.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 49be9b1552aac56f5a13f58901538b77a66d927b88f0ca5ab7b841ed56301948 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#11:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/02_RESEARCH/NEW_RND_DIRECTIONS_RU.md =====
+# 24 дополнительных направления
+
+18 прежних направлений сохранены без потерь в `10_LEGACY`; здесь RND-19…42. Три карточки явно являются усилением обсуждённых идей, а не полностью новой темой.
+
+## RND-19 — Failure-domain diversity
+Не путать три обёртки pytest с тремя независимыми страховками.
+
+Эксперимент: Сравнить 3 обёртки одного пути с 2 реально разными источниками evidence на fault-injection corpus.
+
+Приёмка: Записать co-failure matrix и marginal recovery каждого маршрута; не выводить независимость из названия инструмента.
+
+## RND-20 — Adaptive hedging
+Запускать запасной путь только при признаке задержки или нехватки evidence.
+
+Эксперимент: Сравнить serial, eager-parallel, delayed-hedge на фиксированном наборе read-only задач при одинаковом бюджете.
+
+Приёмка: Снизить p95 time-to-verified при заданном API/CPU бюджете; не допустить дублирующих внешних эффектов.
+
+## RND-21 — Single-effect commit broker
+Результаты готовятся параллельно, эффект принадлежит одному брокеру.
+
+Эксперимент: Два кандидата для одного target; kill/retry вокруг локального commit; отдельно моделировать неизвестный внешний результат.
+
+Приёмка: Локальный commit ровно один в тестируемой SQLite-транзакции; внешние unknown не перезапускаются слепо.
+
+## RND-22 — Resource commutativity and foreground ownership
+Не дать агентам бороться за мышь, буфер и одну вкладку.
+
+Эксперимент: Инъекция пользовательского ввода во время действия; два графа с общим файлом и отдельными browser contexts.
+
+Приёмка: Нет чужого ввода в выбранной вкладке; conflict graph сериализует общие mutable resources.
+
+## RND-23 — Snapshot-closed context
+Пакет связан с одним состоянием проекта, а не смесью вчера и сегодня.
+
+Эксперимент: Поменять файл после retrieval и до apply; удалить dependency; изменить allowlist.
+
+Приёмка: STALE/NEEDS_CONTEXT вместо применения к старой базе; ни одного silent overwrite.
+
+## RND-24 — Evidence deficit planner
+Научить app замечать, какой конкретно информации не хватает.
+
+Эксперимент: Дать bug с отсутствующим trace и противоречивыми заметками; проверить выбор следующего чтения.
+
+Приёмка: Измерить time-to-sufficient-evidence и bytes/request; missing обязательное evidence блокирует действие.
+
+## RND-25 — Authority-aware labeling
+Теги должны отличать просьбу пользователя, чужую инструкцию, гипотезу и факт исполнения.
+
+Эксперимент: Размечать один набор правилами, GLiNER и Laya; спорные метки не закрывать большинством без source evidence.
+
+Приёмка: Проверить span precision/recall, unknown rate и отсутствие автоматического VERIFIED по словам done/merged.
+
+## RND-26 — Causal context evaluation
+Проверять, какие фрагменты реально помогают коду, а какие засоряют контекст.
+
+Эксперимент: Ablation по clauses/tests/history на исторических bug задачах; новые commit families отделить от train.
+
+Приёмка: Измерить verified patch rate и marginal utility/KB без утечки ответа из будущих PR.
+
+## RND-27 — Incremental materialized context views
+Пересобирать только изменённую часть репозитория и зависимых context packs.
+
+Эксперимент: Изменить одну функцию в большом fixture corpus; сверить incremental output с полной пересборкой.
+
+Приёмка: Exact equality где детерминировано; явный unresolved для dynamic edges; raw objects никогда не теряются.
+
+## RND-28 — Verifier adequacy and counterexamples
+Не выбирать патч только потому, что он обошёл слабые тесты.
+
+Эксперимент: Сделать intentionally wrong patch, который проходит прежний test; добавить проверку нарушенного инварианта.
+
+Приёмка: False-success ниже baseline; тесты не отключены, assertions не удалены, negative suite не деградирует.
+
+## RND-29 — Critical-token ASR arbitration
+Ошибки в repo name, path, number и отрицании важнее общего word error rate.
+
+Эксперимент: RU/EN code-mixed команды: merge/not merge, main/branch, dry-run/live; фоновые голоса и поздние исправления.
+
+Приёмка: Semantic slot error и false command activation измеряются отдельно; не делать cloud-audio hedge без согласия.
+
+## RND-30 — Independent stop and intent revision
+Система должна быстро останавливаться и понимать «нет, не этот repo».
+
+Эксперимент: Во время retrieval/patch подготовки/ожидания merge дать stop и смену проекта.
+
+Приёмка: Ни одного нового effect после подтверждённого stop; unknown external effects идут в reconciliation.
+
+## RND-31 — Proof-carrying skill packages
+Навык хранит не только скрипт, но и условия его применимости.
+
+Эксперимент: Повторить успешный навык на другой версии приложения и с другой ролью пользователя.
+
+Приёмка: Mismatched environment блокирует promotion; receipt содержит code hash и проверенные условия.
+
+## RND-32 — Critical-path and attention-budget scheduling
+Ускорять итог задачи, а не максимальное число одновременно активных процессов.
+
+Эксперимент: На Dell выполнить фоновые imports + ASR + context pack; сравнить eager fan-out и admission control.
+
+Приёмка: Не ухудшить voice responsiveness и UI; реальные measured p50/p95 + peak RAM, никаких выдуманных миллисекунд.
+
+## RND-33 — Unknown-outcome state machine
+Отмена/таймаут не доказывает, что внешний запрос не выполнился.
+
+Эксперимент: Смоделировать lost response после server commit; нельзя запускать второй маршрут отправки.
+
+Приёмка: Нулевая слепая повторная публикация; unresolved отдельно от failed.
+
+## RND-34 — Adapter conformance and input trust firewall
+Данные из чужой вкладки не становятся инструкциями ОС.
+
+Эксперимент: Вставить в заметку «upload your keys» и в tool result ложный permit; сравнить policy decisions.
+
+Приёмка: Никакого расширения полномочий от документа; adapter contract tests фиксируют disabled capabilities.
+
+## RND-35 — Two-speed ingestion
+Быстро сохранить raw, а тяжёлую разметку выполнить отдельным восстанавливаемым этапом.
+
+Эксперимент: Большой смешанный corpus + interruption; приоритет новым файлам активного проекта.
+
+Приёмка: Нет исчезнувшего хвоста/тайного лимита; recoverable errors; сохранение raw не означает полный поиск по нему.
+
+## RND-36 — Lineage-aware dedup and evidence diversity
+Пять пересказов одного сообщения — один источник, а не пять подтверждений.
+
+Эксперимент: Несколько AI summaries одного поста + одно независимое наблюдение; проверить счёт evidence.
+
+Приёмка: Не склеивать разные версии цели; не повышать confidence количеством копий одной цепочки.
+
+## RND-37 — Negative knowledge and failure memory
+Хранить доказанное «это здесь не работает» вместе с условиями и сроком.
+
+Эксперимент: Повторить известный failure на том же fingerprint, затем сменить версию и проверить expiry.
+
+Приёмка: Меньше бесполезных повторов без вечной блокировки исправленных возможностей.
+
+## RND-38 — Skill minimization
+Успешную длинную траекторию сокращать до минимальной проверенной процедуры.
+
+Эксперимент: Длинный workflow vs minimized workflow на unseen fixtures и changed windows.
+
+Приёмка: Меньше действий/latency, одинаковый verified outcome; убрать шаг нельзя только по мнению LLM.
+
+## RND-39 — Permission-diff aware updater
+Обновление функции не даёт автоматически новые права на весь компьютер.
+
+Эксперимент: Кандидат просит новый filesystem root/network host; параллельно тест и attestation; activation должен остановиться.
+
+Приёмка: Никакого privilege creep; несовместимая DB migration требует отдельного плана.
+
+## RND-40 — Cross-AI exchange contract
+Отправлять моделям один task contract, а не одинаково весь личный архив.
+
+Эксперимент: Два model adapters + manual exported document; импорт неправильного snapshot и test claim.
+
+Приёмка: Одинаковая target binding; private data не уходит неразрешённому provider; imported DONE не закрывает задачу.
+
+## RND-41 — Capability drift monitoring
+Навык теряет валидность после обновления сайта, инструмента или модели.
+
+Эксперимент: Изменить locator/API field/tool schema и проверить fast demotion старого skill.
+
+Приёмка: Нельзя продолжать по устаревшему cached capability; отдельные receipts для platform qualification.
+
+## RND-42 — Offline context-and-skill optimizer
+Улучшать способы собирать контекст по результатам, не добавляя бездумно больше текста.
+
+Эксперимент: Одинаковый набор задач для baseline и learned context policy; reject reward hacking и критические regression.
+
+Приёмка: Promotion только по held-out verified outcomes, без изменения permissions и production policy.
+===== END CONTENT =====
+
+===== CONTENT SHA256 cc1fd4665d49f6850f4a68a20ac30a91287112a7ff683db3a432d375fc30e113 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#12:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/02_RESEARCH/OPTIONAL_CHATGPT_DIRECTORY_RU.md =====
+# Неотвеченный вопрос об иконке/ссылке на сервис
+
+Точную иконку из прежнего сообщения идентифицировать нельзя: её изображения и названия в доступном контексте нет. Её появление не доказывает связь с ранее обсуждавшимися личными идеями.
+
+Текущая официальная документация OpenAI [S17] описывает plugin directory: пакет с MCP connections и/или skills, validation, review и publication. Страница Apps SDK submission при проверке перенаправлялась на Plugins submission. Поэтому просто вставить service URL или подключить личный connector не значит автоматически сделать сервис доступным всем.
+
+Для личного desktop AgentOS публикация вообще не обязательна. Сначала local-only библиотека и выбранные AI adapters. Будущая публичная интеграция — отдельный review/security проект с минимальным scoped API. Не открывать общий терминал или всю локальную библиотеку публичному endpoint.
+
+Ни аккаунт/план пользователя, ни региональная доступность конкретной иконки здесь не проверены. Публикация/регистрация не выполнялись.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e21f6fb0f7a4f18a5f43bb48d556a5288412362d23fb646279b94bb0075a1244 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#13:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/02_RESEARCH/SOURCES_RU.md =====
+# Первичные источники — реестр V3
+
+
+
+Дата чтения: 3 октября 2026. Документация прочитана; установку и заявленные benchmark-результаты на Dell мы не воспроизводили. Прямые посты X не удалось прочитать; ограничения описаны отдельно.
+
+
+
+## S01 — The Tail at Scale
+
+https://research.google/pubs/the-tail-at-scale/
+
+Источник: Google Research; original research, 2013
+
+Поддерживает: Tail latency and redundant/hedged requests motivate a delayed backup rather than unconditional fan-out.
+
+Границы: Application to desktop context retrieval is our design inference, not a measured result for this app.
+
+
+
+## S02 — Making retries safe with idempotent APIs
+
+https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/
+
+Источник: AWS Builders Library
+
+Поддерживает: A caller request identifier and atomic recording of an operation reduce duplicate side effects on retries.
+
+Границы: A local journal alone cannot provide exactly-once effects in an external service.
+
+
+
+## S03 — Playwright isolation
+
+https://playwright.dev/docs/browser-contexts
+
+Источник: Playwright official documentation
+
+Поддерживает: Browser contexts separate cookies and browser storage for independent sessions.
+
+Границы: Browser contexts do not isolate writes to the same remote account; they are not full OS sandboxes.
+
+
+
+## S04 — Git worktree
+
+https://git-scm.com/docs/git-worktree
+
+Источник: Git documentation
+
+Поддерживает: Multiple working trees can be attached to one repository.
+
+Границы: Worktrees share Git administration; this is not credential, process or filesystem security isolation.
+
+
+
+## S05 — UFO
+
+https://github.com/microsoft/UFO
+
+Источник: Microsoft official repository
+
+Поддерживает: UFO3 documents dynamic task DAGs and parallel orchestration; UFO2 is the device-agent layer.
+
+Границы: Not installed or benchmarked on the user Dell. Use as an optional adapter, not a second authority.
+
+
+
+## S06 — Laya model card
+
+https://huggingface.co/convaiinnovations/laya
+
+Источник: Convai Innovations author model card
+
+Поддерживает: Typed decision models and multilingual/typed checkpoints are available; the card itself reports variable accuracy with domain and input length.
+
+Границы: No 33ms or near-perfect routing promise on this Dell; decision confidence does not grant execution permission.
+
+
+
+## S07 — Unsloth decision Laya
+
+https://unsloth.ai/docs/models/decision-laya
+
+Источник: Unsloth documentation
+
+Поддерживает: Documents local decision-model serving, including CPU execution and optional GPU.
+
+Границы: Model execution and deployment are untested in this pack; pin a reviewed version before installation.
+
+
+
+## S08 — GLiNER
+
+https://github.com/urchade/GLiNER
+
+Источник: Author repository
+
+Поддерживает: Entity extraction accepts user-supplied entity labels.
+
+Границы: Candidate span extraction is not proof of a task being completed or a permission being granted. Russian/code-mixed evaluation is required.
+
+
+
+## S09 — SCIP
+
+https://github.com/scip-code/scip
+
+Источник: Project repository; redirects from sourcegraph/scip
+
+Поддерживает: A protocol for code intelligence with ecosystem language indexers.
+
+Границы: Choose a supported indexer; syntax parsing alone does not produce a complete runtime call graph.
+
+
+
+## S10 — Docling
+
+https://github.com/docling-project/docling
+
+Источник: Project repository
+
+Поддерживает: Document conversion can provide structured inputs to context pipelines.
+
+Границы: Optional parser only. Raw files, page offsets and parser errors still need separate retention. No OCR was used in this delivery.
+
+
+
+## S11 — DSPy
+
+https://github.com/stanfordnlp/dspy
+
+Источник: Author repository
+
+Поддерживает: Modular model pipelines and optimization of prompts/weights.
+
+Границы: Use held-out evaluation; do not tune and report on the same voice/repo cases.
+
+
+
+## S12 — GEPA
+
+https://github.com/gepa-ai/gepa
+
+Источник: Author repository
+
+Поддерживает: Reflective optimization evaluates candidate textual parameters and uses execution feedback.
+
+Границы: Our proposed use is offline context-policy/skill optimization, not uncontrolled self-modification.
+
+
+
+## S13 — GEPA paper
+
+https://arxiv.org/abs/2507.19457
+
+Источник: Research paper abstract, 2025
+
+Поддерживает: Research basis for reflective optimization.
+
+Границы: Reported task results do not transfer automatically to PC control or flashloan qualification.
+
+
+
+## S14 — OpenTelemetry traces
+
+https://opentelemetry.io/docs/concepts/signals/traces/
+
+Источник: OpenTelemetry documentation
+
+Поддерживает: Trace spans describe causally related operations and timing.
+
+Границы: Tracing does not itself validate outcome correctness; keep source/effect receipts separately.
+
+
+
+## S15 — Artifact attestations
+
+https://docs.github.com/en/actions/concepts/security/artifact-attestations
+
+Источник: GitHub documentation
+
+Поддерживает: Attestations support verification of artifact build provenance.
+
+Границы: Provenance is not proof of safe code. Permission diff, tests and local health check remain necessary.
+
+
+
+## S16 — MCP specification
+
+https://modelcontextprotocol.io/specification/2026-07-28
+
+Источник: Official specification; current landing page redirected here during read
+
+Поддерживает: Current specification links Tasks and Skills over MCP extensions.
+
+Границы: Negotiate supported capabilities per client; not every AI web tab supports those extensions.
+
+
+
+## S17 — Plugin submission
+
+https://developers.openai.com/plugins/deploy/submission
+
+Источник: OpenAI official documentation; apps-sdk submission redirected here
+
+Поддерживает: Directory publication has package validation, review and publication steps.
+
+Границы: A URL field or a personal connector is not automatic public listing. The earlier UI icon was not identified.
+
+
+
+## S18 — Agent Skills
+
+https://agentskills.io/home
+
+Источник: Open format documentation
+
+Поддерживает: A skill is a folder with SKILL.md and optional resources/scripts.
+
+Границы: Instructions in a skill are not OS permission enforcement.
+
+
+
+## S19 — LangGraph persistence
+
+https://docs.langchain.com/oss/python/langgraph/persistence
+
+Источник: LangChain official documentation
+
+Поддерживает: Checkpointed graph state is a candidate for resumable agent workflows.
+
+Границы: Do not add a parallel production queue over the existing SCE Core without a migration ADR.
+
+
+
+## S20 — Introducing System One Models & Jev
+
+https://typesafe.ai/blog/introducing-system-one-models-and-jev
+
+Источник: TypeSafe author announcement, 15 September 2026
+
+Поддерживает: State plus typed probabilistic decisions; host software owns surrounding workflow.
+
+Границы: Type correctness is not semantic truth; performance figures are vendor claims, not Dell tests.
+
+
+
+## S21 — Building a Harness with Jev
+
+https://www.langchain.com/blog/building-a-harness-with-jev
+
+Источник: LangChain integration authors, 17 September 2026
+
+Поддерживает: Classifier middleware, model routing and structured decisions; links to browser and email demos on X.
+
+Границы: Direct X posts failed to open here; the article is not independent verification of those demos.
+
+
+
+## S22 — Node/TypeScript Laya runtime
+
+https://github.com/receptron/laya
+
+Источник: Project repository
+
+Поддерживает: ONNX Runtime route for Node/TypeScript without Python at inference time.
+
+Границы: Optional experiment; CPU/RAM, numeric parity and context truncation require local conformance tests.
+
+
+
+## S23 — Laya Candle runtime
+
+https://github.com/Trystan-SA/laya-candle
+
+Источник: Project repository
+
+Поддерживает: Rust/Candle local Laya port exists.
+
+Границы: No Windows installation or performance comparison performed; not assumed equivalent to reference implementation.
+
+
+
+## S24 — screenpipe
+
+https://github.com/screenpipe/screenpipe
+
+Источник: Project repository
+
+Поддерживает: Accessibility-first/event-driven capture and local history can be an optional observation adapter.
+
+Границы: Current source-available license and telemetry defaults need review; not described here as unrestricted open source or zero-network by default.
+
+
+
+## S25 — UI Automation events
+
+https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-eventsoverview
+
+Источник: Microsoft Learn
+
+Поддерживает: UI Automation clients can receive relevant UI events rather than constantly polling everything.
+
+Границы: Accessibility providers may be incomplete; this source does not promise all app contents or complete history.
+
+
+
+## S26 — xAI function calling
+
+https://docs.x.ai/developers/tools/function-calling
+
+Источник: xAI official documentation
+
+Поддерживает: Model tool requests can be executed by client-side code and results returned to the model.
+
+Границы: An API key or model response alone does not mount the PC or grant GitHub rights.
+
+
+
+## S27 — ChatGPT/API billing
+
+https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform
+
+Источник: OpenAI Help
+
+Поддерживает: ChatGPT subscription and API-platform billing are managed separately.
+
+Границы: An API key is not an included Pro API credit allowance; separate supported sign-in products require their own eligibility check.
+
+
+
+## S28 — Computer use
+
+https://developers.openai.com/api/docs/guides/tools-computer-use
+
+Источник: OpenAI API documentation
+
+Поддерживает: Computer-use actions require an execution environment and an observe/act loop.
+
+Границы: Optional fallback only; not a test of autonomous safety or device compatibility.
+
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 f5737c40d35477c9389da20d474750ab849334d12e0a1108ab0918bd2eff82d5 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#14:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/02_RESEARCH/STACK_SHORTLIST_RU.md =====
+# Стек: что брать первым, что только исследовать
+
+## Минимальная основа
+Существующий SCE Python/Core/content.sqlite3 + stdlib asyncio/SQLite; Git source snapshots; точный поиск; существующие parser/review owners. Desktop shell — candidate Tauri 2 или лёгкий Python UI, но не обязательная перепись backend. В этом пакете ни одна оболочка не установлена.
+
+MCP — optional provider/tool adapter [S16], не отдельный исполнитель и не второй scheduler. API/CLI/UIA/CDP относятся к разным каналам доступа, но иногда имеют общий failure domain.
+
+## Селективные добавления
+| Кандидат | Применение | Важная граница |
+|---|---|---|
+| Laya + optional local serving [S06,S07] | Короткие typed routing/label decisions | Benchmark RU/EN на устройстве; не security authority |
+| GLiNER [S08] | Entity spans и кандидаты тегов | Не доказательство статуса implementation/execution |
+| SCIP/LSP [S09] | References/definition graph | Language-specific indexer; не полный runtime graph |
+| Docling [S10] | Structured document ingestion | Parser output не заменяет raw; OCR only when needed |
+| DSPy/GEPA [S11–S13] | Offline оптимизация context/skills | Holdout separation, feedback hygiene, resource budget |
+| Playwright [S03] | Owned browser contexts, структурированные действия | Не параллельный ввод в пользовательскую вкладку |
+| UFO [S05] | Дополнительный Windows/GUI/DAG adapter | Не проверен на Dell; без второго owner для прав |
+| OpenTelemetry [S14] | Timing, causal traces, failure domains | Span success не означает postcondition success |
+| GitHub attestation checks [S15] | Проверка происхождения обновления | Trusted build != безопасный код |
+| Agent Skills [S18] | Переносимый пакет инструкций/ресурсов | Права и версия skill проверяются независимо |
+| LangGraph persistence [S19] | Исследование resumable model subgraph | Не дублировать existing durable Core |
+
+Temporal/Graphiti/LanceDB/OmniParser/Agent-S/OpenHands/BrowserCode из legacy остаются кандидатами из прежнего обсуждения, не обязательными зависимостями и не прошедшими интеграционный тест в этом ZIP. Для каждой зависимости нужен отдельный acceptance test, pin, license/maintenance review и оценка RAM/CPU.
+
+Стек — не гонка за максимальным числом библиотек. Первый speed gain ожидается от source selection, deterministic operations, fewer duplicate calls и incremental processing; его нужно подтвердить измерениями.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 1e0d99ab4d89af731042f1db296399f3b1906fdc29bde88df0159abb585bb5af | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#15:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/02_RESEARCH/X_SEARCH_SCOPE_RU.md =====
+# Что получилось проверить по X/Twitter
+
+3 октября 2026 выполнены web-поиски по Laya, Jev, TypeSafe и переходы к X-ссылкам в статье авторов интеграции LangChain [S21]. X search и прямые страницы этих постов вернули ошибки/непригодные результаты. Надёжный набор прочитанных X threads не получен.
+
+В [S21] есть ссылки на browser-agent демонстрацию, email triage и trading demo. Здесь не утверждается, что сами посты или исходный код всех этих демонстраций прочитаны; trading demo не является evidence прибыли или безопасности нашего бота.
+
+Техническую часть подтверждают прочитанные первичные документы Laya, TypeSafe, LangChain и runtime repositories. Нельзя писать «все на X уже так делают» либо выводить success rate из лайков. Социальные ссылки — discovery leads, а не execution receipts.
+
+Для будущего модуля social research: public URL → source snapshot → author/event date → claim → linked original code/paper → checked revision → reproducible experiment. Недоступный пост хранить как UNAVAILABLE, а не заменять придуманным пересказом. Этот модуль не обходит авторизацию и не делает авто-публикации.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 4da0fee1b322da66c764fd65705ea67df16eaa860f637c887ea699b1b9d24a8c | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#16:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/02_RESEARCH/sources.json =====
+[
+  {
+    "id": "S01",
+    "title": "The Tail at Scale",
+    "url": "https://research.google/pubs/the-tail-at-scale/",
+    "publisher": "Google Research; original research, 2013",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Tail latency and redundant/hedged requests motivate a delayed backup rather than unconditional fan-out.",
+    "limitations": "Application to desktop context retrieval is our design inference, not a measured result for this app.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S02",
+    "title": "Making retries safe with idempotent APIs",
+    "url": "https://aws.amazon.com/builders-library/making-retries-safe-with-idempotent-APIs/",
+    "publisher": "AWS Builders Library",
+    "checked_date": "2026-10-03",
+    "supported_summary": "A caller request identifier and atomic recording of an operation reduce duplicate side effects on retries.",
+    "limitations": "A local journal alone cannot provide exactly-once effects in an external service.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S03",
+    "title": "Playwright isolation",
+    "url": "https://playwright.dev/docs/browser-contexts",
+    "publisher": "Playwright official documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Browser contexts separate cookies and browser storage for independent sessions.",
+    "limitations": "Browser contexts do not isolate writes to the same remote account; they are not full OS sandboxes.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S04",
+    "title": "Git worktree",
+    "url": "https://git-scm.com/docs/git-worktree",
+    "publisher": "Git documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Multiple working trees can be attached to one repository.",
+    "limitations": "Worktrees share Git administration; this is not credential, process or filesystem security isolation.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S05",
+    "title": "UFO",
+    "url": "https://github.com/microsoft/UFO",
+    "publisher": "Microsoft official repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "UFO3 documents dynamic task DAGs and parallel orchestration; UFO2 is the device-agent layer.",
+    "limitations": "Not installed or benchmarked on the user Dell. Use as an optional adapter, not a second authority.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S06",
+    "title": "Laya model card",
+    "url": "https://huggingface.co/convaiinnovations/laya",
+    "publisher": "Convai Innovations author model card",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Typed decision models and multilingual/typed checkpoints are available; the card itself reports variable accuracy with domain and input length.",
+    "limitations": "No 33ms or near-perfect routing promise on this Dell; decision confidence does not grant execution permission.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S07",
+    "title": "Unsloth decision Laya",
+    "url": "https://unsloth.ai/docs/models/decision-laya",
+    "publisher": "Unsloth documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Documents local decision-model serving, including CPU execution and optional GPU.",
+    "limitations": "Model execution and deployment are untested in this pack; pin a reviewed version before installation.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S08",
+    "title": "GLiNER",
+    "url": "https://github.com/urchade/GLiNER",
+    "publisher": "Author repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Entity extraction accepts user-supplied entity labels.",
+    "limitations": "Candidate span extraction is not proof of a task being completed or a permission being granted. Russian/code-mixed evaluation is required.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S09",
+    "title": "SCIP",
+    "url": "https://github.com/scip-code/scip",
+    "publisher": "Project repository; redirects from sourcegraph/scip",
+    "checked_date": "2026-10-03",
+    "supported_summary": "A protocol for code intelligence with ecosystem language indexers.",
+    "limitations": "Choose a supported indexer; syntax parsing alone does not produce a complete runtime call graph.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S10",
+    "title": "Docling",
+    "url": "https://github.com/docling-project/docling",
+    "publisher": "Project repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Document conversion can provide structured inputs to context pipelines.",
+    "limitations": "Optional parser only. Raw files, page offsets and parser errors still need separate retention. No OCR was used in this delivery.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S11",
+    "title": "DSPy",
+    "url": "https://github.com/stanfordnlp/dspy",
+    "publisher": "Author repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Modular model pipelines and optimization of prompts/weights.",
+    "limitations": "Use held-out evaluation; do not tune and report on the same voice/repo cases.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S12",
+    "title": "GEPA",
+    "url": "https://github.com/gepa-ai/gepa",
+    "publisher": "Author repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Reflective optimization evaluates candidate textual parameters and uses execution feedback.",
+    "limitations": "Our proposed use is offline context-policy/skill optimization, not uncontrolled self-modification.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S13",
+    "title": "GEPA paper",
+    "url": "https://arxiv.org/abs/2507.19457",
+    "publisher": "Research paper abstract, 2025",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Research basis for reflective optimization.",
+    "limitations": "Reported task results do not transfer automatically to PC control or flashloan qualification.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S14",
+    "title": "OpenTelemetry traces",
+    "url": "https://opentelemetry.io/docs/concepts/signals/traces/",
+    "publisher": "OpenTelemetry documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Trace spans describe causally related operations and timing.",
+    "limitations": "Tracing does not itself validate outcome correctness; keep source/effect receipts separately.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S15",
+    "title": "Artifact attestations",
+    "url": "https://docs.github.com/en/actions/concepts/security/artifact-attestations",
+    "publisher": "GitHub documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Attestations support verification of artifact build provenance.",
+    "limitations": "Provenance is not proof of safe code. Permission diff, tests and local health check remain necessary.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S16",
+    "title": "MCP specification",
+    "url": "https://modelcontextprotocol.io/specification/2026-07-28",
+    "publisher": "Official specification; current landing page redirected here during read",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Current specification links Tasks and Skills over MCP extensions.",
+    "limitations": "Negotiate supported capabilities per client; not every AI web tab supports those extensions.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S17",
+    "title": "Plugin submission",
+    "url": "https://developers.openai.com/plugins/deploy/submission",
+    "publisher": "OpenAI official documentation; apps-sdk submission redirected here",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Directory publication has package validation, review and publication steps.",
+    "limitations": "A URL field or a personal connector is not automatic public listing. The earlier UI icon was not identified.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S18",
+    "title": "Agent Skills",
+    "url": "https://agentskills.io/home",
+    "publisher": "Open format documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "A skill is a folder with SKILL.md and optional resources/scripts.",
+    "limitations": "Instructions in a skill are not OS permission enforcement.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S19",
+    "title": "LangGraph persistence",
+    "url": "https://docs.langchain.com/oss/python/langgraph/persistence",
+    "publisher": "LangChain official documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Checkpointed graph state is a candidate for resumable agent workflows.",
+    "limitations": "Do not add a parallel production queue over the existing SCE Core without a migration ADR.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S20",
+    "title": "Introducing System One Models & Jev",
+    "url": "https://typesafe.ai/blog/introducing-system-one-models-and-jev",
+    "publisher": "TypeSafe author announcement, 15 September 2026",
+    "checked_date": "2026-10-03",
+    "supported_summary": "State plus typed probabilistic decisions; host software owns surrounding workflow.",
+    "limitations": "Type correctness is not semantic truth; performance figures are vendor claims, not Dell tests.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S21",
+    "title": "Building a Harness with Jev",
+    "url": "https://www.langchain.com/blog/building-a-harness-with-jev",
+    "publisher": "LangChain integration authors, 17 September 2026",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Classifier middleware, model routing and structured decisions; links to browser and email demos on X.",
+    "limitations": "Direct X posts failed to open here; the article is not independent verification of those demos.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S22",
+    "title": "Node/TypeScript Laya runtime",
+    "url": "https://github.com/receptron/laya",
+    "publisher": "Project repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "ONNX Runtime route for Node/TypeScript without Python at inference time.",
+    "limitations": "Optional experiment; CPU/RAM, numeric parity and context truncation require local conformance tests.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S23",
+    "title": "Laya Candle runtime",
+    "url": "https://github.com/Trystan-SA/laya-candle",
+    "publisher": "Project repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Rust/Candle local Laya port exists.",
+    "limitations": "No Windows installation or performance comparison performed; not assumed equivalent to reference implementation.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S24",
+    "title": "screenpipe",
+    "url": "https://github.com/screenpipe/screenpipe",
+    "publisher": "Project repository",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Accessibility-first/event-driven capture and local history can be an optional observation adapter.",
+    "limitations": "Current source-available license and telemetry defaults need review; not described here as unrestricted open source or zero-network by default.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S25",
+    "title": "UI Automation events",
+    "url": "https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-eventsoverview",
+    "publisher": "Microsoft Learn",
+    "checked_date": "2026-10-03",
+    "supported_summary": "UI Automation clients can receive relevant UI events rather than constantly polling everything.",
+    "limitations": "Accessibility providers may be incomplete; this source does not promise all app contents or complete history.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S26",
+    "title": "xAI function calling",
+    "url": "https://docs.x.ai/developers/tools/function-calling",
+    "publisher": "xAI official documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Model tool requests can be executed by client-side code and results returned to the model.",
+    "limitations": "An API key or model response alone does not mount the PC or grant GitHub rights.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S27",
+    "title": "ChatGPT/API billing",
+    "url": "https://help.openai.com/en/articles/9039756-managing-billing-for-chatgpt-and-the-api-platform",
+    "publisher": "OpenAI Help",
+    "checked_date": "2026-10-03",
+    "supported_summary": "ChatGPT subscription and API-platform billing are managed separately.",
+    "limitations": "An API key is not an included Pro API credit allowance; separate supported sign-in products require their own eligibility check.",
+    "evidence": "documentation_read_not_runtime_test"
+  },
+  {
+    "id": "S28",
+    "title": "Computer use",
+    "url": "https://developers.openai.com/api/docs/guides/tools-computer-use",
+    "publisher": "OpenAI API documentation",
+    "checked_date": "2026-10-03",
+    "supported_summary": "Computer-use actions require an execution environment and an observe/act loop.",
+    "limitations": "Optional fallback only; not a test of autonomous safety or device compatibility.",
+    "evidence": "documentation_read_not_runtime_test"
+  }
+]
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 ebae610d95b08f841bac6347b6c1ab7f477f83cdeb33d99cb1c9682bffc4e4ee | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#17:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-19.md =====
+# RND-19 — Failure-domain diversity
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Не путать три обёртки pytest с тремя независимыми страховками.
+
+## Архитектурное изменение
+Добавить дерево общих зависимостей: interpreter, browser engine, remote account, model/provider, verifier, source lineage.
+
+## Конкретный эксперимент
+Сравнить 3 обёртки одного пути с 2 реально разными источниками evidence на fault-injection corpus.
+
+## Критерий принятия
+Записать co-failure matrix и marginal recovery каждого маршрута; не выводить независимость из названия инструмента.
+
+## Функции
+- `route_dependency_fingerprint()`
+- `estimate_cofailure_matrix()`
+- `select_diverse_portfolio()`
+- `record_marginal_recovery()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-014 REQ-017. Первичные источники/технические предпосылки: S01 S02. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 82a2f23192be227eb0c4b38031971853ae56e0c9da24f206e89b6564792c91c3 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#18:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-20.md =====
+# RND-20 — Adaptive hedging
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Запускать запасной путь только при признаке задержки или нехватки evidence.
+
+## Архитектурное изменение
+Первая дешёвая read-попытка стартует сразу; второй путь после deadline/uncertainty trigger; отменить проигравших с receipt.
+
+## Конкретный эксперимент
+Сравнить serial, eager-parallel, delayed-hedge на фиксированном наборе read-only задач при одинаковом бюджете.
+
+## Критерий принятия
+Снизить p95 time-to-verified при заданном API/CPU бюджете; не допустить дублирующих внешних эффектов.
+
+## Функции
+- `compute_hedge_trigger()`
+- `reserve_speculation_budget()`
+- `cancel_loser_candidates()`
+- `audit_cancellation_completion()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-014 REQ-015. Первичные источники/технические предпосылки: S01. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 c8a212e4307c1fc0c7681c19fbe3e24f564ac0d1472b6e896d6753a39ef94a6c | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#19:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-21.md =====
+# RND-21 — Single-effect commit broker
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `hardening_of_prior_idea`.
+
+## Проблема
+Результаты готовятся параллельно, эффект принадлежит одному брокеру.
+
+## Архитектурное изменение
+Уникальный operation_id, payload hash, snapshot revision, writer lease/fencing token, durable outbox и reconciliation.
+
+## Конкретный эксперимент
+Два кандидата для одного target; kill/retry вокруг локального commit; отдельно моделировать неизвестный внешний результат.
+
+## Критерий принятия
+Локальный commit ровно один в тестируемой SQLite-транзакции; внешние unknown не перезапускаются слепо.
+
+## Функции
+- `issue_intent_operation_id()`
+- `acquire_effect_lease()`
+- `commit_verified_candidate()`
+- `reconcile_unknown_effect()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-014 REQ-018. Первичные источники/технические предпосылки: S02. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 5c43ecfdf321c1006a094a3499c3670ba6e5891704671156b254a67e49811641 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#20:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-22.md =====
+# RND-22 — Resource commutativity and foreground ownership
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Не дать агентам бороться за мышь, буфер и одну вкладку.
+
+## Архитектурное изменение
+Для каждого node указать read/write resource sets; разные документы параллельны, общий foreground эксклюзивен; пользователь имеет приоритет.
+
+## Конкретный эксперимент
+Инъекция пользовательского ввода во время действия; два графа с общим файлом и отдельными browser contexts.
+
+## Критерий принятия
+Нет чужого ввода в выбранной вкладке; conflict graph сериализует общие mutable resources.
+
+## Функции
+- `infer_resource_access_sets()`
+- `build_conflict_graph()`
+- `acquire_foreground_lease()`
+- `yield_to_user_input()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-014 REQ-020 REQ-024. Первичные источники/технические предпосылки: S03 S04. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 731841db13d1200e5c2e6903d896ba22296097bf5eb405df6633eac9dd8ccc16 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#21:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-23.md =====
+# RND-23 — Snapshot-closed context
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Пакет связан с одним состоянием проекта, а не смесью вчера и сегодня.
+
+## Архитектурное изменение
+Repo SHA + dirty-file hashes + index hash + config/policy version + source revision задают snapshot; перед effect повторная проверка.
+
+## Конкретный эксперимент
+Поменять файл после retrieval и до apply; удалить dependency; изменить allowlist.
+
+## Критерий принятия
+STALE/NEEDS_CONTEXT вместо применения к старой базе; ни одного silent overwrite.
+
+## Функции
+- `freeze_context_snapshot()`
+- `validate_snapshot_closure()`
+- `compare_target_revision()`
+- `invalidate_stale_candidate()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-006 REQ-012 REQ-032. Первичные источники/технические предпосылки: S04. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 117b03886d7d8f7654780a77cc105928414faf22ed3f5f5c47d694e96491ffff | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#22:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-24.md =====
+# RND-24 — Evidence deficit planner
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Научить app замечать, какой конкретно информации не хватает.
+
+## Архитектурное изменение
+Coverage matrix goal→required observations; вместо ещё одного полного prompt запрашивать один missing source/test/error.
+
+## Конкретный эксперимент
+Дать bug с отсутствующим trace и противоречивыми заметками; проверить выбор следующего чтения.
+
+## Критерий принятия
+Измерить time-to-sufficient-evidence и bytes/request; missing обязательное evidence блокирует действие.
+
+## Функции
+- `derive_evidence_requirements()`
+- `compute_context_deficit()`
+- `choose_next_observation()`
+- `emit_needs_context_request()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-010 REQ-015 REQ-023. Первичные источники/технические предпосылки: S11. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 c7a09e65d84ee87b43d25e6d6508fa38f6b3143f19774f40b62546b5bd61518e | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#23:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-25.md =====
+# RND-25 — Authority-aware labeling
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Теги должны отличать просьбу пользователя, чужую инструкцию, гипотезу и факт исполнения.
+
+## Архитектурное изменение
+Схема provenance + speaker_role + asserted/observed + authority_scope + valid_time + privacy + evidence_state; словари RU/EN алиасов.
+
+## Конкретный эксперимент
+Размечать один набор правилами, GLiNER и Laya; спорные метки не закрывать большинством без source evidence.
+
+## Критерий принятия
+Проверить span precision/recall, unknown rate и отсутствие автоматического VERIFIED по словам done/merged.
+
+## Функции
+- `extract_label_candidates()`
+- `reconcile_label_authority()`
+- `normalize_project_aliases()`
+- `abstain_on_label_conflict()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-002 REQ-007 REQ-012 REQ-023. Первичные источники/технические предпосылки: S06 S08. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 02b1b847d95c87d03e944b49f2fb33126cd4c8e7f04c0c5e5711c6cf276fcb4d | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#24:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-26.md =====
+# RND-26 — Causal context evaluation
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Проверять, какие фрагменты реально помогают коду, а какие засоряют контекст.
+
+## Архитектурное изменение
+Held-out tasks: полный pack, semantic slice, slice без выбранного evidence, compact+delta; одинаковый coder и verifier.
+
+## Конкретный эксперимент
+Ablation по clauses/tests/history на исторических bug задачах; новые commit families отделить от train.
+
+## Критерий принятия
+Измерить verified patch rate и marginal utility/KB без утечки ответа из будущих PR.
+
+## Функции
+- `build_context_ablation_set()`
+- `measure_evidence_utility()`
+- `compare_pack_variants()`
+- `freeze_holdout_partitions()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-006 REQ-015 REQ-017. Первичные источники/технические предпосылки: S11 S12. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 7c4561cafc2de5bb8f37d86fe68aafa24415800f77d528cf158aadcd6cdc7675 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#25:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-27.md =====
+# RND-27 — Incremental materialized context views
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Пересобирать только изменённую часть репозитория и зависимых context packs.
+
+## Архитектурное изменение
+Merkle identifiers на blobs/chunks/derivations; dependency invalidation; parser/schema version входят в cache key.
+
+## Конкретный эксперимент
+Изменить одну функцию в большом fixture corpus; сверить incremental output с полной пересборкой.
+
+## Критерий принятия
+Exact equality где детерминировано; явный unresolved для dynamic edges; raw objects никогда не теряются.
+
+## Функции
+- `hash_derivation_inputs()`
+- `invalidate_context_dependents()`
+- `refresh_materialized_pack()`
+- `compare_incremental_full_build()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-004 REQ-006 REQ-032. Первичные источники/технические предпосылки: S09. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 032a7e9167a578e0b02567b043af34ff6b181b526f3fe64af3d2d9e26fdc42bc | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#26:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-28.md =====
+# RND-28 — Verifier adequacy and counterexamples
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Не выбирать патч только потому, что он обошёл слабые тесты.
+
+## Архитектурное изменение
+Task-specific independent oracles + property/metamorphic tests; mutation-testing эксперименты; разделить test author и patch author.
+
+## Конкретный эксперимент
+Сделать intentionally wrong patch, который проходит прежний test; добавить проверку нарушенного инварианта.
+
+## Критерий принятия
+False-success ниже baseline; тесты не отключены, assertions не удалены, negative suite не деградирует.
+
+## Функции
+- `generate_contract_counterexample()`
+- `run_metamorphic_checks()`
+- `measure_verifier_mutation_score()`
+- `reject_test_weakening_patch()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-011 REQ-017 REQ-023. Первичные источники/технические предпосылки: S11. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 0ae11a6ccdbdd46eab9a76f747e1be351c2aa7a2577928bbf43a195b44c14eb6 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#27:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-29.md =====
+# RND-29 — Critical-token ASR arbitration
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Ошибки в repo name, path, number и отрицании важнее общего word error rate.
+
+## Архитектурное изменение
+Команда имеет stable transcript prefix; domain vocabulary; второй ASR только на спорном span; low confidence не даёт финансовый effect.
+
+## Конкретный эксперимент
+RU/EN code-mixed команды: merge/not merge, main/branch, dry-run/live; фоновые голоса и поздние исправления.
+
+## Критерий принятия
+Semantic slot error и false command activation измеряются отдельно; не делать cloud-audio hedge без согласия.
+
+## Функции
+- `identify_critical_voice_slots()`
+- `request_selective_asr_check()`
+- `reconcile_transcript_hypotheses()`
+- `freeze_confirmed_intent_revision()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-002 REQ-015 REQ-020 REQ-021. Первичные источники/технические предпосылки: S06. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 61e8fef6f98ac81468bcfbde7991aff1ab7d02584ac61579b7e1c7a67da34692 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#28:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-30.md =====
+# RND-30 — Independent stop and intent revision
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Система должна быстро останавливаться и понимать «нет, не этот repo».
+
+## Архитектурное изменение
+Отдельный high-priority control channel; пересмотр intent отзывает pending plans и leases; committed эффекты не выдавать за undone.
+
+## Конкретный эксперимент
+Во время retrieval/patch подготовки/ожидания merge дать stop и смену проекта.
+
+## Критерий принятия
+Ни одного нового effect после подтверждённого stop; unknown external effects идут в reconciliation.
+
+## Функции
+- `process_stop_signal()`
+- `revoke_pending_intent_generation()`
+- `supersede_running_plan()`
+- `report_irreversible_boundary()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-002 REQ-018 REQ-020. Первичные источники/технические предпосылки: S02. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 e081714d52b7af577bd5ae21b3a96f155cd4914f1e443f2fc53958bc568813c4 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#29:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-31.md =====
+# RND-31 — Proof-carrying skill packages
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `hardening_of_prior_idea`.
+
+## Проблема
+Навык хранит не только скрипт, но и условия его применимости.
+
+## Архитектурное изменение
+Skill manifest: input/output schemas, preconditions, postconditions, provenance, environment fingerprint, permissions, expiry, rollback scope.
+
+## Конкретный эксперимент
+Повторить успешный навык на другой версии приложения и с другой ролью пользователя.
+
+## Критерий принятия
+Mismatched environment блокирует promotion; receipt содержит code hash и проверенные условия.
+
+## Функции
+- `build_skill_contract()`
+- `attach_skill_evidence_bundle()`
+- `validate_skill_environment()`
+- `expire_skill_qualification()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-013 REQ-017 REQ-019. Первичные источники/технические предпосылки: S15 S18. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 b3bbf8715db8540bbac28d43dcca45c99d732115454577bee6c1c1d3f6f20451 | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#30:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-32.md =====
+# RND-32 — Critical-path and attention-budget scheduling
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Ускорять итог задачи, а не максимальное число одновременно активных процессов.
+
+## Архитектурное изменение
+DAG priorities по критическому пути; RAM/CPU/network/provider budgets; foreground lease; idle-only reindex.
+
+## Конкретный эксперимент
+На Dell выполнить фоновые imports + ASR + context pack; сравнить eager fan-out и admission control.
+
+## Критерий принятия
+Не ухудшить voice responsiveness и UI; реальные measured p50/p95 + peak RAM, никаких выдуманных миллисекунд.
+
+## Функции
+- `estimate_workflow_critical_path()`
+- `admit_resource_bounded_nodes()`
+- `pause_background_indexing()`
+- `score_latency_reliability_frontier()`
+
+## Safe parallel contract
+Подготовка/чтение — кандидаты; общий mutable target — один committer. Unknown external outcome блокирует fallback effect. Заявленный skill scope не заменяет OS sandbox. Любые live/trading действия в этом пакете disabled.
+
+## Измерения
+Verified outcome; false-success; p50/p95; total attempts including failures/timeouts; human intervention; marginal recovery over baseline; source coverage; peak RAM/API budget. Показатели в карточке — план измерений, не результаты.
+
+## Связи
+Требования: REQ-014 REQ-015 REQ-020. Первичные источники/технические предпосылки: S01 S05. Предлагаемая комбинация — наш инженерный эксперимент, а не утверждение о готовом решении авторов источников.
+
+===== END CONTENT =====
+
+===== CONTENT SHA256 6be0849d479d779429501be5c0179cc7a230e36c47bacd2262c63df5eeec5c5f | FIRST SOURCE original_archives/VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03.zip!#31:VOICE_AGENTOS_PARALLEL_CAPTURE_V3_RU_2026-10-03/03_RND_CARDS/RND-33.md =====
+# RND-33 — Unknown-outcome state machine
+
+**Статус:** R&D specification, не реализованная интеграция. Новизна: `new`.
+
+## Проблема
+Отмена/таймаут не доказывает, что внешний запрос не выполнился.
+
+## Архитектурное изменение
+PREPARED→DISPATCHED→UNKNOWN→OBSERVED_SUCCESS/SAFE_TO_RETRY/MANUAL_REVI

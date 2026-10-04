@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/laya/capability.schema.json",
+  "title": "Capability manifest SPEC 1.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "version",
+    "status",
+    "handler",
+    "artifact",
+    "scope_requests",
+    "execution",
+    "verification"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "enum": [
+        "EXAMPLE_NOT_EXECUTABLE",
+        "AVAILABLE_NOT_CONFIGURED",
+        "READY",
+        "BLOCKED",
+        "FAILED_TEST"
+      ]
+    },
+    "handler": {
+      "type": "string"
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sha256",
+        "source_commit",
+        "repository",
+        "workflow",
+        "signature_ref"
+      ],
+      "properties": {
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "source_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}([0-9a-f]{24})?$"
+        },
+        "repository": {
+          "type": "string"
+        },
+        "workflow": {
+          "type": "string"
+        },
+        "signature_ref": {
+          "type": "string"
+        }
+      }
+    },
+    "scope_requests": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "scope",
+          "reason",
+          "resource"
+        ],
+        "properties": {
+          "scope": {
+            "type": "string"
+          },
+          "reason": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "runtime",
+        "read_only",
+        "resource_locks",
+        "idempotency",
+        "timeout_seconds"
+      ],
+      "properties": {
+        "runtime": {
+          "type": "string"
+        },
+        "read_only": {
+          "type": "boolean"
+        },
+        "resource_locks": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "idempotency": {
+          "enum": [
+            "read_only",
+            "receipt_reconciliation"
+          ]
+        },
+        "timeout_seconds": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_schema",
+        "output_schema",
+        "test_suite",
+        "state"
+      ],
+      "properties": {
+        "input_schema": {
+          "type": "string"
+        },
+        "output_schema": {
+          "type": "string"
+        },
+        "test_suite": {
+          "type": "string"
+        },
+        "state": {
+          "enum": [
+            "TRUE",
+            "FALSE",
+            "UNKNOWN",
+            "NOT_RUN"
+          ]
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "number": 13,
+  "package_id": "ROADMAP-PR-013",
+  "title": "Импорт документов и внешних источников: PDF/Office/OCR, media, RSS/web и GitHub history",
+  "user_outcome": "Расширить importer registry форматными adapters с точными page/cell/time ranges, полными cursors и provenance всех наблюдений.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    10
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "PDF, Office, OCR и таблицы с точными ссылками и проверкой чисел",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Ленивые PDF/Office extractors с версиями",
+        "Page/table/cell/text spans и обратная связь с оригиналом",
+        "OCR uncertainty, units/numbers/table fidelity corpus"
+      ],
+      "acceptance": [
+        "Оригинал остаётся неизменным",
+        "Цитата ведёт к нужной странице/ячейке",
+        "OCR не перезаписывает подтверждённый текст",
+        "Неизвестный mapping явно UNKNOWN",
+        "Cancel/retry не теряет source identity",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Использует SourceAddress №10 и importer protocol №16. Не объявлять все форматы поддержанными по одному fixture; у каждого adapter своя support matrix.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-07"
+      ],
+      "feature_ids": [
+        "LIB-045",
+        "LIB-059"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-07"
+      ],
+      "workstream_id": "WS-009",
+      "parent_package": "ROADMAP-PR-013",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-007"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Аудио и видео: импорт, транскрипция и временные ссылки",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Media originals и версии transcript/ASR",
+        "Time spans, авторы/speaker uncertainty и metadata",
+        "Ленивая очередь, cancel/resume и corpus RU/EN/code-switch"
+      ],
+      "acceptance": [
+        "Text span открывает соответствующий time range",
+        "ASR output связан с exact media hash/model/config",
+        "Ошибки и недоступные media сохранены в ledger",
+        "Повтор не создаёт ложную source version",
+        "Качество и стоимость измерены на реальном corpus",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Это обработка сохранённых media. Живой микрофон/hotkey и intent — №28. Конкретные media/ASR зависимости выбирать по актуальным primary docs.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "ACTION5-08"
+      ],
+      "feature_ids": [
+        "LIB-046",
+        "RND-037"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-07",
+        "GOAL5-26"
+      ],
+      "workstream_id": "WS-010",
+      "parent_package": "ROADMAP-PR-013",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-007"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "RSS, web snapshots и история GitHub PR/issues/CI с полной пагинацией",
+      "lane": "Библиотека",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Версии web/RSS body и provenance",
+        "Полная история GitHub PR/issues/reviews/CI и неудачных попыток",
+        "Incremental cursors, rate limits, partial/freshness ledger"
+      ],
+      "acceptance": [
+        "Все страницы обработаны до явного EOF",
+        "Редакции страницы и PR не затирают историю",
+        "Отсутствие данных отличается от no-match",
+        "Повторная синдикация не считается новым первоисточником",
+        "Backoff/resume сохраняют cursor и raw responses",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Read-only сбор. PR patch/merge workflow — №32; news-to-experiment и сценарии — №37.",
+      "application_code_changed": false,
+      "source_task_ids": [],
+      "feature_ids": [
+        "LIB-043",
+        "LIB-044",
+        "RND-005"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-26"
+      ],
+      "workstream_id": "WS-011",
+      "parent_package": "ROADMAP-PR-013",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-007"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "ACTION5-07",
+    "ACTION5-08"
+  ],
+  "feature_ids": [
+    "LIB-043",
+    "LIB-044",
+    "LIB-045",
+    "LIB-046",
+    "LIB-059",
+    "RND-005",
+    "RND-037"
+  ],
+  "decision_ids": [],
+  "goal_ids": [
+    "GOAL5-05",
+    "GOAL5-07",
+    "GOAL5-26"
+  ]
+}

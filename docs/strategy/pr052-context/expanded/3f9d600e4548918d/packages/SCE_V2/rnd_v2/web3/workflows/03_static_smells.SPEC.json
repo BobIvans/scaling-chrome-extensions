@@ -1,0 +1,51 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF03",
+  "name": "static_smells",
+  "title_ru": "Детерминированные code smells и проверка гипотез",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "repo_inventory"
+  ],
+  "inputs": [
+    "sources",
+    "ruleset_sha256"
+  ],
+  "steps": [
+    {
+      "id": "static_smells.1",
+      "handler": "PROPOSED.static_smells.1",
+      "instruction": "Запускать language-specific AST/rules adapters"
+    },
+    {
+      "id": "static_smells.2",
+      "handler": "PROPOSED.static_smells.2",
+      "instruction": "Laya ранжирует находки, но не закрывает их как исправленные"
+    },
+    {
+      "id": "static_smells.3",
+      "handler": "PROPOSED.static_smells.3",
+      "instruction": "Сохранять file/range/rule/matched excerpt/repro и false-positive decision"
+    }
+  ],
+  "outputs": [
+    "finding_ledger",
+    "rule_run_receipt"
+  ],
+  "qualification_criteria": [
+    "Every suppressed finding has provenance; model belief is not test evidence"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

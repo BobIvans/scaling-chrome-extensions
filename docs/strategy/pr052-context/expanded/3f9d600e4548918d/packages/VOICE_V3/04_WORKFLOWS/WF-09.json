@@ -1,0 +1,82 @@
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-09",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Подготовь один документ для выбранного AI",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Compile evidence-rich source slice",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Compile compact delta against known prior packet",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Run privacy and response-schema checks",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "choose_valid_handoff_variant",
+      "contract_ru": "Budget/omissions, return schema, source refs и approval data scope"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Один approved provider-scoped handoff; автоматическая отправка здесь отключена",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "В приватном фрагменте присутствуют credentials",
+  "requirement_ids": [
+    "REQ-003",
+    "REQ-010",
+    "REQ-021"
+  ],
+  "rnd_ids": [
+    "RND-24",
+    "RND-34",
+    "RND-40"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}

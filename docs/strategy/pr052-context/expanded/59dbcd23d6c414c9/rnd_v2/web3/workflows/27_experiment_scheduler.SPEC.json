@@ -1,0 +1,51 @@
+{
+  "schema": "web3-workflow-spec/v1",
+  "id": "W3-WF27",
+  "name": "experiment_scheduler",
+  "title_ru": "Очередь R&D экспериментов",
+  "status": "SPEC_NOT_EXECUTABLE",
+  "enabled": false,
+  "trigger_candidates": [
+    "manual_goal",
+    "new_snapshot",
+    "receipt_invalidated"
+  ],
+  "depends_on": [
+    "coverage_holes"
+  ],
+  "inputs": [
+    "experiment_matrix",
+    "cost_budget",
+    "resource_locks"
+  ],
+  "steps": [
+    {
+      "id": "experiment_scheduler.1",
+      "handler": "PROPOSED.experiment_scheduler.1",
+      "instruction": "Compile typed tasks into existing automation_core queue"
+    },
+    {
+      "id": "experiment_scheduler.2",
+      "handler": "PROPOSED.experiment_scheduler.2",
+      "instruction": "Parallelize read-only independent stages; isolate repo worktrees and shared devices"
+    },
+    {
+      "id": "experiment_scheduler.3",
+      "handler": "PROPOSED.experiment_scheduler.3",
+      "instruction": "Checkpoint progress and resume exact failed nodes with idempotency keys"
+    }
+  ],
+  "outputs": [
+    "experiment_queue_spec"
+  ],
+  "qualification_criteria": [
+    "No second canonical production executor; schedule not installed by this pack"
+  ],
+  "on_missing_evidence": "UNKNOWN",
+  "idempotency_key": "sha256(workflow_id + goal_revision + exact_binding + step_inputs)",
+  "execution_owner": "existing SCE automation_core.py queue, future reviewed adapter",
+  "laya_role": "advisory template/risk/task routing with abstention; no evidence fabrication",
+  "network_scope": "repo-dependent; unknown until actual bot repository is inspected",
+  "live_authorized": false,
+  "signing_handler_present": false
+}

@@ -1,0 +1,326 @@
+# Агрегатор контекста и проверяемая автоматизация SCE
+Рабочий план для BobIvans и AI разработчика
+3 октября 2026 года
+
+## 1 Главное решение
+
+Развиваем SCE как постоянный слой между моими данными, задачами, компьютером и разными AI. Приложение хранит контекст и состояние выполнения; ChatGPT, Grok, Claude, локальная модель и Laya подключаются как сменяемые компоненты. Пользователь формулирует запрос текстом или голосом, система собирает относящиеся к нему источники, создаёт документ для AI, принимает структурированный ответ и выполняет доступный сценарий с проверкой результата.
+
+Наибольшую ожидаемую отдачу сейчас дают завершённые цепочки: восстановить решение из старых чатов; создать точное ТЗ; продолжить разработку на актуальном коде; получить проверенный документ; повторить уже освоенный сценарий на ПК. В этом плане 16 задач. Их ID обозначают backlog, а не созданные GitHub PR.
+
+«Автоматизировать что угодно» означает постепенно расширять набор поддержанных источников, приложений и проверяемых навыков. Новый неизвестный сценарий сначала становится конкретным заданием на разработку. Уровень агента оцениваем успешными задачами, временем и стоимостью. Оснований объявлять приложение самым сильным агентом среди всех существующих пока нет.
+
+## 2 Восстановленные обсуждения и список функций
+
+Найден сохранённый текст «Вставленный текст(20261002-194027).txt», созданный 2 октября 2026 года. Он содержит обсуждение Laya как слоя контекста и выполнения, упоминание исследования X.com и подробный список из 38 групп функций. Полный доступный текст включён в пакет отдельным файлом RECOVERED_LAYA_FUNCTIONS_2026-10-02.txt. Это восстановленный список идей из прежнего ответа, а не свидетельство их реализации.
+
+Поиск истории также вернул связанные фрагменты от 2 октября около 18:10–18:21 UTC про голос, X, ChatGPT/Grok, компьютер и общий контекст. Точное название исходного voice-mode разговора и его полная запись не установлены. Дата сохранения файла не заменяет дату отдельного сообщения.
+
+| Найденный материал | Что восстанавливает | Уровень подтверждения |
+| --- | --- | --- |
+| Сохранённый текст от 2 октября | Все 38 групп функций Laya и примеры AGGREGATE CONTINUE BUILD | Полный текст найденного файла |
+| Create Laya Data Doc | PC Telegram Chrome, документы, выбранные источники и локальная библиотека | Фрагменты истории и карта обсуждений |
+| Настройка анализа чатов | Связать старые беседы, решения, незавершённые задачи и Memory Graph | Фрагменты истории и карта обсуждений |
+| Обсуждения репозиториев 1–3 октября | OCC context → task → queue → проверка, роли Studious и SCE | История плюс проверка текущего кода |
+| Обсуждение голосового слоя 2 октября | Laya, X research, AI router, persistent memory и PC control | Фрагменты; название исходного чата неизвестно |
+
+Итоговая цель из этих материалов: одна команда должна восстановить проект, найти обещанные и ещё не реализованные функции, сверить текущие источники, собрать переносимое задание, выполнить допустимые шаги и сохранить доказательства. Ранее выданный документ, workflow JSON или заявление AI «готово» не закрывают задачу без соответствующего результата.
+
+Старые утверждения о просмотрах и лайках X, размере каталогов MCP и скорости сторонних проектов оставлены только в восстановленном источнике. Они не используются как подтверждённые показатели спроса или основание ROI этого плана.
+
+## 3 Текущая база двух репозиториев
+
+Проверен SCE main da6abf4c006e4e7d26fe45ef30fa9d07a356f396. PR 37 уже merged; его опубликованный head ef5ca7a483b9850ce3447cf8a2e7e6a5d0fe76db включён в main. Проверен Studious main 67d3852cbc4cb1b24582df45adbf6a42d4da2af0. Это снимок проверки на 3 октября; будущий разработчик обязан заново сверить HEAD и открытые изменения. [C1–C3]
+
+В SCE уже есть владельцы canonical SQLite, source versions, Git inventory, review sessions, handoff и очереди. PR 37 добавил связанный V4/V5 review, локальный отчёт с проверкой байтов, видимые outcome/reason/next step и перенос финального текста в editable goal. Review claims сохраняются как предложения; импортированный DONE не становится доказанным исправлением.
+
+В PR зафиксированы 325 локальных тестов и CI Ubuntu/Windows на точном опубликованном head. Это результаты предыдущей реализации; в этом документном задании тесты заново не запускались. Windows CI не подтверждает работу установленного Chrome, микрофона и приложений пользователя. Реальные ASR, UIA и Laya inference остаются NOT_RUN.
+
+Подтверждённый blocker: repo_context.py описывает Python static imports, а JS edges unresolved. Проба JS goal-normalizer в предыдущем receipt правильно остановилась на JS_DEPENDENCIES_NOT_PARSED. Для Chrome расширения это важный пробел в сборке достаточного контекста.
+
+| Область | Уже есть | Следующий результат |
+| --- | --- | --- |
+| Контекст репозитория | Git snapshot, текст, hashes, выбранная closure | JS/TS static resolver и ясные gaps |
+| Review и документы | Bound import и byte-verified local report | Общая TaskSpec и DOCX/TXT compiler |
+| Выполнение | Durable queue, replay, cancel, report reconciliation | Verifier registry и один device сценарий |
+| Голос | Recorder/preview, editable goal, ASR experiment | Реальный final transcript и измерения |
+| Память жизни | Source/version primitives и материалы истории | Инкрементальные connectors и память решений |
+| Несколько AI | Переносимый handoff как основа | Capability profiles, API/MCP adapters |
+
+## 4 Что полезного перенести из Studious
+
+Да, Studious содержит функции и подходы, которые полезны SCE. Переносить стоит проверенную логику и контракты, адаптируя их к текущим владельцам SCE. Торговые routes, wallet/sign/send и market runtime остаются в Studious. SCE вызывает ограниченный квалификационный интерфейс и управляет контекстом, задачами и UI.
+
+| Studious файл и функция | Польза для SCE |
+| --- | --- |
+| qualification_report.py _semantic_reason | Проверять смысл результата каждого действия, а не только exit code |
+| qualification_report.py _checkpoint и _verify_completed_run | Запоминать завершённые этапы и проверять artifacts перед replay |
+| fast_q_automation.py _inspect_blocker _owner_for _prepare_repair | Blocker → owner → точное repair ТЗ; отсутствие внешних данных не лечить выдуманным patch |
+| occ_memory_qualification_bridge.py _verify_replay | Связывать request и profile; reconcile до retry при неизвестном эффекте |
+| occ_durable_library.py verify_current_version и history | Проверять lineage и актуальность источника |
+| qualification_pr186.py source_tree_identity и verify_signed_verdict | Различать integrity hash и evidence от аутентифицированного производителя |
+
+Эти функции найдены в исходниках указанного Studious snapshot. Полная production readiness Studious этой проверкой не устанавливалась. SCE уже владеет своей SQLite и очередью: вторую базу, Native Host и конкурирующий worker создавать не нужно. Для первого переноса достаточно общего интерфейса postcondition checker и таблицы blocker → owner. [C3]
+
+## 5 Как приложение агрегирует контекст моей жизни
+
+Система начинает с инвентаря реально подключённых источников. Для каждого источника сохраняет вид доступа, диапазон дат, последнюю синхронизацию и покрытие. «Все данные» определяется выбранными папками, экспортами и подключёнными аккаунтами. Невидимый архив, закрытый аккаунт или не загруженное вложение должны быть заметным пробелом.
+
+| Источник | Как получать | Что учитывать |
+| --- | --- | --- |
+| Чаты AI | Официальные экспорты и доступные connectors; выбранная вкладка | Roles, message IDs, branches, вложения, полный export или только DOM |
+| Telegram и voice notes | Доступный export/API и выбранные записи | Message IDs, reply/thread, audio hash и transcript version |
+| Документы и папки ПК | Выбранные roots, file watcher, import | Raw hash, parser version, изменённый или удалённый файл |
+| Git и GitHub | Checkout плюс разрешённый API | Commit/tree, dirty files, PR state, CI на точном head |
+| Почта календарь задачи | Подключённые API с выбранным scope | Даты, timezone, draft/sent, entity links |
+| Экран и браузер | Выбранные окно/вкладка, DOM/UIA, snapshot | Что действительно видно, какой target актуален |
+| Web и X | Поиск или разрешённый API, сохранённые URLs | Автор, дата публикации, capture time, query coverage |
+
+Хранение разделяется на originals, индекс и производные записи. Originals позволяют заново проверить вывод. FTS и метаданные дают быстрый поиск. Память содержит цели, предпочтения, решения, задачи и связи, каждая с ссылкой на исходный fragment. Embeddings добавляются при измеримом выигрыше retrieval; отдельная graph database для начала не нужна.
+
+Минимальная запись источника: source_id, source_kind, origin, captured_at, content_hash, version, project_id, access_scope, coverage, parser_version и spans. Состояния покрытия: COMPLETE_FOR_DECLARED_SCOPE, PARTIAL, METADATA_ONLY, NOT_LOADED, ACCESS_GAP, PARSE_FAILED. COMPLETE относится к явно заданному scope, а не к целой жизни.
+
+Память связывает Goal → Decision → Task → Function → PR → Receipt. Факт пользователя, наблюдение инструмента, гипотеза AI и проверенный outcome имеют разные типы. Каждое изменение сохраняет valid_from, valid_to и supersedes. При противоречии система показывает оба источника и ищет актуальное решение; свежесть сама по себе не делает утверждение истинным.
+
+Практические команды: «вспомни наше решение по голосу», «покажи обещанное, но не сделанное», «продолжи SCE», «что изменилось после последнего PR», «собери документ по этой цели». Личные и рабочие namespaces позволяют давать AI ровно нужную часть. Команда «забудь» исключает запись и её производные индексы из дальнейшего поиска; ранее отправленные внешнему сервису копии нельзя отозвать локальным удалением.
+
+## 6 Логика от запроса до выполненной задачи
+
+Одна общая цепочка обслуживает текст, голос и выбранный объект на экране. ASR добавляет текст и сведения о происхождении; он не создаёт отдельную систему целей.
+
+1. Capture сохраняет исходный запрос и выбранный объект. Финальная речь становится редактируемым текстом.
+2. Intent compiler строит TaskSpec: результат, scope, ограничения, acceptance, бюджет и уже предоставленные полномочия.
+3. Capability resolver проверяет зарегистрированные действия и доступные adapters.
+4. Context compiler ищет evidence, расширяет найденные источники и отмечает конкретные gaps.
+5. Если действие известно и входы достаточны, existing queue выполняет его. Если данных мало, возникает адресный запрос. Если функции нет, создаётся ТЗ.
+6. AI возвращает plan/findings/patch proposal в связанном envelope. Ответ проверяется по schema, request, goal version и source revisions.
+7. Executor выполняет зарегистрированные steps; verifier независимо наблюдает результат.
+8. Receipt обновляет задачу и память. Новая цель или изменённый snapshot требует актуального binding.
+
+Authority берётся из пользовательского поручения и действующих grants. Текст страницы, старого чата или модельный ответ остаётся данными. Низкорисковые действия в уже разрешённом scope продолжаются без повторных вопросов. Публикация, удаление, финансовый эффект и передача новых личных источников должны соответствовать конкретному разрешению пользователя.
+
+При crash после потенциального эффекта задача переходит в NEEDS_RECONCILIATION. Сначала проверяем фактическое состояние, затем решаем, нужен ли retry. Лимиты attempts, времени, стоимости и отсутствие новых evidence останавливают цикл. Это позволяет продолжать работу автономно, не повторяя бесконечно одну ошибку.
+
+## 7 Что отдавать ChatGPT Grok и любому другому AI
+
+Переносимая единица — пакет задачи, не огромная сводка всей жизни. Каждый пакет содержит понятный человеку текст и machine manifest. Широкий архив доступен через индекс для дозагрузки.
+
+| Выходной файл | Назначение |
+| --- | --- |
+| START_HERE_RU.txt | Что выполнить, актуальная цель, ограничения и ожидаемый ответ |
+| TASK.json | Typed goal, scope, acceptance, authority reference, бюджет |
+| CONTEXT.txt | Подобранные fragments с source IDs и точными диапазонами |
+| MANIFEST.json | Версии, hashes, coverage, omissions и binding |
+| NEXT_CONTEXT_REQUEST.json | Какие данные отсутствуют и зачем их получить |
+| REVIEW_TEMPLATE.json | Формат ответа, findings, evidence refs, gaps, proposals |
+| RESULT_RECEIPT.json | Actual observations и независимые проверки выполненного действия |
+| REPORT.docx | Удобный итог для пользователя и обсуждения |
+
+Это предлагаемый контракт будущего универсального compiler. В текущей реализации нужно сохранить existing V4/V5 handoff/import и сделать адаптер, а не молча заменить формат. Документ может запросить реализацию новой функции, но executable handler появляется после кода и проверок.
+
+Документ для coding AI обязан включать current HEAD, существующих owners, touched files, зависимости, reproducer, acceptance и ограничения device verification. Репозиторий мог измениться после экспорта: import обязан обнаружить staleness.
+
+Ни один документ не гарантирует, что AI «понимает всё». Качество проверяется задачами: может ли AI восстановить решения, показать доказательства, назвать пробелы и дать исполнимый следующий шаг. Большой архив сохраняем вне model context; загружаем нужные источники по запросу. Такой подход соответствует context engineering с выборочным retrieval и сохранением внешней памяти. [R1]
+
+## 8 Модель независимого слоя
+
+Рекомендуемая архитектура: один SCE store и execution owner; поверх него универсальный task/context API; по краям adapters AI и источников. Laya, если её установленный API полезен, работает как advisory router. Название продукта может быть Laya, но технически не должно появляться два владельца состояния.
+
+Начальный общий интерфейс: search_context, read_source, build_task_packet, propose_plan, get_task_status, request_context, enqueue_registered_action и read_receipt. Read и write tools публикуются раздельно. К каждому tool относятся schema, capability, версия и независимый verifier.
+
+MCP подходит для доступа к ресурсам и typed tools; стандарт не означает, что любой AI клиент поддерживает каждый инструмент или имеет доступ к ПК. Для каждого клиента нужен capability profile и проверка совместимости. OpenAI документирует remote MCP и фильтрацию allowed_tools; поэтому модели показываем только нужные инструменты задачи. [R2–R4]
+
+Три способа подключения: переносимый TXT/JSON через ручной export/import; официальный API adapter; поддерживаемый клиентом MCP/plugin. Первый вариант даёт быстрый старт без платных вызовов. API расходы считаются отдельно; отсутствие adapter не выдаётся за скрытый доступ к сервису.
+
+Router выбирает по измеренной успешности нужного типа задач, цене, задержке и требованиям к данным. Дополнительный критик включается только для конкретного unresolved вопроса. Совпадение двух ответов не доказывает истину. Новые задачи можно сравнивать на одинаковом benchmark, затем закреплять удачный маршрут.
+
+## 9 Очередь функций по ожидаемой отдаче
+
+Приоритеты ниже — инженерная оценка по текущим blockers и целям. Эмпирический ROI ещё не измерен. P0 завершает основу, P1 расширяет рабочие цепочки, P2 проверяет новые гипотезы. Часть P0 уже реализована фрагментарно и требует интеграции.
+
+| ID | Следующая функция | Приоритет |
+| --- | --- | --- |
+| 01 | Installed Chrome и native path до verified report | P0 |
+| 02 | JS/TS static dependency closure | P0 |
+| 03 | Source registry и incremental import | P0 |
+| 04 | TaskSpec и DOCX/TXT context compiler | P0 |
+| 05 | Адресный retrieval и запрос gaps | P0 |
+| 06 | Память целей решений и конфликтов | P0 |
+| 07 | Verifier registry и recovery | P0 |
+| 08 | Переносимый цикл разных AI | P1 |
+| 09 | Реальный голос в общий goal | P1 |
+| 10 | Один Windows UIA и DOM сценарий | P1 |
+| 11 | Recipes и разработка нового skill | P1 |
+| 12 | Open loops и событийное продолжение | P1 |
+| 13 | Benchmark и ROI dashboard | P1 |
+| 14 | X/web signal → experiment → backlog | P2 |
+| 15 | Демонстрация действия → проверенный skill | P2 |
+| 16 | Laya advisory и ограниченный critic | P2 |
+
+У всех строк полный ID SCE-NEXT-XX. Подробные owners, dependencies, acceptance и метрики лежат в NEXT_FUNCTIONS_RU.json. Это данные планирования, не команды запуска. Не следует превращать все 16 строк в один большой PR.
+
+Первый маршрут: 01 на устройстве и 02 в коде; затем 03–05 для потока «запрос → источники → документ». Память 06 и проверки 07 делают команду «продолжи» надёжной. После этого добавляем voice 09 и один PC scenario 10. Успешные сценарии превращаем в recipes 11; их продолжение и измерения подключаем через 12–13.
+
+## 10 Критерии ближайших изменений
+
+Для SCE-NEXT-02 входом служит реальный JS module выбранного checkout, например goal-normalizer.mjs. Результат — выбранные statically resolved imports и явные gaps. Приёмка должна включать re-export, циклы, отсутствие файла, dynamic import, aliases и изменение зависимого source. AST closure не равна полному runtime call graph.
+
+Для SCE-NEXT-03 берём один доступный экспорт чатов и одну папку документов. Повторный импорт не удваивает сообщения; interrupted import продолжается с checkpoint; один изменённый документ создаёт новую version. Панель показывает, какие вложения реально прочитаны. Объявлять «все 100 чатов загружены» можно только с инвентарём этих 100 источников и отчётом покрытия.
+
+Для SCE-NEXT-04 один запрос создаёт одновременно TXT, DOCX и manifest из общего snapshot. Приёмка: одинаковые goal/scope/source IDs во всех выходах, присутствующие omissions, целый выходной файл и отклонение ответа для другой task. DOCX должен быть читаемым; byte receipt подтверждает сохранение, а содержательная проверка — соответствие acceptance.
+
+Для SCE-NEXT-06 тестовые случаи включают смену цели, старую отменённую идею, противоречащие сведения, слова ассистента «реализовано» без receipt и фактически merged PR. Ответы «что решено» и «что сделано» должны показывать разные типы evidence.
+
+Для SCE-NEXT-07 ложные SUCCESS проверяем намеренно: exit 0 без файла, частичный файл, неправильное содержимое, stale target, отсутствие CI на нужном head, crash после эффекта и поздний результат после STOP. Общий verifier выбирается по effect type, не по оценке самого исполнителя.
+
+Для SCE-NEXT-10 выбираем один редактор и конкретный документ на Windows. UIA/DOM выделяют target; сохранённый файл прочитывается независимо. Microsoft UI Automation даёт структурированный доступ к элементам Windows; DOM locators по roles/labels помогают искать элементы браузера. Применимость к конкретному приложению подтверждается device canary. [R5–R6]
+
+## 11 Голос и контекст ПК
+
+Сначала push-to-talk: записать → local ASR → финальный текст → правка → общий TaskSpec. На Dell используем один ASR worker и ограничиваем параллельную нагрузку. faster-whisper поддерживает CPU INT8; его upstream benchmark не предсказывает latency на нашем устройстве. Измеряем фактический p50/p95 и RAM. [R7]
+
+Обязательные речевые кейсы: отрицания «не отправляй», числа и даты, RU/EN, названия репозиториев, пауза внутри фразы, пустая речь, исправление команды и STOP. Partial transcript не запускает действие; устаревший transcript после отмены не возвращает старую цель.
+
+Команда «сделай это» использует выбранный объект: окно, вкладку, файл или текст. Контекст содержит target identity и время snapshot. Перед действием проверяем актуальность target. Пример: «собери по этому репозиторию документ и сохрани в мою папку» → выбранный checkout → context packet → document compiler → file verifier.
+
+Длительная запись экрана всей жизни даёт большой шум и затраты. Более полезен режим событий: активная задача, выбранное окно, завершение действия, новый файл или CI. OCR дополняет недоступную структуру; он не подтверждает эффект сам по себе. Always listening и wake word остаются поздним экспериментом после устойчивого push-to-talk.
+
+Доступность входит в общий интерфейс: клавиатурная навигация, большие controls, озвучивание статуса, повтор последнего сообщения и короткая команда остановки. Успех с конкретной речью и устройством измеряем, а не обещаем для любых условий.
+
+## 12 Как получить наибольшую отдачу
+
+Сначала измеряем ручной baseline на повторяющихся задачах: восстановить решение, найти missing feature, подготовить ТЗ, собрать документ, прочитать CI blocker, продолжить workflow. Затем сравниваем тот же набор с приложением. Считать следует все failed attempts, исправления и setup, а не только удачный запуск.
+
+Чистая экономия времени за период = время ручного baseline − время пользователя с приложением − время исправлений − доля затрат на настройку и обслуживание. Стоимость проверенной задачи = все API и инфраструктурные затраты периода / число verified outcomes. Если времени мало и цена велика, красивый «автономный» pipeline может иметь отрицательную отдачу.
+
+| Метрика | Как считать |
+| --- | --- |
+| Verified completion rate | Достигнуты acceptance / все начатые задачи выбранного набора |
+| False success rate | SUCCESS без независимого результата / все SUCCESS |
+| Correction burden | Минуты ручной коррекции на запуск |
+| Context quality | Recall нужных evidence и верная attribution |
+| Cost per outcome | Включает неуспехи, retries и critic calls |
+| Open loop closure | Закрытые старые задачи с receipt за неделю |
+
+Набор из 30 замороженных кейсов: 10 на память, 10 на документы/код и 10 на зарегистрированные действия. Меняем один фактор: FTS/embeddings, minimal/full context, rules/Laya, один AI/critic. До замера не назначаем произвольные проценты прироста.
+
+Начальный gate для конкретной версии: на этих 30 кейсах нет ложного SUCCESS; время и cost не ухудшились против baseline; все UNKNOWN видны. Размер выборки ограничивает вывод: этот gate не доказывает универсальную надёжность. Реальные device tasks не заменяются fixtures.
+
+Наибольшая ожидаемая отдача: избавить тебя от повторного объяснения проекта, ручного объединения ZIP и потери незакрытых задач. Автоматизация очередного уже понятного действия становится следующим источником экономии. Массовые debates моделей, непрерывный screen recording и marketplace сотен skills имеет смысл добавлять после этих измерений.
+
+## 13 Новые эксперименты для усиления интеллекта
+
+Ниже наши продуктовые гипотезы. Они предложены для экспериментов и не считаются уже реализованными или доказанно более умными.
+
+**Контекст который меняет решение.** На замороженной задаче удалять по одному fragment из пакета и проверять изменение качества. Так находим минимальный evidence set, уменьшаем цену и выявляем пропущенную зависимость. Originals остаются доступными; сжатие не уничтожает источник.
+
+**Память с проверкой возражений.** По команде «что может сделать этот план неверным» находить отменённые решения, отрицательные results и свежие изменения sources. Проверка полезна против повторения старой ошибки. Метрика — обнаруженные реальные conflicts, а не число критических замечаний.
+
+**Радар забытых обещаний.** Сопоставлять фразы «добавим», «готово» и TODO из чатов с current functions, PR и receipts. Missing/partial получает task card. Verified receipt закрывает обещание. Это должно сокращать open loops без генерации повторных PR.
+
+**Лаборатория новых функций.** X/web signal создаёт evidence-backed hypothesis, маленький reproducer и comparison case. Если новая технология не улучшает outcome при том же бюджете, её не интегрируем. X Search у xAI поддерживает фильтры accounts и дат; это инструмент получения кандидатов, не доказательство их полезности. [R8]
+
+**Планировщик ценности следующего шага.** Выбирать действие по ожидаемой экономии, наличию входов, цене проверки и blocker dependencies. Сначала показывать качественное объяснение выбора. Числовую модель обучать на actual task history, не на выдуманной вероятности успеха.
+
+**Проверка навыка на изменениях.** Для записанного workflow менять имена файлов, порядок controls и start state. Сценарий становится зарегистрированным skill, когда успешно проходит canary и независимую проверку на held-out inputs. При drift создаётся repair task для owner.
+
+**Сон до новых данных.** Не крутить LLM каждые несколько секунд. Trigger срабатывает на новый источник, изменение CI или исчезновение blocker. Durable supervisor продолжает с checkpoint в существующей очереди. Измеряем сэкономленные calls и задержку реакции.
+
+**Дневник экспериментов.** Каждая идея связывается с гипотезой, фиксированным набором входов, baseline, результатом и решением продолжить/отклонить. AI получает и успешные, и отрицательные результаты. Это постепенно улучшает реальные решения без обещания «гениальности» от одного prompt.
+
+## 14 Все восстановленные группы функций
+
+Полный подробный список исходного обсуждения находится в RECOVERED_LAYA_FUNCTIONS_2026-10-02.txt. Ниже карта 38 групп и их место в разработке. «Позже» означает наличие идеи, а не отсутствие ценности.
+
+| Группа | Функции и связь с планом |
+| --- | --- |
+| 1 Голос и команды | Task, диктовка, stop, correction; NEXT 09 |
+| 2 Intent compiler | Goal, subtasks, inputs, missing context; NEXT 04 |
+| 3 Context aggregator | Чаты, code, research, docs; NEXT 03–05 |
+| 4 Chat history | Импорт, dedup, решения, timeline; NEXT 03 и 06 |
+| 5 Persistent memory | Project, preference, conflict, history; NEXT 06 |
+| 6 AI router | Цена, latency, capabilities, fallback; NEXT 08 и 16 |
+| 7 Context packaging | Minimal/full, tokens, chunks, manifest; NEXT 04–05 |
+| 8 Send to AI | TXT/API/MCP, продолжение в другом AI; NEXT 08 |
+| 9 Desktop control | Window, click/type/save, UI tree; NEXT 10 |
+| 10 Accessibility | Hands-free, read screen, stop; NEXT 09–10 |
+| 11 Browser agent | Selected tabs, DOM, trace, replay; NEXT 10–11 |
+| 12 X/social research | Accounts, keywords, links, project gaps; NEXT 14 |
+| 13 Research agent | Primary sources, verify, delta; NEXT 14 |
+| 14 Repository intelligence | AST, dependencies, smells, missing features; NEXT 02 и 05 |
+| 15 Git agent | Branch, patch, tests, PR, CI receipt; NEXT 07 и 11 |
+| 16 Web3 mode | Qualification и diagnostics через Studious; live отдельно |
+| 17 Continuous loops | Schedule/events, sleep/stop/budget; NEXT 12 |
+| 18 Long-lived goals | Done, constraints, blockers, resume; NEXT 06 и 12 |
+| 19 Multi-agent team | Возможный режим после benchmark; не стартовая зависимость |
+| 20 Planner critic | Ограниченная проверка вопроса; NEXT 16 |
+| 21 Approval layer | Учитывать уже выданные grants и конкретные эффекты |
+| 22 Permissions dashboard | Scope apps/folders/tools и expiry |
+| 23 Credential vault | Secret references вне context и logs |
+| 24 Sandboxing | Staging, dry run, effect limits; NEXT 11 |
+| 25 Action verification | Independent observations; NEXT 07 |
+| 26 Timeline | Inputs, steps, costs, result; NEXT 12–13 |
+| 27 Replay resume | Checkpoints и reconciliation; NEXT 07 и 11 |
+| 28 Zero-token automation | Local search, rules, dedup, events; NEXT 03 и 12 |
+| 29 Cost optimizer | Cache/delta/budget, measured routing; NEXT 13 |
+| 30 Local privacy | Scoped local sources и explicit export; NEXT 03 и 08 |
+| 31 MCP hub | Curated typed tools и resources; NEXT 08 |
+| 32 Skills marketplace | Version/tests/rollback; NEXT 11, каталог позже |
+| 33 Learn from actions | Demonstration → proposal → canary; NEXT 15 |
+| 34 Aggregate | Одна команда context package; NEXT 04–05 |
+| 35 Continue | Restore goal, evidence, blockers; NEXT 06 и 12 |
+| 36 Build | Current repo → task → patch/tests → PR; NEXT 11 |
+| 37 Discover to implement | Signal → repo gap → experiment; NEXT 14 |
+| 38 Home screen | Говорить, Собрать, Продолжить, Выполнить; после цепочек |
+
+Кнопки главного экрана должны отражать работающие функции. «Собрать» показывает источники и пробелы; «Продолжить» восстанавливает evidence и blocker; «Выполнить» использует доступный registered scenario; «Новая функция» собирает ТЗ и открывает разработку. Количество кнопок не используется как показатель автономности.
+
+## 15 Задание будущему coding AI
+
+Начни с актуального SCE HEAD и existing owner inventory. Прочитай этот план и NEXT_FUNCTIONS_RU.json. Выбери одну задачу по реальному blocker и доступным входам; сохрани уже существующие изменения. Не переносить весь Studious и не создавать вторые SQLite, queue или Native Host.
+
+Для code задачи создай небольшой diff, reproducer и meaningful focused checks. Для device задачи получи наблюдения на выбранном устройстве; когда устройство недоступно, запиши NOT_RUN и точный next-context request. Не закрывай функцию по одному mock, JSON schema или словам модели.
+
+Верни goal/task binding, base и final tree/head, changed owners, actual outputs, проверенные acceptance, failures, remaining gaps и следующий шаг. PR создаётся после проверок; номера задач этого документа не являются номерами PR. Документ сам по себе не разрешает публикацию, финансовые операции или запуск новой кампании.
+
+Предлагаемый первый code candidate: SCE-NEXT-02, выбранная JS/TS closure поверх existing repo_context owner. Параллельно по готовности пользовательского ПК выполняется NEXT-01. Затем NEXT-03–05 дают минимальный универсальный aggregator: текст → реальный context → документ → связанный AI ответ.
+
+## 16 Источники и ссылки
+
+C1 SCE PR 37, состояние merged проверено 3 октября
+https://github.com/BobIvans/scaling-chrome-extensions/pull/37
+
+C2 SCE runbook и локальные receipts на опубликованном head
+https://github.com/BobIvans/scaling-chrome-extensions/blob/ef5ca7a483b9850ce3447cf8a2e7e6a5d0fe76db/docs/automation/occ-v7-recovery.md
+https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37101911499
+
+C3 Studious snapshot и карта owner reuse
+https://github.com/BobIvans/studious-pancake/tree/67d3852cbc4cb1b24582df45adbf6a42d4da2af0
+https://github.com/BobIvans/scaling-chrome-extensions/blob/ef5ca7a483b9850ce3447cf8a2e7e6a5d0fe76db/docs/automation/studious-to-sce.md
+
+H1 Сохранённый прежний список функций Laya от 2 октября
+RECOVERED_LAYA_FUNCTIONS_2026-10-02.txt в этом пакете
+H2 История связанных обсуждений OCC SCE Laya 1–3 октября
+Поисковые фрагменты; не полный экспорт истории чатов
+H3 Предоставленные архивы OCC V7 и Entire Chat Functions Context
+Использованы каталог функций и план дальнейшей реализации
+
+R1 Anthropic Effective context engineering for AI agents
+https://www.anthropic.com/engineering/effective-context-engineering-for-ai-agents
+R2 MCP Resources версия 2026 07 28
+https://modelcontextprotocol.io/specification/2026-07-28/server/resources
+R3 MCP Tools версия 2026 07 28
+https://modelcontextprotocol.io/specification/2026-07-28/server/tools
+R4 OpenAI MCP servers и tool filtering
+https://developers.openai.com/api/docs/guides/tools-connectors-mcp
+R5 Microsoft UI Automation Overview
+https://learn.microsoft.com/en-us/windows/win32/winauto/uiauto-uiautomationoverview
+R6 Playwright Locators
+https://playwright.dev/docs/locators
+R7 SYSTRAN faster whisper
+https://github.com/SYSTRAN/faster-whisper
+R8 xAI X Search
+https://docs.x.ai/developers/tools/x-search
+
+Первичные технические источники проверены 3 октября 2026 года. Рекомендации по архитектуре и приоритетам являются нашим инженерным планом; перечисленные источники подтверждают соответствующие технические механизмы, а не ROI именно нашего приложения.
+

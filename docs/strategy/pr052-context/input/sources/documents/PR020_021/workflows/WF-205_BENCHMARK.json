@@ -1,0 +1,83 @@
+{
+  "schema": "proposed.adapter-neutral-workflow.v1",
+  "workflow_id": "WF-205_BENCHMARK",
+  "parent_package": "ROADMAP-PR-020-021",
+  "status": "DESIGN_ONLY_NOT_NATIVE_LAYA",
+  "dispatch_policy": "BLOCK_UNRESOLVED_OR_UNQUALIFIED_HANDLER",
+  "prerequisites": [
+    "ACTUAL_OWNER_AUDIT",
+    "COMPATIBLE_REVISIONS",
+    "FROZEN_MODE_SCOPE_BUDGET"
+  ],
+  "steps": [
+    {
+      "step_id": "S01",
+      "semantic_function_id": "FUN-039",
+      "operation": "freeze_utility_benchmark",
+      "registered_handler_ref": null,
+      "input_contract_ref": "contracts/",
+      "depends_on": [],
+      "checkpoint_owner": "existing Core/domain owner",
+      "on_unknown": "OBSERVE_RECONCILE_BEFORE_RETRY",
+      "on_cancel": "STOP_NEW_DISPATCH_PRESERVE_CHECKPOINT",
+      "status": "NOT_BOUND_NOT_RUN"
+    },
+    {
+      "step_id": "S02",
+      "semantic_function_id": "FUN-040",
+      "operation": "run_context_ablation_variants",
+      "registered_handler_ref": null,
+      "input_contract_ref": "contracts/",
+      "depends_on": [
+        "S01"
+      ],
+      "checkpoint_owner": "existing Core/domain owner",
+      "on_unknown": "OBSERVE_RECONCILE_BEFORE_RETRY",
+      "on_cancel": "STOP_NEW_DISPATCH_PRESERVE_CHECKPOINT",
+      "status": "NOT_BOUND_NOT_RUN"
+    },
+    {
+      "step_id": "S03",
+      "semantic_function_id": "FUN-041",
+      "operation": "account_all_attempt_costs",
+      "registered_handler_ref": null,
+      "input_contract_ref": "contracts/",
+      "depends_on": [
+        "S02"
+      ],
+      "checkpoint_owner": "existing Core/domain owner",
+      "on_unknown": "OBSERVE_RECONCILE_BEFORE_RETRY",
+      "on_cancel": "STOP_NEW_DISPATCH_PRESERVE_CHECKPOINT",
+      "status": "NOT_BOUND_NOT_RUN"
+    },
+    {
+      "step_id": "S04",
+      "semantic_function_id": "FUN-043",
+      "operation": "group_evidence_families",
+      "registered_handler_ref": null,
+      "input_contract_ref": "contracts/",
+      "depends_on": [
+        "S03"
+      ],
+      "checkpoint_owner": "existing Core/domain owner",
+      "on_unknown": "OBSERVE_RECONCILE_BEFORE_RETRY",
+      "on_cancel": "STOP_NEW_DISPATCH_PRESERVE_CHECKPOINT",
+      "status": "NOT_BOUND_NOT_RUN"
+    },
+    {
+      "step_id": "S05",
+      "semantic_function_id": "FUN-042",
+      "operation": "estimate_verified_task_roi",
+      "registered_handler_ref": null,
+      "input_contract_ref": "contracts/",
+      "depends_on": [
+        "S04"
+      ],
+      "checkpoint_owner": "existing Core/domain owner",
+      "on_unknown": "OBSERVE_RECONCILE_BEFORE_RETRY",
+      "on_cancel": "STOP_NEW_DISPATCH_PRESERVE_CHECKPOINT",
+      "status": "NOT_BOUND_NOT_RUN"
+    }
+  ],
+  "recovery": "Retain request identity, exact inputs, all attempts and lineage; drift becomes STALE; unsupported becomes named GAP."
+}

@@ -1,0 +1,144 @@
+STUDIOUS И OCC — ПРОВЕРЯЕМЫЙ R&D РЕЗУЛЬТАТ
+3 октября 2026. Проверено в 01:22 UTC.
+
+Результат
+Старый разрыв «OCC #12 отсутствует в #32» больше не является задачей:
+OCC #34 merged, а в current main есть qualification adapter и native bridge.
+Следующий узкий job относится к существующему FAST-Q owner Studious:
+добавить явный валидируемый вход публичного адреса для offline проверки.
+Это handoff, не выполненный patch. Статус writer — BLOCKED_EXECUTION_TOOL:
+подключённого зарегистрированного исполнителя и текущего scoped profile нет.
+
+Что изменилось относительно сохранённой базы Wave33
+• Studious main: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0.
+  #562 merged 2026-10-02 23:07:26 UTC; #561 и #560 также merged.
+  На текущем main наблюдаются 5/5 успешных check runs; на head #562 — 26/26.
+  Это результаты GitHub CI, просмотренные сейчас; тесты мной не перезапускались.
+• OCC main: 23d14fa351e56c89b916c6853f955d562335e8f1.
+  #34 и #35 merged; старый #12 закрыт без merge. Старые Studious #545/#547
+  также закрыты без merge и заменены действующим qualifier, а не двумя инспекторами.
+• OCC #36 открыт, base 23d14fa351e56c89b916c6853f955d562335e8f1,
+  head 75115b57a0b22c919513056ca9b217415cb7561f; 2/2 head checks успешны на Ubuntu/Windows.
+  #33 также открыт с 2/2 успешными checks. На самом OCC main check runs=0,
+  combined status содержит pending при нуле statuses: это отсутствие CI evidence,
+  а не наблюдение упавшего теста. Diff #36 добавляет проверку main push.
+• В #36 есть Git inventory, byte-preserving chunks, SQLite cursor и durable review UI.
+  Документ этого PR явно оставляет installed Windows Chrome/native host NOT RUN,
+  JS/TS syntax — TEXT_ONLY, voice→queue и criterion evidence verifier — следующими задачами.
+• Оба main SHA повторно сверены после исследования; drift не обнаружен.
+
+Новое локальное доказательство
+На снимке src/qualification_report.py текущего main исследована только чистая
+функция _environment и её allowlist. Репозиторий не импортировался и bot worker
+не запускался. Реальные адреса, credentials и network inputs не использовались.
+Изолированный probe выполнил четыре проверки, все успешны:
+1. FLASHLOAN_WALLET_PUBLIC_KEY из синтетического parent env удаляется.
+2. qualify_and_report не имеет отдельного аргумента wallet/public_key.
+3. FLASHLOAN_SIGNER_REFERENCE, SOLANA_RPC_HTTP и SOLANA_RPC_WS не передаются.
+4. Paper mode и отключение live/Jupiter сохраняются.
+Source SHA256: af90d5b30f60d9261430337490c86349a993d0503c167c8b250bb9d3ae7b06bf.
+
+src/config/runtime.py уже содержит WalletConfig.public_key, validate_pubkey и
+binding FLASHLOAN_WALLET_PUBLIC_KEY. src/automation_cli_pr189.py вызывает
+qualify_and_report без public identity. Поэтому просьба «просто положить адрес
+в окружение» не исправит этот путь: нужен явный операторский вход существующего
+owner. Существующий валидатор следует переиспользовать, не создавать второй.
+
+Граница этого вывода
+Исторический installed receipt от 2 октября относится к b31fa445218900702c0d0c4202481488a259c6f8,
+а не к текущему main. В нём четыре preflight завершены, один offline paper-shadow
+pass заблокирован: paper-shadow:blocked_missing_wallet_public_key; candidates=0,
+transactions=0, qualified=false. В том же evidence отсутствуют atomic_stage_suite,
+exact_fee_workflow, verified_marginfi_provider и jupiter_v2_build.
+Этот receipt прочитан, а не воспроизведён сейчас. Публичный адрес не доказывает
+наличие остальных bindings и не даёт права включить MarginFi. Legacy имя
+verified_marginfi_provider не отменяет lender-neutral решения и MarginFi PAUSED.
+Проверка _environment не является ни установленной qualification, ни наблюдением
+реального рынка. Нельзя объявлять прибыль или PAPER_PASS на основании этого probe.
+
+Одно следующее задание
+ID: SPG-01-PUBLIC-IDENTITY-INPUT; прежняя цель SPG-01.
+Repo: BobIvans/studious-pancake.
+Base: 67d3852cbc4cb1b24582df45adbf6a42d4da2af0.
+Owner: src/qualification_report.py; CLI src/automation_cli_pr189.py;
+валидация src/config/runtime.py и существующий validate_pubkey.
+Изменение: один optional operator-owned public identity input; нормализованный
+адрес включить в input_digest и передавать ребёнку только после валидации.
+Не расширять наследование environment, не менять provider/signer/sender policy.
+OCC должен впоследствии использовать тот же проверенный контракт и существующий
+bridge; добавлять второй executor или автоматически править оба repo не требуется.
+
+Приёмка
+1. Valid public identity reaches the child through the explicit input; a unit-test address is marked fixture, never user wallet or market evidence.
+2. Malformed identity fails existing canonical validation before subprocess creation; no arbitrary environment passthrough.
+3. Changing normalized identity changes input_digest; reusing request_id with another identity produces REQUEST_ID_INPUT_CONFLICT.
+4. Secret reference, RPC URLs, provider credentials, signer and sender remain unavailable; MarginFi remains disabled.
+5. Absent identity preserves the honest BLOCKED outcome; one supplied address does not invent the missing atomic/fee/lender/Jupiter bindings.
+6. Existing qualifier and CLI focused regression checks pass on actual changed head; installed receipt is a separate requirement, not inferred from tests.
+7. qualified=false, release_authorized=false, live_authorized=false, transactions_sent=0 remain invariant.
+
+Доступные входы: pinned source, свежие SHA, текущие CLI/WalletConfig, исторический
+installed receipt, текущий pure-function probe. Отсутствуют registered writer,
+operator profile, выбранная публичная идентичность и квалифицированные зависимости
+для настоящего установленного paper опыта. Фикстура адреса допустима в unit test,
+но не как подмена пользовательского входа для получения READY.
+Limits: provider budget=0; writers=1; attempts≤3; send_transactions=false;
+signer_access=false; auto_merge=false; push/PR/deploy запрещены в этом задании.
+Stop: SOURCE_DRIFT, PUBLIC_IDENTITY_INVALID, MISSING_OPERATOR_PROFILE,
+REQUIRED_TEST_FAILED, UNEXPECTED_NETWORK_OR_SIGNER_ACCESS, UNKNOWN_EXTERNAL_OUTCOME.
+Для code job нужен свежий наблюдаемый usage bucket. Нужного authenticated app-server
+или official UI capture здесь нет: actual quota UNKNOWN, model jobs не допущены.
+
+Производная память
+SPG-05: прежний integration gap заменён на BRIDGE_MERGED_DEVICE_QUALIFICATION_PENDING.
+SPG-01: остаётся заблокированной; уточнён public-identity ingress gap и отдельно
+сохранены прежние неподтверждённые runtime bindings.
+SPG-11: context foundation в открытом #36 с CI PASS, installed outcome NOT RUN.
+Новых пользовательских решений не выдумано. DEC-01…DEC-05 сохранены:
+qualification прежде расширения; MarginFi PAUSED; lender-neutral и Slumlord при
+необходимости и доказанной совместимости; Laya advisory; один OCC store/queue/owner;
+live promotion отдельно. Исторические balances не используются как бюджет.
+
+Охват и дедупликация
+Сохранённая сборка Wave33 найдена и восстановлена; прочитаны GOALS, DECISIONS,
+CONTINUATION_COVERAGE. У неё 183 уникальных блока и 14 целей; прежние 33 теста
+не выдаются за проверки этого запуска. Исходные 159-блочная сборка и отчёт целей
+найдены по metadata; их исходники не перезаписаны. 1199 file metadata не означают чаты.
+Прочитан один старый baseline TXT; восемь новых документов/выбранных членов архива
+и relevant diff snippets учтены в JSON. Полная история аккаунта не просматривалась.
+Один Personal Context поиск дал summaries с ролями и датами; заявления ассистента
+проверялись по GitHub и не принимались за новые разрешения. Общий вывод прежних
+обзоров — те же input/device blockers; новый каталог новостей не создавался.
+Предыдущий фактический daily receipt/cursor не найден: дедупликация неполная,
+использовано окно 48 часов. Пример DAILY_RECEIPT из ZIP не принят за реальный run.
+Сопутствующий новый receipt сохраняет SHA/cursor для следующего сравнения.
+
+Первичный технический источник
+Solana Accounts: https://solana.com/docs/core/accounts
+Проверен 3 октября: адрес аккаунта имеет 32 байта. Это существующая документация,
+дата изменения страницы не подтверждена; новой технологической новостью её не считаем.
+Публичная идентичность не является приватным ключом и не разрешает signing.
+Другие модели, ASR, GPU jobs и market APIs не запускались и не скачивались.
+
+Sources для следующего исполнителя
+BASE  libfile_d9d9279cd7808191ad3cca43fd1a70e2
+BUNDLE  libfile_50901f59b3b88191b2bb1af76d6b48b9
+REQ  libfile_41f25b2f95fc8191a67348300b5c3857
+QCODE  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/qualification_report.py
+CFG  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/config/runtime.py
+CLI  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/src/automation_cli_pr189.py
+HIST  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/release_artifacts/rnd_pr02/2026-10-02/installed-run/qualification_receipt.json
+BLOCK  https://github.com/BobIvans/studious-pancake/blob/67d3852cbc4cb1b24582df45adbf6a42d4da2af0/docs/qualification/RND_PR02_CANONICAL_PAPER_BLOCKED_RU.md
+BRIDGE  https://github.com/BobIvans/scaling-chrome-extensions/blob/23d14fa351e56c89b916c6853f955d562335e8f1/agent-bridge/qualification_adapter.py
+NATIVE  https://github.com/BobIvans/scaling-chrome-extensions/blob/23d14fa351e56c89b916c6853f955d562335e8f1/agent-bridge/qualification.mjs
+FOUNDATION  https://github.com/BobIvans/scaling-chrome-extensions/blob/75115b57a0b22c919513056ca9b217415cb7561f/docs/automation/context-foundation.md
+SOLANA  https://solana.com/docs/core/accounts
+GitHub PR: https://github.com/BobIvans/studious-pancake/pull/562
+GitHub PR: https://github.com/BobIvans/scaling-chrome-extensions/pull/34
+GitHub PR: https://github.com/BobIvans/scaling-chrome-extensions/pull/36
+
+Фактически выполнено: чтение источников, проверка GitHub heads/CI, чистый probe,
+создание этого документа и производного receipt. Repository test suites=0,
+repository mutations=0, bot runs=0, device actions=0, transactions=0,
+дополнительные model/provider запросы=0, платные API=0. Внутренний расход модели
+текущего ответа платформой не наблюдается; значение квоты не выдумывается.

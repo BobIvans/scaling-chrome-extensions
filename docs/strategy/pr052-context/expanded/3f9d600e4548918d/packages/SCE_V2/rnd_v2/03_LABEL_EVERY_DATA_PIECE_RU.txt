@@ -1,0 +1,38 @@
+УНИВЕРСАЛЬНАЯ РАЗМЕТКА ДАННЫХ
+
+Не существует одного идеального semantic тега. Разделяем независимые фасеты и храним основание каждого значения.
+
+Обязательная оболочка любого объекта:
+identity: source_id, logical_item_id, revision_id, content_hash, original_locator;
+capture: captured_at, connector/version, scope, complete/partial/error, raw_blob_ref;
+authorship: автор, role(user/assistant/system/tool/unknown), conversation/message/branch/reply IDs;
+time: published_at, edited_at, observed_at, valid_from/to (не подставлять capture-time как publication-time);
+representation: mime, language, modality, parser/version, text_state, spans (bytes/lines/page/time interval);
+provenance: derived_from, referenced_by, exact repo SHA, file hash, workflow run;
+knowledge: quote/assertion/hypothesis/decision/goal/task/constraint/evidence/counterevidence;
+epistemic: OBSERVED/INFERRED/LATENT/UNKNOWN; отдельная truth TRUE/FALSE/UNKNOWN/NOT_RUN;
+project: repo/domain/owner/symbol/dependency/goal_id (несколько значений допустимы);
+lifecycle: proposed/accepted/active/blocked/done/superseded/rejected/archived;
+sensitivity: personal/confidential/secret/unknown, allowed egress, access scope;
+label provenance: asserted_by, suggested_by, method/version, confidence/calibration, supporting_span, corrected_at.
+
+Точность полей разная. Hash/path/messageID можно вычислить; intent и semantic relevance — предположения.
+Unknown не заменяется пустым ложным фактом. Model confidence не является доказательством истины или разрешением выполнить действие.
+Авторство и provenance относятся к каждому фрагменту. Две копии одного текста могут иметь одинаковые bytes и разные источники.
+
+Примеры:
+• «Хочу локальную библиотеку» в user message → goal candidate, author=user, source span; после явного принятия goal=ACTIVE.
+• «Все тесты прошли» в assistant message → CLAIM, truth=UNKNOWN до test artifact с точным SHA.
+• result.xml из запущенного теста → EVIDENCE, конкретные test cases/skip/fail; validity только для его SHA/config.
+• TODO или shell=True в исходнике → STATIC_CANDIDATE, не автоматически bug/exploit.
+• фотография/аудио без parser → raw сохранён, interpretation=NOT_RUN; OCR/ASR даст отдельную derivative, оригинал остаётся.
+
+Life library:
+Личные разговоры, документы и Telegram imports должны иметь собственные scopes. Голосовая цель выбирает область библиотеки; найденная секретная строка не даёт разрешения отправить её внешнему API.
+Искать «всё моё» — значит учесть все подключённые/импортированные источники. Приватные каналы без пользовательского export/доступа не видны приложению.
+Удаление/редактирование требует tombstone/revision и пересчёта derivative context; старый выбор может сохраняться как исторический snapshot с явной датой.
+
+Как оценить «идеальные теги»:
+Создать gold set собственных русских/английских фрагментов; пометить source-span, semantic type, goal links, counterexamples и abstain cases; split по разговорам/времени, а не соседним chunks.
+Сравнить heuristic baseline, Laya, local LLM; считать precision/recall по типу, retrieval recall, calibration, correction time и p95 latency.
+Порог для выбора следующего действия калибровать отдельно от порога для выдачи поисковых подсказок.

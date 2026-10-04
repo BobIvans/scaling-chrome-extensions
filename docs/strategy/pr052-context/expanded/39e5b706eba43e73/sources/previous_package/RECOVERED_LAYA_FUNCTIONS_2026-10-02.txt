@@ -1,0 +1,725 @@
+Я понял задачу. Сейчас это все разложу по полочкам.
+
+Ещё думаю, превращаю твою задумку в конкретный набор функций для условной «Laya». Сначала выцеплю свежие сигналы спроса с X, потом переведу их в реальные кнопки и сценарии автоматизации, а не абстрактные «агенты на все случаи». Уже видно, что больше всего хотят не «ещё один чат‑интерфейс», а связку переносимой памяти, постоянных сессий браузера и рабочего стола, маршрутизации инструментов, подтверждения действий человеком и циклов по расписанию или событиям. Современные каталоги агентов и актуальные обновления проектов как раз сводятся к этим элементам. Кстати, на самом X был показательный сигнал — пост OpenAI от 29 сентября про API для принятия решений в реальном времени («какое действие агент должен сделать дальше») набрал около 684 тысяч просмотров и 5,7 тысяч лайков. При этом рядом сильнее всего звучит запрос на постоянную память, работу за компьютером, автоматизацию браузера и безопасные подтверждения действий. Я на основе этого начинаю набрасывать конкретные кнопки и сценарии для прототипа.
+
+Окей, вот как я бы сформулировал концепт: Лая — это не просто ещё одна модель, а слой между тобой, всеми ИИ и твоим компьютером, который умеет агрегировать любой контент, понимать намерение из голоса, выбирать подходящий ИИ, выполнять действия, проверять результат и хранить состояние между сессиями. Самые востребованные элементы сейчас — это постоянная память, управление компьютером и браузером, маршрутизация инструментов и явное подтверждение действий. Теперь конкретно по кнопкам и функциям. Для слоя голоса и управления — «нажми чтобы говорить», «всегда слушать», «превратить речь в задачу», «отменить последнее действие», «объясни, что ты делаешь», «экстренная остановка», «читать экран», «описать текущее окно», «озвучить изменения». Для агрегатора контекста — «собрать весь связанный контекст», «найти прошлые обсуждения», «вспомнить незакрытые идеи», «найти решения, которые мы уже приняли», «найти противоречия», «найти несделанные пункты», «найти релевантный код, коммиты, pull request’ы, issues, доки, ссылки, экспорты чатов»; «объединить обсуждения», «вытащить решения, обещания, несделанные фичи», «построить таймлайн», «собрать единый пакет контекста». По постоянной памяти — «запомни это», «забудь это», «память по проекту», «личная память», «память репозитория», «поиск по памяти», «экспорт памяти», «конфликты в памяти», «краткое резюме памяти», «переносимая память», «делиться памятью с выбранным ИИ». Маршрутизатор ИИ: «спросить у лучшего ИИ», «спросить у конкретного ИИ», «спросить у нескольких одновременно», «сравнить ответы», «дешёвый сначала», «авто‑выбор модели», «запасная модель», «ограничение бюджета на модели». Универсальная отправка: «отправить выбранному ИИ», «отправить всем», «подготовить промпт для ручной вставки», «как API», «как MCP», «копировать в буфер», «открыть в нужном сервисе»; там, где автоматическая отправка невозможна или запрещена, Лая останавливается на «подготовить, открыть, скопировать». Управление компьютером и доступность: «открыть приложение», «нажать», «ввести текст», «горячие клавиши», «читать интерфейс», «режим без рук», «экранный диктор», «подтверждать каждое действие», «навигация голосом», «описать картинку», «режим для людей с ограниченными возможностями». Браузерный агент: «использовать текущий браузер с уже залогиненными сессиями», «разрешённые вкладки», «разрешённые домены», «следить за страницей», «ждать изменения», «скачать», «загрузить», «записать сценарий», «повторить сценарий», «работать в фоне». Непрерывность и циклы: «запуск по расписанию», «каждый час», «ежедневно», «еженедельно», «по событию в GitHub», «по новому посту в X», «пока не достигнута цель», «пока не заблокирован», «спать до новой информации», «условия остановки». Человеческое подтверждение: «разрешить один раз», «разрешить сессию», «всегда разрешать», «запретить», «показать, что будет сделано», «одобрить пуш», «одобрить мердж», «одобрить отправку», «одобрить удаление», «одобрить финансовое действие», «режим только чтение», «песочница», «симуляция», «предел бюджета», «белый список команд», «чёрный список команд». Специализация под твой кейс: «следить за новыми исследованиями по арбитражу», «следить за новыми интеграциями DEX», «следить за изменениями в экосистеме Solana, Jupiter, MarginFi, Kamino, Jito», «сравнить с существующим кодом», «сгенерировать кандидата стратегии», «прогнать симуляцию», «paper trade», «квалификация», «подготовить PR», «никогда не выводить в live без явного разрешения». На главном экране это может быть пара больших кнопок: «говорить», «спросить», «действовать», «продолжить проект», «агрегировать», «компьютер», «браузер», «репозиторий», «память», «агенты», «разрешения», «таймлайн». Смысл в том, чтобы состояние хранилось в Лае, а не в конкретном ИИ. Тогда «продолжить наш проект» станет одной командой, которая сама поднимет старые чаты, репозиторий, свежие исследования, запустит безопасные тесты, попросит подтверждение опасных шагов и подготовит PR. Если хочешь, я превращу этот список в приоритизированный бэклог с этапами и минимальным нулевым токен‑режимом, который реально можно начать кодить.
+
+The strongest current signal is that users are converging on the exact layer you’re describing: **persistent memory, computer/browser control, model-independent MCP/tool routing, long-running loops, voice control, and explicit human approval for consequential actions**. Recent projects expose dozens to hundreds of browser/agent tools; persistent-memory projects are growing quickly; and OpenAI’s Sept. 29 routing/decision post was captured at roughly **684K views and 5.7K likes**. [latent.space](https://www.latent.space/p/devday-2026?utm_source=chatgpt.com)
+
+I would define **Laya** not as another AI model, but as a **universal context + intent + execution layer between the human, all their information, all AI models, and the computer**.
+
+1. **Universal Voice / Command Layer**
+   - `Talk to Laya`
+   - `Always Listening`
+   - `Push to Talk`
+   - `Wake Word`
+   - `Voice → Task`
+   - `Voice → Prompt`
+   - `Voice → Automation`
+   - `Voice → Computer Action`
+   - `Voice → Coding Task`
+   - `Voice → Research Task`
+   - `Voice → Reminder`
+   - `Voice → Multi-Step Workflow`
+   - `Dictate Document`
+   - `Dictate Code Change`
+   - `Correct Last Command`
+   - `Undo Last Action`
+   - `Stop Agent`
+   - `Pause Agent`
+   - `Continue`
+   - `Explain What You’re Doing`
+   - `Read Screen Aloud`
+   - `Describe Current Window`
+   - `What Changed?`
+   - `What Needs My Approval?`
+
+2. **Intent Compiler**
+   - `Understand My Goal`
+   - `Convert Speech to Structured Task`
+   - `Detect Subtasks`
+   - `Detect Required Apps`
+   - `Detect Required Files`
+   - `Detect Required Repository`
+   - `Detect Required AI`
+   - `Detect Missing Context`
+   - `Infer Previous Project`
+   - `Turn Idea Into Plan`
+   - `Turn Plan Into Executable Steps`
+   - `Generate Agent Instructions`
+   - `Generate Context Packet`
+   - `Generate Machine-Readable Task JSON`
+   - `Preview Task Before Running`
+   - `Run Immediately`
+
+3. **Universal Context Aggregator**
+   - `Collect Context`
+   - `Collect Everything Related`
+   - `Find Previous Discussions`
+   - `Find Unfinished Ideas`
+   - `Find Decisions We Already Made`
+   - `Find Contradictions`
+   - `Find Missing Work`
+   - `Find Old TODOs`
+   - `Find Forgotten Features`
+   - `Find Relevant Files`
+   - `Find Relevant Code`
+   - `Find Relevant Commits`
+   - `Find Relevant PRs`
+   - `Find Relevant Issues`
+   - `Find Relevant Web Research`
+   - `Find Relevant X Posts`
+   - `Find Relevant Reddit Discussions`
+   - `Find Relevant Documentation`
+   - `Find Relevant Emails`
+   - `Find Relevant Notes`
+   - `Find Relevant Screenshots`
+   - `Find Relevant Voice Notes`
+
+4. **Chat-History Aggregation**
+   - `Import ChatGPT History`
+   - `Import Claude History`
+   - `Import Grok History`
+   - `Import Gemini History`
+   - `Import Perplexity History`
+   - `Import Copilot Sessions`
+   - `Import Cursor Sessions`
+   - `Import Codex Sessions`
+   - `Import Local LLM Sessions`
+   - `Import JSON Export`
+   - `Import HTML Export`
+   - `Import TXT/Markdown`
+   - `Merge Related Conversations`
+   - `Deduplicate Discussions`
+   - `Extract Decisions`
+   - `Extract Ideas`
+   - `Extract Promises/TODOs`
+   - `Extract Code Suggestions`
+   - `Extract Rejected Ideas`
+   - `Extract Unimplemented Ideas`
+   - `Build Conversation Timeline`
+   - `Continue Old Conversation With Another AI`
+
+5. **Persistent Memory**
+   - `Remember This`
+   - `Forget This`
+   - `Project Memory`
+   - `Personal Memory`
+   - `Repository Memory`
+   - `Agent Memory`
+   - `Session Memory`
+   - `Long-Term Memory`
+   - `Decision Memory`
+   - `Mistake Memory`
+   - `Successful Workflow Memory`
+   - `Preference Memory`
+   - `Auto-Summarize Memory`
+   - `Memory Confidence`
+   - `Memory Source`
+   - `Memory Timeline`
+   - `Memory Conflict Detection`
+   - `Memory Version History`
+   - `Search Memory`
+   - `Export Memory`
+   - `Portable Memory`
+   - `Share Memory With Selected AI`
+
+Persistent memory is a particularly strong current ecosystem direction: agentmemory describes compatibility across Claude Code, Copilot CLI, Cursor, Gemini CLI, Codex CLI, Hermes and MCP clients, while other current agent projects are explicitly building shared memory beneath multiple agents. [shadowgraph.io](https://shadowgraph.io/rohitg00/agentmemory?utm_source=chatgpt.com)
+
+6. **AI Router**
+   - `Ask Best AI`
+   - `Ask ChatGPT`
+   - `Ask Claude`
+   - `Ask Grok`
+   - `Ask Gemini`
+   - `Ask Perplexity`
+   - `Ask Mistral`
+   - `Ask DeepSeek`
+   - `Ask Groq`
+   - `Ask Local Ollama`
+   - `Ask Multiple AIs`
+   - `Compare Answers`
+   - `Consensus`
+   - `Critic Model`
+   - `Planner Model`
+   - `Coder Model`
+   - `Research Model`
+   - `Cheap Model First`
+   - `Best Model Automatically`
+   - `Fastest Model Automatically`
+   - `Private Model Only`
+   - `Fallback Model`
+   - `Route by Cost`
+   - `Route by Latency`
+   - `Route by Capability`
+   - `Route by Context Size`
+
+This “decide which model/tool/agent should act next” layer is especially timely; agent routing and decision systems are currently receiving substantial attention. [latent.space](https://www.latent.space/p/devday-2026?utm_source=chatgpt.com)
+
+7. **Context Packaging**
+   - `Build Prompt Package`
+   - `Minimal Context`
+   - `Full Context`
+   - `Repository Context`
+   - `Research Context`
+   - `Conversation Context`
+   - `Voice Context`
+   - `Last 24 Hours`
+   - `Last Week`
+   - `Entire Project`
+   - `Token Budget`
+   - `Compress Context`
+   - `Remove Duplicates`
+   - `Keep Source Citations`
+   - `Preserve File Links`
+   - `Preserve Git References`
+   - `Split Into Chunks`
+   - `Generate index.json`
+   - `Generate context.md`
+   - `Generate task.json`
+   - `Copy Context`
+   - `Send Context`
+
+8. **Universal “Send to AI”**
+   - `Send to Selected AI`
+   - `Send to All AIs`
+   - `Copy to Clipboard`
+   - `Open in AI`
+   - `Continue in Claude`
+   - `Continue in Grok`
+   - `Continue in Gemini`
+   - `Continue in Cursor`
+   - `Continue in Codex`
+   - `Continue in Local Agent`
+   - `API Send`
+   - `MCP Send`
+   - `Webhook Send`
+   - `Save for Manual Paste`
+
+For web services where automated message submission is unsupported or conflicts with their rules, Laya can stop at **prepare + open + copy**, while using official APIs/MCP/plugin interfaces where available.
+
+9. **Desktop Computer Control**
+   - `Open App`
+   - `Close App`
+   - `Switch App`
+   - `Find Window`
+   - `Move Window`
+   - `Click`
+   - `Double Click`
+   - `Right Click`
+   - `Type`
+   - `Press Shortcut`
+   - `Scroll`
+   - `Drag`
+   - `Select`
+   - `Copy`
+   - `Paste`
+   - `Upload File`
+   - `Download File`
+   - `Take Screenshot`
+   - `Read Screen`
+   - `Detect Buttons`
+   - `Detect Forms`
+   - `Use Accessibility Tree`
+   - `Wait for UI`
+   - `Retry Failed Action`
+   - `Return Focus to User`
+
+Computer-use infrastructure is developing rapidly; recent Linux tooling, for example, exposes accessibility-tree control, screenshots and desktop input directly to agents. [pi.dev](https://pi.dev/packages/%40agent-sh/computer-use-linux?name=web\&utm_source=chatgpt.com)
+
+10. **Accessibility Mode**
+   - `Hands-Free Mode`
+   - `Voice Only Mode`
+   - `Large Controls`
+   - `Screen Reader Mode`
+   - `Read Every Action`
+   - `Confirm Before Clicking`
+   - `Slow Interaction Mode`
+   - `Repeat Last Screen`
+   - `Describe Image`
+   - `Describe UI`
+   - `Navigate by Voice`
+   - `Fill Form by Voice`
+   - `Write Email by Voice`
+   - `Control Browser by Voice`
+   - `Control IDE by Voice`
+   - `Emergency Stop Word`
+   - `Caregiver/Profile Mode`
+   - `Custom Speech Vocabulary`
+
+This could make Laya substantially more than an “agent app”: the same execution engine becomes an accessibility layer for people who cannot conveniently use a mouse or keyboard.
+
+11. **Browser Agent**
+   - `Use Current Browser`
+   - `Use Logged-In Session`
+   - `Open Tab`
+   - `Read Tab`
+   - `Control Tab`
+   - `Allowed Tabs Only`
+   - `Allow This Site`
+   - `Allow This Domain`
+   - `Extract Page`
+   - `Summarize Page`
+   - `Click Element`
+   - `Fill Form`
+   - `Download`
+   - `Upload`
+   - `Search Site`
+   - `Monitor Page`
+   - `Watch for Changes`
+   - `Keep Session Alive`
+   - `Background Browser`
+   - `Record Browser Trace`
+   - `Replay Workflow`
+   - `Debug Failed Step`
+
+Current browser-agent projects specifically emphasize controlling the browser people are **already logged into**, preserving sessions/cookies and working in the background rather than spawning a clean browser each time. [GitHub](https://github.com/achiya-automation/safari-mcp?utm_source=chatgpt.com)
+
+12. **X / Social Research**
+   - `Search X`
+   - `Watch Accounts`
+   - `Watch Keywords`
+   - `Watch Competitors`
+   - `Watch Product Launches`
+   - `Watch Web3`
+   - `Watch AI Agents`
+   - `Watch Arbitrage`
+   - `Watch GitHub Links`
+   - `Extract Links`
+   - `Extract Threads`
+   - `Summarize Threads`
+   - `Detect Emerging Topic`
+   - `Detect Repeated Complaints`
+   - `Detect Requested Features`
+   - `Detect Popular Tools`
+   - `Detect High-Engagement Posts`
+   - `Save Research`
+   - `Link Research to Project`
+   - `Turn Research Into Tasks`
+
+Current X automation tooling is already exposing large MCP surfaces—one project documents **153 MCP tools**, continuous monitoring, account watching, Spaces, exports and AI-agent interfaces—which is a useful indication of how large this surface can become. [XActions](https://www.xactions.app/docs/guides/readme?utm_source=chatgpt.com)
+
+13. **Research Agent**
+   - `Research Goal`
+   - `Research Continuously`
+   - `Search Web`
+   - `Search X`
+   - `Search Reddit`
+   - `Search GitHub`
+   - `Search Papers`
+   - `Search Documentation`
+   - `Compare Sources`
+   - `Verify Claims`
+   - `Track Sources`
+   - `Find New Information Since Last Run`
+   - `What Changed Since Yesterday?`
+   - `Research → Memory`
+   - `Research → Backlog`
+   - `Research → PR Proposal`
+
+14. **Repository Intelligence**
+   - `Connect Repository`
+   - `Index Repository`
+   - `Read Entire Repository`
+   - `Build Dependency Graph`
+   - `Build AST`
+   - `Find Relevant Code`
+   - `Find Duplicate Implementations`
+   - `Find Dead Code`
+   - `Find Missing Tests`
+   - `Find Security Risks`
+   - `Find TODOs`
+   - `Find Tech Debt`
+   - `Compare Against Old Plans`
+   - `Compare Against Chat History`
+   - `Compare Against Closed PRs`
+   - `Find Promised But Missing Features`
+   - `Find Partially Implemented Features`
+   - `Find Abandoned Branches`
+   - `Find CI Failures`
+   - `Explain Architecture`
+   - `Generate Repository Memory`
+
+15. **Git / GitHub Agent**
+   - `Create Branch`
+   - `Create Worktree`
+   - `Implement Task`
+   - `Run Tests`
+   - `Run Linter`
+   - `Run Security Checks`
+   - `Review Diff`
+   - `Generate Commit`
+   - `Create PR`
+   - `Update PR`
+   - `Resolve Conflicts`
+   - `Review CI`
+   - `Fix CI`
+   - `Request Review`
+   - `Prepare Merge`
+   - `Merge After Approval`
+   - `Rollback`
+   - `Generate Release Notes`
+   - `Link PR to Original Conversation`
+
+16. **Your Flashloan / Web3 Mode**
+   - `Watch New Arbitrage Research`
+   - `Watch New DEX Integrations`
+   - `Watch Solana Releases`
+   - `Watch Jupiter`
+   - `Watch MarginFi`
+   - `Watch Kamino`
+   - `Watch Jito`
+   - `Watch RPC Changes`
+   - `Watch Security Incidents`
+   - `Watch New Markets`
+   - `Watch New Pools`
+   - `Watch New Routes`
+   - `Compare With Existing Strategies`
+   - `Generate Strategy Candidate`
+   - `Simulate Strategy`
+   - `Paper Trade`
+   - `Qualification Campaign`
+   - `Analyze Qualification`
+   - `Reject Unsafe Strategy`
+   - `Prepare Implementation PR`
+   - `Never Live Trade Without Explicit Permission`
+
+17. **Continuous Agent / Loop Engine**
+   - `Run Once`
+   - `Run Every Hour`
+   - `Run Daily`
+   - `Run Weekly`
+   - `Run When File Changes`
+   - `Run When PR Opens`
+   - `Run When CI Fails`
+   - `Run When GitHub Issue Appears`
+   - `Run When New X Post Matches`
+   - `Run When Price Condition Matches`
+   - `Run When Email Arrives`
+   - `Run When Webhook Fires`
+   - `Run When Computer Starts`
+   - `Continue Until Goal`
+   - `Continue Until Blocked`
+   - `Continue Until Budget`
+   - `Retry Automatically`
+   - `Sleep Until New Information`
+   - `Wake Agent`
+   - `Stop Condition`
+
+18. **Long-Lived Goal**
+   - `Create Goal`
+   - `Goal Description`
+   - `Definition of Done`
+   - `Constraints`
+   - `Budget`
+   - `Allowed Tools`
+   - `Allowed Repositories`
+   - `Allowed Websites`
+   - `Agent Strategy`
+   - `Progress %`
+   - `Next Best Action`
+   - `Blocked By`
+   - `Last Activity`
+   - `New Evidence`
+   - `Goal History`
+   - `Resume Goal`
+
+19. **Multi-Agent Team**
+   - `Planner`
+   - `Researcher`
+   - `Coder`
+   - `Reviewer`
+   - `Security Critic`
+   - `Test Agent`
+   - `Web Agent`
+   - `Repository Agent`
+   - `Documentation Agent`
+   - `Memory Agent`
+   - `Cost Controller`
+   - `Final Verifier`
+   - `Create Subagent`
+   - `Assign Task`
+   - `Parallelize`
+   - `Merge Findings`
+   - `Agent-to-Agent Message`
+   - `Kill Subagent`
+
+20. **Planner / Critic Loop**
+   - `Plan`
+   - `Critique Plan`
+   - `Improve Plan`
+   - `Execute`
+   - `Verify`
+   - `Critique Result`
+   - `Retry`
+   - `Escalate to Human`
+
+21. **Human Approval Layer**
+   - `Always Allow`
+   - `Allow Once`
+   - `Allow for Session`
+   - `Deny`
+   - `Edit Action`
+   - `Ask Before Sending`
+   - `Ask Before Posting`
+   - `Ask Before Git Push`
+   - `Ask Before Merge`
+   - `Ask Before Deleting`
+   - `Ask Before Installing`
+   - `Ask Before Spending Money`
+   - `Ask Before Financial Transaction`
+   - `Ask Before Live Trade`
+   - `Ask Before Sharing Data`
+
+Human-in-the-loop authorization is becoming a core piece of agent infrastructure, rather than an optional extra. Current projects explicitly expose identity-specific tools and approval boundaries, and coding-agent releases are adding increasingly granular authorization controls. [Web Pulse](https://wpnews.pro/news/give-muse-code-an-on-call-mcp-toolkit-with-kong-ai-gateway?utm_source=chatgpt.com)
+
+22. **Permissions Dashboard**
+   - `Apps`
+   - `Websites`
+   - `Folders`
+   - `Repositories`
+   - `Commands`
+   - `APIs`
+   - `MCP Servers`
+   - `Credentials`
+   - `Read Permission`
+   - `Write Permission`
+   - `Execute Permission`
+   - `Financial Permission`
+   - `Expiration`
+   - `Revoke All`
+
+23. **Credential Vault**
+   - `Add Secret`
+   - `Use Without Revealing`
+   - `Per-Agent Secrets`
+   - `Per-Site Secrets`
+   - `Temporary Credentials`
+   - `Rotate Secret`
+   - `Revoke Secret`
+   - `Audit Secret Usage`
+   - `Never Put Secrets Into Prompt`
+
+24. **Safety / Sandboxing**
+   - `Read-Only Mode`
+   - `Simulation Mode`
+   - `Dry Run`
+   - `Sandbox`
+   - `Disposable Browser`
+   - `Disposable VM`
+   - `Network Restrictions`
+   - `File Restrictions`
+   - `Command Allowlist`
+   - `Command Denylist`
+   - `Transaction Limit`
+   - `Rate Limit`
+   - `Agent Budget`
+   - `Kill Switch`
+
+25. **Action Verification**
+   - `Verify Action Completed`
+   - `Verify File Changed`
+   - `Verify UI State`
+   - `Verify Git Diff`
+   - `Verify Tests`
+   - `Verify Deployment`
+   - `Verify Source`
+   - `Verify Citation`
+   - `Compare Before/After`
+   - `Screenshot Evidence`
+   - `Execution Receipt`
+
+Source-aware verification is another current concern: recent work highlights that an agent can arrive at a correct fact while attributing it to the wrong tool or source, so Laya should preserve provenance through the whole action chain. [explainx.ai](https://www.explainx.ai/blog/hugging-face-provenanceguard-source-aware-mcp-verification-2026?utm_source=chatgpt.com)
+
+26. **Agent Timeline**
+   - `What Agent Did`
+   - `Why`
+   - `Input`
+   - `Context Used`
+   - `Model Used`
+   - `Tools Used`
+   - `Files Read`
+   - `Files Changed`
+   - `Websites Visited`
+   - `Commands Executed`
+   - `Approvals`
+   - `Errors`
+   - `Retries`
+   - `Cost`
+   - `Duration`
+   - `Result`
+   - `Rollback`
+
+27. **Replay / Resume**
+   - `Replay Workflow`
+   - `Resume From Failure`
+   - `Resume From Last Checkpoint`
+   - `Fork Run`
+   - `Try Different Model`
+   - `Try Different Strategy`
+   - `Compare Runs`
+
+28. **Zero-Token Automation**
+   - `Rule-Based Action`
+   - `Regex Trigger`
+   - `DOM Trigger`
+   - `File Trigger`
+   - `Git Trigger`
+   - `Webhook Trigger`
+   - `Scheduled Script`
+   - `Local Search`
+   - `Local Deduplication`
+   - `Local Chunking`
+   - `Local Indexing`
+   - `Local Transcription`
+   - `Only Call AI When Necessary`
+
+This is important for Laya: **the orchestration itself should not require an LLM**. AI should be one optional reasoning component inside the system.
+
+29. **Cost Optimizer**
+   - `Free First`
+   - `Local First`
+   - `Cheapest Model`
+   - `Fastest Model`
+   - `Cache Result`
+   - `Reuse Previous Answer`
+   - `Do Not Resend Unchanged Context`
+   - `Compress Tool Output`
+   - `Model Budget`
+   - `Daily Budget`
+   - `Task Budget`
+   - `Cost Estimate Before Run`
+
+There is evidence that tool/context architecture can drastically change token consumption. One recent MCP/Codemode comparison reported roughly 66K tokens versus 324K for the same task under two different tool-exposure approaches; that is one vendor experiment, not a universal benchmark, but it illustrates why Laya should control what enters model context. [One](https://www.withone.ai/blog/pi-codemode-one-mcp-server?utm_source=chatgpt.com)
+
+30. **Local-First / Privacy**
+   - `Run Locally`
+   - `Local Database`
+   - `Local Embeddings`
+   - `Local Speech-to-Text`
+   - `Local LLM`
+   - `Encrypted Memory`
+   - `Encrypted Credentials`
+   - `Offline Mode`
+   - `Never Upload This Folder`
+   - `Private Context`
+   - `Delete Local History`
+
+31. **MCP Hub**
+   - `Add MCP`
+   - `Discover MCP`
+   - `Enable MCP`
+   - `Disable MCP`
+   - `Test MCP`
+   - `Permission MCP`
+   - `Filter MCP Tools`
+   - `Search Tools`
+   - `Favorite Tools`
+   - `Auto Select Tool`
+   - `MCP Logs`
+   - `MCP Health`
+   - `Generate MCP from API`
+   - `Generate MCP from OpenAPI`
+
+Current MCP directories already span browser automation, GitHub, databases, Gmail, Drive, Slack, search, payments, local files, desktop automation, deployment and many other categories. [agents-lib](https://agents-lib.com/mcp?utm_source=chatgpt.com)
+
+32. **Skills Marketplace**
+   - `Install Skill`
+   - `Create Skill`
+   - `Record Workflow as Skill`
+   - `Voice → Skill`
+   - `Import Claude Skill`
+   - `Import Agent Skill`
+   - `Import MCP`
+   - `Share Skill`
+   - `Version Skill`
+   - `Test Skill`
+   - `Rate Skill`
+   - `Permissions Before Install`
+
+33. **Learn From My Actions**
+   - `Record Me Doing It`
+   - `Turn Recording Into Workflow`
+   - `Turn Workflow Into Skill`
+   - `Repeat This`
+   - `Automate This Next Time`
+   - `Suggest Automation`
+
+34. **One-Click “Aggregate Everything”**
+   - `AGGREGATE`
+   - voice
+   - current screen
+   - active browser tabs
+   - selected files
+   - repository
+   - Git history
+   - PR history
+   - prior AI conversations
+   - project memory
+   - new web research
+   - current goal
+   - unfinished work
+   - then produce **one canonical context package**.
+
+35. **One-Click “Continue Project”**
+   - `CONTINUE`
+   - identify the project
+   - recover previous state
+   - find what was last completed
+   - find blockers
+   - check what changed externally
+   - propose next actions
+   - route those actions to appropriate agents.
+
+36. **One-Click Autonomous Development**
+   - `BUILD`
+   - research
+   - inspect repository
+   - compare history
+   - generate implementation specification
+   - create branch
+   - implement
+   - test
+   - critique
+   - fix
+   - prepare PR
+   - request approval
+   - merge after approval.
+
+37. **One-Click Research → Code**
+   - `DISCOVER → IMPLEMENT`
+   - watch X/GitHub/web
+   - detect relevant idea
+   - compare with repository
+   - determine whether already implemented
+   - estimate value/risk
+   - generate experiment
+   - run paper/sandbox qualification
+   - prepare PR if evidence supports it.
+
+38. **Main Laya Home Screen**
+   - giant microphone
+   - `Ask`
+   - `Act`
+   - `Research`
+   - `Build`
+   - `Automate`
+   - `Continue`
+   - `Aggregate`
+   - `Computer`
+   - `Browser`
+   - `Repository`
+   - `Memory`
+   - `Agents`
+   - `Approvals`
+   - `Timeline`.
+
+The key architectural idea is that **Laya owns the state, not ChatGPT, Claude, Grok or any other model**. A request such as:
+
+> “Continue our Flashloan bot. Find everything we discussed but never implemented, check what new research appeared this week, compare it with the current repository, test promising ideas in paper mode, and prepare the safest useful PR.”
+
+would become:
+
+**Voice → Intent → Goal → Memory retrieval → chat-history retrieval → repository retrieval → current web/X research → planner → parallel specialist agents → sandbox execution → verifier → approval → PR → updated persistent memory.**
+
+That gives you most of the *product behavior* people want from a persistent 24/7 agent without making the application dependent on whether ChatGPT itself exposes that feature in the EU. The AI provider becomes replaceable infrastructure; **Laya becomes the persistent agent.**

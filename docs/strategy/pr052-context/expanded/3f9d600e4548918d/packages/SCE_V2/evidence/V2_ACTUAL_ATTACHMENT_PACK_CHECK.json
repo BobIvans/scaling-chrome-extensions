@@ -1,0 +1,57 @@
+{
+  "schema": "sce.pack-verification.v1",
+  "index_sha256": "f75c63bfe7479e5b89f3728e399001a6f21e7bbe52efc8de007431a694937914",
+  "checks": [
+    {
+      "criterion": "entry_count",
+      "truth": "TRUE",
+      "reason": {
+        "manifest": 6,
+        "index": 6
+      }
+    },
+    {
+      "criterion": "all_entry_originals_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_entry_ids": []
+      }
+    },
+    {
+      "criterion": "txt_part_integrity",
+      "truth": "TRUE",
+      "reason": {
+        "failed_parts": []
+      }
+    },
+    {
+      "criterion": "zip_inventory_paths_occurrences",
+      "truth": "TRUE",
+      "reason": {
+        "expected": 6,
+        "actual": 6
+      }
+    },
+    {
+      "criterion": "all_entries_have_text_derivative",
+      "truth": "FALSE",
+      "reason": {
+        "non_text_or_error_entry_ids": [
+          2
+        ]
+      }
+    },
+    {
+      "criterion": "ai_review_complete",
+      "truth": "NOT_RUN",
+      "reason": "This verifier checks package integrity, not AI reasoning or code behavior."
+    },
+    {
+      "criterion": "flashloan_ready",
+      "truth": "NOT_RUN",
+      "reason": "Bot runtime and qualification not executed."
+    }
+  ],
+  "laya_called": false,
+  "financial_authority": false
+}

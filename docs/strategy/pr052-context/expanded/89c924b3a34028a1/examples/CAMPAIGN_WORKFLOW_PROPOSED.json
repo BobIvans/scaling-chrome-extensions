@@ -1,0 +1,59 @@
+{
+  "format": "INTERNAL_PROPOSED_NOT_NATIVE_LAYA_IMPORT",
+  "campaign_revision": 1,
+  "goal_ids": [
+    "GOAL5-20",
+    "GOAL5-24"
+  ],
+  "immutable_input_ref": "fixture:manifest-v1",
+  "nodes": [
+    {
+      "id": "prepare",
+      "template_id": "registered.context.prepare",
+      "effect_class": "READ_ONLY"
+    },
+    {
+      "id": "proposal_a",
+      "template_id": "registered.research.propose",
+      "depends_on": [
+        "prepare"
+      ],
+      "effect_class": "READ_ONLY"
+    },
+    {
+      "id": "proposal_b",
+      "template_id": "registered.research.propose",
+      "depends_on": [
+        "prepare"
+      ],
+      "effect_class": "READ_ONLY"
+    },
+    {
+      "id": "join",
+      "template_id": "registered.review.join",
+      "depends_on": [
+        "proposal_a",
+        "proposal_b"
+      ],
+      "effect_class": "LOCAL_RECORD"
+    },
+    {
+      "id": "next_brief",
+      "template_id": "registered.planning.next_brief",
+      "depends_on": [
+        "join"
+      ],
+      "effect_class": "LOCAL_RECORD"
+    }
+  ],
+  "effect_nodes": "Code integration/install are separate qualified optional nodes; draft does not add them implicitly.",
+  "limits": {
+    "max_iterations": 3,
+    "max_elapsed_seconds": 86400,
+    "max_transfers": 6,
+    "max_no_progress_iterations": 2,
+    "api_cost_ceiling_minor_units": 0
+  },
+  "provider_use": "NONE_UNLESS_REGISTERED_SCOPED_AND_BUDGETED",
+  "runtime_status": "NOT_EXECUTED"
+}

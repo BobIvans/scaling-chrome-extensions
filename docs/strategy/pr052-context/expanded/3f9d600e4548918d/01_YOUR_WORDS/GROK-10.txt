@@ -1,0 +1,151 @@
+To give the AI models the highest-value context for continuing development, focus on structured, multi-layer context engineering rather than dumping raw files. The goal is dense, queryable, evolvable memory that supports advanced reasoning (multi-hop, causal, temporal, and procedural).
+ 
+1. What SOTA Context to Gather (Functions Worth Building)
+ 
+Prioritize these high-signal layers (ranked by impact for repo-centric development):
+ 
+Layer	
+What to Capture	
+Why It Helps AI Reasoning	
+Implementation Idea	
+
+
+Structural / AST	
+Functions, classes, imports, call graphs, inheritance	
+Enables precise location + multi-hop navigation	
+Tree-sitter or AST parsers	
+
+Evolutionary / Git	
+Commits, diffs, blame, PR descriptions, issue links	
+Shows why code changed and successful patterns	
+Git log + PR metadata	
+
+Semantic / Embeddings	
+Chunked code + docs with hybrid dense+BM25	
+Fast relevance retrieval	
+Local embeddings (e.g. EmbeddingGemma)	
+
+Knowledge Graph	
+Entities (files, functions, concepts) + relations (calls, depends, supersedes)	
+Supports causal & temporal reasoning	
+Neo4j / Kuzu + GraphRAG style	
+
+Procedural / Skills	
+Reusable workflows extracted from code (e.g. “how we add a feature”)	
+Turns past work into transferable skills	
+Code2Skill-style extraction	
+
+Episodic / Interaction	
+Past AI sessions, decisions, failures, outcomes	
+Prevents repeating mistakes; enables reconsolidation	
+Mem0 / Letta / Zep style	
+
+State / Temporal	
+Current vs superseded facts, versioned notes	
+Avoids stale context (big failure mode in agents)	
+Bi-temporal graphs	
+
+
+
+
+
+
+
+
+
+
+ 
+Key principle from 2026 research: Signal density > volume. Prefer curated, versioned, citation-backed snippets over full dumps. Use progressive disclosure (load summaries first, expand on demand).
+ 
+2. How to Transfer That Context to the AI
+ 
+Best current patterns:
+ 
+ 
+Hybrid RAG + Memory Systems — Retrieve only what’s needed, then inject structured context.
+ 
+MCP (Model Context Protocol) servers — Expose your library as tools the AI can call.
+ 
+Agent Memory Architectures:
+
+Short-term (working context window)
+
+Long-term (vector + graph store)
+
+Procedural (skills bank)
+
+Reconsolidation loop (update memory after every retrieval/use)
+
+
+
+ 
+Git-inspired context control — Treat context like a repo: COMMIT, BRANCH, MERGE (see Git-Context-Controller ideas).
+ 
+Semi-formal reasoning prompts — Force the model to state premises → evidence → conclusion (improves code reasoning accuracy).
+ 
+ 
+3. SOTA Open-Source Stack to Focus On (Hugging Face + GitHub)
+ 
+Core memory & RAG engines (highest leverage):
+ 
+ 
+Mem0 / Letta (MemGPT) / Zep — Production-grade long-term agent memory with extraction, expiration, and graphs.
+ 
+RAGFlow or LightRAG — Strong open-source RAG engines with deep document understanding.
+ 
+Microsoft GraphRAG (or community forks) + Kuzu / Neo4j — For knowledge-graph reasoning over code.
+ 
+LangGraph + LangMem — Orchestration + native memory.
+ 
+Codebase-RAG style projects (AST-aware chunking + hybrid retrieval + symbol graphs).
+ 
+ 
+Code / Repo specialists:
+ 
+ 
+Projects doing Code2Skill-style extraction (turn repos into grounded skill banks).
+ 
+DeepRepoQA-style MCTS exploration agents.
+ 
+Fine-tunes like repo-specific Qwen/Code models on Hugging Face (or train your own on your aggregated library).
+ 
+IQuest-Coder or similar open code models with long context + reasoning variants.
+ 
+ 
+Agent frameworks to assemble everything:
+ 
+ 
+LangGraph / CrewAI / AutoGen for multi-agent setups.
+ 
+MCP servers for exposing your context library.
+ 
+OpenKnowledge-style tools (markdown + native MCP + agents) if you want a lighter local-first base.
+ 
+ 
+Practical focus order for your app:
+ 
+ 
+Build a hybrid indexer: AST + git history + embeddings + simple knowledge graph.
+ 
+Add a memory layer (start with Mem0 or Letta) that supports write / update / forget / reconsolidate.
+ 
+Expose everything via MCP tools so any model (Claude, local Qwen, etc.) can query it cleanly.
+ 
+Extract procedural skills from successful past changes so the AI can reuse patterns instead of reinventing.
+ 
+Implement temporal / state tracking so the model always knows what is current vs outdated.
+ 
+ 
+This combination (structured multi-layer memory + graph + skills + MCP) is currently the highest-value way to feed context back to models for continued development. It turns your repo aggregation app into a true long-horizon agent memory system rather than a simple note store.
+
+
+
+
+
+
+
+
+
+
+
+sources

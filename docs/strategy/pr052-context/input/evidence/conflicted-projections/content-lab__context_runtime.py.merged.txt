@@ -1,0 +1,280 @@
+"""Registered local context services dispatched by the existing durable Core.
+
+Operator configuration is the only grant/paths/destination authority. AI result
+JSON cannot supply a command, policy, capability, executable or qualification.
+"""
+from __future__ import annotations
+import argparse
+import json
+import os
+from pathlib import Path
+import subprocess
+import sys
+import time
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import context_library as lib
+import context_packets as packets
+import context_recovery as recovery
+from automation_core import Core, enqueue, identifier, load_json, read_connection
+
+READS = {
+ 'SEARCH': ({'query'}, {'offset','limit','as_of','project','history'}),
+ 'READ': ({'source_ref'}, set()),
+ 'DOCUMENT': ({'document_id'}, {'kind','offset','limit'}),
+ 'PART': ({'document_id','ordinal'}, set()),
+ 'INTENT': ({'operation_id'}, set()),
+ 'CAPABILITIES': (set(), set()),
+ 'JOB': ({'job_id'}, set()),
+ 'OPERATION': ({'operation_id'}, set()),
+ 'CONTROL': (set(), set()),
+ 'DELETION_IMPACT': ({'source_key'}, set()),
+}
+WRITES = {
+ 'CAPTURE': ({'path','source_key'}, set()),
+ 'SELECT': ({'rows'}, {'parent'}),
+ 'REMOVE_RANGE': ({'selection_id','ordinal'}, set()),
+ 'ADOPT_ITEM': ({'item_id'}, set()),
+ 'BUILD_PACKET': ({'selection_id','goal','criteria'}, {'part_bytes'}),
+ 'PROJECT': ({'packet_id','destination'}, {'redactions'}),
+ 'EXPORT': ({'projection_id','output','destination'}, set()),
+ 'RESULT': ({'path','result_id'}, set()),
+ 'NEED_CONTEXT': ({'request'}, set()),
+ 'ANNOTATE': ({'source_ref','annotation'}, set()),
+ 'DELETE': ({'source_key'}, set()),
+ 'PURGE': ({'source_key'}, set()),
+ 'BACKUP': ({'output'}, set()),
+ 'RESTORE_COPY': ({'backup','output'}, set()),
+ 'SYNC_EXPORT': ({'output'}, set()),
+ 'SYNC_IMPORT': ({'bundle'}, set()),
+}
+<<<<<<< HEAD
+SHIPPING = ('action_intent.py', 'action_runtime.py', 'browser_cdp.py', 'action_cli.py', 'asr_cpu_experiment.py', 'campaign_runtime.py', 'durable_schedule.py', 'qualify_workflow.py', 'release_updater.py', 'workflow_github.py', 'workflow_runtime.py', 'workflow_state.py', 'automation_core.py', 'content_lab.py', 'context_benchmark.py', 'context_handoff.py', 'context_library.py', 'context_packets.py', 'context_recovery.py', 'context_review.py', 'context_runtime.py', 'github_ci_snapshot.py', 'native_adapter.py', 'occ_local.py', 'occ_proposal.py', 'occ_v4/__init__.py', 'occ_v4/protocol.py', 'occ_v5/__init__.py', 'occ_v5/context.py', 'qualify_repo_inventory.py', 'qualify_repo_js.py', 'repo_archive.py', 'repo_archive_input.py', 'repo_artifacts.py', 'repo_context.py', 'repo_coverage.py', 'repo_groups.py', 'repo_history.py', 'repo_inventory.py', 'repo_js.py', 'repo_js_input.py', 'repo_js_runtime.py', 'repo_manifest.py', 'repo_scan.py', 'repo_source.py', 'review_report.py', 'schedule_supervisor.py', 'schedule_tick.py', 'source_eligibility.py', 'repo_js_parser.cjs', 'js-parser/LICENSE', 'js-parser/PIN.json', 'js-parser/babel-parser.cjs', 'js-parser/package.json', 'js-contracts/BUDGET.schema.json', 'js-contracts/ELIGIBILITY.schema.json', 'js-contracts/JS_ANALYSIS.schema.json', 'js-contracts/RELATION.schema.json', 'test_context_services.py')
+=======
+SHIPPING = ('research_bridge.py', 'product_qualification.py', 'asr_cpu_experiment.py', 'campaign_runtime.py', 'durable_schedule.py', 'qualify_workflow.py', 'release_updater.py', 'workflow_github.py', 'workflow_runtime.py', 'workflow_state.py', 'automation_core.py', 'content_lab.py', 'context_benchmark.py', 'context_handoff.py', 'context_library.py', 'context_packets.py', 'context_recovery.py', 'context_review.py', 'context_runtime.py', 'github_ci_snapshot.py', 'native_adapter.py', 'occ_local.py', 'occ_proposal.py', 'occ_v4/__init__.py', 'occ_v4/protocol.py', 'occ_v5/__init__.py', 'occ_v5/context.py', 'qualify_repo_inventory.py', 'qualify_repo_js.py', 'repo_archive.py', 'repo_archive_input.py', 'repo_artifacts.py', 'repo_context.py', 'repo_coverage.py', 'repo_groups.py', 'repo_history.py', 'repo_inventory.py', 'repo_js.py', 'repo_js_input.py', 'repo_js_runtime.py', 'repo_manifest.py', 'repo_scan.py', 'repo_source.py', 'review_report.py', 'schedule_supervisor.py', 'schedule_tick.py', 'source_eligibility.py', 'repo_js_parser.cjs', 'js-parser/LICENSE', 'js-parser/PIN.json', 'js-parser/babel-parser.cjs', 'js-parser/package.json', 'js-contracts/BUDGET.schema.json', 'js-contracts/ELIGIBILITY.schema.json', 'js-contracts/JS_ANALYSIS.schema.json', 'js-contracts/RELATION.schema.json', 'test_context_services.py')
+>>>>>>> origin/audit-pr52
+
+def build_digest():
+    root=Path(__file__).parent
+    return lib.digest({name:lib.sha((root/name).read_bytes()) for name in SHIPPING})
+
+
+def config(policy,name):
+    c=policy.get('context_services',{}).get(identifier(name))
+    lib.exact(c,{'namespace','input_roots','output_roots','destinations','actions','qualification_path'})
+    identifier(c['namespace'])
+    for field in ('input_roots','output_roots'):
+        if not isinstance(c[field],list) or not c[field]:raise ValueError('REGISTERED_ROOTS_REQUIRED')
+        for p in c[field]:
+            if not isinstance(p,str) or not Path(p).is_absolute() or '\0' in p:raise ValueError('REGISTERED_ABSOLUTE_ROOT_REQUIRED')
+    if not isinstance(c['actions'],list) or len(set(c['actions']))!=len(c['actions']) or any(a not in WRITES for a in c['actions']):raise ValueError('REGISTERED_CONTEXT_ACTION_REQUIRED')
+    if not isinstance(c['destinations'],dict):raise ValueError('REGISTERED_DESTINATIONS_REQUIRED')
+    for name,p in c['destinations'].items():
+        identifier(name);lib.exact(p,{'destination_id','destination_revision','policy_revision','source_keys','protected_literals'})
+        for k in ('destination_id','destination_revision','policy_revision'):lib.text(p[k],200)
+        if not isinstance(p['source_keys'],list) or not all(isinstance(x,str) for x in p['source_keys']):raise ValueError('SHARE_SCOPE_REQUIRED')
+        if not isinstance(p['protected_literals'],list):raise ValueError('SHARE_POLICY_REQUIRED')
+        for literal in p['protected_literals']:lib.text(literal,1024)
+    if not isinstance(c['qualification_path'],str) or not Path(c['qualification_path']).is_absolute():raise ValueError('QUALIFICATION_PATH_REQUIRED')
+    return c
+
+
+def scoped_path(value,roots):
+    if not isinstance(value,str) or '\0' in value or not Path(value).is_absolute():raise ValueError('ABSOLUTE_PATH_REQUIRED')
+    p=Path(value)
+    if any(x.is_symlink() for x in (p,*p.parents)):raise ValueError('CONTEXT_LINK_PATH')
+    resolved=p.resolve()
+    if not any(resolved.is_relative_to(Path(r).resolve()) and resolved!=Path(r).resolve() for r in roots):raise ValueError('PATH_OUTSIDE_OPERATOR_SCOPE')
+    return p
+
+
+def validate_arguments(action,args,c):
+    fields=(READS|WRITES).get(action)
+    if fields is None:raise ValueError('CONTEXT_ACTION_REQUIRED')
+    lib.exact(args,*fields)
+    if len(lib.encoded(args))>12_000:raise ValueError('CONTEXT_FRAME_LIMIT')
+    for k in ('path','backup','bundle'):
+        if k in args:scoped_path(args[k],c['input_roots'])
+    if 'output' in args:scoped_path(args['output'],c['output_roots'])
+    if 'destination' in args and args['destination'] not in c['destinations']:raise ValueError('DESTINATION_OUTSIDE_OPERATOR_SCOPE')
+    if action=='CAPTURE':identifier(args['source_key'])
+    if 'rows' in args:
+        if not isinstance(args['rows'],list) or not args['rows']:raise ValueError('SELECTION_ROWS_REQUIRED')
+        for row in args['rows']:lib.exact(row,{'source_ref','reason'});lib.text(row['reason'])
+    for key in ('selection_id','packet_id','projection_id','document_id','item_id'):
+        if key in args:lib.hash_id(args[key])
+    if 'ordinal' in args:lib.strict_int(args['ordinal'],0,lib.MAX_INT)
+    if 'offset' in args:lib.strict_int(args['offset'],0,lib.MAX_INT)
+    if 'limit' in args:lib.strict_int(args['limit'],1,100)
+    if action=='BUILD_PACKET':
+        lib.text(args['goal']);
+        if not isinstance(args['criteria'],list) or not args['criteria']:raise ValueError('CRITERIA_REQUIRED')
+        for x in args['criteria']:lib.text(x,1000)
+    return args
+
+
+def qualification(c):
+    try:
+        p=Path(c['qualification_path']);scoped_path(str(p),[str(p.parent)])
+        r=load_json(p,48_000)
+        lib.exact(r,{'schema','build_digest','grant_digest','status','test_count','log_sha256','log_file','platform','device_qualification'})
+        log=p.parent/r['log_file']
+        if Path(r['log_file']).name!=r['log_file'] or log.is_symlink():raise ValueError('QUALIFICATION_LOG_PATH')
+        if r['schema']!='occ.context-qualification.v1' or r['status']!='PASS' or type(r['test_count']) is not int or r['test_count']<1 or recovery.file_sha(log)!=r['log_sha256']:raise ValueError('QUALIFICATION_INVALID')
+        if r['build_digest']!=build_digest() or r['grant_digest']!=lib.digest(c):return 'STALE'
+        return 'LOCAL_TESTS_VERIFIED'
+    except (OSError,ValueError,KeyError,TypeError):return 'UNKNOWN'
+
+
+def schema_state(store):
+    if store is None:return 'UNKNOWN_STORE'
+    try:
+        db=read_connection(store)
+        try:
+            tables={r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            if 'context_schema' not in tables:return 'SETUP_REQUIRED'
+            if [r[0] for r in db.execute('SELECT version FROM context_schema')]!=[1]:return 'UNSUPPORTED_SCHEMA'
+            needed={'context_sources','context_raw_parts','context_source_heads','context_intents',
+                    'context_intent_fences','context_packets','context_packet_sources','context_selections','core_control'}
+            return 'READY_V1' if needed<=tables else 'SETUP_REQUIRED'
+        finally:db.close()
+    except (OSError,ValueError,__import__('sqlite3').Error):return 'SETUP_REQUIRED'
+
+
+def capabilities(c,store=None):
+    q=qualification(c);schema=schema_state(store)
+    return {'schema':'occ.context-capabilities.v1','namespace':c['namespace'],
+            'build_digest':build_digest(),'grant_digest':lib.digest(c),'qualification':q,'store_schema':schema,
+            'read_actions':sorted(READS),'write_actions':[{'action':a,'state':('AVAILABLE_LOCAL' if a in c['actions'] and q=='LOCAL_TESTS_VERIFIED' and schema=='READY_V1' else 'SCHEMA_UNAVAILABLE' if a in c['actions'] and schema!='READY_V1' else 'STALE' if q=='STALE' else 'UNQUALIFIED' if a in c['actions'] else 'NOT_GRANTED')} for a in WRITES],
+            'network_send':'NOT_IMPLEMENTED','money_moving':'NOT_IMPLEMENTED',
+            'device_qualification':'NOT_RUN','execution_owner':'EXISTING_DURABLE_CORE'}
+
+
+def validate_job(payload,policy):
+    lib.exact(payload,{'kind','service','action','arguments','operation_id','build_digest','grant_digest'})
+    c=config(policy,payload['service']);identifier(payload['operation_id'])
+    if payload['kind']!='context_service' or payload['action'] not in c['actions']:raise ValueError('CONTEXT_ACTION_NOT_GRANTED')
+    validate_arguments(payload['action'],payload['arguments'],c)
+    if payload['build_digest']!=build_digest() or payload['grant_digest']!=lib.digest(c):raise ValueError('CONTEXT_JOB_STALE')
+    if qualification(c)!='LOCAL_TESTS_VERIFIED':raise ValueError('CONTEXT_QUALIFICATION_REQUIRED')
+    return 1
+
+
+def submit(store,policy,service,action,args,operation_id):
+    c=config(policy,service);identifier(operation_id);validate_arguments(action,args,c)
+    if action not in c['actions']:raise ValueError('CONTEXT_ACTION_NOT_GRANTED')
+    if schema_state(store)!='READY_V1':raise ValueError('CONTEXT_SETUP_OR_SCHEMA_REQUIRED')
+    payload={'kind':'context_service','service':service,'action':action,'arguments':args,
+             'operation_id':operation_id,'build_digest':build_digest(),'grant_digest':lib.digest(c)}
+    job=enqueue(store,policy,identifier('context:'+operation_id),payload)
+    return {'job_id':job['id'],'state':job['state'],'operation_id':operation_id,'effect':'QUEUED_ONLY'}
+
+
+def query(store,policy,service,action,args):
+    c=config(policy,service);validate_arguments(action,args,c);ns=c['namespace']
+    if action=='CAPABILITIES':return capabilities(c,store)
+    if schema_state(store)!='READY_V1':raise ValueError('CONTEXT_SETUP_OR_SCHEMA_REQUIRED')
+    if action=='SEARCH':return lib.search_sources(store,ns,**args)
+    if action=='READ':return lib.read_span(store,ns,args['source_ref'])
+    if action=='DOCUMENT':return packets.metadata_page(store,ns,args['document_id'],**{k:v for k,v in args.items() if k!='document_id'})
+    if action=='PART':return packets.read_document_part(store,ns,args['document_id'],args['ordinal'])
+    if action=='INTENT':return lib.intent_status(store,ns,args['operation_id'])
+    if action=='CAPABILITIES':return capabilities(c,store)
+    if action=='CONTROL':return Core(store,policy).control_status()
+    if action=='DELETION_IMPACT':return lib.deletion_impact(store,ns,args['source_key'])
+    if action in {'JOB','OPERATION'}:
+        if action=='OPERATION':
+            identifier(args['operation_id'])
+            db=read_connection(store)
+            try:row=db.execute('SELECT id FROM jobs WHERE task_key=?',('context:'+args['operation_id'],)).fetchone()
+            finally:db.close()
+            if row is None:return {'state':'NOT_FOUND','operation_id':args['operation_id']}
+            jobid=row[0]
+        else:jobid=identifier(args['job_id'])
+        job=Core(store,policy).get(jobid)
+        if job['policy_hash']!=__import__('automation_core').digest(policy) or job['payload'].get('service')!=service:raise ValueError('JOB_OUTSIDE_OPERATOR_SCOPE')
+        return {k:job[k] for k in ('id','state','attempt','cancel_requested','result')}
+    raise ValueError('CONTEXT_READ_ACTION_REQUIRED')
+
+
+def run_job(core,job):
+    p=job['payload'];validate_job(p,core.policy);c=config(core.policy,p['service']);ns=c['namespace'];a=p['arguments'];op=p['operation_id'];action=p['action']
+    core.heartbeat(job)
+    def tick():core.heartbeat(job)
+    # One intent fences immediate local operations too. Multi-part owners have
+    # their own resumable intents; jobs reuse the same logical ID after recovery.
+    own=action in {'CAPTURE','BUILD_PACKET','PROJECT','ANNOTATE','DELETE','PURGE'}
+    if not own:
+        with lib.view(core.store,write=True) as db:
+            db.execute('BEGIN IMMEDIATE');old=lib.begin_intent(db,ns,op,'service:'+action,a)
+            if old is not None:return old
+    if action=='CAPTURE':result=lib.import_file(core.store,ns,a['source_key'],a['path'],op,progress=tick)
+    elif action=='SELECT':result=packets.create_selection(core.store,ns,a['rows'],parent=a.get('parent'))
+    elif action=='REMOVE_RANGE':result=packets.remove_selected_range(core.store,ns,a['selection_id'],a['ordinal'])
+    elif action=='ADOPT_ITEM':result={'source_ref':packets.adopt_item_ref(core.store,ns,a['item_id'])}
+    elif action=='BUILD_PACKET':result=packets.compile_task_document(core.store,ns,a['selection_id'],a['goal'],a['criteria'],op,part_bytes=a.get('part_bytes',4096),progress=tick)
+    elif action=='PROJECT':result=packets.create_share_projection(core.store,ns,a['packet_id'],c['destinations'][a['destination']],op,redactions=a.get('redactions'),progress=tick)
+    elif action=='EXPORT':result=packets.export_projection(core.store,ns,a['projection_id'],a['output'],c['destinations'][a['destination']],progress=tick)
+    elif action=='RESULT':
+        with scoped_path(a['path'],c['input_roots']).open('rb') as f:raw=f.read(128_001)
+        result=packets.import_result(core.store,ns,a['result_id'],raw)
+    elif action=='NEED_CONTEXT':result=packets.need_context(core.store,ns,a['request'])
+    elif action=='ANNOTATE':result=lib.annotate(core.store,ns,a['source_ref'],a['annotation'],op)
+    elif action=='DELETE':result=lib.tombstone(core.store,ns,a['source_key'],op)
+    elif action=='PURGE':result=recovery.purge_tombstoned_source(core.store,ns,a['source_key'],op)
+    elif action=='BACKUP':result=recovery.snapshot_backup(core.store,a['output'],progress=tick)
+    elif action=='RESTORE_COPY':result=recovery.restore_to_copy(a['backup'],a['output'],current_store=core.store,progress=tick)
+    elif action=='SYNC_EXPORT':result=recovery.export_sync(core.store,ns,a['output'])
+    elif action=='SYNC_IMPORT':result=recovery.import_sync(core.store,ns,a['bundle'])
+    else:raise ValueError('UNREGISTERED_CONTEXT_HANDLER')
+    core.heartbeat(job)
+    if not own:
+        with lib.view(core.store,write=True) as db:
+            db.execute('BEGIN IMMEDIATE');lib.ensure_running(db);lib.finish_intent(db,ns,op,result)
+    return result
+
+
+def qualify(policy,service):
+    c=config(policy,service);root=Path(__file__).parent
+    # Tests are independent assertions, never an imported model result or grant.
+    r=subprocess.run([sys.executable,'-I','-X','utf8',str(root/'test_context_services.py')],cwd=root,
+                     stdout=subprocess.PIPE,stderr=subprocess.STDOUT,timeout=180,check=False)
+    if r.returncode:raise ValueError('CONTEXT_QUALIFICATION_TESTS_FAILED')
+    import re
+    match=re.search(rb'Ran (\d+) tests?',r.stdout)
+    if not match:raise ValueError('CONTEXT_QUALIFICATION_RECEIPT_MISSING')
+    p=Path(c['qualification_path']);p.parent.mkdir(parents=True,exist_ok=True)
+    log='context-qualification-'+lib.sha(r.stdout)+'.log';(p.parent/log).write_bytes(r.stdout)
+    report={'schema':'occ.context-qualification.v1','build_digest':build_digest(),'grant_digest':lib.digest(c),
+            'status':'PASS','test_count':int(match[1]),'log_sha256':lib.sha(r.stdout),'log_file':log,
+            'platform':sys.platform,'device_qualification':'NOT_RUN'}
+    stage=p.with_name(p.name+'.tmp');stage.write_bytes(lib.encoded(report));os.replace(stage,p)
+    return report
+
+
+def main():
+    ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--id');ap.add_argument('--process-stopped',action='store_true');ap.add_argument('--resume-local',action='store_true')
+    ap.add_argument('--policy',type=Path);ap.add_argument('--service');ap.add_argument('--profile',type=Path)
+    ap.add_argument('command',choices=['qualify','capabilities','initialize','work','reconcile']);args=ap.parse_args()
+    if args.profile:
+        from native_adapter import operator_profile
+        profile,policy=operator_profile(args.profile);service=profile['context_service']
+    else:
+        if not args.policy or not args.service:ap.error('--profile or --policy and --service required')
+        policy=load_json(args.policy);service=args.service;profile=None
+    if args.command=='initialize':
+        if profile is None:ap.error('--profile required')
+        packets.db_for(Path(profile['store'])).close();result={'state':'READY','migration':'ADDITIVE_V1'}
+    elif args.command=='reconcile':
+        if profile is None or not args.id:ap.error('--profile and --id required')
+        j=Core(Path(profile['store']),policy).reconcile_context(args.id,args.process_stopped,resume_local=args.resume_local)
+        result={k:j[k] for k in ('id','state','result')}
+    elif args.command=='work':
+        if profile is None:ap.error('--profile required')
+        j=Core(Path(profile['store']),policy).run_once()
+        result={k:j[k] for k in ('id','state','result') if k in j}
+    else:result=qualify(policy,service) if args.command=='qualify' else capabilities(config(policy,service),Path(profile['store']) if profile else None)
+    print(json.dumps(result))
+
+if __name__=='__main__':main()

@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Goal evidence receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "goal_id",
+    "goal_version",
+    "criterion",
+    "truth",
+    "source_refs",
+    "verifier",
+    "snapshot_sha",
+    "observed_at"
+  ],
+  "properties": {
+    "goal_id": {
+      "type": "string"
+    },
+    "goal_version": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "criterion": {
+      "type": "string"
+    },
+    "truth": {
+      "enum": [
+        "TRUE",
+        "FALSE",
+        "UNKNOWN",
+        "NOT_RUN"
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "verifier": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "snapshot_sha": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "observed_at": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "model_probability": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "reason": {
+      "type": "string"
+    }
+  }
+}

@@ -1,0 +1,113 @@
+{
+  "backend_module": "content-lab/test_workflow_runtime.py",
+  "backend_cases": {
+    "Fixture": [],
+    "ResourceTests": [
+      "test_atomic_failure_does_not_leave_partial_resource",
+      "test_racing_writers_only_one_granted",
+      "test_expiry_requires_stop_and_effect_reconciliation",
+      "test_old_fence_cannot_commit_after_replacement",
+      "test_unknown_cost_is_retained",
+      "test_unknown_capacity_is_not_zero",
+      "test_two_immutable_readers_share_resource",
+      "test_canonical_hardlink_alias",
+      "test_unknown_physical_identity_is_conservative",
+      "test_effect_duplicate_and_unknown_no_blind_retry"
+    ],
+    "ScheduleTests": [
+      "test_riga_fold_has_two_distinct_utc_occurrences",
+      "test_fold_policies",
+      "test_gap_skip_and_shift_forward",
+      "test_tick_race_canonical_jobs_exactly_once",
+      "test_latest_retains_skipped_ledger",
+      "test_bounded_sleep_catchup_is_finite",
+      "test_stop_survives_restart_and_disable",
+      "test_policy_drift_pauses",
+      "test_edit_preserves_occurrence_history",
+      "test_backward_clock_does_not_duplicate",
+      "test_capacity_wait_retains_occurrence",
+      "test_v2_routes_through_existing_schedule_owner"
+    ],
+    "CampaignTests": [
+      "test_end_to_end_dag_uses_core_and_restart",
+      "test_parallel_admission_of_same_manifest_replays",
+      "test_stop_does_not_resurrect",
+      "test_worker_input_drift_fails_without_import",
+      "test_unknown_running_blocks_new_node",
+      "test_cycle_rejected_before_queue",
+      "test_source_drift_retained_as_blocker",
+      "test_large_dag_uses_pagination_not_twenty_node_cap",
+      "test_same_store_no_competing_database",
+      "test_native_scope_and_registered_manifest",
+      "test_dag_deadline_records_deferred",
+      "test_refresh_reuses_independent_receipt_and_invalidates_descendants"
+    ],
+    "BriefTests": [
+      "test_core_generates_early_brief_no_install_or_send",
+      "test_repeat_draft_reuses_same_id",
+      "test_negative_trial_and_old_goal_are_retained",
+      "test_unknown_and_correlated_claims_are_not_verified",
+      "test_no_progress_stops_persistently",
+      "test_unknown_effect_stops_before_iteration",
+      "test_registered_experiment_retains_negative_result"
+    ],
+    "CanonicalResearchTests": [
+      "test_campaign_brief_uses_actual_receipts_and_preserves_open_criteria"
+    ],
+    "UpdateTests": [
+      "test_exact_stage_only_does_not_activate",
+      "test_real_core_install_canary_is_only_test_root",
+      "test_tampered_asset_keeps_active_pointer",
+      "test_mismatched_source_binding_rejected",
+      "test_archive_traversal_rejected",
+      "test_archive_undeclared_file_rejected",
+      "test_failed_rehearsal_retains_production_data",
+      "test_canary_failure_restores_previous_pointer_without_data_loss",
+      "test_migration_schema_mismatch_does_not_activate",
+      "test_unmarked_target_cannot_activate",
+      "test_case_alias_archive_rejected",
+      "test_capability_usability_requires_all_bindings",
+      "test_power_loss_after_pointer_switch_reconciles_without_second_install"
+    ],
+    "GitTests": [
+      "test_merge_actual_final_revision",
+      "test_squash_does_not_require_head_equality",
+      "test_manual_commit_without_pr",
+      "test_rebased_change_has_distinct_sha_and_extra_base_files",
+      "test_wrong_repository_remote_is_rejected",
+      "test_revert_does_not_claim_current_coverage",
+      "test_failed_final_tree_tests_cannot_pass"
+    ],
+    "RecoveryAndObserverTests": [
+      "test_pause_resume_no_extra_effect_and_stop_after_source_disappears",
+      "test_local_keyboard_stop_cli_without_execution_policy",
+      "test_deadline_does_not_allow_queued_job_to_execute",
+      "test_updater_second_owner_cannot_touch_candidate",
+      "test_archive_windows_device_name_rejected_on_all_hosts",
+      "test_authenticated_observer_requires_actual_merge_and_head",
+      "test_ci_for_wrong_revision_does_not_verify_final_tree",
+      "test_latest_check_rerun_wins_without_discarding_history",
+      "test_missing_token_has_no_network_call",
+      "test_power_loss_before_switch_leaves_not_applied_receipt"
+    ],
+    "CoreGuardTests": [
+      "test_cancelled_unstarted_node_releases_admission_capacity",
+      "test_cancel_running_node_keeps_reservation_until_worker_stops",
+      "test_revision_refresh_releases_completed_predecessor_leases",
+      "test_running_campaign_cannot_refresh_away_its_owner",
+      "test_stale_campaign_worker_cannot_renew_resource",
+      "test_stale_brief_job_cannot_publish_receipt",
+      "test_future_workflow_schema_is_not_silently_rewritten",
+      "test_skipped_dst_gap_is_retained_in_ledger",
+      "test_null_github_metadata_fails_closed",
+      "test_optional_queue_capacity_without_default_total_limit",
+      "test_expired_worker_cannot_heartbeat_or_commit",
+      "test_job_cannot_supply_argv_or_update_path"
+    ]
+  },
+  "backend_count": 84,
+  "ui_module": "one-click-context/tests/campaign-ui.test.mjs",
+  "ui_count": 5,
+  "source_66_scenarios": "pr018-019-input/SCENARIOS.json",
+  "relation": "Executable component tests are independently named; the 66 design scenarios are retained and not blanket-marked PASS."
+}

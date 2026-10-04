@@ -1,0 +1,81 @@
+{
+  "schema_version": "voice-agentos.workflow/0.2",
+  "id": "WF-19",
+  "status": "DESIGN_SPEC_NOT_EXECUTABLE",
+  "voice_or_text_example_ru": "Работай, пока я использую Chrome",
+  "same_goal_parallel_candidates": true,
+  "nodes": [
+    {
+      "id": "prepare_a",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Read local indexes without focus",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_b",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Prepare drafts in isolated owned browser/workspace",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "prepare_c",
+      "role": "READ_OR_ISOLATED_PREPARE",
+      "description": "Check user foreground/clipboard activity",
+      "depends_on": [],
+      "allow_external_write": false,
+      "failure_domain": "MUST_CLASSIFY_DURING_ADAPTER_BINDING"
+    },
+    {
+      "id": "verify",
+      "role": "INDEPENDENT_VERIFIER",
+      "depends_on": [
+        "prepare_a",
+        "prepare_b",
+        "prepare_c"
+      ],
+      "join_semantics": "resource_partitioned_execution",
+      "contract_ru": "Не перехватывать пользовательский ввод; browser context не sandbox удалённого аккаунта"
+    },
+    {
+      "id": "commit",
+      "role": "SINGLE_EFFECT_BROKER",
+      "depends_on": [
+        "verify"
+      ],
+      "description_ru": "Background read/preparation; GUI input по единой аренде",
+      "enabled": false,
+      "requires": [
+        "current_snapshot",
+        "policy_allows_exact_effect",
+        "confirmed_operation_id",
+        "resource_lease",
+        "independent_postconditions",
+        "approval_if_external"
+      ]
+    }
+  ],
+  "commit_policy": {
+    "max_effect_writers_per_target": 1,
+    "external_writes_enabled": false,
+    "unknown_outcome": "RECONCILE_BEFORE_RETRY",
+    "same_browser_or_foreground_concurrent_input": false,
+    "same_account_contexts_are_not_effect_isolation": true
+  },
+  "failure_injection_ru": "Пользователь начинает печатать во время агентского шага",
+  "requirement_ids": [
+    "REQ-014",
+    "REQ-020",
+    "REQ-024"
+  ],
+  "rnd_ids": [
+    "RND-22",
+    "RND-32"
+  ],
+  "laya_role": "advisory_typed_route_only",
+  "native_laya_import_format": false,
+  "note": "Canonical app-level workflow proposal. A registered adapter/compiler is required; not a ready-to-import Laya JSON."
+}

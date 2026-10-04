@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "status": "PROPOSED_ADAPT_TO_EXISTING_PUBLIC_API",
+  "records": {
+    "operation_intent": {
+      "fields": {
+        "operation_id": "string",
+        "intent_revision": "integer",
+        "kind": "string",
+        "target_identity": "string",
+        "input_digest": "string",
+        "policy_digest": "string",
+        "idempotency_key": "string",
+        "state": "string",
+        "record_revision": "integer",
+        "lease_epoch": "integer",
+        "evidence_refs": "array"
+      },
+      "owner": "Existing effect ledger/Core",
+      "invariant": "UNKNOWN_EFFECT reconciled before retry; revision/fence checked on write; external guarantees are adapter-specific."
+    },
+    "verification_receipt": {
+      "fields": {
+        "receipt_id": "string",
+        "repository_id": "string",
+        "source_commit": "string",
+        "source_tree": "string",
+        "overlay_digest": "string",
+        "verifier_version": "string",
+        "template_binding": "string",
+        "environment_digest": "string",
+        "fixture_digest": "string",
+        "criteria_ids": "array",
+        "artifact_refs": "array",
+        "result": "string"
+      },
+      "owner": "Registered verifier",
+      "invariant": "No promotion from worker-head result to final-tree result without explicit applicability and fresh evidence."
+    },
+    "merge_observation": {
+      "fields": {
+        "observation_id": "string",
+        "repository_id": "string",
+        "target_ref": "string",
+        "origin_kind": "string",
+        "pr_id": "string",
+        "head_commit": "string",
+        "base_commit": "string",
+        "result_commit": "string",
+        "result_tree": "string",
+        "mapping_evidence_refs": "array",
+        "observation_revision": "integer",
+        "observed_at_utc": "string",
+        "state": "string"
+      },
+      "owner": "Git observer/integrator",
+      "invariant": "Repository/ref/head/mapping verified; manual commit may have empty pr_id; assertion is separate."
+    },
+    "release_binding": {
+      "fields": {
+        "binding_id": "string",
+        "repository_id": "string",
+        "resolved_tag_commit": "string",
+        "source_tree": "string",
+        "asset_id": "string",
+        "asset_sha256": "string",
+        "build_manifest_digest": "string",
+        "toolchain_digest": "string",
+        "dependency_lock_digest": "string",
+        "provenance_refs": "array",
+        "reproducibility_state": "string",
+        "verification_refs": "array",
+        "target_profile": "string"
+      },
+      "owner": "Release/updater owner",
+      "invariant": "Acquired bytes match asset digest; descendant commit qualified on its own revision; missing required provenance is a blocker."
+    },
+    "installed_receipt": {
+      "fields": {
+        "receipt_id": "string",
+        "operation_id": "string",
+        "device_id": "string",
+        "installation_id": "string",
+        "os_build": "string",
+        "active_asset_sha256": "string",
+        "source_commit": "string",
+        "data_schema_version": "integer",
+        "host_version": "string",
+        "adapter_version": "string",
+        "observed_process_ref": "string",
+        "previous_asset_sha256": "string",
+        "canary_refs": "array",
+        "rollback_plan_ref": "string",
+        "state": "string"
+      },
+      "owner": "Independent device observer",
+      "invariant": "Installed observation independent of download/merge; canary refs absent means not qualified."
+    },
+    "schedule_spec": {
+      "fields": {
+        "schedule_id": "string",
+        "revision": "integer",
+        "timezone": "string",
+        "local_trigger": "string",
+        "gap_policy": "string",
+        "fold_policy": "string",
+        "catch_up": "string",
+        "catch_up_limit": "integer",
+        "catch_up_window_seconds": "integer",
+        "template_binding": "string",
+        "scope_digest": "string",
+        "policy_digest": "string",
+        "budget_account": "string",
+        "cursor_utc": "string",
+        "state": "string"
+      },
+      "owner": "Existing scheduler",
+      "invariant": "Unique revision + resolved UTC logical slot; explicit DST/catchup; edit preserves historical occurrences."
+    },
+    "lease_receipt": {
+      "fields": {
+        "lease_id": "string",
+        "owner_attempt": "string",
+        "epoch": "integer",
+        "resource_ids": "array",
+        "resource_modes": "array",
+        "reservation_id": "string",
+        "profile_revision": "integer",
+        "expires_at_utc": "string",
+        "boot_id": "string",
+        "record_revision": "integer",
+        "state": "string"
+      },
+      "owner": "Existing store/lease owner",
+      "invariant": "Resource+budget reservation atomic; every mutation checks current epoch and record revision; restart reconciles stale owners."
+    },
+    "campaign_manifest": {
+      "fields": {
+        "campaign_id": "string",
+        "revision": "integer",
+        "goal_ids": "array",
+        "criterion_ids": "array",
+        "source_snapshot_refs": "array",
+        "input_digest": "string",
+        "omission_refs": "array",
+        "nodes": "array",
+        "edges": "array",
+        "join_policy": "string",
+        "contract_bindings": "array",
+        "max_iterations": "integer",
+        "max_elapsed_seconds": "integer",
+        "max_transfers": "integer",
+        "budget_minor_units": "integer",
+        "budget_currency": "string",
+        "no_progress_limit": "integer",
+        "scope_digest": "string"
+      },
+      "owner": "Existing campaign/Core store",
+      "invariant": "Frozen goal/criteria/input; draft read-only branches may precede installation; effect nodes use specific activation gates."
+    },
+    "checkpoint": {
+      "fields": {
+        "checkpoint_id": "string",
+        "campaign_id": "string",
+        "node_id": "string",
+        "attempt_id": "string",
+        "intent_revision": "integer",
+        "input_digest": "string",
+        "source_commit": "string",
+        "policy_digest": "string",
+        "capability_binding": "string",
+        "output_refs": "array",
+        "effect_intent_refs": "array",
+        "lease_epoch": "integer",
+        "state": "string"
+      },
+      "owner": "Existing checkpoint/Core owner",
+      "invariant": "Resume validates lineage and reconciles effects; cancellation terminal; invalidate only affected descendants."
+    },
+    "claim": {
+      "fields": {
+        "claim_id": "string",
+        "revision": "integer",
+        "source_locator": "string",
+        "source_digest": "string",
+        "span_ref": "string",
+        "primary_source_ref": "string",
+        "lineage_refs": "array",
+        "correlation_group_id": "string",
+        "verification_state": "string",
+        "observed_at_utc": "string",
+        "experiment_refs": "array"
+      },
+      "owner": "Existing evidence store",
+      "invariant": "Unknown provenance marked UNKNOWN; derived retellings are not independent sources."
+    },
+    "next_brief": {
+      "fields": {
+        "brief_id": "string",
+        "revision": "integer",
+        "goal_ids": "array",
+        "task_ids": "array",
+        "gap_ids": "array",
+        "gap_classifications": "array",
+        "evidence_delta_digest": "string",
+        "input_refs": "array",
+        "rationale": "string",
+        "owner": "string",
+        "dependencies": "array",
+        "acceptance": "array",
+        "recovery": "array",
+        "estimated_cost_state": "string",
+        "stop_conditions": "array",
+        "supersedes": "array",
+        "state": "string"
+      },
+      "owner": "Planning projection",
+      "invariant": "May be generated before installed/usable; deterministic generation key; no implicit send/publish/execute."
+    }
+  },
+  "bindings": "All strings called digest are content-addresses with algorithm prefix in product API; empty refs permitted only for explicitly unavailable observations. No arbitrary remote URL grants execution."
+}

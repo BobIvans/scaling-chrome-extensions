@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "FailureCapsule",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "failure.v1"
+    },
+    "capsule_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "attempt_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "skill_version_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "input_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    },
+    "environment_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version_digest": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "error_kind": {
+      "type": "string",
+      "minLength": 1
+    },
+    "observed_state": {
+      "type": "string",
+      "minLength": 1
+    },
+    "counterexample_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "recovery_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "applicability_ref": {
+      "type": "string",
+      "minLength": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "capsule_id",
+    "attempt_ref",
+    "skill_version_ref",
+    "input_refs",
+    "environment_ref",
+    "version_digest",
+    "error_kind",
+    "observed_state",
+    "counterexample_ref",
+    "recovery_ref",
+    "evidence_refs",
+    "applicability_ref"
+  ],
+  "additionalProperties": false
+}

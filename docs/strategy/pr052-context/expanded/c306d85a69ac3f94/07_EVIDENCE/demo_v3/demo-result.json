@@ -1,0 +1,91 @@
+{
+  "evidence_state": "SYNTHETIC_OFFLINE_DEMO",
+  "winner": "source_bound",
+  "events": [
+    {
+      "route_id": "cached_stale",
+      "failure_domain": "cache",
+      "state": "STARTED",
+      "detail": "",
+      "elapsed_ms": 0.079
+    },
+    {
+      "route_id": "cached_stale",
+      "failure_domain": "cache",
+      "state": "REJECTED",
+      "detail": "STALE_SNAPSHOT",
+      "elapsed_ms": 2.208
+    },
+    {
+      "route_id": "source_bound",
+      "failure_domain": "source_reader",
+      "state": "STARTED",
+      "detail": "",
+      "elapsed_ms": 5.523
+    },
+    {
+      "route_id": "slow_alternative",
+      "failure_domain": "alternative_reader",
+      "state": "STARTED",
+      "detail": "",
+      "elapsed_ms": 10.643
+    },
+    {
+      "route_id": "source_bound",
+      "failure_domain": "source_reader",
+      "state": "VERIFIED",
+      "detail": "BOUND_SOURCE_AND_CONTRACT",
+      "elapsed_ms": 11.963
+    },
+    {
+      "route_id": "slow_alternative",
+      "failure_domain": "alternative_reader",
+      "state": "CANCELLED",
+      "detail": "",
+      "elapsed_ms": 12.019
+    }
+  ],
+  "elapsed_ms_not_hardware_benchmark": 12.053,
+  "receipt": {
+    "operation_id": "demo-intent-1",
+    "target": "handoff/demo",
+    "revision": 1,
+    "payload_sha256": "c13b08f258c127a590f23e4e84ec21065b038320e6588c632817ee30265eebda",
+    "status": "LOCAL_SQLITE_COMMITTED",
+    "external_actions": 0
+  },
+  "replay_is_identical": true,
+  "commit_count": 1,
+  "external_actions": 0,
+  "real_repository_tests_run": false,
+  "desktop_tested": false,
+  "voice_or_laya_or_api_tested": false,
+  "context_pack": {
+    "schema": "agentos.context-pack/v0.2",
+    "query": "qualification",
+    "status": "READY_FOR_REVIEW",
+    "evidence_bytes": 140,
+    "evidence_budget_bytes": 2048,
+    "budget_note": "Evidence text only; NOT total serialized request or exact model tokens.",
+    "sources_selected": 1,
+    "evidence": [
+      {
+        "ref": "7ef8e3eaaa2f4ccf85ede1c61609ac2dc61583f89415f2c9ff157343fcc5b1ce:0",
+        "source_id": "7ef8e3eaaa2f4ccf85ede1c61609ac2dc61583f89415f2c9ff157343fcc5b1ce",
+        "start": 0,
+        "end": 140,
+        "sha256": "b786613d7e6d689a6b3cec9530470fcc1a4356e094de5aca07829d2e623616b2",
+        "text": "Синтетический пример: qualification блокируется без подтверждённых зависимостей.\n",
+        "uri": "fixture://studious/demo-note",
+        "metadata": {
+          "evidence_state": "SYNTHETIC",
+          "privacy": "private"
+        },
+        "score": 1
+      }
+    ],
+    "omissions": [],
+    "missing_required_refs": [],
+    "automatic_execution_authorized": false
+  }
+}

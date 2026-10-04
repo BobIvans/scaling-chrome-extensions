@@ -1,0 +1,590 @@
+ПОЛНЫЙ СВОДНЫЙ КАТАЛОГ КАРТОЧЕК ФУНКЦИЙ
+Статусы перенесены из источников. Предложения, офлайн-прототипы, интеграции и продуктовая готовность различаются.
+
+SCE_V2::CTX-01 | Реестр источников и checkpoint каждого импортёра | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/0
+SCE_V2::CTX-02 | ChatGPT/Grok/Telegram/Google Docs adapters | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/1
+SCE_V2::CTX-03 | Revision и tombstone reconciliation | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/2
+SCE_V2::CTX-04 | Извлечение целей и принятых решений | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/3
+SCE_V2::CTX-05 | Timeline противоречий и supersession | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/4
+SCE_V2::CTX-06 | Области личных данных и egress policy | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/5
+SCE_V2::CTX-07 | Audio/OCR/video derivatives | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/6
+SCE_V2::CTX-08 | План дня из незакрытых целей | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/7
+SCE_V2::CTX-09 | Evidence-aware graph retrieval | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/8
+SCE_V2::CTX-10 | Полный multi-part AI review ledger | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/9
+SCE_V2::CTX-11 | Реестр R&D и сравнение экспериментов | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/10
+SCE_V2::CTX-12 | Active learning по исправлениям пользователя | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/11
+SCE_V2::CTX-13 | Сбор публичных research signals | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/12
+SCE_V2::CTX-14 | Event-driven обновление контекста | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/13
+SCE_V2::CTX-15 | Dependency-closed code harvesting | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/14
+SCE_V2::CTX-16 | Оценка полезности automations | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/15
+SCE_V2::PIPE-01 | Голосовая цель с версиями | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/16
+SCE_V2::PIPE-02 | Компилятор mission.json | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/17
+SCE_V2::PIPE-03 | Контекст до конца диктовки | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/18
+SCE_V2::PIPE-04 | Grok custom tool bridge | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/19
+SCE_V2::PIPE-05 | Маршрут rules/Laya/escalation | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/20
+SCE_V2::PIPE-06 | DAG и resource locks | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/21
+SCE_V2::PIPE-07 | Idempotency и UNKNOWN | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/22
+SCE_V2::PIPE-08 | Runner в отдельном worktree | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/23
+SCE_V2::PIPE-09 | Evidence после каждого patch | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/24
+SCE_V2::PIPE-10 | PR и merge ожидаемого head | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/25
+SCE_V2::PIPE-11 | Release provenance | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/26
+SCE_V2::PIPE-12 | Capability diff | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/27
+SCE_V2::PIPE-13 | Staging updater | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/28
+SCE_V2::PIPE-14 | Миграция с восстановлением | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/29
+SCE_V2::PIPE-15 | Rollback версии | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/30
+SCE_V2::PIPE-16 | Windows semantic automation | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/31
+SCE_V2::PIPE-17 | Доступный STOP и activity arbitration | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/32
+SCE_V2::PIPE-18 | Измерение реального выигрыша | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/33
+SCE_V2::W3-F01 | Проверка типизированного плана и DAG этапов | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/34
+SCE_V2::W3-F02 | Сравнение exact repo/config/input/environment/network/anchor/provider/model/toolchain | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/35
+SCE_V2::W3-F03 | Потоковая проверка bytes/SHA256 и contained paths | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/36
+SCE_V2::W3-F04 | Срок актуальности, будущие timestamps и несовпадение plan hash | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/37
+SCE_V2::W3-F05 | Проверка pinned runner identity вместо текста/успешного boolean | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/38
+SCE_V2::W3-F06 | Сверка полного path+ordinal manifest | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/39
+SCE_V2::W3-F07 | Проверка реальных записей testcase, failure/error/skipped и требуемых названий | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/40
+SCE_V2::W3-F08 | Пересчёт net cost в integer atomic units и freshness accepted candidates | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/41
+SCE_V2::W3-F09 | Длительность/gaps/provider ids/paper-only/source freshness по журналу | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/42
+SCE_V2::W3-F10 | Проверка записанных stop latency и запрещённых dispatch после trigger | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/43
+SCE_V2::W3-F11 | Раздельный own status и readiness с учётом зависимостей | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/44
+SCE_V2::W3-F12 | TRUE/FALSE/UNKNOWN/NOT_RUN, причины и неизменное live_authorized=false | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/45
+SCE_V2::W3-F13 | Отказ от скрытого выбора между несколькими receipts | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/46
+SCE_V2::W3-F14 | Сверка полного репозитория и входных данных | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/47
+SCE_V2::W3-F15 | Воспроизводимая сборка | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/48
+SCE_V2::W3-F16 | Детерминированные code smells и проверка гипотез | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/49
+SCE_V2::W3-F17 | Unit и boundary regression | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/50
+SCE_V2::W3-F18 | Fuzz с corpus и seed | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/51
+SCE_V2::W3-F19 | Stateful invariants | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/52
+SCE_V2::W3-F20 | Fork или local validator pinned state | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/53
+SCE_V2::W3-F21 | Детерминированный replay | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/54
+SCE_V2::W3-F22 | Сбор рыночных данных без подписи | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/55
+SCE_V2::W3-F23 | Сравнение независимых provider views | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/56
+SCE_V2::W3-F24 | Oracle и quote freshness | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/57
+SCE_V2::W3-F25 | Полная стоимость opportunity | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/58
+SCE_V2::W3-F26 | Маршрут и атомарность | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/59
+SCE_V2::W3-F27 | Slippage, liquidity и adverse timing | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/60
+SCE_V2::W3-F28 | Lender-neutral repayment contract | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/61
+SCE_V2::W3-F29 | Реальное paper-наблюдение | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/62
+SCE_V2::W3-F30 | Operational faults | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/63
+SCE_V2::W3-F31 | Dell Windows 11 qualification | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/64
+SCE_V2::W3-F32 | Пауза и остановка по голосу/кнопке | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/65
+SCE_V2::W3-F33 | Release, digest и rollback | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/66
+SCE_V2::W3-F34 | План ограниченного canary | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/67
+SCE_V2::W3-F35 | Мониторинг уже разрешённого live | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/68
+SCE_V2::W3-F36 | Инвалидация по изменению inputs | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/69
+SCE_V2::W3-F37 | Incident→regression | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/70
+SCE_V2::W3-F38 | Пакет решения readiness | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/71
+SCE_V2::W3-F39 | Поиск непроверенных требований | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/72
+SCE_V2::W3-F40 | Очередь R&D экспериментов | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/73
+SCE_V2::W3-F41 | Голосовая цель→проверяемый Web3 план | SPEC_NOT_EXECUTABLE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/74
+SCE_V2::LABEL-01 | Адаптер полного экспортированного пакета | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/75
+SCE_V2::LABEL-02 | Проверка SHA-256 оригиналов и TXT до маркировки | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/76
+SCE_V2::LABEL-03 | Стабильные source/content/span IDs и точные локаторы | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/77
+SCE_V2::LABEL-04 | Различение повторных одинаковых путей ZIP | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/78
+SCE_V2::LABEL-05 | Unicode spans без общего лимита документов | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/79
+SCE_V2::LABEL-06 | Метки ASSERTED, SUGGESTED и UNKNOWN с происхождением | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/80
+SCE_V2::LABEL-07 | Нормализация Unicode и безопасные ключи тегов | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/81
+SCE_V2::LABEL-08 | Эвристические кандидаты целей, задач, вопросов, тестов и web3 | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/82
+SCE_V2::LABEL-09 | Сохранение всех доступных ролей и ветвей messages.jsonl | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/83
+SCE_V2::LABEL-10 | Граф происхождения и объявленных parent-связей | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/84
+SCE_V2::LABEL-11 | Контекст по цели без top-20/top-k | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/85
+SCE_V2::LABEL-12 | Полный учёт включённого, исключённого и неизвестного | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/86
+SCE_V2::LABEL-13 | Режим включить весь доступный текст | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/87
+SCE_V2::LABEL-14 | Раздельные версии оригинала и пользовательских меток | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/88
+SCE_V2::LABEL-15 | Инвалидация контекста при изменении данных или меток | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/89
+SCE_V2::LABEL-16 | Атомарное создание результатов и кооперативная отмена | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/90
+SCE_V2::LABEL-17 | JSON Schema записей и coverage | OFFLINE_PROTOTYPE_IMPLEMENTED_TESTED_LINUX | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/91
+SCE_V2::LABEL-18 | Расширенная таксономия жизненного контекста | R_AND_D_SPEC_ONLY | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/92
+SCE_V2::LVF01 | hardware_probe — CPU/RAM/GPU/backend capabilities без предположений о Dell. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/93
+SCE_V2::LVF02 | local_decision_backend — Unsloth/native Laya/ONNX adapter с revision и loopback endpoint. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/94
+SCE_V2::LVF03 | question_pack_registry — versioned choice/score/noul schemas и classifier calibration. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/95
+SCE_V2::LVF04 | lossless_inference_ledger — окна, span offsets, ошибки и повторение до покрытия. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/96
+SCE_V2::LVF05 | voice_capture_session — opt-in запись, состояние, локальные audio/text links. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/97
+SCE_V2::LVF06 | partial_transcript_prefetch — speculative read-only поиск без запуска действий. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/98
+SCE_V2::LVF07 | finalize_goal — неизменяемая финальная версия цели и исправления. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/99
+SCE_V2::LVF08 | voice_stop_resume — cancel token, журнал уже сделанного, продолжение с checkpoint. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/100
+SCE_V2::LVF09 | asr_entity_dictionary — проектные имена/пути и проверка важных сущностей. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/101
+SCE_V2::LVF10 | multimodal_local_search — FTS+embeddings+metadata, ссылки на spans. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/102
+SCE_V2::LVF11 | recipe_router — выбор существующего tested workflow с abstain/fallback. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/103
+SCE_V2::LVF12 | adaptive_clarification — минимальный полезный уточняющий вопрос; R&D. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/104
+SCE_V2::LVF13 | typed_action_registry — observed target/args/preconditions/postconditions. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/105
+SCE_V2::LVF14 | windows_uia_adapter — доступ к опубликованным UIA elements/patterns. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/106
+SCE_V2::LVF15 | browser_dom_adapter — snapshot, target freshness, semantic completion checks. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/107
+SCE_V2::LVF16 | worker_resource_scheduler — параллельные read-only jobs, locks для writers/UI. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/108
+SCE_V2::LVF17 | outcome_verifier — TRUE/FALSE/UNKNOWN/NOT_RUN по независимым проверкам. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/109
+SCE_V2::LVF18 | validated_recipe_compiler — успешные traces→проект рецепта→тесты→version. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/110
+SCE_V2::LVF19 | warm_model_manager — load/unload/cache keyed по revisions. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/111
+SCE_V2::LVF20 | latency_eval_harness — timestamps по стадиям, p50/p95, качество/ресурсы. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/112
+SCE_V2::LVF21 | accessibility_profiles — keyboard/text/voice/pauses/labels/cancellation. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/113
+SCE_V2::LVF22 | source_aware_context_compaction — ограничение active prompt при полном archive. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/114
+SCE_V2::LVF23 | social_claim_verification_queue — X claim→первоисточник→код→reproduction status. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/115
+SCE_V2::LVF24 | model_change_regression_suite — upgrade inference backend не меняет решения молча. | SPEC | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/116
+SCE_V2::SMELL-01 | Полный доступный Python inventory и SHA256 исходников | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/117
+SCE_V2::SMELL-02 | AST eval/exec/shell=True/bare-except/except-pass candidates | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/118
+SCE_V2::SMELL-03 | Большие функции с настраиваемым порогом | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/119
+SCE_V2::SMELL-04 | Одинаковые AST bodies функций | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/120
+SCE_V2::SMELL-05 | Разрешимые локальные import edges | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/121
+SCE_V2::SMELL-06 | Циклические компоненты import graph | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/122
+SCE_V2::SMELL-07 | Неразрешённые, wildcard и динамические imports | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/123
+SCE_V2::SMELL-08 | Явные ошибки чтения/разбора и пропуски ссылок | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/124
+SCE_V2::SMELL-09 | Хеш наблюдаемого inventory и стабильные IDs находок | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/125
+SCE_V2::SMELL-10 | Отчёт STATIC_CANDIDATE с source spans | IMPLEMENTED_OFFLINE_PROTOTYPE | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/126
+SCE_V2::UI-01 | Окно запуска пяти офлайн действий, отдельные журналы и STOP | IMPLEMENTED_UI_WINDOWS_NOT_RUN | packages/SCE_V2/FUNCTION_CATALOG_V2.json/functions/127
+VOICE_V3::LEGACY-F001 | capture_voice_stream | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/0
+VOICE_V3::LEGACY-F002 | capture_active_window_event | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/1
+VOICE_V3::LEGACY-F003 | capture_accessibility_event | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/2
+VOICE_V3::LEGACY-F004 | capture_clipboard_event | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/3
+VOICE_V3::LEGACY-F005 | ingest_file | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/4
+VOICE_V3::LEGACY-F006 | ingest_folder | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/5
+VOICE_V3::LEGACY-F007 | ingest_repo | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/6
+VOICE_V3::LEGACY-F008 | ingest_git_history | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/7
+VOICE_V3::LEGACY-F009 | ingest_chat_export | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/8
+VOICE_V3::LEGACY-F010 | ingest_document_export | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/9
+VOICE_V3::LEGACY-F011 | ingest_terminal_trace | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/10
+VOICE_V3::LEGACY-F012 | normalize_object | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/11
+VOICE_V3::LEGACY-F013 | content_address_object | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/12
+VOICE_V3::LEGACY-F014 | deduplicate_object | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/13
+VOICE_V3::LEGACY-F015 | attach_provenance | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/14
+VOICE_V3::LEGACY-F016 | index_fulltext | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/15
+VOICE_V3::LEGACY-F017 | index_embeddings | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/16
+VOICE_V3::LEGACY-F018 | index_temporal_event | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/17
+VOICE_V3::LEGACY-F019 | index_entity_graph | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/18
+VOICE_V3::LEGACY-F020 | index_repo_symbols | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/19
+VOICE_V3::LEGACY-F021 | index_import_graph | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/20
+VOICE_V3::LEGACY-F022 | index_call_graph | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/21
+VOICE_V3::LEGACY-F023 | index_tests_to_symbols | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/22
+VOICE_V3::LEGACY-F024 | index_commit_symbol_diff | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/23
+VOICE_V3::LEGACY-F025 | refresh_incremental_indexes | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/24
+VOICE_V3::LEGACY-F026 | resolve_goal_entities | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/25
+VOICE_V3::LEGACY-F027 | retrieve_exact | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/26
+VOICE_V3::LEGACY-F028 | retrieve_semantic | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/27
+VOICE_V3::LEGACY-F029 | retrieve_temporal | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/28
+VOICE_V3::LEGACY-F030 | retrieve_graph_neighbors | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/29
+VOICE_V3::LEGACY-F031 | retrieve_code_dependencies | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/30
+VOICE_V3::LEGACY-F032 | detect_superseded_facts | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/31
+VOICE_V3::LEGACY-F033 | detect_conflicting_context | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/32
+VOICE_V3::LEGACY-F034 | rank_evidence | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/33
+VOICE_V3::LEGACY-F035 | compile_context_pack | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/34
+VOICE_V3::LEGACY-F036 | compile_context_delta | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/35
+VOICE_V3::LEGACY-F037 | estimate_context_budget | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/36
+VOICE_V3::LEGACY-F038 | generate_handoff_bundle | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/37
+VOICE_V3::LEGACY-F039 | transcribe_stream | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/38
+VOICE_V3::LEGACY-F040 | detect_end_of_utterance | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/39
+VOICE_V3::LEGACY-F041 | bias_domain_vocabulary | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/40
+VOICE_V3::LEGACY-F042 | parse_typed_intent | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/41
+VOICE_V3::LEGACY-F043 | classify_risk | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/42
+VOICE_V3::LEGACY-F044 | estimate_intent_confidence | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/43
+VOICE_V3::LEGACY-F045 | prefetch_from_partial_transcript | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/44
+VOICE_V3::LEGACY-F046 | escalate_to_planner | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/45
+VOICE_V3::LEGACY-F047 | build_action_spec | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/46
+VOICE_V3::LEGACY-F048 | decompose_to_dag | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/47
+VOICE_V3::LEGACY-F049 | find_parallelizable_nodes | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/48
+VOICE_V3::LEGACY-F050 | declare_preconditions | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/49
+VOICE_V3::LEGACY-F051 | declare_postconditions | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/50
+VOICE_V3::LEGACY-F052 | declare_required_capabilities | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/51
+VOICE_V3::LEGACY-F053 | compute_rollback_plan | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/52
+VOICE_V3::LEGACY-F054 | register_executor | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/53
+VOICE_V3::LEGACY-F055 | register_skill | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/54
+VOICE_V3::LEGACY-F056 | list_capabilities | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/55
+VOICE_V3::LEGACY-F057 | match_capability | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/56
+VOICE_V3::LEGACY-F058 | score_executor | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/57
+VOICE_V3::LEGACY-F059 | update_executor_score | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/58
+VOICE_V3::LEGACY-F060 | choose_primary_executor | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/59
+VOICE_V3::LEGACY-F061 | choose_fallback_executors | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/60
+VOICE_V3::LEGACY-F062 | mark_executor_degraded | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/61
+VOICE_V3::LEGACY-F063 | execute_local_function | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/62
+VOICE_V3::LEGACY-F064 | execute_powershell | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/63
+VOICE_V3::LEGACY-F065 | execute_process | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/64
+VOICE_V3::LEGACY-F066 | execute_git | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/65
+VOICE_V3::LEGACY-F067 | execute_mcp_tool | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/66
+VOICE_V3::LEGACY-F068 | execute_http_api | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/67
+VOICE_V3::LEGACY-F069 | execute_browser_cdp | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/68
+VOICE_V3::LEGACY-F070 | execute_playwright | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/69
+VOICE_V3::LEGACY-F071 | execute_browsercode_script | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/70
+VOICE_V3::LEGACY-F072 | execute_windows_uia | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/71
+VOICE_V3::LEGACY-F073 | execute_win32 | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/72
+VOICE_V3::LEGACY-F074 | execute_com | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/73
+VOICE_V3::LEGACY-F075 | execute_ufo_workflow | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/74
+VOICE_V3::LEGACY-F076 | execute_gui_vision_agent | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/75
+VOICE_V3::LEGACY-F077 | snapshot_pre_state | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/76
+VOICE_V3::LEGACY-F078 | verify_preconditions | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/77
+VOICE_V3::LEGACY-F079 | execute_with_timeout | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/78
+VOICE_V3::LEGACY-F080 | verify_postconditions | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/79
+VOICE_V3::LEGACY-F081 | compare_expected_actual | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/80
+VOICE_V3::LEGACY-F082 | retry_with_same_executor | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/81
+VOICE_V3::LEGACY-F083 | fallback_to_next_executor | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/82
+VOICE_V3::LEGACY-F084 | rollback_action | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/83
+VOICE_V3::LEGACY-F085 | create_execution_receipt | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/84
+VOICE_V3::LEGACY-F086 | checkpoint_workflow | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/85
+VOICE_V3::LEGACY-F087 | resume_workflow | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/86
+VOICE_V3::LEGACY-F088 | create_automation_spec | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/87
+VOICE_V3::LEGACY-F089 | create_git_worktree | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/88
+VOICE_V3::LEGACY-F090 | invoke_coding_agent | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/89
+VOICE_V3::LEGACY-F091 | apply_patch_isolated | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/90
+VOICE_V3::LEGACY-F092 | run_targeted_tests | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/91
+VOICE_V3::LEGACY-F093 | run_regression_tests | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/92
+VOICE_V3::LEGACY-F094 | package_skill | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/93
+VOICE_V3::LEGACY-F095 | validate_skill_manifest | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/94
+VOICE_V3::LEGACY-F096 | atomic_install_skill | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/95
+VOICE_V3::LEGACY-F097 | healthcheck_skill | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/96
+VOICE_V3::LEGACY-F098 | rollback_skill_version | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/97
+VOICE_V3::LEGACY-F099 | promote_skill_to_fast_path | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/98
+VOICE_V3::LEGACY-F100 | record_command_case | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/99
+VOICE_V3::LEGACY-F101 | record_trajectory | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/100
+VOICE_V3::LEGACY-F102 | label_outcome | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/101
+VOICE_V3::LEGACY-F103 | compute_success_rate | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/102
+VOICE_V3::LEGACY-F104 | compute_latency_distribution | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/103
+VOICE_V3::LEGACY-F105 | compute_cost_per_success | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/104
+VOICE_V3::LEGACY-F106 | compare_executor_paths | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/105
+VOICE_V3::LEGACY-F107 | mine_repeated_sequences | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/106
+VOICE_V3::LEGACY-F108 | synthesize_candidate_skill | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/107
+VOICE_V3::LEGACY-F109 | regression_test_all_commands | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/108
+VOICE_V3::LEGACY-F110 | resolve_secret_reference | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/109
+VOICE_V3::LEGACY-F111 | redact_sensitive_context | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/110
+VOICE_V3::LEGACY-F112 | enforce_path_scope | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/111
+VOICE_V3::LEGACY-F113 | enforce_network_scope | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/112
+VOICE_V3::LEGACY-F114 | enforce_command_allowlist | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/113
+VOICE_V3::LEGACY-F115 | permission_gate | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/114
+VOICE_V3::LEGACY-F116 | require_human_approval | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/115
+VOICE_V3::LEGACY-F117 | audit_tool_call | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/116
+VOICE_V3::LEGACY-F118 | revoke_skill_capability | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/117
+VOICE_V3::LEGACY-F119 | scan_repo_state | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/118
+VOICE_V3::LEGACY-F120 | build_studious_repo_map | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/119
+VOICE_V3::LEGACY-F121 | run_qualification_suite | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/120
+VOICE_V3::LEGACY-F122 | parse_qualification_failures | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/121
+VOICE_V3::LEGACY-F123 | map_failure_to_symbols | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/122
+VOICE_V3::LEGACY-F124 | retrieve_related_pr_history | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/123
+VOICE_V3::LEGACY-F125 | retrieve_related_chat_decisions | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/124
+VOICE_V3::LEGACY-F126 | compile_failure_handoff | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/125
+VOICE_V3::LEGACY-F127 | generate_patch_branch | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/126
+VOICE_V3::LEGACY-F128 | validate_flashloan_patch | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/127
+VOICE_V3::LEGACY-F129 | write_qualification_receipt | LEGACY_PROPOSED_NOT_VERIFIED | packages/VOICE_V3/11_BACKLOG/functions.json/128
+VOICE_V3::RND-19-F01 | route_dependency_fingerprint | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/129
+VOICE_V3::RND-19-F02 | estimate_cofailure_matrix | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/130
+VOICE_V3::RND-19-F03 | select_diverse_portfolio | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/131
+VOICE_V3::RND-19-F04 | record_marginal_recovery | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/132
+VOICE_V3::RND-20-F01 | compute_hedge_trigger | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/133
+VOICE_V3::RND-20-F02 | reserve_speculation_budget | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/134
+VOICE_V3::RND-20-F03 | cancel_loser_candidates | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/135
+VOICE_V3::RND-20-F04 | audit_cancellation_completion | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/136
+VOICE_V3::RND-21-F01 | issue_intent_operation_id | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/137
+VOICE_V3::RND-21-F02 | acquire_effect_lease | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/138
+VOICE_V3::RND-21-F03 | commit_verified_candidate | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/139
+VOICE_V3::RND-21-F04 | reconcile_unknown_effect | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/140
+VOICE_V3::RND-22-F01 | infer_resource_access_sets | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/141
+VOICE_V3::RND-22-F02 | build_conflict_graph | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/142
+VOICE_V3::RND-22-F03 | acquire_foreground_lease | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/143
+VOICE_V3::RND-22-F04 | yield_to_user_input | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/144
+VOICE_V3::RND-23-F01 | freeze_context_snapshot | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/145
+VOICE_V3::RND-23-F02 | validate_snapshot_closure | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/146
+VOICE_V3::RND-23-F03 | compare_target_revision | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/147
+VOICE_V3::RND-23-F04 | invalidate_stale_candidate | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/148
+VOICE_V3::RND-24-F01 | derive_evidence_requirements | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/149
+VOICE_V3::RND-24-F02 | compute_context_deficit | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/150
+VOICE_V3::RND-24-F03 | choose_next_observation | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/151
+VOICE_V3::RND-24-F04 | emit_needs_context_request | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/152
+VOICE_V3::RND-25-F01 | extract_label_candidates | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/153
+VOICE_V3::RND-25-F02 | reconcile_label_authority | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/154
+VOICE_V3::RND-25-F03 | normalize_project_aliases | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/155
+VOICE_V3::RND-25-F04 | abstain_on_label_conflict | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/156
+VOICE_V3::RND-26-F01 | build_context_ablation_set | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/157
+VOICE_V3::RND-26-F02 | measure_evidence_utility | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/158
+VOICE_V3::RND-26-F03 | compare_pack_variants | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/159
+VOICE_V3::RND-26-F04 | freeze_holdout_partitions | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/160
+VOICE_V3::RND-27-F01 | hash_derivation_inputs | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/161
+VOICE_V3::RND-27-F02 | invalidate_context_dependents | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/162
+VOICE_V3::RND-27-F03 | refresh_materialized_pack | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/163
+VOICE_V3::RND-27-F04 | compare_incremental_full_build | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/164
+VOICE_V3::RND-28-F01 | generate_contract_counterexample | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/165
+VOICE_V3::RND-28-F02 | run_metamorphic_checks | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/166
+VOICE_V3::RND-28-F03 | measure_verifier_mutation_score | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/167
+VOICE_V3::RND-28-F04 | reject_test_weakening_patch | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/168
+VOICE_V3::RND-29-F01 | identify_critical_voice_slots | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/169
+VOICE_V3::RND-29-F02 | request_selective_asr_check | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/170
+VOICE_V3::RND-29-F03 | reconcile_transcript_hypotheses | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/171
+VOICE_V3::RND-29-F04 | freeze_confirmed_intent_revision | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/172
+VOICE_V3::RND-30-F01 | process_stop_signal | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/173
+VOICE_V3::RND-30-F02 | revoke_pending_intent_generation | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/174
+VOICE_V3::RND-30-F03 | supersede_running_plan | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/175
+VOICE_V3::RND-30-F04 | report_irreversible_boundary | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/176
+VOICE_V3::RND-31-F01 | build_skill_contract | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/177
+VOICE_V3::RND-31-F02 | attach_skill_evidence_bundle | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/178
+VOICE_V3::RND-31-F03 | validate_skill_environment | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/179
+VOICE_V3::RND-31-F04 | expire_skill_qualification | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/180
+VOICE_V3::RND-32-F01 | estimate_workflow_critical_path | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/181
+VOICE_V3::RND-32-F02 | admit_resource_bounded_nodes | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/182
+VOICE_V3::RND-32-F03 | pause_background_indexing | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/183
+VOICE_V3::RND-32-F04 | score_latency_reliability_frontier | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/184
+VOICE_V3::RND-33-F01 | mark_dispatch_uncertain | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/185
+VOICE_V3::RND-33-F02 | query_effect_receipt | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/186
+VOICE_V3::RND-33-F03 | prove_safe_retry_transition | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/187
+VOICE_V3::RND-33-F04 | quarantine_ambiguous_operation | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/188
+VOICE_V3::RND-34-F01 | validate_adapter_contract | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/189
+VOICE_V3::RND-34-F02 | classify_input_trust_origin | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/190
+VOICE_V3::RND-34-F03 | isolate_untrusted_document_instructions | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/191
+VOICE_V3::RND-34-F04 | enforce_egress_field_policy | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/192
+VOICE_V3::RND-35-F01 | register_ingestion_stage | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/193
+VOICE_V3::RND-35-F02 | resume_ingestion_cursor | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/194
+VOICE_V3::RND-35-F03 | stream_large_source_objects | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/195
+VOICE_V3::RND-35-F04 | schedule_progressive_enrichment | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/196
+VOICE_V3::RND-36-F01 | trace_information_lineage | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/197
+VOICE_V3::RND-36-F02 | cluster_near_duplicate_claims | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/198
+VOICE_V3::RND-36-F03 | compute_independent_evidence_count | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/199
+VOICE_V3::RND-36-F04 | preserve_conflicting_source_versions | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/200
+VOICE_V3::RND-37-F01 | record_conditional_failure | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/201
+VOICE_V3::RND-37-F02 | retrieve_negative_capability_evidence | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/202
+VOICE_V3::RND-37-F03 | invalidate_obsolete_failure | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/203
+VOICE_V3::RND-37-F04 | route_around_known_failure | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/204
+VOICE_V3::RND-38-F01 | slice_successful_trajectory | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/205
+VOICE_V3::RND-38-F02 | eliminate_redundant_steps | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/206
+VOICE_V3::RND-38-F03 | validate_minimized_skill | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/207
+VOICE_V3::RND-38-F04 | compare_skill_behavioral_equivalence | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/208
+VOICE_V3::RND-39-F01 | compute_capability_permission_diff | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/209
+VOICE_V3::RND-39-F02 | verify_update_origin | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/210
+VOICE_V3::RND-39-F03 | stage_skill_candidate | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/211
+VOICE_V3::RND-39-F04 | activate_approved_skill_version | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/212
+VOICE_V3::RND-40-F01 | compile_provider_scoped_handoff | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/213
+VOICE_V3::RND-40-F02 | validate_ai_return_contract | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/214
+VOICE_V3::RND-40-F03 | bind_ai_patch_to_snapshot | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/215
+VOICE_V3::RND-40-F04 | merge_model_evidence_without_effects | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/216
+VOICE_V3::RND-41-F01 | fingerprint_capability_environment | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/217
+VOICE_V3::RND-41-F02 | run_readonly_capability_canary | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/218
+VOICE_V3::RND-41-F03 | demote_drifted_executor | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/219
+VOICE_V3::RND-41-F04 | schedule_adapter_requalification | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/220
+VOICE_V3::RND-42-F01 | evaluate_context_policy_candidate | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/221
+VOICE_V3::RND-42-F02 | optimize_offline_context_program | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/222
+VOICE_V3::RND-42-F03 | audit_optimizer_data_leakage | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/223
+VOICE_V3::RND-42-F04 | promote_validated_context_policy | PROPOSED_SPEC_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/224
+VOICE_V3::V3-F001 | open_observation_session | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/225
+VOICE_V3::V3-F002 | append_source_observation | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/226
+VOICE_V3::V3-F003 | correlate_observation_streams | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/227
+VOICE_V3::V3-F004 | preserve_late_channel_evidence | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/228
+VOICE_V3::V3-F005 | identify_capture_information_gap | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/229
+VOICE_V3::V3-F006 | select_observation_portfolio | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/230
+VOICE_V3::V3-F007 | measure_sensor_marginal_coverage | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/231
+VOICE_V3::V3-F008 | retire_redundant_capture_channel | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/232
+VOICE_V3::V3-F009 | classify_parallel_join_semantics | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/233
+VOICE_V3::V3-F010 | compile_join_contract | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/234
+VOICE_V3::V3-F011 | validate_route_merge_policy | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/235
+VOICE_V3::V3-F012 | explain_join_wait_reason | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/236
+VOICE_V3::V3-F013 | compute_minimum_evidence_frontier | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/237
+VOICE_V3::V3-F014 | freeze_handoff_revision | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/238
+VOICE_V3::V3-F015 | emit_late_evidence_delta | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/239
+VOICE_V3::V3-F016 | invalidate_result_after_material_delta | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/240
+VOICE_V3::V3-F017 | label_source_authority_lane | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/241
+VOICE_V3::V3-F018 | distinguish_intent_from_world_state | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/242
+VOICE_V3::V3-F019 | preserve_label_disagreements | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/243
+VOICE_V3::V3-F020 | require_evidence_for_status_promotion | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/244
+VOICE_V3::V3-F021 | parse_ai_context_request | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/245
+VOICE_V3::V3-F022 | resolve_requested_symbol_context | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/246
+VOICE_V3::V3-F023 | enforce_context_request_scope | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/247
+VOICE_V3::V3-F024 | return_context_delta_receipt | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/248
+VOICE_V3::V3-F025 | define_action_equivalence_class | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/249
+VOICE_V3::V3-F026 | map_goal_to_reachable_state | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/250
+VOICE_V3::V3-F027 | choose_shortest_verified_route | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/251
+VOICE_V3::V3-F028 | reconcile_same_goal_effects | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/252
+VOICE_V3::V3-F029 | detect_foreground_user_activity | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/253
+VOICE_V3::V3-F030 | lease_desktop_input_channel | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/254
+VOICE_V3::V3-F031 | suspend_conflicting_gui_path | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/255
+VOICE_V3::V3-F032 | continue_noninterfering_background_tasks | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/256
+VOICE_V3::V3-F033 | track_producer_watermark | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/257
+VOICE_V3::V3-F034 | detect_capture_sequence_gap | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/258
+VOICE_V3::V3-F035 | associate_causal_source_version | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/259
+VOICE_V3::V3-F036 | reprocess_late_evidence_revision | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/260
+VOICE_V3::V3-F037 | segment_cross_source_task_episode | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/261
+VOICE_V3::V3-F038 | rank_automation_opportunities | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/262
+VOICE_V3::V3-F039 | draft_skill_from_correlated_episode | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/263
+VOICE_V3::V3-F040 | measure_verified_manual_effort_saved | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/264
+VOICE_V3::V3-F041 | profile_on_device_route_budget | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/265
+VOICE_V3::V3-F042 | compare_local_remote_hedge_policies | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/266
+VOICE_V3::V3-F043 | track_quality_latency_pareto_frontier | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/267
+VOICE_V3::V3-F044 | promote_empirically_better_portfolio | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/268
+VOICE_V3::V3-F045 | ingest_strategy_artifact_graph | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/269
+VOICE_V3::V3-F046 | link_chat_requirement_to_archive | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/270
+VOICE_V3::V3-F047 | reconcile_strategy_precedence | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/271
+VOICE_V3::V3-F048 | compile_one_provider_neutral_master_handoff | PROPOSED_NOT_IMPLEMENTED | packages/VOICE_V3/11_BACKLOG/functions.json/272
+OCC_RND::api.readonly_tool_session | api.readonly_tool_session | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/0
+OCC_RND::archive.verify | archive.verify | BUNDLED_CLI_NOT_WORKFLOW_WIRED | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/1
+OCC_RND::bot.existing_qualification_adapter | bot.existing_qualification_adapter | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/2
+OCC_RND::browser.approved_dom_read | browser.approved_dom_read | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/3
+OCC_RND::code.resolve_symbol_span | code.resolve_symbol_span | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/4
+OCC_RND::code.static_catalog | code.static_catalog | BUNDLED_CLI_NOT_WORKFLOW_WIRED | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/5
+OCC_RND::context.full_export | context.full_export | BUNDLED_CLI_NOT_WORKFLOW_WIRED | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/6
+OCC_RND::context.reconstruct_verify | context.reconstruct_verify | BUNDLED_CLI_NOT_WORKFLOW_WIRED | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/7
+OCC_RND::context.select_evidence | context.select_evidence | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/8
+OCC_RND::desktop.observe_uia | desktop.observe_uia | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/9
+OCC_RND::desktop.perform_registered_action | desktop.perform_registered_action | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/10
+OCC_RND::desktop.record_authorized_trace | desktop.record_authorized_trace | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/11
+OCC_RND::editor.open_registered_goto | editor.open_registered_goto | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/12
+OCC_RND::evidence.freeze_results | evidence.freeze_results | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/13
+OCC_RND::evidence.independent_verify | evidence.independent_verify | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/14
+OCC_RND::evidence.observe_actual_state | evidence.observe_actual_state | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/15
+OCC_RND::evidence.read_domain_receipt | evidence.read_domain_receipt | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/16
+OCC_RND::evidence.validate_source_refs | evidence.validate_source_refs | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/17
+OCC_RND::history.requirement_extract | history.requirement_extract | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/18
+OCC_RND::history.version_link | history.version_link | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/19
+OCC_RND::intent.advisory_route | intent.advisory_route | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/20
+OCC_RND::intent.deterministic_route | intent.deterministic_route | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/21
+OCC_RND::jobs.inspect_stale_run | jobs.inspect_stale_run | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/22
+OCC_RND::jobs.propose | jobs.propose | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/23
+OCC_RND::library.index_projection | library.index_projection | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/24
+OCC_RND::library.search_related_attempts | library.search_related_attempts | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/25
+OCC_RND::policy.approve_frozen_dataset | policy.approve_frozen_dataset | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/26
+OCC_RND::policy.capture_consent | policy.capture_consent | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/27
+OCC_RND::policy.check_api_budget_consent | policy.check_api_budget_consent | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/28
+OCC_RND::policy.check_data_rights_budget | policy.check_data_rights_budget | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/29
+OCC_RND::policy.check_desktop_profile | policy.check_desktop_profile | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/30
+OCC_RND::policy.check_operator_profile | policy.check_operator_profile | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/31
+OCC_RND::policy.check_source_allowlist | policy.check_source_allowlist | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/32
+OCC_RND::policy.decide_reconciliation | policy.decide_reconciliation | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/33
+OCC_RND::privacy.review_scope | privacy.review_scope | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/34
+OCC_RND::privacy.sanitized_projection | privacy.sanitized_projection | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/35
+OCC_RND::reports.compose | reports.compose | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/36
+OCC_RND::research.compare_revisions | research.compare_revisions | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/37
+OCC_RND::research.cost_and_holdout_check | research.cost_and_holdout_check | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/38
+OCC_RND::research.fetch_primary_metadata | research.fetch_primary_metadata | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/39
+OCC_RND::research.license_compatibility_review | research.license_compatibility_review | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/40
+OCC_RND::research.parallel_read_workers | research.parallel_read_workers | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/41
+OCC_RND::research.register_trial | research.register_trial | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/42
+OCC_RND::research.replay_alternatives | research.replay_alternatives | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/43
+OCC_RND::skills.draft_candidate | skills.draft_candidate | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/44
+OCC_RND::skills.propose_effect_contract | skills.propose_effect_contract | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/45
+OCC_RND::source.attachment_inventory | source.attachment_inventory | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/46
+OCC_RND::source.chat_export_import | source.chat_export_import | BUNDLED_CLI_NOT_WORKFLOW_WIRED | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/47
+OCC_RND::source.folder_snapshot | source.folder_snapshot | BUNDLED_CLI_NOT_WORKFLOW_WIRED | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/48
+OCC_RND::source.git_snapshot | source.git_snapshot | BUNDLED_CLI_NOT_WORKFLOW_WIRED | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/49
+OCC_RND::source.prefer_official_api | source.prefer_official_api | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/50
+OCC_RND::source.shared_pit_feed | source.shared_pit_feed | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/51
+OCC_RND::source.verify_exact_installation | source.verify_exact_installation | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/52
+OCC_RND::source.verify_exact_revision | source.verify_exact_revision | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/53
+OCC_RND::tests.propose_acceptance | tests.propose_acceptance | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/54
+OCC_RND::tests.propose_sandbox_profile | tests.propose_sandbox_profile | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/55
+OCC_RND::tests.replay_in_isolation | tests.replay_in_isolation | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/56
+OCC_RND::voice.capture_consent | voice.capture_consent | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/57
+OCC_RND::voice.final_transcript | voice.final_transcript | REQUIRES_ADAPTER_OR_EXISTING_OWNER_INTEGRATION | packages/OCC_RND/schemas/CAPABILITY_CANDIDATES.json/58
+LAYA_CHUNK_V2::V2-001 | Stable Chunk ID | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/0
+LAYA_CHUNK_V2::V2-002 | Chunk lineage | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/1
+LAYA_CHUNK_V2::V2-003 | Freshness state | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/2
+LAYA_CHUNK_V2::V2-004 | Dependency closure | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/3
+LAYA_CHUNK_V2::V2-005 | Reverse dependency index | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/4
+LAYA_CHUNK_V2::V2-006 | Derived invalidation | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/5
+LAYA_CHUNK_V2::V2-007 | Chunk provenance | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/6
+LAYA_CHUNK_V2::V2-008 | Truth role | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/7
+LAYA_CHUNK_V2::V2-009 | Qualification state | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/8
+LAYA_CHUNK_V2::V2-010 | Risk tags | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/9
+LAYA_CHUNK_V2::V2-011 | Chunk annotations | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/10
+LAYA_CHUNK_V2::V2-012 | Pin chunk | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/11
+LAYA_CHUNK_V2::V2-013 | Chunk aliases | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/12
+LAYA_CHUNK_V2::V2-014 | Version compare | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/13
+LAYA_CHUNK_V2::V2-015 | Chunk history | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/14
+LAYA_CHUNK_V2::V2-016 | Persistent Context Cart | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/15
+LAYA_CHUNK_V2::V2-017 | Add related | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/16
+LAYA_CHUNK_V2::V2-018 | Add dependencies | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/17
+LAYA_CHUNK_V2::V2-019 | Add tests | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/18
+LAYA_CHUNK_V2::V2-020 | Add docs | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/19
+LAYA_CHUNK_V2::V2-021 | Add chats | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/20
+LAYA_CHUNK_V2::V2-022 | Deduplicate | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/21
+LAYA_CHUNK_V2::V2-023 | Truth-first ordering | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/22
+LAYA_CHUNK_V2::V2-024 | Token budget meter | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/23
+LAYA_CHUNK_V2::V2-025 | Missing-context warning | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/24
+LAYA_CHUNK_V2::V2-026 | Conflict warning | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/25
+LAYA_CHUNK_V2::V2-027 | Saved cart | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/26
+LAYA_CHUNK_V2::V2-028 | Cart templates | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/27
+LAYA_CHUNK_V2::V2-029 | Cart diff | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/28
+LAYA_CHUNK_V2::V2-030 | Auto-trim | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/29
+LAYA_CHUNK_V2::V2-031 | Unified inbox | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/30
+LAYA_CHUNK_V2::V2-032 | Source classification | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/31
+LAYA_CHUNK_V2::V2-033 | Project assignment | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/32
+LAYA_CHUNK_V2::V2-034 | Cross-project links | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/33
+LAYA_CHUNK_V2::V2-035 | Backlinks | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/34
+LAYA_CHUNK_V2::V2-036 | Saved filters | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/35
+LAYA_CHUNK_V2::V2-037 | Smart collections | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/36
+LAYA_CHUNK_V2::V2-038 | Stale collection | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/37
+LAYA_CHUNK_V2::V2-039 | Conflict collection | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/38
+LAYA_CHUNK_V2::V2-040 | Unimplemented collection | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/39
+LAYA_CHUNK_V2::V2-041 | Coverage collection | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/40
+LAYA_CHUNK_V2::V2-042 | Run collection | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/41
+LAYA_CHUNK_V2::V2-043 | Bulk actions | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/42
+LAYA_CHUNK_V2::V2-044 | Source preview | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/43
+LAYA_CHUNK_V2::V2-045 | Offline FTS search | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/44
+LAYA_CHUNK_V2::V2-046 | Hybrid lexical retrieval | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/45
+LAYA_CHUNK_V2::V2-047 | Graph expansion | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/46
+LAYA_CHUNK_V2::V2-048 | Freshness boost | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/47
+LAYA_CHUNK_V2::V2-049 | Truth boost | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/48
+LAYA_CHUNK_V2::V2-050 | Risk-aware retrieval | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/49
+LAYA_CHUNK_V2::V2-051 | Goal-aware retrieval | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/50
+LAYA_CHUNK_V2::V2-052 | Provider-aware packing | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/51
+LAYA_CHUNK_V2::V2-053 | Retrieval explanation | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/52
+LAYA_CHUNK_V2::V2-054 | Negative filters | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/53
+LAYA_CHUNK_V2::V2-055 | Changed-since retrieval | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/54
+LAYA_CHUNK_V2::V2-056 | Feature slices | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/55
+LAYA_CHUNK_V2::V2-057 | Qualification slices | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/56
+LAYA_CHUNK_V2::V2-058 | PR slices | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/57
+LAYA_CHUNK_V2::V2-059 | Chat-to-code coverage | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/58
+LAYA_CHUNK_V2::V2-060 | Requirement-to-code coverage | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/59
+LAYA_CHUNK_V2::V2-061 | Unowned requirement detector | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/60
+LAYA_CHUNK_V2::V2-062 | Untested symbol detector | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/61
+LAYA_CHUNK_V2::V2-063 | Duplicate authority detector | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/62
+LAYA_CHUNK_V2::V2-064 | Effect map | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/63
+LAYA_CHUNK_V2::V2-065 | Repo change impact | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/64
+LAYA_CHUNK_V2::V2-066 | Context pack per PR | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/65
+LAYA_CHUNK_V2::V2-067 | Context pack per blocker | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/66
+LAYA_CHUNK_V2::V2-068 | Chunk-changed trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/67
+LAYA_CHUNK_V2::V2-069 | Pack-invalidated trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/68
+LAYA_CHUNK_V2::V2-070 | Conflict-found trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/69
+LAYA_CHUNK_V2::V2-071 | Qualification-blocked trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/70
+LAYA_CHUNK_V2::V2-072 | Unimplemented-idea trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/71
+LAYA_CHUNK_V2::V2-073 | AI-result-import trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/72
+LAYA_CHUNK_V2::V2-074 | PR-merged trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/73
+LAYA_CHUNK_V2::V2-075 | CI-failed trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/74
+LAYA_CHUNK_V2::V2-076 | Daily stale sweep | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/75
+LAYA_CHUNK_V2::V2-077 | Weekly compaction | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/76
+LAYA_CHUNK_V2::V2-078 | Project continuation trigger | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/77
+LAYA_CHUNK_V2::V2-079 | Voice-to-cart | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/78
+LAYA_CHUNK_V2::V2-080 | Three-pane workspace | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/79
+LAYA_CHUNK_V2::V2-081 | Chunk graph | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/80
+LAYA_CHUNK_V2::V2-082 | Coverage heatmap | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/81
+LAYA_CHUNK_V2::V2-083 | Qualification board | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/82
+LAYA_CHUNK_V2::V2-084 | Context budget bar | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/83
+LAYA_CHUNK_V2::V2-085 | Chunk reason badge | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/84
+LAYA_CHUNK_V2::V2-086 | Freshness badge | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/85
+LAYA_CHUNK_V2::V2-087 | Truth badge | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/86
+LAYA_CHUNK_V2::V2-088 | Risk badge | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/87
+LAYA_CHUNK_V2::V2-089 | Quick actions | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/88
+LAYA_CHUNK_V2::V2-090 | Voice focus | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/89
+LAYA_CHUNK_V2::V2-091 | Run timeline | LEGACY_DESIGN_NO_IMPLEMENTATION_STATUS | packages/LAYA_CHUNK_V2/06_NEW_FUNCTIONS_V2.json/functions/90
+FUTURE::FUT-001 | attach_idea_source_span | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/0
+FUTURE::FUT-002 | link_idea_to_outcome | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/1
+FUTURE::FUT-003 | diff_requirement_interpretations | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/2
+FUTURE::FUT-004 | declare_required_context_slots | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/3
+FUTURE::FUT-005 | plan_missing_source_acquisition | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/4
+FUTURE::FUT-006 | explain_packet_coverage | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/5
+FUTURE::FUT-007 | fingerprint_goal_evidence | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/6
+FUTURE::FUT-008 | invalidate_dependent_conclusions | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/7
+FUTURE::FUT-009 | explain_goal_truth_snapshot | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/8
+FUTURE::FUT-010 | append_producer_observation | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/9
+FUTURE::FUT-011 | reconcile_late_observations | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/10
+FUTURE::FUT-012 | render_conflicting_source_views | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/11
+FUTURE::FUT-013 | register_verifier_failure_domain | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/12
+FUTURE::FUT-014 | measure_marginal_evidence_gain | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/13
+FUTURE::FUT-015 | choose_diverse_verifier_set | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/14
+FUTURE::FUT-016 | build_change_impact_atlas | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/15
+FUTURE::FUT-017 | suggest_smallest_useful_patch | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/16
+FUTURE::FUT-018 | record_patch_goal_delta | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/17
+FUTURE::FUT-019 | explain_label_proposal | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/18
+FUTURE::FUT-020 | collect_label_correction | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/19
+FUTURE::FUT-021 | evaluate_personal_taxonomy_revision | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/20
+FUTURE::FUT-022 | version_partial_intent | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/21
+FUTURE::FUT-023 | prefetch_for_candidate_goals | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/22
+FUTURE::FUT-024 | finalize_corrected_voice_mission | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/23
+FUTURE::FUT-025 | compile_verified_trace_recipe | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/24
+FUTURE::FUT-026 | check_recipe_precondition_revision | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/25
+FUTURE::FUT-027 | route_known_goal_to_fast_path | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/26
+FUTURE::FUT-028 | rehearse_release_on_state_copy | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/27
+FUTURE::FUT-029 | compare_capability_contracts | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/28
+FUTURE::FUT-030 | verify_upgrade_rollback_pair | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/29
+FUTURE::FUT-031 | capture_strategy_counterexample | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/30
+FUTURE::FUT-032 | minimize_reproducible_market_fixture | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/31
+FUTURE::FUT-033 | replay_negative_qualification_corpus | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/32
+FUTURE::FUT-034 | build_resume_check_questions | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/33
+FUTURE::FUT-035 | verify_handoff_understanding | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/34
+FUTURE::FUT-036 | append_next_chat_decision_receipt | PROPOSAL_FOR_FUTURE_RND_NOT_IMPLEMENTED | 03_CATALOGS/NEW_FUTURE_FUNCTIONS.json/35

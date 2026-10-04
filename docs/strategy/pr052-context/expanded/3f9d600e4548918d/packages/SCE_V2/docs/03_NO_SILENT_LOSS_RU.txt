@@ -1,0 +1,55 @@
+СНЯТИЕ ОГРАНИЧЕНИЙ БЕЗ ПОТЕРИ ДАННЫХ
+
+Удалённые в прототипе лимиты: 2.2 MB файла/библиотеки, 300 ZIP entries,
+8 MiB unpacked total, 20 документов в общем экспорте. Нет whitelist расширений
+для UTF-8/UTF-16/UTF-32 текста. .mjs/.rs/.sh/.cs и неизвестные расширения читаются.
+Пути сохраняются в SQLite и files.jsonl; одинаковые пути ZIP имеют отдельный ordinal.
+Не выполняется извлечение в потенциально опасные пути: ../ и абсолютные имена
+сохраняются как metadata, bytes — под content hash. Symlinks не разыменовываются.
+
+Что остаётся и почему:
+- Размер блока I/O 65536 байт ограничивает рабочую память одного чтения.
+- UI показывает 200 записей и одну страницу текста, следующие доступны кнопками.
+- Резерв свободного диска по умолчанию 64 MiB; CLI --reserve-mib меняет его.
+  Это проверка ресурса, а не максимальный размер коллекции. При недостатке — PAUSED.
+- Размер TXT-части задаёт пользователь; объём полного экспорта от него не зависит.
+- API context/output/rate limits остаются свойствами провайдера; truncation disabled.
+- Файловая система и SQLite имеют физические пределы; «бесконечная память» не заявлена.
+
+ПОЛНЫЕ ПУТИ И ОРИГИНАЛЫ
+index.json → files.jsonl → original_object → SHA-256 blob. ZIP целиком тоже сохранён.
+Для ZIP original entry metadata включает ordinal, crc32, compression, даты, attrs,
+extra/comment. Файлы не перезаписываются из-за совпадения basename.
+Полный ZIP нужен также для исходного container-level metadata и raw name encoding.
+Для папки сохраняются file bytes/path/mtime/mode; NTFS ACL/ADS/hardlink relationships
+не архивируются. Это архив обычного содержимого, не forensic image файловой системы.
+
+СОСТОЯНИЯ
+TEXT_COMPLETE — весь сохранённый blob декодирован выбранной Unicode-кодировкой.
+RAW_ONLY — оригинал есть, текстового извлечения нет. Это НЕ анализ содержимого.
+METADATA_ONLY — запись каталога. ERROR — причина в ledger.
+COMPLETE — перечисление и обработка закончены; binary RAW_ONLY может оставаться.
+COMPLETE_WITH_ERRORS — все обнаруженные entries учтены, часть не прочитана.
+PAUSED/FAILED — полнота перечисления не подтверждена.
+
+ОГРАНИЧЕНИЯ ПРОТОТИПА, КОТОРЫЕ НУЖНО ЗНАТЬ
+ZIP central directory загружается стандартным zipfile в RAM. Для миллионов entries
+понадобится новый iterator/parser. JSON ChatGPT parser также читает JSON в память.
+Вложенные архивы и Office/PDF/media сохраняются RAW_ONLY; рекурсивное извлечение,
+OCR и ASR ещё не реализованы. Пароли encrypted ZIP не запрашиваются.
+Legacy cp1251 без BOM не угадывается: RAW_ONLY до явного выбора encoding.
+Повторный импорт создаёт новый snapshot; bytes дедуплицируются, snapshot rows — нет.
+Resume реализован для ZIP из сохранённого неизменного blob. Folder import после
+остановки создаётся заново; folder scan не является atomic Git snapshot.
+Редактирование файла во время чтения выявляется по size/mtime, это best effort.
+Malformed filesystem names могут привести к FAILED, silent-success не допускается.
+Экспорт хранит все оригиналы и может содержать секреты исходного repo. Не отправлять
+originals/ в API автоматически. Встроенный API отправляет только выбранный TXT.
+
+ПОЛНОЕ ПОКРЫТИЕ В PRODUCTION
+expected_entries = text_complete + raw_only + metadata_only + errors.
+byte coverage и semantic extraction coverage — отдельные показатели.
+Каждый TEXT_COMPLETE должен пройти roundtrip к исходному blob с известной encoding.
+Model-reviewed coverage считается по request hash + source span + response receipt.
+Для полного UTF-8 repo export сравнивать оригинальные bytes каждого файла,
+а не только итоговую длину concatenated TXT.

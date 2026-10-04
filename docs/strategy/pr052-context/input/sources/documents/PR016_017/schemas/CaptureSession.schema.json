@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "CaptureSession",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "capture.v1"
+    },
+    "capture_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "device_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "device_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "asr_adapter_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "model_digest": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "physical_activation_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "audio_ref": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "segments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "start_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "end_ms": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "CAPTURED",
+              "GAP",
+              "TTS_EXCLUDED"
+            ]
+          }
+        },
+        "required": [
+          "start_ms",
+          "end_ms",
+          "kind"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "CAPTURING",
+        "STOPPED",
+        "ABORTED",
+        "DEVICE_LOST",
+        "TRANSCRIBING",
+        "TRANSCRIBED"
+      ]
+    },
+    "retention_policy_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "transcript_revision_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 0
+    }
+  },
+  "required": [
+    "schema_version",
+    "capture_id",
+    "device_ref",
+    "device_version",
+    "asr_adapter_ref",
+    "model_digest",
+    "physical_activation_ref",
+    "audio_ref",
+    "segments",
+    "state",
+    "retention_policy_ref",
+    "transcript_revision_refs"
+  ],
+  "additionalProperties": false
+}

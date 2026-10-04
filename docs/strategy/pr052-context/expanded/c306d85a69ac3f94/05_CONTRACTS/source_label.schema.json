@@ -1,0 +1,144 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "SourceLabel",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "source_ref",
+    "source_kind",
+    "speaker_role",
+    "content_role",
+    "epistemic_state",
+    "privacy",
+    "authority",
+    "derived_from"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "agentos.source-label/0.2"
+    },
+    "source_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_kind": {
+      "enum": [
+        "git",
+        "chatgpt_export",
+        "grok_export",
+        "google_docs_export",
+        "telegram_export",
+        "voice",
+        "file",
+        "browser_capture",
+        "execution_receipt"
+      ]
+    },
+    "speaker_role": {
+      "enum": [
+        "user",
+        "assistant",
+        "tool",
+        "third_party",
+        "unknown"
+      ]
+    },
+    "content_role": {
+      "enum": [
+        "goal",
+        "requirement",
+        "decision",
+        "task",
+        "code",
+        "error",
+        "hypothesis",
+        "result",
+        "quotation",
+        "instruction_in_source"
+      ]
+    },
+    "epistemic_state": {
+      "enum": [
+        "ASSERTED",
+        "OBSERVED",
+        "INFERRED",
+        "VERIFIED_BY_BOUND_RECEIPT",
+        "DISPUTED",
+        "UNKNOWN"
+      ]
+    },
+    "privacy": {
+      "enum": [
+        "public",
+        "private",
+        "sensitive",
+        "secret_reference_only"
+      ]
+    },
+    "authority": {
+      "enum": [
+        "DATA_ONLY",
+        "USER_INTENT",
+        "TOOL_OBSERVATION",
+        "POLICY_CONFIG"
+      ]
+    },
+    "derived_from": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "valid_until": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "labeler": {
+      "type": "string"
+    },
+    "label_schema_version": {
+      "type": "string"
+    },
+    "confidence": {
+      "type": [
+        "number",
+        "null"
+      ],
+      "minimum": 0,
+      "maximum": 1
+    },
+    "project_alias": {
+      "type": "string"
+    },
+    "exact_source_span": {
+      "type": "object",
+      "required": [
+        "start_byte",
+        "end_byte"
+      ],
+      "properties": {
+        "start_byte": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "end_byte": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "additionalProperties": false
+    },
+    "external_egress_approved": {
+      "type": "boolean"
+    }
+  }
+}

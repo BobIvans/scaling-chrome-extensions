@@ -1,0 +1,29 @@
+ОБЪЕДИНЁННЫЙ PR-020 + PR-021 · 2026-10-04
+
+Название: Web3 research bridge + Windows product qualification + закрытие V5.
+Parent: ROADMAP-PR-020-021. Заменяет отдельные roadmap пакеты 020 и 021 в одной поставке; их исходные IDs сохранены.
+Статус: DETAILED_IMPLEMENTATION_SPEC_READY. Код/кампании/merge/Windows install не выполнены этим архивом.
+
+Прочитать по порядку:
+1. 01_PR_DESCRIPTION_RU.md — готовое описание будущего PR.
+2. 02_IMPLEMENTATION_PLAN_RU.md — восемь блоков, owners, DTO, recovery и выходные artifacts.
+3. 03_CONTRACTS_AND_DATA_RU.md — domain/input/output identities и правила evidence.
+4. 04_TESTS_AND_QUALIFICATION_RU.md — unit/integration/device/provider suites.
+5. 05_DEPENDENCIES_AND_HANDOFF_RU.md — интеграция с пакетами 010..019 и двумя repo.
+6. 06_CLOSURE_AND_BENCHMARK_RU.md — полный criterion ledger и полезность.
+7. SEND_THIS_TO_CODING_AI_RU.txt — команда для следующего coding-чата.
+
+Машинные данные: implementation/FUNCTION_CATALOG.json; contracts/*.schema.json;
+qualification/TEST_CASES.json; coverage/CRITERION_LEDGER.json;
+workflows/*.json — adapter-neutral design, не проверенный native Laya import.
+
+Основной repo: BobIvans/scaling-chrome-extensions. Web3 economic/data/runtime owner: BobIvans/studious-pancake.
+Цель — один coherent SCE code PR с адаптацией к существующему Studious API.
+Если Studious owner действительно требует изменения, один GitHub PR не может менять два repo: сохранить один umbrella package и связанные physical PRs с integration manifest.
+
+Пакеты 010..019 являются prerequisites интеграции; их завершение не доказано этим документом.
+Объединение снимает внешнюю зависимость 021→020, но сохраняет внутренний порядок WS-029..036.
+Большие repo/архивы обрабатываются до исчерпания cursor, без потолка 20 файлов/документов; transport/page/time/RAM budgets остаются явными и возобновляемыми.
+
+Проверка распакованного пакета: python tools/verify_package.py
+Для оригинальной истории приложить также ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip.

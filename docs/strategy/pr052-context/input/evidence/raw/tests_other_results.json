@@ -1,0 +1,94 @@
+[
+  {
+    "command": [
+      "python",
+      "docs/strategy/voice-agentos/verify_integrity.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.1,
+    "log": "tests_other_0.log",
+    "tail": "{\n  \"ok\": true,\n  \"source_files_verified\": 1826,\n  \"source_bytes\": 28056140,\n  \"catalog_counts\": {\n    \"tasks\": 160,\n    \"features\": 164,\n    \"goals\": 28,\n    \"decisions\": 24\n  },\n  \"runtime_qualification\": \"NOT_INFERRED_FROM_ARCHIVE_INTEGRITY\",\n  \"failures\": []\n}\n"
+  },
+  {
+    "command": [
+      "python",
+      "docs/strategies/pr016-017/verify_context.py"
+    ],
+    "exit_code": 0,
+    "seconds": 0.35,
+    "log": "tests_other_1.log",
+    "tail": "{\"status\": \"PASS\", \"preserved_files\": 2132, \"source_members\": 170, \"unique_nested_archives\": 11, \"original_criteria_preserved\": 220, \"runtime_or_device_qualification\": \"NOT_CLAIMED\"}\n"
+  },
+  {
+    "command": [
+      "python",
+      "-I",
+      "-X",
+      "utf8",
+      "desktop/package.py",
+      "verify",
+      "--shell",
+      "desktop"
+    ],
+    "exit_code": 0,
+    "seconds": 0.05,
+    "log": "tests_other_2.log",
+    "tail": "7aef8100455ec220a0024874afdac8b7da3b5f4cc57a989cf6aaeea60\", \"client.py\": \"a237e6b61e96325dd1f84d63f30f803e078d071d482196020eb4633aed90465a\", \"draft.py\": \"37f5dd4b972c6c70a225e3e91a692b54f968f6cc7069069ad72c1424361493a4\", \"state.py\": \"d6c175d63a88da56b69eb13113a05b798e175fdc8d3832f4f049ff037f4426fe\", \"preflight.py\": \"282c8aeebecbe8ec997c357d57745c84f3da886c60faf8ffaea26f9c8121a2af\", \"actions_ui.py\": \"ad4cc9ef79285a0aa68ba3d9d142d5828b31a2a700577072a54ac86c7ed8008a\", \"voice.py\": \"a97e24576cb43d5c5b1242ea676cdff07955ea9e8e1e3b7a66fee18c1fe90916\", \"library.py\": \"182d69fc7eccf8bfc853ac8cc313e61b9cade6bb8e719af4d9c3ae26cf894576\", \"install.py\": \"bc255869d4f9df4342c0e6ee4683a37f241d5f411dfa46b2663b178fd141fd81\", \"Install_Windows.ps1\": \"336050230ae54469730557ca81f14e3681156dea666ac249076cdb60d0157e49\", \"package.py\": \"55995960a45f944a00b970d71f423d3ef2e604ac22b859b8ffee5fec766dfc48\", \"Launch_Windows.ps1\": \"d9f8ed00acd26ed424414910454077dc7e09ac17e296905c1273e4ce8481bccc\", \"connection.example.json\": \"5d8bb18bb1e8e443ca099970eccfd5d9f6c9fcfcc823500f7889515389dc0376\", \"README_RU.md\": \"52b5c2a95be66f227080614ccde9b0d8df6de420cf34ff3ce31a66baeea75127\"}, \"backend_external_reference\": \"connection.json:adapter_path/profile_path\", \"data_preserve_roots\": \"operator-profile:store/policy_file and all chosen output folders\", \"optional_owned_config\": \"connection.json\", \"windows_installed\": \"NOT_RUN\"}}\n"
+  },
+  {
+    "command": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "desktop/tests",
+      "-p",
+      "test_*.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "seconds": 27.09,
+    "log": "tests_other_3.log",
+    "tail": "historical_base_and_incomplete_head_fail_closed (test_repo_history.RepoHistoryTests.test_explicit_historical_base_and_incomplete_head_fail_closed) ... ok\ntest_long_unicode_cursor_continues_without_path_budget_cutoff (test_repo_history.RepoHistoryTests.test_long_unicode_cursor_continues_without_path_budget_cutoff) ... ok\ntest_native_scope_cursor_and_response (test_repo_history.RepoHistoryTests.test_native_scope_cursor_and_response) ... ok\ntest_text_revision_enqueue_worker_stop_share_existing_owner (test_voice_actions.ActionIPCTests.test_text_revision_enqueue_worker_stop_share_existing_owner) ... ok\ntest_device_loss_duration_and_restart_are_visible (test_voice_actions.CaptureTests.test_device_loss_duration_and_restart_are_visible) ... ok\ntest_metrics_include_failed_trials_and_human_gold (test_voice_actions.CaptureTests.test_metrics_include_failed_trials_and_human_gold) ... ok\ntest_one_stream_hold_release_and_exact_wave_bytes (test_voice_actions.CaptureTests.test_one_stream_hold_release_and_exact_wave_bytes) ... ok\ntest_start_failure_releases_lease_for_retry (test_voice_actions.CaptureTests.test_start_failure_releases_lease_for_retry) ... ok\ntest_tts_gap_and_second_owner_cannot_capture (test_voice_actions.CaptureTests.test_tts_gap_and_second_owner_cannot_capture) ... ok\n\n----------------------------------------------------------------------\nRan 45 tests in 26.936s\n\nOK (skipped=3)\n"
+  },
+  {
+    "command": [
+      "bash",
+      "-c",
+      "node --test agent-bridge/*.test.mjs"
+    ],
+    "exit_code": 0,
+    "seconds": 2.88,
+    "log": "tests_other_4.log",
+    "tail": "runs one job at a time and cancel releases it (6.766151ms)\n\u2714 failed Codex job is not successful and cannot export (13.229135ms)\n\u2714 discard deletes only owned job files and later access fails (1.953565ms)\n\u2714 job cap and disconnect clear temporary jobs (3.188887ms)\n\u2714 unverified write sandbox is never advertised or enabled by a content request (0.799765ms)\n\u2714 completed artifacts freeze exact binary bytes and hide input/internal files (13.81582ms)\n\u2714 artifact export enforces total size and completed state (15.599348ms)\n\u2714 artifact export refuses junctions outside the job directory (14.371597ms)\n\u2714 artifact export refuses hard links to other files (12.871366ms)\n\u2714 qualification bridge is disabled by default and requires absolute operator paths (2.433249ms)\n\u2714 JobHost advertises qualification only after explicit operator opt-in (4.492484ms)\n\u2714 native request cannot inject paths, argv, actions or ambiguous text (0.433744ms)\n\u2714 subprocess transport pins argv, strips secrets and returns BLOCKED as data (1.027579ms)\n\u2714 authority expansion in child response is rejected (1.948037ms)\n\u2714 generic adapter failure remains a bounded native error (1.566782ms)\n\u2714 secret filtering and output limit are fail closed (0.578593ms)\n\u2714 disconnect kills pending qualification process and settles immediately (0.348977ms)\n\u2139 tests 47\n\u2139 suites 0\n\u2139 pass 47\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 2818.692999\n"
+  },
+  {
+    "command": [
+      "python",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "agent-bridge",
+      "-p",
+      "test_qualification_adapter.py",
+      "-v"
+    ],
+    "exit_code": 0,
+    "seconds": 0.08,
+    "log": "tests_other_5.log",
+    "tail": "hout_second_execution) ... ok\ntest_changed_request_under_same_task_id_is_conflict (test_qualification_adapter.QualificationAdapterTests.test_changed_request_under_same_task_id_is_conflict) ... ok\ntest_child_cannot_expand_live_or_change_provenance (test_qualification_adapter.QualificationAdapterTests.test_child_cannot_expand_live_or_change_provenance) ... ok\ntest_historical_qualification_owner_cannot_be_rebound_as_current_script (test_qualification_adapter.QualificationAdapterTests.test_historical_qualification_owner_cannot_be_rebound_as_current_script) ... ok\ntest_interrupted_child_requires_reconciliation (test_qualification_adapter.QualificationAdapterTests.test_interrupted_child_requires_reconciliation) ... ok\ntest_main_returns_generic_error_without_leaking_profile_details (test_qualification_adapter.QualificationAdapterTests.test_main_returns_generic_error_without_leaking_profile_details) ... ok\ntest_profile_requires_operator_absolute_paths_and_canonical_bot_script (test_qualification_adapter.QualificationAdapterTests.test_profile_requires_operator_absolute_paths_and_canonical_bot_script) ... ok\ntest_request_is_exact_and_source_content_cannot_add_authority (test_qualification_adapter.QualificationAdapterTests.test_request_is_exact_and_source_content_cannot_add_authority) ... ok\n\n----------------------------------------------------------------------\nRan 8 tests in 0.011s\n\nOK\n"
+  },
+  {
+    "command": [
+      "bash",
+      "-c",
+      "node --test one-click-context/tests/*.test.*"
+    ],
+    "exit_code": 0,
+    "seconds": 2.29,
+    "log": "tests_other_6.log",
+    "tail": "es across real host restart (1932.269255ms)\n\u2714 NativeClient progress frames keep queued scan controls alive without resolving a pending request (1.093829ms)\n\u2714 final text uses the shared editable goal and preserves negations and numbers (1.448945ms)\n\u2714 press-to-talk requests microphone-only scope and stops tracks on release (0.865836ms)\n\u2714 release during permission prompt never starts a late recording (0.259931ms)\n\u2714 independent cancel is terminal, discards audio and invalidates late permission result (0.996172ms)\n\u2714 timeout, byte budget and permission failures are explicit terminal states (0.688167ms)\n\u2714 unsupported capabilities and editable transcript bounds fail closed (0.307294ms)\n\u2714 trusted transfer edits the repo goal and invalidates its prior request; STOP clears input (0.730622ms)\n\u2714 view shows unsupported device and ignores synthetic recording gesture (13.224062ms)\n\u2714 trusted STOP button and Escape cancel without ASR and show terminal receipt (1.072987ms)\n\u2714 production voice module has no network, speech provider or action dispatch (0.825445ms)\n\u2714 migrates legacy createdAt and assigns project/session (1.372139ms)\n\u2714 filters by project session date and text (0.812495ms)\n\u2714 facets are deterministic (0.203807ms)\n\u2714 restore preserves IDs and separates duplicates/conflicts (0.330118ms)\n\u2139 tests 121\n\u2139 suites 0\n\u2139 pass 121\n\u2139 fail 0\n\u2139 cancelled 0\n\u2139 skipped 0\n\u2139 todo 0\n\u2139 duration_ms 2230.405319\n"
+  }
+]

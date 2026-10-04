@@ -1,0 +1,121 @@
+{
+  "fixture_status": "SYNTHETIC_NOT_RUNTIME_EVIDENCE",
+  "frozen_before_implementation": true,
+  "queries": [
+    {
+      "query_id": "Q01",
+      "query": "запуск вручную",
+      "project": "Alpha",
+      "as_of": "2026-10-01",
+      "expected_source_refs": [
+        {
+          "namespace": "fixture-alpha",
+          "source_id": "A",
+          "revision_id": "r1",
+          "blob_sha256": "4398ce25379569a4a82409630d4314d335bd7a530d2dd277f35db6bd7e8b9a59",
+          "offset_space": "raw_bytes",
+          "start": 0,
+          "end": 158
+        }
+      ],
+      "hard_negative_refs": [
+        {
+          "namespace": "fixture-beta",
+          "source_id": "B",
+          "revision_id": "r1",
+          "blob_sha256": "feb56acd4ca6806f09f47759ed0538a847ef58d54913f754a0d7232846568486",
+          "offset_space": "raw_bytes",
+          "start": 0,
+          "end": 98
+        },
+        {
+          "namespace": "fixture-alpha",
+          "source_id": "A",
+          "revision_id": "r2",
+          "blob_sha256": "cf265916d76e1a0636fa0fbf78898aad9c5da12ece8dde944c40f172b89758e8",
+          "offset_space": "raw_bytes",
+          "start": 0,
+          "end": 166
+        }
+      ]
+    },
+    {
+      "query_id": "Q02",
+      "query": "текущее решение Alpha",
+      "project": "Alpha",
+      "as_of": "2026-10-04",
+      "expected_source_refs": [
+        {
+          "namespace": "fixture-alpha",
+          "source_id": "A",
+          "revision_id": "r2",
+          "blob_sha256": "cf265916d76e1a0636fa0fbf78898aad9c5da12ece8dde944c40f172b89758e8",
+          "offset_space": "raw_bytes",
+          "start": 0,
+          "end": 166
+        }
+      ],
+      "hard_negative_refs": [
+        {
+          "namespace": "fixture-alpha",
+          "source_id": "A",
+          "revision_id": "r1",
+          "blob_sha256": "4398ce25379569a4a82409630d4314d335bd7a530d2dd277f35db6bd7e8b9a59",
+          "offset_space": "raw_bytes",
+          "start": 0,
+          "end": 158
+        },
+        {
+          "namespace": "fixture-beta",
+          "source_id": "B",
+          "revision_id": "r1",
+          "blob_sha256": "feb56acd4ca6806f09f47759ed0538a847ef58d54913f754a0d7232846568486",
+          "offset_space": "raw_bytes",
+          "start": 0,
+          "end": 98
+        }
+      ]
+    },
+    {
+      "query_id": "Q03",
+      "query": "не существующая цитата 8719",
+      "project": "Alpha",
+      "expected_state": "NO_MATCH",
+      "expected_source_refs": []
+    },
+    {
+      "query_id": "Q04",
+      "query": "удалённый текущий источник",
+      "project": "Alpha",
+      "expected_state": "NO_MATCH",
+      "expected_source_refs": []
+    },
+    {
+      "query_id": "Q05",
+      "query": "формат данных Alpha",
+      "project": "Alpha",
+      "expected_conflict_sources": [
+        "C:r1",
+        "D:r1"
+      ],
+      "expected_state": "CONFLICT"
+    }
+  ],
+  "lineage": {
+    "A:r1": {
+      "valid_from": "2026-09-01",
+      "valid_until_exclusive": "2026-10-03"
+    },
+    "A:r2": {
+      "valid_from": "2026-10-03",
+      "supersedes": "A:r1"
+    },
+    "B:r1": {
+      "namespace": "fixture-beta"
+    },
+    "deleted_source:r1": {
+      "current_tombstone": true
+    }
+  },
+  "benchmark_note": "Minimal seed; extend independent held-out corpus before product qualification"
+}

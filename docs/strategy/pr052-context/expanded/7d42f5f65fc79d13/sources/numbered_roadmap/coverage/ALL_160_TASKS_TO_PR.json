@@ -1,0 +1,2858 @@
+[
+  {
+    "task_id": "G3-001",
+    "title": "Сверить владельцев и связать V3 с текущим кодом",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [],
+    "original_acceptance_criteria": [
+      "SHA фактического checkout записан; переезды путей обнаружены.",
+      "Ни один новый store/runtime не конкурирует с production owner."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-002",
+    "title": "GoalRequest с исходной формулировкой и требованиями",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-001"
+    ],
+    "original_acceptance_criteria": [
+      "Сохраняется точный original_text; интерпретации имеют автора.",
+      "Неизвестный target не заменяется догадкой; исправление голоса меняет revision."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-003",
+    "title": "Скомпилировать проверяемый пакет из существующего snapshot",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-002"
+    ],
+    "original_acceptance_criteria": [
+      "Все selected parts имеют hashes/ranges; omitted sources перечислены.",
+      "Старый V2 handoff импортируется явным адаптером; новый digest учитывает task и source revision."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-004",
+    "title": "Связать пакет, попытки и журнал без потери provenance",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-003"
+    ],
+    "original_acceptance_criteria": [
+      "Один operation ID не принимает другой payload.",
+      "Неопределённый send отличается от failed-before-send и требует reconciliation."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-005",
+    "title": "Отобразить подготовку и доставку частей в UI",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-004"
+    ],
+    "original_acceptance_criteria": [
+      "UI показывает selected/staged/delivered отдельно.",
+      "Клавиатура проходит подготовку и STOP; tested device указан."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-006",
+    "title": "Импортировать типизированный ответ и запрос следующего контекста",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-004"
+    ],
+    "original_acceptance_criteria": [
+      "Reply связан с request/packet/target; неизвестные IDs помещаются в review.",
+      "Запрос части разрешается только в выбранном snapshot; ссылка за его пределы не читается."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-007",
+    "title": "Поддержать ручное внедрение пользователем",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-006"
+    ],
+    "original_acceptance_criteria": [
+      "Фраза или кнопка «я внедрил» сохраняет assertion.",
+      "Наблюдатель получает конкретный repo/PR/commit; assertion не становится installed evidence."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-008",
+    "title": "Поддержать метки состояния и пользовательские исправления",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-002"
+    ],
+    "original_acceptance_criteria": [
+      "Rule/model/user provenance различимы.",
+      "Переиндексация сохраняет пользовательское исправление и инвалидирует stale derived label."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-009",
+    "title": "Собрать панель целей и непокрытых требований",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-006",
+      "G3-008"
+    ],
+    "original_acceptance_criteria": [
+      "Каждый активный requirement имеет источник, статус и следующую проверку.",
+      "Противоречащие данные отображаются; число повторений AI не повышает evidence level."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-010",
+    "title": "Создавать следующий R&D brief по новым данным",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-007",
+      "G3-009"
+    ],
+    "original_acceptance_criteria": [
+      "У задачи есть gap, новая evidence delta и критерий результата.",
+      "Повтор без новых данных не создаёт бесконечную кампанию; бюджет/stop condition соблюдены."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-011",
+    "title": "Подготовить квалификационный набор вертикального сценария",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-005",
+      "G3-006",
+      "G3-007"
+    ],
+    "original_acceptance_criteria": [
+      "Прогнаны wrong chat, missing part, ambiguous send, stale head, unexpected result.",
+      "Receipt указывает ОС, UI version, commit и точную область; Windows NOT_RUN не скрывается."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "G3-012",
+    "title": "Обновлять мастер и карту отложенного без дублирования",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "G3-009"
+    ],
+    "original_acceptance_criteria": [
+      "Все старые ID и байты сохранены либо отображены на version copy.",
+      "Новая задача указывает refinement_of; totals не заявлены как distinct implemented functions."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-001",
+    "title": "Версия контракта UI-маршрута и связь с существующими owners",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [],
+    "original_acceptance_criteria": [
+      "Обязательные поля валидируются; unknown поля не заполняются вымышленными значениями.",
+      "CLI/ACP fallback невозможен без отдельного выбора; V2-035 не является prerequisite."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-002",
+    "title": "Привязать фактический аккаунт, workspace и чат без отправки",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-001"
+    ],
+    "original_acceptance_criteria": [
+      "Два чата с одинаковым заголовком различаются либо автоотправка недоступна.",
+      "Смена аккаунта/чата обнаруживается до загрузки и отправки."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-003",
+    "title": "Скомпилировать неизменяемый task document с возвратным контрактом",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-001"
+    ],
+    "original_acceptance_criteria": [
+      "Каждое требование имеет источник или явно авторство системы.",
+      "Изменение цели/байтов создаёт новую ревизию; старая очередь неизменна."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-004",
+    "title": "Планировать части по ограничениям наблюдаемого UI",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-003"
+    ],
+    "original_acceptance_criteria": [
+      "Отклонённая большая часть делится без потери исходного диапазона.",
+      "Никакая очередь не объявляется полной при неотправленных частях."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-005",
+    "title": "Добавить durable outbox к существующему Core",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-001",
+      "UI3-003"
+    ],
+    "original_acceptance_criteria": [
+      "Перезапуск восстанавливает очередь без потери ревизии.",
+      "Истёкший lease не превращается в разрешение повторно нажать Send."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-006",
+    "title": "Квалифицировать реальные controls и режим ввода",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-002",
+      "UI3-005"
+    ],
+    "original_acceptance_criteria": [
+      "Многострочный текст не отправляется при вставке.",
+      "Перемещение фокуса или новый UI contract останавливает дальнейшие внешние действия."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-007",
+    "title": "Собрать локальный и удалённый draft с точной сверкой",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-003",
+      "UI3-004",
+      "UI3-006"
+    ],
+    "original_acceptance_criteria": [
+      "До Send видны назначение, состав и точный prompt.",
+      "Недоступная upload-функция не заменяется передачей одного локального пути в web chat."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-008",
+    "title": "Выполнять scoped auto-send без повторных вопросов",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-005",
+      "UI3-007"
+    ],
+    "original_acceptance_criteria": [
+      "Одна разрешённая задача отправляется без вопроса на каждую часть.",
+      "Новая область не наследует полномочия из ответа модели или документа."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-009",
+    "title": "Фиксировать отправку по наблюдаемой истории",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-008"
+    ],
+    "original_acceptance_criteria": [
+      "Видимый filename не маркируется как remote SHA verification.",
+      "Чужой похожий ответ не принимается за исходящее сообщение задачи."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-010",
+    "title": "Восстанавливать ambiguous send после падения",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-009"
+    ],
+    "original_acceptance_criteria": [
+      "Crash сразу после Send не создаёт вторую задачу при повторном старте.",
+      "Несколько совпадений дают конфликт, неполная история — unknown."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-011",
+    "title": "Вести coverage получения и использования частей",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-004",
+      "UI3-009"
+    ],
+    "original_acceptance_criteria": [
+      "Ответ «всё прочитал» не закрывает все chunk IDs.",
+      "Отсутствующая часть видна и имеет очередь повторной доставки/причину."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-012",
+    "title": "Импортировать результат из связанного UI",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-009",
+      "UI3-011"
+    ],
+    "original_acceptance_criteria": [
+      "Чужой task ID, незаконченный streaming и неполный JSON не завершают job.",
+      "Повторный импорт того же ответа идемпотентен."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-013",
+    "title": "Проверить изменение по реальным артефактам",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-012"
+    ],
+    "original_acceptance_criteria": [
+      "Success модели без артефактов остаётся unverified.",
+      "Проверки привязаны к конкретному commit и acceptance."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-014",
+    "title": "Превратить ручное «я внедрил» в проверку версии",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-013"
+    ],
+    "original_acceptance_criteria": [
+      "Голосовое утверждение не меняет статус на merge_verified само по себе.",
+      "Новый head после review требует актуальных доказательств."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-015",
+    "title": "Распараллелить подготовку и проверку с одним UI-писателем",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-003",
+      "UI3-005"
+    ],
+    "original_acceptance_criteria": [
+      "Два worker не изменяют один composer одновременно; разные чаты не обходят desktop-session mutex.",
+      "Конфликт по файлам/результатам становится интеграционной задачей."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-016",
+    "title": "Независимый от голоса STOP и честное возобновление",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-005",
+      "UI3-006",
+      "UI3-010"
+    ],
+    "original_acceptance_criteria": [
+      "Без ASR STOP работает.",
+      "Локальная остановка не отображается как доказанная отмена удалённой задачи."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-017",
+    "title": "Доступный текстовый путь; voice как необязательное расширение",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-007",
+      "UI3-012",
+      "UI3-016"
+    ],
+    "original_acceptance_criteria": [
+      "Обязательный критерий: пользователь без мыши связывает чат, готовит, отправляет и восстанавливает задачу.",
+      "Опциональный voice-критерий применяется только при подключении ASR: голос не выдаёт расширенные права. Отсутствие voice не блокирует UI3-018."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-018",
+    "title": "Квалифицировать живой UI маршрут на Windows",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-010",
+      "UI3-011",
+      "UI3-012",
+      "UI3-016",
+      "UI3-017"
+    ],
+    "original_acceptance_criteria": [
+      "Пройден нормальный цикл и crash/retry/wrong-target случаи.",
+      "Offline симулятор и Linux tests не названы Windows/live проверкой."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-019",
+    "title": "Инвалидировать устаревший UI adapter и восстановить его",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-018"
+    ],
+    "original_acceptance_criteria": [
+      "Удалённая кнопка/изменённый composer останавливает отправку до Send.",
+      "После обновления адаптера повторяется затронутая qualification, а не весь бессвязный suite."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "UI3-020",
+    "title": "Связать проверенный merge с обновлением и новой capability",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "UI3-014",
+      "UI3-018"
+    ],
+    "original_acceptance_criteria": [
+      "Merge без соответствующего release не запускает установку случайной версии.",
+      "Capability публикуется после фактической установленной проверки."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-001",
+    "title": "Зафиксировать владельца состояния и контракт расширения",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [],
+    "original_acceptance_criteria": [
+      "Зафиксированы текущий SHA и фактические API durable/native/context владельцев; Oct3 baseline не выдан за current main.",
+      "Каждая новая сущность имеет существующий source of truth и план совместимой миграции.",
+      "Прототип JSON/read-only planner не создаёт второй production scheduler."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-002",
+    "title": "Неизменяемые входы и общий manifest кампании",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-001"
+    ],
+    "original_acceptance_criteria": [
+      "Каждый узел ссылается на snapshot ID, commit и хеш входного manifest.",
+      "Полнота raw capture, unresolved graph edges и omissions представлены отдельно.",
+      "Два работника получают один и тот же зафиксированный вход, даже если current main изменился."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-003",
+    "title": "Capability registry с проверенными эффектами и ресурсами",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-001"
+    ],
+    "original_acceptance_criteria": [
+      "Binding имеет version/digest, typed inputs, effects, resource estimates и verifier.",
+      "Статический discovery не выполняет найденные программы или неизвестный --help.",
+      "Unknown effects и needs access/version/configuration различаются с причиной."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-004",
+    "title": "Каноническая идентичность ресурсов Windows",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-003"
+    ],
+    "original_acceptance_criteria": [
+      "Case aliases, separator aliases, UNC, volume, symlink и junction проходят реальные Windows fixtures.",
+      "Read/write scopes привязаны к физической идентичности или отмечены unknown.",
+      "Clipboard, window/chat и Git metadata имеют устойчивые resource IDs."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-005",
+    "title": "Общий компилятор голосового и текстового DAG",
+    "completion_owner": "ROADMAP-PR-016",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-002",
+      "PAR3-003"
+    ],
+    "original_acceptance_criteria": [
+      "Исходный текст/транскрипт и corrections сохраняются отдельно от интерпретации.",
+      "Циклы, duplicate IDs, missing inputs, version mismatch и unknown capability обнаружены до dispatch.",
+      "План имеет ревизию, хеш и конкретные output criteria; retrieved text не становится пользовательской командой."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-006",
+    "title": "Граф конфликтов исполнения и будущей интеграции",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-004",
+      "PAR3-005"
+    ],
+    "original_acceptance_criteria": [
+      "Read/read одного immutable snapshot допускается параллельно; write/read и write/write пересечения сериализуются.",
+      "execution_write_set и integration_write_set независимы: разные worktree могут готовить будущий конфликтующий patch.",
+      "Unknown runtime effects получают эксклюзивное выполнение; поздний фактический diff заменяет предположение о merge overlap."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-007",
+    "title": "Admission control для CPU, RAM, UI и провайдеров",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-006"
+    ],
+    "original_acceptance_criteria": [
+      "Начальный профиль Dell отмечен proposal; каждое решение сохраняет свободную и зарезервированную ёмкость.",
+      "Нельзя получить lease, если превышены worker, memory estimate, heavy, UI или provider slots.",
+      "Базовые UI/STOP не зависят от свободного рабочего слота."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-008",
+    "title": "Атомарные leases, fencing и единственный DB writer",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-001",
+      "PAR3-007"
+    ],
+    "original_acceptance_criteria": [
+      "Выдача lease и resource reservation атомарны в существующем store.",
+      "Каждая попытка получает новый fencing token и checkpoint references.",
+      "Истёкший worker не подтверждает success и не перезаписывает новую ревизию."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-009",
+    "title": "Сериализация передачи в выбранный UI-чат",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-005",
+      "PAR3-008"
+    ],
+    "original_acceptance_criteria": [
+      "Один owner удерживает chat/composer/clipboard scopes от draft до observed send result.",
+      "Envelope связывает operation ID, target chat, snapshot и content/part hashes.",
+      "Ручной takeover и смена вкладки проверяются до следующего действия.",
+      "Разработка и приёмка адаптера не включают runtime: перед внешним действием проверены activation_prerequisites и актуальные qualified receipts по contracts/ACTIVATION_GATES.json."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-010",
+    "title": "Сверка неопределённых внешних эффектов",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-009"
+    ],
+    "original_acceptance_criteria": [
+      "Timeout после click/send ведёт в effect_unknown, а не в автоматический повтор.",
+      "Повторная доставка job проверяет существующий receipt либо внешний operation ID/content hash.",
+      "Отсутствие способа достоверной сверки сохраняет неопределённость и понятный next action."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-011",
+    "title": "Общий кеш доказательств и безопасное переиспользование",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-002",
+      "PAR3-005"
+    ],
+    "original_acceptance_criteria": [
+      "Ключ включает source snapshot, selected input hashes, goal, parser/rules и capability version.",
+      "Raw данные не скачиваются повторно для независимых потребителей одного ключа без необходимости.",
+      "Кеш подтверждает hashes, completeness и freshness; derived claims остаются атрибутированы."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-012",
+    "title": "Worktree на отдельную write-задачу с одним Git-owner",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-006",
+      "PAR3-008"
+    ],
+    "original_acceptance_criteria": [
+      "Создание/удаление worktree и изменения Git metadata выполняет один owner.",
+      "Каждая write-задача имеет base SHA, отдельный путь/ветку и разрешённый output scope.",
+      "Общие инструменты, файлы вне worktree, сети и процессы входят в эффекты отдельно."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-013",
+    "title": "Последовательный integrator с фактическим diff",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-012"
+    ],
+    "original_acceptance_criteria": [
+      "Интегратор принимает patch только для ожидаемого base и после independent review.",
+      "Пересечения вычислены по реальным изменённым путям и повторно проверены после первого patch.",
+      "Один owner изменяет integration branch; конфликт имеет отдельную задачу и проверяемое разрешение."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-014",
+    "title": "Резервирование бюджета и ограничения backlog",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-007",
+      "PAR3-008"
+    ],
+    "original_acceptance_criteria": [
+      "Перед платным эффектом резервируются configured верхние оценки запросов, входа/выхода и стоимости.",
+      "Unknown price/quota не считается нулём; UI и API budgets не смешиваются.",
+      "Одинаковые не начатые события coalesce; stale jobs становятся superseded с сохранением исходных намерений."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-015",
+    "title": "STOP независимо от голоса и корректная отмена",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-008",
+      "PAR3-010"
+    ],
+    "original_acceptance_criteria": [
+      "GUI/keyboard STOP доступен до голосовой интеграции и без слота работника.",
+      "После STOP нет новых lease/dispatch; каждый running node получает observed completed/cancelled/unknown.",
+      "Компенсация внешнего эффекта — отдельная операция, не стирание receipt.",
+      "Базовый local keyboard STOP квалифицируется независимо от ASR и без живой отправки: fake adapters проверяют очередь/отмену до активации PAR3-009 и PAR3-018."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-016",
+    "title": "Resume с верификацией входов и остатка DAG",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-011",
+      "PAR3-014",
+      "PAR3-015"
+    ],
+    "original_acceptance_criteria": [
+      "После restart проверены hashes, SHA, grants, capability version и неопределённые эффекты.",
+      "Успешные подтверждённые узлы переиспользуются, остальной DAG перепланируется.",
+      "Истёкшие reservations освобождены только после определения судьбы эффекта."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-017",
+    "title": "Независимая проверка AI-результата и ручного внедрения",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-005",
+      "PAR3-010",
+      "PAR3-013"
+    ],
+    "original_acceptance_criteria": [
+      "AI claims, patch, тестовые свидетельства и пользовательское сообщение о внедрении различаются.",
+      "Проверки связаны с точным code snapshot и исходными acceptance criteria.",
+      "Ручное внедрение пользователя входит в тот же путь наблюдения результата; отсутствие automerge не блокирует сценарий."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-018",
+    "title": "Merge evidence → единственный updater → capability",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-008",
+      "PAR3-017"
+    ],
+    "original_acceptance_criteria": [
+      "Наблюдаемые repo/PR/head/merge commit и проверки соответствуют ожидаемому изменению.",
+      "Происхождение сборки и совместимость миграции проверены до переключения версии.",
+      "Capability доступна только после проверки установленной версии и её результата.",
+      "Разработка и приёмка адаптера не включают runtime: перед внешним действием проверены activation_prerequisites и актуальные qualified receipts по contracts/ACTIVATION_GATES.json."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-019",
+    "title": "Планирование по доступным возможностям и aging",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-003",
+      "PAR3-007",
+      "PAR3-014"
+    ],
+    "original_acceptance_criteria": [
+      "Недоступная версия/доступ/квота блокирует только затронутый узел с точной причиной.",
+      "Приоритет задаёт доступность/STOP, reconciliation, interactive, background; aging уменьшает голодание background.",
+      "Laya выбирает только разрешённые candidate IDs и может abstain; она не меняет grants или budgets."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-020",
+    "title": "Журнал решений и представление зависимостей",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-008",
+      "PAR3-010",
+      "PAR3-016"
+    ],
+    "original_acceptance_criteria": [
+      "Каждый transition содержит campaign/node/attempt/revision, hashes, evidence и причину.",
+      "UI объясняет ready/running/waiting/blocked/unknown и владельца конфликтного ресурса.",
+      "Projection перестраивается из событий; метки поиска сохраняют provenance и ручные исправления."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-021",
+    "title": "Доступный контроль очереди; голосовой parity как отдельное расширение",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-015",
+      "PAR3-020"
+    ],
+    "original_acceptance_criteria": [
+      "Queue, причины ожидания, локальный STOP, исправление текстовой цели и resume доступны клавиатурой и выбранным screen reader.",
+      "Полный базовый сценарий завершается без ASR, микрофона, голосовой модели или voice adapter.",
+      "Клавиатурная проверка выполнена на Windows устройстве с реальными результатами, не только по атрибутам UI."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-022",
+    "title": "Пилот параллелизма на Dell и fault injection",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-006",
+      "PAR3-016",
+      "PAR3-018",
+      "PAR3-019",
+      "PAR3-021"
+    ],
+    "original_acceptance_criteria": [
+      "Зафиксированы устройство/runtime, snapshots, corpus, worker profile и ручной baseline.",
+      "Измерены RAM, queue age, время до verified outcome, responsiveness STOP и частота unknown effects.",
+      "Fault fixtures покрывают restart, stale worker, lost receipt, changed chat, alias collision, budget exhaustion и corrupted artifact.",
+      "PAR3-021 принимается по baseline keyboard/screen-reader критериям; ASR/voice parity не являются условием начала или завершения этого пилота."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-023",
+    "title": "Инвалидация устаревших исследовательских ветвей",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-011",
+      "PAR3-016",
+      "PAR3-020"
+    ],
+    "original_acceptance_criteria": [
+      "Новый snapshot или capability version инвалидирует зависимые claims/skills по lineage.",
+      "Исторические результаты остаются доступными; текущие задачи получают явный refresh requirement.",
+      "Непокрытые критерии формируют следующий evidence-linked R&D brief."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "PAR3-024",
+    "title": "Продвижение проверенного сценария в повторяемый навык",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "PAR3-022",
+      "PAR3-023"
+    ],
+    "original_acceptance_criteria": [
+      "Кандидат содержит версии, scopes, inputs/outputs, recovery, evidence и условия инвалидирования.",
+      "Promotion опирается на новые случаи и отказы, а не один успешный прогон.",
+      "Повтор использует прежнее совместимое разрешение без повторных вопросов; новые эффекты требуют отдельного scope решения."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-001",
+    "title": "Закрепить владельцев и типы UpdateCase/Evidence",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [],
+    "original_acceptance_criteria": [
+      "Свежий snapshot и diff к V2 owner map сохранены; новые tables/DTO имеют одного владельца и migration plan.",
+      "AI statement, user assertion, repo observation, test evidence, release observation и device observation имеют разные типы.",
+      "Unknown, failed и stale различимы; импорт документа не может установить verified/usable напрямую."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-002",
+    "title": "Реестр целей и покрытия без потери пользовательских формулировок",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001"
+    ],
+    "original_acceptance_criteria": [
+      "Оригинальная формулировка и её digest сохранены; интерпретация, приоритет и критерии представлены отдельно.",
+      "Каждый критерий связан с source/implementation/device evidence или имеет явный gap/deferred reason.",
+      "Метрика покрытия публикует знаменатель; критический незакрытый критерий исключает общий статус цели achieved."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-003",
+    "title": "Связать ContextPack с ожидаемым результатом AI",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-002"
+    ],
+    "original_acceptance_criteria": [
+      "Manifest включает repo identity, snapshot commit/overlay, chunk hashes, omissions, goal IDs и acceptance version.",
+      "RETURN_CONTRACT требует изменённые пути, критерии, подтверждения и оставшиеся gaps; отсутствие поля не заменяется успехом.",
+      "Изменение manifest создаёт новую revision; receipt относится только к точному digest переданного пакета."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-004",
+    "title": "Связать наблюдения UI доставки с UpdateCase",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-003"
+    ],
+    "original_acceptance_criteria": [
+      "Prepared, attachment_confirmed, message_observed и response_observed различимы; upload не означает прочтение всех частей моделью.",
+      "Receipt хранит target profile/version, chat identity, request ID и наблюдение; новый destination не берёт grant старого чата.",
+      "Unknown после потери связи требует reconciliation; повторное нажатие Send без определения исхода не выполняется."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-005",
+    "title": "Checkpoint пользователя «я применил / merged»",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-002",
+      "EVO3-003"
+    ],
+    "original_acceptance_criteria": [
+      "UI принимает PR URL, commit URL/SHA или local build reference вместе с исходным текстом пользователя.",
+      "Assertion запускает чтение evidence в рамках уже согласованного scope; не устанавливает verified сама.",
+      "Отсутствие PR допустимо для manual_commit/local_build; UI явно показывает выбранное происхождение."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-006",
+    "title": "Импорт AI claims и артефактов без доверенного исполнения",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-003",
+      "EVO3-004"
+    ],
+    "original_acceptance_criteria": [
+      "Каждый claim ссылается на request ID и criterion; цитата AI доступна без переатрибуции пользователю.",
+      "Команды/инструкции из ответа и исходников хранятся как данные, пока не зарегистрированы точным adapter.",
+      "Повреждённый, частичный или дублирующий ответ не закрывает критерии; все приложения содержат hashes."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-007",
+    "title": "Зафиксировать целевую ревизию и ручной путь commit",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-005",
+      "EVO3-006"
+    ],
+    "original_acceptance_criteria": [
+      "Сохраняются роли каждого SHA, repo stable identity и разрешённая target ref; текущая branch name не подменяет immutable commit.",
+      "Manual commit проверяется по свежему Git/remote evidence и достижимости; local overlay сохраняется отдельно.",
+      "При смене repo/account/ref дальнейший update не наследует прежний target scope."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-008",
+    "title": "Сопоставить merge, squash и rebase без SHA shortcuts",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-007"
+    ],
+    "original_acceptance_criteria": [
+      "Нужны правильные repo/base/PR/head и merged state; pre-merge test SHA не считается интеграцией.",
+      "Squash/rebase проверяются по итоговой связи и финальному diff/дереву; равенство PR head и результата не требуется.",
+      "Новый head, неизвестный mapping или последующий revert не дают coverage для текущего поведения без повторной проверки."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-009",
+    "title": "Проверять критерии на итоговой ревизии",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-002",
+      "EVO3-006",
+      "EVO3-007",
+      "EVO3-008"
+    ],
+    "original_acceptance_criteria": [
+      "TestRun содержит source commit/tree/overlay digest, verifier version, environment, command binding, fixture digest и artifacts.",
+      "Выполняются только зарегистрированные проверочные операции в согласованной изоляции; scan не запускает код repo.",
+      "Тесты прежнего PR head не объявляются доказательством более нового release commit без проверки применимости."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-010",
+    "title": "Граф устаревания evidence и избирательная повторная проверка",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-002",
+      "EVO3-007",
+      "EVO3-009"
+    ],
+    "original_acceptance_criteria": [
+      "Head/base/asset/installed build/UI profile/grant changes распространяют stale на зависимые evidence.",
+      "Исторический факт не удаляется; current applicability пересчитывается отдельной проекцией.",
+      "Reuse незатронутого evidence содержит обоснование, dependency digest и policy version."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-011",
+    "title": "Observer и reconciliation сигналов без дублирования",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-007",
+      "EVO3-008",
+      "EVO3-010"
+    ],
+    "original_acceptance_criteria": [
+      "Дубли и перестановка событий не создают повторных installs; identity включает repo/case/observation revision.",
+      "Недоступный источник сохраняет pending с backoff и budget; не выдумывает factual state.",
+      "Следующий эффект использует заново проверенные изменяемые условия, а не только старый webhook payload."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-012",
+    "title": "Проекция статуса и объяснимые guards",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-004",
+      "EVO3-005",
+      "EVO3-006",
+      "EVO3-008",
+      "EVO3-009",
+      "EVO3-010",
+      "EVO3-011"
+    ],
+    "original_acceptance_criteria": [
+      "Для каждого guard видны pass/fail/unknown/stale и ссылки на основания.",
+      "AI response, user merged assertion, integration verified и capability usable не сводятся к одному ready.",
+      "Проекция воспроизводится из тех же events/evidence детерминированно; её UI-переключатель не обходит policy."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-013",
+    "title": "Связать release с исходниками и точным asset",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-007",
+      "EVO3-009",
+      "EVO3-010",
+      "EVO3-012"
+    ],
+    "original_acceptance_criteria": [
+      "Resolved tag commit, asset ID/digest и build metadata закреплены в ReleaseBinding; target_commitish не используется как proof существующего tag.",
+      "Artifact digest сравнивается с реально скачанными bytes; отсутствие требуемой подписи/provenance остаётся gap.",
+      "Release из descendant commit проходит квалификацию собственной ревизии, включая значимые дополнительные изменения."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-014",
+    "title": "Точка восстановления и политика данных",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-010"
+    ],
+    "original_acceptance_criteria": [
+      "Checkpoint связывает build, data schema, backup manifest и проверяемые hashes; restore rehearsal пройден.",
+      "Политика различает обратимую схему, совместимый rollback и восстановление данных с оценкой последующих записей.",
+      "Отозванная/несовместимая старая сборка не выбирается автоматически; failure plan фиксируется заранее."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-015",
+    "title": "Stage и репетиция миграции",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-013",
+      "EVO3-014"
+    ],
+    "original_acceptance_criteria": [
+      "Staged candidate имеет проверенный digest и только свой выделенный root; production data не меняются при rehearsal.",
+      "Миграция копии проверяет schema, counts и ключевые связи; old scenario и new capability smoke проходят.",
+      "Stage и cleanup не затрагивают unrelated paths; неизвестные installer effects не получают execution автоматически."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-016",
+    "title": "Установка и независимый receipt устройства",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-011",
+      "EVO3-014",
+      "EVO3-015",
+      "EVO3-019"
+    ],
+    "original_acceptance_criteria": [
+      "Один installation lease; event before/after change и recovery marker сохраняются durable.",
+      "Receipt связывает installation ID/device ID/OS, active artifact digest, host/adapter version и process observation.",
+      "Restart после переключения до receipt вызывает наблюдение active state, а не второй install.",
+      "До unattended установки в рабочий экземпляр пройдены baseline local keyboard STOP, действующий scoped grant и qualification существующего predecessor updater на точных device/installation/target. Test builds собирают недостающие receipts только в изолированном bounded_qualification_session с теми же STOP/scope/current-target и effect limits. Post-install qualification новой capability остаётся отдельной стадией."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-017",
+    "title": "Регистрация capability и binding к установленной сборке",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-009",
+      "EVO3-013"
+    ],
+    "original_acceptance_criteria": [
+      "Capability имеет typed arguments/effects/verifier/retry/recovery и binding к известному entrypoint.",
+      "Manifest не даёт разрешения; found function и registered operation хранятся раздельно.",
+      "Compatibility diff проверяет не только номер версии, но и target/effects/schema semantics."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-018",
+    "title": "Qualification capability на конкретном устройстве",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-015",
+      "EVO3-016",
+      "EVO3-017"
+    ],
+    "original_acceptance_criteria": [
+      "Испытание выполняется на test target без пользовательских внешних эффектов и связывается с exact device/build/binding.",
+      "Версия target app и профиль UI учитываются; несовместимость не маскируется зелёными repo tests.",
+      "Keyboard/STOP/recovery входят в испытание; voice не является prerequisite базовой отмены.",
+      "Первичная квалификация adapter выполняется в центральном bounded_qualification_session: full qualification не требуется для сбора самой себя, но baseline keyboard STOP, scope, текущий точный target и ограниченные effects обязательны; это не открывает unattended runtime."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-019",
+    "title": "Постоянный scope для согласованного цикла обновления",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-001",
+      "EVO3-002",
+      "EVO3-017"
+    ],
+    "original_acceptance_criteria": [
+      "Grant включает principal/device/installation/targets/channel/effects/version policy/budgets/revocation.",
+      "Повторные действия внутри scope выполняются без нового вопроса; policy check сохраняет grant revision.",
+      "Новый account/destination/destructive effect/денежный эффект или расширение data root требует конкретного нового scope; AI не может его выдать.",
+      "Grant проверяется до первого соответствующего внешнего эффекта, включая install; само наличие карточки или UI progress не выдаёт scope."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-020",
+    "title": "Условие usable и привязка существующих workflows",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-012",
+      "EVO3-016",
+      "EVO3-017",
+      "EVO3-018",
+      "EVO3-019"
+    ],
+    "original_acceptance_criteria": [
+      "Usable вычисляется из registry/binding/install/qualification/grant/revocation; запись enabled из AI отвергается.",
+      "Workflow фиксирует совместимый contract и разрешённый target; новую capability нельзя применять к другим приложениям по сходству названия.",
+      "Изменение active build, scope или UI profile инвалидирует только затронутую пригодность до проверки."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-021",
+    "title": "Следующий R&D документ из доказанных gaps",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-002",
+      "EVO3-003",
+      "EVO3-005",
+      "EVO3-006",
+      "EVO3-010",
+      "EVO3-012"
+    ],
+    "original_acceptance_criteria": [
+      "Brief различает missing evidence, missing code, missing release и missing device binding; каждый gap имеет цель и источник.",
+      "Выполненные и deferred требования сохраняются в index; повторная реализация закрытой функции не предлагается без причины.",
+      "Приоритет сравнивает полезность, снятие блокировки, стоимость и uncertainty; веса прозрачны и изменяемы.",
+      "Brief строится до release/install/usable: достаточно текущего ledger с manual checkpoint или verified evidence. Данные установленного устройства добавляются при наличии; их отсутствие отражается как gap."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-022",
+    "title": "Координатор параллельных proposals",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-003",
+      "EVO3-007",
+      "EVO3-010",
+      "EVO3-012"
+    ],
+    "original_acceptance_criteria": [
+      "Worker получает snapshot/request/goal IDs, read scope, predicted write set, contract dependency set и return contract.",
+      "Конфликты по файлам и общим контрактам приводят к integration task; stale base не применяется молча.",
+      "Сумма зелёных worker tests не заменяет qualification интегрированной ревизии; UI send/install/schema write serial leases.",
+      "Подготовка parallel proposals доступна до install/usable и не зависит от готового следующего brief; если worker требует внешнего эффекта, применяется отдельный activation gate."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-023",
+    "title": "Доступная панель прогресса и прекращения",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-005",
+      "EVO3-012",
+      "EVO3-020"
+    ],
+    "original_acceptance_criteria": [
+      "Основные действия доступны клавиатурой и имеют проверенные accessible names; подтверждение и ошибки читаются screen reader.",
+      "Панель различает «ты сообщил», «репозиторий проверен», «готов релиз», «установлено», «операция доступна».",
+      "STOP и Resume не зависят от ASR; после отмены видно, какой эффект завершён/неизвестен и что будет проверено перед повтором.",
+      "Готовность панели EVO3-023 не выдаёт permission и не подменяет ранний baseline STOP/device qualification; external effects проверяют activation_prerequisites отдельно."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "EVO3-024",
+    "title": "Пройти общую qualification feedback loop",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "EVO3-008",
+      "EVO3-010",
+      "EVO3-015",
+      "EVO3-018",
+      "EVO3-019",
+      "EVO3-020",
+      "EVO3-021",
+      "EVO3-022",
+      "EVO3-023"
+    ],
+    "original_acceptance_criteria": [
+      "Все восемь экспериментов имеют pinned fixtures, исходные observations, результаты и explicit pass/fail/unknown.",
+      "0 ложных usable и 0 неразрешённых внешних эффектов — обязательные gates; ускорение не компенсирует нарушение.",
+      "Отчёт указывает, что проверено offline, на Windows и на реальном UI отдельно; непроверенные стадии не закрываются."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-01",
+    "title": "Закрепить владельцев данных и версию расширения",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [
+      8
+    ],
+    "original_dependencies": [],
+    "original_acceptance_criteria": [
+      "Зафиксированы контракт и миграция для task ID, packet SHA, attempt ID, наблюдений и execution job ID; существующие ручные операции продолжают работать.",
+      "Все записи задачи и наблюдений принадлежат существующему SQLite-хранилищу; все исполняемые задания принадлежат Core.",
+      "Текущие OPERATOR_REPORTED, dispatch_allowed=false и LOCAL_TESTS_VERIFIED не переименованы в подтверждения сервиса или установки.",
+      "Прочитанная конфигурация max_parallel=1 сохраняется; неподдерживаемые новые job kinds отклоняются до отдельной квалификации."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-02",
+    "title": "Сохранённый профиль ограниченной автоматизации",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-01"
+    ],
+    "original_acceptance_criteria": [
+      "Профиль перечисляет точные namespace, репозиторий, допустимые ветки/пути, действия, группы источников, шаблоны заданий и лимиты.",
+      "Каждая попытка привязана к digest актуальной версии профиля; профиль из документа или ответа AI не принимается.",
+      "Разрешённое действие выполняется без повторного запроса; действие вне области показывает конкретную разницу требуемой настройки.",
+      "Отзыв разрешения блокирует новые действия и сохраняет наблюдение об уже начатом внешнем эффекте."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-03",
+    "title": "Привязка указанной пользователем вкладки",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-02"
+    ],
+    "original_acceptance_criteria": [
+      "Дескриптор содержит роль, origin, доступный устойчивый ID диалога/репозитория, версию привязки и временный указатель на браузер/вкладку.",
+      "Выбор подтверждается видимым превью адресата; одинаковые заголовки вкладок не дают автоматического совпадения.",
+      "Навигация, смена аккаунта, новый диалог в том же tab ID и неоднозначность после перезапуска дают REBIND_REQUIRED.",
+      "Перемещение вкладки не требует нового выбора, если её проверенная идентичность сохранилась."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-04",
+    "title": "Квалификация адаптера интерфейса Grok Build",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-03"
+    ],
+    "original_acceptance_criteria": [
+      "Адаптер сообщает поддержку и ограничения чтения диалога, загрузки файла, проверки черновика, Send и наблюдения результата.",
+      "Версия адаптера связана с наблюдаемым вариантом интерфейса; изменённые ориентиры не приводят к случайному клику.",
+      "Вход выполняет пользователь; истёкшая сессия вызывает состояние NEEDS_LOGIN с сохранением задачи.",
+      "Квалификация не предполагает наличие официального API Grok Build; результат UNSUPPORTED оставляет ручной экспорт доступным."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-05",
+    "title": "Документ изменения с происхождением и покрытием",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-01",
+      "TAB4-02"
+    ],
+    "original_acceptance_criteria": [
+      "В документ входят точные goal/scope/criteria, repo SHA, packet SHA, ID частей, связи, известные пробелы и шаблон связанного ответа.",
+      "Полный snapshot и частичный пакет различимы; неприсутствующие части не считаются прочитанными AI.",
+      "Передаваемые группы личных данных соответствуют профилю; невыбранные источники и найденные секреты исключены с видимым отчётом.",
+      "Многочастная передача имеет manifest и продолжение; ограничение размера не приводит к молчаливому обрезанию."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-06",
+    "title": "Заполнение проверяемого черновика в выбранном чате",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-04",
+      "TAB4-05"
+    ],
+    "original_acceptance_criteria": [
+      "Перед заполнением проверяются профиль, источник, идентичность вкладки и версия адаптера.",
+      "Вложение связано с локальными именем/размером/document SHA доступным квалифицированным способом; степень подтверждения отражена явно.",
+      "Существующий чужой черновик не затирается; конфликт даёт отдельное состояние и сохраняет исходный документ.",
+      "Автозаполнение заканчивается на DRAFT_ATTACHED; отправка имеет отдельный записанный intent."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-07",
+    "title": "Отправка с журналом намерения и сверкой неизвестного исхода",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-06"
+    ],
+    "original_acceptance_criteria": [
+      "Intent фиксируется до Send и связывает attempt ID, task ID, packet SHA, target binding и profile digest.",
+      "Одна попытка допускает не более одного внешнего действия Send; повтор клиентского запроса возвращает состояние той же попытки.",
+      "Подтверждение содержит наблюдаемый message ID, если доступен, либо ограниченный квалифицированный UI receipt с происхождением.",
+      "Сбой после возможного клика даёт NEEDS_RECONCILIATION; новая отправка запрещена до разрешения исхода.",
+      "OPERATOR_REPORTED и UI_OBSERVED остаются разными типами доказательств."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-08",
+    "title": "Получение и импорт связанного ответа",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-07"
+    ],
+    "original_acceptance_criteria": [
+      "Ответ из выбранного диалога связан с попыткой отправки; требуется точный task ID и packet SHA для импорта.",
+      "Схема ограничена и проверена до записи; команды, новые права и пути из ответа не исполняются.",
+      "Coverage, missing context, findings и ссылки сохраняются с происхождением; DONE остаётся утверждением.",
+      "Повтор старого ответа не откатывает более новую голову результата."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-09",
+    "title": "Связь второй вкладки с репозиторием и PR",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-03",
+      "TAB4-08"
+    ],
+    "original_acceptance_criteria": [
+      "Вторая вкладка проверена на зарегистрированный owner/repo и роль REPOSITORY_STATUS.",
+      "PR number, base branch, head repository и head SHA связаны с задачей и имеют источник наблюдения.",
+      "Ссылка из ответа разрешается только в рамках профиля; редирект в другой repo/fork требует отдельного разбора.",
+      "При отсутствии PR остаётся состояние PR_NOT_BOUND, а не автоматически выбранный последний PR."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-10",
+    "title": "Проверка merge и итоговой удалённой версии",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-09"
+    ],
+    "original_acceptance_criteria": [
+      "Голосовое или текстовое «merged» инициирует проверку и не устанавливает merge_verified.",
+      "UI-наблюдение хранит UI_OBSERVED; квалифицированный Git/интеграционный источник хранит отдельную квитанцию происхождения.",
+      "Подтверждены repo identity, PR/head, способ merge, целевая ветка и точный SHA кандидата; squash/rebase не используют ошибочное равенство head и merge SHA.",
+      "Изменение ветки после наблюдения не подменяет закреплённую версию; новая версия требует новой квалификации."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-11",
+    "title": "Получение точного commit в изолированную область",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-10"
+    ],
+    "original_acceptance_criteria": [
+      "Разрешённый remote выбирается из профиля; URL из AI-ответа не становится источником исполнения.",
+      "Скачанные исходники сверены с закреплённым SHA/tree; для архива отдельно проверяются полнота и соответствие содержимого.",
+      "Файлы попадают в уникальный staging; hooks, пакетные scripts и инструкции README не исполняются при получении.",
+      "Квоты диска/размера и состояние частичного получения отражены в журнале."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-12",
+    "title": "Квалификация кандидата зарегистрированными заданиями",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-11",
+      "TAB4-01"
+    ],
+    "original_acceptance_criteria": [
+      "План запуска выбирает зарегистрированные templates и зависимости окружения; новые команды требуют отдельной регистрации.",
+      "Проверки относятся к точному итоговому SHA кандидата и зафиксированной версии окружения.",
+      "Локальные тесты, CI и устройство имеют разные поля доказательств; CI другого SHA не закрывает текущую проверку.",
+      "Существующая политика Core, лимиты времени и отмена действуют без обхода через новый UI-адаптер."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-13",
+    "title": "Сравнение возможностей и инвалидирование старых навыков",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-12"
+    ],
+    "original_acceptance_criteria": [
+      "Capability manifest содержит стабильный ID, версию контракта, входы/выходы, требуемые права, состояние проверки и ссылку на реализацию.",
+      "Diff различает новое поведение, переименование, удаление и несовместимое изменение.",
+      "Старые automation skills, зависящие от изменённого контракта, получают REQUALIFICATION_REQUIRED.",
+      "Права и критерии приёмки не расширяются самим обновлением; изменения проверяющего компонента выделены отдельно."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-14",
+    "title": "Пробная миграция и восстанавливаемое состояние",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-13"
+    ],
+    "original_acceptance_criteria": [
+      "Миграция выполняется на копии авторитетного хранилища; исходные данные и их происхождение сохраняются.",
+      "Проверяется чтение существующих task/review/job/library записей после миграции.",
+      "Определено, какие записи появляются после переключения и как они сохраняются при возврате версии.",
+      "Фиксированы схема backup, контроль целостности и способ восстановления после прерывания."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-15",
+    "title": "Атомарная активация и проверенный откат",
+    "completion_owner": "ROADMAP-PR-018",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-14"
+    ],
+    "original_acceptance_criteria": [
+      "Активируется только артефакт квалифицированного SHA с актуальными proof/profile/capability bindings.",
+      "Переключение версии атомарно; фиксируются old/new version, схема данных и причина.",
+      "Health check проверяет процесс, библиотеку и зарегистрированные команды; сбой вызывает проверенный откат.",
+      "Задания старой версии продолжаются только при доказанной совместимости; обновление worker/evaluator имеет отдельную квалификацию."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-16",
+    "title": "Доступное управление текстом и голосом",
+    "completion_owner": "ROADMAP-PR-016",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-02",
+      "TAB4-03",
+      "TAB4-07"
+    ],
+    "original_acceptance_criteria": [
+      "Выбор задачи, привязка вкладки, просмотр документа, запуск, пауза и отмена доступны с клавиатуры и имеют доступные названия.",
+      "Голосовая команда показывает текст и выбранный объект; неоднозначность не выполняет внешнее действие.",
+      "Пауза не требует точной фразы в текущем документе и немедленно блокирует новые шаги.",
+      "Потеря микрофона оставляет текстовый путь; состояние и ошибки доступны вспомогательным технологиям.",
+      "Для настроенного ограниченного workflow не запрашивается одно и то же разрешение на каждом шаге."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-17",
+    "title": "Ограниченный автономный цикл улучшений",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-08",
+      "TAB4-15",
+      "TAB4-16"
+    ],
+    "original_acceptance_criteria": [
+      "Цикл имеет явные max iterations/time/transfers и список критериев завершения; бесконечное выполнение не является режимом по умолчанию.",
+      "Следующий запрос формируется из незакрытых критериев, подтверждённых изменений и конкретных ошибок.",
+      "Один чат, одно дерево записи и одна установка имеют одного владельца действия; исследовательский параллелизм не обходит max_parallel Core.",
+      "Нет прогресса, повтор ошибки или изменение scope останавливают цикл с конкретным следующим шагом.",
+      "Перезапуск продолжает подтверждённое состояние, а не начинает все действия заново."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-18",
+    "title": "Delta-контекст LAYA после изменения репозитория",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-05",
+      "TAB4-10",
+      "TAB4-13"
+    ],
+    "original_acceptance_criteria": [
+      "Части имеют стабильный логический ID и версию из исходных байтов; изменённые файлы не оставляют старые ссылки как актуальные.",
+      "Граф различает подтверждённые и предполагаемые связи; циклы и межфайловые зависимости представлены явно.",
+      "Delta-обход пересчитывает затронутые тесты/контракты и сравнивается с полным обходом на эталонных репозиториях.",
+      "Пакеты имеют индекс snapshot, порядок продолжения, coverage и перечень неподдержанных файлов/языков.",
+      "При лимите памяти/размера задача возобновляется без молчаливого пропуска."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-19",
+    "title": "Единый пакет для других выбранных AI",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-04",
+      "TAB4-05",
+      "TAB4-08"
+    ],
+    "original_acceptance_criteria": [
+      "Основной packet/result contract не содержит обязательного Grok-only поля.",
+      "Каждое назначение имеет собственные target binding, profile и квалификацию UI/API; права Grok не переносятся автоматически.",
+      "Различия лимитов, вложений и получения ответа видимы до передачи.",
+      "Ручная загрузка того же проверяемого пакета остаётся доступной при неподдержанном адаптере."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-20",
+    "title": "Измерение долга и независимая оценка успеха",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-01",
+      "TAB4-05",
+      "TAB4-07"
+    ],
+    "original_acceptance_criteria": [
+      "Счётчики разделяют context completeness, delivery, result binding, local tests, CI, merge, install и device availability.",
+      "У каждого показателя есть числитель, знаменатель, версия сценария и причины исключений.",
+      "Заблокированные и прерванные попытки видимы отдельно и не увеличивают показатель успеха.",
+      "Долг связан с нарушенным критерием и конкретной карточкой; отсутствующие доказательства не заменяются словами AI.",
+      "Логи минимизируют личные данные и позволяют собрать воспроизводимую failure capsule."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-21",
+    "title": "Сквозная квалификация на устройстве пользователя",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-15",
+      "TAB4-16",
+      "TAB4-17",
+      "TAB4-18",
+      "TAB4-20"
+    ],
+    "original_acceptance_criteria": [
+      "Зафиксированы устройство, ОС, браузер, версии host/extension/adapter и доступные способы управления.",
+      "Пройден сценарий от цели до реально доступной новой команды и отдельно проверен откат.",
+      "Пройдены смена вкладки, неизвестная отправка, рестарт, stale CI, повреждённая загрузка, миграция и отмена.",
+      "Измерены длительность, память, ручные вмешательства и точность результатов без переноса Linux-результата на Windows.",
+      "Непройденные проверки оставляют конкретные возможности DISABLED или MANUAL_ONLY."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "TAB4-22",
+    "title": "Постепенное включение рабочего процесса",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "TAB4-19",
+      "TAB4-21"
+    ],
+    "original_acceptance_criteria": [
+      "Режимы dry run, draft-only, configured-send и qualified-update включаются отдельно по доказательствам.",
+      "Начальный пилот ограничен одним репозиторием, одной целью, одним чатом и одним типом совместимого обновления.",
+      "Экран показывает, что сейчас IMPLEMENTED/QUALIFIED/PLANNED, и конкретную причину недоступного шага.",
+      "Экспорт продолжения содержит текущую задачу, незавершённые действия, версии, доказательства и следующий запрос.",
+      "Расширение на новые приложения, репозитории и группы жизненного контекста требует квалификации соответствующего адаптера/области, сохраняя прежние сценарии."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-001",
+    "title": "Закрепить владельцев и контракты Laya/context batch",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [
+      1
+    ],
+    "original_dependencies": [],
+    "original_acceptance_criteria": [
+      "В implementation PR указан точный current HEAD и diff к основанию 5574ab7; все используемые symbols проверены по текущему коду.",
+      "Таблицы source/batch/labels принадлежат существующему content.sqlite3; executable jobs принадлежат Core, другого runtime/scheduler нет.",
+      "Для новых DTO определены schema/version, limits, namespace и несовместимые изменения; прежние repo/review/task данные читаются.",
+      "Фактический Laya/Voice Agent OS interface отмечен AVAILABLE, UNAVAILABLE или UNKNOWN с observed version; пример JSON не принимается за adapter."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-002",
+    "title": "Одна кнопка продолжает scan всего выбранного HEAD",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [
+      1
+    ],
+    "original_dependencies": [
+      "LAYA4-001"
+    ],
+    "original_acceptance_criteria": [
+      "Один start intent фиксирует repo/profile/HEAD; UI последовательно вызывает bounded scan_page до terminal state.",
+      "Double click и network timeout не создают новый snapshot/run intent; перезапуск продолжает сохранённый cursor.",
+      "Экран показывает total/accounted/pending/errors/excluded; progress и Pause/Continue/Stop доступны с клавиатуры.",
+      "Изменение HEAD или revoked profile сохраняет SOURCE_DRIFT/BLOCKED; разные commits не смешиваются.",
+      "Локальное окно можно закрыть без потери ledger; продолжение не требует повторного чтения уже committed pages."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-003",
+    "title": "Масштабировать inventory без скрытого усечения",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [
+      4
+    ],
+    "original_dependencies": [
+      "LAYA4-001"
+    ],
+    "original_acceptance_criteria": [
+      "Текущий предел остаётся явной ошибкой, пока streaming reader не прошёл отдельную квалификацию.",
+      "Streaming Git enumeration сохраняет NUL-safe пути, mode/OID/size и exact HEAD; частичный inventory не публикуется COMPLETE.",
+      "Поток имеет bounded buffer, timeout, stderr budget и temp-stage до atomic publish; subprocess завершён перед restart.",
+      "Неоднозначные/неподдерживаемые paths представлены metadata с причиной и исходным reversible path encoding.",
+      "Cold/warm resource measurements включают большой tree; введён configurable budget вместо безлимитного считывания."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-004",
+    "title": "Полный ledger форматов, gaps и защищённых данных",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [
+      1,
+      5
+    ],
+    "original_dependencies": [
+      "LAYA4-001"
+    ],
+    "original_acceptance_criteria": [
+      "Для каждого entry есть одна disposition: indexed, excluded, unsupported, missing, error, deferred или pending; pending исключает completion.",
+      "LFS pointer отличается от available payload; submodule/symlink metadata не выдаются за содержимое target.",
+      "Binary/non-UTF8, oversize, parse error, credential heuristic и operator exclusion сохраняют reason и исходный hash, когда он доступен.",
+      "Zero omission проверяет accounted==tracked_total; all_tracked_bytes_exportable имеет отдельное значение.",
+      "Exclusion policy не запрещает обычные исходники по случайной подстроке; секретные bytes не дублируются в diagnostic log."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-005",
+    "title": "Квалифицировать статический JS/TS parser и resolver",
+    "completion_owner": "ROADMAP-PR-011",
+    "earlier_scoped_packages": [
+      7
+    ],
+    "original_dependencies": [
+      "LAYA4-001",
+      "LAYA4-004"
+    ],
+    "original_acceptance_criteria": [
+      "ADR сравнивает parser candidates по JS/TS/JSX/TSX, offline packaging, Windows memory, pins и лицензии; package выбран по измерению.",
+      "Parser извлекает symbols/ranges и imports; resolver поддерживает явно перечисленные ESM/CommonJS/relative/workspace/alias правила.",
+      "Computed imports, unsupported exports, dynamic require и runtime injection представлены unresolved, не guessed exact edges.",
+      "Ни import scanned module, ни install scripts, ни repository hooks во время анализа не запускаются.",
+      "Размеченный corpus достигает предложенного precision gate LX4-03; recall и неподдерживаемые формы публикуются отдельно."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-006",
+    "title": "Объединить Python и JS/TS связи в provenance graph",
+    "completion_owner": "ROADMAP-PR-011",
+    "earlier_scoped_packages": [
+      7
+    ],
+    "original_dependencies": [
+      "LAYA4-001",
+      "LAYA4-004"
+    ],
+    "original_acceptance_criteria": [
+      "Edge хранит type, source range/hash, parser/resolver version и evidence class.",
+      "Python static, JS/TS static, declared contract и heuristic candidate не смешиваются в один unqualified relation.",
+      "Unresolved/dynamic/ambiguous links доступны в graph query и packet gaps.",
+      "Graph построен детерминированно из pinned snapshot; SCC не зависит от directory enumeration order.",
+      "Rebuild на одинаковых inputs даёт одинаковый graph digest; цикл не вызывает unbounded traversal."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-007",
+    "title": "Связать owners, tests, contracts и capability candidates",
+    "completion_owner": "ROADMAP-PR-011",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-001",
+      "LAYA4-006"
+    ],
+    "original_acceptance_criteria": [
+      "Name heuristic, declared mapping и observed test coverage имеют разные relation types.",
+      "Тесты/контракты разрешаются только внутри выбранного snapshot/scope; внешний missing contract остаётся gap.",
+      "У registration/API/schema adapters есть owner mapping, уменьшающий риск изменения только одной стороны интерфейса.",
+      "Capability candidate из parser не получает статус enabled/installed; для него показано missing qualification.",
+      "UI позволяет открыть источник связи и явно включить tests/contracts в packet."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-008",
+    "title": "Планировать связанные группы и bounded chunks",
+    "completion_owner": "ROADMAP-PR-011",
+    "earlier_scoped_packages": [
+      6
+    ],
+    "original_dependencies": [
+      "LAYA4-001",
+      "LAYA4-004"
+    ],
+    "original_acceptance_criteria": [
+      "MVP работает с текущим Python graph и честно отмечает JS/TS gaps; новый resolver не блокирует первый release.",
+      "SCC рассматривается как logical group; oversized SCC делится на bounded parts с neighbour references.",
+      "Каждый group имеет reason/owner/source refs; эвристики явно отмечены.",
+      "Raw byte coverage проверяется отдельно от повторных explanatory snippets в нескольких docs.",
+      "Порядок и IDs детерминированы snapshot/planner version; добавление несвязанного файла не перенумеровывает все logical source IDs."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-009",
+    "title": "Собрать manifest всего repo и обратный индекс частей",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [
+      2
+    ],
+    "original_dependencies": [
+      "LAYA4-002",
+      "LAYA4-004",
+      "LAYA4-008"
+    ],
+    "original_acceptance_criteria": [
+      "REPO_MANIFEST содержит все tracked entries, включая errors/exclusions; accounted равен pinned inventory total.",
+      "PARTS_INDEX хранит hashes/bytes/ranges/dependencies и позволяет из части перейти к исходнику и обратно.",
+      "Batch identity включает snapshot, goal revision, grouping/parser versions и export policy.",
+      "Каждая текстовая omission имеет reason: budget/unsupported/protected/missing/selected_out; их нельзя превратить в read coverage.",
+      "Manifest validation не требует размещения всех data bytes в одном native response; текущие transport limits сохраняются."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-010",
+    "title": "Сделать resumable сборку ZIP и offline index",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [
+      3
+    ],
+    "original_dependencies": [
+      "LAYA4-009"
+    ],
+    "original_acceptance_criteria": [
+      "Part publication atomic: staged bytes проверены, затем manifest head указывает на finished part.",
+      "Resume повторно проверяет hashes завершённых parts и не генерирует дубликаты при replay.",
+      "Количество частей определяется размером/бюджетом, фиксированного потолка 20/39 частей нет.",
+      "Offline index открывает цель, группы, gaps, source paths и relative part references; portable ZIP не зависит от абсолютного пути машины.",
+      "ZIP manifest перечисляет каждый output; archive checksum и reconstruction report сохраняются отдельно от утверждений AI."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-011",
+    "title": "Инвалидировать только затронутые sources и evidence",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-006",
+      "LAYA4-009"
+    ],
+    "original_acceptance_criteria": [
+      "Изменение bytes/parser/resolver/policy учитывается отдельными input hashes; старые results не объявляются current.",
+      "Добавления/удаления/rename сохраняют lineage; old path identity не переписывается задним числом.",
+      "Affected dependents строятся по доказанным edges; unresolved dynamic relations добавляют uncertainty.",
+      "Packets и criterion evidence показывают STALE/RECHECK_REQUIRED с конкретным changed input.",
+      "Clean rebuild и incremental rebuild дают эквивалентный семантический graph/manifest для одинакового source snapshot."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-012",
+    "title": "Переиспользовать immutable blobs и ограничить RAM",
+    "completion_owner": "ROADMAP-PR-012",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-009",
+      "LAYA4-011"
+    ],
+    "original_acceptance_criteria": [
+      "Parse cache keyed by raw hash/parser version/resolver config/extraction policy; отсутствие ключа запрещает reuse.",
+      "Один DB writer; read workers ограничены memory/CPU admission, не самостоятельными schedulers.",
+      "Новые cache links не дублируют raw blob; cache eviction удаляет derived data, не origin evidence.",
+      "UI paginated; backlog fragments и hot cache bounded; весь archive не загружается в память.",
+      "Current Core max_parallel=1 не ослаблен; parser parallel extension имеет отдельный measured gate."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-013",
+    "title": "Добавить каталог источников с intent и lifetime policy",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-001"
+    ],
+    "original_acceptance_criteria": [
+      "Record отделяет raw/extracted/transcript/summary/claim/evidence и имеет стабильные source/revision IDs.",
+      "Сохраняются original user text, capture intent, source_event_at и captured_at; неизвестное время не выдумывается.",
+      "Project/lifetime scope и share/retention policy закреплены отдельно от auto labels.",
+      "Namespace/profile границы существующего store применяются ко всем каталожным queries.",
+      "Импорт одного материала не делает его автоматически доступным всем future automations."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-014",
+    "title": "Организовать extractor очередь и gap reconciliation",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-004",
+      "LAYA4-013"
+    ],
+    "original_acceptance_criteria": [
+      "Каждый extractor имеет format/version/limits и pure input→derived output contract; output ссылается на raw hash/ranges.",
+      "Existing ChatGPT export/selected record paths используются повторно; raw transcript и исправленный текст не смешиваются.",
+      "PDF/OCR/ASR/image/unsupported inputs имеют явное состояние READY/PENDING/UNSUPPORTED/FAILED/MISSING.",
+      "Bulk import resumable и идемпотентен; network/model invocation обозначен capability и scope, не происходит скрытно.",
+      "Неизвестный attachment учитывается до извлечения; OCR/ASR confidence не объявляется доказанным содержимым."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-015",
+    "title": "Автоматические метки с источником и user overlay",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-013",
+      "LAYA4-014"
+    ],
+    "original_acceptance_criteria": [
+      "Label хранит dimension/value/source_ref/extractor_version/assigned_at/evidence class.",
+      "Детерминированный path match, keyword rule, AI inference и user label различаются.",
+      "User overlay имеет приоритет и сохраняется после reindex; конфликт виден и откатывается.",
+      "Dimensions включают project/topic/goal/module/capability candidate/evidence/freshness/delivery/next action.",
+      "Implemented/enabled/usable выводятся из evidence owner; слова из исходного чата не устанавливают их напрямую."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-016",
+    "title": "Единый поиск, фильтры и timeline с source links",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-013",
+      "LAYA4-015"
+    ],
+    "original_acceptance_criteria": [
+      "Namespace/project-aware current search использует existing Core search owner; legacy item shapes не приводят к KeyError/потере результата.",
+      "Есть exact ID/path/quote, FTS, project/type/topic/date/status filters и version selector.",
+      "Каждый hit показывает excerpt, origin, revision/freshness и основание попадания.",
+      "Timeline отличает source_event_at от captured_at и не размещает unknown event time как точную дату.",
+      "Пагинация стабильна; private project фильтр применяется до поиска/reranking, не только после выдачи."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-017",
+    "title": "Dedup, версии, tombstones и управляемое хранение",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-013",
+      "LAYA4-014"
+    ],
+    "original_acceptance_criteria": [
+      "Exact raw dedup может объединять physical bytes, сохраняя все origin refs и индивидуальные policies.",
+      "Semantic similarity создаёт duplicate candidate; разные решения/версии не сливаются автоматически.",
+      "Current head, deleted/tombstoned и historical versions имеют разные projections.",
+      "Retention/delete распространяется на raw/derived/cache/backups по явному manifest; shared blobs удаляются только при отсутствии допустимых refs.",
+      "Local deletion не заявляет удаление внешней копии; external delivery receipt остаётся объяснимым и минимальным."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-018",
+    "title": "Bounded retrieval из архива всей жизни",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-016",
+      "LAYA4-017"
+    ],
+    "original_acceptance_criteria": [
+      "Pipeline применяет goal/project/time scope, exact/FTS retrieval, graph neighbours и budget selection перед optional semantic rerank.",
+      "Project/episode/lifetime summaries имеют source refs и expand-to-original; изменение источника помечает summary stale.",
+      "Conflicts, uncertainty и missing facts переносятся в ответ и packet; summary не удаляет альтернативные свидетельства.",
+      "Budget, selected refs и excluded reasons видны пользователю; запрос дополнительных частей ограничен текущим scope.",
+      "Quality evaluation проверяет source recall и evidence correctness, а не только stylistic AI judgement."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-019",
+    "title": "Provider-neutral packet и профили Grok/ChatGPT/Gemini",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-009"
+    ],
+    "original_acceptance_criteria": [
+      "Core packet содержит goal/scope/criteria/source refs/gaps/result contract независимо от provider UI.",
+      "Provider profile задаёт observed input/attachment limits и version; неизвестный лимит не выдаётся за факт.",
+      "Bytes, exact tokens при наличии qualified tokenizer и token estimate method различаются.",
+      "Передача части не меняет source identity; provider projection имеет собственный digest.",
+      "Carry-over в новую session содержит decisions/open issues/source refs; не утверждает прежнее чтение моделью."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-020",
+    "title": "Preview share projection и быстрый локальный экспорт",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-004",
+      "LAYA4-019"
+    ],
+    "original_acceptance_criteria": [
+      "Preview показывает goal/source projects/data categories/destination binding revision/parts/bytes/gaps.",
+      "Raw archive и share projection имеют разные IDs; redaction не меняет оригинал и меняет share digest.",
+      "Explicit scope и protected fields проверяются вместе с heuristic scan; heuristic не обещает полного нахождения секретов.",
+      "Смена recipient/account/chat или расширение scope инвалидирует old ready projection, не удаляя локальный archive.",
+      "После одной настройки routine export в прежнем scope не требует повторной настройки; send остаётся отдельным UI adapter эффектом."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-021",
+    "title": "Следующие части и bounded запрос missing context",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-009",
+      "LAYA4-019"
+    ],
+    "original_acceptance_criteria": [
+      "AI request принимает part/source identifiers из manifest, reason и критерий; произвольный filesystem path не открывается.",
+      "Следующая часть привязана к той же goal/source revision или явно supersedes её.",
+      "Inventory/captured/selected/delivered/model-declared-reviewed/criterion-verified ведутся раздельно.",
+      "Out-of-scope/missing/stale запросы показывают конкретный blocker и не запускают скрытый gather.",
+      "Repeated request возвращает прежний immutable part при совпадающих inputs, не создаёт новую delivery attempt."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-022",
+    "title": "Подключить Laya через typed intent adapter",
+    "completion_owner": "ROADMAP-PR-016",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-001",
+      "LAYA4-019",
+      "LAYA4-020"
+    ],
+    "original_acceptance_criteria": [
+      "Обнаружены фактическая local Laya version/interface и capability; UNKNOWN/UNAVAILABLE имеют рабочий direct UI fallback.",
+      "Adapter понимает prepare_repo_context/find_context/compile_ai_packet/show_packet/request_more_context/inspect_result как typed operations.",
+      "Intent хранит original text/transcript revision, repo/scope/goal/criteria; интерпретация имеет отдельное author/version поле.",
+      "Document/repo content не может добавить executable argv, grant, recipient, root или verifier registration.",
+      "Existing operator scope применяется перед Core/native вызовом; free-form Laya answer остаётся proposal до компиляции известной capability."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-023",
+    "title": "Доступный единый text/voice контроль",
+    "completion_owner": "ROADMAP-PR-016",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-002",
+      "LAYA4-019"
+    ],
+    "original_acceptance_criteria": [
+      "Keyboard-only пользователь выбирает repo, задаёт цель, запускает scan, открывает part, preview и копирует документ.",
+      "Controls имеют имена, focus order, live status и text error; drag-and-drop необязателен.",
+      "Voice correction показывает точные repo/destination/scope до дальнейшего действия и создаёт versioned intent.",
+      "Stop доступен независимо от модели/ASR и во всех длительных состояниях.",
+      "Падение ASR не блокирует текстовый путь; статус данных и выполняемой операции не теряется."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-024",
+    "title": "Сохранить повторяемые контекстные automation recipes",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-002",
+      "LAYA4-010",
+      "LAYA4-020",
+      "LAYA4-022",
+      "LAYA4-023"
+    ],
+    "original_acceptance_criteria": [
+      "Recipe связывает version, repo alias, data scope, goal template, provider projection и required capabilities.",
+      "Routine повтор внутри согласованного scope идёт без повторных setup вопросов; новые полномочия не выводятся из free-form документа.",
+      "Recipe использует существующие Core jobs/leases/cancel/reconciliation; отдельного worker или бесконечной queue не создаёт.",
+      "Рецепты подготовка/поиск/экспорт квалифицируются до live send/update; реальные UI routes связаны с UI3 receipts.",
+      "Повторный запуск учитывает source change/unknown send и не дублирует внешние эффекты."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-025",
+    "title": "Объяснимое «найди нужный контекст для этой цели»",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-016",
+      "LAYA4-019",
+      "LAYA4-021"
+    ],
+    "original_acceptance_criteria": [
+      "Каждый factual answer указывает source revision/range или явно unknown; model-generated citation валидируется на существование.",
+      "Панель why-selected показывает exact match/filter/graph/summary reason.",
+      "Запрос дополнительных данных предлагает конкретные missing source categories и ожидаемую пользу для критерия.",
+      "Goal/source conflict не скрывается summary; пользователь может открыть обе версии и изменить scope.",
+      "Ответ сам по себе не вызывает repo execution/provider send и не помечает цель achieved."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-026",
+    "title": "Квалифицировать repo batch на Windows 16 GB",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-010",
+      "LAYA4-020",
+      "LAYA4-023"
+    ],
+    "original_acceptance_criteria": [
+      "Device receipt содержит exact app/repo build, OS/CPU/RAM/SSD, corpus digest и active capability versions.",
+      "Core inventory/roundtrip/restart/export/accessibility сценарии проходят LX4-01/02/06/09/10; прочие эксперименты применяются только к включённым расширениям.",
+      "Публикуются peak memory, p50/p95 latency, throughput, counts/gaps; слова fastest/infinite не подменяют измерения.",
+      "Installed native host и browser/desktop integration проходят end-to-end; unit fixtures не выдаются за device qualification.",
+      "Один успешный chunk run не устанавливает provider sent/merge/update/usable статусы."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-027",
+    "title": "Backup, restore и миграции личного каталога",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-013",
+      "LAYA4-017"
+    ],
+    "original_acceptance_criteria": [
+      "Backup manifest связывает SQLite snapshot, raw blobs, derived indexes policy, schema versions и hashes.",
+      "Consistent snapshot не смешивает поколения DB/blob publication; backup проверяется до отметки complete.",
+      "Restore сверяет hashes/lineage/tombstones/user labels; никаких stale source resurrection.",
+      "Migration имеет preflight/free-space/rollback point; старый archive читается или даёт явный unsupported schema.",
+      "Restore не восстанавливает grants, credentials или active external sends автоматически; data continuity отделена от execution state."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "LAYA4-028",
+    "title": "Следующий R&D brief из проверенных gaps и целей",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "LAYA4-011",
+      "LAYA4-015",
+      "LAYA4-021",
+      "LAYA4-026"
+    ],
+    "original_acceptance_criteria": [
+      "Каждое исходное требование имеет task/evidence/deferred link; пересказ не заменяет original user words.",
+      "Brief выбирает bottleneck и next evidence с явным rationale, dependencies и proposed acceptance.",
+      "Implemented, locally tested, installed, provider connected и usable представлены раздельными статусами.",
+      "Неизвестные/missing/history gaps не удаляются из общего ZIP; supersedes связи сохраняются.",
+      "Подготовка brief не отправляет его и не запускает capability update; destination and update owners продолжают UI3/EVO3 flow."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-01",
+    "title": "Сверить операции библиотеки и границу транзакции перед desktop",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [
+      8
+    ],
+    "original_dependencies": [
+      "G3-001"
+    ],
+    "original_acceptance_criteria": [
+      "Каждая требуемая операция связана с текущим owner; неизвестные операции обозначены GAP с отдельным scope.",
+      "Импорт, UI и CLI читают один source head; число новых competing stores/executors равно нулю.",
+      "Для каждой миграции определены schema version, precondition, rollback boundary и writer lock."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-02",
+    "title": "Собрать установочный desktop-сценарий без работающего Chrome",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [
+      8
+    ],
+    "original_dependencies": [
+      "ACTION5-01"
+    ],
+    "original_acceptance_criteria": [
+      "На Windows 11 при закрытом Chrome доступны импорт TXT, поиск источника и export task document.",
+      "First-run показывает путь данных и установленную версию; повторный запуск открывает тот же namespace.",
+      "Uninstall shell не удаляет пользовательский корпус; backend failure даёт доступный текст ошибки."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-03",
+    "title": "Версионировать локальный IPC и восстановление соединения",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [
+      8
+    ],
+    "original_dependencies": [
+      "ACTION5-01",
+      "ACTION5-02"
+    ],
+    "original_acceptance_criteria": [
+      "Desktop и браузер вызывают одну командную реализацию; IPC не принимает произвольные executable, argv или SQL.",
+      "Unknown command, oversized frame и protocol mismatch отклоняются до изменения состояния.",
+      "После reconnect поздний ответ прежней generation не меняет UI; повтор операции использует сохранённый intent key."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-04",
+    "title": "CaptureEnvelope сохраняет исходный текст и автора",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [
+      9
+    ],
+    "original_dependencies": [
+      "ACTION5-01"
+    ],
+    "original_acceptance_criteria": [
+      "Реконструкция raw text совпадает byte-for-byte; нормализованный search text хранит обратные offsets.",
+      "Время сообщения, время захвата и inferred event time не объединяются в одно поле.",
+      "Цитата другого автора внутри сообщения не становится словами пользователя; неизвестное авторство явно UNKNOWN.",
+      "Исправление пользователя создаёт overlay/version, сохраняя исходное написание."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-05",
+    "title": "Учитывать full-scroll чат и недоступные ветви",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [
+      9
+    ],
+    "original_dependencies": [
+      "ACTION5-04"
+    ],
+    "original_acceptance_criteria": [
+      "Top/middle/bottom и virtualized-history fixtures дают по одной source version на наблюдаемый message ID.",
+      "Loading/end-of-history подтверждается наблюдением; scroll без новых сообщений сам по себе не означает COMPLETE.",
+      "Недоступная ветвь, удалённое сообщение, вложение и login wall отображаются как конкретный gap.",
+      "Export и DOM capture связываются по происхождению; разные ветви не склеиваются по похожему тексту."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-06",
+    "title": "Закрепить общий контракт файлового импортера",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [
+      9
+    ],
+    "original_dependencies": [
+      "ACTION5-01",
+      "ACTION5-04"
+    ],
+    "original_acceptance_criteria": [
+      "Несовпадение extension/MIME отражается в manifest; extraction не скрывает оригинал.",
+      "У каждого выбранного файла ровно один исход: imported, excluded с причиной, unsupported или error.",
+      "Повторное продолжение создаёт новые версии только для изменённых bytes и сохраняет все origins.",
+      "Unknown importer fields сохраняются в raw envelope, не становятся исполнимыми настройками."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-07",
+    "title": "Разделить PDF/Office текст, таблицы и OCR",
+    "completion_owner": "ROADMAP-PR-013",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-06"
+    ],
+    "original_acceptance_criteria": [
+      "Клик по найденному тексту открывает исходную страницу/ячейку и версию файла.",
+      "Числа, единицы, отрицательные значения и merged cells сверены на размеченном corpus; потеря структуры помечена.",
+      "Scanned PDF имеет OCR-derived label и сохраняет original page; OCR не выдаётся за точный imported text.",
+      "Password-protected/unsupported embedded object остаётся конкретным gap."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-08",
+    "title": "Импортировать audio/video с проверяемым transcript",
+    "completion_owner": "ROADMAP-PR-013",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-06",
+      "ACTION5-04"
+    ],
+    "original_acceptance_criteria": [
+      "Фрагмент transcript открывает соответствующий time range оригинала.",
+      "Unintelligible segment обозначен UNKNOWN; speaker identity не выводится без evidence.",
+      "RU/EN/code-switch corrections не изменяют ASR оригинал; модель/версия сохранены.",
+      "Без разрешённого внешнего profile медиа остаётся локальным."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-09",
+    "title": "Учитывать архивы, папки и вложения как граф происхождения",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-06"
+    ],
+    "original_acceptance_criteria": [
+      "Вложенные ZIP, одинаковые bytes в двух путях, empty entry и missing attachment учтены отдельно по происхождению.",
+      "Traversal path, symlink, compression bomb и budget limit дают явный blocked/error и не записывают вне staging scope.",
+      "Repo LFS pointers/submodules остаются отдельным disposition до фактического получения разрешённых bytes.",
+      "Повторная распаковка не считает копии независимыми подтверждениями."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-10",
+    "title": "Версионировать автометки и пользовательские исправления",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-04",
+      "ACTION5-06"
+    ],
+    "original_acceptance_criteria": [
+      "Каждый автоматический tag указывает rule/model version и supporting source span либо отмечен inference.",
+      "User correction имеет приоритет в представлении и не удаляет прежнее предложение.",
+      "Разные facets не объединяют source type, цель, статус исполнения и private scope в одну метку.",
+      "Taxonomy upgrade не переименовывает исторические labels без version mapping."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-11",
+    "title": "Сделать SourceAddress для точной цитаты и диапазона",
+    "completion_owner": "ROADMAP-PR-010",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-04",
+      "ACTION5-06"
+    ],
+    "original_acceptance_criteria": [
+      "SourceAddress открывает тот же диапазон после restart; изменение оригинала не переносит ссылку молча.",
+      "Derived text указывает исходный range и extraction version; unsupported mapping возвращает UNKNOWN.",
+      "Ошибочные range bounds, namespace и hash отклоняются до чтения.",
+      "Удалённый оригинал возвращает tombstone/missing и не подменяется совпадающей цитатой."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-12",
+    "title": "Квалифицировать поиск по точным источникам и областям",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-10",
+      "ACTION5-11"
+    ],
+    "original_acceptance_criteria": [
+      "ID/path/exact quote возвращают правильный source version или явный no-match; выдача включает ranges.",
+      "Namespace/project/time filters применяются до построения packet и не раскрывают cross-scope snippets.",
+      "Saved view хранит запрос, а не копии источников; deleted source исчезает из current view.",
+      "Latency и relevance измерены на corpus отдельно для cold/warm; пороги описаны как proposed до измерения."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-13",
+    "title": "Зафиксировать WHY_THIS_PACKET и управляемую корзину контекста",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-11",
+      "ACTION5-12"
+    ],
+    "original_acceptance_criteria": [
+      "Для каждого включённого range указана связь с goal/criterion либо user choice.",
+      "Обязательный источник вне budget попадает в next-part/missing ledger; количество частей не имеет скрытого общего потолка.",
+      "User removal меняет selection revision и packet digest; старый пакет остаётся auditable.",
+      "Неизвестное утверждение создаёт bounded NEXT_CONTEXT_REQUEST, а не fabricated evidence."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-14",
+    "title": "Сделать быстрый переносимый share projection",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-11",
+      "ACTION5-13"
+    ],
+    "original_acceptance_criteria": [
+      "Preview и export имеют один projection digest; все omissions отмечены и доступны для продолжения.",
+      "Private overlay/excluded source не попадает в share bytes; эвристика секретов не выдаётся за гарантию.",
+      "После export offline index позволяет найти исходный range без сети.",
+      "Grok/ChatGPT/Gemini profile меняет transport formatting, сохраняя source/goal identity; фактические лимиты требуют qualification."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-15",
+    "title": "Резервировать библиотеку согласованным snapshot",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-01",
+      "ACTION5-06"
+    ],
+    "original_acceptance_criteria": [
+      "Backup во время допустимых операций даёт согласованный source-head/event/blob snapshot.",
+      "Каждый blob и DB artifact проходит hash/integrity check; missing bytes не скрываются.",
+      "Ключи не копируются из credential storage в архив; сохраняются ссылки и шаги повторного подключения.",
+      "Пользователь видит расположение, размер, время и последний проверенный restore status."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-16",
+    "title": "Проверить restore и миграцию на копии до активации",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-15",
+      "ACTION5-03"
+    ],
+    "original_acceptance_criteria": [
+      "Restore восстанавливает hashes, source heads, overlays, tombstones и task state; старое UNKNOWN не превращается в sent.",
+      "Schema migration rehearsal сравнивает record/relationship counts и exact-source queries до/после.",
+      "Активен один canonical DB path; activation выполняется при закрытых writer leases.",
+      "Downgrade, не совместимый с новой схемой, использует проверенный pre-migration backup."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-17",
+    "title": "Определить tombstone, retention и очистку производных данных",
+    "completion_owner": "ROADMAP-PR-014",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-11",
+      "ACTION5-15"
+    ],
+    "original_acceptance_criteria": [
+      "До удаления показаны зависимые packets/reviews и данные, ещё находящиеся в snapshots.",
+      "Current retrieval не возвращает tombstoned source; lease завершение не resurrect data.",
+      "Raw original, transcript, derived index и external projection имеют отдельные retention states.",
+      "Restore old backup применяет текущие tombstones либо явно предлагает отдельный recovery namespace."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-18",
+    "title": "Типизировать capabilities по версии, эффекту и qualification",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-01",
+      "ACTION5-03"
+    ],
+    "original_acceptance_criteria": [
+      "Capability недоступна без совпадения installed version, typed input contract и действующего grant.",
+      "Описание различает read-only, local write, remote send и money-moving effect; hazard влияет на policy, не на маркетинговый title.",
+      "PLANNED/UNKNOWN/QUALIFIED/STALE не объединяются в available.",
+      "Изменение grant, adapter или build инвалидирует соответствующую qualification."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-19",
+    "title": "Операторские execution templates без shell из документа",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-18"
+    ],
+    "original_acceptance_criteria": [
+      "Doc/transcript/AI answer не задаёт executable/argv/env; выбирается operator-registered template.",
+      "Template validation проверяет namespace, repo alias, expected version, allowed paths и bounded resources.",
+      "Intent replay не создаёт вторую задачу; cancel использует существующий Core semantics.",
+      "Read-only research template не получает signer, sender или wallet capability через наследование."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-20",
+    "title": "Один IntentSpec для текста, голоса и Laya proposal",
+    "completion_owner": "ROADMAP-PR-016",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-18",
+      "ACTION5-19"
+    ],
+    "original_acceptance_criteria": [
+      "Одинаковый исправленный text и voice transcript компилируются в одинаковый typed plan при одинаковых версиях.",
+      "Repo, destination, effect kind и amount не угадываются при неоднозначности.",
+      "Correction создаёт новую intent revision и отзывает неисполненный old intent.",
+      "Из Laya принят только типизированный proposal; неизвестные instructions не обходят template/grant validation."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-21",
+    "title": "Доступный STOP вне модели и микрофона",
+    "completion_owner": "ROADMAP-PR-015",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-03",
+      "ACTION5-19"
+    ],
+    "original_acceptance_criteria": [
+      "STOP доступен keyboard-only и без работающего ASR/model/Chrome.",
+      "Подготовка, queue, active command и unknown send имеют разные наблюдаемые outcomes.",
+      "После STOP истёкший worker/adapter не возобновляет действие и не меняет task как fresh owner.",
+      "Screen-reader status объясняет, что остановлено и что требует проверки; предлагаемая задержка реакции измеряется на устройстве."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-22",
+    "title": "Квалифицировать voice capture и исправление критических slots",
+    "completion_owner": "ROADMAP-PR-016",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-08",
+      "ACTION5-20",
+      "ACTION5-21"
+    ],
+    "original_acceptance_criteria": [
+      "Повтор hotkey не открывает второй capture stream; микрофон освобождён после stop/crash recovery.",
+      "TTS/background speech и ошибочная фраза не получают готового execution grant.",
+      "До action пользователь может исправить repo/destination/effect slots текстом; correction сохраняет provenance.",
+      "Latency/accuracy/critical-slot error измерены на выбранном Windows mic и отмечены как qualification данного устройства."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-23",
+    "title": "Преобразовать показанную автоматизацию в тестируемый skill",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-18",
+      "ACTION5-19",
+      "ACTION5-20",
+      "ACTION5-21"
+    ],
+    "original_acceptance_criteria": [
+      "Skill включает только наблюдаемые и разрешённые steps; пароль/secret values заменены credential references.",
+      "Recorded tab/focus координаты не считаются переносимой identity без adapter binding.",
+      "Skill replay проходит sandbox fixture и device scenario с независимым outcome receipt.",
+      "Оптимизация лишних steps сохраняет preconditions, STOP и expected effect invariants."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-24",
+    "title": "Инвалидировать skills при drift и permission diff",
+    "completion_owner": "ROADMAP-PR-017",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-18",
+      "ACTION5-23"
+    ],
+    "original_acceptance_criteria": [
+      "Изменившийся adapter/critical permission помечает зависимый skill STALE до execution admission.",
+      "Не затронутые навыки сохраняют valid receipt только при доказанной dependency independence.",
+      "Permission growth отображается как новый scope; прежний grant не расширяется молча.",
+      "Repaired skill имеет новую version; failure capsules не исчезают."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-25",
+    "title": "Зафиксировать durable расписание и offline catch-up",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-19",
+      "ACTION5-21"
+    ],
+    "original_acceptance_criteria": [
+      "Timezone Europe/Riga, DST, sleep/offline и clock change fixtures не создают duplicate occurrence.",
+      "Для missed runs явно выбран skip/latest/bounded catch-up; нет неконтролируемого backlog.",
+      "После policy/version drift schedule paused до revalidation.",
+      "Schedule edit создаёт новую revision и не переписывает результаты старых occurrences."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-26",
+    "title": "Продолжать work после restart с resource и checkpoint checks",
+    "completion_owner": "ROADMAP-PR-019",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-03",
+      "ACTION5-19",
+      "ACTION5-21",
+      "ACTION5-25"
+    ],
+    "original_acceptance_criteria": [
+      "Restart не оживляет cancelled intent и не возобновляет unknown send до reconciliation.",
+      "Changed HEAD/source/grant инвалидирует затронутый checkpoint; unaffected read-only work может продолжаться.",
+      "Foreground user input сохраняет приоритет; пределы RAM/CPU и concurrency измерены на Dell, не заявлены заранее.",
+      "Queue перегрузка показывается как waiting/budget blocker, исходный корпус не обрезается."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-27",
+    "title": "Сверить SCE→Studious read-only capability bridge",
+    "completion_owner": "ROADMAP-PR-020",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-18",
+      "ACTION5-19"
+    ],
+    "original_acceptance_criteria": [
+      "Каждая предлагаемая команда подтверждена code entrypoint и текущим test/contract либо отмечена GAP.",
+      "Bridge сохраняет repo/build identity и явный режим READ_ONLY/REPLAY/PAPER; данные не становятся live permission.",
+      "Signer/sender/wallet/grants не создаются через context importer или Laya proposal.",
+      "Нет второго market-data owner, trading runtime или независимого job executor."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-28",
+    "title": "Собрать research observations с freshness и provenance",
+    "completion_owner": "ROADMAP-PR-020",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-27",
+      "ACTION5-25",
+      "ACTION5-11"
+    ],
+    "original_acceptance_criteria": [
+      "Каждое observation связано с provider/version/time and raw hash; отсутствующая информация остаётся UNKNOWN.",
+      "Quota/backpressure/partial capture отражаются отдельно от отсутствия opportunity.",
+      "Повторное использование одного dataset исследователями не считается независимым provider evidence.",
+      "Offline fixture run воспроизводим; реальный сетевой run требует установленного adapter и его scope."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-29",
+    "title": "Привязать replay/paper гипотезу к замороженным критериям",
+    "completion_owner": "ROADMAP-PR-020",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-27",
+      "ACTION5-28",
+      "ACTION5-13"
+    ],
+    "original_acceptance_criteria": [
+      "Paper/replay output имеет свой mode label и не выдаётся за on-chain execution или measured real profit.",
+      "Стоимость, комиссии, slippage и delay assumptions указаны с units и coverage gaps.",
+      "Criteria/holdout frozen до запуска; неудачные trials сохраняются в реестре.",
+      "Итог привязан к exact dataset/config/repo revision; source drift переводит evidence в stale."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  },
+  {
+    "task_id": "ACTION5-30",
+    "title": "Вести общий qualification corpus и next brief из незакрытых aims",
+    "completion_owner": "ROADMAP-PR-021",
+    "earlier_scoped_packages": [],
+    "original_dependencies": [
+      "ACTION5-13",
+      "ACTION5-14",
+      "ACTION5-18",
+      "ACTION5-21",
+      "ACTION5-27"
+    ],
+    "original_acceptance_criteria": [
+      "Каждая цель имеет реализованный результат с scope/evidence либо named gap/decision/deferred condition.",
+      "Corpus покрывает wrong repo/tab, stale source, unsupported input, cancelled job, unknown send, restore и denied mic.",
+      "Linux fixture pass не повышает Windows/Grok/Laya qualification; model claim не закрывает criterion.",
+      "Next brief выбирает конкретный gap, owners, input artifacts, acceptance, recovery и verification scope.",
+      "Публикация кода, внешняя отправка и live-money permissions остаются отдельным фактическим scope; roadmap не расширяет их."
+    ],
+    "closure_status": "OPEN_UNTIL_CRITERION_EVIDENCE",
+    "mapping_kind": "AUTHOR_PROPOSED_OWNERSHIP_NOT_IMPLEMENTATION_PROOF"
+  }
+]

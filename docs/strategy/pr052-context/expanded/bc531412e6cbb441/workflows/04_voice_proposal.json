@@ -1,0 +1,97 @@
+{
+  "schema": "occ.rnd.workflow.v1",
+  "id": "04_voice_proposal",
+  "title_ru": "Голос → typed proposal",
+  "status": "PROPOSAL_NOT_EXECUTED",
+  "native_laya_request": false,
+  "ready_for_automatic_execution": false,
+  "scope": "OPERATOR_SELECTED_ONLY",
+  "money_budget": 0,
+  "signer_access": false,
+  "live_trading": false,
+  "required_before_execution": [
+    "registered_reviewed_capabilities",
+    "exact_revisions",
+    "explicit_permissions",
+    "implemented_postconditions",
+    "resource_admission"
+  ],
+  "nodes": [
+    {
+      "id": "n1",
+      "capability_id": "voice.capture_consent",
+      "depends_on": [],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n2",
+      "capability_id": "voice.final_transcript",
+      "depends_on": [
+        "n1"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n3",
+      "capability_id": "intent.deterministic_route",
+      "depends_on": [
+        "n2"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n4",
+      "capability_id": "intent.advisory_route",
+      "depends_on": [
+        "n3"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n5",
+      "capability_id": "jobs.propose",
+      "depends_on": [
+        "n4"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    },
+    {
+      "id": "n6",
+      "capability_id": "reports.compose",
+      "depends_on": [
+        "n5"
+      ],
+      "inputs": {
+        "source_refs": "RESOLVE_FROM_OPERATOR_SELECTED_SCOPE"
+      },
+      "postcondition": "Independent capability-specific evidence required; implementation must define it.",
+      "on_failure": "BLOCK_AND_REPORT"
+    }
+  ],
+  "outcomes": [
+    "BLOCKED",
+    "FAILED",
+    "INCONCLUSIVE",
+    "VERIFIED_FOR_DECLARED_PROFILE"
+  ]
+}

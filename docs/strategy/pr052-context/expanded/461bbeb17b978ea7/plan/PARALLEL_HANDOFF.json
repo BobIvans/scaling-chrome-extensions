@@ -1,0 +1,49 @@
+{
+  "package_id": "ROADMAP-PR-010-011",
+  "aliases": [
+    "ROADMAP-PR-010",
+    "ROADMAP-PR-011"
+  ],
+  "actual_head": null,
+  "proposed_shared_contracts": [
+    "contracts/schemas/source_address.schema.json",
+    "contracts/schemas/import_checkpoint.schema.json",
+    "contracts/schemas/capture_envelope.schema.json",
+    "contracts/schemas/label_overlay.schema.json",
+    "contracts/schemas/search_request.schema.json",
+    "contracts/schemas/provenance_edge.schema.json",
+    "contracts/schemas/graph_group.schema.json",
+    "contracts/schemas/criterion_receipt.schema.json"
+  ],
+  "writer_policy": "One canonical SQLite migration coordinator; one UI/focus writer and one Git integrator; no second store/runtime",
+  "neighbor_contracts": [
+    {
+      "consumer": "ROADMAP-PR-012",
+      "provided": "Immutable SourceAddress/graph generation/entry outcomes; graph pages complete",
+      "needs": "Durable repo Core/delta/CAS owner; legacy raw chunk identity proof"
+    },
+    {
+      "consumer": "ROADMAP-PR-013",
+      "provided": "Importer registry, source/original/extraction/provenance contracts",
+      "needs": "PDF/media/web adapter-specific page/cell/time mapping and qualification"
+    },
+    {
+      "consumer": "ROADMAP-PR-014",
+      "provided": "Related-selection refs, complete SCC member/part manifests, goal source refs",
+      "needs": "Final AI packet/share/NEED_CONTEXT/backup/semantic retrieval"
+    },
+    {
+      "consumer": "ROADMAP-PR-015",
+      "provided": "Scoped import/search/graph/goal service and UI DTOs",
+      "needs": "Actual standalone installer/Core write/device receipt"
+    },
+    {
+      "consumer": "ROADMAP-PR-019/021",
+      "provided": "Typed criteria/guards/open evidence and performance measurement protocol",
+      "needs": "Campaign operation and final whole-product qualification"
+    }
+  ],
+  "status": "PROPOSED_HANDOFF_NOT_ACKNOWLEDGED_BY_OTHER_CHATS",
+  "touched_paths": [],
+  "next_checkpoint": "Current owner audit + agreed schema/adapters and criterion matrix before writes"
+}
