@@ -27,6 +27,9 @@ INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 FIELDS = {
     "durable.research.jobs": ({"type"}, {"offset", "limit", "snapshot"}),
+    "durable.library": ({"type", "namespace", "action", "arguments"}, {"operationId"}),
+    "durable.stop": ({"type", "requestId"}, set()),
+    "durable.control.resume": ({"type", "expectedEpoch"}, set()),
     'durable.campaign.inspect': ({'type','campaign'}, {'offset','limit'}),
     'durable.campaign.advance': ({'type','campaign'}, set()),
     'durable.campaign.pause': ({'type','campaign'}, set()),
@@ -76,7 +79,7 @@ def adapter_context(profile, policy):
     return {'protocol': DESKTOP_PROTOCOL, 'profile_digest': digest([profile, policy]),
             'store_identity': digest(identity),
             'adapter_sha256': hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
-            'backend_bundle_sha256': None}
+            'backend_bundle_sha256': (__import__('context_runtime').build_digest() if profile.get('context_service') else None)}
 
 
 def ready_store(store, *, manifest=False):
@@ -128,6 +131,8 @@ def info(profile):
             capabilities.extend(sorted({'durable.repo.history', 'durable.repo.delta'} & FIELDS.keys()))
             if profile.get('desktop_scan_enabled') is True and ready_scan_store(store):
                 capabilities.append(DESKTOP_SCAN)
+    if profile.get('context_service'):
+        capabilities.extend(['durable.library','durable.stop','durable.control.resume'])
     return {'protocol': DESKTOP_PROTOCOL, 'native_input_bytes': INPUT_BYTES,
             'native_combined_output_bytes': OUTPUT_BYTES,
             'native_timeout_ms': 120_000 if DESKTOP_SCAN in capabilities else 10_000,
@@ -139,7 +144,7 @@ def info(profile):
 def operator_profile(path):
     profile = load_json(path)
     required = {"schema", "store", "policy_file", "namespaces", "templates"}
-    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories', 'campaigns', 'desktop_scan_enabled'} or profile["schema"] != "occ.native-durable-profile.v1":
+    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories', 'campaigns', 'desktop_scan_enabled', 'context_service'} or profile["schema"] != "occ.native-durable-profile.v1":
         raise ValueError("DURABLE_OPERATOR_PROFILE_REQUIRED")
     if type(profile.get('desktop_scan_enabled', False)) is not bool:
         raise ValueError('DURABLE_OPERATOR_PROFILE_REQUIRED')
@@ -173,6 +178,10 @@ def operator_profile(path):
             if (report['namespace'] not in namespaces
                     or repositories.get(report['repository']) != report['repository_profile']):
                 raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+    if 'context_service' in profile:
+        import context_runtime
+        c=context_runtime.config(policy,profile['context_service'])
+        if c['namespace'] not in namespaces:raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
     campaigns=profile.get('campaigns',[])
     if not isinstance(campaigns,list) or len(campaigns)!=len(set(campaigns)) or not all(isinstance(x,str) and x in policy.get('campaigns',{}) for x in campaigns):
         raise ValueError('CAMPAIGN_OUTSIDE_OPERATOR_SCOPE')
@@ -259,11 +268,30 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     store, operation = Path(profile["store"]), request["type"]
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
     if desktop and operation not in DESKTOP_READS and not (
-            operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile)['capabilities']):
+            (operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile)['capabilities']) or
+            (profile.get('context_service') and operation in {'durable.library','durable.stop','durable.control.resume'})):
         raise ValueError('DESKTOP_READ_ONLY')
     if operation == 'durable.research.jobs':
         from research_bridge import jobs_page
         value['research'] = jobs_page(store, policy, profile['templates'], **{k:request[k] for k in ('offset','limit','snapshot') if k in request})
+        return value
+    if operation in {'durable.library','durable.stop','durable.control.resume'}:
+        import context_runtime as runtime
+        service=profile.get('context_service')
+        if service is None:raise ValueError('CONTEXT_SERVICE_NOT_CONFIGURED')
+        c=runtime.config(policy,service)
+        if operation=='durable.stop':result=Core(store,policy).stop(request['requestId'])
+        elif operation=='durable.control.resume':result=Core(store,policy).resume_control(request['expectedEpoch'])
+        else:
+            if request['namespace']!=c['namespace']:raise ValueError('DURABLE_NAMESPACE_OUTSIDE_SCOPE')
+            action=request['action'];args=request['arguments']
+            if action in runtime.READS:
+                if 'operationId' in request:raise ValueError('DURABLE_SCHEMA')
+                result=runtime.query(store,policy,service,action,args)
+            else:
+                result=runtime.submit(store,policy,service,action,args,request.get('operationId'))
+        value['library']={'schema':'occ.context-service-result.v1','namespace':c['namespace'],
+                          'action':request.get('action',operation),'data':result,'authority':'DATA_ONLY'}
         return value
     if operation.startswith('durable.campaign.'):
         from campaign_runtime import inspect, advance, cancel, set_admission
@@ -431,9 +459,13 @@ def dispatch_desktop(request, profile_path):
     context = None
     try:
         validate_request(request)
-        if request['type'] not in DESKTOP_READS and request['type'] != DESKTOP_SCAN:
+        if request['type'] not in DESKTOP_READS | {'durable.library','durable.stop','durable.control.resume', DESKTOP_SCAN}:
             raise ValueError('DESKTOP_READ_ONLY')
         profile, policy = operator_profile(profile_path)
+        if request['type'] not in DESKTOP_READS and not (
+                (request['type'] == DESKTOP_SCAN and DESKTOP_SCAN in info(profile)['capabilities']) or
+                (profile.get('context_service') and request['type'] in {'durable.library','durable.stop','durable.control.resume'})):
+            raise ValueError('DESKTOP_READ_ONLY')
         context = adapter_context(profile, policy)
         result = dispatch_loaded(request, profile, policy, desktop=True)
         return {'schema': 'occ.desktop-stdio-result.v1', 'ok': True,

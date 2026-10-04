@@ -149,9 +149,14 @@ def main():
     original_command = worker.command
 
     def observed_command(*args):
+        identity = []
+        for query in (["rev-parse", "HEAD"], ["status", "--porcelain"]):
+            check = original_command(args[0], ["git", "-C", str(owner), *query], owner, 15)
+            identity.append({"query": query, "exit_code": check["exit_code"], "output": check["output"]})
         process = original_command(*args)
         last_command.clear()
         last_command.update({key: process.get(key) for key in ("exit_code", "reason", "output")})
+        last_command["isolated_owner_identity"] = identity
         return process
 
     worker.command = observed_command
@@ -241,6 +246,22 @@ def main():
             raise AssertionError(page)
     finally:
         client.close()
+    # Exercise PR014+015's real versioned Desktop installer as well as Native siblings.
+    from desktop.install import install, verify_install
+
+    desktop_install = work / "installed-desktop"
+    install(SCE, desktop_install, args.python, profilefile)
+    verify_install(desktop_install)
+    installed_client = DesktopClient(Connection.load(desktop_install / "desktop/connection.json"))
+    try:
+        installed_client.handshake()
+        installed_page = installed_client.request({"type": "durable.research.jobs", "limit": 20})[
+            "result"
+        ]["research"]
+        if installed_page != page:
+            raise AssertionError("INSTALLED_DESKTOP_RESEARCH_MISMATCH")
+    finally:
+        installed_client.close()
     qualification.import_catalog(store, source_ledger, ledger_sha)
     scope = {
         "build": actual,
@@ -273,6 +294,7 @@ def main():
         "useful_calls": sum(j["useful_calls"] for j in jobs),
         "exact_repeat_pairs": 5,
         "installed_sibling_transport": "PASS",
+        "installed_desktop_backend_transport": "PASS",
         "desktop_read_jobs": page["total"],
         "criterion_count": report["total"],
         "criterion_status_counts": report["counts"],

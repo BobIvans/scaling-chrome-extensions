@@ -1,0 +1,84 @@
+"""Versioned offline installation; external store/profile/policy are preserved."""
+from __future__ import annotations
+import argparse
+import json
+import os
+from pathlib import Path
+import shutil
+import sys
+sys.path.insert(0,str(Path(__file__).resolve().parent.parent))
+from desktop.client import Connection, PROTOCOL, is_link, require, sha_file
+from desktop.package import verify, stage_shell
+from desktop.draft import publication
+
+BACKEND_FILES = ('research_bridge.py', 'product_qualification.py', 'asr_cpu_experiment.py', 'campaign_runtime.py', 'durable_schedule.py', 'qualify_workflow.py', 'release_updater.py', 'workflow_github.py', 'workflow_runtime.py', 'workflow_state.py', 'automation_core.py', 'content_lab.py', 'context_benchmark.py', 'context_handoff.py', 'context_library.py', 'context_packets.py', 'context_recovery.py', 'context_review.py', 'context_runtime.py', 'github_ci_snapshot.py', 'native_adapter.py', 'occ_local.py', 'occ_proposal.py', 'occ_v4/__init__.py', 'occ_v4/protocol.py', 'occ_v5/__init__.py', 'occ_v5/context.py', 'qualify_repo_inventory.py', 'qualify_repo_js.py', 'repo_archive.py', 'repo_archive_input.py', 'repo_artifacts.py', 'repo_context.py', 'repo_coverage.py', 'repo_groups.py', 'repo_history.py', 'repo_inventory.py', 'repo_js.py', 'repo_js_input.py', 'repo_js_runtime.py', 'repo_manifest.py', 'repo_scan.py', 'repo_source.py', 'review_report.py', 'schedule_supervisor.py', 'schedule_tick.py', 'source_eligibility.py', 'repo_js_parser.cjs', 'js-parser/LICENSE', 'js-parser/PIN.json', 'js-parser/babel-parser.cjs', 'js-parser/package.json', 'js-contracts/BUDGET.schema.json', 'js-contracts/ELIGIBILITY.schema.json', 'js-contracts/JS_ANALYSIS.schema.json', 'js-contracts/RELATION.schema.json', 'test_context_services.py')
+
+
+def install(source,output,python_path,profile_path):
+    source=Path(source).absolute();output=Path(output).absolute();profile_path=Path(profile_path).absolute()
+    verify(source/'desktop')
+    require(sys.version_info >= (3,11),'DESKTOP_RUNTIME_REQUIRED')
+    profile=json.loads(profile_path.read_text(encoding='utf-8'))
+    # A versioned code directory must never own the corpus, grants or credentials.
+    for value in (str(profile_path),profile['store'],profile['policy_file']):
+        p=Path(value).resolve();require(not p.is_relative_to(output.resolve()) and not output.resolve().is_relative_to(p), 'DESKTOP_INSTALL_DATA_OVERLAP')
+    require(not any(is_link(p) for p in (source,output,*output.parents) if p.exists() or p.is_symlink()), 'DESKTOP_LINK_PATH')
+    with publication(output) as stage:
+        backend=stage/'backend';backend.mkdir()
+        for name in BACKEND_FILES:
+            origin=source/'content-lab'/name
+            require(origin.is_file() and not is_link(origin),'DESKTOP_BACKEND_FILE_REQUIRED')
+            target=backend/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(origin,target)
+            require(sha_file(target)==sha_file(origin),'DESKTOP_BACKEND_CHANGED')
+        stage_shell(source/'desktop',stage/'desktop')
+        config={'schema':'occ.desktop-connection.v1','protocol':PROTOCOL,'python_path':str(Path(python_path).resolve()),
+                'adapter_path':str(output/'backend/native_adapter.py'),'profile_path':str(profile_path),
+                'expected_adapter_sha256':sha_file(backend/'native_adapter.py'),'preferred_namespace':profile['namespaces'][0]}
+        (stage/'desktop/connection.json').write_text(json.dumps(config,ensure_ascii=False,indent=2),encoding='utf-8')
+        manifest={'schema':'occ.desktop-install.v1','backend_files':{n:sha_file(backend/n) for n in BACKEND_FILES},
+                  'external_data_preserved':True,'runtime':'OPERATOR_INSTALLED_PYTHON_3_11_PLUS_TK',
+                  'windows_device_qualification':'NOT_RUN'}
+        (stage/'INSTALL.json').write_text(json.dumps(manifest,sort_keys=True),encoding='utf-8')
+    verify_install(output)
+    Connection.load(output/'desktop/connection.json')
+    return {'state':'INSTALLED_VERIFIED_FILES','root':str(output),'data_migration':'NOT_PERFORMED','device_qualification':'NOT_RUN'}
+
+
+def verify_install(output):
+    output=Path(output).absolute();verify(output/'desktop')
+    require(not any(is_link(p) for p in (output,*output.parents)), 'DESKTOP_LINK_PATH')
+    mpath=output/'INSTALL.json';require(not is_link(mpath),'DESKTOP_LINK_PATH')
+    m=json.loads(mpath.read_text());require(m['schema']=='occ.desktop-install.v1' and set(m['backend_files'])==set(BACKEND_FILES),'DESKTOP_INSTALL_MANIFEST')
+    for name,h in m['backend_files'].items():
+        p=output/'backend'/name;require(p.is_file() and not any(is_link(x) for x in (p,*p.parents)) and sha_file(p)==h,'DESKTOP_BACKEND_CHANGED')
+    return m
+
+
+def uninstall(output):
+    output=Path(output).absolute();m=verify_install(output)
+    from desktop.package import FILES
+    allowed={'INSTALL.json','desktop/OWNED_FILES.json','desktop/connection.json'}|{'desktop/'+n for n in FILES}|{'backend/'+n for n in BACKEND_FILES}
+    # Generated bytecode is owned only if its source is an explicitly owned file.
+    for p in output.rglob('*'):
+        require(not is_link(p),'DESKTOP_LINK_PATH')
+        if p.is_file():
+            rel=p.relative_to(output).as_posix()
+            if '/__pycache__/' in rel and p.suffix=='.pyc':
+                parent=p.parent.parent.relative_to(output).as_posix();stem=p.name.split('.')[0]
+                if parent+'/'+stem+'.py' in allowed:allowed.add(rel)
+            require(rel in allowed,'DESKTOP_INSTALL_UNOWNED_FILE')
+    # All files validated before deleting any; external data is never traversed.
+    shutil.rmtree(output)
+    return {'state':'UNINSTALLED','external_data_preserved':True}
+
+
+def main():
+    p=argparse.ArgumentParser(description=__doc__);p.add_argument('command',choices=['install','verify','uninstall']);p.add_argument('--output',type=Path,required=True)
+    p.add_argument('--source',type=Path);p.add_argument('--python',default=sys.executable);p.add_argument('--profile',type=Path);a=p.parse_args()
+    if a.command=='install':
+        if not a.source or not a.profile:p.error('--source and --profile required')
+        result=install(a.source,a.output,a.python,a.profile)
+    else:result=verify_install(a.output) if a.command=='verify' else uninstall(a.output)
+    print(json.dumps(result,ensure_ascii=False))
+
+if __name__=='__main__':main()
