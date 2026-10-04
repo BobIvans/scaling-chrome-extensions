@@ -137,11 +137,11 @@ class SourceEligibilityTests(TestCase):
         self.assertNotIn((FIXTURES / 'input_bytes/source_056.bin').read_bytes(), output.read_bytes())
 
     def test_A02_A03_whole_binary_source_prevents_every_printable_fragment(self):
-        self.capture({'nul.txt': b'matchprint\n' * 1500 + b'\0', 'nonutf.bin': b'matchprint\n' * 1500 + b'\xff',
+        self.capture({'controls.txt': b'matchprint\n' * 1500 + b'\0', 'nonutf.bin': b'matchprint\n' * 1500 + b'\xff',
                       'normal.txt': b'matchprint ordinary\n'})
         db = repo.db_for(self.store)
         try:
-            for path in ('nul.txt', 'nonutf.bin'):
+            for path in ('controls.txt', 'nonutf.bin'):
                 chunks = list(db.execute('SELECT item_id,raw FROM repo_chunks WHERE snapshot_id=? AND path=?', (self.sid, path)))
                 self.assertGreater(len(chunks), 1)
                 self.assertTrue(all(c['item_id'] is None for c in chunks))

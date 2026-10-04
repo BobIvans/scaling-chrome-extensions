@@ -4,7 +4,7 @@
   "package_id": "PR-005",
   "actual_base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
   "actual_head_sha": "052444be36d92e43a0c92c937283ff86b1bff79f",
-  "head_sha_scope": "Published implementation code commit. Subsequent commits preserve fixture checkout bytes and record this receipt; final PR head, exact-head CI and merge SHA are authoritative in the linked PR.",
+  "head_sha_scope": "Published implementation code commit. Subsequent commits preserve fixture checkout bytes, use a portable generated test filename and record this receipt; final PR head, exact-head CI and merge SHA are authoritative in the linked PR.",
   "tested_local_implementation_sha": "164e547e2408b96c5e39db84266c274e7f89c424",
   "tested_implementation_tree": "2e4202724cdd28b5ada2208675f8725847d8e8a3",
   "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/42",
@@ -12,6 +12,19 @@
   "merge_evidence_policy": "Merge only after exact final-head Ubuntu and Windows checks pass; observed merge result is recorded in the PR and final execution response.",
   "implementation": "IMPLEMENTED_LOCALLY_VERIFIED",
   "github_ci": "LIVE_PR_CHECKS_ARE_AUTHORITATIVE",
+  "github_ci_observations": [
+    {
+      "head_sha": "4537c773a84474bcb613b3524494388d955552b9",
+      "run_id": 37202013546,
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37202013546",
+      "ubuntu": "PASS",
+      "windows": "FAIL",
+      "failure": "A02/A03 generated a real Git fixture named nul.txt, a reserved Windows device filename; git add failed before the source eligibility assertions.",
+      "correction": "Rename the generated fixture and both path references to controls.txt. Preserve the NUL byte payload and assertions. Production code and golden fixture bytes are unchanged.",
+      "correction_verification": "All 16 test_source_eligibility.py tests passed locally in 7.362 seconds with the portable fixture name.",
+      "final_head_ci": "PENDING; exact updated-head checks must pass before merge."
+    }
+  ],
   "windows_installed": "NOT_RUN",
   "functions_engineered": {
     "schema": "occ.pr005-function-inventory.v1",
@@ -317,6 +330,13 @@
       "state": "PASS",
       "tests": 266,
       "seconds": 163.366
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_source_eligibility.py' -v",
+      "state": "PASS",
+      "tests": 16,
+      "seconds": 7.362,
+      "note": "Focused verification after the Windows reserved-name fixture correction; included in the total, not added to it."
     },
     {
       "command": "node --test agent-bridge/*.test.mjs",
