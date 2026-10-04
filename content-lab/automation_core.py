@@ -69,6 +69,21 @@ def connection(store, *, configure=None):
         raise
 
 
+def read_connection(store):
+    """Open the existing owner without creating files, tables or migrations."""
+    path = Path(store) / 'content.sqlite3'
+    if path.is_symlink() or not path.is_file():
+        raise ValueError('DESKTOP_SETUP_REQUIRED')
+    db = sqlite3.connect(path.resolve().as_uri() + '?mode=ro', uri=True, timeout=1)
+    try:
+        db.row_factory = sqlite3.Row
+        db.execute('PRAGMA query_only=ON')
+        return db
+    except BaseException:
+        db.close()
+        raise
+
+
 def _initialize_connection(db):
     db.executescript("""
         CREATE TABLE IF NOT EXISTS sync_heads(
@@ -155,7 +170,7 @@ def sync(store, namespace, root, *, max_files=100, max_bytes=25_000_000, progres
             "bytes": total, "model_calls": 0}
 
 
-def search(store, namespace, query, limit=10):
+def search(store, namespace, query, limit=10, *, read_only=False):
     identifier(namespace)
     strict_int(limit, 1, 50)
     if not isinstance(query, str) or len(query) > 1000:
@@ -164,7 +179,7 @@ def search(store, namespace, query, limit=10):
     if not terms:
         raise ValueError("QUERY_TERMS_REQUIRED")
     match = " AND ".join('"' + term + '"' for term in terms)
-    db = connection(store)
+    db = read_connection(store) if read_only else connection(store)
     try:
         rows = db.execute("SELECT content_fts.id, snippet(content_fts,1,'[',']','…',24) AS snippet, sync_heads.source_key FROM content_fts JOIN sync_heads ON sync_heads.item_id=content_fts.id WHERE content_fts MATCH ? AND namespace=? AND present=1 ORDER BY rank LIMIT ?", (match, namespace, limit)).fetchall()
         return [dict(r) for r in rows]
@@ -172,12 +187,12 @@ def search(store, namespace, query, limit=10):
         db.close()
 
 
-def context_pack(store, namespace, item_ids, max_bytes=100_000):
+def context_pack(store, namespace, item_ids, max_bytes=100_000, *, read_only=False):
     identifier(namespace)
     strict_int(max_bytes, 1, 1_000_000)
     if not isinstance(item_ids, list) or not 1 <= len(item_ids) <= 10 or len(set(item_ids)) != len(item_ids):
         raise ValueError("ONE_TO_TEN_UNIQUE_IDS_REQUIRED")
-    db, selected, total = connection(store), [], 0
+    db, selected, total = (read_connection(store) if read_only else connection(store)), [], 0
     try:
         for item_id in item_ids:
             row = db.execute("SELECT items.payload FROM items JOIN sync_heads ON items.id=sync_heads.item_id WHERE namespace=? AND present=1 AND items.id=?", (namespace, item_id)).fetchone()

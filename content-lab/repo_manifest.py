@@ -19,7 +19,7 @@ import tempfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from automation_core import digest, strict_int
+from automation_core import digest, strict_int, read_connection
 import repo_context as repo
 
 PAGE_FRAME_BYTES = 32_768
@@ -34,8 +34,8 @@ def canonical(value):
 
 
 @contextmanager
-def read_view(store, namespace, snapshot_id, alias, profile):
-    db = repo.db_for(Path(store))
+def read_view(store, namespace, snapshot_id, alias, profile, *, read_only=False):
+    db = read_connection(store) if read_only else repo.db_for(Path(store))
     try:
         db.execute('BEGIN')
         snap = repo.load_snapshot(db, namespace, snapshot_id)
@@ -156,7 +156,7 @@ def native_frame_size(value):
     return max(len(json.dumps(f, ensure_ascii=False, allow_nan=False).encode('utf-8')) for f in frames)
 
 
-def page(store, namespace, sid, alias, profile, action, *, offset=0, limit=20, file_ordinal=None):
+def page(store, namespace, sid, alias, profile, action, *, offset=0, limit=20, file_ordinal=None, read_only=False):
     if action not in {'INFO', 'ENTRIES', 'PARTS'}:
         raise ValueError('DURABLE_SCHEMA')
     strict_int(offset, 0, MAX_OFFSET)
@@ -165,7 +165,7 @@ def page(store, namespace, sid, alias, profile, action, *, offset=0, limit=20, f
         strict_int(file_ordinal, 0, MAX_OFFSET)
         if action != 'PARTS':
             raise ValueError('DURABLE_SCHEMA')
-    with read_view(store, namespace, sid, alias, profile) as (db, snap):
+    with read_view(store, namespace, sid, alias, profile, read_only=read_only) as (db, snap):
         value = metadata_info(snap, inventory(db, snap))
         value.update(scope={'action': action, 'file_ordinal': file_ordinal}, rows=[], offset=offset,
                      total=0, nextOffset=None, proof_scope='METADATA_ONLY_GLOBAL_NOT_RUN')
