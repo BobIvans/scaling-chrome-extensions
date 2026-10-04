@@ -126,6 +126,22 @@ class SourceLedgerTests(unittest.TestCase):
         self.assertEqual(receipt['raw_sha'], hashlib.sha256(self.first.read_bytes()).hexdigest())
         self.assertEqual(receipt['state'], 'COMPLETE')
 
+    def test_stable_operator_key_keeps_identity_across_path_rename(self):
+        self.first.write_bytes(b'stable bytes')
+        first = ledger.capture_file(self.store, 'docs', 'FILE', self.first, '1' * 32,
+                                    source_key='document:contract-1')
+        self.first.rename(self.second)
+        second = ledger.capture_file(self.store, 'docs', 'FILE', self.second, '2' * 32,
+                                     source_key='document:contract-1')
+        self.assertEqual(first['source_id'], second['source_id'])
+        self.assertEqual(first['version_id'], second['version_id'])
+        self.assertNotEqual(first['observation_id'], second['observation_id'])
+        db = read_connection(self.store)
+        try:
+            self.assertEqual(db.execute('SELECT count(*) FROM source_aliases').fetchone()[0], 2)
+        finally:
+            db.close()
+
 
 if __name__ == '__main__':
     unittest.main()

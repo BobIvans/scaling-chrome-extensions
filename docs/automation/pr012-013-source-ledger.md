@@ -4,8 +4,10 @@
 from its byte version and each observation. It uses Content Lab's existing
 `content.sqlite3` connection and adds tables; it does not create a second
 database, executor or network authority. An explicit CLI call captures a regular
-file into 64 KiB immutable parts. Source identity is namespace/kind/absolute
-origin, version identity includes exact raw SHA and declared scope, and an
+file into 64 KiB immutable parts. Source identity is namespace/kind/stable
+operator key (the absolute URI by default); `--source-key` preserves identity
+across a rename while recording both path aliases. Version identity includes
+exact raw SHA and declared scope, and an
 intent key replays the same observation after a lost reply.
 
 The raw object is only marked COMPLETE after a second full read and a matching
@@ -29,7 +31,8 @@ invalidate criterion evidence. The older ChatGPT import keeps its specialized
 `import_raw_blobs` tables; a shared CAS migration/reconciliation remains open.
 Do not treat a captured binary as searchable or a successful importer result.
 
-Local tests use exact binary bytes, two aliases with one raw object, 23 versions,
+Local tests use exact binary bytes, two origins with one raw object, two path
+aliases for one stable key, 23 versions,
 an interrupted stage and replay, source mutation, corruption, namespace scope,
 and the installed-style isolated Python CLI. Device, large-corpus peak RAM and
 the full combined acceptance matrix remain open.

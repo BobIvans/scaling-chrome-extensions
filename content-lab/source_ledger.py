@@ -31,8 +31,11 @@ def _schema(db):
     db.executescript('''
       CREATE TABLE IF NOT EXISTS source_origins(
         namespace TEXT NOT NULL, source_id TEXT NOT NULL, kind TEXT NOT NULL,
-        origin TEXT NOT NULL, created REAL NOT NULL,
-        PRIMARY KEY(namespace,source_id), UNIQUE(namespace,kind,origin));
+        source_key TEXT NOT NULL, origin TEXT NOT NULL, created REAL NOT NULL,
+        PRIMARY KEY(namespace,source_id), UNIQUE(namespace,kind,source_key));
+      CREATE TABLE IF NOT EXISTS source_aliases(
+        namespace TEXT NOT NULL, source_id TEXT NOT NULL, origin TEXT NOT NULL,
+        first_observed REAL NOT NULL, PRIMARY KEY(namespace,source_id,origin));
       CREATE TABLE IF NOT EXISTS source_raw_objects(
         namespace TEXT NOT NULL, raw_sha TEXT NOT NULL, encoding TEXT NOT NULL,
         size INTEGER NOT NULL, parts INTEGER NOT NULL, state TEXT NOT NULL,
@@ -57,6 +60,14 @@ def _schema(db):
         namespace TEXT NOT NULL, source_id TEXT NOT NULL, version_id TEXT NOT NULL,
         PRIMARY KEY(namespace,source_id));
     ''')
+    columns = {r['name'] for r in db.execute('PRAGMA table_info(source_origins)')}
+    if 'source_key' not in columns:
+        with db:
+            db.execute('ALTER TABLE source_origins ADD COLUMN source_key TEXT')
+            db.execute('UPDATE source_origins SET source_key=origin WHERE source_key IS NULL')
+            db.execute('''INSERT OR IGNORE INTO source_aliases
+                SELECT namespace,source_id,origin,created FROM source_origins''')
+    db.execute('CREATE UNIQUE INDEX IF NOT EXISTS source_origin_keys ON source_origins(namespace,kind,source_key)')
 
 
 def _db(store):
@@ -100,7 +111,7 @@ def _result(db, namespace, source_id, intent_key):
 
 
 def capture_file(store: Path, namespace: str, kind: str, path: Path, intent_key: str,
-                 *, scope: dict | None = None, progress=None):
+                 *, source_key: str | None = None, scope: dict | None = None, progress=None):
     """Resume 64 KiB stages; publish a version and observation only after EOF.
 
     The intent is replayable after a lost response. A different intent observing
@@ -109,12 +120,19 @@ def capture_file(store: Path, namespace: str, kind: str, path: Path, intent_key:
     namespace = identifier(namespace)
     if kind not in KINDS or not isinstance(intent_key, str) or not INTENT.fullmatch(intent_key):
         raise ValueError('SOURCE_CAPTURE_REQUEST_REQUIRED')
-    path = Path(path).absolute()
+    path = Path(path)
+    if not path.is_absolute():
+        raise ValueError('SOURCE_REGULAR_FILE_REQUIRED')
     if (not path.is_absolute() or any(p.is_symlink() for p in (path, *path.parents))
             or not path.is_file() or path.resolve().is_relative_to(Path(store).resolve())):
         raise ValueError('SOURCE_REGULAR_FILE_REQUIRED')
     origin = path.as_uri()
-    source_id = digest([namespace, kind, origin])
+    if source_key is None:
+        source_key = origin
+    if (not isinstance(source_key, str) or not source_key or '\0' in source_key
+            or len(source_key.encode('utf-8')) > 1000):
+        raise ValueError('SOURCE_KEY_REQUIRED')
+    source_id = digest([namespace, kind, source_key])
     scope_raw = _object(scope or {'representation': 'ORIGINAL'})
     db = _db(store)
     try:
@@ -177,8 +195,11 @@ def capture_file(store: Path, namespace: str, kind: str, path: Path, intent_key:
                     raise ValueError('SOURCE_RAW_CORRUPT')
                 db.execute('''UPDATE source_raw_objects SET state='COMPLETE'
                     WHERE namespace=? AND raw_sha=? AND encoding=?''', (namespace, raw_sha, 'bytes'))
-                db.execute('INSERT OR IGNORE INTO source_origins VALUES (?,?,?,?,?)',
-                           (namespace, source_id, kind, origin, time.time()))
+                db.execute('''INSERT OR IGNORE INTO source_origins
+                    (namespace,source_id,kind,source_key,origin,created) VALUES (?,?,?,?,?,?)''',
+                           (namespace, source_id, kind, source_key, origin, time.time()))
+                db.execute('INSERT OR IGNORE INTO source_aliases VALUES (?,?,?,?)',
+                           (namespace, source_id, origin, time.time()))
                 db.execute('INSERT OR IGNORE INTO source_versions VALUES (?,?,?,?,?,?,?)',
                            (namespace, source_id, version_id, raw_sha, 'bytes', scope_raw, time.time()))
                 db.execute('INSERT INTO source_observations VALUES (?,?,?,?,?,?,?,?)',
@@ -293,10 +314,11 @@ def main(argv=None):
     parser.add_argument('--namespace', required=True)
     parser.add_argument('--kind', choices=sorted(KINDS), required=True)
     parser.add_argument('--path', type=Path, required=True)
+    parser.add_argument('--source-key', help='Stable operator-chosen identity across local path renames')
     parser.add_argument('--intent-key', required=True)
     args = parser.parse_args(argv)
     result = capture_file(args.store, args.namespace, args.kind, args.path,
-                          args.intent_key)
+                          args.intent_key, source_key=args.source_key)
     print(json.dumps(result, sort_keys=True, ensure_ascii=False))
     return 0
 
