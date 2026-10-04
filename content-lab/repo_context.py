@@ -20,6 +20,7 @@ import time
 
 from automation_core import connection, digest, identifier, strict_int
 from content_lab import _insert_item
+from repo_artifacts import oid_hasher
 from repo_source import CHUNK_BYTES, analyze, partition, partition_stream, import_graph, components
 
 AST_WINDOW_BYTES = 2 * 1024 * 1024
@@ -698,23 +699,25 @@ def get_snapshot(store, namespace, snapshot_id, *, offset=0, limit=20):
 
 def verify_roundtrip_db(db, snap):
     indexed = exact = 0
-    for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? AND state=?', (snap['id'], 'INDEXED')):
+    for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? AND state=? ORDER BY ordinal', (snap['id'], 'INDEXED')):
         indexed += 1
-        chunks = db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], row['path']))
-        cursor, hasher, valid, chunk_count = 0, hashlib.sha256(), True, 0
-        for chunk in chunks:
-            chunk_count += 1
+        cursor, count, hasher, valid = 0, 0, hashlib.sha256(), True
+        git_hash = oid_hasher(row['oid'], row['size'])
+        for chunk in db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], row['path'])):
             pulse()
-            valid = valid and chunk['byte_start'] == cursor and chunk['byte_end'] - chunk['byte_start'] == len(chunk['raw'])
+            valid = valid and chunk['ordinal'] == count and chunk['byte_start'] == cursor and chunk['byte_end'] - cursor == len(chunk['raw'])
+            valid = valid and (len(chunk['raw']) > 0 or row['size'] == 0 and count == 0)
             valid = valid and chunk['revision'] == digest([chunk['logical_id'], row['file_hash'], sha(chunk['raw']), chunk['byte_start'], chunk['byte_end']])
             hasher.update(chunk['raw'])
-            cursor = chunk['byte_end']
-        exact += int(valid and chunk_count > 0 and cursor == row['size'] and hasher.hexdigest() == row['file_hash'])
+            git_hash.update(chunk['raw'])
+            cursor, count = chunk['byte_end'], count + 1
+        exact += int(valid and count > 0 and cursor == row['size'] and hasher.hexdigest() == row['file_hash'] and git_hash.hexdigest() == row['oid'])
     accounted = db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=?', (snap['id'],)).fetchone()[0]
     gaps = db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=? AND state!=?', (snap['id'], 'INDEXED')).fetchone()[0]
+    orphans = db.execute("SELECT count(*) FROM repo_chunks c LEFT JOIN repo_entries e ON e.snapshot_id=c.snapshot_id AND e.path=c.path WHERE c.snapshot_id=? AND (e.path IS NULL OR e.state!='INDEXED')", (snap['id'],)).fetchone()[0]
     return {'indexed': indexed, 'exact': exact, 'accounted': accounted,
-            'exact_for_indexed': exact == indexed and accounted == snap['total'],
-            'all_tracked_bytes_exportable': gaps == 0 and accounted == snap['total'] and exact == indexed}
+            'exact_for_indexed': exact == indexed and accounted == snap['total'] and orphans == 0,
+            'all_tracked_bytes_exportable': gaps == 0 and accounted == snap['total'] and exact == indexed and orphans == 0}
 
 
 def snapshot_changes(db, snap):
