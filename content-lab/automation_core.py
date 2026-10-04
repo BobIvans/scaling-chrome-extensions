@@ -227,6 +227,10 @@ def validate_policy(policy):
 def validate_job(payload, policy):
     if not isinstance(payload, dict):
         raise ValueError("JOB_OBJECT_REQUIRED")
+    if payload.get('kind') == 'workflow_operation':
+        from workflow_runtime import validate_operation_job
+        validate_operation_job(payload, policy)
+        return 1
     if payload.get('kind') == 'review_report':
         if set(payload) != {'kind', 'report_profile'}:
             raise ValueError('REPORT_JOB_SCHEMA')
@@ -297,23 +301,38 @@ def enqueue(store, policy, task_key, payload):
     validate_policy(policy)
     identifier(task_key)
     maximum = validate_job(payload, policy)
-    db, job_id, now = connection(store), uuid.uuid4().hex, time.time()
+    db = connection(store)
     try:
         db.execute("BEGIN IMMEDIATE")
-        row = db.execute("SELECT * FROM jobs WHERE task_key=?", (task_key,)).fetchone()
-        if row:
-            if row["payload_hash"] != digest(payload) or row["policy_hash"] != digest(policy):
-                raise ValueError("TASK_KEY_CONTENT_CONFLICT")
-            db.commit()
-            return {"id": row["id"], "state": row["state"], "reused": True}
-        if db.execute("SELECT count(*) FROM jobs WHERE state NOT IN ('SUCCEEDED','FAILED','CANCELLED','BLOCKED')").fetchone()[0] >= 1000:
-            raise ValueError("QUEUE_LIMIT")
-        db.execute("INSERT INTO jobs VALUES (?,?,?,?,?,'QUEUED',0,?,?,0,NULL,0,'{}','{}',?,?)", (job_id, task_key, encoded(payload), digest(payload), digest(policy), maximum, now, now, now))
-        event(db, job_id, "QUEUED", {"task_key": task_key})
+        result = enqueue_in_transaction(db, policy, task_key, payload)
         db.commit()
-        return {"id": job_id, "state": "QUEUED", "reused": False}
+        return result
     finally:
         db.close()
+
+
+def enqueue_in_transaction(db, policy, task_key, payload):
+    """Canonical admission used by scheduler/campaign in their owner transaction."""
+    validate_policy(policy)
+    identifier(task_key)
+    maximum = validate_job(payload, policy)
+    row = db.execute("SELECT * FROM jobs WHERE task_key=?", (task_key,)).fetchone()
+    if row:
+        if row["payload_hash"] != digest(payload) or row["policy_hash"] != digest(policy):
+            raise ValueError("TASK_KEY_CONTENT_CONFLICT")
+        return {"id": row["id"], "state": row["state"], "reused": True}
+    # Optional operator capacity is admission, never a corpus/file ceiling.
+    limit = policy.get("max_queued")
+    if limit is not None:
+        if type(limit) is not int or limit < 1:
+            raise ValueError("QUEUE_CAPACITY_REQUIRED")
+        if db.execute("SELECT count(*) FROM jobs WHERE state NOT IN ('SUCCEEDED','FAILED','CANCELLED','BLOCKED')").fetchone()[0] >= limit:
+            raise ValueError("QUEUE_CAPACITY_WAIT")
+    job_id, now = uuid.uuid4().hex, time.time()
+    db.execute("INSERT INTO jobs VALUES (?,?,?,?,?,'QUEUED',0,?,?,0,NULL,0,'{}','{}',?,?)",
+               (job_id, task_key, encoded(payload), digest(payload), digest(policy), maximum, now, now, now))
+    event(db, job_id, "QUEUED", {"task_key": task_key})
+    return {"id": job_id, "state": "QUEUED", "reused": False}
 
 
 class Cancelled(Exception):
@@ -432,22 +451,27 @@ class Core:
         return self.get(job_id)
 
     def heartbeat(self, job):
+        from campaign_runtime import worker_guard
+        worker_guard(self.store, job['id'], job=job)
         db = connection(self.store)
         try:
             with db:
-                row = db.execute("SELECT cancel_requested,state,lease_token FROM jobs WHERE id=?", (job["id"],)).fetchone()
-                if not row or row[0] or row[1] != "RUNNING" or row[2] != job["lease_token"]:
+                row = db.execute("SELECT cancel_requested,state,lease_token,lease_until FROM jobs WHERE id=?", (job["id"],)).fetchone()
+                if not row or row[0] or row[1] != "RUNNING" or row[2] != job["lease_token"] or row[3] < time.time():
                     raise Cancelled()
                 db.execute("UPDATE jobs SET lease_until=? WHERE id=?", (time.time() + 30, job["id"]))
         finally:
             db.close()
 
     def transition(self, job, state, *, result=None, checkpoint=None, delay=0):
+        if state in {'SUCCEEDED','WAITING_CI','RUNNING'}:
+            from campaign_runtime import worker_guard
+            worker_guard(self.store, job['id'], job=job)
         db = connection(self.store)
         try:
             db.execute("BEGIN IMMEDIATE")
             current = db.execute("SELECT * FROM jobs WHERE id=?", (job["id"],)).fetchone()
-            if current["lease_token"] != job["lease_token"]:
+            if current["lease_token"] != job["lease_token"] or current["state"] != "RUNNING" or current["lease_until"] < time.time():
                 raise ValueError("LEASE_LOST")
             if current["cancel_requested"] and state != "RUNNING":
                 state = "CANCELLED"
@@ -659,6 +683,10 @@ class Core:
                 from review_report import write_report
                 result = write_report(self.store, self.policy['reports'][job['payload']['report_profile']],
                                       progress=lambda: self.heartbeat(job))
+                self.transition(job, 'SUCCEEDED', result=result)
+            elif job['payload']['kind'] == 'workflow_operation':
+                from workflow_runtime import execute_operation
+                result = execute_operation(self, job)
                 self.transition(job, 'SUCCEEDED', result=result)
             else:
                 self.patch_test(job)

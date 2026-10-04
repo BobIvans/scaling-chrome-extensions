@@ -1,0 +1,1386 @@
+{
+  "count": 29,
+  "features": [
+    {
+      "id": "LIB-034",
+      "title": "Очередь ресурсоёмких операций вместо обрезания корпуса",
+      "domain": "desktop_core",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/02_DESKTOP_ARCHITECTURE_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "81a159b4d3ccf37a7943f79f8142bd5ded07a1f86f5b5b49f06af12ced0b51e3",
+          "ordinal": 3,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Конечная RAM/CPU Dell требует контроля; искусственное уменьшение архива решает не ту проблему.",
+      "proposed_behavior": "CPU/I/O/parser workers используют настраиваемый resource budget; backpressure и WAITING_RESOURCE сохраняют полный набор jobs, диск проверяется до commit.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-006",
+        "LIB-029"
+      ],
+      "acceptance": [
+        "Задачи ждут ресурс, но не исчезают из manifest.",
+        "Остановка по disk threshold сохраняет cursor и честный incomplete."
+      ],
+      "next_experiment": "Прогнать один и несколько collectors при ограниченной памяти.",
+      "metric": "Throughput, p95 UI latency, peak RAM; lost queued work=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-049",
+      "title": "Выбор следующего недостающего доказательства",
+      "domain": "evidence",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "CONTINUATION_V3/ASSISTANT_RND_PROPOSALS.json",
+          "source_record_id": "ASSISTANT-RND-01",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "149ad81385760ba7da45c3fdf43e615770c36552e8c707fd67148fbac9f6c50d",
+          "ordinal": 233,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Большой backlog растёт быстрее, чем закрываются причины неопределённости.",
+      "proposed_behavior": "Evidence debt по цели включает source/test/device/data gaps; next read/experiment ранжировать по устранению blocker и измеренной стоимости, не по количеству карточек.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "LIB-020",
+        "LIB-022",
+        "LIB-024"
+      ],
+      "acceptance": [
+        "Каждая рекомендация указывает конкретный missing proof и зависимую цель.",
+        "Непроверенный ROI отображён как оценка."
+      ],
+      "next_experiment": "На десяти открытых целях сравнить FIFO и debt-based выбор сбора.",
+      "metric": "Time-to-unblock; verified questions resolved per hour.",
+      "deferred_condition": "После достоверного requirement/evidence graph и измерения baseline.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-011",
+      "title": "Snapshot fence перед изменением",
+      "domain": "execution",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-21",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Патч или план может быть подготовлен для уже устаревшего состояния.",
+      "proposed_behavior": "Связать кандидата с commit, dirty patch, source hashes, intent revision и policy version; перед изменением сравнить с текущим состоянием.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "ACT-001",
+        "ACT-003"
+      ],
+      "acceptance": [
+        "Изменение HEAD, исходника или разрешения переводит кандидата в STALE.",
+        "Перепланирование сохраняет оба snapshots и причину отклонения."
+      ],
+      "next_experiment": "Изменить один файл между retrieval и commit на fixture.",
+      "metric": "Отклонённые stale candidates; silent overwrite; время обновления.",
+      "deferred_condition": "Нельзя применять к новой базе по одному совпадению имени проекта.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-05"
+      ]
+    },
+    {
+      "id": "ACT-012",
+      "title": "Проверяемый исход и ExecutionReceipt",
+      "domain": "evidence",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-22",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/05_SCHEMAS/ExecutionReceipt.schema.json",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "e20b074b37087e6478b292a3f5e7a7f8553ac53ea390115ebe8713b5df5c2e91",
+          "ordinal": 68,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Зелёный лог или уверенное сообщение модели не доказывает нужный результат.",
+      "proposed_behavior": "До выполнения задавать outcome predicates; receipt связывать с операцией, входами, средой, артефактами, границей эффекта и проверившим компонентом.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "ACT-001",
+        "ACT-002",
+        "ACT-011"
+      ],
+      "acceptance": [
+        "Тест другого SHA отвергается.",
+        "Структурная валидность JSON не подменяет проверку результата пользователя."
+      ],
+      "next_experiment": "Подложить ложный DONE, чужой тест и частичный экспорт под один goal.",
+      "metric": "False acceptance; доля receipts с полным binding; verified task success.",
+      "deferred_condition": "Verified всегда указывает scope; не повышать исторический prototype receipt до production.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-016",
+      "title": "Граф конфликтов общих ресурсов",
+      "domain": "parallelism",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-20",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/00_START/00_PARALLEL_CAPTURE_DECISION_RU.md",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "f60828d44b44bdbd4aceeb6dd868b984b5f4152eda29664020fba46eb2903ce4",
+          "ordinal": 383,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Глобальный single-writer тормозит независимую работу, а отсутствие scopes создаёт гонки.",
+      "proposed_behavior": "Декларировать read/write footprint: файл, branch/head, UI focus, clipboard, port, аккаунт; сериализовать конфликтующие эффекты и разрешать независимые.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-002",
+        "ACT-015"
+      ],
+      "acceptance": [
+        "Два job на одной вкладке ждут lease, два независимых append-only producers работают параллельно.",
+        "Windows aliases, case и junction не создают два владельца одного ресурса."
+      ],
+      "next_experiment": "Запустить API collector, индексатор и два GUI job; проверить конфликт только GUI.",
+      "metric": "Resource collisions; параллельные независимые задачи; очередь конфликтов.",
+      "deferred_condition": "Топология resources уточняется на настоящих adapters, не только в JSON.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-09"
+      ]
+    },
+    {
+      "id": "ACT-017",
+      "title": "Общая подготовка immutable данных",
+      "domain": "parallelism",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-31",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Несколько задач заново строят одинаковый индекс и расходуют память.",
+      "proposed_behavior": "Coalesce одинаковые read preparations по snapshot, parser/version и scope; выдавать immutable результат подписчикам с отдельной отменой.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-011",
+        "ACT-016"
+      ],
+      "acceptance": [
+        "Пять подписчиков инициируют одну подготовку.",
+        "Отмена одного подписчика не лишает остальных результата."
+      ],
+      "next_experiment": "Пять simultaneous goals запрашивают один repo graph; отменить один.",
+      "metric": "Повторные rebuild; cache hit; retained memory; latency подписчиков.",
+      "deferred_condition": "Разные права или snapshots никогда не объединяются одним key.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-018",
+      "title": "Отложенный резерв вместо постоянного fan-out",
+      "domain": "parallelism",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-19",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/03_RND_CARDS/RND-20.md",
+          "source_record_id": "RND-20",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "82a2f23192be227eb0c4b38031971853ae56e0c9da24f206e89b6564792c91c3",
+          "ordinal": 401,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Постоянный запуск нескольких дорогих путей может ухудшать итоговую задержку.",
+      "proposed_behavior": "Подключать backup для разрешённой read/preparation работы по измеренному slow-tail или ошибке; выбирать первый прошедший обязательные проверки результат.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-012",
+        "ACT-013",
+        "ACT-016"
+      ],
+      "acceptance": [
+        "Самый быстрый неверный кандидат проигрывает более медленному валидному.",
+        "Backup не отправляет дублирующий внешний submit."
+      ],
+      "next_experiment": "Сравнить serial, eager и delayed hedge на одинаковом corpus и бюджете.",
+      "metric": "p95 time-to-verified; total attempt cost; recovery; wasted work.",
+      "deferred_condition": "Включать по классам задач после измерений, не назначать универсальный порог.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-019",
+      "title": "Явная семантика объединения параллельных ветвей",
+      "domain": "parallelism",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/00_START/00_PARALLEL_CAPTURE_DECISION_RU.md",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "f60828d44b44bdbd4aceeb6dd868b984b5f4152eda29664020fba46eb2903ce4",
+          "ordinal": 383,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Режим first-result теряет обязательные части полного сбора.",
+      "proposed_behavior": "Выбирать COMPLEMENTARY_UNION, REQUIRED_EVIDENCE_JOIN, FIRST_VERIFIED, PARTITIONED_MAP или PREPARE_COMMIT с собственным условием завершения.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-012",
+        "ACT-016"
+      ],
+      "acceptance": [
+        "UNION сохраняет late observations до завершения объявленного scope.",
+        "REQUIRED_EVIDENCE_JOIN не закрывается первым удачным checker."
+      ],
+      "next_experiment": "На одном workflow сделать обязательный поздний результат и проверить разные join modes.",
+      "metric": "Потерянные обязательные ветви; корректность coverage; время завершения.",
+      "deferred_condition": "Не переиспользовать FIRST_VERIFIED для полного экспорта или суммы partitions.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-020",
+      "title": "Многопоточная запись observations",
+      "domain": "capture",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/00_START/00_PARALLEL_CAPTURE_DECISION_RU.md",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "f60828d44b44bdbd4aceeb6dd868b984b5f4152eda29664020fba46eb2903ce4",
+          "ordinal": 383,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/01_YOUR_WORDS/VOICE-USER-EXCERPT-01.txt",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "de77bd2e7fe5a738ebe4539b7a876e55652490423e9e0238357be894e74b1630",
+          "ordinal": 28,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Ранние документы запрещали всю параллельную запись, хотя пользователь уточнил необходимость одновременного capture.",
+      "proposed_behavior": "Микрофон, DOM, Git, terminal и accessibility collectors append-only пишут в свои namespace с sequence, timestamp и source revision; views объединяются отдельно.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-016",
+        "ACT-019"
+      ],
+      "acceptance": [
+        "Одновременные producers сохраняют все sequences и provenance.",
+        "Дедуп raw bytes сохраняет каждую исходную ссылку и версию."
+      ],
+      "next_experiment": "Запустить три collectors с duplicate и out-of-order observations и остановить один.",
+      "metric": "Capture gaps; late arrival lag; duplicate lineage retention.",
+      "deferred_condition": "Реальные connectors подключать по одному после проверки доступа и coverage.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-09"
+      ]
+    },
+    {
+      "id": "ACT-021",
+      "title": "Один commit на конкретный effect target",
+      "domain": "execution",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-23",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/00_START/00_PARALLEL_CAPTURE_DECISION_RU.md",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "f60828d44b44bdbd4aceeb6dd868b984b5f4152eda29664020fba46eb2903ce4",
+          "ordinal": 383,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Несколько правильных кандидатов могут дважды изменить один внешний объект.",
+      "proposed_behavior": "Scoped commit broker выбирает проверенного кандидата и владеет конкретной операцией/target; независимые targets сохраняют параллельность.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-011",
+        "ACT-012",
+        "ACT-015",
+        "ACT-016"
+      ],
+      "acceptance": [
+        "Два concurrent commit для одного ID создают один локальный эффект.",
+        "Два разных разрешённых targets не блокируются глобальным mutex."
+      ],
+      "next_experiment": "Гонка двух кандидатов вокруг одной локальной записи и двух независимых файлов.",
+      "metric": "Duplicate mutations; throughput независимых targets; lease conflicts.",
+      "deferred_condition": "Для удалённого сервиса граница гарантий описывается отдельно.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-09"
+      ]
+    },
+    {
+      "id": "ACT-024",
+      "title": "Возобновляемый workflow с проверенными checkpoints",
+      "domain": "durability",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/03_RND_CARDS/RND-33.md",
+          "source_record_id": "RND-33",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "6be0849d479d779429501be5c0179cc7a230e36c47bacd2262c63df5eeec5c5f",
+          "ordinal": 414,
+          "historical_record_links": []
+        },
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/00_START/01_MASTER_GOALS_AND_ARCHITECTURE_RU.md",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "40069f65fe9d8843666e848ec2e7934da9b51918af583859602cece3463e5116",
+          "ordinal": 0,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Перезапуск ПК или процесса заставляет workflow начинаться заново.",
+      "proposed_behavior": "Хранить verified prefix, pending steps, attempts и bindings; на resume переоценивать freshness и permissions, не повторять подтверждённый эффект.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "ACT-011",
+        "ACT-012",
+        "ACT-022",
+        "ACT-023"
+      ],
+      "acceptance": [
+        "Restart сохраняет verified шаги и отдельно unknown шаги.",
+        "Устаревшие inputs инвалидируют только зависимую часть плана."
+      ],
+      "next_experiment": "Остановить workflow после каждого шага, восстановить и сравнить итог с непрерывным запуском.",
+      "metric": "Resume success; повторные эффекты; восстановленные checkpoints.",
+      "deferred_condition": "Нельзя продолжать на изменённой среде без revalidation.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-08"
+      ]
+    },
+    {
+      "id": "ACT-025",
+      "title": "Deadline, отмена и bounded retries",
+      "domain": "durability",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/05_SCHEMAS/ActionSpec.schema.json",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "68fd65d1bc225a3f3f160cc92c257732b03c32ff86313ca366bed3a6b5913d42",
+          "ordinal": 63,
+          "historical_record_links": []
+        },
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-36",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Фоновый job может бесконечно повторяться и продолжать после отмены.",
+      "proposed_behavior": "Задать parent cancellation, deadline и retry policy на шаг; отмена запрещает новые эффекты, уже отправленные внешние запросы передаются reconciliation.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "ACT-015",
+        "ACT-023",
+        "ACT-024"
+      ],
+      "acceptance": [
+        "После подтверждённого cancel новые effect steps не стартуют.",
+        "Retry exhaustion виден как конкретный blocker, без бесконечного цикла."
+      ],
+      "next_experiment": "Отменить parent при одновременно queued, running и remote-unknown steps.",
+      "metric": "Cancel-to-no-new-work latency; runaway retries; untracked child jobs.",
+      "deferred_condition": "Отмена HTTP не трактуется как доказанная отмена server-side эффекта.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-027",
+      "title": "Планировщик ресурсов Dell и foreground приоритет",
+      "domain": "scheduling",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-40",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/VOICE_V3/03_RND_CARDS/RND-32.md",
+          "source_record_id": "RND-32",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "b3bbf8715db8540bbac28d43dcca45c99d732115454577bee6c1c1d3f6f20451",
+          "ordinal": 413,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Одновременные ASR, индексатор и тесты конкурируют за ограниченные CPU/RAM.",
+      "proposed_behavior": "Ограничивать тяжёлые jobs и provider budget, приоритет отдавать audio/UI; лёгкое I/O допускается параллельно, backpressure явно виден.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-016",
+        "ACT-025",
+        "ACT-026"
+      ],
+      "acceptance": [
+        "При давлении памяти background jobs замедляются без потери очереди.",
+        "Одновременные задачи не обходят общий бюджет попыток."
+      ],
+      "next_experiment": "Сравнить 1/2/4 workers при Chrome, ASR и импорте на Dell после подключения runtime.",
+      "metric": "Peak RAM; voice p95; jobs/hour; стоимость; throttled time.",
+      "deferred_condition": "Выбор числа workers основывать на измерениях, не путать с лимитом документов.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-040",
+      "title": "Локальное перепланирование остатка workflow",
+      "domain": "reliability",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-33",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Любая ошибка заставляет повторять все шаги или продолжать по устаревшему плану.",
+      "proposed_behavior": "После каждого наблюдаемого checkpoint сравнивать delta; сохранять verified prefix и строить минимальный recovery suffix с теми же scopes.",
+      "implementation_status": "unverified",
+      "phase": "P4",
+      "dependencies": [
+        "ACT-011",
+        "ACT-012",
+        "ACT-024",
+        "ACT-039"
+      ],
+      "acceptance": [
+        "Переименование окна не повторяет уже сохранённый артефакт.",
+        "Изменение обязательной предпосылки создаёт BLOCKED/NEEDS_CONTEXT, не скрытое продолжение."
+      ],
+      "next_experiment": "В середине fixture workflow изменить состояние одного зависимого ресурса.",
+      "metric": "Повторные шаги; repair success; сохранённый verified prefix.",
+      "deferred_condition": "Planner не расширяет права при ремонте маршрута.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-045",
+      "title": "Unknown capability в небольшой coding workflow",
+      "domain": "coding",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/00_START/02_NEXT_IMPLEMENTATION_RU.md",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "62358b6f16acff10dc89d25c223cbbe7b034b4ed35359f5a75cce2e0b58dd7d8",
+          "ordinal": 1,
+          "historical_record_links": []
+        },
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-27",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Просьба «любое действие» не имеет готового adapter и может уйти в неограниченную генерацию.",
+      "proposed_behavior": "Неизвестную способность превращать в scoped AutomationSpec, patch proposal в отдельной среде, контрактные тесты и reviewable integration; после проверки добавить один capability.",
+      "implementation_status": "unverified",
+      "phase": "P8",
+      "dependencies": [
+        "ACT-008",
+        "ACT-010",
+        "ACT-014",
+        "ACT-041"
+      ],
+      "acceptance": [
+        "Generated code не меняет trust policy и не получает production credentials.",
+        "Следующий вызов проверенного skill не требует повторной генерации."
+      ],
+      "next_experiment": "Создать один новый read-only adapter из задачи и проверить два held-out случая.",
+      "metric": "Spec-to-verified-skill time; reuse success; scope creep.",
+      "deferred_condition": "Git worktree не считать песочницей; интеграция зависит от разрешённого отдельного сценария.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "ACT-046",
+      "title": "Staged updater и проверка происхождения релиза",
+      "domain": "updates",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-38",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Загрузка нового кода может активировать чужую или устаревшую сборку.",
+      "proposed_behavior": "Проверять доверенные release metadata/digest, совместимость и healthcheck; скачивать в staging и активировать одну версию атомарно в своей границе.",
+      "implementation_status": "unverified",
+      "phase": "P8",
+      "dependencies": [
+        "ACT-011",
+        "ACT-012",
+        "ACT-041"
+      ],
+      "acceptance": [
+        "Правильный checksum от недоверенного publisher не проходит.",
+        "Повтор release event не выполняет вторую активацию."
+      ],
+      "next_experiment": "Подать чужой пакет, старую подписанную версию и корректный новый release.",
+      "metric": "Rejected invalid releases; interrupted update recovery; activation consistency.",
+      "deferred_condition": "Текущую поддержку подписи/attestation конкретного distribution channel проверить отдельно.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-11"
+      ]
+    },
+    {
+      "id": "ACT-047",
+      "title": "Миграции данных и ограниченный rollback",
+      "domain": "updates",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-38",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/00_START/02_NEXT_IMPLEMENTATION_RU.md",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "62358b6f16acff10dc89d25c223cbbe7b034b4ed35359f5a75cce2e0b58dd7d8",
+          "ordinal": 1,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Обновление кода и схемы может оставить смешанную несовместимую версию.",
+      "proposed_behavior": "До activation проверять migration plan на копии, backup/read compatibility и возможность возврата; явно описывать необратимые migrations.",
+      "implementation_status": "unverified",
+      "phase": "P8",
+      "dependencies": [
+        "ACT-024",
+        "ACT-046"
+      ],
+      "acceptance": [
+        "Ошибка миграции сохраняет пригодную прежнюю версию либо явный recovery state.",
+        "Rollback тестируется на данных, а не только переключением бинарника."
+      ],
+      "next_experiment": "Fault injection на migration steps и восстановление копии библиотеки.",
+      "metric": "Data consistency; recovery time; успешность проверенного возврата.",
+      "deferred_condition": "Не обещать универсальный rollback внешних сообщений, сделок или необратимой миграции.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-11"
+      ]
+    },
+    {
+      "id": "ACT-049",
+      "title": "Durable расписания на ПК с catch-up политикой",
+      "domain": "scheduling",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/ALL_TRACKS_INDEX.json",
+          "source_record_id": "RND-12",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "047df79c7d2eba2a1e9b155084346caf21a61f51f4d376157609b1fe9153c8d6",
+          "ordinal": 15,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/02_STRATEGY/NEXT_DEVELOPMENT_NOW_LATER_RU.txt",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "afa079f4dd61149efe5dae25fbbc649f1109b64c75844e8a0541eb0ab8c80d17",
+          "ordinal": 35,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Цель 24/7 не определяет поведение после сна ноутбука и пропущенных запусков.",
+      "proposed_behavior": "Для будущего расписания хранить timezone, next_run, missed-run policy, concurrency key и budget; повтор события использует durable operation identity.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "ACT-024",
+        "ACT-025",
+        "RND-039"
+      ],
+      "acceptance": [
+        "Sleep/resume не запускает бесконтрольно все пропущенные тяжёлые jobs.",
+        "Два события одного occurrence не создают две операции."
+      ],
+      "next_experiment": "На fake clock смоделировать сон, переход даты и restart; реальное расписание создавать только отдельной командой.",
+      "metric": "Duplicate occurrences; scheduling lag; bounded catch-up.",
+      "deferred_condition": "В этом архиве расписания только специфицируются; 24/7 выполнение требует реально работающего host.",
+      "optional_enhancements": [
+        "ACT-027"
+      ],
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-08"
+      ]
+    },
+    {
+      "id": "ACT-055",
+      "title": "Предварительная смета полной попытки",
+      "domain": "cost",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/00_START/01_MASTER_GOALS_AND_ARCHITECTURE_RU.md",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "40069f65fe9d8843666e848ec2e7934da9b51918af583859602cece3463e5116",
+          "ordinal": 0,
+          "historical_record_links": []
+        },
+        {
+          "archive": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03(1).zip",
+          "member": "VOICE_AGENTOS_PARALLEL_CONTEXT_V2_2026-10-03/03_RND/NEW_TRACKS.json",
+          "source_record_id": "RND-40",
+          "archive_sha256": "e307c955cc0abbd087b6bab2a07d6463ca0b8e226834278f872246652f2f3af7",
+          "source_sha256": "d77da13fcd9c82a35de84d4705d2a4a8b1995b5bde7b63dd1f029f62dd70be20",
+          "ordinal": 16,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/packages/OCC_RND/docs/10_OPENAI_AND_AUTOMATION_CONTRACTS_RU.md",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "3bb54f01515c38a1ab16a2b4ffd1a0328ebafb56341927d8af7d802e73c12426",
+          "ordinal": 152,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Цена показывается только для победителя, скрывая retries и parallel losers.",
+      "proposed_behavior": "Оценивать ожидаемые CPU/time/API затраты всех ветвей до запуска и фактические после; budget guard влияет на число routes и размер допустимого контекста.",
+      "implementation_status": "unverified",
+      "phase": "P5",
+      "dependencies": [
+        "ACT-018",
+        "ACT-026",
+        "ACT-027"
+      ],
+      "acceptance": [
+        "Backup и отменённые обращения входят в итоговую стоимость.",
+        "Бюджет не приводит к молчаливому удалению исходников или ложному DONE."
+      ],
+      "next_experiment": "Сравнить predicted и actual cost на serial и hedged corpus.",
+      "metric": "Estimate error; over-budget jobs; cost per verified outcome.",
+      "deferred_condition": "Цены provider брать из проверенной на момент внедрения конфигурации, не из старых ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-10"
+      ]
+    },
+    {
+      "id": "RND-006",
+      "title": "AI-код → изолированный patch → независимая проверка",
+      "domain": "repo",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-04",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        },
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-05",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::PIPE-08",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-943ea5af94267b4c367ee13eeaa5e10881d527f1c5fd0b836b4a00f71d0cb354"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::PIPE-09",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-d7eb5bbf5c320fc425816b045eb990b56973dd3ba4c34e2580cacfefa22ce576"
+          ]
+        }
+      ],
+      "problem": "Текст AI не гарантирует пригодный patch на нужной базе.",
+      "proposed_behavior": "Собирать TaskSpec и context digest, принимать patch в отдельном worktree, проверять allowed paths, base и postconditions; вернуть evidence в библиотеку.",
+      "implementation_status": "unverified",
+      "phase": "P3",
+      "dependencies": [
+        "RND-002",
+        "RND-003",
+        "RND-004"
+      ],
+      "acceptance": [
+        "Wrong base и изменённый patch hash отклоняются.",
+        "Два worktree не делят test artifacts.",
+        "Редактирование expected answer вместо исправления дефекта не проходит независимый сценарий."
+      ],
+      "next_experiment": "Одна реальная маленькая исправляемая ошибка на pinned fixture репозитория.",
+      "metric": "Verified patch rate, число повторов и cost per accepted patch.",
+      "deferred_condition": "После working context roundtrip и установленных проверок репозитория.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-007",
+      "title": "PR/CI/merge с привязкой к реально проверенному дереву",
+      "domain": "repo",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-06",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        },
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-07",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        },
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-08",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Успешная проверка старого head не подтверждает новый публикуемый код.",
+      "proposed_behavior": "Готовить reviewable diff, сверять опубликованный tree/head с tested tree и сохранять фактический merged SHA из ответа сервиса.",
+      "implementation_status": "unverified",
+      "phase": "P3",
+      "dependencies": [
+        "RND-006"
+      ],
+      "acceptance": [
+        "Смена head инвалидирует старую проверку.",
+        "Неизвестный ответ публикации требует reconciliation до повтора.",
+        "Squash SHA не путается с прежним branch head."
+      ],
+      "next_experiment": "Испытать dry-run adapter на fixture ответах CI с изменением head и таймаутом.",
+      "metric": "Расхождения tested/published tree и duplicate publications.",
+      "deferred_condition": "Реальные записи GitHub только в отдельно заданном scope.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-14"
+      ]
+    },
+    {
+      "id": "RND-008",
+      "title": "Воспроизводимая сборка и идентичность установленного приложения",
+      "domain": "qualification",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-F15",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-1822abe587628d97fa4aae5da92dc806721dabcc97c280dc325745ff0862f8ee"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-035",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-964ac57114f88435f2edd51a499d5fe5957dedb1a5a8ab41fc71599602ec1aeb"
+          ]
+        },
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-09",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Тесты checkout могут относиться к другому коду, чем запущенный desktop или bot.",
+      "proposed_behavior": "Записывать toolchain, dependencies, artifact digest, установленный entrypoint и source fingerprint до и после обновления.",
+      "implementation_status": "unverified",
+      "phase": "P3",
+      "dependencies": [
+        "RND-001"
+      ],
+      "acceptance": [
+        "Различие installed/source hashes даёт BLOCKED.",
+        "Сборка фиксирует различия nondeterministic artifacts.",
+        "Неудачная миграция не активирует новый runtime."
+      ],
+      "next_experiment": "Установить две версии в изолированных каталогах и обнаружить намеренную подмену entrypoint.",
+      "metric": "Доля запусков с проверенной installed identity.",
+      "deferred_condition": "Реальное устройство и поддержанная текущим репозиторием среда ещё не проверены.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-11"
+      ]
+    },
+    {
+      "id": "RND-024",
+      "title": "Расписание R&D и campaign DAG с checkpoint",
+      "domain": "orchestration",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-11",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_WORKFLOW_CATALOG.json",
+          "source_record_id": "SCE_V2::W3-WF27",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "376a6170460ebfb1598505fc1636606b9c747830eb0203a71fb775471e19db2b",
+          "ordinal": 43,
+          "historical_record_links": [
+            "HIST-3090a5857b93e203708c9f8143b564d675620fcc2baa9a21cbef078e20bb4a8b"
+          ]
+        }
+      ],
+      "problem": "План JSON без установленного scheduler не выполняет ежедневную работу.",
+      "proposed_behavior": "Расширять существующего queue owner: dependencies, deadline, quota, per-resource lease, checkpoint, overlap policy и typed result join.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-009",
+        "RND-011",
+        "RND-023"
+      ],
+      "acceptance": [
+        "Неуспешный required node блокирует dependent node.",
+        "Два ticks одной schedule не дублируют run.",
+        "Прерванный job сохраняет точку продолжения."
+      ],
+      "next_experiment": "Смоделировать двое суток virtual time с missed tick, restart и overlapping job.",
+      "metric": "Выполненные полезные jobs/сутки, skipped reasons и recovery latency.",
+      "deferred_condition": "Расписание устанавливается отдельной конкретной настройкой; ZIP его не включает.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-08"
+      ]
+    },
+    {
+      "id": "RND-025",
+      "title": "Измеренная параллельность strategy/replay workers",
+      "domain": "web3_scaling",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/automation/GAP_MATRIX_RU.txt",
+          "source_record_id": "GAP-14",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "af76a31892cbd7dd29986a9e22cbeddde0edfa733d2312bca1ce62bcc3b0df4c",
+          "ordinal": 325,
+          "historical_record_links": []
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-030",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-8787aded8cabf64500c6c23a9da65008067afc1203fd0d0265439a396ccca378"
+          ]
+        }
+      ],
+      "problem": "Число процессов не равно полезной пропускной способности или on-chain параллелизму.",
+      "proposed_behavior": "Раздельно конфигурировать capture, detector, simulation и ledger stages; independent workspaces читать immutable snapshots, общие изменяемые ресурсы координировать.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-012",
+        "RND-015",
+        "RND-018",
+        "RND-024"
+      ],
+      "acceptance": [
+        "Прогоны 1/2/4 workers используют одинаковый dataset и суммарный budget.",
+        "Нет дублирующих writers одного ledger.",
+        "Сохранены p95 latency, memory и dropped-work причины."
+      ],
+      "next_experiment": "Сравнить throughput и полезный результат при 1/2/4 workers до увеличения лимита.",
+      "metric": "Verified opportunities/hour при одинаковых затратах.",
+      "deferred_condition": "Concurrency текущего runtime не повышается без отдельной проверки его owner.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-09"
+      ]
+    },
+    {
+      "id": "RND-026",
+      "title": "Граф конфликтов ресурсов и капитала",
+      "domain": "web3_scaling",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/STRUCTURED_RND_CARDS.json",
+          "source_record_id": "OCC_RND::EXP-039",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "ba8b3c142ab24dec9467aabb18fd60a9f710f80cdbf6ba71f1162578ab47bf2d",
+          "ordinal": 47,
+          "historical_record_links": [
+            "HIST-b9d7f63ad880c893ec5145d690e2497db52c73060056ecc179bf490a8ab1a500"
+          ]
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-030",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-8787aded8cabf64500c6c23a9da65008067afc1203fd0d0265439a396ccca378"
+          ]
+        }
+      ],
+      "problem": "Несколько хороших opportunities могут требовать одинаковые accounts, capital или state.",
+      "proposed_behavior": "Строить conflict graph по writable resources и funding; назначать только совместимые simulation jobs и переоценивать устаревшие кандидаты.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-021",
+        "RND-025"
+      ],
+      "acceptance": [
+        "Конфликтующий shared resource не получает двух активных leases.",
+        "Изменение snapshot отменяет прежнее допущение."
+      ],
+      "next_experiment": "Replay portfolio с shared pools/accounts и независимыми маршрутами.",
+      "metric": "Conflict rate, wasted simulations и полезный throughput.",
+      "deferred_condition": "Live resource coordination требует отдельного runtime qualification, здесь только research spec.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-09"
+      ]
+    },
+    {
+      "id": "RND-036",
+      "title": "Утверждение из новости → первоисточник → experiment",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "SCE_V2::LVF23",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-78243cf2c2fd2733f84d6fa047a5f55c77b2529400405b39f8cc9f6412b7e4c9"
+          ]
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-026",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-62f7487e68b91ebf926bfd32873dd84d63ad6a4d1f70d260d21bd291658b4c76"
+          ]
+        }
+      ],
+      "problem": "Социальный пересказ технологии или стратегии может многократно цитировать один непроверенный источник.",
+      "proposed_behavior": "Хранить claim, attribution, source graph, дату, противоречия и воспроизведение; число перепечаток не считать независимым подтверждением.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-011",
+        "RND-028"
+      ],
+      "acceptance": [
+        "Три перепечатки одного сообщения дают один корневой источник.",
+        "Непроверенное claim не становится supported feature."
+      ],
+      "next_experiment": "Пять сохранённых публикаций с общими upstream источниками.",
+      "metric": "Source diversity и доля claims с проверяемым primary evidence.",
+      "deferred_condition": "Новый web scouting запускается отдельно; текущий пакет лишь развивает сохранённую стратегию.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-13"
+      ]
+    },
+    {
+      "id": "RND-038",
+      "title": "Technology scout по конкретным пробелам продукта",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "OCC_RND::research.fetch_primary_metadata",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-07dae77817456228131bd646f422b94d81b463114497140162c15732c549aad9"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "OCC_RND::research.license_compatibility_review",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-79a2be9ac3425fddc9fa9e57e00976f96734effd6d04baac34cf28bf594edf1c"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "OCC_RND::research.compare_revisions",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-1d53182750c9058b2d6c8dfe834b33ec130425b4b734df2e78174e8f577c8251"
+          ]
+        }
+      ],
+      "problem": "Бесконечный список новых моделей не закрывает конкретные задачи приложения.",
+      "proposed_behavior": "Связывать paper/model/tool release с текущим blocker, версией, лицензией, runtime requirements и коротким baseline experiment.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-002",
+        "RND-028",
+        "RND-036"
+      ],
+      "acceptance": [
+        "У каждого candidate указан затрагиваемый gap и измеримый результат.",
+        "Старый benchmark не выдаётся за результат на Dell."
+      ],
+      "next_experiment": "Сравнить один candidate extractor/router с текущим deterministic baseline.",
+      "metric": "Доля scout candidates, уменьшивших конкретный blocker при допустимых затратах.",
+      "deferred_condition": "Не устанавливать model до определения benchmark и нужных ресурсов.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-044",
+      "title": "Автоматический следующий R&D документ из blocker",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-034",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-090b3d4d70ee0931a55a8004094b62006e06eb4ebf04b4760f152f964f0017ab"
+          ]
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-037",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-da3f71b7312726a2041687d56cbb7de0338293c489547f65ac27a3ce5f728003"
+          ]
+        }
+      ],
+      "problem": "После ошибки пользователь повторно собирает контекст для нового чата.",
+      "proposed_behavior": "Компилировать цель, точные sources, unsuccessful attempts, evidence, remaining gap, bounded patch/experiment и acceptance в переносимый документ.",
+      "implementation_status": "unverified",
+      "phase": "P6",
+      "dependencies": [
+        "RND-002",
+        "RND-011",
+        "RND-028",
+        "RND-043"
+      ],
+      "acceptance": [
+        "Чистый новый чат получает все required source refs или явные missing slots.",
+        "Документ не помечает BLOCKED как DONE."
+      ],
+      "next_experiment": "Передать один failure capsule в независимый новый контекст и проверить восстановление следующего шага.",
+      "metric": "Continuation accuracy и повторные вопросы о потерянном контексте.",
+      "deferred_condition": "Рекомендация следующего действия не означает автоматический запуск.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-15"
+      ]
+    },
+    {
+      "id": "RND-045",
+      "title": "Портфель экспериментов по ожидаемой информационной пользе",
+      "domain": "research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-015",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-e6f0e837994c0247aff8978abf75ee5150b060bfaf01fc04c0a0e997357865f3"
+          ]
+        },
+        {
+          "archive": "OCC_STRATEGY_MASTER_2026-10-03(1).zip",
+          "member": "OCC_STRATEGY_MASTER_2026-10-03/catalogs/ASSISTANT_FUTURE_RND.json",
+          "source_record_id": "AI-RND-035",
+          "archive_sha256": "0e377f76584e8604faf67765984964119b596db98bf18c12f49410d0c260035b",
+          "source_sha256": "3256184f8d39acef9acc2f7e9b2942a58b84fb4a45a5254388419d4342d41ef3",
+          "ordinal": 8,
+          "historical_record_links": [
+            "HIST-413ba51f83fb51f497a6e33da8ca3d1518fcde294f625bec3da912d874759bbb"
+          ]
+        }
+      ],
+      "problem": "Сотни идей конкурируют за небольшой compute/data budget.",
+      "proposed_behavior": "Ранжировать unresolved hypotheses по decision impact, cost и ожидаемому уменьшению неопределённости; хранить объяснение и периодически проверять ranking.",
+      "implementation_status": "unverified",
+      "phase": "P8",
+      "dependencies": [
+        "RND-028",
+        "RND-029",
+        "RND-039",
+        "RND-041"
+      ],
+      "acceptance": [
+        "Дешёвый опровергающий эксперимент может обойти дорогой scale-up.",
+        "Изменение prerequisite возвращает только связанные deferred cards.",
+        "Ranking не претендует на доказанную доходность."
+      ],
+      "next_experiment": "Сравнить FIFO и экспертно проверенный information-value ranking на десяти прошлых blocker задачах.",
+      "metric": "Resolved decision uncertainty per budget unit.",
+      "deferred_condition": "После накопления достоверных time/cost/outcome данных.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": []
+    }
+  ],
+  "status": "ORIGINAL_DESIGN_CARDS_NOT_IMPLEMENTATION_PROOF"
+}
