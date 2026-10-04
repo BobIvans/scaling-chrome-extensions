@@ -40,7 +40,9 @@ corpus и не позволяют терять хвост. «Без лимита
 
 Исходный ZIP №010–021 сохранён побайтно в `originals/`, распакован в
 `roadmap/`; все 9 вложенных PR ZIP также сохранены и полностью распакованы в
-`prior-packages/PR_001/` … `PR_009/`. Вложенные fixtures остаются данными:
+`prior-packages/PR_001/` … `PR_009/` без повторяющегося корневого каталога ZIP,
+чтобы обычный Windows checkout мог открыть все пути. Исходные member names
+сохранены в integrity manifest. Вложенные fixtures остаются данными:
 не запускать их как приложение. `verification/SOURCE_INTEGRITY.json` и
 `verify_integrity.py` проверяют каждый исходный member, размер и SHA-256.
 
