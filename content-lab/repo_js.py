@@ -226,7 +226,9 @@ def build(profile_path, alias, snapshot_id, output, *, limits=None, legacy=False
     limits = budget(limits)
     control = Control(limits, progress)
     store, source = operator_scope(profile_path, alias)
-    control.node_executable = node_path()
+    # Normalize at the trust boundary too: Windows 8.3 parent aliases must
+    # compare identically with the resolved source/store roots, before launch.
+    control.node_executable = str(Path(node_path()).resolve())
     executable = Path(control.node_executable)
     if executable.is_relative_to(Path(source['root']).resolve()) or executable.is_relative_to(store):
         raise ValueError('NODE_EXECUTABLE_IN_SOURCE_OR_STORE')

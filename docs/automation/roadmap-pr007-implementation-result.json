@@ -45,9 +45,30 @@
       "passed": 24,
       "skipped": 1,
       "total": 25
+    },
+    {
+      "command": "Full Content Lab with merged PR005 and PR009",
+      "passed": 297,
+      "total": 297,
+      "seconds": 184.325,
+      "scope": "Before final Windows executable-path normalization; final exact-head CI in PR #43"
+    },
+    {
+      "command": "PR007 focused suite after Windows executable-path normalization",
+      "passed": 25,
+      "total": 25,
+      "seconds": 29.655,
+      "scope": "Merged PR005 owner; unresolved source/store executable paths rejected before invocation"
     }
   ],
   "application_code_changed": true,
+  "windows_executable_path_correction": {
+    "failed_head": "db1954014e8435c5875e41e1c6219e89c29c3339",
+    "failed_run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37205194434",
+    "cause": "Unresolved test-discovered executable used Windows TEMP 8.3 parent alias; validated roots used resolved long paths.",
+    "correction": "Resolve the fixed executable at the build trust boundary before source/store containment checks or any invocation.",
+    "regression": "Unresolved discovered paths inside both source and store must fail before subprocess.run; no source/store execution is allowed."
+  },
   "base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
   "integration_base_sha": "e6af765dcb94e9462c6adf071a3df8421e141cc5",
   "pr005_merged_main_owner": {
