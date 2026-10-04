@@ -1,0 +1,79 @@
+{
+  "schema": "sce.unified-source-contract.v1",
+  "authority": "existing Core + canonical SQLite writer",
+  "source": {
+    "source_id": "stable origin identity",
+    "kind": "REPO|FILE|MEDIA|WEB|RSS|GITHUB",
+    "aliases": "many; preserve lineage",
+    "privacy_profile": "existing grants"
+  },
+  "version": {
+    "version_id": "source_id + immutable revision/scope digest",
+    "raw_sha256": "digest exact bytes if available",
+    "scope": "pinned repo tree or explicit overlay / remote observation",
+    "state": "PENDING|PARTIAL|COMPLETE|BLOCKED|FAILED|SOURCE_DRIFT"
+  },
+  "observation": {
+    "observation_id": "stable request/revision identity",
+    "retrieved_at": "timestamp",
+    "request_cursor": "opaque, persisted",
+    "response_sha256": "hash of raw response where permitted",
+    "freshness": "COMPLETE_AT_EOF|PARTIAL|STALE|UNKNOWN"
+  },
+  "address": {
+    "source_id": "required",
+    "version_id": "required",
+    "coordinate": "path+byte-range | page+rect | sheet+cell | slide+paragraph | time_ms | URL+fragment | remote event",
+    "precision": "EXACT|APPROXIMATE|UNKNOWN"
+  },
+  "extraction": {
+    "raw_sha256": "required",
+    "adapter_version": "required",
+    "config_digest": "required",
+    "derived_id": "deterministic key",
+    "segments": "ordered and paginated",
+    "uncertainty": "explicit"
+  },
+  "job": {
+    "job_id": "durable",
+    "intent_key": "idempotency",
+    "request_digest": "immutable",
+    "cursor": "version-bound",
+    "lease_epoch": "fenced",
+    "state": "QUEUED|RUNNING|PAUSED|COMPLETE|CANCELED|BLOCKED|FAILED|SOURCE_DRIFT"
+  },
+  "page": {
+    "items": "bounded",
+    "next_cursor": "null only at EOF",
+    "total": "optional known count; never fabricate",
+    "accounted": "monotonic committed count",
+    "gaps": "paged ledger"
+  },
+  "delta": {
+    "base_version": "required",
+    "head_version": "required",
+    "changes": "ADDED|REPLACED|DELETED|RENAMED with byte ranges and lineage",
+    "invalidation": "edge-specific evidence + reason"
+  },
+  "importer_v1": {
+    "probe": "read-only capability/version check",
+    "start": "idempotent Core job",
+    "step": "bounded unit of work",
+    "checkpoint": "committed cursor",
+    "result": "versioned originals/derived/address/gaps",
+    "cancel": "terminal fenced state"
+  },
+  "errors": [
+    "UNSUPPORTED",
+    "PROTECTED",
+    "MISSING",
+    "BUDGET_EXCEEDED",
+    "DISK_FULL",
+    "SOURCE_DRIFT",
+    "RATE_LIMITED",
+    "INACCESSIBLE",
+    "BAD_CURSOR",
+    "CORRUPT_DERIVED",
+    "UNKNOWN_MAPPING"
+  ]
+}

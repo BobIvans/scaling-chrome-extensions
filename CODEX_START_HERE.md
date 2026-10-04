@@ -1,3 +1,17 @@
+# Codex: ROADMAP PR-012 + PR-013 / GitHub PR #51
+
+Для продолжения **Unified source lifecycle** открыть
+[docs/strategy/pr012-013/CODEX_START_HERE.md](docs/strategy/pr012-013/CODEX_START_HERE.md)
+и [MASTER_CONTEXT.md этого пакета](docs/strategy/pr012-013/MASTER_CONTEXT.md).
+Реализация PR #51 уже находится в `main`; продолжай только фактический остаток
+по scoped handoff, не повторяя merged Source/Version/Observation ledger.
+Следующий checkpoint: unified SourceAddress/read adapters поверх текущих raw
+owners, затем durable Core repo/capture jobs. Полный scope PR-012/013 остаётся
+OPEN до закрытия всех acceptance criteria. Нумерация ROADMAP №012/013 не является
+номером GitHub PR.
+
+---
+
 # Codex: начать здесь
 
 1. Прочитай `MASTER_CONTEXT.md`, repository instructions и текущие Git refs/CI.

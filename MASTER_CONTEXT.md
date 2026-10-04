@@ -1,3 +1,13 @@
+# Продолжение ROADMAP PR-012 + PR-013 — GitHub PR #51
+
+Реализация immutable local original ledger и bounded exact reads из PR #51
+слита в `main`. Для следующего этапа Unified source lifecycle открой
+[MASTER_CONTEXT.md пакета PR-012/013](docs/strategy/pr012-013/MASTER_CONTEXT.md)
+и [CODEX_START_HERE.md](docs/strategy/pr012-013/CODEX_START_HERE.md).
+Не повторяй уже слитый ledger; unified SourceAddress/read adapters и durable
+Core repo/capture jobs остаются следующими checkpoints. Весь roadmap и все
+исходные acceptance criteria сохранены; полный scope пакета остаётся OPEN.
+
 # Текущая навигация: полный Voice AgentOS и PR-016+017
 
 Эта интеграция сохраняет обе передачи без потери исходной стратегии.
@@ -21,7 +31,7 @@ Exact root handoffs из #53 сохранены также в `UPSTREAM_*_PR53.m
 текущие refs/CI/merge читать из Git/GitHub и пакета EXECUTION_AUDIT.
 Ни один исходный backlog/критерий не удалён ради объединения.
 
----
+
 
 # Voice AgentOS / Context Library — полный контекст продолжения
 

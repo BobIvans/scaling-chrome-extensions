@@ -1,0 +1,174 @@
+{
+  "schema": "sce.pr012-013.repository-audit.v1",
+  "observed_at": "2026-10-04T16:50:07.619Z",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "main": {
+    "sha": "ccf73e747e6743ead68040e3eb6837b3a5233fbc",
+    "tree_sha": "03b85bb8df7c1b9cdec94fd89795221f9d54b705",
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/commit/ccf73e747e6743ead68040e3eb6837b3a5233fbc"
+  },
+  "prs": [
+    {
+      "number": 47,
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/47",
+      "title": "Draft PR012+013: bounded repository history and delta pages",
+      "state": "closed",
+      "draft": false,
+      "merged": true,
+      "merged_at": "2026-10-04T15:27:18Z",
+      "merge_commit_sha": "8ad12c9f3e43d03cc8c7c6a4de1d9de083fe74bf",
+      "head_sha": "8f65e6fee659335aae2ebcdd29598fe18cd14d63",
+      "branch": "codex/pr012-013-unified-source-lifecycle",
+      "base_sha": "eb99d1c2cbc0faccf5eb7fb19b331c9bb9d5f80f",
+      "body_as_observed": "## Combined ROADMAP-PR-012+013 — implementation stage\n\nThis draft adds scoped, keyset-paged repository snapshot history and path deltas to the canonical Content Lab SQLite owner. Native exposes `durable.repo.history` and `durable.repo.delta` with explicit EOF; Desktop validates their DTOs and atomically exports complete JSONL and SHA-256 receipts. A 1–50 row frame is not a corpus ceiling. Delta requires complete pinned snapshots and supports an explicit historical `baseSnapshotId`; continuation binds the exact head/base pair.\n\nThe branch integrates main's PR-006 and PR-007; the Windows installer carries both `repo_groups.py` and `repo_history.py`. With explicit `desktop_scan_enabled: true` in the operator profile, Desktop controls the existing `repo_scan_runs` ledger if its schema is ready: START, STATUS, STEP, PAUSE, CONTINUE, CANCEL, with revision/cursor fencing. This is manual page stepping and a recoverable committed cursor, not a background scheduler. The default Desktop gate remains read-only.\n\nLocal verification: `test_repo_history` 4 passed (26 snapshots, 25 delta paths, historical base, incomplete head/base, Unicode cursors), Desktop transport/integration 29 passed, package verification passed. One Tk/display test is skipped locally; Windows CI covers it. Exact-head CI for the previous history stage passed on Ubuntu and Windows in [run 37208580756](https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37208580756). Current head `8f65e6fee659335aae2ebcdd29598fe18cd14d63` passed Ubuntu CI; Windows is running in [run 37211060798](https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37211060798). Installed Dell/Windows qualification remains pending. See `docs/automation/roadmap-pr012-013-progress.md`.\n\n**Combined ZIP still open.** WS-002 Core background job integration, WS-003 remaining selection/export consumers and legacy summary memory, WS-006 derived CAS/invalidation, and WS-009/010/011 document/media/web importers remain unimplemented. PR-010/011 contracts have not yet landed. Draft #50 changes the same Desktop and Native files and will need integration when ready. Do not merge this draft as package completion.",
+      "changed_paths": [
+        "agent-bridge/Install.ps1",
+        "content-lab/native_adapter.py",
+        "content-lab/repo_history.py",
+        "content-lab/test_repo_history.py",
+        "desktop/OWNED_FILES.json",
+        "desktop/README_RU.md",
+        "desktop/app.py",
+        "desktop/client.py",
+        "desktop/draft.py",
+        "desktop/tests/test_repo_history_client.py",
+        "desktop/tests/test_repo_scan_client.py",
+        "docs/automation/roadmap-pr012-013-progress.md"
+      ]
+    },
+    {
+      "number": 51,
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/51",
+      "title": "Draft PR012+013 continuation: immutable source originals",
+      "state": "open",
+      "draft": true,
+      "merged": false,
+      "merged_at": null,
+      "merge_commit_sha": null,
+      "head_sha": "83f6337ccf725da443a673fc84d623bed04a3c29",
+      "branch": "codex/pr012-013-source-ledger-continuation",
+      "base_sha": "b0a06f26106cb4739d8cf3465a4ad8941c328f40",
+      "body_as_observed": "## PR-012+013 continuation: immutable local original ledger\n\nThe merged #47 supplied complete paged repository history and opt-in Desktop scan controls. This continuation adds an additive Source/Version/Observation ledger for explicitly selected local FILE and MEDIA originals in the same Content Lab SQLite database.\n\n- Raw bytes are staged in 64 KiB parts keyed by namespace and exact SHA-256. Two origins with identical bytes share one object; a changed origin creates a new version. Observations have independent intent keys.\n- An interrupted capture never publishes a version/head. Replay verifies staged bytes and resumes; a second full hash and file fingerprint gate publication. Read APIs page versions, part metadata and fixed-size byte delta ranges to EOF, with per-part hash verification; this is not a semantic diff.\n- The branch incorporates merged PR018/019 and the Windows installer includes both its workflow modules and this new module. A standalone isolated-Python CLI provides capture without browser grants or implicit network access.\n- Nine local tests pass: identity/reuse, stable key across path rename, 23-version continuation, interrupted stage, drift/corruption, additive migration, pair-bound byte delta continuation across 51 parts, and installed-style CLI. Ubuntu CI passed on the previous head. Windows exposed a false SOURCE_DRIFT after file rewrites; head `3f8c87f677c238a27d409496963856f167fc490d` changes the Windows check to exact two-pass bytes plus file identity. Exact-head CI is [running](https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37215650102); installed Windows device qualification is pending.\n\nDesign and limits: `docs/automation/pr012-013-source-ledger.md`. This is a substrate, **not completion of the combined 101 criteria**. Existing ChatGPT import uses its own specialized raw table; unified CAS reconciliation, parser/extraction cache, selective evidence invalidation, PDF/Office/OCR, media/ASR, web/RSS/GitHub adapters, Core background jobs and full scale/device receipts remain open. Keep this PR draft until its scoped stage is validated; do not present #47 or this continuation as the full roadmap.",
+      "changed_paths": [
+        "agent-bridge/Install.ps1",
+        "content-lab/source_ledger.py",
+        "content-lab/test_source_ledger.py",
+        "docs/automation/pr012-013-source-ledger.md"
+      ]
+    }
+  ],
+  "neighboring_prs": [
+    {
+      "number": 52,
+      "title": "ROADMAP PR-020 + PR-021: Core research, Desktop receipts and criterion reconciliation",
+      "state": "open",
+      "merged_at": null,
+      "branch": "codex/pr020-021-research-qualification",
+      "head_sha": "3c6bf81e1345f91454ae87cccec2c3cd7c3d84a6"
+    },
+    {
+      "number": 49,
+      "title": "PR-016 + PR-017: Core voice/delivery/skills baseline and full Codex strategy handoff",
+      "state": "open",
+      "merged_at": null,
+      "branch": "codex/pr016-017-intent-voice-delivery-skills",
+      "head_sha": "9a4fd3acb4ac66a14a55656f60a4d0727a378fcd"
+    },
+    {
+      "number": 53,
+      "title": "Voice AgentOS: full roadmap preservation and Codex continuation context",
+      "state": "closed",
+      "merged_at": "2026-10-04T16:32:00Z",
+      "branch": "codex/master-context-20261004",
+      "head_sha": "0a26dbc842a8647196269a49e9e42a21dc1c8054"
+    },
+    {
+      "number": 50,
+      "title": "Roadmap PR-014 + PR-015: exact context, recovery and desktop Core workflow",
+      "state": "closed",
+      "merged_at": "2026-10-04T16:21:37Z",
+      "branch": "codex/roadmap-pr014-015-context-windows-20261004",
+      "head_sha": "579a670d7770cca751c492492479b679d7ad3fce"
+    },
+    {
+      "number": 48,
+      "title": "PR018 + PR019: durable release, campaign DAG and R&D workflows",
+      "state": "closed",
+      "merged_at": "2026-10-04T15:55:34Z",
+      "branch": "codex/pr018-019-release-campaigns",
+      "head_sha": "cf973b28b2c75d897ae9e2a773d76f6cbc6e842b"
+    },
+    {
+      "number": 46,
+      "title": "PR006: complete Python SCC groups and immutable source-part catalogs",
+      "state": "closed",
+      "merged_at": "2026-10-04T14:31:11Z",
+      "branch": "codex/pr006-python-scc-groups",
+      "head_sha": "a5043918767908cfab9722f577889b72e68e9b31"
+    },
+    {
+      "number": 43,
+      "title": "PR007: verified JS/TS static relations from captured repository bytes",
+      "state": "closed",
+      "merged_at": "2026-10-04T14:06:57Z",
+      "branch": "codex/pr007-js-ts-static-relations",
+      "head_sha": "3f252cbf5a647a60a784a74cb16b62f4a619d965"
+    },
+    {
+      "number": 44,
+      "title": "PR009: preserve selected ChatGPT originals and complete node fidelity",
+      "state": "closed",
+      "merged_at": "2026-10-04T12:51:12Z",
+      "branch": "codex/pr009-original-revisions-import-fidelity",
+      "head_sha": "8c40778b97c5eb58700d64fc4d34b835cb68a914"
+    },
+    {
+      "number": 41,
+      "title": "PR004: stage complete Git inventories with bounded memory and atomic publication",
+      "state": "closed",
+      "merged_at": "2026-10-04T11:32:08Z",
+      "branch": "codex/pr004-streaming-git-inventory",
+      "head_sha": "dc9f89e72cf547047de3345affb168c46caebb1a"
+    },
+    {
+      "number": 40,
+      "title": "PR003: verified full-context ZIP64 export with atomic resume",
+      "state": "closed",
+      "merged_at": "2026-10-04T10:46:27Z",
+      "branch": "codex/roadmap-pr003-portable-archive-20261004",
+      "head_sha": "e1082a739a575688afe88f4190b6fe813bffadc8"
+    },
+    {
+      "number": 39,
+      "title": "PR-002: complete repository manifest and byte-range index on the full-scan controller",
+      "state": "closed",
+      "merged_at": "2026-10-04T10:29:52Z",
+      "branch": "codex/pr002-repo-manifest-unbounded",
+      "head_sha": "6ee2f4b38fdee8e2e6a70e9eddd0daefc40ac756"
+    },
+    {
+      "number": 38,
+      "title": "PR001: stream whole repositories with durable scan controls",
+      "state": "closed",
+      "merged_at": "2026-10-04T10:04:33Z",
+      "branch": "codex/roadmap-pr001-unbounded-repo-scan",
+      "head_sha": "dc3debed118ce4d51f94c802697d867b429d9f24"
+    }
+  ],
+  "ci_observations": [
+    {
+      "id": 37216822604,
+      "name": "Deterministic OCC core",
+      "head_sha": "83f6337ccf725da443a673fc84d623bed04a3c29",
+      "status": "in_progress",
+      "conclusion": null,
+      "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37216822604",
+      "updated_at": "2026-10-04T16:28:42Z"
+    }
+  ],
+  "qualification": {
+    "package_criteria": "101 remain OPEN pending full criterion-specific receipts",
+    "windows_installed_device": "NOT_RUN",
+    "audit_method": "Pinned checkout plus GitHub API; PR bodies are historical assertions, local reruns recorded separately"
+  }
+}
