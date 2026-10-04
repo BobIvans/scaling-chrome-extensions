@@ -3,6 +3,7 @@
 from collections import Counter
 import hashlib
 import json
+import sys
 from pathlib import Path
 import tempfile
 import unittest
@@ -27,8 +28,6 @@ class ResearchBridgeTests(unittest.TestCase):
         data.write_text("{}\n")
         cfg = self.root / "config"
         cfg.write_text("{}")
-        import sys
-
         self.profile = {
             "schema": "occ.research-profile.v1",
             "root": str(repo),
@@ -118,6 +117,19 @@ class ResearchBridgeTests(unittest.TestCase):
 
     def enqueue(self, key="task"):
         return ac.enqueue(self.store, self.policy, key, self.payload)["id"]
+
+    def test_real_child_retains_windows_systemroot_and_excludes_credentials(self):
+        self.enqueue()
+        worker = ac.Core(self.store, self.policy)
+        job = worker.claim()
+        system_root = ac.os.environ.get('SYSTEMROOT', r'C:\Windows')
+        with patch.dict(ac.os.environ, {'SYSTEMROOT': system_root,
+                                       'OCC_FIXTURE_API_TOKEN': 'excluded-fixture-credential'}):
+            result = worker.command(job, [sys.executable, '-I', '-c',
+                'import asyncio,json,os; print(json.dumps({"system_root":os.environ.get("SYSTEMROOT"),'
+                '"credential":os.environ.get("OCC_FIXTURE_API_TOKEN")}))'], self.root, 10)
+        self.assertEqual(result['exit_code'], 0, result['output'])
+        self.assertEqual(json.loads(result['output']), {'system_root': system_root, 'credential': None})
 
     def test_existing_campaign_admits_research_and_binds_only_selected_profile(self):
         import campaign_runtime as campaign

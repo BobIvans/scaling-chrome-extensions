@@ -519,7 +519,7 @@ class Core:
         self.heartbeat(job)
         # Do not inherit API keys, desktop IPC, agent credentials or Git hooks.
         env = {key: value for key, value in os.environ.items()
-               if key in {"PATH", "SystemRoot", "WINDIR", "TEMP", "TMP", "LANG", "LC_ALL"}}
+               if key.upper() in {"PATH", "SYSTEMROOT", "WINDIR", "TEMP", "TMP", "LANG", "LC_ALL"}}
         env.update(GIT_CONFIG_NOSYSTEM="1", GIT_CONFIG_GLOBAL=os.devnull,
                    GIT_TERMINAL_PROMPT="0", PYTHONNOUSERSITE="1")
         started, stopped = time.monotonic(), None
