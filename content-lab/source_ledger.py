@@ -150,8 +150,7 @@ def capture_file(store: Path, namespace: str, kind: str, path: Path, intent_key:
             before = os.fstat(stream.fileno())
             if not stat.S_ISREG(before.st_mode):
                 raise ValueError('SOURCE_REGULAR_FILE_REQUIRED')
-            fingerprint = (before.st_dev, before.st_ino, before.st_size,
-                           before.st_mtime_ns, before.st_ctime_ns)
+            fingerprint = _stat(stream)
             hasher = hashlib.sha256()
             while block := stream.read(PART_BYTES):
                 hasher.update(block)
@@ -191,7 +190,8 @@ def capture_file(store: Path, namespace: str, kind: str, path: Path, intent_key:
                 if progress:
                     progress()
             if (verified.hexdigest() != raw_sha or ordinal != count or fingerprint != _stat(stream)
-                    or fingerprint != _path_stat(path)):
+                    or (before.st_dev, before.st_ino) != _path_identity(path)
+                    or os.name != 'nt' and fingerprint != _path_stat(path)):
                 raise ValueError('SOURCE_DRIFT')
             with db:
                 row = db.execute('''SELECT count(*) AS n,coalesce(sum(length(raw)),0) AS size
@@ -225,12 +225,21 @@ def capture_file(store: Path, namespace: str, kind: str, path: Path, intent_key:
 
 def _stat(stream):
     value = os.fstat(stream.fileno())
-    return value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns, value.st_ctime_ns
+    identity = value.st_dev, value.st_ino, value.st_size
+    # Windows may report different timestamp caches for an open handle and a
+    # path immediately after a preceding write. Both byte passes still hash
+    # the same open file, and the final path must point to that file identity.
+    return identity if os.name == 'nt' else identity + (value.st_mtime_ns, value.st_ctime_ns)
 
 
 def _path_stat(path):
     value = path.lstat()
     return value.st_dev, value.st_ino, value.st_size, value.st_mtime_ns, value.st_ctime_ns
+
+
+def _path_identity(path):
+    value = path.lstat()
+    return value.st_dev, value.st_ino
 
 
 def versions(store: Path, namespace: str, source_id: str, *, after=None, limit=20):
