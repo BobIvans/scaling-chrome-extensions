@@ -84,6 +84,8 @@ def create_session(store, namespace, ids, goal, base_repo_sha=None, *,
                'goal_sha256': hashlib.sha256(goal.encode('utf-8')).hexdigest(),
                'export_bundle_id': pack['sha256'], 'export_sha256': pack['sha256'],
                'base_repo_sha': base_repo_sha, 'evidence_refs': []}
+    if any(item.get('schema_version') == 'occ.git-source.v1' for item in pack['items']):
+        payload['source_classifier_version'] = pack['source_classifier_version']
     if repo_snapshot_id is not None:
         from repo_context import bind_ids, verify_binding
         binding = repo_binding or bind_ids(store, namespace, repo_snapshot_id, ids)

@@ -23,6 +23,8 @@ from automation_core import connection, digest, identifier, strict_int
 from content_lab import _insert_item
 from repo_artifacts import oid_hasher
 from repo_source import CHUNK_BYTES, analyze, partition, partition_stream, import_graph, components
+from source_eligibility import (CLASSIFIER_VERSION, analysis_object, classify_chunks,
+                               make_facts, metadata_facts, project_facts, text_blocker, write_facts)
 
 AST_WINDOW_BYTES = 2 * 1024 * 1024
 STREAM_BYTES = 64 * 1024
@@ -396,19 +398,27 @@ def _capture_file_db(db, snap, row, root):
         if secret:
             db.execute('UPDATE repo_entries SET state=?,reason=?,file_hash=? WHERE snapshot_id=? AND path=?',
                        ('EXCLUDED', 'SECRET_TEXT_HEURISTIC', file_hash, snapshot_id, row['path']))
+            terminal = dict(row, state='EXCLUDED', reason='SECRET_TEXT_HEURISTIC', file_hash=file_hash)
+            write_facts(db, snap, terminal, metadata_facts(snap, terminal))
             return
+        classified = classify_chunks(iter(lambda: stream.read(STREAM_BYTES), b''), progress=pulse)
+        stream.seek(0)
+        text_eligible = classified['text_eligibility'] == 'ELIGIBLE'
         if row['size'] <= AST_WINDOW_BYTES:
             raw = stream.read()
-            analysis, boundaries = analyze(row['path'], raw)
+            if text_eligible:
+                analysis, boundaries = analyze(row['path'], raw)
+            else:
+                analysis, boundaries = {'parser': None, 'symbols': [], 'imports': [], 'dynamic_imports': [], 'findings': []}, []
             chunks = partition(snap['alias'], row['path'], raw, file_hash, boundaries)
         else:
-            analysis = {'parser': 'STREAMING_UTF8_TEXT_ONLY_NO_SYNTAX_CLAIM' if utf8 else 'BINARY_OR_NON_UTF8',
+            analysis = {'parser': 'STREAMING_UTF8_TEXT_ONLY_NO_SYNTAX_CLAIM' if text_eligible else None,
                         'symbols': [], 'imports': [], 'dynamic_imports': [], 'findings': [],
                         'syntax_analysis': 'OUTSIDE_AST_WINDOW', 'bytes_captured': row['size']}
             chunks = partition_stream(snap['alias'], row['path'], stream, file_hash, utf8=utf8)
         for n, chunk in enumerate(chunks):
             text, item_id = None, None
-            if utf8:
+            if text_eligible:
                 text = chunk['raw'].decode('utf-8')
             if text is not None:
                 item_id = digest([snapshot_id, chunk['revision']])
@@ -426,6 +436,8 @@ def _capture_file_db(db, snap, row, root):
                         chunk['byte_start'], chunk['byte_end'], chunk['start_line'], chunk['end_line'],
                         chunk['fragment'], chunk['raw'], item_id))
             pulse()
+        terminal = dict(row, state='INDEXED', file_hash=file_hash)
+        analysis['format_eligibility'] = make_facts(snapshot_id, terminal, classified, analysis.get('parser'))
         db.execute('UPDATE repo_entries SET state=?,file_hash=?,analysis=?,working_state=? WHERE snapshot_id=? AND path=?',
                    ('INDEXED', file_hash, json.dumps(analysis), working_state(root, row['path'], file_hash), snapshot_id, row['path']))
 
@@ -458,6 +470,8 @@ def _scan_page_db(db, namespace, snapshot_id, limit):
                       (snapshot_id, snap['cursor'], limit)).fetchall()
     for row in rows:
         if row['state'] != 'PENDING':
+            if row['state'] in {'EXCLUDED', 'ERROR'}:
+                write_facts(db, snap, row, metadata_facts(snap, row))
             continue
         db.execute('SAVEPOINT repo_file')
         try:
@@ -468,6 +482,8 @@ def _scan_page_db(db, namespace, snapshot_id, limit):
             db.execute('RELEASE repo_file')
             db.execute('UPDATE repo_entries SET state=?,reason=? WHERE snapshot_id=? AND path=?',
                        ('ERROR', str(exc), snapshot_id, row['path']))
+            terminal = dict(row, state='ERROR', reason=str(exc))
+            write_facts(db, snap, terminal, metadata_facts(snap, terminal))
     # Source drift during a long page must roll back this page as well.
     if git(root, 'rev-parse', 'HEAD').decode('ascii').strip() != snap['head']:
         raise ValueError('SOURCE_DRIFT')
@@ -528,8 +544,10 @@ def display_text(text, budget=256):
 
 def entry_display(row):
     row = dict(row)
+    facts = project_facts(row['snapshot_id'], row)
     analysis = json.loads(row.pop('analysis') or '{}')
     row['parser'] = analysis.get('parser')
+    row.update({k: facts[k] for k in ('format_kind', 'text_eligibility', 'raw_capture')})
     row['symbols'] = [dict(s, name=display_text(s['name'], 128)) for s in analysis.get('symbols', [])[:20]]
     row['findings'] = [dict(f, criterion=display_text(f['criterion'])) for f in analysis.get('findings', [])[:10]]
     if len(row['path'].encode('utf-8')) > 800:
@@ -545,7 +563,7 @@ def _run_projection_db(db, run):
     ledger = sum(counts.values())
     complete = snap['cursor'] == snap['total'] and inventory_valid_db(db, snap) and not counts.get('PENDING', 0)
     files = []
-    for row in db.execute('SELECT ordinal,path,state,reason,working_state,analysis FROM repo_entries WHERE snapshot_id=? ORDER BY ordinal LIMIT 20', (snap['id'],)):
+    for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? ORDER BY ordinal LIMIT 20', (snap['id'],)):
         files.append(entry_display(row))
     return {'schema': 'occ.repo-scan-run.v1', 'run_id': run['run_id'], 'intent_key': run['intent_key'],
             'repository': run['alias'], 'alias': run['alias'], 'namespace': run['namespace'],
@@ -652,7 +670,7 @@ def get_snapshot(store, namespace, snapshot_id, *, offset=0, limit=20):
     try:
         snap = load_snapshot(db, namespace, snapshot_id)
         counts = entry_counts_db(db, snapshot_id)
-        rows = [entry_display(r) for r in db.execute('SELECT ordinal,path,mode,oid,size,state,reason,file_hash,analysis,working_state FROM repo_entries WHERE snapshot_id=? AND ordinal>=? ORDER BY ordinal LIMIT ?', (snapshot_id, offset, limit))]
+        rows = [entry_display(r) for r in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? AND ordinal>=? ORDER BY ordinal LIMIT ?', (snapshot_id, offset, limit))]
         complete = (snap['cursor'] == snap['total'] and inventory_valid_db(db, snap)
                     and not counts.get('PENDING'))
         roundtrip = verify_roundtrip_db(db, snap) if complete else None
@@ -782,6 +800,10 @@ def selection(store, namespace, snapshot_id, paths, max_bytes=24_000, source_off
             if row['state'] != 'INDEXED':
                 omitted.append({'path': path, 'reason': row['reason'] or row['state']})
                 continue
+            blocker = text_blocker(snapshot_id, row)
+            if blocker:
+                omitted.append({'path': path, 'reason': blocker})
+                continue
             bindings.append({'path': path, 'sha256': row['file_hash'], 'git_oid': row['oid']})
             for c in db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snapshot_id, path)):
                 ordinal = source_total
@@ -813,6 +835,7 @@ def selection(store, namespace, snapshot_id, paths, max_bytes=24_000, source_off
                 'omitted_sources': omitted[:50], 'omitted_count': len(omitted),
                 'omitted_summary_truncated': len(omitted) > 50, 'missing_dependencies': gaps,
                 'coverage': 'PARTIAL' if omitted or gaps else 'SELECTED_STATIC_CLOSURE',
+                'classifier_version': CLASSIFIER_VERSION,
                 'parser_scope': 'Python static imports; external/dynamic/ambiguous and JS edges unresolved'}
     finally:
         db.close()

@@ -166,7 +166,9 @@ def search(store, namespace, query, limit=10):
     match = " AND ".join('"' + term + '"' for term in terms)
     db = connection(store)
     try:
-        rows = db.execute("SELECT content_fts.id, snippet(content_fts,1,'[',']','…',24) AS snippet, sync_heads.source_key FROM content_fts JOIN sync_heads ON sync_heads.item_id=content_fts.id WHERE content_fts MATCH ? AND namespace=? AND present=1 ORDER BY rank LIMIT ?", (match, namespace, limit)).fetchall()
+        from source_eligibility import current_text_sql
+        predicate = current_text_sql(db)
+        rows = db.execute("SELECT content_fts.id, snippet(content_fts,1,'[',']','…',24) AS snippet, sync_heads.source_key FROM content_fts JOIN sync_heads ON sync_heads.item_id=content_fts.id WHERE content_fts MATCH ? AND namespace=? AND present=1 AND " + predicate + " ORDER BY rank LIMIT ?", (match, namespace, limit)).fetchall()
         return [dict(r) for r in rows]
     finally:
         db.close()
@@ -179,10 +181,12 @@ def context_pack(store, namespace, item_ids, max_bytes=100_000):
         raise ValueError("ONE_TO_TEN_UNIQUE_IDS_REQUIRED")
     db, selected, total = connection(store), [], 0
     try:
+        from source_eligibility import current_text_sql, blocked_item_reason, CLASSIFIER_VERSION
+        predicate = current_text_sql(db)
         for item_id in item_ids:
-            row = db.execute("SELECT items.payload FROM items JOIN sync_heads ON items.id=sync_heads.item_id WHERE namespace=? AND present=1 AND items.id=?", (namespace, item_id)).fetchone()
+            row = db.execute("SELECT items.payload FROM items JOIN sync_heads ON items.id=sync_heads.item_id WHERE namespace=? AND present=1 AND items.id=? AND " + predicate, (namespace, item_id)).fetchone()
             if row is None:
-                raise ValueError("ITEM_OUTSIDE_SCOPE_OR_STALE")
+                raise ValueError(blocked_item_reason(db, namespace, item_id))
             item = json.loads(row[0])
             total += len(item["text"].encode())
             if total > max_bytes:
@@ -192,7 +196,7 @@ def context_pack(store, namespace, item_ids, max_bytes=100_000):
         db.close()
     return {"schema": "occ.context-pack.v1", "namespace": namespace,
             "authority": "source-content-not-action-instructions", "items": selected,
-            "bytes": total, "sha256": digest(selected)}
+            "bytes": total, "sha256": digest(selected), "source_classifier_version": CLASSIFIER_VERSION}
 
 
 def validate_policy(policy):
