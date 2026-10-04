@@ -502,6 +502,19 @@ class RecoveryAndObserverTests(Fixture):
 
 
 class CoreGuardTests(Fixture):
+    def test_campaign_profile_coexists_with_opt_in_desktop_scan(self):
+        import native_adapter
+        self.manifest();path=self.profile_file();profile=json.loads(path.read_text())
+        profile['desktop_scan_enabled']=True;path.write_text(ac.encoded(profile),encoding='utf-8')
+        loaded,policy=native_adapter.operator_profile(path)
+        self.assertEqual(loaded['campaigns'],['research']);self.assertTrue(loaded['desktop_scan_enabled'])
+        result=native_adapter.dispatch_loaded({'type':'durable.campaign.advance','campaign':'research'},loaded,policy)
+        self.assertEqual(len(result['campaign']['admitted']),1)
+        with self.assertRaisesRegex(ValueError,'DESKTOP_READ_ONLY'):
+            native_adapter.dispatch_loaded({'type':'durable.campaign.advance','campaign':'research'},loaded,policy,desktop=True)
+        profile['desktop_scan_enabled']='true';path.write_text(ac.encoded(profile),encoding='utf-8')
+        with self.assertRaisesRegex(ValueError,'OPERATOR_PROFILE_REQUIRED'):native_adapter.operator_profile(path)
+
     def test_cancelled_unstarted_node_releases_admission_capacity(self):
         self.manifest();cr.advance(self.store,self.policy,'research');cr.cancel(self.store,self.policy,'research')
         self.assertEqual(self.sql('SELECT count(*) FROM workflow_reservations')[0][0],0)

@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import uuid
 from pathlib import Path
 import queue
 import sys
@@ -13,7 +14,7 @@ from tkinter import filedialog, messagebox, ttk
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from desktop import SHELL_VERSION
 from desktop.client import Connection, DesktopClient, DesktopError, PROTOCOL
-from desktop.draft import save_draft, save_manifest
+from desktop.draft import save_draft, save_manifest, save_repo_history
 from desktop.preflight import check
 from desktop.state import Fence
 
@@ -47,6 +48,7 @@ class App:
         self.connection = None
         self.report = None
         self.context = None
+        self.scan_run = None
         self.items = []
         self.events = queue.Queue(maxsize=8)
         self.worker = None
@@ -113,14 +115,34 @@ class App:
         ttk.Entry(inventory, textvariable=self.snapshot).grid(row=0, column=3, sticky='ew')
         self.inventory_button = ttk.Button(inventory, text='Сохранить весь список', command=self.export_inventory, state='disabled')
         self.inventory_button.grid(row=0, column=4, padx=6)
+        self.history_button = ttk.Button(inventory, text='Сохранить историю снимков',
+                                         command=self.export_history, state='disabled')
+        self.history_button.grid(row=1, column=0, columnspan=2, sticky='w', pady=(5, 0))
+        self.delta_button = ttk.Button(inventory, text='Сохранить изменения снимка',
+                                       command=self.export_delta, state='disabled')
+        self.delta_button.grid(row=1, column=2, columnspan=2, sticky='w', pady=(5, 0))
         ttk.Label(inventory, text='Снимок должен быть уже собран backend. Список читается до конца; размер репозитория не ограничен.',
-                  wraplength=920).grid(row=1, column=0, columnspan=5, sticky='w', pady=(4, 0))
+                  wraplength=920).grid(row=2, column=0, columnspan=5, sticky='w', pady=(4, 0))
+        controls = ttk.Frame(inventory)
+        controls.grid(row=3, column=0, columnspan=5, sticky='w', pady=(6, 0))
+        self.scan_buttons = {}
+        for action, label in (('STATUS', 'Статус сканирования'), ('START', 'Новый запуск'),
+                              ('STEP', 'Следующая порция'), ('PAUSE', 'Пауза'),
+                              ('CONTINUE', 'Продолжить'), ('CANCEL', 'Отменить запуск')):
+            button = ttk.Button(controls, text=label, command=lambda a=action: self.scan_action(a),
+                                state='disabled')
+            button.pack(side='left', padx=(0, 5))
+            self.scan_buttons[action] = button
+        self.scan_status = tk.StringVar(value='Сканирование: статус не загружен.')
+        ttk.Label(inventory, textvariable=self.scan_status, wraplength=900).grid(
+            row=4, column=0, columnspan=5, sticky='w', pady=(3, 0))
         root.bind('<Escape>', lambda _event: self.cancel())
         root.protocol('WM_DELETE_WINDOW', self.close)
         self.query.trace_add('write', self.query_changed)
         self.namespace.trace_add('write', self.query_changed)
         self.snapshot.trace_add('write', self.query_changed)
         self.repository.trace_add('write', self.query_changed)
+        self.repository.trace_add('write', self.repository_changed)
         self.after_id = root.after(40, self.drain)
         if self.config_path.is_file():
             root.after(0, self.connect)
@@ -139,6 +161,58 @@ class App:
         self.save_button.configure(state='normal' if idle and self.context is not None else 'disabled')
         manifest = idle and 'durable.repo.manifest' in self.client.info['capabilities'] if ready else False
         self.inventory_button.configure(state='normal' if manifest else 'disabled')
+        capabilities = self.client.info['capabilities'] if ready else []
+        self.history_button.configure(state='normal' if idle and 'durable.repo.history' in capabilities else 'disabled')
+        self.delta_button.configure(state='normal' if idle and 'durable.repo.delta' in capabilities and
+                                    len(self.snapshot.get()) == 64 else 'disabled')
+        scan = idle and bool(self.repository.get()) and 'durable.repo.scanRun' in capabilities
+        run = self.scan_run if self.scan_run and self.scan_run['repository'] == self.repository.get() else None
+        for action, button in self.scan_buttons.items():
+            enabled = scan and (action in {'STATUS', 'START'} or run is not None and
+                (action == 'STEP' and run['state'] == 'RUNNING' or
+                 action == 'PAUSE' and run['state'] == 'RUNNING' or
+                 action == 'CONTINUE' and run['state'] == 'PAUSED' or
+                 action == 'CANCEL' and run['state'] in {'RUNNING', 'PAUSED'}))
+            button.configure(state='normal' if enabled else 'disabled')
+
+    def repository_changed(self, *_args):
+        self.scan_run = None
+        self.scan_status.set('Сканирование: запросите статус для выбранного репозитория.')
+        self.update_controls()
+
+    def scan_action(self, action):
+        if self.client is None or self.client.identity is None or self.busy():
+            return
+        repository = self.repository.get()
+        run = self.scan_run
+        request = {'type': 'durable.repo.scanRun', 'repository': repository, 'action': action}
+        if action == 'START':
+            request['intentKey'] = uuid.uuid4().hex
+        elif action == 'STATUS':
+            pass
+        elif run is not None and run['repository'] == repository:
+            request['runId'] = run['run_id']
+            if action not in {'STATUS'}:
+                request['expectedRevision'] = run['run_revision']
+            if action == 'STEP':
+                request['expectedCursor'] = run['cursor']
+        elif action != 'STATUS':
+            return
+        client = self.client
+
+        def apply(reply):
+            current = reply['result']['scan_run']
+            self.scan_run = current
+            if current is None:
+                self.scan_status.set('Сканирование: запуск не найден.')
+                return
+            self.scan_status.set(f'Сканирование: {current["state"]} · '
+                                 f'{current["processed"]}/{current["total"]} · '
+                                 f'исключено {current["excluded"]}, ошибок {current["errors"]}' +
+                                 (f' · {current["reason"]}' if current['reason'] else ''))
+            self.snapshot.set(current['snapshot_id'])
+            self.status.set('Состояние сканирования записано в backend; закрытие окна не отменяет запуск.')
+        self.start('durable.repo.scanRun', lambda _cancel, _progress: client.request(request), apply)
 
     def clear_context(self):
         self.context = None
@@ -299,6 +373,7 @@ class App:
         self.clear_context()
         self.location.set('')
         self.report = None
+        self.scan_run = None
         if self.client:
             self.client.close()
         try:
@@ -397,6 +472,27 @@ class App:
                    lambda cancel, progress: save_manifest(output, client, repository, snapshot,
                                                          cancel=cancel, progress=progress),
                    lambda value: self.status.set(f'Полный список сохранён: {value["rows"]} файлов · {output}'))
+
+    def export_history(self):
+        output = self.output_folder('repository-history')
+        if output is None:
+            return
+        client, repository = self.client, self.repository.get()
+        self.start('durable.repo.history',
+                   lambda cancel, progress: save_repo_history(output, client, repository,
+                                                               cancel=cancel, progress=progress),
+                   lambda value: self.status.set(f'История сохранена: {value["rows"]} снимков · {output}'))
+
+    def export_delta(self):
+        output = self.output_folder('repository-delta')
+        if output is None:
+            return
+        client, repository, snapshot = self.client, self.repository.get(), self.snapshot.get()
+        self.start('durable.repo.delta',
+                   lambda cancel, progress: save_repo_history(output, client, repository,
+                                                               snapshot_id=snapshot,
+                                                               cancel=cancel, progress=progress),
+                   lambda value: self.status.set(f'Изменения сохранены: {value["rows"]} путей · {output}'))
 
     def diagnostics(self):
         window = tk.Toplevel(self.root)
