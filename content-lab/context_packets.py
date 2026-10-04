@@ -302,8 +302,9 @@ def export_projection(store,namespace,projection_id,output,profile,*,progress=No
             (stage/'parts').mkdir()
             manifest=[]
             def write(name,raw):
-                p=stage/name;p.write_bytes(raw)
-                with p.open('rb') as stream:os.fsync(stream.fileno())
+                p=stage/name
+                with p.open('xb') as stream:
+                    stream.write(raw);stream.flush();os.fsync(stream.fileno())
                 manifest.append({'path':name,'sha256':lib.sha(raw),'bytes':len(raw)})
             def safe(value):
                 if isinstance(value,str):
@@ -330,7 +331,8 @@ def export_projection(store,namespace,projection_id,output,profile,*,progress=No
                 if lib.sha(row['raw'])!=row['sha256']:raise ValueError('PART_CORRUPT')
                 write(f"parts/{row['ordinal']:08}.bin",row['raw'])
             write('INDEX.html',b'<!doctype html><meta charset="utf-8"><title>Context packet</title><h1>Offline context packet</h1><p>Exact part/source mappings: <a href="SOURCES.jsonl">sources</a> and <a href="PARTS_INDEX.jsonl">parts</a>. Delivery/read/criterion verification are independent.</p>')
-            (stage/'MANIFEST.json').write_bytes(lib.encoded({'schema':'occ.context-export.v1','projection_digest':lib.digest(meta),'files':manifest}))
+            with (stage/'MANIFEST.json').open('xb') as stream:
+                stream.write(lib.encoded({'schema':'occ.context-export.v1','projection_digest':lib.digest(meta),'files':manifest}));stream.flush();os.fsync(stream.fileno())
             verify_export(stage,expected_digest=lib.digest(meta))
             # Guard publication against late stop/delete/profile changes.
             if progress:progress()
