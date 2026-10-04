@@ -42,6 +42,11 @@
 <div class="actions"><button id="repo-manifest-info" disabled>Сводка manifest</button><button id="repo-manifest-entries" disabled>Все файлы</button><button id="repo-manifest-parts" disabled>Все части</button></div>
 <pre id="repo-manifest-summary" role="status"></pre><div id="repo-manifest-rows"></div>
 <div class="actions"><button id="repo-manifest-prev" disabled>Предыдущая страница</button><button id="repo-manifest-next" disabled>Следующая страница</button></div></details>
+<details><summary>Формат и доступность каждого исходника</summary>
+<p class="note">Учёт entry, сохранённые raw bytes и текстовая доступность показаны отдельно. LFS pointer не подтверждает наличие payload. Сводка не запускает проверку байтов. Старые snapshots требуют явного локального backfill.</p>
+<div class="actions"><button id="repo-format-info" disabled>Сводка форматов</button><button id="repo-format-all" disabled>Все исходники</button><button id="repo-format-gaps" disabled>Пропуски и raw-only</button></div>
+<pre id="repo-format-summary" role="status"></pre><div id="repo-format-rows"></div>
+<div class="actions"><button id="repo-format-prev" disabled>Предыдущая страница</button><button id="repo-format-next" disabled>Следующая страница</button></div></details>
 <label>Цель review<textarea id="repo-goal" maxlength="4000" placeholder="Например: проверить обработку удаления источника."></textarea></label>
 <label>Принятая область изменений<textarea id="repo-scope" maxlength="2000" placeholder="Владелец функции, контракты и допустимые изменения."></textarea></label>
 <label>Критерии приёмки, по одному на строку<textarea id="repo-acceptance" maxlength="4000" placeholder="Например: deletion делает прежний review stale."></textarea></label>

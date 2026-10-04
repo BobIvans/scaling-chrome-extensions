@@ -33,6 +33,16 @@ async function fixture(t){
  return {root,source,store,policy,profile,policyPath,profilePath,config,host,hiddenId:JSON.parse(hidden).id};
 }
 function fakeSpawn(effect){return (exe,args,opts)=>{const child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new PassThrough();child.stderr=new PassThrough();child.kill=()=>{child.killed=true;setImmediate(()=>child.emit('close',null));return true;};child.stdin.on('finish',()=>effect?.(child,exe,args,opts));return child;};}
+test('coverage uses strict action fields, bounded request IDs and the actual 32768-byte frame',async()=>{
+ const config={enabled:true,pythonPath:path.resolve('python'),profilePath:path.resolve('profile'),adapterPath:path.resolve('adapter')};
+ const bridge=new DurableBridge(config,{spawnProcess:fakeSpawn(child=>{child.stdout.write(JSON.stringify({ok:true,result:{schema:'occ.native-durable-result.v1',operation:'durable.repo.coverage',coverage:{data:'x'.repeat(32760)}}}));child.emit('close',0);})});
+ const req={type:'durable.repo.coverage',repository:'sce',snapshotId:'a'.repeat(64),action:'SUMMARY',requestId:'valid-request'};
+ assert.ok(DURABLE_COMMANDS.includes('durable.repo.coverage'));
+ await assert.rejects(bridge.handle(req),/ROW_ENVELOPE_LIMIT/);
+ for(const extra of [{cursor:null},{query:'ALL'},{limit:20},{requestId:'\n'.repeat(128)},{requestId:'x'.repeat(129)}])await assert.rejects(bridge.handle({...req,...extra}),/DURABLE_SCHEMA/);
+ await assert.rejects(bridge.handle({...req,action:'PAGE',query:'ALL',limit:20}),/DURABLE_SCHEMA/);
+ bridge.close();
+});
 
 test('durable bridge is disabled by default and exposes only explicit opt-in capabilities',async()=>{
  const host=new JobHost({dataRoot:os.tmpdir(),codexPath:'not-used'});
