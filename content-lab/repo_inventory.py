@@ -7,7 +7,7 @@ Source files/configuration are data; no checkout, filters, hooks or lazy fetch.
 from __future__ import annotations
 
 import argparse
-from contextlib import contextmanager, nullcontext
+from contextlib import closing, contextmanager, nullcontext
 import errno
 import hashlib
 import json
@@ -393,12 +393,13 @@ def stage_inventory(root, head, width, profile, directory, run):
         # Independent bounded readback verifies the staged projection, bytes,
         # continuous ordinals, and exact original NUL stream digest.
         proof, seen = hashlib.sha256(), 0
-        for row in stage.execute('SELECT * FROM entries ORDER BY ordinal'):
-            run.check()
-            if row[0] != seen or tuple(row[1:9]) != parse_record(row[9], width, profile):
-                raise InventoryError('CONTEXT_INCOMPLETE')
-            proof.update(row[9] + b'\0')
-            seen += 1
+        with closing(stage.execute('SELECT * FROM entries ORDER BY ordinal')) as rows:
+            for row in rows:
+                run.check()
+                if row[0] != seen or tuple(row[1:9]) != parse_record(row[9], width, profile):
+                    raise InventoryError('CONTEXT_INCOMPLETE')
+                proof.update(row[9] + b'\0')
+                seen += 1
         if seen != total or proof.digest() != stream_hash.digest():
             raise InventoryError('CONTEXT_INCOMPLETE')
         run.metrics['stdout_sha256'] = stream_hash.hexdigest()
@@ -422,12 +423,14 @@ def valid_existing(db, stage, snap, alias, profile, head, tree, total, run):
         'SELECT count(*),min(ordinal),max(ordinal) FROM repo_entries WHERE snapshot_id=?', (snap['id'],)).fetchone()
     if count != total or (total and (first != 0 or last != total - 1)):
         raise InventoryError('CONTEXT_INCOMPLETE')
-    observed = db.execute('SELECT ordinal,path,mode,kind,oid,size,state FROM repo_entries WHERE snapshot_id=? ORDER BY ordinal', (snap['id'],))
-    expected = stage.execute('SELECT ordinal,path,mode,kind,oid,size FROM entries ORDER BY ordinal')
-    for entry, reference in zip(observed, expected):
-        run.check()
-        if tuple(entry[:6]) != tuple(reference) or entry[6] not in {'PENDING', 'INDEXED', 'ERROR', 'EXCLUDED'}:
-            raise InventoryError('CONTEXT_INCOMPLETE')
+    # A traceback retains active cursors. Closing the connection alone can
+    # defer SQLite's file close, which prevents stage deletion on Windows.
+    with closing(db.execute('SELECT ordinal,path,mode,kind,oid,size,state FROM repo_entries WHERE snapshot_id=? ORDER BY ordinal', (snap['id'],))) as observed, \
+            closing(stage.execute('SELECT ordinal,path,mode,kind,oid,size FROM entries ORDER BY ordinal')) as expected:
+        for entry, reference in zip(observed, expected):
+            run.check()
+            if tuple(entry[:6]) != tuple(reference) or entry[6] not in {'PENDING', 'INDEXED', 'ERROR', 'EXCLUDED'}:
+                raise InventoryError('CONTEXT_INCOMPLETE')
 
 
 def publish(store, alias, profile, root, head, tree, stage_path, total, run, existing_db=None, retry_size_errors=False):
@@ -465,13 +468,14 @@ def publish(store, alias, profile, root, head, tree, stage_path, total, run, exi
                         db.executemany('INSERT INTO repo_entries(snapshot_id,' + ENTRY_COLUMNS + ') VALUES (?,?,?,?,?,?,?,?,?)', batch)
                         run.publication_storage(store, stage_path.parent, baseline_sidecars)
                         batch.clear()
-                for row in stage.execute('SELECT ' + ENTRY_COLUMNS + ' FROM entries ORDER BY ordinal'):
-                    size = len(row[1].encode('utf-8')) + 256
-                    if batch and (len(batch) >= run.budget['insert_batch_rows'] or byte_size + size > run.budget['insert_batch_bytes']):
-                        flush()
-                        byte_size = 0
-                    batch.append((snapshot_id, *row))
-                    byte_size += size
+                with closing(stage.execute('SELECT ' + ENTRY_COLUMNS + ' FROM entries ORDER BY ordinal')) as rows:
+                    for row in rows:
+                        size = len(row[1].encode('utf-8')) + 256
+                        if batch and (len(batch) >= run.budget['insert_batch_rows'] or byte_size + size > run.budget['insert_batch_bytes']):
+                            flush()
+                            byte_size = 0
+                        batch.append((snapshot_id, *row))
+                        byte_size += size
                 flush()
                 valid_existing(db, stage, db.execute('SELECT * FROM repo_snapshots WHERE id=?', (snapshot_id,)).fetchone(),
                                alias, profile, head, tree, total, run)

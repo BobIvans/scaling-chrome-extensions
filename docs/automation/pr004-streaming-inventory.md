@@ -57,6 +57,8 @@ restart_size_errors для повторения старых FILE_TOO_LARGE; inv
 - Private SQLite stage имеет уникальные paths/ordinals, bounded cache/batches,
   optional quota с reserve для target WAL/journal и dirty cache. Независимый readback сверяет каждую projection и original
   record с точным SHA256 NUL stream. Stage — disposable data, не metadata owner.
+  Readback/publication/identity cursors закрываются явно до connection и cleanup:
+  error traceback не оставляет открытый stage handle, блокирующий удаление на Windows.
 - После EOF/reap публикуются snapshot и все entries одной transaction в
   `content.sqlite3`; перед публикацией повторно проверяется HEAD. Для scanRun
   START используется его текущая transaction: intent и inventory атомарны.
@@ -77,7 +79,11 @@ restart_size_errors для повторения старых FILE_TOO_LARGE; inv
 55-record golden stream на всех 4075 split cuts, SHA256/empty trees, full
 160000-entry tree (45,600,000 stdout bytes), faults, deadline, backpressure,
 cancel/restart, concurrent publication, reader visibility, scoped CLI и rollback
-scan intent вместе с inventory. Все четыре CI suites остаются обязательными.
+scan intent вместе с inventory. Отдельный regression проверяет отсутствие stage
+handle при metadata fault, включая Windows file-lock semantics на Linux.
+Все четыре CI suites остаются обязательными; полный прогон real-Git fixtures
+на Windows/NTFS имеет CI job budget 20 минут, без изменения размеров fixtures
+или ограничения времени inventory в приложении.
 
 Воспроизводимая Linux resource qualification:
 
@@ -89,7 +95,7 @@ Cold означает первый новый процесс без eviction OS 
 процесс на том же fixture/store с validation/reuse. Linux worker `getrusage`
 измеряет application и owned Git child peaks отдельно. В receipt сохранены
 stdout bytes/hash, exact tail/ordinal, stage peak на batch checkpoints, duration,
-main DB size, target sidecar peak, суммарный storage peak и версии. На 160k application peak около 20 MiB; рост с 40k около
+main DB size, target sidecar peak, суммарный storage peak и версии. На 160k application peak около 20 MiB; рост с 40k меньше
 1 MiB. Git child peak около 40 MiB, stage peak около 167 MiB.
 Пик stage + target DB + WAL/journal на cold 160k — около 443 MiB;
 это полный наблюдённый storage peak данного synthetic corpus.

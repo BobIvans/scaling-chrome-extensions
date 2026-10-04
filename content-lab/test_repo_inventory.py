@@ -308,6 +308,33 @@ class InventoryTests(TestCase):
                     db.execute('DELETE FROM repo_snapshots')
                 db.close()
 
+    def test_stage_cursor_closed_before_cleanup_on_metadata_fault(self):
+        inv.inventory(self.store, 'sce', self.profile)
+        db = repo.db_for(self.store)
+        with db:
+            db.execute('UPDATE repo_entries SET oid=? WHERE ordinal=40', ('a' * 40,))
+        db.close()
+        original = inv.shutil.rmtree
+        def cleanup(directory, *args, **kwargs):
+            descriptors = Path('/proc/self/fd')
+            if descriptors.is_dir():
+                # Enforce Windows file-lock semantics on Linux too: a
+                # pending SELECT retained by a traceback must not own the file.
+                target = str(directory / 'inventory.sqlite3')
+                active = []
+                for descriptor in descriptors.iterdir():
+                    try:
+                        if os.readlink(descriptor) == target:
+                            active.append(descriptor.name)
+                    except OSError:
+                        pass
+                self.assertEqual(active, [])
+            return original(directory, *args, **kwargs)
+        with mock.patch.object(inv.shutil, 'rmtree', side_effect=cleanup):
+            with self.assertRaisesRegex(inv.InventoryError, 'CONTEXT_INCOMPLETE'):
+                inv.inventory(self.store, 'sce', self.profile)
+        self.assertEqual(list(self.store.glob('.occ-inventory-*')), [])
+
     def test_concurrent_writers_reuse_one_complete_identity(self):
         # Initialize schema before racing the two inventory publications.
         repo.db_for(self.store).close()
