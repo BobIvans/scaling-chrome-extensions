@@ -108,3 +108,23 @@ class RepoHistoryTests(TestCase):
         revoked = dict(self.profile, exclusions=['changed'])
         with self.assertRaisesRegex(ValueError, 'REPO_OUTSIDE_OPERATOR_SCOPE'):
             repo_history.snapshots(self.store, 'code', 'sce', revoked)
+
+    def test_long_unicode_cursor_continues_without_path_budget_cutoff(self):
+        self.commit({'base.txt': b'initial'})
+        long_path = '/'.join(['я' * 60] * 4) + '/long.txt'
+        target = self.repo / long_path
+        target.parent.mkdir(parents=True)
+        target.write_bytes(b'long')
+        (self.repo / (long_path + 'x')).write_bytes(b'next')
+        self.git('add', '-A')
+        self.git('commit', '-qm', 'unicode paths')
+        head = repo_context.start_scan(self.store, 'sce', self.profile)
+        while repo_context.scan_page(self.store, 'code', head)['state'] != 'COMPLETE':
+            pass
+        first = repo_history.delta(self.store, 'code', 'sce', self.profile, head, limit=1)
+        self.assertEqual(first['changes'][0]['path'], long_path)
+        self.assertIsNotNone(first['next_cursor'])
+        second = repo_history.delta(self.store, 'code', 'sce', self.profile, head,
+                                    limit=1, cursor=first['next_cursor'])
+        self.assertEqual(second['changes'][0]['path'], long_path + 'x')
+        self.assertTrue(second['eof'])

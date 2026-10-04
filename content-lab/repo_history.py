@@ -5,7 +5,10 @@ are read from the canonical SQLite ledger and never materialize the corpus.
 """
 from __future__ import annotations
 
+import base64
+import binascii
 import json
+import re
 from pathlib import Path
 
 from automation_core import identifier, read_connection, strict_int
@@ -15,15 +18,17 @@ MAX_PAGE = 100
 
 
 def _encode(value):
-    return json.dumps(value, ensure_ascii=True, sort_keys=True, separators=(',', ':')).encode().hex()
+    raw = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(',', ':')).encode('utf-8')
+    return base64.urlsafe_b64encode(raw).decode('ascii').rstrip('=')
 
 
 def _decode(token, keys):
-    if not isinstance(token, str) or len(token) > 4096 or len(token) % 2:
+    if not isinstance(token, str) or len(token) > 4096 or not re.fullmatch(r'[A-Za-z0-9_-]+', token):
         raise ValueError('REPO_CURSOR_INVALID')
     try:
-        value = json.loads(bytes.fromhex(token).decode('utf-8'))
-    except (ValueError, UnicodeError) as exc:
+        raw = base64.b64decode(token + '=' * (-len(token) % 4), altchars=b'-_', validate=True)
+        value = json.loads(raw.decode('utf-8'))
+    except (ValueError, UnicodeError, binascii.Error) as exc:
         raise ValueError('REPO_CURSOR_INVALID') from exc
     if not isinstance(value, dict) or set(value) != keys:
         raise ValueError('REPO_CURSOR_INVALID')
