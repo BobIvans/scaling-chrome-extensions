@@ -170,6 +170,11 @@ lab.import_chatgpt_export(pathlib.Path(__import__('sys').argv[1]),
         with self.assertRaisesRegex(ValueError, "PAGE_BOUNDARY"):
             lab.inspect_chatgpt_import(self.store, first["source_version_id"],
                                        first["extraction_id"], limit=101)
+        with patch.object(lab, "MAX_CHATGPT_INSPECT_BYTES", 100):
+            small = lab.inspect_chatgpt_import(
+                self.store, first["source_version_id"], first["extraction_id"])
+        self.assertTrue(small["nodes"][0]["metadata_omitted"])
+        self.assertEqual(small["next_offset"], 1)
         target = self.root / "original.json"
         target.write_bytes(b"existing")
         with self.assertRaisesRegex(ValueError, "DESTINATION_EXISTS"):

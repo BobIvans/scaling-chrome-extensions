@@ -29,6 +29,7 @@ MAX_CHATGPT_TEXT_BYTES = 64 * 1024 * 1024
 MAX_CHATGPT_ATTACHMENTS = 100_000
 MAX_CHATGPT_NODES = 100_000
 MAX_CHATGPT_LEDGER_BYTES = 64 * 1024 * 1024
+MAX_CHATGPT_INSPECT_BYTES = 1_000_000
 FIDELITY_EXTRACTOR_VERSION = "chatgpt-json-fidelity.v1"
 MAX_ATTACHMENT_POINTER_BYTES = 4096
 TEXT_SUFFIXES = {".txt", ".md", ".json", ".csv", ".py", ".js", ".ts", ".yaml", ".yml"}
@@ -1271,20 +1272,29 @@ def inspect_chatgpt_import(store: Path, version_id: str, extraction_id: str,
                             "extractor_key": extractor}) != extraction_id or
                 hashlib.sha256(payload).hexdigest() != payload_hash):
             raise ValueError("IMPORT_VERSION_INTEGRITY")
-        nodes = []
-        for raw, digest in connection.execute(
-                "SELECT payload,payload_sha256 FROM import_node_ledger "
+        nodes, page_bytes = [], 0
+        for cid, node_id, raw, digest in connection.execute(
+                "SELECT conversation_id,node_id,payload,payload_sha256 FROM import_node_ledger "
                 "WHERE extraction_id=? ORDER BY ordinal LIMIT ? OFFSET ?",
                 (extraction_id, limit, offset)):
             if hashlib.sha256(raw).hexdigest() != digest:
                 raise ValueError("IMPORT_NODE_LEDGER_INTEGRITY")
-            nodes.append(json.loads(raw))
+            if page_bytes + len(raw) > MAX_CHATGPT_INSPECT_BYTES:
+                if nodes:
+                    break
+                nodes.append({"conversation_id": cid, "node_id": node_id,
+                              "metadata_omitted": True, "metadata_bytes": len(raw),
+                              "payload_sha256": digest})
+            else:
+                nodes.append(json.loads(raw))
+                page_bytes += len(raw)
+        total = json.loads(payload)["observed_nodes"] if disposition != "ERROR" else 0
         return {"source_version_id": version_id, "extraction_id": extraction_id,
                 "namespace": scope, "source_key": key, "raw_sha256": raw_hash,
                 "byte_count": count, "extractor_key": extractor,
                 "disposition": disposition, "summary": json.loads(payload),
                 "nodes": nodes, "offset": offset, "limit": limit,
-                "next_offset": offset + len(nodes) if len(nodes) == limit else None}
+                "next_offset": offset + len(nodes) if offset + len(nodes) < total else None}
     finally:
         connection.close()
 

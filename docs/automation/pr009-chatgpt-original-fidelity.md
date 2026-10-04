@@ -23,7 +23,9 @@ the canonical absolute input path, so a rename changes source identity. Use a
 stable explicit key across locations when that is the desired lineage. An
 existing output requires `--overwrite`. The original read verifies byte count
 and SHA-256 before an atomic file publication. Inspection returns at most 100
-node records per page and never includes the original JSON bytes.
+node records and 1 MB of node metadata per page. An oversized individual node
+is represented by its ID, byte count and digest with `metadata_omitted=true`;
+the next page advances past it. Inspection never includes original JSON bytes.
 
 The node ledger records every observed mapping key, including structural,
 empty and non-text nodes, both branches, declared parent/children, JSON Pointer,
