@@ -32,6 +32,10 @@
 <div id="durable-hits"></div><textarea id="durable-output" readonly aria-label="Текущий context из локальной библиотеки" placeholder="Текущие источники, provenance и SHA-256 появятся здесь."></textarea>
 <div class="actions"><label>Зарегистрированное действие<input id="durable-template" placeholder="sync-exports" maxlength="100"></label><label>Стабильный ключ задачи<input id="durable-task-key" placeholder="my-goal-001" maxlength="100"></label><button id="durable-enqueue" disabled>Поставить в очередь</button><button id="durable-refresh" disabled>Обновить известные задания</button></div>
 <p class="note">При timeout или отключении повторите то же действие и тот же ключ. Новый ключ создаёт другую задачу. Worker запускается отдельно; закрытие канала сохраняет SQLite queue. Здесь до 20 известных ссылок, а не весь список jobs. Состояния сверяются по кнопке обновления; остановка RUNNING подтверждается отдельно.</p>
+<fieldset><legend>Долгая кампания</legend>
+<label for="campaign-alias">Кампания из локального профиля</label><input id="campaign-alias" placeholder="research">
+<div class="actions"><button id="campaign-inspect" disabled>Показать очередь</button><button id="campaign-advance" disabled>Продолжить допуск</button><button id="campaign-pause" disabled>Приостановить допуск</button><button id="campaign-resume" disabled>Возобновить допуск</button><button id="campaign-cancel" disabled>СТОП кампании</button><button id="campaign-next" disabled>Следующая страница</button></div>
+<p id="campaign-status" role="status" aria-live="polite">Выберите кампанию и подключитесь.</p><pre id="campaign-output" aria-label="Узлы, состояния и причины ожидания"></pre></fieldset>
 <p id="durable-status" role="status">Durable host не подключён.</p><div id="durable-jobs"></div></details>
 <details id="repo-panel"><summary>Репозиторий → полный контекст → AI review</summary>
 <p>Подключите локальный host выше. Репозитории и namespace выбираются из установленного профиля. Scan читает tracked Git blobs и сохраняет progress; исходники не исполняются.</p>
