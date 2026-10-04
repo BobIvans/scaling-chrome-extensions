@@ -45,6 +45,7 @@ FIELDS = {
     "durable.repo.scanRun": ({"type", "repository", "action"}, {"intentKey", "runId", "expectedCursor", "expectedRevision"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
     "durable.repo.manifest": ({"type", "repository", "snapshotId", "action"}, {"offset", "limit", "fileOrdinal"}),
+    "durable.repo.coverage": ({"type", "repository", "snapshotId", "action"}, {"query", "limit", "cursor"}),
     "durable.repo.export": ({"type", "repository", "snapshotId", "paths", "goal", "scope", "acceptance"}, {"maxBytes", "sourceOffset"}),
 }
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
@@ -182,6 +183,13 @@ def validate_request(request):
             raise ValueError('DURABLE_SCHEMA')
         if 'fileOrdinal' in request:
             strict_int(request['fileOrdinal'], 0, 9_007_199_254_740_991)
+    if request['type'] == 'durable.repo.coverage':
+        from repo_coverage import validate_request as validate_coverage_request
+        fields = {'query', 'limit', 'cursor'}
+        if request['action'] == 'PAGE' and not fields.issubset(request):
+            raise ValueError('DURABLE_SCHEMA')
+        validate_coverage_request(request['action'], query=request.get('query'), limit=request.get('limit'),
+                                  cursor=request.get('cursor'), page_fields=bool(fields.intersection(request)))
     return request
 
 
@@ -197,6 +205,17 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
     if desktop and operation not in DESKTOP_READS:
         raise ValueError('DESKTOP_READ_ONLY')
+    if operation == 'durable.repo.coverage':
+        # This operation must not initialize the writer/Core/schema owners.
+        from repo_coverage import query
+        alias = identifier(request['repository'])
+        source = profile.get('repositories', {}).get(alias)
+        if source is None:
+            raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+        coverage = query(store, source['namespace'], request['snapshotId'], alias, source, request['action'],
+                         **{k: request[k] for k in ('query', 'limit', 'cursor') if k in request})
+        value['coverage'] = coverage
+        return value
     if operation == 'durable.info':
         value['info'] = info(profile)
         return value

@@ -31,6 +31,8 @@ MESSAGES = {
     'DESKTOP_OUTPUT_FAILED': 'Не удалось сохранить документ. Проверьте место на диске и права доступа.',
     'DESKTOP_CAPABILITY_UNAVAILABLE': 'Этот backend ещё не поддерживает выбранную операцию.',
     'DESKTOP_ITEM_SCHEMA_UNAVAILABLE': 'Формат источника требует обновления Desktop.',
+    'DESKTOP_CLASSIFIER_UNAVAILABLE': 'Версия проверки форматов требует обновления Desktop.',
+    'FORMAT_BACKFILL_REQUIRED': 'Для выбранного источника ещё не проверен формат. Обновите библиотеку и повторите поиск.',
     'DESKTOP_DRAFT_FIELDS_REQUIRED': 'Заполните цель, область и критерии.',
     'ITEM_OUTSIDE_SCOPE_OR_STALE': 'Выбранный источник изменился. Повторите поиск.',
 }

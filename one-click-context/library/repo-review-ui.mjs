@@ -2,6 +2,8 @@
 export const REVIEW_NATIVE_INPUT_BYTES=16000;
 const HASH=/^[0-9a-f]{64}$/;
 const bytes=value=>new TextEncoder().encode(value).length;
+const CLASSIFIER_VERSION='utf8-controls-strict-lfs3.v1';
+const wireInteger=value=>typeof value==='string'&&/^(0|[1-9][0-9]{0,18})$/.test(value)&&BigInt(value)<=9223372036854775807n;
 
 export function parseReviewInput(raw,namespace,sessionId=null){
  if(typeof raw!=='string'||bytes(raw)>REVIEW_NATIVE_INPUT_BYTES)throw Error('REVIEW_NATIVE_INPUT_LIMIT');
@@ -28,7 +30,30 @@ export function parseReviewInput(raw,namespace,sessionId=null){
 
 export class RepoReviewSession{
  constructor({durable,onChange=()=>{}}){this.durable=durable;this.onChange=onChange;this.version=0;this.reset();}
- reset(){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;this.version++;this.manifestVersion=(this.manifestVersion||0)+1;this.manifest=null;this.manifestHistory=[];this.repositories=[];this.repository=null;this.namespace=null;this.snapshot=null;this.selected=new Set();this.exported=null;this.handoff=null;this.reviews=[];this.review=null;this.reportJob=null;this.busy=false;this.onChange();}
+ clearCoverage(){this.coverageVersion=(this.coverageVersion||0)+1;this.coverage=null;this.coverageCursor=null;this.coverageHistory=[];}
+ async coveragePage(action='SUMMARY',query=null,cursor=null,{back=false}={}){
+  if(!this.snapshot)throw Error('REPO_SCAN_REQUIRED');
+  if(!['SUMMARY','PAGE'].includes(action)||action==='PAGE'&&!['ALL','GAPS'].includes(query))throw Error('COVERAGE_QUERY_REQUIRED');
+  const version=this.version,clientGeneration=this.durable.generation,queryVersion=++this.coverageVersion,sid=this.snapshot.snapshot_id;
+  const d=await this.call('durable.repo.coverage',{repository:this.repository,snapshotId:sid,action,...(action==='PAGE'?{query,limit:20,cursor}:{})});
+  if(version!==this.version||clientGeneration!==this.durable.generation||queryVersion!==this.coverageVersion||sid!==this.snapshot?.snapshot_id)throw Error('STALE_COVERAGE_REPLY');
+  const c=d.coverage,countFields=['total','ledger_rows','terminal_entries','pending_entries','facts_entries','indexed','excluded','error','text_eligible','raw_recorded','gaps'];
+  const validCursor=n=>n===null||n&&Object.keys(n).length===4&&n.snapshotId===sid&&n.classifierVersion===CLASSIFIER_VERSION&&n.query===query&&wireInteger(n.afterOrdinal);
+  if(c?.schema!=='occ.repo-coverage.v1'||c.snapshot_id!==sid||c.classifier_version!==CLASSIFIER_VERSION||c.action!==action||c.query!==query||!Array.isArray(c.rows)||c.rows.length>20||!c.summary||!['READY','SCAN_PENDING','FORMAT_FACTS_PENDING','CORRUPT_FACTS'].includes(c.summary.state)||countFields.some(k=>!wireInteger(c.summary[k]))||!validCursor(c.next_cursor)||bytes(JSON.stringify({ok:true,durable:d,requestId:'x'.repeat(128)}))>32768)throw Error('COVERAGE_RESULT_SCHEMA');
+  let after=cursor===null?-1n:BigInt(cursor.afterOrdinal);
+  for(const row of c.rows){
+   if(row.schema!=='occ.format-eligibility.v1'||row.snapshot_id!==sid||row.classifier_version!==CLASSIFIER_VERSION||!wireInteger(row.ordinal)||BigInt(row.ordinal)<=after||typeof row.path!=='string'||!Array.isArray(row.reasons)||row.reasons.some(r=>typeof r!=='string')||!['ELIGIBLE','INELIGIBLE','METADATA_ONLY','UNKNOWN'].includes(row.text_eligibility)||query==='GAPS'&&row.text_eligibility==='ELIGIBLE')throw Error('COVERAGE_RESULT_SCHEMA');
+   if(query==='ALL'&&BigInt(row.ordinal)!==after+1n)throw Error('COVERAGE_RESULT_SCHEMA');
+   after=BigInt(row.ordinal);
+  }
+  if(action==='SUMMARY'&&(c.rows.length||c.next_cursor!==null)||action==='PAGE'&&c.summary.state!=='READY'||c.next_cursor!==null&&(!c.rows.length||c.next_cursor.afterOrdinal!==c.rows.at(-1).ordinal))throw Error('COVERAGE_RESULT_SCHEMA');
+  if(action==='PAGE'&&query==='ALL'&&c.next_cursor===null&&after<BigInt(c.summary.total)-1n)throw Error('COVERAGE_RESULT_SCHEMA');
+  if(this.coverage?.action==='PAGE'&&this.coverage.query===query){if(back)this.coverageHistory.pop();else if(JSON.stringify(cursor)!==JSON.stringify(this.coverageCursor))this.coverageHistory.push(this.coverageCursor);}else this.coverageHistory=[];
+  this.coverage=c;this.coverageCursor=cursor;this.onChange();return c;
+ }
+ async coverageNext(){if(this.coverage?.next_cursor==null)throw Error('COVERAGE_END');return this.coveragePage('PAGE',this.coverage.query,this.coverage.next_cursor);}
+ async coverageBack(){if(!this.coverageHistory.length)throw Error('COVERAGE_START');return this.coveragePage('PAGE',this.coverage.query,this.coverageHistory.at(-1),{back:true});}
+ reset(){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;this.version++;this.manifestVersion=(this.manifestVersion||0)+1;this.manifest=null;this.manifestHistory=[];this.clearCoverage();this.repositories=[];this.repository=null;this.namespace=null;this.snapshot=null;this.selected=new Set();this.exported=null;this.handoff=null;this.reviews=[];this.review=null;this.reportJob=null;this.busy=false;this.onChange();}
  invalidate(){this.version++;this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.onChange();}
  async call(type,args={}){return this.durable.request(type,args);}
  async loadRepositories(){
@@ -37,9 +62,9 @@ export class RepoReviewSession{
   if(!Array.isArray(d.repositories)||d.repositories.length>20||d.repositories.some(r=>typeof r.repository!=='string'||typeof r.namespace!=='string'))throw Error('REPO_RESULT_SCHEMA');
   this.repositories=d.repositories;this.onChange();return d.repositories;
  }
- choose(alias){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;const repo=this.repositories.find(r=>r.repository===alias);if(!repo)throw Error('REPO_OUTSIDE_OPERATOR_SCOPE');this.version++;this.manifestVersion++;this.manifest=null;this.manifestHistory=[];this.repository=alias;this.namespace=repo.namespace;this.snapshot=null;this.selected.clear();this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.reviews=[];this.onChange();}
- select(path,checked){if(!this.snapshot?.files.some(f=>f.path===path&&f.state==='INDEXED'))throw Error('REPO_PATH_OUTSIDE_SNAPSHOT');if(checked&&this.selected.size>=10&&!this.selected.has(path))throw Error('REPO_SELECTION_LIMIT');checked?this.selected.add(path):this.selected.delete(path);this.invalidate();}
- acceptSnapshot(s){if(s?.schema!=='occ.repo-snapshot.v1'||s.alias!==this.repository||s.namespace!==this.namespace||!HASH.test(s.snapshot_id)||!Array.isArray(s.files)||!Number.isInteger(s.cursor)||!Number.isInteger(s.total)||s.cursor<0||s.cursor>s.total)throw Error('REPO_RESULT_SCHEMA');if(s.snapshot_id!==this.snapshot?.snapshot_id){this.manifestVersion++;this.manifest=null;this.manifestHistory=[];}this.snapshot=s;this.exported=null;this.handoff=null;this.review=null;this.onChange();return s;}
+ choose(alias){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;const repo=this.repositories.find(r=>r.repository===alias);if(!repo)throw Error('REPO_OUTSIDE_OPERATOR_SCOPE');this.version++;this.manifestVersion++;this.manifest=null;this.manifestHistory=[];this.clearCoverage();this.repository=alias;this.namespace=repo.namespace;this.snapshot=null;this.selected.clear();this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.reviews=[];this.onChange();}
+ select(path,checked){if(!this.snapshot?.files.some(f=>f.path===path&&f.state==='INDEXED'&&f.text_eligibility==='ELIGIBLE'))throw Error('REPO_PATH_OUTSIDE_SNAPSHOT');if(checked&&this.selected.size>=10&&!this.selected.has(path))throw Error('REPO_SELECTION_LIMIT');checked?this.selected.add(path):this.selected.delete(path);this.invalidate();}
+ acceptSnapshot(s){if(s?.schema!=='occ.repo-snapshot.v1'||s.alias!==this.repository||s.namespace!==this.namespace||!HASH.test(s.snapshot_id)||!Array.isArray(s.files)||!Number.isInteger(s.cursor)||!Number.isInteger(s.total)||s.cursor<0||s.cursor>s.total)throw Error('REPO_RESULT_SCHEMA');if(s.snapshot_id!==this.snapshot?.snapshot_id){this.manifestVersion++;this.manifest=null;this.manifestHistory=[];this.clearCoverage();}for(const f of s.files)if(f.text_eligibility!=='ELIGIBLE')this.selected.delete(f.path);this.snapshot=s;this.exported=null;this.handoff=null;this.review=null;this.onChange();return s;}
  async manifestPage(action='INFO',offset=0,fileOrdinal=null,{back=false}={}){
   if(this.snapshot?.state!=='COMPLETE')throw Error('CONTEXT_INCOMPLETE');
   if(!['INFO','ENTRIES','PARTS'].includes(action)||!Number.isSafeInteger(offset)||offset<0||fileOrdinal!==null&&(!Number.isSafeInteger(fileOrdinal)||fileOrdinal<0||action!=='PARTS'))throw Error('MANIFEST_QUERY_REQUIRED');
@@ -230,6 +255,14 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
   const s=state.snapshot;
   $('repo-progress').textContent=s?`${state.scanControlPending||state.run?.state||s.state}: обработано ${state.run?.processed??(s.total-(s.counts?.PENDING||0))}/${s.total} · cursor ${s.cursor}/${s.total} · ${s.repo_sha} · ${JSON.stringify(s.counts)}${state.scanError?' · '+state.scanError:''}`:'Выберите настроенный репозиторий.';
   if($('repo-inventory-details'))$('repo-inventory-details').textContent=s?JSON.stringify({ledger_entries:s.accounted,processed:s.total-(s.counts?.PENDING||0),pending:s.counts?.PENDING||0,total:s.total,roundtrip:s.roundtrip,changes:s.changes,ai_delivery:'NOT_PERFORMED'},null,2):'';
+  for(const id of ['repo-format-info','repo-format-all','repo-format-gaps'])if($(id))$(id).disabled=state.busy||!durable.can('durable.repo.coverage')||!s;
+  if($('repo-format-next'))$('repo-format-next').disabled=state.busy||state.coverage?.next_cursor==null;
+  if($('repo-format-prev'))$('repo-format-prev').disabled=state.busy||!state.coverageHistory.length;
+  if($('repo-format-summary'))$('repo-format-summary').textContent=state.coverage?JSON.stringify(state.coverage.summary,null,2):'Format facts ещё не открыты. Старые snapshots требуют явного локального backfill.';
+  if($('repo-format-rows')){
+   $('repo-format-rows').replaceChildren();
+   for(const r of state.coverage?.rows||[]){const row=document.createElement('div');row.className='item';row.textContent=`${r.ordinal}: ${r.path} · ${r.disposition} · ${r.format_kind} · raw ${r.raw_capture} · text ${r.text_eligibility} · integrity ${r.raw_integrity} · ${r.reasons.join(', ')}${r.lfs?' · LFS payload '+r.lfs.payload_availability:''}`;$('repo-format-rows').append(row);}
+  }
   for(const id of ['repo-manifest-info','repo-manifest-entries','repo-manifest-parts'])if($(id))$(id).disabled=state.busy||!durable.can('durable.repo.manifest')||s?.state!=='COMPLETE';
   if($('repo-manifest-next'))$('repo-manifest-next').disabled=state.busy||state.manifest?.nextOffset==null;
   if($('repo-manifest-prev'))$('repo-manifest-prev').disabled=state.busy||!state.manifestHistory.length;
@@ -246,9 +279,9 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
   }
   $('repo-files').replaceChildren();
   for(const f of s?.files||[]){
-   const row=document.createElement('label');row.className='item';const check=document.createElement('input');check.type='checkbox';check.disabled=f.state!=='INDEXED';check.checked=state.selected.has(f.path);
+   const row=document.createElement('label');row.className='item';const check=document.createElement('input');check.type='checkbox';check.disabled=f.state!=='INDEXED'||f.text_eligibility!=='ELIGIBLE';check.checked=state.selected.has(f.path);
    check.onchange=()=>{try{state.select(f.path,check.checked);}catch(e){check.checked=false;notice(e.message);}};
-   const text=document.createElement('span');text.textContent=`${f.path} · ${f.state}${f.reason?' · '+f.reason:''}${f.working_state?' · '+f.working_state:''} · ${f.parser||'metadata'}`;
+   const text=document.createElement('span');text.textContent=`${f.path} · ${f.state}${f.reason?' · '+f.reason:''}${f.working_state?' · '+f.working_state:''} · ${f.parser||'metadata'} · ${f.format_kind||'LEGACY_UNKNOWN'} · text ${f.text_eligibility||'UNKNOWN'} · raw ${f.raw_capture||'UNKNOWN'}`;
    row.append(check,text);
    for(const finding of f.findings||[]){const button=document.createElement('button');button.textContent='Разобрать: '+finding.criterion;button.onclick=e=>{if(!e.isTrusted)return;try{state.select(f.path,true);$('repo-goal').value=finding.criterion;notice('Файл выбран. Укажите область и критерии, затем экспортируйте запрос.');}catch(error){notice(error.message);}};row.append(button);}
    $('repo-files').append(row);
@@ -287,6 +320,9 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
  for(const [id,action] of [['repo-manifest-info','INFO'],['repo-manifest-entries','ENTRIES'],['repo-manifest-parts','PARTS']])if($(id))$(id).onclick=e=>{if(e.isTrusted)void act(()=>state.manifestPage(action),'Manifest получен; глобальная проверка байтов выполняется отдельным локальным экспортом.');};
  if($('repo-manifest-next'))$('repo-manifest-next').onclick=e=>{if(e.isTrusted)void act(()=>state.manifestNext(),'Следующая страница manifest.');};
  if($('repo-manifest-prev'))$('repo-manifest-prev').onclick=e=>{if(e.isTrusted)void act(()=>state.manifestBack(),'Предыдущая страница manifest.');};
+ for(const [id,action,query] of [['repo-format-info','SUMMARY',null],['repo-format-all','PAGE','ALL'],['repo-format-gaps','PAGE','GAPS']])if($(id))$(id).onclick=e=>{if(e.isTrusted)void act(()=>state.coveragePage(action,query),'Format coverage получен. Counts не являются проверкой raw bytes или LFS payload.');};
+ if($('repo-format-next'))$('repo-format-next').onclick=e=>{if(e.isTrusted)void act(()=>state.coverageNext(),'Следующая страница format ledger.');};
+ if($('repo-format-prev'))$('repo-format-prev').onclick=e=>{if(e.isTrusted)void act(()=>state.coverageBack(),'Предыдущая страница format ledger.');};
  for(const id of ['repo-goal','repo-scope','repo-acceptance'])$(id).oninput=()=>state.invalidate();
  $('repo-export').onclick=e=>{if(e.isTrusted)void act(()=>state.export($('repo-goal').value,$('repo-scope').value,$('repo-acceptance').value.split('\n').map(x=>x.trim()).filter(Boolean)),'Запрос и review session сохранены. Проверьте coverage и пропуски перед передачей в AI.');};
  if($('repo-export-next'))$('repo-export-next').onclick=e=>{if(e.isTrusted&&state.exported?.document?.selection?.next_source_offset!=null){const offset=state.exported.document.selection.next_source_offset;void act(()=>state.export($('repo-goal').value,$('repo-scope').value,$('repo-acceptance').value.split('\n').map(x=>x.trim()).filter(Boolean),offset),'Следующая часть context экспортирована. Сохраните каждую часть отдельно.');}};

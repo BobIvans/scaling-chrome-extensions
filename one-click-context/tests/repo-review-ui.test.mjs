@@ -12,7 +12,7 @@ import {JobHost} from '../../agent-bridge/host.mjs';
 import {DURABLE_COMMANDS,DURABLE_INPUT_BYTES} from '../../agent-bridge/durable.mjs';
 
 const snapshotId='a'.repeat(64),sessionId='b'.repeat(64);
-const snapshot={schema:'occ.repo-snapshot.v1',alias:'sce',namespace:'code',snapshot_id:snapshotId,repo_sha:'c'.repeat(40),cursor:1,total:1,state:'COMPLETE',files:[{path:'main.py',state:'INDEXED',parser:'PYTHON_AST',findings:[{criterion:'Review <script>candidate</script>'}]}],counts:{INDEXED:1},offset:0,next_offset:null};
+const snapshot={schema:'occ.repo-snapshot.v1',alias:'sce',namespace:'code',snapshot_id:snapshotId,repo_sha:'c'.repeat(40),cursor:1,total:1,state:'COMPLETE',files:[{path:'main.py',state:'INDEXED',text_eligibility:'ELIGIBLE',parser:'PYTHON_AST',findings:[{criterion:'Review <script>candidate</script>'}]}],counts:{INDEXED:1},offset:0,next_offset:null};
 const status={schema:'occ.review-status.v1',namespace:'code',session_id:sessionId,state:'NEEDS_REVIEW',sources:[],next_step:'VERIFY_CRITERION_EVIDENCE'};
 const response=(operation,payload)=>({schema:'occ.native-durable-result.v1',operation,...payload});
 function deferred(){let resolve;const promise=new Promise(r=>resolve=r);return {promise,resolve};}
@@ -44,6 +44,36 @@ function manifestResult(action,offset=0,fileOrdinal=null,total=45){
  const rows=Array.from({length:count},(_,i)=>action==='ENTRIES'?{schema:'occ.repo-entry-manifest.v1',snapshot_id:snapshotId,ordinal:offset+i,path:`file ${offset+i} <script>.txt`,state:'INDEXED',chunk_count:45}:{schema:'occ.repo-part-index.v1',snapshot_id:snapshotId,file_ordinal:fileOrdinal??0,path:'main.py',chunk_ordinal:offset+i,part_id:'d'.repeat(64),sha256:'e'.repeat(64),source_start:(offset+i)*4096,source_end:(offset+i+1)*4096,text_eligible:true});
  return {schema:'occ.repo-manifest-view.v1',batch_id:'f'.repeat(64),binding:{snapshot_id:snapshotId,repository:'sce',namespace:'code'},scope:{action,file_ordinal:fileOrdinal},total:action==='INFO'?0:total,offset,rows,nextOffset:action==='INFO'||offset+rows.length>=total?null:offset+rows.length,global_validation:'NOT_RUN'};
 }
+function coverageResult(action,query=null,cursor=null){
+ const start=cursor===null?0n:BigInt(cursor.afterOrdinal)+1n,total=45n;
+ const count=action==='SUMMARY'||start>=total?0:Number(total-start>20n?20n:total-start);
+ const rows=Array.from({length:count},(_,i)=>({schema:'occ.format-eligibility.v1',snapshot_id:snapshotId,classifier_version:'utf8-controls-strict-lfs3.v1',ordinal:String(start+BigInt(i)),path:'<img src=x onerror=alert(1)>',text_eligibility:query==='GAPS'?'INELIGIBLE':'ELIGIBLE',reasons:['<script>reason</script>'],format_kind:query==='GAPS'?'NON_UTF8':'UTF8_TEXT_CANDIDATE',raw_capture:'RECORDED',raw_integrity:'NOT_RUN',disposition:'INDEXED',lfs:null}));
+ const summary={state:'READY',total:'45',ledger_rows:'45',terminal_entries:'45',pending_entries:'0',facts_entries:'45',indexed:'45',excluded:'0',error:'0',text_eligible:query==='GAPS'?'0':'45',raw_recorded:'45',gaps:query==='GAPS'?'45':'0',inventory_complete:true,facts_complete:true,raw_integrity:'NOT_RUN',ai_delivery:'NOT_PERFORMED',ai_read:'UNKNOWN'};
+ const next_cursor=count&&start+BigInt(count)<total?{snapshotId,classifierVersion:'utf8-controls-strict-lfs3.v1',query,afterOrdinal:rows.at(-1).ordinal}:null;
+ return {schema:'occ.repo-coverage.v1',snapshot_id:snapshotId,classifier_version:'utf8-controls-strict-lfs3.v1',action,query,summary,rows,next_cursor};
+}
+test('A17 coverage traverses all pages, resets filters, goes back and preserves decimal ordinals',async()=>{
+ const {s,calls}=setup((op,args)=>response(op,{coverage:coverageResult(args.action,args.query??null,args.cursor??null)}));s.acceptSnapshot(snapshot);
+ await s.coveragePage();assert.equal(s.coverage.summary.raw_integrity,'NOT_RUN');
+ await s.coveragePage('PAGE','ALL');await s.coverageNext();await s.coverageNext();assert.equal(s.coverage.rows.at(-1).ordinal,'44');assert.equal(s.coverage.next_cursor,null);await s.coverageBack();assert.equal(s.coverage.rows[0].ordinal,'20');
+ await s.coveragePage('PAGE','GAPS');assert.equal(calls.at(-1).args.cursor,null);assert.deepEqual(s.coverageHistory,[]);
+ const big={snapshotId,classifierVersion:'utf8-controls-strict-lfs3.v1',query:'ALL',afterOrdinal:'9007199254740993'};await s.coveragePage('PAGE','ALL',big);assert.equal(calls.at(-1).args.cursor.afterOrdinal,'9007199254740993');
+});
+test('A17 late coverage replies cannot replace changed filter, snapshot, repository or connection',async()=>{
+ const {s}=setup((op,args)=>response(op,{coverage:coverageResult(args.action,args.query??null,args.cursor??null)}));s.acceptSnapshot(snapshot);
+ const late=deferred();s.durable.request=()=>late.promise;const pending=assert.rejects(s.coveragePage('PAGE','ALL'),/STALE_COVERAGE_REPLY/);
+ s.durable.request=async op=>response(op,{coverage:coverageResult('PAGE','GAPS')});await s.coveragePage('PAGE','GAPS');late.resolve(response('durable.repo.coverage',{coverage:coverageResult('PAGE','ALL')}));await pending;assert.equal(s.coverage.query,'GAPS');
+ for(const change of [()=>s.acceptSnapshot({...snapshot,snapshot_id:'b'.repeat(64)}),()=>s.choose('sce'),()=>s.durable.generation++]){
+  s.acceptSnapshot(snapshot);const held=deferred();s.durable.request=()=>held.promise;const rejected=assert.rejects(s.coveragePage(),/STALE_COVERAGE_REPLY/);change();held.resolve(response('durable.repo.coverage',{coverage:coverageResult('SUMMARY')}));await rejected;
+ }
+});
+test('A17 coverage rejects lossy numbers, wrong versions and cursor lies; source facts gate selection',async()=>{
+ const {s}=setup(op=>response(op,{coverage:{...coverageResult('PAGE','ALL'),next_cursor:null}}));s.acceptSnapshot(snapshot);
+ for(const bad of [c=>c.rows[0].ordinal=1,c=>c.next_cursor.afterOrdinal='100',c=>c.classifier_version='old',c=>c.summary.total=45]){
+  const c=coverageResult('PAGE','ALL');bad(c);s.durable.request=async op=>response(op,{coverage:c});await assert.rejects(s.coveragePage('PAGE','ALL'),/COVERAGE_RESULT_SCHEMA/);
+ }
+ for(const text_eligibility of ['INELIGIBLE','METADATA_ONLY','UNKNOWN',undefined]){s.acceptSnapshot({...snapshot,files:[{path:'main.py',state:'INDEXED',text_eligibility}]});assert.throws(()=>s.select('main.py',true),/OUTSIDE_SNAPSHOT/);}
+});
 test('manifest pages reach file and part tails and navigate back to the exact source',async()=>{
  const {s,calls}=setup((op,args)=>response(op,op==='durable.repo.manifest'?{manifest:manifestResult(args.action,args.offset,args.fileOrdinal??null)}:{snapshot}));s.acceptSnapshot(snapshot);
  await s.manifestPage('ENTRIES');await s.manifestNext();await s.manifestNext();assert.equal(s.manifest.rows.length,5);assert.equal(s.manifest.nextOffset,null);assert.deepEqual(s.manifestHistory,[0,20]);await s.manifestBack();assert.equal(s.manifest.offset,20);
@@ -97,8 +127,19 @@ class Element{
  set innerHTML(_value){throw Error('Unsafe source rendering');}
  append(...children){this.children.push(...children);}replaceChildren(...children){this.children=[...children];}
 }
-function dom(){const ids=['repo-pause','repo-continue','repo-stop','repo-panel','repo-status','repo-list','repo-scan','repo-rescan','review-list','review-import','repo-export','repo-export-next','repo-coverage','repo-next','repo-prev','repo-copy','repo-download','repo-repository','repo-progress','repo-files','repo-goal','repo-scope','repo-acceptance','repo-output','review-sessions','review-details','review-next-request','review-namespace','review-input','review-file','repo-manifest-info','repo-manifest-entries','repo-manifest-parts','repo-manifest-next','repo-manifest-prev','repo-manifest-summary','repo-manifest-rows'];const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));return {elements,document:{getElementById:id=>elements[id],createElement:()=>new Element()}};}
+function dom(){const ids=['repo-format-info','repo-format-all','repo-format-gaps','repo-format-next','repo-format-prev','repo-format-summary','repo-format-rows','repo-pause','repo-continue','repo-stop','repo-panel','repo-status','repo-list','repo-scan','repo-rescan','review-list','review-import','repo-export','repo-export-next','repo-coverage','repo-next','repo-prev','repo-copy','repo-download','repo-repository','repo-progress','repo-files','repo-goal','repo-scope','repo-acceptance','repo-output','review-sessions','review-details','review-next-request','review-namespace','review-input','review-file','repo-manifest-info','repo-manifest-entries','repo-manifest-parts','repo-manifest-next','repo-manifest-prev','repo-manifest-summary','repo-manifest-rows'];const elements=Object.fromEntries(ids.map(id=>[id,new Element()]));return {elements,document:{getElementById:id=>elements[id],createElement:()=>new Element()}};}
 const flush=()=>new Promise(resolve=>setImmediate(resolve));
+test('A17 production coverage controls safely render labels and disable ineligible text choices',async()=>{
+ const {elements:e,document}=dom(),calls=[];
+ const durable={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});return response(op,{coverage:coverageResult(args.action,args.query??null,args.cursor??null)});}};
+ const view=attachRepoReviewView({document,session:durable});view.state.repositories=[{repository:'sce',namespace:'code'}];view.state.choose('sce');view.state.acceptSnapshot({...snapshot,files:[...snapshot.files,{path:'raw.bin',state:'INDEXED',text_eligibility:'INELIGIBLE'}]});
+ assert.equal(e['repo-files'].children[1].children[0].disabled,true);assert.equal(e['repo-files'].children[0].children[0].disabled,false);
+ e['repo-format-gaps'].onclick({isTrusted:false});await flush();assert.equal(calls.length,0);
+ e['repo-format-gaps'].onclick({isTrusted:true});await flush();assert.match(e['repo-format-rows'].children[0].textContent,/<img src=x onerror=alert\(1\)>/);assert.match(e['repo-format-summary'].textContent,/NOT_RUN/);
+ e['repo-format-next'].onclick({isTrusted:true});await flush();assert.equal(calls.at(-1).args.cursor.afterOrdinal,'19');
+ e['repo-format-all'].onclick({isTrusted:true});await flush();assert.equal(calls.at(-1).args.cursor,null);
+ view.disconnect();assert.equal(view.state.coverage,null);
+});
 test('production view wires repo selection → scan → finding → request → review with text-only rendering',async()=>{
  const {elements:e,document}=dom(),calls=[];
  const durable={generation:0,can:()=>true,request:async(op,args)=>{calls.push({op,args});if(op==='durable.repo.list')return response(op,{repositories:[{repository:'sce',namespace:'code'}]});if(op==='durable.repo.scanRun')return response(op,{scan_run:args.action==='STATUS'?null:{...snapshot,schema:'occ.repo-scan-run.v1',repository:'sce',run_id:'d'.repeat(64),intent_key:'e'.repeat(32),run_revision:1,processed:1,pending:0,ledger_entries:1,inventory_complete:true,exact_for_indexed:true}});if(op==='durable.repo.scan')return response(op,{snapshot});if(op==='durable.repo.export')return response(op,{export:{document:{schema:'occ.repo-request.v1',goal:'fixture',selection:{source_offset:args.sourceOffset||0,next_source_offset:4,source_total:8,omitted_count:4,coverage:'PARTIAL'}},review:status}});if(op==='durable.review.list')return response(op,{reviews:[status]});return response(op,{review:{...status,coverage:{reviewed:['main.py']},finding_details:[{finding_id:'F1',criterion:'<img src=evil>',disposition:'DONE'}]}});}};
@@ -134,6 +175,7 @@ test('NativeClient/real host roundtrip persists repo/review across restart and v
  async function connect(){const host=new JobHost({dataRoot:path.join(root,'ephemeral'),codexPath:'never-invoked',durableCore:{enabled:true,pythonPath:python,adapterPath:path.join(lab,'native_adapter.py'),profilePath}});hosts.push(host);const listeners={};const port={onMessage:{addListener:f=>listeners.message=f},onDisconnect:{addListener:f=>listeners.disconnect=f},disconnect(){},postMessage(m){void host.handle(m).then(r=>listeners.message({...r,requestId:m.requestId,ok:true}),e=>listeners.message({requestId:m.requestId,ok:false,error:e.message}));}};const client=new NativeClient(port);clients.push(client);const durable=new DurableSession();durable.connect(client,await client.request('hello'),'fixture');return {host,client,view:new RepoReviewSession({durable})};}
  const a=await connect();await a.view.loadRepositories();a.view.choose('sce');await a.view.startWholeScan();assert.equal(a.view.run.state,'COMPLETE');
  assert.equal(a.view.durable.can('durable.repo.manifest'),true);let allEntries=[];await a.view.manifestPage('ENTRIES');while(true){allEntries.push(...a.view.manifest.rows);if(a.view.manifest.nextOffset===null)break;await a.view.manifestNext();}assert.equal(allEntries.length,25);
+ assert.equal(a.view.durable.can('durable.repo.coverage'),true);await a.view.coveragePage('PAGE','ALL');let formatRows=[];while(true){formatRows.push(...a.view.coverage.rows);if(a.view.coverage.next_cursor===null)break;await a.view.coverageNext();}assert.equal(formatRows.length,25);assert.equal(formatRows.at(-1).ordinal,'24');assert.equal(a.view.coverage.summary.raw_integrity,'NOT_RUN');
  const long=allEntries.find(r=>r.path==='long.txt');await a.view.manifestPage('PARTS',0,long.ordinal);let allParts=[];while(true){allParts.push(...a.view.manifest.rows);if(a.view.manifest.nextOffset===null)break;await a.view.manifestNext();}assert.equal(allParts.length,long.chunk_count);assert.ok(allParts.length>20);assert.equal(allParts.at(-1).source_end,Buffer.byteLength('Я👋'.repeat(23000)));await a.view.manifestSource(a.view.manifest.rows[0]);assert.equal(a.view.snapshot.files[0].path,'long.txt');
  await a.view.page(20);a.view.select('main.py',true);const exported=await a.view.export('Review data','Source owner',['Prove criterion']);
  assert.deepEqual(exported.document.selection.dependencies,['helper.py']);const result=exported.document.review_result_template;result.findings=[{finding_id:'F001',classification:'CODE_DEFECT',disposition:'DONE',source_key:result.sources[0].source_key,source_sha256:result.sources[0].sha256,criterion:'Model claim',evidence_refs:[],duplicate_of:null,supersedes:null}];

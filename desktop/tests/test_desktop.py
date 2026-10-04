@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / 'content-lab'))
 from desktop.client import (Connection, DesktopClient, DesktopError, environment,
-                            PROTOCOL, sha_file, strict_json, validate_reply)
+                            PROTOCOL, sha_file, strict_json, validate_context, validate_reply)
 from desktop.draft import save_draft, save_manifest
 from desktop.package import FILES, make_manifest, stage_shell, uninstall, verify
 from desktop.preflight import check
@@ -435,6 +435,36 @@ class ManifestTests(unittest.TestCase):
         self.assertEqual(before, sha_file(self.store / 'content.sqlite3'))
         request = {'type': 'durable.repo.manifest', 'repository': 'sce', 'snapshotId': self.sid, 'action': 'INFO'}
         self.assertEqual(self.client.request(request)['result'], native.dispatch(request, self.profile))
+
+    def test_current_main_source_classifier_and_readonly_gate_are_preserved(self):
+        from source_eligibility import CLASSIFIER_VERSION
+        request = {'type': 'durable.search', 'namespace': 'code', 'query': 'needle', 'limit': 1}
+        hit = self.client.request(request)['result']['items'][0]
+        context_request = {'type': 'durable.context', 'namespace': 'code', 'ids': [hit['id']]}
+        value = self.client.request(context_request)['result']['context']
+        self.assertEqual(value['source_classifier_version'], CLASSIFIER_VERSION)
+        self.assertEqual(value, core.context_pack(self.store, 'code', [hit['id']], read_only=True))
+        with self.assertRaisesRegex(DesktopError, 'DESKTOP_CLASSIFIER_UNAVAILABLE'):
+            validate_context(dict(value, source_classifier_version='future'), context_request)
+        # A legacy source without current format facts remains excluded by the
+        # shared owner, even if its historical text item is still retained.
+        db = repo.db_for(self.store)
+        try:
+            with db:
+                db.execute("UPDATE repo_entries SET analysis=json_remove(analysis,'$.format_eligibility') "
+                           "WHERE snapshot_id=? AND path=?", (self.sid, value['items'][0]['path']))
+        finally:
+            db.close()
+        before = sha_file(self.store / 'content.sqlite3')
+        with self.assertRaisesRegex(DesktopError, 'FORMAT_BACKFILL_REQUIRED'):
+            self.client.request(context_request)
+        hits = self.client.request(request)['result']['items']
+        self.assertTrue(hits)
+        self.assertNotIn(hit['id'], [item['id'] for item in hits])
+        self.assertEqual(before, sha_file(self.store / 'content.sqlite3'))
+        reply = native.dispatch_desktop({'type': 'durable.repo.coverage', 'repository': 'sce',
+                                         'snapshotId': self.sid, 'action': 'SUMMARY'}, self.profile)
+        self.assertEqual(reply['error'], 'DESKTOP_READ_ONLY')
 
     def test_manifest_cancel_rolls_back_projection_and_cursor_fault_fails(self):
         cancelled = threading.Event()

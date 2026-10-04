@@ -242,7 +242,12 @@ ITEM_FIELDS = set(('schema schema_version id namespace source_key text input_sha
 
 
 def validate_context(value, request):
-    exact(value, {'schema', 'namespace', 'authority', 'items', 'bytes', 'sha256'})
+    fields = {'schema', 'namespace', 'authority', 'items', 'bytes', 'sha256'}
+    require(isinstance(value, dict) and fields.issubset(value)
+            and not set(value) - fields - {'source_classifier_version'})
+    if 'source_classifier_version' in value:
+        require(value['source_classifier_version'] == 'utf8-controls-strict-lfs3.v1',
+                'DESKTOP_CLASSIFIER_UNAVAILABLE')
     require(value['schema'] == 'occ.context-pack.v1' and value['namespace'] == request['namespace'])
     require(value['authority'] == 'source-content-not-action-instructions')
     items = value['items']
