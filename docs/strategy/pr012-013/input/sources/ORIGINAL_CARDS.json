@@ -1,0 +1,2242 @@
+{
+  "tasks": [
+    {
+      "task_id": "EVO3-010",
+      "title": "Граф устаревания evidence и избирательная повторная проверка",
+      "dependencies": [
+        "EVO3-001",
+        "EVO3-002",
+        "EVO3-007",
+        "EVO3-009"
+      ],
+      "acceptance_criteria": [
+        "Head/base/asset/installed build/UI profile/grant changes распространяют stale на зависимые evidence.",
+        "Исторический факт не удаляется; current applicability пересчитывается отдельной проекцией.",
+        "Reuse незатронутого evidence содержит обоснование, dependency digest и policy version."
+      ],
+      "implementation_status": "DESIGN_ONLY",
+      "source_file": "strategy_v3/catalogs/ALL_TASKS_V3.json",
+      "original_card": {
+        "id": "EVO3-010",
+        "title": "Граф устаревания evidence и избирательная повторная проверка",
+        "depends_on": [
+          "EVO3-001",
+          "EVO3-002",
+          "EVO3-007",
+          "EVO3-009"
+        ],
+        "refines_v2": [
+          "V2-009",
+          "V2-029"
+        ],
+        "owner": "Content Lab evidence graph",
+        "acceptance": [
+          "Head/base/asset/installed build/UI profile/grant changes распространяют stale на зависимые evidence.",
+          "Исторический факт не удаляется; current applicability пересчитывается отдельной проекцией.",
+          "Reuse незатронутого evidence содержит обоснование, dependency digest и policy version."
+        ],
+        "implementation_status": "DESIGN_ONLY",
+        "source_file": "evolution/TASKS_EVO3.json",
+        "source_status": "proposed_not_implemented",
+        "original_card": {
+          "id": "EVO3-010",
+          "title": "Граф устаревания evidence и избирательная повторная проверка",
+          "status": "proposed_not_implemented",
+          "depends_on": [
+            "EVO3-001",
+            "EVO3-002",
+            "EVO3-007",
+            "EVO3-009"
+          ],
+          "owner": "Content Lab evidence graph",
+          "owner_evidence": "V2 owner map pinned to SCE da6abf4c006e4e7d26fe45ef30fa9d07a356f396; refresh before implementation",
+          "change_mode": "extend_existing_owner_or_add_owned_adapter",
+          "scope": "Инвалидировать производные по изменившимся субъектам.",
+          "acceptance": [
+            "Head/base/asset/installed build/UI profile/grant changes распространяют stale на зависимые evidence.",
+            "Исторический факт не удаляется; current applicability пересчитывается отдельной проекцией.",
+            "Reuse незатронутого evidence содержит обоснование, dependency digest и policy version."
+          ],
+          "deliverables": [
+            "EvidenceDependencyGraph.json",
+            "invalidation_report.json"
+          ],
+          "verification_fixture": "25-node graph, mutations of 10 dependency types, EX-EVO3-03.",
+          "failure_behavior": "Если затронутость неизвестна, пометить dependent stale и назначить ограниченную проверку.",
+          "refines_v2": [
+            "V2-009",
+            "V2-029"
+          ]
+        }
+      }
+    },
+    {
+      "task_id": "TAB4-18",
+      "title": "Delta-контекст LAYA после изменения репозитория",
+      "goal": "После подтверждённого обновления быстро пересобрать изменённые части и связанные области кода для следующей R&D-задачи.",
+      "dependencies": [
+        "TAB4-05",
+        "TAB4-10",
+        "TAB4-13"
+      ],
+      "acceptance_criteria": [
+        "Части имеют стабильный логический ID и версию из исходных байтов; изменённые файлы не оставляют старые ссылки как актуальные.",
+        "Граф различает подтверждённые и предполагаемые связи; циклы и межфайловые зависимости представлены явно.",
+        "Delta-обход пересчитывает затронутые тесты/контракты и сравнивается с полным обходом на эталонных репозиториях.",
+        "Пакеты имеют индекс snapshot, порядок продолжения, coverage и перечень неподдержанных файлов/языков.",
+        "При лимите памяти/размера задача возобновляется без молчаливого пропуска."
+      ],
+      "failure_recovery": [
+        "Неподдержанная конструкция даёт gap; неверная cache/version привязка вызывает полный перерасчёт соответствующей области.",
+        "При несогласованном snapshot delta отменяется и создаётся новый закреплённый снимок."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Полный/delta equivalence на изменении, удалении, переименовании и цикле зависимостей.",
+        "Byte roundtrip и coverage manifest.",
+        "Измерения времени/памяти на целевом компьютере, без выдуманного обещания скорости."
+      ],
+      "stage": "D — помощник",
+      "source_file": "two_tabs/TASKS_TAB4.json"
+    },
+    {
+      "task_id": "LAYA4-002",
+      "title": "Одна кнопка продолжает scan всего выбранного HEAD",
+      "goal": "Автоматически пройти существующий persisted cursor до полного учёта repo без повторных кликов и потери доступного управления.",
+      "dependencies": [
+        "LAYA4-001"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Один start intent фиксирует repo/profile/HEAD; UI последовательно вызывает bounded scan_page до terminal state.",
+        "Double click и network timeout не создают новый snapshot/run intent; перезапуск продолжает сохранённый cursor.",
+        "Экран показывает total/accounted/pending/errors/excluded; progress и Pause/Continue/Stop доступны с клавиатуры.",
+        "Изменение HEAD или revoked profile сохраняет SOURCE_DRIFT/BLOCKED; разные commits не смешиваются.",
+        "Локальное окно можно закрыть без потери ledger; продолжение не требует повторного чтения уже committed pages."
+      ],
+      "failure_recovery": [
+        "После прерывания проверить snapshot identity и повторить только незакоммиченную page.",
+        "На source drift создать новую revision после явного выбора текущего snapshot, сохранив историю."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Restart/double-click/timeout fixture.",
+        "Native-to-UI integration receipt.",
+        "Windows keyboard and progress receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_context.scan_page + repo-review UI",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E08",
+        "L4-E12",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "G3-005",
+        "UI3-017"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-06",
+        "LX4-10"
+      ],
+      "deliverables": [
+        "Bounded scan controller",
+        "Persisted scan run reference"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+      "source_file": "laya/TASKS_LAYA4.json"
+    },
+    {
+      "task_id": "LAYA4-003",
+      "title": "Масштабировать inventory без скрытого усечения",
+      "goal": "Обработать repositories, превышающие текущий 32 MiB enumeration output, сохраняя полный manifest и bounded memory.",
+      "dependencies": [
+        "LAYA4-001"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Текущий предел остаётся явной ошибкой, пока streaming reader не прошёл отдельную квалификацию.",
+        "Streaming Git enumeration сохраняет NUL-safe пути, mode/OID/size и exact HEAD; частичный inventory не публикуется COMPLETE.",
+        "Поток имеет bounded buffer, timeout, stderr budget и temp-stage до atomic publish; subprocess завершён перед restart.",
+        "Неоднозначные/неподдерживаемые paths представлены metadata с причиной и исходным reversible path encoding.",
+        "Cold/warm resource measurements включают большой tree; введён configurable budget вместо безлимитного считывания."
+      ],
+      "failure_recovery": [
+        "Сбой stream удаляет незавершённый staging inventory, оставляя прежний complete snapshot.",
+        "Превышение configured budget возвращает конкретный limit reason без усечённого success."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Large-tree fixture above previous limit.",
+        "Interrupted stream fault injection.",
+        "Peak memory/device receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_context Git read/inventory owner",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "PAR3-002",
+        "PAR3-007"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-06"
+      ],
+      "deliverables": [
+        "Streaming enumeration ADR",
+        "Bounded inventory implementation"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+      "source_file": "laya/TASKS_LAYA4.json"
+    },
+    {
+      "task_id": "LAYA4-009",
+      "title": "Собрать manifest всего repo и обратный индекс частей",
+      "goal": "Связать все tracked entries с chunks/groups/packets и gaps в одной переносимой схеме.",
+      "dependencies": [
+        "LAYA4-002",
+        "LAYA4-004",
+        "LAYA4-008"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "REPO_MANIFEST содержит все tracked entries, включая errors/exclusions; accounted равен pinned inventory total.",
+        "PARTS_INDEX хранит hashes/bytes/ranges/dependencies и позволяет из части перейти к исходнику и обратно.",
+        "Batch identity включает snapshot, goal revision, grouping/parser versions и export policy.",
+        "Каждая текстовая omission имеет reason: budget/unsupported/protected/missing/selected_out; их нельзя превратить в read coverage.",
+        "Manifest validation не требует размещения всех data bytes в одном native response; текущие transport limits сохраняются."
+      ],
+      "failure_recovery": [
+        "Повреждённый manifest блокирует release batch; валидные immutable sources остаются доступны.",
+        "При source drift сохранить старый batch и создать новый digest/version."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Full inventory reconciliation report.",
+        "Per-part hashes/ranges and roundtrip check.",
+        "Transport envelope limit test."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "repo_context + batch projection over existing SQLite",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E04",
+        "L4-E12",
+        "L4-E14"
+      ],
+      "related_v3_tasks": [
+        "G3-003",
+        "G3-004",
+        "PAR3-002"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02"
+      ],
+      "deliverables": [
+        "BATCH.json",
+        "REPO_MANIFEST.jsonl",
+        "PARTS_INDEX.jsonl"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+      "source_file": "laya/TASKS_LAYA4.json"
+    },
+    {
+      "task_id": "LAYA4-010",
+      "title": "Сделать resumable сборку ZIP и offline index",
+      "goal": "Получить полный repo context bundle после одного запуска с продолжением при restart и удобным локальным просмотром.",
+      "dependencies": [
+        "LAYA4-009"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Part publication atomic: staged bytes проверены, затем manifest head указывает на finished part.",
+        "Resume повторно проверяет hashes завершённых parts и не генерирует дубликаты при replay.",
+        "Количество частей определяется размером/бюджетом, фиксированного потолка 20/39 частей нет.",
+        "Offline index открывает цель, группы, gaps, source paths и relative part references; portable ZIP не зависит от абсолютного пути машины.",
+        "ZIP manifest перечисляет каждый output; archive checksum и reconstruction report сохраняются отдельно от утверждений AI."
+      ],
+      "failure_recovery": [
+        "При disk full оставить recoverable staging и counts; после освобождения места продолжить недостающие части.",
+        "Повреждённую часть пересоздать из pinned sources, не перезаписывая неподтверждённо другой batch."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Crash/disk-full/duplicate resume fixture.",
+        "ZIP extraction and manifest checksum report.",
+        "Offline Windows opening receipt."
+      ],
+      "stage": "L4-S1",
+      "owner_layer": "existing store export owner + local UI",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E04",
+        "L4-E06",
+        "L4-E12"
+      ],
+      "related_v3_tasks": [
+        "G3-005",
+        "G3-012",
+        "PAR3-016"
+      ],
+      "experiments": [
+        "LX4-01",
+        "LX4-02",
+        "LX4-12"
+      ],
+      "deliverables": [
+        "Repo context ZIP",
+        "Offline index",
+        "Batch resume receipt"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+      "source_file": "laya/TASKS_LAYA4.json"
+    },
+    {
+      "task_id": "LAYA4-011",
+      "title": "Инвалидировать только затронутые sources и evidence",
+      "goal": "Обновлять source→group→packet→evidence связи после изменения repo и личного источника.",
+      "dependencies": [
+        "LAYA4-006",
+        "LAYA4-009"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Изменение bytes/parser/resolver/policy учитывается отдельными input hashes; старые results не объявляются current.",
+        "Добавления/удаления/rename сохраняют lineage; old path identity не переписывается задним числом.",
+        "Affected dependents строятся по доказанным edges; unresolved dynamic relations добавляют uncertainty.",
+        "Packets и criterion evidence показывают STALE/RECHECK_REQUIRED с конкретным changed input.",
+        "Clean rebuild и incremental rebuild дают эквивалентный семантический graph/manifest для одинакового source snapshot."
+      ],
+      "failure_recovery": [
+        "При неполном dependency graph расширить область recheck и объяснить why.",
+        "Отсутствующий source остаётся missing; reuse не восстанавливает удалённый current head."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Edit/delete/rename/parser-update fixtures.",
+        "Incremental versus clean rebuild comparison.",
+        "Evidence invalidation integration receipt."
+      ],
+      "stage": "L4-S2",
+      "owner_layer": "repo_context versions + review/task evidence",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E05",
+        "L4-E06",
+        "L4-E07"
+      ],
+      "related_v3_tasks": [
+        "PAR3-011",
+        "PAR3-023",
+        "EVO3-010"
+      ],
+      "experiments": [
+        "LX4-05"
+      ],
+      "deliverables": [
+        "Invalidation graph",
+        "Change impact view"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+      "source_file": "laya/TASKS_LAYA4.json"
+    },
+    {
+      "task_id": "LAYA4-012",
+      "title": "Переиспользовать immutable blobs и ограничить RAM",
+      "goal": "Сократить повторное чтение/парсинг и удержать подготовку большого repo в бюджете 16 GB ПК.",
+      "dependencies": [
+        "LAYA4-009",
+        "LAYA4-011"
+      ],
+      "optional_extensions": [],
+      "acceptance_criteria": [
+        "Parse cache keyed by raw hash/parser version/resolver config/extraction policy; отсутствие ключа запрещает reuse.",
+        "Один DB writer; read workers ограничены memory/CPU admission, не самостоятельными schedulers.",
+        "Новые cache links не дублируют raw blob; cache eviction удаляет derived data, не origin evidence.",
+        "UI paginated; backlog fragments и hot cache bounded; весь archive не загружается в память.",
+        "Current Core max_parallel=1 не ослаблен; parser parallel extension имеет отдельный measured gate."
+      ],
+      "failure_recovery": [
+        "Memory pressure снижает worker count и ставит pending work на паузу, сохраняя cursor.",
+        "Повреждённый cache отбрасывается и пересчитывается из проверяемых bytes."
+      ],
+      "implementation_status": "PLANNED",
+      "evidence_required": [
+        "Peak RSS/cold-warm receipt.",
+        "Cache key invalidation fixture.",
+        "Single-writer/concurrency conflict fixture."
+      ],
+      "stage": "L4-S2",
+      "owner_layer": "existing SQLite/Core ownership + read-only analysis workers",
+      "source_evidence_refs": [
+        "L4-E01",
+        "L4-E02",
+        "L4-E04"
+      ],
+      "related_v3_tasks": [
+        "PAR3-007",
+        "PAR3-008",
+        "PAR3-011"
+      ],
+      "experiments": [
+        "LX4-05",
+        "LX4-06"
+      ],
+      "deliverables": [
+        "Resource profile",
+        "Content-addressed derived cache"
+      ],
+      "attribution": "Assistant development proposal derived from current user direction and inspected source; not a quotation or completion claim.",
+      "source_file": "laya/TASKS_LAYA4.json"
+    },
+    {
+      "task_id": "ACTION5-07",
+      "title": "Разделить PDF/Office текст, таблицы и OCR",
+      "goal": "Предоставить точные page/sheet/cell ranges и указать качество извлечения для документов.",
+      "refines_existing_task_ids": [
+        "LAYA4-014",
+        "LAYA4-016",
+        "G3-003"
+      ],
+      "related_feature_ids": [
+        "LIB-045",
+        "LIB-059",
+        "LIB-014"
+      ],
+      "dependencies": [
+        "ACTION5-06"
+      ],
+      "inputs": [
+        "PDF/DOCX/XLSX/PPTX originals; extractor version; OCR policy"
+      ],
+      "outputs": [
+        "Text spans с page/paragraph/slide/cell refs; table structure; OCR confidence; extraction gaps"
+      ],
+      "owner": "Версионируемые extraction adapters существующего Content Lab",
+      "acceptance_criteria": [
+        "Клик по найденному тексту открывает исходную страницу/ячейку и версию файла.",
+        "Числа, единицы, отрицательные значения и merged cells сверены на размеченном corpus; потеря структуры помечена.",
+        "Scanned PDF имеет OCR-derived label и сохраняет original page; OCR не выдаётся за точный imported text.",
+        "Password-protected/unsupported embedded object остаётся конкретным gap."
+      ],
+      "failure_recovery": [
+        "Ошибка одной страницы не переводит весь файл в COMPLETE.",
+        "Повтор extraction новым движком сохраняет старую версию и invalidate зависимый packet."
+      ],
+      "evidence_required": [
+        "Golden tables/numbers corpus; extraction coverage; page/range screenshots"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1",
+      "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+    },
+    {
+      "task_id": "ACTION5-08",
+      "title": "Импортировать audio/video с проверяемым transcript",
+      "goal": "Связать transcript с временными участками оригинала и отдельно хранить ASR и ручные исправления.",
+      "refines_existing_task_ids": [
+        "LAYA4-014",
+        "LAYA4-013",
+        "LAYA4-023"
+      ],
+      "related_feature_ids": [
+        "LIB-046",
+        "LIB-016",
+        "ACT-029",
+        "ACT-034"
+      ],
+      "dependencies": [
+        "ACTION5-06",
+        "ACTION5-04"
+      ],
+      "inputs": [
+        "Выбранное audio/video; модель ASR/version; язык; политика retention"
+      ],
+      "outputs": [
+        "Media source hash; timed transcript; model/config receipt; correction overlay"
+      ],
+      "owner": "Существующий extraction owner; ASR только адаптер извлечения",
+      "acceptance_criteria": [
+        "Фрагмент transcript открывает соответствующий time range оригинала.",
+        "Unintelligible segment обозначен UNKNOWN; speaker identity не выводится без evidence.",
+        "RU/EN/code-switch corrections не изменяют ASR оригинал; модель/версия сохранены.",
+        "Без разрешённого внешнего profile медиа остаётся локальным."
+      ],
+      "failure_recovery": [
+        "Длинный файл обрабатывается частями с checkpoints; соседние overlap segments дедуплицируются по времени.",
+        "Неудачный ASR оставляет media available и позволяет вручную внести timed note."
+      ],
+      "evidence_required": [
+        "Timed golden corpus; transcript/source hash receipts; restart and correction fixtures"
+      ],
+      "implementation_status": "PLANNED",
+      "priority": "P1",
+      "source_file": "strategy_v5/actions/TASKS_ACTION5.json"
+    }
+  ],
+  "features": [
+    {
+      "id": "LIB-002",
+      "title": "Полный манифест фиксированного Git snapshot",
+      "domain": "source_preservation",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/FEATURE_BACKLOG.json",
+          "source_record_id": "DESK-001",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "3612e575a9e4d1d12f412cffc8caba670526903b21e0b555a32f2c22d85783d9",
+          "ordinal": 3132,
+          "historical_record_links": [
+            "HIST-8e2d4b07f689b88f8b84d92a1fb23cf31724cf915b38998ff1744b2c65e8fd29"
+          ]
+        },
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/03_NO_LOSS_AND_LIMITS_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "ce4f3b71f53d30523fba2405391fba0d0fc35021fcb794a7745069b4e5d1b192",
+          "ordinal": 4,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Сканирование рабочей папки через ignore rules не даёт полного дерева коммита.",
+      "proposed_behavior": "Сначала фиксировать commit и каждый ls-tree entry: path bytes/display path, mode, blob OID, size, SHA-256 и статус сохранения.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-001"
+      ],
+      "acceptance": [
+        "Множество manifest entries совпадает с выбранным Git tree.",
+        "Unicode, пустые файлы и нестандартные пути имеют собственные записи."
+      ],
+      "next_experiment": "Сравнить fixture дерева с ignore rules, binary и необычными именами с manifest.",
+      "metric": "100% entries и bytes в заявленном snapshot scope.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-003",
+      "title": "Потоковое сохранение крупных исходников",
+      "domain": "source_preservation",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/FEATURE_BACKLOG.json",
+          "source_record_id": "DESK-002",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "3612e575a9e4d1d12f412cffc8caba670526903b21e0b555a32f2c22d85783d9",
+          "ordinal": 3132,
+          "historical_record_links": [
+            "HIST-e44143d14bb4ad7b2cfad5d36a06dbb57445a0b8b2412940427a03f3a06d5ac3"
+          ]
+        },
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/03_NO_LOSS_AND_LIMITS_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "ce4f3b71f53d30523fba2405391fba0d0fc35021fcb794a7745069b4e5d1b192",
+          "ordinal": 4,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Ограничения 4/8 MiB в исторических путях могут оставлять большой файл вне контекста.",
+      "proposed_behavior": "Потоково записывать raw object и SHA-256; parser budget отделить от хранения; низкий свободный диск даёт checkpoint и видимую остановку.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-001"
+      ],
+      "acceptance": [
+        "Файлы 9 MiB и больше выбранного RAM batch восстанавливаются byte-for-byte.",
+        "Превышение ресурса не помечает источник COMPLETE и не уничтожает уже сохранённые bytes."
+      ],
+      "next_experiment": "Импортировать большой текст и binary с ограниченным worker budget и прерыванием.",
+      "metric": "Roundtrip hashes; peak RAM относительно chunk size; silent omissions=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-004",
+      "title": "Массовый выбор и пагинация до конца",
+      "domain": "source_preservation",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/FEATURE_BACKLOG.json",
+          "source_record_id": "DESK-003",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "3612e575a9e4d1d12f412cffc8caba670526903b21e0b555a32f2c22d85783d9",
+          "ordinal": 3132,
+          "historical_record_links": [
+            "HIST-183b38169f54407f20e84cca75dc90b4d632831bd49e8710820565a73be5cb4e"
+          ]
+        }
+      ],
+      "problem": "Размер страницы 20 и selection cap 10 ошибочно превращаются в общую границу экспорта.",
+      "proposed_behavior": "Хранить selection как versioned query или явный set; проходить stable cursors до terminal page, показывать selected/processed/remaining.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-001"
+      ],
+      "acceptance": [
+        "31 и 1001 выбранных источника полностью попадают в export.",
+        "Последняя неполная страница и изменившийся snapshot не теряют записи."
+      ],
+      "next_experiment": "Пройти коллекцию 1001 объектов с page size 20 и restart на промежуточном cursor.",
+      "metric": "Selected=represented+explicit failures; duplicate/omission count.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-008",
+      "title": "Дедупликация bytes с сохранением всех происхождений",
+      "domain": "provenance",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/FEATURE_BACKLOG.json",
+          "source_record_id": "DESK-007",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "3612e575a9e4d1d12f412cffc8caba670526903b21e0b555a32f2c22d85783d9",
+          "ordinal": 3132,
+          "historical_record_links": [
+            "HIST-25853a825bf875064fbb8969090b53e5f1caf9f352b66cfa3ae8928e4bf981fe"
+          ]
+        }
+      ],
+      "problem": "Повторные архивы раздувают хранение, а дедуп по тексту может стереть пути и авторов.",
+      "proposed_behavior": "Один CAS object на identical bytes; source aliases, контейнеры, версии, роли и позиции остаются отдельными сущностями.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-001",
+        "LIB-003"
+      ],
+      "acceptance": [
+        "Пять одинаковых объектов в разных путях дают один blob и пять origins.",
+        "Удаление alias не удаляет object, пока на него есть ссылки."
+      ],
+      "next_experiment": "Импортировать два перекрывающихся ZIP и сравнить object и alias counts.",
+      "metric": "Storage dedup ratio; origin retention=100%.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-011",
+      "title": "Слои commit, dirty worktree и история",
+      "domain": "repo_context",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/02_DESKTOP_ARCHITECTURE_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "81a159b4d3ccf37a7943f79f8142bd5ded07a1f86f5b5b49f06af12ced0b51e3",
+          "ordinal": 3,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Смешение HEAD и незакоммиченных файлов делает контекст невоспроизводимым.",
+      "proposed_behavior": "Показывать pinned snapshot отдельно от working overlay; branches/history добавлять как отдельные выбранные scopes с refs, revisions и tombstones.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-002",
+        "LIB-006"
+      ],
+      "acceptance": [
+        "Контекст содержит commit и явный overlay diff.",
+        "Удалённый/untracked файл не маскируется под tracked HEAD entry."
+      ],
+      "next_experiment": "Собрать packet до и после локального изменения без нового commit.",
+      "metric": "Воспроизводимость каждого scope; unbound paths=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-023",
+      "title": "Инвалидация зависимого контекста при обновлении источника",
+      "domain": "evidence",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/07_COMPETITORS_AND_DATA_PIPELINES_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "678986249318de56d482bc914001cebfcd30dec99dfe75176d7be6b4eebe6fc3",
+          "ordinal": 8,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Новые исходники не обновляют summaries, embeddings и recommendations; устаревший контекст выглядит свежим.",
+      "proposed_behavior": "Source revision событие инвалидирует только зависимые derived artifacts; raw и исторические выводы остаются; delta re-index и пересборка packet идут через existing queue.",
+      "implementation_status": "unverified",
+      "phase": "P3",
+      "dependencies": [
+        "LIB-016",
+        "LIB-022"
+      ],
+      "acceptance": [
+        "Изменение одного source помечает его summary stale.",
+        "Независимые summaries не пересчитываются без причины."
+      ],
+      "next_experiment": "Поменять source fragment в графе с двумя независимыми ветвями.",
+      "metric": "Stale detection recall; unnecessary recomputation; update latency.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-05"
+      ]
+    },
+    {
+      "id": "LIB-024",
+      "title": "Четыре отдельных измерения полноты",
+      "domain": "evidence",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "design/MASTER_DESKTOP_RU.txt",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "c5fe74b44d42beeb2b67d8ea1e9969c018c17c0f32468439518d5dad7ca12491",
+          "ordinal": 1373,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "100% сохранённых bytes не означает, что всё извлечено, проиндексировано и прочитано AI.",
+      "proposed_behavior": "Показывать raw capture, extraction, indexing и reviewed/used coverage отдельно для defined scope; raw COMPLETE допускается по readback, semantic UNKNOWN не маскируется.",
+      "implementation_status": "unverified",
+      "phase": "P1",
+      "dependencies": [
+        "LIB-002",
+        "LIB-007",
+        "LIB-014"
+      ],
+      "acceptance": [
+        "Binary original даёт captured=true, text_extracted=false.",
+        "Непрочитанные chunks видны даже после успешного export."
+      ],
+      "next_experiment": "Смешанный corpus: text, binary, broken OCR и неиспользованный tail.",
+      "metric": "Coverage denominators reproducible; false complete=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-028",
+      "title": "Обновления контекста вместо повторной пересылки всего ZIP",
+      "domain": "ai_handoff",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "CONTINUATION_V3/ASSISTANT_RND_PROPOSALS.json",
+          "source_record_id": "ASSISTANT-RND-03",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "149ad81385760ba7da45c3fdf43e615770c36552e8c707fd67148fbac9f6c50d",
+          "ordinal": 233,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Повторная отправка всех вложенных пакетов расходует время и маскирует реальные изменения.",
+      "proposed_behavior": "Root manifest связывает base digest и additions/changes/tombstones/goal revisions; delta применим только к совпадающей базе, иначе выдаётся full manifest.",
+      "implementation_status": "unverified",
+      "phase": "P2",
+      "dependencies": [
+        "LIB-005",
+        "LIB-019",
+        "LIB-025"
+      ],
+      "acceptance": [
+        "Base+delta восстанавливают тот же manifest, что fresh export.",
+        "Неверный base hash обнаруживается до применения."
+      ],
+      "next_experiment": "Сделать два updates с rename, delete и corrected goal; replay deltas.",
+      "metric": "Transferred bytes saved; reproducibility; wrong-base acceptance=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-043",
+      "title": "RSS и веб-снимки с версией тела страницы",
+      "domain": "source_integrations",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/FEATURE_BACKLOG.json",
+          "source_record_id": "DESK-040",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "3612e575a9e4d1d12f412cffc8caba670526903b21e0b555a32f2c22d85783d9",
+          "ordinal": 3132,
+          "historical_record_links": [
+            "HIST-c7fa7ca6c09e02c25bb839d665d0ca617003ee3d5ac638b78380c3e6eb3f2cf3"
+          ]
+        },
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/07_COMPETITORS_AND_DATA_PIPELINES_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "678986249318de56d482bc914001cebfcd30dec99dfe75176d7be6b4eebe6fc3",
+          "ordinal": 8,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "URL и заголовок недостаточны, чтобы воспроизвести исследование или заметить изменившуюся страницу.",
+      "proposed_behavior": "Сохранять доступный body, URL, capture time, response status, hash и extraction version; deleted/blocked content отмечать, не восстанавливать по памяти.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "LIB-006",
+        "LIB-016",
+        "LIB-023"
+      ],
+      "acceptance": [
+        "Изменение body создаёт новую source version.",
+        "RSS duplicate link не удаляет отдельное происхождение."
+      ],
+      "next_experiment": "Fixture feed и страницы с revisions, redirect и unavailable response.",
+      "metric": "Freshness lag; reproducible cited body; unsupported content claims=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-13"
+      ]
+    },
+    {
+      "id": "LIB-044",
+      "title": "История GitHub PR, issues и CI с полной пагинацией",
+      "domain": "source_integrations",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/07_COMPETITORS_AND_DATA_PIPELINES_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "678986249318de56d482bc914001cebfcd30dec99dfe75176d7be6b4eebe6fc3",
+          "ordinal": 8,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Текущий snapshot не объясняет abandoned branches и невыполненные обещания прошлых PR.",
+      "proposed_behavior": "Отдельный authorized adapter хранит PR/issue/comments/checks refs, head/base SHAs, timestamps и completeness cursors; старый merge status не становится current without refresh.",
+      "implementation_status": "unverified",
+      "phase": "P3",
+      "dependencies": [
+        "LIB-004",
+        "LIB-011",
+        "LIB-022"
+      ],
+      "acceptance": [
+        "Все страницы выбранного scope представлены или явно missing.",
+        "CI receipt связан с exact commit, а не только номером PR."
+      ],
+      "next_experiment": "Импорт fixture из >1 страницы обсуждений с changed PR head.",
+      "metric": "History scope coverage; wrong-SHA attribution=0.",
+      "deferred_condition": "После Git snapshot и manual handoff; доступ/API лимиты сверять при реализации.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-14"
+      ]
+    },
+    {
+      "id": "LIB-045",
+      "title": "PDF/Office/OCR как ленивые извлечения",
+      "domain": "extraction",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/FEATURE_BACKLOG.json",
+          "source_record_id": "DESK-041",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "3612e575a9e4d1d12f412cffc8caba670526903b21e0b555a32f2c22d85783d9",
+          "ordinal": 3132,
+          "historical_record_links": [
+            "HIST-fdb1058bee3b0c3df9b9bf7e623174119f213f3c7df5d82200d5e7c65b140177"
+          ]
+        }
+      ],
+      "problem": "Документы с таблицами или сканами остаются ORIGINAL_ONLY либо теряют структуру при plain text extraction.",
+      "proposed_behavior": "Lazy adapters сохраняют pages/cells/regions и parser fidelity; extraction отдельно от originals; OCR confidence не объявляет exactness.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "LIB-007",
+        "LIB-016"
+      ],
+      "acceptance": [
+        "Таблица проверяется по эталону значений/ячеек.",
+        "OCR error не меняет оригинал и отражается в metadata."
+      ],
+      "next_experiment": "Набор PDF/DOCX/table/scan и ручной gold subset.",
+      "metric": "Cell accuracy, page coverage, extraction time, unsupported inventory.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "LIB-046",
+      "title": "Аудио и видео с временными ссылками",
+      "domain": "extraction",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "CONTINUATION_V3/ASSISTANT_RND_PROPOSALS.json",
+          "source_record_id": "ASSISTANT-RND-23",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "149ad81385760ba7da45c3fdf43e615770c36552e8c707fd67148fbac9f6c50d",
+          "ordinal": 233,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Транскрипт без исходного медиа и таймкодов не позволяет проверить сказанное.",
+      "proposed_behavior": "Original media, ASR transcript, subtitle/OCR frames связать через source-time intervals; исправления создают derived version, missing media явно отмечается.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "LIB-007",
+        "LIB-014",
+        "LIB-016"
+      ],
+      "acceptance": [
+        "Quote открывает соответствующий timestamp исходного файла.",
+        "Исправленная транскрипция не переписывает original audio."
+      ],
+      "next_experiment": "Короткое RU/EN media с числами, repo names и deliberately wrong ASR token.",
+      "metric": "Alignment error; critical-token error rate; raw media retention.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": [
+        "SH-13"
+      ]
+    },
+    {
+      "id": "LIB-059",
+      "title": "Контракты точности для чисел, единиц и таблиц",
+      "domain": "data_exactness",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "OCC_ALL_USER_IDEAS_STRATEGY_FULL_CONTEXT_V3_RU_2026-10-03.zip",
+          "member": "RND_V2/data_labeling/TAXONOMY_RU.json",
+          "source_record_id": "economics.hypothesis",
+          "archive_sha256": "fef46544227a72f7b3c951d33320f560c45efb5d5cb49dde7d983591be10b801",
+          "source_sha256": "2f8fbac4609ec64b9ce4ac14732aad745004b405b91d6c78eb5b1baf163476f2",
+          "ordinal": 338,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Модельная нормализация может смешать валюту, сеть, сумму, token units или пример с фактическим результатом.",
+      "proposed_behavior": "Structured values сохраняют lexical original, unit/network IDs, normalization rule и source spans; example/hypothetical/observed outcome различаются; ambiguous values не вычисляются молча.",
+      "implementation_status": "unverified",
+      "phase": "P2",
+      "dependencies": [
+        "LIB-014",
+        "LIB-016",
+        "LIB-018"
+      ],
+      "acceptance": [
+        "Числа из исторического примера funnel не появляются как measured statistics.",
+        "Decimal/scientific/raw token amounts восстанавливаются без float округления."
+      ],
+      "next_experiment": "Fixture с евро/SOL, decimal amounts и старой примерной воронкой результатов.",
+      "metric": "Numeric/unit exactness; hypothetical-to-observed promotions=0.",
+      "deferred_condition": "Выполнять после зависимостей и сверки актуального owner; состояние реализации проверяется по текущему коду, а не по старому ZIP.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "attribution_note": "Редакторское развитие приложенных источников; не дословная цитата пользователя. Приёмка и порядок реализации предложены при объединении.",
+      "shared_implementation_groups": []
+    },
+    {
+      "id": "RND-005",
+      "title": "История PR и неудачных попыток как контекст изменения",
+      "domain": "repo",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "OCC_RND::history.version_link",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-a69a88d9d77ea1835f7ed5453fc976ac51cb09a1f7310443f77cb00560b44f21"
+          ]
+        },
+        {
+          "archive": "AUTOMATION_STRATEGY_ALL_IDEAS_V3_RU_2026-10-03(1).zip",
+          "member": "STRATEGY_V3/03_CATALOGS/MASTER_FUNCTION_CATALOG.json",
+          "source_record_id": "OCC_RND::library.search_related_attempts",
+          "archive_sha256": "3f9d600e4548918d5b74cdabe776067b6eec5894ae1988a55f57cf0c5043a69b",
+          "source_sha256": "513ddc8b0cf1fc945e339bf9c2983e81b3ec74d0009fe9c730e1f86c4e916457",
+          "ordinal": 42,
+          "historical_record_links": [
+            "HIST-f32f9fc99566c8d1238309dbd049074731fcfe9c30697189afc59e89ba0ae47c"
+          ]
+        },
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/07_COMPETITORS_AND_DATA_PIPELINES_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "678986249318de56d482bc914001cebfcd30dec99dfe75176d7be6b4eebe6fc3",
+          "ordinal": 8,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Новая задача может повторять уже отвергнутую реализацию либо закрытый PR.",
+      "proposed_behavior": "Привязывать PR/ветку/commit/review/CI к цели, восстанавливать причины отказа и показывать различия текущей базы.",
+      "implementation_status": "unverified",
+      "phase": "P3",
+      "dependencies": [
+        "RND-001",
+        "RND-002"
+      ],
+      "acceptance": [
+        "Пагинация включает последнюю страницу PR history.",
+        "Закрыт без merge и merged различаются; отсутствующие данные отмечены."
+      ],
+      "next_experiment": "Подготовить историю одного blocker из сохранённых PR metadata, затем проверить вручную связи.",
+      "metric": "Доля повторных попыток с найденным релевантным прошлым опытом.",
+      "deferred_condition": "Для недоступных PR сохранять missing-source запись, не выдумывать причину.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-14"
+      ]
+    },
+    {
+      "id": "RND-037",
+      "title": "Медиа и transcripts как воспроизводимый research corpus",
+      "domain": "media_research",
+      "origin": "source_derived",
+      "source_refs": [
+        {
+          "archive": "SCE_DESKTOP_FULL_CONTEXT_LAYA_RND_RU_2026-10-03 (2).zip",
+          "member": "SCE_DESKTOP_RND_2026-10-03/01_RND/07_COMPETITORS_AND_DATA_PIPELINES_RU.txt",
+          "archive_sha256": "cd2e107af3fba254c0f86d796363ff1f996f805695d12b91e958bef7cd819ad7",
+          "source_sha256": "678986249318de56d482bc914001cebfcd30dec99dfe75176d7be6b4eebe6fc3",
+          "ordinal": 8,
+          "historical_record_links": []
+        }
+      ],
+      "problem": "Извлечённый текст видео теряет timestamp, speaker или исходное утверждение.",
+      "proposed_behavior": "Импортировать предоставленные SRT/VTT/audio/video metadata, связывать transcript spans с claims; optional ASR имеет свою версию и confidence, original сохраняется.",
+      "implementation_status": "unverified",
+      "phase": "P7",
+      "dependencies": [
+        "RND-011",
+        "RND-036"
+      ],
+      "acceptance": [
+        "Каждый claim открывает точный media timestamp/span.",
+        "Неразобранный media object остаётся RAW_ONLY.",
+        "ASR confidence не трактуется как истинность утверждения."
+      ],
+      "next_experiment": "Сопоставить предоставленные subtitles и ручную расшифровку короткого RU/EN отрывка.",
+      "metric": "Citation timestamp accuracy и claim extraction corrections.",
+      "deferred_condition": "Live media connectors после полезного офлайн импорта и проверенных условий доступа.",
+      "attribution_note": "Карточка развивает указанные документы; source_derived не означает дословное требование пользователя. Приёмка и порядок этапов — предлагаемая редакция текущей сборки.",
+      "definition_status": "PROPOSED_PRODUCT_CARD",
+      "current_repo_verified": false,
+      "shared_implementation_groups": [
+        "SH-13"
+      ]
+    }
+  ],
+  "feature_audit": [
+    {
+      "feature_id": "LIB-002",
+      "title": "Полный манифест фиксированного Git snapshot",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-02"
+      ],
+      "new_decision_ids": [
+        "DEC5-08"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "LAYA4-002",
+        "LAYA4-003",
+        "LAYA4-004",
+        "TAB4-18"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "IMPLEMENTED_SCOPED_EXISTING",
+      "verified_scope": "Проверен snapshot inventory 157/157; неподдерживаемые entries имеют явный статус.",
+      "evidence_refs": [
+        "content-lab/repo_context.py"
+      ],
+      "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "next_experiment": "Сравнить fixture дерева с ignore rules, binary и необычными именами с manifest.",
+      "measurement": "100% entries и bytes в заявленном snapshot scope.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-003",
+      "title": "Потоковое сохранение крупных исходников",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-03"
+      ],
+      "new_decision_ids": [
+        "DEC5-09"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "LAYA4-012",
+        "LAYA4-013",
+        "LAYA4-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Импортировать большой текст и binary с ограниченным worker budget и прерыванием.",
+      "measurement": "Roundtrip hashes; peak RAM относительно chunk size; silent omissions=0.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-004",
+      "title": "Массовый выбор и пагинация до конца",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-02"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "PARTIAL",
+      "verified_scope": "Пагинация inventory и task-list есть; auto-loop полного scan ещё планируется.",
+      "evidence_refs": [
+        "content-lab/repo_context.py",
+        "content-lab/context_tasks.py"
+      ],
+      "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "next_experiment": "Пройти коллекцию 1001 объектов с page size 20 и restart на промежуточном cursor.",
+      "measurement": "Selected=represented+explicit failures; duplicate/omission count.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-008",
+      "title": "Дедупликация bytes с сохранением всех происхождений",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-08"
+      ],
+      "new_decision_ids": [
+        "DEC5-09",
+        "DEC5-12"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "LAYA4-012",
+        "LAYA4-013",
+        "LAYA4-017",
+        "LAYA4-027"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Импортировать два перекрывающихся ZIP и сравнить object и alias counts.",
+      "measurement": "Storage dedup ratio; origin retention=100%.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-011",
+      "title": "Слои commit, dirty worktree и история",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-05"
+      ],
+      "new_decision_ids": [
+        "DEC5-08"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "LAYA4-002",
+        "LAYA4-003",
+        "LAYA4-004",
+        "TAB4-18"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Собрать packet до и после локального изменения без нового commit.",
+      "measurement": "Воспроизводимость каждого scope; unbound paths=0.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-023",
+      "title": "Инвалидация зависимого контекста при обновлении источника",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-05"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [
+        "ACTION5-17"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-010",
+        "LAYA4-017",
+        "LAYA4-027"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "PARTIAL",
+      "verified_scope": "Изменённые источники/profile/review инвалидируют текущую проверку; общий граф всех импортёров остаётся задачей.",
+      "evidence_refs": [
+        "content-lab/context_tasks.py",
+        "content-lab/context_review.py"
+      ],
+      "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db",
+      "next_experiment": "Поменять source fragment в графе с двумя независимыми ветвями.",
+      "measurement": "Stale detection recall; unnecessary recomputation; update latency.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-024",
+      "title": "Четыре отдельных измерения полноты",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-02"
+      ],
+      "new_decision_ids": [
+        "DEC5-05",
+        "DEC5-23"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-05"
+      ],
+      "candidate_inherited_task_ids": [
+        "EVO3-024",
+        "G3-006",
+        "G3-011",
+        "LAYA4-004",
+        "LAYA4-009",
+        "LAYA4-014",
+        "LAYA4-019",
+        "LAYA4-021",
+        "PAR3-017",
+        "TAB4-05",
+        "TAB4-19",
+        "TAB4-20",
+        "UI3-004",
+        "UI3-011"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Смешанный corpus: text, binary, broken OCR и неиспользованный tail.",
+      "measurement": "Coverage denominators reproducible; false complete=0.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-028",
+      "title": "Обновления контекста вместо повторной пересылки всего ZIP",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-11"
+      ],
+      "new_decision_ids": [
+        "DEC5-05"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-13"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-003",
+        "G3-009",
+        "LAYA4-009",
+        "LAYA4-018",
+        "LAYA4-019",
+        "LAYA4-021",
+        "LAYA4-025",
+        "TAB4-05",
+        "TAB4-19",
+        "UI3-004",
+        "UI3-011"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Сделать два updates с rename, delete и corrected goal; replay deltas.",
+      "measurement": "Transferred bytes saved; reproducibility; wrong-base acceptance=0.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-043",
+      "title": "RSS и веб-снимки с версией тела страницы",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-06",
+        "GOAL5-26"
+      ],
+      "new_decision_ids": [
+        "DEC5-16"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "LAYA4-013",
+        "LAYA4-014",
+        "LAYA4-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Fixture feed и страницы с revisions, redirect и unavailable response.",
+      "measurement": "Freshness lag; reproducible cited body; unsupported content claims=0.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-044",
+      "title": "История GitHub PR, issues и CI с полной пагинацией",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-14"
+      ],
+      "new_decision_ids": [
+        "DEC5-16"
+      ],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [
+        "LAYA4-013",
+        "LAYA4-014",
+        "LAYA4-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Импорт fixture из >1 страницы обсуждений с changed PR head.",
+      "measurement": "History scope coverage; wrong-SHA attribution=0.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-045",
+      "title": "PDF/Office/OCR как ленивые извлечения",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-07"
+      ],
+      "new_decision_ids": [
+        "DEC5-16"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-07"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-003",
+        "LAYA4-013",
+        "LAYA4-014",
+        "LAYA4-016",
+        "LAYA4-017"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Набор PDF/DOCX/table/scan и ручной gold subset.",
+      "measurement": "Cell accuracy, page coverage, extraction time, unsupported inventory.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-046",
+      "title": "Аудио и видео с временными ссылками",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-07",
+        "GOAL5-26"
+      ],
+      "new_decision_ids": [
+        "DEC5-16"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-08"
+      ],
+      "candidate_inherited_task_ids": [
+        "LAYA4-013",
+        "LAYA4-014",
+        "LAYA4-017",
+        "LAYA4-023"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Короткое RU/EN media с числами, repo names и deliberately wrong ASR token.",
+      "measurement": "Alignment error; critical-token error rate; raw media retention.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "LIB-059",
+      "title": "Контракты точности для чисел, единиц и таблиц",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-07"
+      ],
+      "new_decision_ids": [
+        "DEC5-13"
+      ],
+      "new_action_task_ids": [
+        "ACTION5-07"
+      ],
+      "candidate_inherited_task_ids": [
+        "G3-003",
+        "LAYA4-014",
+        "LAYA4-016",
+        "LAYA4-020",
+        "TAB4-05",
+        "TAB4-19",
+        "UI3-007"
+      ],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Fixture с евро/SOL, decimal amounts и старой примерной воронкой результатов.",
+      "measurement": "Numeric/unit exactness; hypothetical-to-observed promotions=0.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "RND-005",
+      "title": "История PR и неудачных попыток как контекст изменения",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-14"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Подготовить историю одного blocker из сохранённых PR metadata, затем проверить вручную связи.",
+      "measurement": "Доля повторных попыток с найденным релевантным прошлым опытом.",
+      "implementation_changed_in_v5": false
+    },
+    {
+      "feature_id": "RND-037",
+      "title": "Медиа и transcripts как воспроизводимый research corpus",
+      "source_catalog": "catalogs/PRODUCT_FEATURES.json",
+      "original_required_fields_present": [
+        "problem",
+        "proposed_behavior",
+        "dependencies",
+        "acceptance",
+        "metric",
+        "next_experiment",
+        "source_refs"
+      ],
+      "original_required_fields_absent": [],
+      "execution_fields_not_in_original_card": [
+        "inputs",
+        "outputs",
+        "owner",
+        "state_contract",
+        "error_contract",
+        "checkpoint_contract",
+        "receipt_schema",
+        "resource_limits"
+      ],
+      "absence_note": "Field absence is assessed only in the original feature card. Other documents may already define these contracts; this is not an archive-wide absence claim.",
+      "goal_ids": [
+        "GOAL5-07",
+        "GOAL5-26"
+      ],
+      "new_decision_ids": [],
+      "new_action_task_ids": [],
+      "candidate_inherited_task_ids": [],
+      "relation_note": "Cross-links are derived through explicit shared feature IDs. Candidate task association does not replace task dependencies or prove full criterion coverage.",
+      "definition_status": "ROADMAP_CARD_DEFINED_OPERATIONAL_GATES_OPEN",
+      "current_verified_status": "UNVERIFIED_OR_PLANNED",
+      "verified_scope": "Эта карточка сохранена; её полная реализация в текущей итерации не проверялась.",
+      "evidence_refs": [],
+      "evidence_commit": null,
+      "next_experiment": "Сопоставить предоставленные subtitles и ручную расшифровку короткого RU/EN отрывка.",
+      "measurement": "Citation timestamp accuracy и claim extraction corrections.",
+      "implementation_changed_in_v5": false
+    }
+  ],
+  "goals": [
+    {
+      "goal_id": "GOAL5-02",
+      "title": "Полный учёт репозитория одной кнопкой",
+      "user_outcome": "Выбрать repo и получить учёт всего pinned HEAD с прогрессом, отменой и продолжением.",
+      "feature_ids": [
+        "LIB-002",
+        "LIB-004",
+        "LIB-006",
+        "LIB-024",
+        "LIB-034",
+        "LIB-056",
+        "RND-001"
+      ],
+      "acceptance_criteria": [
+        "Множество entries соответствует tree выбранного SHA; exclusions/errors показаны отдельно.",
+        "Перезапуск продолжает тот же snapshot cursor, смена HEAD создаёт новую версию.",
+        "Каждый INDEXED blob восстанавливается по chunks byte-for-byte."
+      ],
+      "primary_scenario": "Repo → полный scan → manifest → cancel/resume на порции.",
+      "stage": "S1",
+      "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+      "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+      "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+      "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+      "related_decision_ids": [
+        "DEC5-05",
+        "DEC5-08",
+        "DEC5-09",
+        "DEC5-23"
+      ],
+      "related_action_task_ids": [
+        "ACTION5-05",
+        "ACTION5-06",
+        "ACTION5-27",
+        "ACTION5-30"
+      ],
+      "milestone_ids": [
+        "M5-02"
+      ],
+      "criterion_ids": [
+        "GOAL5-02-AC1",
+        "GOAL5-02-AC2",
+        "GOAL5-02-AC3"
+      ],
+      "known_v4_evidence_scopes": [
+        {
+          "feature_id": "LIB-002",
+          "status": "IMPLEMENTED_SCOPED_EXISTING",
+          "verified_scope": "Проверен snapshot inventory 157/157; неподдерживаемые entries имеют явный статус.",
+          "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+        },
+        {
+          "feature_id": "LIB-004",
+          "status": "PARTIAL",
+          "verified_scope": "Пагинация inventory и task-list есть; auto-loop полного scan ещё планируется.",
+          "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+        },
+        {
+          "feature_id": "LIB-006",
+          "status": "PARTIAL",
+          "verified_scope": "Существующий repo scan cursor сохраняется в SQLite; произвольные source importers требуют своих контрактов.",
+          "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+        },
+        {
+          "feature_id": "RND-001",
+          "status": "IMPLEMENTED_SCOPED",
+          "verified_scope": "Current SCE SHA и owners проверены; иные repo снимки остаются историческими.",
+          "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+        }
+      ],
+      "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+      "implementation_verification_changed_in_v5": false
+    },
+    {
+      "goal_id": "GOAL5-03",
+      "title": "Большие, binary и специальные источники без потери учёта",
+      "user_outcome": "Сохранить или явно учесть источник, даже если он не помещается в текстовый документ AI.",
+      "feature_ids": [
+        "LIB-003",
+        "LIB-007",
+        "LIB-009",
+        "LIB-010",
+        "LIB-034",
+        "LIB-060"
+      ],
+      "acceptance_criteria": [
+        "Unsupported/binary/LFS/submodule/link имеют отдельную причину и область покрытия.",
+        "Размер/вложенность архивов ограничивают processing, но не скрывают неучтённые entries.",
+        "Превышение лимита даёт явный pending/error и следующий допустимый путь."
+      ],
+      "primary_scenario": "Добавить большой архив → inventory → выбор оригинала/извлечения.",
+      "stage": "S1/S10",
+      "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+      "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+      "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+      "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+      "related_decision_ids": [
+        "DEC5-08",
+        "DEC5-09"
+      ],
+      "related_action_task_ids": [
+        "ACTION5-06",
+        "ACTION5-09"
+      ],
+      "milestone_ids": [
+        "M5-02"
+      ],
+      "criterion_ids": [
+        "GOAL5-03-AC1",
+        "GOAL5-03-AC2",
+        "GOAL5-03-AC3"
+      ],
+      "known_v4_evidence_scopes": [],
+      "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+      "implementation_verification_changed_in_v5": false
+    },
+    {
+      "goal_id": "GOAL5-05",
+      "title": "Инкрементальные изменения и история разработки",
+      "user_outcome": "Обновлять только изменившиеся источники и зависимые пакеты, сохраняя прежние версии.",
+      "feature_ids": [
+        "LIB-011",
+        "LIB-023",
+        "LIB-028",
+        "LIB-041",
+        "LIB-044",
+        "LIB-054",
+        "RND-005"
+      ],
+      "acceptance_criteria": [
+        "Изменение байтов/commit/branch инвалидирует соответствующие производные.",
+        "Rename/delete отражены в provenance, старый источник остаётся историческим.",
+        "Delta packet перечисляет заменённые/добавленные/удалённые ranges, а не молча редактирует baseline."
+      ],
+      "primary_scenario": "Новая версия repo → delta → затронутые задачи → новый запрос.",
+      "stage": "S2/S6",
+      "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+      "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+      "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+      "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+      "related_decision_ids": [
+        "DEC5-05",
+        "DEC5-08",
+        "DEC5-16"
+      ],
+      "related_action_task_ids": [
+        "ACTION5-06",
+        "ACTION5-09",
+        "ACTION5-13",
+        "ACTION5-17"
+      ],
+      "milestone_ids": [
+        "M5-02",
+        "M5-05",
+        "M5-10"
+      ],
+      "criterion_ids": [
+        "GOAL5-05-AC1",
+        "GOAL5-05-AC2",
+        "GOAL5-05-AC3"
+      ],
+      "known_v4_evidence_scopes": [
+        {
+          "feature_id": "LIB-023",
+          "status": "PARTIAL",
+          "verified_scope": "Изменённые источники/profile/review инвалидируют текущую проверку; общий граф всех импортёров остаётся задачей.",
+          "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+        }
+      ],
+      "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+      "implementation_verification_changed_in_v5": false
+    },
+    {
+      "goal_id": "GOAL5-07",
+      "title": "Документы и медиа с проверяемыми ссылками",
+      "user_outcome": "Найти текст, таблицу или фрагмент аудио и открыть место в исходнике.",
+      "feature_ids": [
+        "LIB-045",
+        "LIB-046",
+        "LIB-047",
+        "LIB-059",
+        "RND-037"
+      ],
+      "acceptance_criteria": [
+        "Extractor version и page/time spans сохранены.",
+        "OCR/ASR output не перезаписывает оригинал; uncertain text и числа видимы.",
+        "Ленивое извлечение, отмена и повторный запуск не создают ложную новую source identity."
+      ],
+      "primary_scenario": "PDF/Office/audio/video → extract → chunk → поиск → точный источник.",
+      "stage": "S10",
+      "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+      "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+      "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+      "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+      "related_decision_ids": [
+        "DEC5-10",
+        "DEC5-13",
+        "DEC5-16"
+      ],
+      "related_action_task_ids": [
+        "ACTION5-06",
+        "ACTION5-07",
+        "ACTION5-08"
+      ],
+      "milestone_ids": [
+        "M5-03"
+      ],
+      "criterion_ids": [
+        "GOAL5-07-AC1",
+        "GOAL5-07-AC2",
+        "GOAL5-07-AC3"
+      ],
+      "known_v4_evidence_scopes": [],
+      "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+      "implementation_verification_changed_in_v5": false
+    },
+    {
+      "goal_id": "GOAL5-15",
+      "title": "Независимые проверки результата",
+      "user_outcome": "Проверять критерий по подходящему доказательству, сохраняя неизвестное.",
+      "feature_ids": [
+        "ACT-012",
+        "ACT-013",
+        "ACT-014",
+        "ACT-053",
+        "RND-008",
+        "RND-011",
+        "RND-023",
+        "RND-042",
+        "RND-043"
+      ],
+      "acceptance_criteria": [
+        "Local tests, CI, merge, installation и device outcome имеют отдельные bindings.",
+        "Изменение input/template/policy/registry/bytes делает связанные evidence stale.",
+        "Проверка измеряет сам критерий, а не доверяет модели или одному exit code без test binding."
+      ],
+      "primary_scenario": "Критерий → зарегистрированный check → receipt → independent revalidation.",
+      "stage": "S6/S7",
+      "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+      "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+      "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+      "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+      "related_decision_ids": [
+        "DEC5-01",
+        "DEC5-04",
+        "DEC5-18",
+        "DEC5-20",
+        "DEC5-23",
+        "DEC5-24"
+      ],
+      "related_action_task_ids": [
+        "ACTION5-11",
+        "ACTION5-18",
+        "ACTION5-24",
+        "ACTION5-30"
+      ],
+      "milestone_ids": [
+        "M5-05"
+      ],
+      "criterion_ids": [
+        "GOAL5-15-AC1",
+        "GOAL5-15-AC2",
+        "GOAL5-15-AC3"
+      ],
+      "known_v4_evidence_scopes": [
+        {
+          "feature_id": "ACT-012",
+          "status": "PARTIAL",
+          "verified_scope": "Есть narrow local-test receipt с актуальной revalidation; CI/merge/install/device не подтверждаются.",
+          "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+        },
+        {
+          "feature_id": "RND-011",
+          "status": "PARTIAL",
+          "verified_scope": "Схема local-evidence явно отделяет CI/merge/install и semantic claim. Полная UpdateEvidence далее.",
+          "evidence_commit": "5574ab768b39605d4631651a1e8f2451483344db"
+        }
+      ],
+      "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+      "implementation_verification_changed_in_v5": false
+    },
+    {
+      "goal_id": "GOAL5-26",
+      "title": "Медиа, новости и технологические источники",
+      "user_outcome": "Собирать разрешённые материалы, выделять утверждения и связывать их с первоисточниками.",
+      "feature_ids": [
+        "LIB-042",
+        "LIB-043",
+        "LIB-046",
+        "RND-036",
+        "RND-037",
+        "RND-038"
+      ],
+      "acceptance_criteria": [
+        "Source snapshot, timestamp и claim/quote identity сохраняются.",
+        "Пересказы одного источника не считаются независимым подтверждением.",
+        "Контентный workflow возвращает документ/сценарий с источниками и coverage report."
+      ],
+      "primary_scenario": "Выбранный канал/материал → extract → claims → source check → draft.",
+      "stage": "S10/S11",
+      "definition_status": "DESIGN_DEFINED_OPERATIONAL_DECISIONS_PENDING",
+      "implementation_status": "UNFINISHED_SCOPED_FOUNDATION_ONLY",
+      "evidence_rule": "Each acceptance criterion needs an independently checked receipt in its stated scope. Historical documentation is not current implementation proof.",
+      "attribution": "Assistant operationalization of preserved catalog, not a verbatim user quotation.",
+      "related_decision_ids": [
+        "DEC5-16"
+      ],
+      "related_action_task_ids": [
+        "ACTION5-08"
+      ],
+      "milestone_ids": [
+        "M5-03",
+        "M5-09"
+      ],
+      "criterion_ids": [
+        "GOAL5-26-AC1",
+        "GOAL5-26-AC2",
+        "GOAL5-26-AC3"
+      ],
+      "known_v4_evidence_scopes": [],
+      "link_scope": "Explicit shared-feature associations, not a claim that all linked tasks or decisions are mandatory for every criterion.",
+      "implementation_verification_changed_in_v5": false
+    }
+  ],
+  "decisions": [
+    {
+      "id": "DEC5-08",
+      "title": "Snapshot scope: commit, dirty, history, LFS и submodules",
+      "related_feature_ids": [
+        "LIB-002",
+        "LIB-007",
+        "LIB-010",
+        "LIB-011"
+      ],
+      "related_task_ids": [
+        "LAYA4-002",
+        "LAYA4-003",
+        "LAYA4-004",
+        "TAB4-18"
+      ],
+      "what_is_undefined": "Полный inventory закреплённого commit частично есть; неоднозначно, входит ли в команда entire repo dirty worktree, все branches/history, LFS content и submodule trees; default исключений и финансирование remote fetch не заданы.",
+      "options": [
+        "Чистый pinned commit первым; остальные layers explicit opt-in",
+        "Все local/remote history и submodules всегда",
+        "Только текущие text files без raw ledger"
+      ],
+      "recommended_default": "SnapshotScope описывает pinned tree, selected optional overlays, protected paths и fetch budget. Старт: текущий registered commit; dirty/history/LFS/submodules идут отдельными declared layers, pointers не выдаются за content.",
+      "rationale": "Entire repo должен означать точное множество entries, а не скрыто разные виды истории. Дополнительные remote объекты требуют собственных источников и ресурсов.",
+      "validation_experiment": "Fixture: dirty tracked/untracked, symlink, binary, LFS pointer, detached submodule, unusual filename и missing remote blob; сверить manifest с exact scope tree.",
+      "decision_acceptance": [
+        "Scope manifest определяет inclusion/exclusion и source revision каждого layer.",
+        "Selected entries = represented originals + explicit unresolved/unsupported; secret exclusion не уничтожает original identity.",
+        "Resume не смешивает разные tree/overlay revisions."
+      ],
+      "owner_role": "Repository source owner",
+      "blocking_milestones": [
+        "V4:S1",
+        "V4:S2",
+        "V4:S10"
+      ],
+      "status": "PROPOSED_NOT_DECIDED"
+    },
+    {
+      "id": "DEC5-09",
+      "title": "Canonical object model, CAS и дисковая нагрузка",
+      "related_feature_ids": [
+        "LIB-003",
+        "LIB-008",
+        "LIB-009",
+        "LIB-034",
+        "LIB-056",
+        "LIB-060"
+      ],
+      "related_task_ids": [
+        "LAYA4-012",
+        "LAYA4-013",
+        "LAYA4-017"
+      ],
+      "what_is_undefined": "Есть стратегия SQLite/Core и CAS, но не выбраны versioned source/object/alias/extraction/chunk keys, raw-object layout, atomic publication, disk reservation, GC roots и filesystem boundaries.",
+      "options": [
+        "Один metadata owner + content-addressed originals/derived objects",
+        "Файловые копии в каждой collection",
+        "Новая отдельная vector DB как authority всех объектов"
+      ],
+      "recommended_default": "Существующий SQLite owner хранит references/provenance/events; immutable CAS bytes публикуются только после hash/flush; отдельные alias/source/extraction identities и quota-aware checkpoints.",
+      "rationale": "Дедуп bytes не должна стирать происхождение. Atomicity должна работать при падении и заполненном диске; raw storage budget отличается от parser budget.",
+      "validation_experiment": "Импортировать overlapping archives и большой объект, прервать до/после object publish/DB reference, ограничить свободное место, очистить orphan staging и сравнить hashes/aliases.",
+      "decision_acceptance": [
+        "Схема object references, CAS layout, transaction boundary и orphan recovery зафиксированы.",
+        "Failed object не становится COMPLETE; завершённые версии и все origins сохраняются.",
+        "Дисковый долг/очередь видны; garbage collection не удаляет reachable originals."
+      ],
+      "owner_role": "Library storage owner",
+      "blocking_milestones": [
+        "V4:S1",
+        "V4:S3",
+        "V4:S10"
+      ],
+      "status": "PROPOSED_NOT_DECIDED"
+    }
+  ]
+}

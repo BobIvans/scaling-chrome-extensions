@@ -1,0 +1,241 @@
+[
+  {
+    "id": "WS-002",
+    "title": "Долгие repo-задания через существующий Core: прогресс, отмена и resume",
+    "source_package": "ROADMAP-PR-012",
+    "scope": [
+      "Registered scan/inventory job в текущем Core",
+      "START/STATUS/PAUSE/RESUME/CANCEL возвращают job identity",
+      "Перезапуск клиента/процесса и проверяемые checkpoints"
+    ],
+    "source_ids": {
+      "source_task_ids": [
+        "LAYA4-002"
+      ],
+      "feature_ids": [],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-02"
+      ]
+    },
+    "original_acceptance": [
+      "UI остаётся отзывчивым при долгом Git tree",
+      "Disconnect не теряет job identity",
+      "Cancel не оживает после restart",
+      "Повтор START не создаёт второй job",
+      "Inventory/capture используют владельцев №1/4",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "original_boundary": "Native progress и streaming START уже есть в main; проверить недостающий durable lifecycle. Не создавать второй scheduler/executor и не переделывать inventory.",
+    "depends_on_workstreams": [],
+    "implementation_status": "PLANNED_UNVERIFIED"
+  },
+  {
+    "id": "WS-003",
+    "title": "Полная выдача repo, delta и истории без скрытых общих лимитов",
+    "source_package": "ROADMAP-PR-012",
+    "scope": [
+      "Полная пагинация snapshots, selections и delta paths",
+      "Потоковые проверки всего manifest и экспорт через №2/3",
+      "Аудит всех entrypoints на cap, потерю хвоста и накопление памяти"
+    ],
+    "source_ids": {
+      "source_task_ids": [
+        "LAYA4-003",
+        "LAYA4-009",
+        "LAYA4-010"
+      ],
+      "feature_ids": [
+        "LIB-002",
+        "LIB-003",
+        "LIB-004",
+        "LIB-024"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-02",
+        "GOAL5-03"
+      ]
+    },
+    "original_acceptance": [
+      "Более 20 snapshots и более 20 delta paths доступны до EOF",
+      "Точное восстановление последнего source и последнего chunk",
+      "Размер page/frame ограничивает порцию, а не корпус",
+      "Fault/disk-full не публикует частичный успех",
+      "Нет повторной реализации уже потоковых blob/index/proof путей",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "original_boundary": "В main уже потоковые blobs, index_matches_head и verify_roundtrip_db. Реальные остатки: list_snapshots LIMIT 20 и snapshot_changes с массивами и [:20]. Инвалидация производных и CAS — №15.",
+    "depends_on_workstreams": [
+      "WS-002"
+    ],
+    "implementation_status": "PLANNED_UNVERIFIED"
+  },
+  {
+    "id": "WS-006",
+    "title": "Инкрементальные snapshots, CAS, delta-context и инвалидация доказательств",
+    "source_package": "ROADMAP-PR-012",
+    "scope": [
+      "Переиспользование immutable blobs без потери нескольких origins",
+      "Версии commit/dirty/history и rename/delete semantics",
+      "Dependency-based stale graph для extraction, packet, tests и skills"
+    ],
+    "source_ids": {
+      "source_task_ids": [
+        "EVO3-010",
+        "TAB4-18",
+        "LAYA4-011",
+        "LAYA4-012"
+      ],
+      "feature_ids": [
+        "LIB-008",
+        "LIB-011",
+        "LIB-023",
+        "LIB-028"
+      ],
+      "decision_ids": [
+        "DEC5-08",
+        "DEC5-09"
+      ],
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-15"
+      ]
+    },
+    "original_acceptance": [
+      "Неизменившиеся bytes переиспользуются по hash",
+      "Изменения сохраняют предыдущие версии",
+      "Delta перечисляет added/replaced/deleted ranges полностью",
+      "Инвалидируются зависимые evidence, независимые сохраняются",
+      "Dirty/LFS/submodule scope объявлен отдельно от HEAD",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "original_boundary": "№12 отвечает за полную выдачу и потоковую обработку; здесь — semantics reuse и invalidation. Получение специальных payloads принадлежит №16.",
+    "depends_on_workstreams": [
+      "WS-003",
+      "WS-005"
+    ],
+    "implementation_status": "PLANNED_UNVERIFIED"
+  },
+  {
+    "id": "WS-009",
+    "title": "PDF, Office, OCR и таблицы с точными ссылками и проверкой чисел",
+    "source_package": "ROADMAP-PR-013",
+    "scope": [
+      "Ленивые PDF/Office extractors с версиями",
+      "Page/table/cell/text spans и обратная связь с оригиналом",
+      "OCR uncertainty, units/numbers/table fidelity corpus"
+    ],
+    "source_ids": {
+      "source_task_ids": [
+        "ACTION5-07"
+      ],
+      "feature_ids": [
+        "LIB-045",
+        "LIB-059"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-07"
+      ]
+    },
+    "original_acceptance": [
+      "Оригинал остаётся неизменным",
+      "Цитата ведёт к нужной странице/ячейке",
+      "OCR не перезаписывает подтверждённый текст",
+      "Неизвестный mapping явно UNKNOWN",
+      "Cancel/retry не теряет source identity",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "original_boundary": "Использует SourceAddress №10 и importer protocol №16. Не объявлять все форматы поддержанными по одному fixture; у каждого adapter своя support matrix.",
+    "depends_on_workstreams": [
+      "WS-007"
+    ],
+    "implementation_status": "PLANNED_UNVERIFIED"
+  },
+  {
+    "id": "WS-010",
+    "title": "Аудио и видео: импорт, транскрипция и временные ссылки",
+    "source_package": "ROADMAP-PR-013",
+    "scope": [
+      "Media originals и версии transcript/ASR",
+      "Time spans, авторы/speaker uncertainty и metadata",
+      "Ленивая очередь, cancel/resume и corpus RU/EN/code-switch"
+    ],
+    "source_ids": {
+      "source_task_ids": [
+        "ACTION5-08"
+      ],
+      "feature_ids": [
+        "LIB-046",
+        "RND-037"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-07",
+        "GOAL5-26"
+      ]
+    },
+    "original_acceptance": [
+      "Text span открывает соответствующий time range",
+      "ASR output связан с exact media hash/model/config",
+      "Ошибки и недоступные media сохранены в ledger",
+      "Повтор не создаёт ложную source version",
+      "Качество и стоимость измерены на реальном corpus",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "original_boundary": "Это обработка сохранённых media. Живой микрофон/hotkey и intent — №28. Конкретные media/ASR зависимости выбирать по актуальным primary docs.",
+    "depends_on_workstreams": [
+      "WS-007"
+    ],
+    "implementation_status": "PLANNED_UNVERIFIED"
+  },
+  {
+    "id": "WS-011",
+    "title": "RSS, web snapshots и история GitHub PR/issues/CI с полной пагинацией",
+    "source_package": "ROADMAP-PR-013",
+    "scope": [
+      "Версии web/RSS body и provenance",
+      "Полная история GitHub PR/issues/reviews/CI и неудачных попыток",
+      "Incremental cursors, rate limits, partial/freshness ledger"
+    ],
+    "source_ids": {
+      "source_task_ids": [],
+      "feature_ids": [
+        "LIB-043",
+        "LIB-044",
+        "RND-005"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-26"
+      ]
+    },
+    "original_acceptance": [
+      "Все страницы обработаны до явного EOF",
+      "Редакции страницы и PR не затирают историю",
+      "Отсутствие данных отличается от no-match",
+      "Повторная синдикация не считается новым первоисточником",
+      "Backoff/resume сохраняют cursor и raw responses",
+      "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+      "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+      "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+    ],
+    "original_boundary": "Read-only сбор. PR patch/merge workflow — №32; news-to-experiment и сценарии — №37.",
+    "depends_on_workstreams": [
+      "WS-007"
+    ],
+    "implementation_status": "PLANNED_UNVERIFIED"
+  }
+]

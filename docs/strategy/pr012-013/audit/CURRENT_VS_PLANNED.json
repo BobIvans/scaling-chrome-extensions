@@ -1,0 +1,77 @@
+{
+  "schema": "sce.pr012-013.current-vs-planned.v1",
+  "code_audit_sha": "27cb446fc803df63d485ad376c1954bed30b30f7",
+  "package_status": "PARTIAL_IMPLEMENTATION_FULL_SCOPE_OPEN",
+  "canonical_db": "content.sqlite3 via automation_core.connection",
+  "workstreams": [
+    {
+      "id": "WS-002",
+      "title": "Долгие repo-задания через существующий Core: прогресс, отмена и resume",
+      "status": "PARTIAL_EXISTING_SUBSTRATE",
+      "existing_code": [
+        "content-lab/repo_context.py:scan_run",
+        "desktop/client.py:scan controls",
+        "content-lab/automation_core.py:Core"
+      ],
+      "next_action": "Registered Core repo/capture job, immutable request binding, background worker checkpoints and installed progress/cancel/resume; manual stepping is partial."
+    },
+    {
+      "id": "WS-003",
+      "title": "Полная выдача repo, delta и истории без скрытых общих лимитов",
+      "status": "PARTIAL_EXISTING_SUBSTRATE",
+      "existing_code": [
+        "content-lab/repo_history.py:snapshots/delta",
+        "desktop/client.py:history_pages/delta_pages; desktop/draft.py:exports",
+        "content-lab/repo_archive.py"
+      ],
+      "next_action": "Audit old list_snapshots and snapshot_changes summary consumers, selections/export traversal and bounded graph memory; qualify full EOF/fault/scale scope."
+    },
+    {
+      "id": "WS-006",
+      "title": "Инкрементальные snapshots, CAS, delta-context и инвалидация доказательств",
+      "status": "PARTIAL_EXISTING_SUBSTRATE",
+      "existing_code": [
+        "content-lab/source_ledger.py:capture_file/versions/raw_parts/read_part/delta_parts",
+        "content-lab/context_library.py",
+        "content-lab/repo_groups.py"
+      ],
+      "next_action": "Unify source dialects, extraction cache, input/dependency digests and selective evidence invalidation; fixed 64 KiB delta is not a semantic diff."
+    },
+    {
+      "id": "WS-009",
+      "title": "PDF, Office, OCR и таблицы с точными ссылками и проверкой чисел",
+      "status": "IMPORTER_ACCEPTANCE_OPEN",
+      "existing_code": [
+        "content-lab/source_ledger.py:FILE raw originals only"
+      ],
+      "next_action": "PDF/DOCX/XLSX/PPTX adapters, OCR rendition, mapping/support matrix, numeric/table corpus, lazy Core extraction."
+    },
+    {
+      "id": "WS-010",
+      "title": "Аудио и видео: импорт, транскрипция и временные ссылки",
+      "status": "IMPORTER_ACCEPTANCE_OPEN",
+      "existing_code": [
+        "content-lab/source_ledger.py:MEDIA raw originals only",
+        "content-lab/asr_cpu_experiment.py:existing optional experiment"
+      ],
+      "next_action": "Versioned stored-media importer/ASR, timestamps and speaker uncertainty, checkpointed spans and real RU/EN/code-switch corpus."
+    },
+    {
+      "id": "WS-011",
+      "title": "RSS, web snapshots и история GitHub PR/issues/CI с полной пагинацией",
+      "status": "IMPORTER_ACCEPTANCE_OPEN",
+      "existing_code": [
+        "content-lab/github_ci_snapshot.py:scoped existing CI transport",
+        "content-lab/workflow_github.py:existing workflow owner"
+      ],
+      "next_action": "Provenance-aware read-only web/RSS and full paginated GitHub PR/issues/reviews/CI history with response/observation identity, freshness/backoff and gap outcomes."
+    }
+  ],
+  "prerequisites": {
+    "001_004": "GitHub #38-41 merged; scope receipts still matter",
+    "010": "Full package not verified landed; existing source dialects must be adapted",
+    "011": "Existing Python/JS static substrate; full shared provenance graph/resolver remains open"
+  },
+  "original_plan": "input/CURRENT_VS_PLANNED.json is preserved as historical PLAN_ONLY",
+  "criterions": "audit/CRITERION_STATUS.json retains all 101 exact criteria without broad completion claims"
+}
