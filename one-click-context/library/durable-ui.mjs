@@ -1,6 +1,6 @@
 import {attachRepoReviewView} from './repo-review-ui.mjs';
 // A view over the existing Native Host/SQLite owners, never a second queue.
-const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.export']);
+const COMMANDS=new Set(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.manifest','durable.repo.export']);
 const NAME=/^[A-Za-z0-9_.:-]{1,100}$/, JOB=/^[0-9a-f]{32}$/, ITEM=/^[0-9a-f]{64}$/;
 const TERMINAL=new Set(['SUCCEEDED','FAILED','CANCELLED','BLOCKED']);
 const STATES=new Set(['QUEUED','RUNNING','RETRY_READY','WAITING_CI','NEEDS_RECONCILIATION',...TERMINAL]);

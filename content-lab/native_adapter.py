@@ -40,6 +40,7 @@ FIELDS = {
     "durable.repo.list": ({"type"}, set()),
     "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
+    "durable.repo.manifest": ({"type", "repository", "snapshotId", "action"}, {"offset", "limit", "fileOrdinal"}),
     "durable.repo.export": ({"type", "repository", "snapshotId", "paths", "goal", "scope", "acceptance"}, {"maxBytes", "sourceOffset"}),
 }
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
@@ -119,6 +120,14 @@ def dispatch(request, profile_path):
     required, optional = FIELDS[request["type"]]
     if not required.issubset(request) or set(request) - required - optional:
         raise ValueError("DURABLE_SCHEMA")
+    if request['type'] == 'durable.repo.manifest':
+        action = request['action']
+        if (not isinstance(action, str) or action not in {'INFO', 'ENTRIES', 'PARTS'}
+                or action == 'INFO' and set(request) != required
+                or action != 'PARTS' and 'fileOrdinal' in request):
+            raise ValueError('DURABLE_SCHEMA')
+        if 'fileOrdinal' in request:
+            strict_int(request['fileOrdinal'], 0, 9_007_199_254_740_991)
     profile, policy = operator_profile(profile_path)
     store, operation = Path(profile["store"]), request["type"]
     core = Core(store, policy)
@@ -148,6 +157,11 @@ def dispatch(request, profile_path):
                 value['snapshot'] = repo_context.scan_page(store, namespace, snapshot_id)
             elif operation == 'durable.repo.get':
                 value['snapshot'] = repo_context.get_snapshot(store, namespace, snapshot_id, offset=request.get('offset', 0))
+            elif operation == 'durable.repo.manifest':
+                import repo_manifest
+                value['manifest'] = repo_manifest.page(store, namespace, snapshot_id, alias, source,
+                    request['action'], offset=request.get('offset', 0), limit=request.get('limit', 20),
+                    file_ordinal=request.get('fileOrdinal'))
             else:
                 value['export'] = repo_context.export_request(store, namespace, snapshot_id, request['paths'],
                     request['goal'], request['scope'], request['acceptance'], request.get('maxBytes', 24_000), request.get('sourceOffset', 0))

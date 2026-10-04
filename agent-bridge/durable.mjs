@@ -1,7 +1,7 @@
 import path from 'node:path';
 import {spawn} from 'node:child_process';
 
-export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.export']);
+export const DURABLE_COMMANDS=Object.freeze(['durable.search','durable.context','durable.enqueue','durable.get','durable.cancel','durable.record','durable.review.create','durable.review.import','durable.review.list','durable.review.get','durable.review.report','durable.review.handoff','durable.review.importBound','durable.repo.list','durable.repo.scan','durable.repo.get','durable.repo.manifest','durable.repo.export']);
 export const DURABLE_INPUT_BYTES=16000,DURABLE_OUTPUT_BYTES=192000,DURABLE_TIMEOUT_MS=10000;
 const fields={
  'durable.search':['namespace','query','limit'],
@@ -20,6 +20,7 @@ const fields={
  'durable.repo.list':[],
  'durable.repo.scan':['repository','snapshotId'],
  'durable.repo.get':['repository','snapshotId','offset'],
+ 'durable.repo.manifest':['repository','snapshotId','action','offset','limit','fileOrdinal'],
  'durable.repo.export':['repository','snapshotId','paths','goal','scope','acceptance','maxBytes','sourceOffset']
 };
 export function durableEnvironment(source=process.env){
@@ -38,6 +39,7 @@ export class DurableBridge{
   if(!this.enabled)throw Error('DURABLE_UNAVAILABLE');
   const allowed=fields[message.type];
   if(!allowed||Object.keys(message).some(key=>!['type','requestId',...allowed].includes(key)))throw Error('DURABLE_SCHEMA');
+  if(message.type==='durable.repo.manifest'&&message.requestId!==undefined&&!(typeof message.requestId==='string'&&Buffer.byteLength(message.requestId)<=128||Number.isSafeInteger(message.requestId)))throw Error('DURABLE_SCHEMA');
   // The caller never chooses a path, argv, policy, worker command or executable.
   const request=Object.fromEntries(Object.entries(message).filter(([key])=>key!=='requestId'));
   const input=Buffer.from(JSON.stringify(request));
@@ -61,6 +63,7 @@ export class DurableBridge{
       if(!value||typeof value!=='object'||typeof value.ok!=='boolean')throw Error('DURABLE_RESULT_SCHEMA');
       if(!value.ok)throw Error(typeof value.error==='string'&&/^[A-Z_]{1,100}$/.test(value.error)?value.error:'DURABLE_OPERATION_FAILED');
       if(!value.result||value.result.schema!=='occ.native-durable-result.v1'||value.result.operation!==request.type)throw Error('DURABLE_RESULT_SCHEMA');
+      if(request.type==='durable.repo.manifest'&&Buffer.byteLength(JSON.stringify({ok:true,requestId:message.requestId,durable:value.result}))>32768)throw Error('ROW_ENVELOPE_LIMIT');
       finish(null,{durable:value.result});
      }catch(error){finish(error.message?.startsWith('DURABLE_')||/^[A-Z_]{1,100}$/.test(error.message||'')?error:Error('DURABLE_INVALID_RESPONSE'));}
     });

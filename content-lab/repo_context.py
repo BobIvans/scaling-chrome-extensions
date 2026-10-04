@@ -6,45 +6,201 @@ before bounded processing; a fresh process resumes the same pinned snapshot.
 from __future__ import annotations
 
 import hashlib
+import codecs
+from contextlib import contextmanager
 import json
 import os
 from pathlib import Path, PurePosixPath
 import re
 import subprocess
+import sqlite3
+import tempfile
 import time
 
 from automation_core import connection, digest, identifier, strict_int
 from content_lab import _insert_item
 from repo_source import CHUNK_BYTES, analyze, partition, import_graph, components
 
-MAX_FILE = 8 * 1024 * 1024
-MAX_TREE = 32 * 1024 * 1024
+ANALYSIS_BYTES = 8 * 1024 * 1024  # AST workspace budget; larger blobs are captured in full as streams.
 SECRET_NAME = re.compile(r'(^|/)(\.env($|\.)|id_rsa$|id_ed25519$|credentials\.json$|keypair\.json$)|\.(pem|p12|pfx|key)$', re.I)
 SECRET_TEXT = re.compile(rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bsk-(?:proj-)?[A-Za-z0-9_-]{24,}|(?im:^\s*(?:api_key|private_key|secret_key|access_token|mnemonic)\s*[:=]\s*[\"\x27][^\"\x27\r\n]{16,}[\"\x27])')
+STREAM_SECRET_TEXT = re.compile(rb'-----BEGIN (?:RSA |EC |OPENSSH )?PRIVATE KEY-----|\bsk-(?:proj-)?[A-Za-z0-9_-]{24}|(?im:^\s*(?:api_key|private_key|secret_key|access_token|mnemonic)\s*[:=]\s*[\"\x27][^\"\x27\r\n]{16})')
+
+
+class FieldSecretScanner:
+    """Constant-space detection of declared secret fields across any whitespace.
+
+    The overlap regex handles key/token markers; this state machine preserves
+    the field heuristic when separators span more than one read block.
+    """
+    names = ('api_key', 'private_key', 'secret_key', 'access_token', 'mnemonic')
+
+    def __init__(self):
+        self.state, self.name, self.length = 'START', '', 0
+
+    def feed(self, raw):
+        offset = 0
+        while offset < len(raw):
+            if self.state == 'IGNORE':
+                lf, cr = raw.find(b'\n', offset), raw.find(b'\r', offset)
+                ends = [n for n in (lf, cr) if n >= 0]
+                if not ends:
+                    return False
+                offset = min(ends)
+                self.state = 'START'
+            value = raw[offset]
+            offset += 1
+            if self.state == 'START':
+                if value in b' \t\r\n\v\f':
+                    continue
+                self.name = chr(value).lower()
+                self.state = 'NAME' if any(n.startswith(self.name) for n in self.names) else 'IGNORE'
+            elif self.state == 'NAME':
+                if value in b' \t\r\n\v\f:=' and self.name in self.names:
+                    self.state = 'AFTER' if value in b':=' else 'BEFORE'
+                else:
+                    self.name += chr(value).lower()
+                    if not any(n.startswith(self.name) for n in self.names):
+                        self.state = 'START' if value in b'\r\n' else 'IGNORE'
+            elif self.state == 'BEFORE':
+                if value in b':=':
+                    self.state = 'AFTER'
+                elif value not in b' \t\r\n\v\f':
+                    self.state = 'IGNORE'
+            elif self.state == 'AFTER':
+                if value in b'\"\x27':
+                    self.state, self.length = 'VALUE', 0
+                elif value not in b' \t\r\n\v\f':
+                    self.state = 'IGNORE'
+            elif self.state == 'VALUE':
+                if value in b'\r\n':
+                    self.state = 'START'
+                elif value in b'\"\x27':
+                    self.state = 'IGNORE'
+                else:
+                    self.length += 1
+                    if self.length >= 16:
+                        return True
+        return False
 
 
 def sha(raw):
     return hashlib.sha256(raw).hexdigest()
 
 
-def git(root, *args, limit=MAX_TREE):
+def git_environment():
     # Ignore inherited Git configuration/replace objects. No checkout, filters,
     # status/fsmonitor, hooks, repository executables, fetch, or shell invocation.
     env = {k: v for k, v in os.environ.items()
            if k in {'PATH', 'SystemRoot', 'SYSTEMROOT', 'WINDIR', 'TEMP', 'TMP'}}
     env.update(GIT_CONFIG_NOSYSTEM='1', GIT_CONFIG_GLOBAL=os.devnull,
                GIT_NO_REPLACE_OBJECTS='1', GIT_NO_LAZY_FETCH='1', GIT_OPTIONAL_LOCKS='0', LC_ALL='C')
+    return env
+
+
+def git(root, *args):
     try:
         result = subprocess.run(['git', '-c', 'core.fsmonitor=false', '-C', str(root), *args],
-                                env=env, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                                env=git_environment(), stdout=subprocess.PIPE, stderr=subprocess.PIPE,
                                 timeout=5, shell=False)
     except (OSError, subprocess.TimeoutExpired) as exc:
         raise ValueError('REPO_UNAVAILABLE') from exc
     if result.returncode:
         raise ValueError('REPO_GIT_READ_FAILED')
-    if len(result.stdout) > limit:
-        raise ValueError('REPO_GIT_OUTPUT_LIMIT')
     return result.stdout
+
+
+@contextmanager
+def git_stream(root, *args):
+    """Corpus reads have no size/time ceiling; callers retain only one block.
+
+    Native transport can still cancel its subprocess; the SQLite transaction
+    rolls back. An operator CLI can run an arbitrarily long capture.
+    """
+    process = None
+    try:
+        process = subprocess.Popen(['git', '-c', 'core.fsmonitor=false', '-C', str(root), *args],
+                                   env=git_environment(), stdout=subprocess.PIPE,
+                                   stderr=subprocess.DEVNULL, shell=False)
+        yield process.stdout
+        if process.wait():
+            raise ValueError('REPO_GIT_READ_FAILED')
+    except OSError as exc:
+        raise ValueError('REPO_UNAVAILABLE') from exc
+    finally:
+        if process is not None:
+            process.stdout.close()
+            if process.poll() is None:
+                process.kill()
+            process.wait()
+
+
+def git_records(root, *args):
+    with git_stream(root, *args) as stream:
+        pending = b''
+        while raw := stream.read(64 * 1024):
+            records = (pending + raw).split(b'\0')
+            pending = records.pop()
+            yield from records
+        if pending:
+            raise ValueError('REPO_GIT_READ_FAILED')
+
+
+@contextmanager
+def captured_blob(root, row):
+    """Spool once to disk for hash/secret checks, then stream exact chunks."""
+    with tempfile.TemporaryFile() as spool:
+        hasher, size, tail, secret, utf8 = hashlib.sha256(), 0, b'', False, True
+        decoder = codecs.getincrementaldecoder('utf-8')('strict')
+        fields = FieldSecretScanner()
+        with git_stream(root, 'cat-file', 'blob', row['oid']) as source:
+            while raw := source.read(64 * 1024):
+                spool.write(raw)
+                hasher.update(raw)
+                size += len(raw)
+                secret = secret or bool(STREAM_SECRET_TEXT.search(tail + raw)) or fields.feed(raw)
+                tail = (tail + raw)[-512:]
+                if utf8:
+                    try:
+                        decoder.decode(raw)
+                    except UnicodeDecodeError:
+                        utf8 = False
+        if utf8:
+            try:
+                decoder.decode(b'', final=True)
+            except UnicodeDecodeError:
+                utf8 = False
+        if size != row['size']:
+            raise ValueError('REPO_BLOB_SIZE_MISMATCH')
+        spool.seek(0)
+        yield spool, hasher.hexdigest(), secret, utf8
+
+
+def stream_partition(alias, path, stream, file_hash, utf8):
+    start = part = 0
+    line, previous_cr, pending = 1, False, b''
+    while True:
+        pending += stream.read(CHUNK_BYTES + 4 - len(pending))
+        if not pending and part:
+            break
+        end = min(CHUNK_BYTES, len(pending))
+        if utf8:
+            while 0 < end < len(pending) and pending[end] & 0xc0 == 0x80:
+                end -= 1
+        raw, pending = pending[:end], pending[end:]
+        logical = digest([alias, path, 'preamble', 0, part])
+        breaks = len(re.findall(rb'\r\n|\r|\n', raw)) - int(previous_cr and raw.startswith(b'\n'))
+        start_line = line - int(previous_cr and raw.startswith(b'\n')) if raw else 0
+        end_line = line + breaks - int(raw.endswith((b'\r', b'\n'))) if raw else 0
+        yield {'logical_id': logical, 'revision': digest([logical, file_hash, sha(raw), start, start + len(raw)]),
+               'byte_start': start, 'byte_end': start + len(raw), 'raw': raw,
+               'start_line': start_line, 'end_line': end_line, 'fragment': part,
+               'oversized_fragment': True}
+        line += breaks
+        previous_cr = raw.endswith(b'\r')
+        start, part = start + len(raw), part + 1
+        if not raw:
+            break
 
 
 def source_path(value):
@@ -125,31 +281,36 @@ def working_state(root, path, expected_hash):
             return 'LINK_OR_MISSING'
         if not target.is_file():
             return 'MISSING'
-        if target.stat().st_size > MAX_FILE:
-            return 'DIRTY'
         with target.open('rb') as stream:
-            raw = stream.read(MAX_FILE + 1)
-        return 'CLEAN' if sha(raw) == expected_hash else 'DIRTY'
+            hasher = hashlib.sha256()
+            for raw in iter(lambda: stream.read(64 * 1024), b''):
+                hasher.update(raw)
+        return 'CLEAN' if hasher.hexdigest() == expected_hash else 'DIRTY'
     except OSError:
         return 'MISSING'
 
 
 def index_matches_head(root, head):
-    expected = set()
-    for entry in git(root, 'ls-tree', '-r', '-z', '--full-tree', head).split(b'\0'):
-        if entry:
-            meta, path = entry.split(b'\t', 1)
-            mode, _kind, oid = meta.split()
-            expected.add((mode, oid, path))
-    observed = set()
-    for entry in git(root, 'ls-files', '--stage', '-z').split(b'\0'):
-        if entry:
-            meta, path = entry.split(b'\t', 1)
-            mode, oid, stage = meta.split()
-            if stage != b'0':
-                return False
-            observed.add((mode, oid, path))
-    return observed == expected
+    # Temporary comparison workspace, not a second persistent content owner.
+    with tempfile.TemporaryDirectory() as temp:
+        db = sqlite3.connect(str(Path(temp) / 'index.sqlite3'))
+        try:
+            db.execute('CREATE TABLE expected(mode BLOB,oid BLOB,path BLOB,PRIMARY KEY(mode,oid,path)) WITHOUT ROWID')
+            db.execute('CREATE TABLE observed(mode BLOB,oid BLOB,path BLOB,PRIMARY KEY(mode,oid,path)) WITHOUT ROWID')
+            for entry in git_records(root, 'ls-tree', '-r', '-z', '--full-tree', head):
+                meta, path = entry.split(b'\t', 1)
+                mode, _kind, oid = meta.split()
+                db.execute('INSERT INTO expected VALUES (?,?,?)', (mode, oid, path))
+            for entry in git_records(root, 'ls-files', '--stage', '-z'):
+                meta, path = entry.split(b'\t', 1)
+                mode, oid, stage = meta.split()
+                if stage != b'0':
+                    return False
+                db.execute('INSERT INTO observed VALUES (?,?,?)', (mode, oid, path))
+            return (db.execute('SELECT * FROM expected EXCEPT SELECT * FROM observed LIMIT 1').fetchone() is None
+                    and db.execute('SELECT * FROM observed EXCEPT SELECT * FROM expected LIMIT 1').fetchone() is None)
+        finally:
+            db.close()
 
 
 def start_scan(store, alias, profile):
@@ -164,34 +325,85 @@ def start_scan(store, alias, profile):
     db = db_for(store)
     try:
         if db.execute('SELECT 1 FROM repo_snapshots WHERE id=?', (snapshot_id,)).fetchone():
+            with db:
+                restart_size_errors(db, snapshot_id)
             return snapshot_id
-        entries = []
-        # NUL delimiters preserve spaces, tabs and newlines in tracked names.
-        for entry in git(root, 'ls-tree', '-r', '-z', '-l', '--full-tree', head).split(b'\0'):
-            if not entry:
-                continue
-            meta, path_raw = entry.split(b'\t', 1)
-            mode, kind, oid, size = meta.decode('ascii').split()
-            try:
-                path = source_path(path_raw.decode('utf-8'))
-                state, reason = 'PENDING', None
-            except (UnicodeDecodeError, ValueError):
-                path, state, reason = 'git-path-hex:' + path_raw.hex(), 'EXCLUDED', 'UNSUPPORTED_PATH'
-            if kind != 'blob' or mode == '120000':
-                state, reason = 'EXCLUDED', 'LINK_OR_SUBMODULE_METADATA_ONLY'
-            elif SECRET_NAME.search(path) or any(path == p or path.startswith(p + '/') for p in profile['exclusions']):
-                state, reason = 'EXCLUDED', 'PROTECTED_NAME_OR_OPERATOR_EXCLUSION'
-            elif not size.isdigit():
-                state, reason = 'ERROR', 'BLOB_SIZE_UNAVAILABLE'
-            entries.append((snapshot_id, len(entries), path, mode, kind, oid,
-                            int(size) if size.isdigit() else None, state, reason))
         with db:
             db.execute('INSERT OR IGNORE INTO repo_snapshots VALUES (?,?,?,?,?,?,?,?,?)',
-                       (snapshot_id, profile['namespace'], alias, json.dumps(profile), head, tree, 0, len(entries), time.time()))
-            db.executemany('INSERT OR IGNORE INTO repo_entries(snapshot_id,ordinal,path,mode,kind,oid,size,state,reason) VALUES (?,?,?,?,?,?,?,?,?)', entries)
+                       (snapshot_id, profile['namespace'], alias, json.dumps(profile), head, tree, 0, 0, time.time()))
+            total = 0
+            # Stream NUL records directly into the existing ledger, without
+            # holding the full ls-tree output or entry array in memory.
+            for entry in git_records(root, 'ls-tree', '-r', '-z', '-l', '--full-tree', head):
+                meta, path_raw = entry.split(b'\t', 1)
+                mode, kind, oid, size = meta.decode('ascii').split()
+                try:
+                    path = source_path(path_raw.decode('utf-8'))
+                    state, reason = 'PENDING', None
+                except (UnicodeDecodeError, ValueError):
+                    path, state, reason = 'git-path-hex:' + path_raw.hex(), 'EXCLUDED', 'UNSUPPORTED_PATH'
+                if kind != 'blob' or mode == '120000':
+                    state, reason = 'EXCLUDED', 'LINK_OR_SUBMODULE_METADATA_ONLY'
+                elif SECRET_NAME.search(path) or any(path == p or path.startswith(p + '/') for p in profile['exclusions']):
+                    state, reason = 'EXCLUDED', 'PROTECTED_NAME_OR_OPERATOR_EXCLUSION'
+                elif not size.isdigit():
+                    state, reason = 'ERROR', 'BLOB_SIZE_UNAVAILABLE'
+                db.execute('INSERT INTO repo_entries(snapshot_id,ordinal,path,mode,kind,oid,size,state,reason) VALUES (?,?,?,?,?,?,?,?,?)',
+                           (snapshot_id, total, path, mode, kind, oid, int(size) if size.isdigit() else None, state, reason))
+                total += 1
+            db.execute('UPDATE repo_snapshots SET total=? WHERE id=?', (total, snapshot_id))
     finally:
         db.close()
     return snapshot_id
+
+
+def restart_size_errors(db, snapshot_id):
+    """Upgrade old size-rejected entries when the operator resumes their scan."""
+    first = db.execute("SELECT min(ordinal) FROM repo_entries WHERE snapshot_id=? AND state='ERROR' AND reason='FILE_TOO_LARGE'", (snapshot_id,)).fetchone()[0]
+    if first is not None:
+        db.execute("UPDATE repo_entries SET state='PENDING',reason=NULL WHERE snapshot_id=? AND state='ERROR' AND reason='FILE_TOO_LARGE'", (snapshot_id,))
+        db.execute('UPDATE repo_snapshots SET cursor=min(cursor,?) WHERE id=?', (first, snapshot_id))
+
+
+def capture_entry(db, root, snap, row):
+    with captured_blob(root, row) as (stream, file_hash, secret, utf8):
+        if row['size'] <= ANALYSIS_BYTES:
+            raw = stream.read()
+            secret = bool(SECRET_TEXT.search(raw))
+            analysis, boundaries = analyze(row['path'], raw)
+            chunks = partition(snap['alias'], row['path'], raw, file_hash, boundaries) if not secret else ()
+        else:
+            analysis = {'parser': 'UTF8_STREAM_NO_AST' if utf8 else 'BINARY_OR_NON_UTF8',
+                        'symbols': [], 'imports': [], 'dynamic_imports': [], 'findings': [],
+                        'capture_policy': 'STREAMING_BYTES_V1', 'syntax_analysis': 'NOT_RUN_WORKSPACE_BUDGET'}
+            chunks = stream_partition(snap['alias'], row['path'], stream, file_hash, utf8) if not secret else ()
+        if secret:
+            db.execute('UPDATE repo_entries SET state=?,reason=?,file_hash=? WHERE snapshot_id=? AND path=?',
+                       ('EXCLUDED', 'SECRET_TEXT_HEURISTIC', file_hash, snap['id'], row['path']))
+            return
+        for n, chunk in enumerate(chunks):
+            try:
+                text = chunk['raw'].decode('utf-8')
+            except UnicodeDecodeError:
+                text = None
+            item_id = None
+            if text is not None:
+                item_id = digest([snap['id'], chunk['revision']])
+                item = {'id': item_id, 'schema_version': 'occ.git-source.v1', 'namespace': snap['namespace'],
+                        'source_key': 'git:' + snap['alias'] + ':' + chunk['logical_id'],
+                        'input_sha256': sha(chunk['raw']), 'text': text, 'file_sha256': file_hash,
+                        'path': row['path'], 'repo_sha': snap['head'],
+                        'logical_id': chunk['logical_id'], 'revision': chunk['revision'],
+                        'byte_start': chunk['byte_start'], 'byte_end': chunk['byte_end'],
+                        'start_line': chunk['start_line'], 'end_line': chunk['end_line'],
+                        'oversized_fragment': chunk['oversized_fragment'], 'authority': 'DATA_ONLY'}
+                _insert_item(db, item)
+            db.execute('INSERT INTO repo_chunks VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
+                       (snap['id'], row['path'], n, chunk['logical_id'], chunk['revision'],
+                        chunk['byte_start'], chunk['byte_end'], chunk['start_line'], chunk['end_line'],
+                        chunk['fragment'], chunk['raw'], item_id))
+        db.execute('UPDATE repo_entries SET state=?,file_hash=?,analysis=?,working_state=? WHERE snapshot_id=? AND path=?',
+                   ('INDEXED', file_hash, json.dumps(analysis), working_state(root, row['path'], file_hash), snap['id'], row['path']))
 
 
 def scan_page(store, namespace, snapshot_id, *, limit=20):
@@ -200,6 +412,7 @@ def scan_page(store, namespace, snapshot_id, *, limit=20):
     try:
         with db:
             db.execute('BEGIN IMMEDIATE')
+            restart_size_errors(db, snapshot_id)
             snap = load_snapshot(db, namespace, snapshot_id)
             if db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=?', (snapshot_id,)).fetchone()[0] != snap['total']:
                 raise ValueError('CONTEXT_INCOMPLETE')
@@ -212,53 +425,21 @@ def scan_page(store, namespace, snapshot_id, *, limit=20):
             for row in rows:
                 if row['state'] != 'PENDING':
                     continue
-                if row['size'] > MAX_FILE:
-                    db.execute('UPDATE repo_entries SET state=?,reason=? WHERE snapshot_id=? AND path=?',
-                               ('ERROR', 'FILE_TOO_LARGE', snapshot_id, row['path']))
-                    continue
+                db.execute('SAVEPOINT capture_entry')
                 try:
-                    raw = git(root, 'cat-file', 'blob', row['oid'], limit=MAX_FILE)
-                    if len(raw) != row['size']:
-                        raise ValueError('REPO_BLOB_SIZE_MISMATCH')
-                    file_hash = sha(raw)
-                    if SECRET_TEXT.search(raw):
-                        db.execute('UPDATE repo_entries SET state=?,reason=?,file_hash=? WHERE snapshot_id=? AND path=?',
-                                   ('EXCLUDED', 'SECRET_TEXT_HEURISTIC', file_hash, snapshot_id, row['path']))
-                        continue
-                    analysis, boundaries = analyze(row['path'], raw)
-                    chunks = partition(snap['alias'], row['path'], raw, file_hash, boundaries)
-                    for n, chunk in enumerate(chunks):
-                        try:
-                            text = chunk['raw'].decode('utf-8')
-                        except UnicodeDecodeError:
-                            text = None
-                        item_id = None
-                        if text is not None:
-                            item_id = digest([snapshot_id, chunk['revision']])
-                            item = {'id': item_id, 'schema_version': 'occ.git-source.v1', 'namespace': namespace,
-                                    'source_key': 'git:' + snap['alias'] + ':' + chunk['logical_id'],
-                                    'input_sha256': sha(chunk['raw']), 'text': text, 'file_sha256': file_hash,
-                                    'path': row['path'], 'repo_sha': snap['head'],
-                                    'logical_id': chunk['logical_id'], 'revision': chunk['revision'],
-                                    'byte_start': chunk['byte_start'], 'byte_end': chunk['byte_end'],
-                                    'start_line': chunk['start_line'], 'end_line': chunk['end_line'],
-                                    'oversized_fragment': chunk['oversized_fragment'], 'authority': 'DATA_ONLY'}
-                            _insert_item(db, item)
-                        db.execute('INSERT INTO repo_chunks VALUES (?,?,?,?,?,?,?,?,?,?,?,?)',
-                                   (snapshot_id, row['path'], n, chunk['logical_id'], chunk['revision'],
-                                    chunk['byte_start'], chunk['byte_end'], chunk['start_line'], chunk['end_line'],
-                                    chunk['fragment'], chunk['raw'], item_id))
-                    db.execute('UPDATE repo_entries SET state=?,file_hash=?,analysis=?,working_state=? WHERE snapshot_id=? AND path=?',
-                               ('INDEXED', file_hash, json.dumps(analysis), working_state(root, row['path'], file_hash), snapshot_id, row['path']))
+                    capture_entry(db, root, snap, row)
                 except ValueError as exc:
+                    db.execute('ROLLBACK TO capture_entry')
                     db.execute('UPDATE repo_entries SET state=?,reason=? WHERE snapshot_id=? AND path=?',
                                ('ERROR', str(exc), snapshot_id, row['path']))
+                finally:
+                    db.execute('RELEASE capture_entry')
             cursor = rows[-1]['ordinal'] + 1 if rows else snap['cursor']
             db.execute('UPDATE repo_snapshots SET cursor=? WHERE id=?', (cursor, snapshot_id))
             if cursor == snap['total']:
                 prefix = 'git:' + snap['alias'] + ':'
                 db.execute('UPDATE sync_heads SET present=0 WHERE namespace=? AND substr(source_key,1,?)=?', (namespace, len(prefix), prefix))
-                for c in db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND item_id IS NOT NULL', (snapshot_id,)).fetchall():
+                for c in db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND item_id IS NOT NULL', (snapshot_id,)):
                     key = prefix + c['logical_id']
                     db.execute('INSERT OR IGNORE INTO sync_versions VALUES (?,?,?,?)', (namespace, key, c['item_id'], time.time()))
                     db.execute('INSERT INTO sync_heads VALUES (?,?,?,?,?,1) ON CONFLICT(namespace,source_key) DO UPDATE SET item_id=excluded.item_id,raw_hash=excluded.raw_hash,generation=excluded.generation,present=1',
@@ -270,7 +451,7 @@ def scan_page(store, namespace, snapshot_id, *, limit=20):
 
 
 def get_snapshot(store, namespace, snapshot_id, *, offset=0, limit=20):
-    strict_int(offset, 0, 1_000_000)
+    strict_int(offset, 0, 9_007_199_254_740_991)
     strict_int(limit, 1, 20)
     db = db_for(store)
     try:
@@ -301,16 +482,18 @@ def get_snapshot(store, namespace, snapshot_id, *, offset=0, limit=20):
 
 def verify_roundtrip_db(db, snap):
     indexed = exact = 0
-    for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? AND state=?', (snap['id'], 'INDEXED')).fetchall():
+    for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? AND state=?', (snap['id'], 'INDEXED')):
         indexed += 1
-        chunks = db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], row['path'])).fetchall()
-        cursor, hasher, valid = 0, hashlib.sha256(), bool(chunks)
+        chunks = db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], row['path']))
+        cursor, hasher, valid, count = 0, hashlib.sha256(), True, 0
         for chunk in chunks:
+            valid = valid and chunk['ordinal'] == count
+            count += 1
             valid = valid and chunk['byte_start'] == cursor and chunk['byte_end'] - chunk['byte_start'] == len(chunk['raw'])
             valid = valid and chunk['revision'] == digest([chunk['logical_id'], row['file_hash'], sha(chunk['raw']), chunk['byte_start'], chunk['byte_end']])
             hasher.update(chunk['raw'])
             cursor = chunk['byte_end']
-        exact += int(valid and cursor == row['size'] and hasher.hexdigest() == row['file_hash'])
+        exact += int(valid and count > 0 and cursor == row['size'] and hasher.hexdigest() == row['file_hash'])
     accounted = db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=?', (snap['id'],)).fetchone()[0]
     gaps = db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=? AND state!=?', (snap['id'], 'INDEXED')).fetchone()[0]
     return {'indexed': indexed, 'exact': exact, 'accounted': accounted,
@@ -368,7 +551,7 @@ def verify_source_item(db, chunk):
 
 def selection(store, namespace, snapshot_id, paths, max_bytes=24_000, source_offset=0):
     strict_int(max_bytes, 4000, 32_000)
-    strict_int(source_offset, 0, 1_000_000)
+    strict_int(source_offset, 0, 9_007_199_254_740_991)
     if not isinstance(paths, list) or not 1 <= len(paths) <= 10 or len(set(paths)) != len(paths):
         raise ValueError('REPO_SELECTED_PATHS_REQUIRED')
     for path in paths:
@@ -525,3 +708,51 @@ def export_request(store, namespace, snapshot_id, paths, goal, scope, acceptance
             'token_count': None, 'token_upper_bound': len(raw),
             'budget_method': 'UTF-8 bytes; conservative bound for byte-based tokenizers, not exact tokens',
             'execution_authorized': False}
+
+
+def main(argv=None):
+    """Explicit operator capture for workloads longer than a native request."""
+    import argparse
+    from native_adapter import operator_profile
+    parser = argparse.ArgumentParser(description='Capture an entire pinned Git repository into Content Lab.')
+    parser.add_argument('--profile', required=True, type=Path)
+    parser.add_argument('--repository', required=True)
+    parser.add_argument('--snapshot')
+    args = parser.parse_args(argv)
+    try:
+        if not args.profile.is_absolute():
+            raise ValueError('DURABLE_ABSOLUTE_OPERATOR_PATH_REQUIRED')
+        profile, _ = operator_profile(args.profile)
+        alias = identifier(args.repository)
+        source = profile.get('repositories', {}).get(alias)
+        if source is None:
+            raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+        store = Path(profile['store'])
+        sid = args.snapshot or start_scan(store, alias, source)
+        db = db_for(store)
+        try:
+            snap = load_snapshot(db, source['namespace'], sid)
+            if snap['alias'] != alias or json.loads(snap['profile']) != source:
+                raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+            with db:
+                restart_size_errors(db, sid)
+        finally:
+            db.close()
+        result = get_snapshot(store, source['namespace'], sid)
+        while result['state'] == 'PENDING':
+            result = scan_page(store, source['namespace'], sid)
+            print(json.dumps({k: result[k] for k in ('snapshot_id', 'state', 'cursor', 'total', 'counts')}), flush=True)
+        if result['state'] != 'COMPLETE':
+            raise ValueError('CONTEXT_CORRUPT')
+        print(json.dumps({'snapshot_id': sid, 'state': 'COMPLETE', 'cursor': result['cursor'],
+                          'total': result['total'], 'roundtrip': result['roundtrip']}))
+        return 0
+    except (OSError, ValueError, sqlite3.Error) as exc:
+        code = str(exc) if re.fullmatch(r'[A-Z_]{1,100}', str(exc)) else 'REPO_CAPTURE_FAILED'
+        print(json.dumps({'state': 'FAILED', 'error': code}))
+        return 1
+
+
+if __name__ == '__main__':
+    import sys
+    sys.exit(main())

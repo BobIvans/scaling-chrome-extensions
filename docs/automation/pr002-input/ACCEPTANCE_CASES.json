@@ -1,0 +1,120 @@
+{
+  "schema": "roadmap.acceptance-cases.v1",
+  "count": 14,
+  "runtime_cases_executed_for_this_package": false,
+  "cases": [
+    {
+      "criterion_id": "AC2-001",
+      "title": "Complete entry accounting",
+      "action": "Project a real COMPLETE snapshot with INDEXED/EXCLUDED/ERROR entries.",
+      "expected": "REPO_MANIFEST count and exact ordinal/path/OID/mode set match all repo_entries; no PENDING and no skipped tail.",
+      "evidence_required": "SQLite count/set comparison",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-002",
+      "title": "Exact source-to-part ranges",
+      "action": "Multi-part INDEXED source, empty and nonempty files.",
+      "expected": "Every indexed chunk maps once; half-open byte intervals tile source, empty chunk valid, assembled SHA/size correct.",
+      "evidence_required": "Actual SQLite raw reconstruction",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-003",
+      "title": "Binary/UTF8/long-line handling",
+      "action": "Use >20 parts in one UTF8 source, CRLF/BOM and non-UTF8 captured blob.",
+      "expected": "Bytes preserved; raw-only versus text eligibility explicit; no character-based offsets or fake AI-read claim.",
+      "evidence_required": "Source byte hashes and legacy text-item integrity checks where applicable",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-004",
+      "title": "Gap metadata and protected exclusions",
+      "action": "Excluded name, unsupported encoded path, submodule metadata, oversized ERROR.",
+      "expected": "Original states/reasons/OID/size retained, missing hashes null; no protected raw bytes in metadata; all_tracked_bytes_exportable=false.",
+      "evidence_required": "Original ledger-to-manifest comparison",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-005",
+      "title": "Entries/parts pagination and byte budget",
+      "action": "Read all ENTRIES/PARTS pages, including >20 chunks for one file and row-budget cut.",
+      "expected": "Exact full result set once; nextOffset advances only by emitted rows; actual serialized frame<=32768 and native limits unchanged.",
+      "evidence_required": "Native serialized-size and whole-tail equality receipt",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-006",
+      "title": "Bidirectional lookup",
+      "action": "Navigate fileOrdinal→parts and returned part→source, then change file filter.",
+      "expected": "Exact snapshot/file ordinal/path; same chunk IDs/ranges; query-relative offset cannot silently continue old filter.",
+      "evidence_required": "Real UI/native lookup plus stale-query test",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-007",
+      "title": "Deterministic binding and files",
+      "action": "Project same snapshot twice; separately vary export policy/goal or grouping policy version in authorized future contract fixture.",
+      "expected": "Same binding produces byte-identical JSONL and hashes; changed binding changes batch ID; no timestamps/absolute paths in canonical files.",
+      "evidence_required": "Two writer outputs comparison and digest oracle",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-008",
+      "title": "Pending/corrupt snapshot refusal",
+      "action": "Try incomplete snapshot; delete entry, duplicate/missing/orphan chunk, overlap/gap ranges and mismatched revision.",
+      "expected": "No verified BATCH or published metadata directory; explicit CONTEXT_INCOMPLETE/CONTEXT_CORRUPT; valid original data preserved.",
+      "evidence_required": "Actual DB mutation fault corpus",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-009",
+      "title": "Raw/hash/revision tamper",
+      "action": "Alter chunk raw bytes/hash or stored file hash without consistent original source binding.",
+      "expected": "Full proof fails; per-page checks do not claim whole-corpus verification; no forged PASS.",
+      "evidence_required": "Actual stored-byte corruption tests",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-010",
+      "title": "Consistent read view and historical snapshot",
+      "action": "Write unrelated snapshot data during export; move HEAD after complete capture.",
+      "expected": "One SQLite read view yields original pinned binding; no working-tree read/fetch, no mixed snapshots; old captured scope remains inspectable under active profile.",
+      "evidence_required": "Concurrent read fixture + instrumentation proving no Git/source-code calls",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-011",
+      "title": "Strict native scope and compatibility",
+      "action": "Wrong alias/namespace/profile, caller-supplied output/root, unknown fields; old bridge/DB endpoints.",
+      "expected": "Typed rejection outside scope; new command only if advertised; legacy scan/get/export/task/review data unchanged; no second DB.",
+      "evidence_required": "Actual NativeClient→JobHost→Python subprocess roundtrip and old-schema comparison",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-012",
+      "title": "Atomic output and interruption",
+      "action": "Interrupt before BATCH publication; inject disk-full; repeat on valid or corrupted existing target.",
+      "expected": "Unverified staging is never advertised READY/PASS; originals/valid output preserved; duplicate verified projection compares hashes; corruption explicit.",
+      "evidence_required": "Writer filesystem fault tests; full resume deferred to PR003",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-013",
+      "title": "Coverage semantics and UI late replies",
+      "action": "INFO before global validation; read one part page; switch repo/query with delayed reply.",
+      "expected": "Metadata completeness, returned-page proof and full raw proof distinct; AI packet/graph claims absent; stale page cannot overwrite current selection.",
+      "evidence_required": "UI/DTO integration with actual proof scope",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC2-014",
+      "title": "Empty snapshot and file-name encoding",
+      "action": "Empty Git tree; source paths containing newline/tab/quote/RU characters in metadata.",
+      "expected": "Zero-count manifest valid, empty-file case distinct; one JSONL record per entry despite path escapes; textContent rendering and portable index refs.",
+      "evidence_required": "JSONL line-count/parser roundtrip and empty real snapshot",
+      "outcome": "NOT_RUN"
+    }
+  ],
+  "device_status": "NOT_RUN"
+}
