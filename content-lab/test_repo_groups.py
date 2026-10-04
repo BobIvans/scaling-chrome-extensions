@@ -25,7 +25,7 @@ FIXTURE = LAB / 'fixtures' / 'pr006'
 
 
 def jsonl(path):
-    with Path(path).open() as incoming:
+    with Path(path).open(encoding='utf-8') as incoming:
         return [json.loads(line) for line in incoming]
 
 
@@ -78,7 +78,7 @@ class GroupTests(unittest.TestCase):
                        'source_roots': ['.', 'libA', 'libB'],
                        'exclusions': ['operator-excluded.txt', 'oversize.dat']}
         cls.fixture_entries = jsonl(FIXTURE / 'REPO_MANIFEST.jsonl')
-        cls.oracle = json.loads((FIXTURE / 'EXPECTED_ORACLE.json').read_text())
+        cls.oracle = json.loads((FIXTURE / 'EXPECTED_ORACLE.json').read_text(encoding='utf-8'))
         cls.fixture_eligibility = {r['path']: r for r in jsonl(FIXTURE / 'SOURCE_ELIGIBILITY.jsonl')}
         env = repo.git_environment() | {'GIT_AUTHOR_NAME': 'Fixture', 'GIT_AUTHOR_EMAIL': 'fixture@invalid',
                     'GIT_COMMITTER_NAME': 'Fixture', 'GIT_COMMITTER_EMAIL': 'fixture@invalid'}
@@ -138,10 +138,10 @@ class GroupTests(unittest.TestCase):
         self.store, self.manifest, self.output = self.run / 'store', self.run / 'manifest', self.run / 'groups'
         shutil.copytree(self.baseline, self.store)
         self.policy_path = self.run / 'automation.json'
-        self.policy_path.write_text(json.dumps({'schema': 'occ.automation-policy.v1', 'money_budget': 0, 'max_parallel': 1}))
+        self.policy_path.write_text(json.dumps({'schema': 'occ.automation-policy.v1', 'money_budget': 0, 'max_parallel': 1}), encoding='utf-8')
         self.operator = self.run / 'operator.json'
         self.operator.write_text(json.dumps({'schema': 'occ.native-durable-profile.v1', 'store': str(self.store),
-            'policy_file': str(self.policy_path), 'namespaces': ['code'], 'templates': {}, 'repositories': {'sce': self.profile}}))
+            'policy_file': str(self.policy_path), 'namespaces': ['code'], 'templates': {}, 'repositories': {'sce': self.profile}}), encoding='utf-8')
         self.batch = base.write_manifest(self.store, 'sce', self.profile, self.sid, self.manifest)
         self.policy = groups.policy_view(None, self.profile)
         self.adapter = mock.patch.object(groups, 'eligibility_view', side_effect=self.mapped)
@@ -210,7 +210,7 @@ class GroupTests(unittest.TestCase):
                 self.assertEqual(ref[field], part[field])
         self.assertEqual({n: file_proof(self.output / n) for n in base.METADATA}, before)
         self.assertTrue(receipt['raw_reference_complete'])
-        header=json.loads((self.output/'GROUPS.json').read_text())
+        header=json.loads((self.output/'GROUPS.json').read_text(encoding='utf-8'))
         self.assertEqual(file_proof(self.output/'ELIGIBILITY_VIEW.jsonl')['sha256'],header['binding']['eligibility_digest'])
 
     def test_scc_independent_oracle_shuffling_and_labelled_cycle(self):
@@ -290,7 +290,7 @@ class GroupTests(unittest.TestCase):
         empty = members['empty.txt']
         refs = [r for s in jsonl(self.output / 'GROUP_PARTS.jsonl') for r in s['raw_refs'] if r['source_id'] == empty['source_id']]
         self.assertEqual([(r['source_start'],r['source_end']) for r in refs], [(0,0)])
-        coverage = json.loads((self.output / 'COVERAGE.json').read_text())
+        coverage = json.loads((self.output / 'COVERAGE.json').read_text(encoding='utf-8'))
         self.assertFalse(coverage['all_tracked_bytes_exportable'])
         self.assertEqual(coverage['ai_read'], 'UNKNOWN')
 
@@ -351,7 +351,7 @@ class GroupTests(unittest.TestCase):
         (self.manifest/'PARTS_INDEX.jsonl').write_bytes(raw.replace(b'"source_end":',b'"tampered_end":',1))
         with self.assertRaisesRegex(ValueError,'MANIFEST_UNVERIFIED'):
             self.build()
-        self.assertEqual(before['grouping_batch_id'],json.loads((self.output/'GROUPS.json').read_text())['grouping_batch_id'])
+        self.assertEqual(before['grouping_batch_id'],json.loads((self.output/'GROUPS.json').read_text(encoding='utf-8'))['grouping_batch_id'])
 
     def test_explicit_part_frame_resource_budgets_without_total_caps(self):
         for changes, error in [({'raw_reference_bytes_per_segment':1},'PART_BUDGET_TOO_SMALL'),
@@ -389,7 +389,7 @@ class GroupTests(unittest.TestCase):
         self.assertEqual(list(self.run.glob('.occ-groups-*')),[])
         with self.assertRaisesRegex(ValueError,'GROUP_OUTPUT_CONFLICT'):
             self.build(policy=self.policy|{'max_refs_per_segment':1})
-        self.assertEqual(first['grouping_batch_id'],json.loads((self.output/'GROUPS.json').read_text())['grouping_batch_id'])
+        self.assertEqual(first['grouping_batch_id'],json.loads((self.output/'GROUPS.json').read_text(encoding='utf-8'))['grouping_batch_id'])
 
     def test_post_validation_tamper_never_publishes_success_header(self):
         for event in ['artifacts_written','before_header','before_publish']:
@@ -439,7 +439,7 @@ class GroupTests(unittest.TestCase):
         self.output.rename(moved)
         labels, count = [], 0
         for path in moved.rglob('*.html'):
-            parser=Links();parser.feed(path.read_text())
+            parser=Links();parser.feed(path.read_text(encoding='utf-8'))
             self.assertEqual(parser.active,[])
             labels.extend(parser.text)
             for href in parser.links:
@@ -489,7 +489,7 @@ class GroupTests(unittest.TestCase):
         import source_eligibility as owner
         receipt=groups.publish(self.operator,'sce',self.manifest,self.output)
         self.assertEqual(receipt['counts']['groups'],68)
-        header=json.loads((self.output/'GROUPS.json').read_text())
+        header=json.loads((self.output/'GROUPS.json').read_text(encoding='utf-8'))
         adapter=header['binding']['eligibility_adapter']
         self.assertEqual(adapter['schema'],owner.SCHEMA)
         self.assertEqual(adapter['version'],owner.CLASSIFIER_VERSION)

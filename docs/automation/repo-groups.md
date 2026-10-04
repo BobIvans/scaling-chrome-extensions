@@ -153,10 +153,10 @@ release, strict scope and portable links. Existing PR001–004 regressions remai
 required on Ubuntu and Windows CI.
 
 The actual combined repository checkout was also captured through Git → SQLite →
-manifest → automatic PR005 facts → PR006 CLI: 418 entries, 407 groups, 1828
-segments and all 2097 captured parts, with the four base metadata files byte
-identical. The Linux observation took 2.46s to capture and 2.69s to group, with
-26.3MB observed planner-process peak RSS; this is that checkout, not a bound for
+manifest → automatic PR005 facts → PR006 CLI: 419 entries, 408 groups, 1832
+segments and all 2101 captured parts, with the four base metadata files byte
+identical. The Linux observation took 2.77s to capture and 3.04s to group, with
+26.1MB observed planner-process peak RSS; this is that checkout, not a bound for
 other repositories or Windows device proof. See
 `runs/PR006_CHECKOUT_QUALIFICATION_2026-10-04.json`.
 

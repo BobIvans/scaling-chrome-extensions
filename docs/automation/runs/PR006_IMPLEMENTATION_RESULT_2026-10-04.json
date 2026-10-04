@@ -105,15 +105,15 @@
   "pr005_adapter": {
     "schema": "occ.format-eligibility.v1",
     "version": "utf8-controls-strict-lfs3.v1",
-    "projection_digest": "3ed71e7ff5e01b518fba10c9adc5f229a2104d469d3c3a7e04d4189b09a4a337",
+    "projection_digest": "2ac7630a9db976f49b6b5ce6a98cd36a2811e348b18c1bf7403e93048d3d924b",
     "owner": "source_eligibility.facts_status/project_facts",
     "owner_build": "534916549871a615d716489bccb05fafd5e265d3d413b2000d392f3327dfab0f",
     "head_sha": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
     "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/42",
     "interop_test": "PASS_REAL_GIT_SQLITE_AND_AUTOMATIC_CLI"
   },
-  "grouping_batch_id": "d5725db886168969afa8ca1d1b8c96015d4c1729f2aa51b02983abffd8a454dc",
-  "base_batch_id": "ad823fb4429a4441728f4e0fefa9eb4cf09678c8d5e73321a00f030918a91c12",
+  "grouping_batch_id": "5dac1ceae5ef583b63e3c38816bddd0689ad1d0b47adf0de620e033a3d187ea8",
+  "base_batch_id": "2a0eb7f05ae163ff6458bcfba95fb9b88260d6d1ff7b9c1edf57c8863daa204d",
   "group_count": 68,
   "source_count": 70,
   "segment_count": 105,
@@ -131,7 +131,8 @@
       "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
       "passed": 296,
       "failed": 0,
-      "duration_seconds": 167.103
+      "duration_seconds": 167.103,
+      "subject": "Full combined suite before encoding correction; rerun on corrected code in progress at receipt update"
     },
     {
       "command": "node --test agent-bridge/*.test.mjs",
@@ -312,11 +313,11 @@
     "broad_PR005_device_work_still_open": true,
     "synthetic_adapter_fixture_alone_does_not_prove_actual_PR005_interop": true,
     "actual_PR005_interop_independently_verified": true,
-    "actual_checkout_files": 418,
-    "actual_checkout_parts": 2097
+    "actual_checkout_files": 419,
+    "actual_checkout_parts": 2101
   },
   "dependency_integration": {
-    "PR005": "Actual owner bytes match latest PR005 head; automatic integration PASS; upstream merge pending at receipt creation",
+    "PR005": "MERGED e6af765dcb94e9462c6adf071a3df8421e141cc5; owner unchanged; automatic integration PASS",
     "windows_failure_observed": {
       "job_id": 111435480657,
       "reason": "Reserved Win32 device filename nul.txt in test fixture, git add exit 128",
@@ -332,11 +333,11 @@
     "latest_dependency_ci": {
       "head_sha": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
       "run_id": 37204147508,
-      "state": "IN_PROGRESS_AT_RECEIPT_CREATION"
+      "state": "PASS_BOTH_OS"
     }
   },
   "tests_total": 467,
-  "as_of": "INITIAL_PR_PUBLICATION_BEFORE_OS_CI_AND_MERGE",
+  "as_of": "CORRECTED_PR_PUBLICATION_BEFORE_UPDATED_OS_CI_AND_MERGE",
   "tests_subject": "PR006 + actual PR005 owner + merged PR009 main; product byte identity will be matched to published Git tree",
   "integration_base_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
   "full_checkout_qualification": "docs/automation/runs/PR006_CHECKOUT_QUALIFICATION_2026-10-04.json",
@@ -345,10 +346,26 @@
   "published_implementation_tree": "c4280b2204d10d8f3e7a2c3fec46761dd9fc9365",
   "tests_source_commit": "42467013902b289b94ff0859fe4845cf618a22c3",
   "tested_product_code": {
-    "content-lab/repo_groups.py": "7681cf17446b7cc51555d3259a4bc5fc58671bac7e8f0f731ba043a4a4f1fcd7",
+    "content-lab/repo_groups.py": "61129552649ab34c5d84601c2db2b599cf61f57df4a06afe8c74d9a4040ab4b6",
     "content-lab/repo_source.py": "3ece70f07012494ebe33b8a034186a65cd9b10c1633011ba7851889eb4a2e683",
     "content-lab/source_eligibility.py": "534916549871a615d716489bccb05fafd5e265d3d413b2000d392f3327dfab0f",
     "content-lab/repo_context.py": "8c1ea19627768f09ce19993cfa0eb58074ee2e4206e65a3f5eb01dd0860d695a",
     "content-lab/content_lab.py": "6230bc42cf35f570aae61f7b0d09748e451009f954f10336eb41ae9f8d5e5518"
+  },
+  "encoding_correction": {
+    "failed_head": "93ce5bc3fcd0392f763366bd531fcc4654ccddbb",
+    "failed_run": 37204626920,
+    "failed_windows_job": 111443137457,
+    "cause": "UTF8 fixture reader inherited CP1252; setUpClass failed before 24 grouping cases could run",
+    "fix": "All grouping test text IO explicitly UTF8; reuse proof reader uses binary JSONL like other proof readers",
+    "corrected_local_code_commit": "d6c9370e1f2db58563d7ede249587a9ca7b3d936",
+    "focused_locale_regression": {
+      "command": "LC_ALL=C LANG=C PYTHONUTF8=0 PYTHONCOERCECLOCALE=0 python -B -m unittest discover -s content-lab -p test_repo_groups.py -v",
+      "passed": 24,
+      "failed": 0,
+      "duration_seconds": 6.828
+    },
+    "complete_local_suite": "RUNNING_ON_CORRECTED_CODE_AT_RECEIPT_UPDATE",
+    "complete_os_ci": "PENDING_ON_CORRECTED_HEAD"
   }
 }

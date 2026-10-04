@@ -813,7 +813,7 @@ def publish(profile_path, alias, manifest, output, *, policy=None, declared=None
                 for item in outputs:
                     if file_proof(output / item['path']) != {'bytes': item['bytes'], 'sha256': item['sha256']}:
                         raise ValueError('GROUP_CATALOG_CORRUPT')
-                with (stage / 'NAVIGATION.jsonl').open() as incoming:
+                with (stage / 'NAVIGATION.jsonl').open('rb') as incoming:
                     for line in incoming:
                         item = json.loads(line)
                         if file_proof(output / item['path']) != {'bytes': item['bytes'], 'sha256': item['sha256']}:
