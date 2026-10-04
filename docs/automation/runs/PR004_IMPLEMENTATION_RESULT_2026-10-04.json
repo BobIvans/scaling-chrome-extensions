@@ -4,7 +4,7 @@
   "repository": "BobIvans/scaling-chrome-extensions",
   "state": "PR004_IMPLEMENTED_LOCAL_CHECKS_PASS_CI_PENDING",
   "base_sha": "3abd9e6b37d9a654ef96b03357b7f0a7301d85c2",
-  "result_sha": "996c617040dd4cfbba83ff040008e47e6b9b0258",
+  "result_sha": "1f6932baeac882a5da0b9dc0d32dc5fe8fcc4ddd",
   "github_pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/41",
   "application_code_changed": true,
   "source_task": "LAYA4-003",
@@ -12,9 +12,9 @@
   "application_checks": [
     {
       "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
-      "passed": 249,
+      "passed": 250,
       "failed": 0,
-      "duration_seconds": 145.202
+      "duration_seconds": 150.22
     },
     {
       "command": "node --test agent-bridge/*.test.mjs",
@@ -134,7 +134,8 @@
       "outcome": "PASS",
       "evidence": [
         "content-lab/test_repo_inventory.py::test_corrupt_existing_identity_is_not_silently_repaired",
-        "content-lab/test_repo_inventory.py::test_concurrent_writers_reuse_one_complete_identity"
+        "content-lab/test_repo_inventory.py::test_concurrent_writers_reuse_one_complete_identity",
+        "content-lab/test_repo_inventory.py::test_stage_cursor_closed_before_cleanup_on_metadata_fault"
       ]
     },
     {
@@ -177,12 +178,19 @@
   "actual_build_minutes": null,
   "cold_definition": "first new process; OS caches were not evicted",
   "warm_definition": "second new process on same fixture/store; validates and reuses existing snapshot",
-  "local_verified_tree": "10f05abf7b282a807fc05f1d75d68ebfab182998",
+  "local_verified_tree": "c18bcb94d56606dcac8fb12d8b39b86483d82109",
   "input_zip_sha256": "235ae0def4c305ceddec8ceaf9593c1a0460889a301781e01890abe0628409a5",
   "published_tree_matches_local": true,
   "pr001_integration": "PASS: merged #38; existing _start_scan_db transaction delegates to staged inventory, existing START rollback/UI-to-native regression retained",
   "source_request_amendment": "No corpus/runtime ceiling by default. User overrides proposed legacy cap; optional explicit deadline/stage quota, bounded buffers and scoped dispositions retained.",
-  "local_total_tests_passed": 415,
+  "local_total_tests_passed": 416,
   "pr002_integration": "PASS: merged #39; staged inventory captures every page, preserves manifest tail and range output, reuses snapshot, and retains legacy FILE_TOO_LARGE retry migration",
-  "github_actions": "EXACT_FINAL_HEAD_UBUNTU_AND_WINDOWS_PENDING"
+  "github_actions": "EXACT_FINAL_HEAD_UBUNTU_AND_WINDOWS_PENDING",
+  "windows_cursor_cleanup": "PASS_LOCAL: explicit cursor close releases stage handles even while metadata-fault traceback is active; regression enforces Windows file-lock semantics on Linux and uses actual Windows deletion in CI",
+  "initial_windows_ci": {
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37197281650",
+    "state": "CANCELLED_AT_10_MINUTE_JOB_BUDGET",
+    "diagnosis": "160000-entry inventory passed; full suite exhausted job time at inherited 125000-entry Native START test; separate metadata-fault cleanup error confirmed as active stage cursor retained by traceback",
+    "resolution": "Explicit cursor ownership/close and full real-fixture CI job budget increased to 20 minutes; no fixture counts or application inventory deadlines reduced"
+  }
 }
