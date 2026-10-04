@@ -117,3 +117,12 @@ reconciliation, trust-version evidence correction, version-aware editor
 navigation, large-export memory, and full fault injection/retention/migration
 coverage. Existing baseline functions and dependency PRs are not blanket-certified
 by this package.
+
+Local context reconciliation now uses `Core.reconcile_context` via the fixed
+`context_runtime.py --profile ... --id ... --process-stopped reconcile` CLI.
+It independently verifies a completed owner receipt and SQLite/artifact bytes.
+Explicit `--resume-local` permits only incomplete CAPTURE/BUILD_PACKET/PROJECT
+under the same job ID, payload, grant/build qualification and STOP epoch. Other
+unknown effects remain unresolved. The process-stop flag represents an actual
+operator check, not a model assertion. The desktop background Core process has
+no corpus-size timeout; closing the UI does not imply cancelling that process.

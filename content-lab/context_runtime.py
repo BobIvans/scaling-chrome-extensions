@@ -122,11 +122,26 @@ def qualification(c):
     except (OSError,ValueError,KeyError,TypeError):return 'UNKNOWN'
 
 
-def capabilities(c):
-    q=qualification(c)
+def schema_state(store):
+    if store is None:return 'UNKNOWN_STORE'
+    try:
+        db=read_connection(store)
+        try:
+            tables={r[0] for r in db.execute("SELECT name FROM sqlite_master WHERE type='table'")}
+            if 'context_schema' not in tables:return 'SETUP_REQUIRED'
+            if [r[0] for r in db.execute('SELECT version FROM context_schema')]!=[1]:return 'UNSUPPORTED_SCHEMA'
+            needed={'context_sources','context_raw_parts','context_source_heads','context_intents',
+                    'context_intent_fences','context_packets','context_packet_sources','context_selections','core_control'}
+            return 'READY_V1' if needed<=tables else 'SETUP_REQUIRED'
+        finally:db.close()
+    except (OSError,ValueError,__import__('sqlite3').Error):return 'SETUP_REQUIRED'
+
+
+def capabilities(c,store=None):
+    q=qualification(c);schema=schema_state(store)
     return {'schema':'occ.context-capabilities.v1','namespace':c['namespace'],
-            'build_digest':build_digest(),'grant_digest':lib.digest(c),'qualification':q,
-            'read_actions':sorted(READS),'write_actions':[{'action':a,'state':('AVAILABLE_LOCAL' if a in c['actions'] and q=='LOCAL_TESTS_VERIFIED' else 'STALE' if q=='STALE' else 'UNQUALIFIED' if a in c['actions'] else 'NOT_GRANTED')} for a in WRITES],
+            'build_digest':build_digest(),'grant_digest':lib.digest(c),'qualification':q,'store_schema':schema,
+            'read_actions':sorted(READS),'write_actions':[{'action':a,'state':('AVAILABLE_LOCAL' if a in c['actions'] and q=='LOCAL_TESTS_VERIFIED' and schema=='READY_V1' else 'SCHEMA_UNAVAILABLE' if a in c['actions'] and schema!='READY_V1' else 'STALE' if q=='STALE' else 'UNQUALIFIED' if a in c['actions'] else 'NOT_GRANTED')} for a in WRITES],
             'network_send':'NOT_IMPLEMENTED','money_moving':'NOT_IMPLEMENTED',
             'device_qualification':'NOT_RUN','execution_owner':'EXISTING_DURABLE_CORE'}
 
@@ -144,6 +159,7 @@ def validate_job(payload,policy):
 def submit(store,policy,service,action,args,operation_id):
     c=config(policy,service);identifier(operation_id);validate_arguments(action,args,c)
     if action not in c['actions']:raise ValueError('CONTEXT_ACTION_NOT_GRANTED')
+    if schema_state(store)!='READY_V1':raise ValueError('CONTEXT_SETUP_OR_SCHEMA_REQUIRED')
     payload={'kind':'context_service','service':service,'action':action,'arguments':args,
              'operation_id':operation_id,'build_digest':build_digest(),'grant_digest':lib.digest(c)}
     job=enqueue(store,policy,identifier('context:'+operation_id),payload)
@@ -152,12 +168,14 @@ def submit(store,policy,service,action,args,operation_id):
 
 def query(store,policy,service,action,args):
     c=config(policy,service);validate_arguments(action,args,c);ns=c['namespace']
+    if action=='CAPABILITIES':return capabilities(c,store)
+    if schema_state(store)!='READY_V1':raise ValueError('CONTEXT_SETUP_OR_SCHEMA_REQUIRED')
     if action=='SEARCH':return lib.search_sources(store,ns,**args)
     if action=='READ':return lib.read_span(store,ns,args['source_ref'])
     if action=='DOCUMENT':return packets.metadata_page(store,ns,args['document_id'],**{k:v for k,v in args.items() if k!='document_id'})
     if action=='PART':return packets.read_document_part(store,ns,args['document_id'],args['ordinal'])
     if action=='INTENT':return lib.intent_status(store,ns,args['operation_id'])
-    if action=='CAPABILITIES':return capabilities(c)
+    if action=='CAPABILITIES':return capabilities(c,store)
     if action=='CONTROL':return Core(store,policy).control_status()
     if action=='DELETION_IMPACT':return lib.deletion_impact(store,ns,args['source_key'])
     if action in {'JOB','OPERATION'}:
@@ -232,8 +250,9 @@ def qualify(policy,service):
 
 def main():
     ap=argparse.ArgumentParser(description=__doc__)
+    ap.add_argument('--id');ap.add_argument('--process-stopped',action='store_true');ap.add_argument('--resume-local',action='store_true')
     ap.add_argument('--policy',type=Path);ap.add_argument('--service');ap.add_argument('--profile',type=Path)
-    ap.add_argument('command',choices=['qualify','capabilities','initialize','work']);args=ap.parse_args()
+    ap.add_argument('command',choices=['qualify','capabilities','initialize','work','reconcile']);args=ap.parse_args()
     if args.profile:
         from native_adapter import operator_profile
         profile,policy=operator_profile(args.profile);service=profile['context_service']
@@ -243,11 +262,15 @@ def main():
     if args.command=='initialize':
         if profile is None:ap.error('--profile required')
         packets.db_for(Path(profile['store'])).close();result={'state':'READY','migration':'ADDITIVE_V1'}
+    elif args.command=='reconcile':
+        if profile is None or not args.id:ap.error('--profile and --id required')
+        j=Core(Path(profile['store']),policy).reconcile_context(args.id,args.process_stopped,resume_local=args.resume_local)
+        result={k:j[k] for k in ('id','state','result')}
     elif args.command=='work':
         if profile is None:ap.error('--profile required')
         j=Core(Path(profile['store']),policy).run_once()
         result={k:j[k] for k in ('id','state','result') if k in j}
-    else:result=qualify(policy,service) if args.command=='qualify' else capabilities(config(policy,service))
+    else:result=qualify(policy,service) if args.command=='qualify' else capabilities(config(policy,service),Path(profile['store']) if profile else None)
     print(json.dumps(result))
 
 if __name__=='__main__':main()

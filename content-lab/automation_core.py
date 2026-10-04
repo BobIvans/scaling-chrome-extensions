@@ -520,6 +520,72 @@ class Core:
             db.close()
         return self.get(job_id)
 
+    def reconcile_context(self, job_id, process_stopped, *, resume_local=False):
+        """Resolve only registered local effects after an actual process-stop check.
+
+        A completed owner receipt is verified independently; unfinished capture,
+        packet or projection may resume under its original identity and epoch.
+        Unknown other effects remain blocked, never blindly retried.
+        """
+        if process_stopped is not True:
+            raise ValueError('OPERATOR_PROCESS_STOP_CONFIRMATION_REQUIRED')
+        if type(resume_local) is not bool:
+            raise ValueError('LOCAL_RESUME_BOOLEAN_REQUIRED')
+        from context_runtime import validate_job as validate_context_job, config
+        import context_library as library
+        import context_recovery as recovery
+        job = self.get(job_id)
+        payload = job['payload']
+        if (job['state'] != 'NEEDS_RECONCILIATION'
+                or job['policy_hash'] != digest(self.policy)
+                or job['payload_hash'] != digest(payload)
+                or payload.get('kind') != 'context_service'):
+            raise ValueError('CONTEXT_RECONCILIATION_SCOPE')
+        validate_context_job(payload, self.policy)
+        service = config(self.policy, payload['service'])
+        namespace, operation = service['namespace'], payload['operation_id']
+        receipt = library.intent_status(self.store, namespace, operation)
+        result = None
+        if receipt['state'] == 'COMPLETED':
+            # Verify immutable SQLite objects before accepting a persisted receipt.
+            recovery.verify_database(self.store / 'content.sqlite3')
+            result = receipt['result']
+            if payload['action'] == 'EXPORT':
+                import context_packets
+                context_packets.verify_export(Path(payload['arguments']['output']),
+                    expected_digest=result['projection_digest'])
+            elif payload['action'] == 'BACKUP':
+                verified = recovery.verify_backup(Path(payload['arguments']['output']))
+                if verified['sha256'] != result['sha256']:
+                    raise ValueError('RECONCILIATION_ARTIFACT_CHANGED')
+            elif payload['action'] == 'RESTORE_COPY':
+                recovery.verify_database(Path(payload['arguments']['output']) / 'content.sqlite3')
+        elif not resume_local or payload['action'] not in {'CAPTURE', 'BUILD_PACKET', 'PROJECT'}:
+            raise ValueError('LOCAL_EFFECT_RECONCILIATION_REQUIRED')
+        db = connection(self.store)
+        try:
+            db.execute('BEGIN IMMEDIATE')
+            row = db.execute('SELECT * FROM jobs WHERE id=?', (job_id,)).fetchone()
+            if row['state'] != 'NEEDS_RECONCILIATION' or row['payload_hash'] != job['payload_hash']:
+                raise ValueError('CONTEXT_RECONCILIATION_CHANGED')
+            if result is not None:
+                state = 'CANCELLED' if row['cancel_requested'] else 'SUCCEEDED'
+                outcome = {'effect': result, 'independent_verification': 'LOCAL_OWNER_BYTES_AND_RECEIPT',
+                           'criterion_verified': False, 'dispatch_allowed': False}
+            else:
+                if row['cancel_requested']:
+                    raise ValueError('CANCELLED_INTENT_CANNOT_RESUME')
+                library.ensure_running(db, operation, namespace)
+                state = 'QUEUED'
+                outcome = {'reason': 'OPERATOR_VERIFIED_LOCAL_RESUME', 'operation_id': operation}
+            db.execute('UPDATE jobs SET state=?,lease_token=NULL,lease_until=NULL,available=?,result=?,updated=? WHERE id=?',
+                       (state, time.time(), encoded(outcome), time.time(), job_id))
+            event(db, job_id, state, outcome)
+            db.commit()
+        finally:
+            db.close()
+        return self.get(job_id)
+
     def heartbeat(self, job):
         db = connection(self.store)
         try:

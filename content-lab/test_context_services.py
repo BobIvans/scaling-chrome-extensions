@@ -162,7 +162,7 @@ class Services(unittest.TestCase):
     def test_qualification_grant_change_and_path_scope(self):
         self.assertEqual(runtime.capabilities(self.c)['qualification'],'LOCAL_TESTS_VERIFIED')
         self.c['actions'].remove('CAPTURE');self.assertEqual(runtime.capabilities(self.c)['qualification'],'STALE')
-        with self.assertRaisesRegex(ValueError,'PATH_OUTSIDE_OPERATOR_SCOPE'):runtime.submit(self.store,self.policy,'local','RESULT',{'path':'/outside/data.json','result_id':'r'},'r')
+        with self.assertRaisesRegex(ValueError,'PATH_OUTSIDE_OPERATOR_SCOPE'):runtime.submit(self.store,self.policy,'local','RESULT',{'path':str(self.root.parent/'outside-context-scope'/'data.json'),'result_id':'r'},'r')
         with self.assertRaisesRegex(ValueError,'CONTEXT_ACTION_NOT_GRANTED'):runtime.submit(self.store,self.policy,'local','CAPTURE',{'path':str(self.root/'x'),'source_key':'source'},'x')
     def test_stop_fences_queue_and_independent_running_job(self):
         p=self.root/'input';p.write_bytes(b'data');args={'path':str(p),'source_key':'source'};j=runtime.submit(self.store,self.policy,'local','CAPTURE',args,'running');runner=core.Core(self.store,self.policy);claimed=runner.claim()
@@ -223,6 +223,53 @@ class Services(unittest.TestCase):
         self.capture(b'new source','second','capture-second');ref=lib.search_sources(self.store,'n')['rows'][0]['source_ref'];sid=packets.create_selection(self.store,'n',[{'source_ref':ref,'reason':'retain'}])['selection_id'];packets.compile_task_document(self.store,'n',sid,'g',['criterion'],'retained');lib.tombstone(self.store,'n','second','deleted-second')
         self.assertEqual(lib.deletion_impact(self.store,'n','second')['dependent_packets'],1)
         with self.assertRaisesRegex(ValueError,'DEPENDENT_PACKET_RETENTION_REQUIRED'):recovery.purge_tombstoned_source(self.store,'n','second','blocked-purge')
+
+    def test_reconcile_completed_local_effect_without_duplicate_write(self):
+        file=self.root/'file';file.write_bytes(b'completed but ack lost')
+        args={'path':str(file),'source_key':'source'}
+        registered=runtime.submit(self.store,self.policy,'local','CAPTURE',args,'lost-ack')
+        runner=core.Core(self.store,self.policy);job=runner.claim();runtime.run_job(runner,job)
+        with lib.view(self.store,write=True) as db:db.execute('UPDATE jobs SET lease_until=0 WHERE id=?',(job['id'],))
+        self.assertIsNone(runner.claim());self.assertEqual(runner.get(job['id'])['state'],'NEEDS_RECONCILIATION')
+        with self.assertRaisesRegex(ValueError,'OPERATOR_PROCESS_STOP_CONFIRMATION_REQUIRED'):runner.reconcile_context(job['id'],False)
+        result=runner.reconcile_context(job['id'],True)
+        self.assertEqual(result['state'],'SUCCEEDED');self.assertFalse(result['result']['criterion_verified'])
+        with lib.view(self.store) as db:self.assertEqual(db.execute('SELECT count(*) FROM context_sources WHERE complete=1').fetchone()[0],1)
+    def test_reconcile_partial_local_capture_same_identity_and_fence(self):
+        file=self.root/'big';file.write_bytes(b'A'*20_000);args={'path':str(file),'source_key':'source'}
+        registered=runtime.submit(self.store,self.policy,'local','CAPTURE',args,'partial')
+        runner=core.Core(self.store,self.policy);job=runner.claim();calls=[0]
+        def crash():
+            calls[0]+=1
+            if calls[0]==2:raise RuntimeError('process lost')
+        with self.assertRaises(RuntimeError):lib.import_file(self.store,'n','source',file,'partial',progress=crash)
+        with lib.view(self.store,write=True) as db:db.execute('UPDATE jobs SET lease_until=0 WHERE id=?',(job['id'],))
+        self.assertIsNone(runner.claim())
+        with self.assertRaisesRegex(ValueError,'LOCAL_EFFECT_RECONCILIATION_REQUIRED'):runner.reconcile_context(job['id'],True)
+        self.assertEqual(runner.reconcile_context(job['id'],True,resume_local=True)['state'],'QUEUED')
+        result=runner.run_once();self.assertEqual(result['state'],'SUCCEEDED',result['result']);self.assertEqual(result['id'],job['id']);self.assertEqual(result['result']['bytes'],20_000)
+
+    def test_path_ctime_semantics_differ_without_byte_drift(self):
+        from types import SimpleNamespace
+        path=self.root/'ntfs-file';path.write_bytes(b'exact Windows bytes')
+        original=Path.lstat
+        def ntfs_stat(p,*args,**kwargs):
+            stat=original(p,*args,**kwargs)
+            if p!=path:return stat
+            values={name:getattr(stat,name) for name in dir(stat) if name.startswith('st_')}
+            values['st_ctime_ns']+=1_000_000
+            return SimpleNamespace(**values)
+        with patch.object(Path,'lstat',ntfs_stat):result=lib.import_file(self.store,'n','source',path,'ntfs')
+        self.assertEqual(result['sha256'],hashlib.sha256(b'exact Windows bytes').hexdigest())
+
+    def test_capabilities_require_actual_store_schema_and_deny_downgrade(self):
+        self.assertEqual(runtime.capabilities(self.c,self.store)['store_schema'],'READY_V1')
+        unknown=self.root/'not-initialized';core.connection(unknown).close()
+        caps=runtime.capabilities(self.c,unknown);self.assertEqual(caps['store_schema'],'SETUP_REQUIRED');self.assertFalse(any(r['state']=='AVAILABLE_LOCAL' for r in caps['write_actions']))
+        with lib.view(self.store,write=True) as db:db.execute('INSERT INTO context_schema VALUES(2)')
+        self.assertEqual(runtime.capabilities(self.c,self.store)['store_schema'],'UNSUPPORTED_SCHEMA')
+        with self.assertRaisesRegex(ValueError,'UNSUPPORTED_CONTEXT_SCHEMA'):lib.db_for(self.store)
+        with lib.view(self.store) as db:self.assertEqual([r[0] for r in db.execute('SELECT version FROM context_schema')],[1,2])
 
     def test_read_only_query_does_not_migrate(self):
         self.capture();before=(self.store/'content.sqlite3').read_bytes();lib.search_sources(self.store,'n');self.assertEqual((self.store/'content.sqlite3').read_bytes(),before)

@@ -80,6 +80,9 @@ def strict_json(raw, limit=PAGE_BYTES):
 
 def db_for(store):
     db = connection(Path(store))
+    if db.execute("SELECT 1 FROM sqlite_master WHERE name='context_schema'").fetchone():
+        if [r[0] for r in db.execute('SELECT version FROM context_schema')]!=[1]:
+            db.close();raise ValueError('UNSUPPORTED_CONTEXT_SCHEMA')
     db.executescript('''
       CREATE TABLE IF NOT EXISTS context_schema(version INTEGER PRIMARY KEY);
       INSERT OR IGNORE INTO context_schema VALUES(1);
@@ -120,7 +123,7 @@ def db_for(store):
         namespace TEXT, result_id TEXT, packet_id TEXT, payload TEXT,
         payload_hash TEXT, state TEXT, PRIMARY KEY(namespace,result_id));
     ''')
-    if list(db.execute('SELECT version FROM context_schema'))[0][0] != 1:
+    if [r[0] for r in db.execute('SELECT version FROM context_schema')] != [1]:
         db.close()
         raise ValueError('UNSUPPORTED_CONTEXT_SCHEMA')
     return db
@@ -257,9 +260,23 @@ def import_file(store, namespace, source_key, path, operation_id, *, progress=No
         after = os.fstat(stream.fileno())
     current = path.lstat()
     attrs = ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns', 'st_ctime_ns')
+    path_attrs = ('st_dev', 'st_ino', 'st_size', 'st_mtime_ns')
+    # Windows can expose different ctime meanings through fstat and pathname
+    # stat. Compare ctime only between handles; never weaken the byte oracle.
     if (any(getattr(before, a) != getattr(after, a) for a in attrs)
-            or any(getattr(after, a) != getattr(current, a) for a in attrs)
+            or any(getattr(after, a) != getattr(current, a) for a in path_attrs)
             or offset != before.st_size):
+        raise ValueError('SOURCE_DRIFT')
+    verified_hash=hashlib.sha256()
+    with os.fdopen(os.open(path,flags),'rb') as verification:
+        verification_before=os.fstat(verification.fileno())
+        for raw in iter(lambda:verification.read(PART_BYTES),b''):
+            if progress:progress()
+            verified_hash.update(raw)
+        verification_after=os.fstat(verification.fileno())
+    if (any(getattr(after,a)!=getattr(verification_before,a) for a in attrs)
+            or any(getattr(verification_before,a)!=getattr(verification_after,a) for a in attrs)
+            or verified_hash.hexdigest()!=hasher.hexdigest()):
         raise ValueError('SOURCE_DRIFT')
     with view(store, write=True) as db:
         db.execute('BEGIN IMMEDIATE'); ensure_running(db,operation_id,namespace)

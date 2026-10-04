@@ -154,7 +154,7 @@ class LibraryWindow:
             self.connection.verify()
             self.client.verify_backend_bundle()
             command=Path(self.connection.adapter_path).parent/'context_runtime.py'
-            proc=subprocess.run([self.connection.python_path,'-I','-X','utf8',str(command),'--profile',self.connection.profile_path,'work'],env=environment(),capture_output=True,timeout=600,check=False)
+            proc=subprocess.run([self.connection.python_path,'-I','-X','utf8',str(command),'--profile',self.connection.profile_path,'work'],env=environment(),capture_output=True,check=False)
             if proc.returncode:raise DesktopError('CORE_WORKER_FAILED')
             return self.request('OPERATION',{'operation_id':self.ids['operation_id']}) if self.ids['operation_id'] else {'state':'IDLE'}
         self.call(run,self.apply_job)

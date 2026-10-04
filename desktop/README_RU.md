@@ -150,3 +150,18 @@ C:\Python313\python.exe -I -X utf8 "$env:LOCALAPPDATA\ContextLibrary\versions\0.
 внешние результаты сохраняются. Удалите ярлык Start Menu отдельно. Проверка
 доступности, клавиатуры, установок/обновлений и быстродействия на Windows/Dell
 остаётся отдельным обязательным приёмочным этапом.
+
+Фоновый Core не имеет общего таймаута размера источника: окно может закрыться,
+а сохранённое задание продолжает работать. Если процесс действительно потерян,
+сначала остановите/проверьте все worker-процессы. Только после этой проверки:
+
+```powershell
+C:\Python313\python.exe -I -X utf8 "$Backend\context_runtime.py" --profile C:\ContextData\profile.json --id JOB_ID --process-stopped reconcile
+```
+
+Команда проверяет completed local receipt и реальные байты/артефакты. Для
+незавершённых CAPTURE/BUILD_PACKET/PROJECT явно добавьте `--resume-local`:
+возобновляется тот же job/operation ID, только при неизменных grant/build/STOP
+эпохе. Cancelled или старый fenced intent не запускается повторно. Другие
+неопределённые эффекты команда оставляет reconciliation-required. Не ставьте
+`--process-stopped`, пока процесс фактически не проверен.
