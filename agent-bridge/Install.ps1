@@ -18,7 +18,7 @@ Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'qualification_adapter.py') -Des
 # Preserve the adapter's sibling layout. Durable access remains opt-in in host-config.json.
 $occContentDestination=Join-Path $occDestination 'content-lab'
 New-Item -ItemType Directory -Path $occContentDestination | Out-Null
-foreach($occFile in @('native_adapter.py','automation_core.py','content_lab.py','context_review.py','repo_context.py','repo_source.py','repo_manifest.py','review_report.py','context_handoff.py')){
+foreach($occFile in @('native_adapter.py','automation_core.py','content_lab.py','context_review.py','repo_context.py','repo_source.py','repo_artifacts.py','repo_archive_input.py','repo_manifest.py','repo_archive.py','repo_scan.py','review_report.py','context_handoff.py')){
  Copy-Item -LiteralPath (Join-Path (Join-Path $PSScriptRoot '../content-lab') $occFile) -Destination $occContentDestination
 }
 foreach($occPackage in @('occ_v4','occ_v5')){
