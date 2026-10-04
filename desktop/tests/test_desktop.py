@@ -483,5 +483,28 @@ class ManifestTests(unittest.TestCase):
                            self.client.connection.expected_adapter_sha256, self.client.identity)
 
 
+class ResearchReadSchemaTests(unittest.TestCase):
+    def test_complete_pages_and_snapshot_type_fences(self):
+        from desktop.client import validate_research, validate_request
+        import copy
+        request={'type':'durable.research.jobs','offset':20,'limit':20,'snapshot':'a'*64}
+        row={'id':'b'*32,'state':'SUCCEEDED','domain_status':'MODEL_REPLAY_COMPLETED',
+             'records':47,'useful_calls':45,'receipt_sha256':'c'*64,'qualified':False}
+        page={'schema':'occ.research-jobs-page.v1','snapshot':'a'*64,'offset':20,
+              'total':21,'items':[row],'next_offset':None}
+        validate_request(request);validate_research(page,request)
+        for mutation in ('snapshot','qualified','count','cursor','status','duplicate'):
+            bad=copy.deepcopy(page)
+            if mutation=='snapshot':bad['snapshot']='d'*64
+            if mutation=='qualified':bad['items'][0]['qualified']=True
+            if mutation=='count':bad['items'][0]['records']=True
+            if mutation=='cursor':bad['next_offset']=21
+            if mutation=='status':bad['items'][0]['domain_status']='LIVE_QUALIFIED'
+            if mutation=='duplicate':bad['items']*=2;bad['total']=22
+            with self.assertRaises(DesktopError):validate_research(bad,request)
+        for bad in (request|{'limit':True},request|{'offset':-1},request|{'snapshot':'bad'},request|{'argv':['anything']}):
+            with self.assertRaises(DesktopError):validate_request(bad)
+
+
 if __name__ == '__main__':
     unittest.main()

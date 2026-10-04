@@ -19,6 +19,7 @@ from desktop.preflight import check
 from desktop.state import Fence
 
 MESSAGES = {
+    'RESEARCH_PAGE_SNAPSHOT_CHANGED': 'Список исследований изменился. Переподключитесь, чтобы прочитать его заново.',
     'DESKTOP_SETUP_REQUIRED': 'Нужны установленный backend, профиль и готовая библиотека. Откройте настройки.',
     'DESKTOP_RUNTIME_TK_REQUIRED': 'Выберите Python 3.11+ с установленным Tkinter.',
     'DESKTOP_PROTOCOL_UNAVAILABLE': 'Backend не поддерживает Desktop. Обновите установленный backend и переподключитесь.',
@@ -48,6 +49,8 @@ class App:
         self.connection = None
         self.report = None
         self.context = None
+        self.research_offset = 0
+        self.research_snapshot = None
         self.scan_run = None
         self.items = []
         self.events = queue.Queue(maxsize=8)
@@ -73,6 +76,8 @@ class App:
         ttk.Button(toolbar, text='Настройки', command=self.configure).pack(side='left')
         ttk.Button(toolbar, text='Подключиться', command=self.connect).pack(side='left', padx=6)
         ttk.Button(toolbar, text='Отмена (Esc)', command=self.cancel).pack(side='left')
+        self.research_button = ttk.Button(toolbar, text='Исследования', command=self.read_research, state='disabled')
+        self.research_button.pack(side='left', padx=6)
         ttk.Button(toolbar, text='Диагностика', command=self.diagnostics).pack(side='right')
         ttk.Label(body, textvariable=self.status, wraplength=940).grid(row=1, column=0, columnspan=3, sticky='w', pady=(8, 3))
         ttk.Label(body, textvariable=self.location, wraplength=940).grid(row=2, column=0, columnspan=3, sticky='w')
@@ -156,6 +161,7 @@ class App:
     def update_controls(self):
         ready = self.client is not None and self.client.identity is not None and not self.closing
         idle = ready and not self.busy()
+        self.research_button.configure(state='normal' if idle and 'durable.research.jobs' in self.client.info['capabilities'] else 'disabled')
         self.search_button.configure(state='normal' if idle else 'disabled')
         self.context_button.configure(state='normal' if idle and self.results.curselection() else 'disabled')
         self.save_button.configure(state='normal' if idle and self.context is not None else 'disabled')
@@ -394,6 +400,8 @@ class App:
             return report, hello, repos
 
         def connected(value):
+            self.research_offset = 0
+            self.research_snapshot = None
             self.report, hello, repos = value
             info = hello['result']['info']
             self.ns_box.configure(values=info['namespaces'])
@@ -419,6 +427,27 @@ class App:
                 self.results.insert('end', item['source_key'] + ' — ' + item['snippet'].replace('\n', ' '))
             self.status.set(f'Лучшие совпадения: {len(self.items)} (TOP_MATCHES_BOUNDED).')
         self.start('durable.search', lambda _cancel, _progress: client.request(request), apply)
+
+    def read_research(self):
+        if self.client is None or self.client.identity is None:
+            return
+        client=self.client
+        request={'type':'durable.research.jobs','offset':self.research_offset,'limit':20}
+        if self.research_snapshot is not None:
+            request['snapshot']=self.research_snapshot
+        self.clear_context()
+        def apply(reply):
+            page=reply['result']['research']
+            lines=['Офлайн-исследования. Рыночная и аппаратная квалификация не подтверждена.']
+            for row in page['items']:
+                lines.append(f"{row['id']} — {row['state']} / {row['domain_status'] or 'ожидает'}; записей {row['records']}, вызовов {row['useful_calls']}")
+            self.preview.configure(state='normal')
+            self.preview.delete('1.0','end');self.preview.insert('1.0','\n'.join(lines))
+            self.preview.configure(state='disabled')
+            self.research_offset=page['next_offset'] or 0
+            self.research_snapshot=page['snapshot'] if page['next_offset'] is not None else None
+            self.status.set(f"Исследования {page['offset']+1 if page['items'] else 0}–{page['offset']+len(page['items'])} из {page['total']}. «Исследования» — следующая страница.")
+        self.start('durable.research.jobs',lambda _cancel,_progress:client.request(request),apply)
 
     def read_context(self):
         indexes = self.results.curselection()
