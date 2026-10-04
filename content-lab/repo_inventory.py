@@ -136,6 +136,21 @@ class Run:
             raise InventoryError('REPO_INVENTORY_STREAM_MALFORMED') from exc
         raise InventoryError('REPO_INVENTORY_STORE_FAILED') from exc
 
+    def publication_storage(self, store, directory, baseline_sidecars, *, enforce=True):
+        if enforce:
+            self.check()
+        stage_bytes = sum(p.stat().st_size for p in directory.iterdir() if p.is_file())
+        names = ['content.sqlite3-wal', 'content.sqlite3-shm', 'content.sqlite3-journal']
+        sidecars = sum((store / name).stat().st_size for name in names if (store / name).is_file())
+        total = stage_bytes + sidecars + (store / 'content.sqlite3').stat().st_size
+        self.metrics['storage_peak_bytes'] = max(self.metrics.get('storage_peak_bytes', 0), total)
+        self.metrics['target_sidecar_peak_bytes'] = max(self.metrics.get('target_sidecar_peak_bytes', 0), sidecars)
+        # Reserve the target's bounded dirty cache before commit. The quota is
+        # for temporary stage/sidecar growth, independent of existing corpus.
+        needed = stage_bytes + max(0, sidecars - baseline_sidecars) + 2 * self.budget['stage_cache_bytes']
+        if enforce and self.budget['stage_max_bytes'] is not None and needed > self.budget['stage_max_bytes']:
+            raise InventoryError('REPO_INVENTORY_STAGE_LIMIT')
+
 
 def git_environment():
     env = {k: v for k, v in os.environ.items()
@@ -415,7 +430,7 @@ def valid_existing(db, stage, snap, alias, profile, head, tree, total, run):
             raise InventoryError('CONTEXT_INCOMPLETE')
 
 
-def publish(store, alias, profile, root, head, tree, stage_path, total, run, existing_db=None):
+def publish(store, alias, profile, root, head, tree, stage_path, total, run, existing_db=None, retry_size_errors=False):
     snapshot_id = digest({'alias': alias, 'profile': profile, 'head': head, 'tree': tree})
     owned = existing_db is None
     db = repo.db_for(store, configure=run.configure) if owned else existing_db
@@ -423,6 +438,7 @@ def publish(store, alias, profile, root, head, tree, stage_path, total, run, exi
     try:
         stage = sqlite3.connect(stage_path)
         run.configure(stage)
+        baseline_sidecars = sum(p.stat().st_size for p in (store / 'content.sqlite3-wal', store / 'content.sqlite3-shm', store / 'content.sqlite3-journal') if p.is_file())
         if not owned and not db.in_transaction:
             raise InventoryError('REPO_INVENTORY_TRANSACTION_REQUIRED')
         with db if owned else nullcontext(db):
@@ -445,8 +461,9 @@ def publish(store, alias, profile, root, head, tree, stage_path, total, run, exi
                 batch, byte_size = [], 0
                 def flush():
                     if batch:
-                        run.check()
+                        run.publication_storage(store, stage_path.parent, baseline_sidecars)
                         db.executemany('INSERT INTO repo_entries(snapshot_id,' + ENTRY_COLUMNS + ') VALUES (?,?,?,?,?,?,?,?,?)', batch)
+                        run.publication_storage(store, stage_path.parent, baseline_sidecars)
                         batch.clear()
                 for row in stage.execute('SELECT ' + ENTRY_COLUMNS + ' FROM entries ORDER BY ordinal'):
                     size = len(row[1].encode('utf-8')) + 256
@@ -458,13 +475,23 @@ def publish(store, alias, profile, root, head, tree, stage_path, total, run, exi
                 flush()
                 valid_existing(db, stage, db.execute('SELECT * FROM repo_snapshots WHERE id=?', (snapshot_id,)).fetchone(),
                                alias, profile, head, tree, total, run)
+            if retry_size_errors:
+                # PR002's existing capture migration, only for capture starts.
+                # Inventory-only CLI replay never resets captured dispositions.
+                repo.restart_size_errors(db, snapshot_id)
             run.check()
             if control(root, run, 'rev-parse', 'HEAD').decode('ascii').strip() != head:
                 raise InventoryError('SOURCE_DRIFT')
             # Deadline/cancellation interrupts must not interfere with rollback.
             run.check()
+            run.publication_storage(store, stage_path.parent, baseline_sidecars)
             if owned:
                 db.set_progress_handler(None, 0)
+        try:
+            run.publication_storage(store, stage_path.parent, baseline_sidecars, enforce=False)
+        except OSError:
+            # Commit is already known: an observation failure cannot undo it.
+            run.metrics['storage_observation_unavailable'] = True
         return {'schema': 'occ.repo-inventory-receipt.v1', 'state': 'READY',
                 'repository': alias, 'namespace': profile['namespace'], 'snapshotId': snapshot_id,
                 'repoSha': head, 'treeSha': tree, 'total': total, 'inventoryComplete': True,
@@ -483,7 +510,7 @@ def publish(store, alias, profile, root, head, tree, stage_path, total, run, exi
             db.close()
 
 
-def inventory(store, alias, profile, *, budget=None, progress=None, cancel=None, metrics=None, _db=None):
+def inventory(store, alias, profile, *, budget=None, progress=None, cancel=None, metrics=None, _db=None, _retry_size_errors=False):
     run = Run(budget, progress, cancel, metrics)
     directory = None
     keep_stage = False
@@ -507,7 +534,7 @@ def inventory(store, alias, profile, *, budget=None, progress=None, cancel=None,
         store.mkdir(parents=True, exist_ok=True)
         directory = Path(tempfile.mkdtemp(prefix='.occ-inventory-', dir=store))
         stage_path, total = stage_inventory(root, head, width, profile, directory, run)
-        return publish(store, alias, profile, root, head, tree, stage_path, total, run, _db)
+        return publish(store, alias, profile, root, head, tree, stage_path, total, run, _db, _retry_size_errors)
     except InventoryError as exc:
         keep_stage = not exc.process_stopped
         raise

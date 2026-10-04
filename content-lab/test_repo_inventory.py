@@ -12,6 +12,7 @@ import sys
 import tempfile
 import threading
 import time
+import zipfile
 from unittest import TestCase, mock
 
 import repo_context as repo
@@ -415,7 +416,7 @@ class InventoryTests(TestCase):
         def configure(run, db):
             original(run, db)
             filename = db.execute('PRAGMA database_list').fetchone()[2]
-            if filename == str(self.store / 'content.sqlite3'):
+            if Path(filename).resolve() == (self.store / 'content.sqlite3').resolve():
                 pages = db.execute('PRAGMA page_count').fetchone()[0]
                 db.execute('PRAGMA max_page_count=' + str(pages))
         with mock.patch.object(inv.Run, 'configure', new=configure):
@@ -423,3 +424,64 @@ class InventoryTests(TestCase):
                 inv.inventory(self.store, 'sce', self.profile)
         self.assertEqual(before, {t: self.rows(t) for t in before})
         self.assertEqual(list(self.store.glob('.occ-inventory-*')), [])
+
+    def test_pr002_manifest_from_staged_inventory_keeps_all_pages_and_tail(self):
+        import repo_manifest
+        receipt = inv.inventory(self.store, 'sce', self.profile)
+        sid = receipt['snapshotId']
+        cursors = []
+        while not cursors or cursors[-1] < 45:
+            status = repo.scan_page(self.store, 'code', sid, limit=20)
+            cursors.append(status['cursor'])
+        self.assertEqual(cursors, [20, 40, 45])
+        output = self.base / 'manifest'
+        self.assertEqual(repo_manifest.publish(self.store, 'code', sid, 'sce', self.profile, output)['state'], 'PASS')
+        records = [json.loads(line) for line in (output / 'REPO_MANIFEST.jsonl').read_text().splitlines()]
+        self.assertEqual(len(records), 45)
+        self.assertEqual(records[-1]['path'], 'f00000044_.py')
+        validation = json.loads((output / 'VALIDATION.json').read_text())
+        self.assertEqual(validation['state'], 'PASS')
+        self.assertEqual(validation['raw_bytes'], 45)
+        self.assertTrue(repo_manifest.publish(self.store, 'code', sid, 'sce', self.profile, output)['reused'])
+
+    def test_target_journal_reserve_quota_rolls_back_after_completed_stage(self):
+        receipt = inv.inventory(self.store, 'sce', self.profile)
+        repo.scan_page(self.store, 'code', receipt['snapshotId'], limit=100)
+        before = {t: self.rows(t) for t in ('repo_snapshots', 'repo_entries', 'repo_chunks', 'repo_heads')}
+        self.make_tree(5000, padding=210)
+        original, reached_publication = inv.publish, []
+        def publish(*args):
+            reached_publication.append(True)
+            return original(*args)
+        with mock.patch.object(inv, 'publish', side_effect=publish):
+            with self.assertRaisesRegex(inv.InventoryError, 'STAGE_LIMIT'):
+                inv.inventory(self.store, 'sce', self.profile, budget=inv.DEFAULT_BUDGET | {'stage_max_bytes': 11 * 1024 * 1024})
+        self.assertTrue(reached_publication)
+        self.assertEqual(before, {t: self.rows(t) for t in before})
+        self.assertEqual(list(self.store.glob('.occ-inventory-*')), [])
+
+    def test_pr003_verified_zip_from_streamed_inventory_reconstructs_tail(self):
+        import repo_archive
+        import repo_archive_input
+        receipt = inv.inventory(self.store, 'sce', self.profile)
+        sid = receipt['snapshotId']
+        for expected in (20, 40, 45):
+            self.assertEqual(repo.scan_page(self.store, 'code', sid, limit=20)['cursor'], expected)
+        policy = self.base / 'policy.json'
+        policy.write_text(json.dumps({'schema': 'occ.automation-policy.v1', 'money_budget': 0, 'max_parallel': 1}))
+        operator = self.base / 'operator.json'
+        operator.write_text(json.dumps({'schema': 'occ.native-durable-profile.v1', 'store': str(self.store),
+            'policy_file': str(policy), 'namespaces': ['code'], 'templates': {}, 'repositories': {'sce': self.profile}}))
+        directory, output = self.base / 'archive-input', self.base / 'exports'
+        repo_archive_input.write_manifest(self.store, 'sce', self.profile, sid, directory)
+        result = repo_archive.build(operator, 'sce', directory, output)
+        self.assertEqual(result['state'], 'PUBLISHED')
+        self.assertEqual(result['entry_count'], 45)
+        self.assertTrue(result['captured_export_complete'])
+        with zipfile.ZipFile(result['archive_path']) as archive:
+            parts = [json.loads(line) for line in archive.read('PARTS_INDEX.jsonl').splitlines()]
+            self.assertEqual(len(parts), 45)
+            tail = next(p for p in parts if p['path'] == 'f00000044_.py')
+            self.assertEqual(archive.read('parts/' + tail['part_id'] + '.bin'), b'x')
+            self.assertIsNone(archive.testzip())
+        self.assertEqual(repo_archive.build(operator, 'sce', directory, output)['state'], 'PUBLISHED')

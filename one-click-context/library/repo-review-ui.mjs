@@ -28,7 +28,7 @@ export function parseReviewInput(raw,namespace,sessionId=null){
 
 export class RepoReviewSession{
  constructor({durable,onChange=()=>{}}){this.durable=durable;this.onChange=onChange;this.version=0;this.reset();}
- reset(){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;this.version++;this.repositories=[];this.repository=null;this.namespace=null;this.snapshot=null;this.selected=new Set();this.exported=null;this.handoff=null;this.reviews=[];this.review=null;this.reportJob=null;this.busy=false;this.onChange();}
+ reset(){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;this.version++;this.manifestVersion=(this.manifestVersion||0)+1;this.manifest=null;this.manifestHistory=[];this.repositories=[];this.repository=null;this.namespace=null;this.snapshot=null;this.selected=new Set();this.exported=null;this.handoff=null;this.reviews=[];this.review=null;this.reportJob=null;this.busy=false;this.onChange();}
  invalidate(){this.version++;this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.onChange();}
  async call(type,args={}){return this.durable.request(type,args);}
  async loadRepositories(){
@@ -37,9 +37,25 @@ export class RepoReviewSession{
   if(!Array.isArray(d.repositories)||d.repositories.length>20||d.repositories.some(r=>typeof r.repository!=='string'||typeof r.namespace!=='string'))throw Error('REPO_RESULT_SCHEMA');
   this.repositories=d.repositories;this.onChange();return d.repositories;
  }
- choose(alias){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;const repo=this.repositories.find(r=>r.repository===alias);if(!repo)throw Error('REPO_OUTSIDE_OPERATOR_SCOPE');this.version++;this.repository=alias;this.namespace=repo.namespace;this.snapshot=null;this.selected.clear();this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.reviews=[];this.onChange();}
+ choose(alias){this.stopScanPump();this.run=null;this.scanIntent=null;this.scanError=null;this.scanControlPending=null;const repo=this.repositories.find(r=>r.repository===alias);if(!repo)throw Error('REPO_OUTSIDE_OPERATOR_SCOPE');this.version++;this.manifestVersion++;this.manifest=null;this.manifestHistory=[];this.repository=alias;this.namespace=repo.namespace;this.snapshot=null;this.selected.clear();this.exported=null;this.handoff=null;this.reportJob=null;this.review=null;this.reviews=[];this.onChange();}
  select(path,checked){if(!this.snapshot?.files.some(f=>f.path===path&&f.state==='INDEXED'))throw Error('REPO_PATH_OUTSIDE_SNAPSHOT');if(checked&&this.selected.size>=10&&!this.selected.has(path))throw Error('REPO_SELECTION_LIMIT');checked?this.selected.add(path):this.selected.delete(path);this.invalidate();}
- acceptSnapshot(s){if(s?.schema!=='occ.repo-snapshot.v1'||s.alias!==this.repository||s.namespace!==this.namespace||!HASH.test(s.snapshot_id)||!Array.isArray(s.files)||!Number.isInteger(s.cursor)||!Number.isInteger(s.total)||s.cursor<0||s.cursor>s.total)throw Error('REPO_RESULT_SCHEMA');this.snapshot=s;this.exported=null;this.handoff=null;this.review=null;this.onChange();return s;}
+ acceptSnapshot(s){if(s?.schema!=='occ.repo-snapshot.v1'||s.alias!==this.repository||s.namespace!==this.namespace||!HASH.test(s.snapshot_id)||!Array.isArray(s.files)||!Number.isInteger(s.cursor)||!Number.isInteger(s.total)||s.cursor<0||s.cursor>s.total)throw Error('REPO_RESULT_SCHEMA');if(s.snapshot_id!==this.snapshot?.snapshot_id){this.manifestVersion++;this.manifest=null;this.manifestHistory=[];}this.snapshot=s;this.exported=null;this.handoff=null;this.review=null;this.onChange();return s;}
+ async manifestPage(action='INFO',offset=0,fileOrdinal=null,{back=false}={}){
+  if(this.snapshot?.state!=='COMPLETE')throw Error('CONTEXT_INCOMPLETE');
+  if(!['INFO','ENTRIES','PARTS'].includes(action)||!Number.isSafeInteger(offset)||offset<0||fileOrdinal!==null&&(!Number.isSafeInteger(fileOrdinal)||fileOrdinal<0||action!=='PARTS'))throw Error('MANIFEST_QUERY_REQUIRED');
+  const version=this.version,queryVersion=++this.manifestVersion,sid=this.snapshot.snapshot_id;
+  const args={repository:this.repository,snapshotId:sid,action,...(action==='INFO'?{}:{offset,limit:20}),...(fileOrdinal===null?{}:{fileOrdinal})};
+  const d=await this.call('durable.repo.manifest',args);
+  if(version!==this.version||queryVersion!==this.manifestVersion||sid!==this.snapshot?.snapshot_id)throw Error('STALE_MANIFEST_REPLY');
+  const m=d.manifest;
+  if(m?.schema!=='occ.repo-manifest-view.v1'||!HASH.test(m.batch_id)||m.binding?.snapshot_id!==sid||m.binding.repository!==this.repository||m.binding.namespace!==this.namespace||m.scope?.action!==action||m.scope.file_ordinal!==fileOrdinal||m.offset!==offset||!Number.isSafeInteger(m.total)||m.total<0||!Array.isArray(m.rows)||m.rows.length>20||m.rows.length>Math.max(0,m.total-offset)||m.nextOffset!==(offset+m.rows.length<m.total?offset+m.rows.length:null)||m.nextOffset!==null&&m.nextOffset<=offset||m.rows.some((r,i)=>r.snapshot_id!==sid||r.schema!==(action==='ENTRIES'?'occ.repo-entry-manifest.v1':'occ.repo-part-index.v1')||typeof r.path!=='string'||!Number.isSafeInteger(action==='ENTRIES'?r.ordinal:r.file_ordinal)||action==='ENTRIES'&&r.ordinal!==offset+i||action==='PARTS'&&(!HASH.test(r.part_id)||!Number.isSafeInteger(r.source_start)||!Number.isSafeInteger(r.source_end)||r.source_start<0||r.source_end<r.source_start||fileOrdinal!==null&&r.file_ordinal!==fileOrdinal)))throw Error('MANIFEST_RESULT_SCHEMA');
+  const previous=this.manifest;
+  if(previous?.scope.action===action&&previous.scope.file_ordinal===fileOrdinal&&previous.binding.snapshot_id===sid){if(back)this.manifestHistory.pop();else if(previous.offset!==offset)this.manifestHistory.push(previous.offset);}else this.manifestHistory=[];
+  this.manifest=m;this.onChange();return m;
+ }
+ async manifestNext(){const m=this.manifest;if(m?.nextOffset==null)throw Error('MANIFEST_END');return this.manifestPage(m.scope.action,m.nextOffset,m.scope.file_ordinal);}
+ async manifestBack(){const m=this.manifest;if(!m||!this.manifestHistory.length)throw Error('MANIFEST_START');return this.manifestPage(m.scope.action,this.manifestHistory.at(-1),m.scope.file_ordinal,{back:true});}
+ async manifestSource(part){if(!this.manifest?.rows.includes(part)||part.schema!=='occ.repo-part-index.v1')throw Error('REPO_PATH_OUTSIDE_SNAPSHOT');await this.page(part.file_ordinal);return this.manifestPage('ENTRIES',part.file_ordinal);}
  async scan({fresh=false}={}){
   if(!this.repository)throw Error('REPO_SELECTION_REQUIRED');
   const version=++this.version;
@@ -214,6 +230,20 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
   const s=state.snapshot;
   $('repo-progress').textContent=s?`${state.scanControlPending||state.run?.state||s.state}: обработано ${state.run?.processed??(s.total-(s.counts?.PENDING||0))}/${s.total} · cursor ${s.cursor}/${s.total} · ${s.repo_sha} · ${JSON.stringify(s.counts)}${state.scanError?' · '+state.scanError:''}`:'Выберите настроенный репозиторий.';
   if($('repo-inventory-details'))$('repo-inventory-details').textContent=s?JSON.stringify({ledger_entries:s.accounted,processed:s.total-(s.counts?.PENDING||0),pending:s.counts?.PENDING||0,total:s.total,roundtrip:s.roundtrip,changes:s.changes,ai_delivery:'NOT_PERFORMED'},null,2):'';
+  for(const id of ['repo-manifest-info','repo-manifest-entries','repo-manifest-parts'])if($(id))$(id).disabled=state.busy||!durable.can('durable.repo.manifest')||s?.state!=='COMPLETE';
+  if($('repo-manifest-next'))$('repo-manifest-next').disabled=state.busy||state.manifest?.nextOffset==null;
+  if($('repo-manifest-prev'))$('repo-manifest-prev').disabled=state.busy||!state.manifestHistory.length;
+  if($('repo-manifest-summary'))$('repo-manifest-summary').textContent=state.manifest?JSON.stringify({...state.manifest,rows:undefined},null,2):'Manifest ещё не открыт.';
+  if($('repo-manifest-rows')){
+   $('repo-manifest-rows').replaceChildren();
+   for(const r of state.manifest?.rows||[]){
+    const row=document.createElement('div');row.className='item';const text=document.createElement('span');
+    text.textContent=r.schema==='occ.repo-entry-manifest.v1'?`${r.ordinal}: ${r.path} · ${r.state} · ${r.chunk_count} частей${r.reason?' · '+r.reason:''}`:`${r.path} · chunk ${r.chunk_ordinal} · bytes [${r.source_start}, ${r.source_end}) · ${r.sha256} · ${r.text_eligible?'text':'raw'}`;row.append(text);
+    const button=document.createElement('button');button.textContent=r.schema==='occ.repo-entry-manifest.v1'?'Части файла':'Открыть исходник';
+    button.disabled=state.busy||r.schema==='occ.repo-entry-manifest.v1'&&r.state!=='INDEXED';
+    button.onclick=e=>{if(e.isTrusted)void act(()=>r.schema==='occ.repo-entry-manifest.v1'?state.manifestPage('PARTS',0,r.ordinal):state.manifestSource(r),'Точный диапазон и исходник получены.');};row.append(button);$('repo-manifest-rows').append(row);
+   }
+  }
   $('repo-files').replaceChildren();
   for(const f of s?.files||[]){
    const row=document.createElement('label');row.className='item';const check=document.createElement('input');check.type='checkbox';check.disabled=f.state!=='INDEXED';check.checked=state.selected.has(f.path);
@@ -254,6 +284,9 @@ export function attachRepoReviewView({document=globalThis.document,session:durab
  };
  $('repo-next').onclick=e=>{if(e.isTrusted)void act(()=>state.page(state.snapshot.next_offset),'Следующая страница файлов.');};
  $('repo-prev').onclick=e=>{if(e.isTrusted)void act(()=>state.page(Math.max(0,state.snapshot.offset-20)),'Предыдущая страница файлов.');};
+ for(const [id,action] of [['repo-manifest-info','INFO'],['repo-manifest-entries','ENTRIES'],['repo-manifest-parts','PARTS']])if($(id))$(id).onclick=e=>{if(e.isTrusted)void act(()=>state.manifestPage(action),'Manifest получен; глобальная проверка байтов выполняется отдельным локальным экспортом.');};
+ if($('repo-manifest-next'))$('repo-manifest-next').onclick=e=>{if(e.isTrusted)void act(()=>state.manifestNext(),'Следующая страница manifest.');};
+ if($('repo-manifest-prev'))$('repo-manifest-prev').onclick=e=>{if(e.isTrusted)void act(()=>state.manifestBack(),'Предыдущая страница manifest.');};
  for(const id of ['repo-goal','repo-scope','repo-acceptance'])$(id).oninput=()=>state.invalidate();
  $('repo-export').onclick=e=>{if(e.isTrusted)void act(()=>state.export($('repo-goal').value,$('repo-scope').value,$('repo-acceptance').value.split('\n').map(x=>x.trim()).filter(Boolean)),'Запрос и review session сохранены. Проверьте coverage и пропуски перед передачей в AI.');};
  if($('repo-export-next'))$('repo-export-next').onclick=e=>{if(e.isTrusted&&state.exported?.document?.selection?.next_source_offset!=null){const offset=state.exported.document.selection.next_source_offset;void act(()=>state.export($('repo-goal').value,$('repo-scope').value,$('repo-acceptance').value.split('\n').map(x=>x.trim()).filter(Boolean),offset),'Следующая часть context экспортирована. Сохраните каждую часть отдельно.');}};

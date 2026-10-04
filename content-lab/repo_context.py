@@ -14,12 +14,14 @@ from pathlib import Path, PurePosixPath
 import queue
 import re
 import subprocess
+import sqlite3
 import tempfile
 import threading
 import time
 
 from automation_core import connection, digest, identifier, strict_int
 from content_lab import _insert_item
+from repo_artifacts import oid_hasher
 from repo_source import CHUNK_BYTES, analyze, partition, partition_stream, import_graph, components
 
 AST_WINDOW_BYTES = 2 * 1024 * 1024
@@ -285,7 +287,8 @@ def index_matches_head(root, head):
 
 def _start_scan_db(db, store, alias, profile):
     from repo_inventory import inventory
-    return inventory(store, alias, profile, progress=pulse, _db=db)["snapshotId"]
+    return inventory(store, alias, profile, progress=pulse, _db=db,
+                     _retry_size_errors=True)["snapshotId"]
 
 
 def start_scan(store, alias, profile, *, inventory_budget=None, progress=None):
@@ -293,7 +296,7 @@ def start_scan(store, alias, profile, *, inventory_budget=None, progress=None):
     # makes streaming the default; explicit operator budgets remain opt-in.
     from repo_inventory import inventory
     return inventory(store, alias, profile, budget=inventory_budget,
-                     progress=progress or pulse)['snapshotId']
+                     progress=progress or pulse, _retry_size_errors=True)['snapshotId']
 
 
 class SecretDetector:
@@ -443,6 +446,8 @@ def _publish_snapshot_db(db, snap):
 
 
 def _scan_page_db(db, namespace, snapshot_id, limit):
+    snap = load_snapshot(db, namespace, snapshot_id)
+    restart_size_errors(db, snapshot_id)
     snap = load_snapshot(db, namespace, snapshot_id)
     if not inventory_valid_db(db, snap):
         raise ValueError('CONTEXT_INCOMPLETE')
@@ -667,23 +672,25 @@ def get_snapshot(store, namespace, snapshot_id, *, offset=0, limit=20):
 
 def verify_roundtrip_db(db, snap):
     indexed = exact = 0
-    for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? AND state=?', (snap['id'], 'INDEXED')):
+    for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=? AND state=? ORDER BY ordinal', (snap['id'], 'INDEXED')):
         indexed += 1
-        chunks = db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], row['path']))
-        cursor, hasher, valid, chunk_count = 0, hashlib.sha256(), True, 0
-        for chunk in chunks:
-            chunk_count += 1
+        cursor, count, hasher, valid = 0, 0, hashlib.sha256(), True
+        git_hash = oid_hasher(row['oid'], row['size'])
+        for chunk in db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], row['path'])):
             pulse()
-            valid = valid and chunk['byte_start'] == cursor and chunk['byte_end'] - chunk['byte_start'] == len(chunk['raw'])
+            valid = valid and chunk['ordinal'] == count and chunk['byte_start'] == cursor and chunk['byte_end'] - cursor == len(chunk['raw'])
+            valid = valid and (len(chunk['raw']) > 0 or row['size'] == 0 and count == 0)
             valid = valid and chunk['revision'] == digest([chunk['logical_id'], row['file_hash'], sha(chunk['raw']), chunk['byte_start'], chunk['byte_end']])
             hasher.update(chunk['raw'])
-            cursor = chunk['byte_end']
-        exact += int(valid and chunk_count > 0 and cursor == row['size'] and hasher.hexdigest() == row['file_hash'])
+            git_hash.update(chunk['raw'])
+            cursor, count = chunk['byte_end'], count + 1
+        exact += int(valid and count > 0 and cursor == row['size'] and hasher.hexdigest() == row['file_hash'] and git_hash.hexdigest() == row['oid'])
     accounted = db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=?', (snap['id'],)).fetchone()[0]
     gaps = db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=? AND state!=?', (snap['id'], 'INDEXED')).fetchone()[0]
+    orphans = db.execute("SELECT count(*) FROM repo_chunks c LEFT JOIN repo_entries e ON e.snapshot_id=c.snapshot_id AND e.path=c.path WHERE c.snapshot_id=? AND (e.path IS NULL OR e.state!='INDEXED')", (snap['id'],)).fetchone()[0]
     return {'indexed': indexed, 'exact': exact, 'accounted': accounted,
-            'exact_for_indexed': exact == indexed and accounted == snap['total'],
-            'all_tracked_bytes_exportable': gaps == 0 and accounted == snap['total'] and exact == indexed}
+            'exact_for_indexed': exact == indexed and accounted == snap['total'] and orphans == 0,
+            'all_tracked_bytes_exportable': gaps == 0 and accounted == snap['total'] and exact == indexed and orphans == 0}
 
 
 def snapshot_changes(db, snap):
@@ -893,3 +900,59 @@ def export_request(store, namespace, snapshot_id, paths, goal, scope, acceptance
             'token_count': None, 'token_upper_bound': len(raw),
             'budget_method': 'UTF-8 bytes; conservative bound for byte-based tokenizers, not exact tokens',
             'execution_authorized': False}
+
+
+def restart_size_errors(db, snapshot_id):
+    """Upgrade old size-rejected entries when the operator resumes their scan."""
+    first = db.execute("SELECT min(ordinal) FROM repo_entries WHERE snapshot_id=? AND state='ERROR' AND reason='FILE_TOO_LARGE'", (snapshot_id,)).fetchone()[0]
+    if first is not None:
+        db.execute("UPDATE repo_entries SET state='PENDING',reason=NULL WHERE snapshot_id=? AND state='ERROR' AND reason='FILE_TOO_LARGE'", (snapshot_id,))
+        db.execute('UPDATE repo_snapshots SET cursor=min(cursor,?) WHERE id=?', (first, snapshot_id))
+
+
+def main(argv=None):
+    """Explicit operator capture for workloads longer than a native request."""
+    import argparse
+    from native_adapter import operator_profile
+    parser = argparse.ArgumentParser(description='Capture an entire pinned Git repository into Content Lab.')
+    parser.add_argument('--profile', required=True, type=Path)
+    parser.add_argument('--repository', required=True)
+    parser.add_argument('--snapshot')
+    args = parser.parse_args(argv)
+    try:
+        if not args.profile.is_absolute():
+            raise ValueError('DURABLE_ABSOLUTE_OPERATOR_PATH_REQUIRED')
+        profile, _ = operator_profile(args.profile)
+        alias = identifier(args.repository)
+        source = profile.get('repositories', {}).get(alias)
+        if source is None:
+            raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+        store = Path(profile['store'])
+        sid = args.snapshot or start_scan(store, alias, source)
+        db = db_for(store)
+        try:
+            snap = load_snapshot(db, source['namespace'], sid)
+            if snap['alias'] != alias or json.loads(snap['profile']) != source:
+                raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+            with db:
+                restart_size_errors(db, sid)
+        finally:
+            db.close()
+        result = get_snapshot(store, source['namespace'], sid)
+        while result['state'] == 'PENDING':
+            result = scan_page(store, source['namespace'], sid)
+            print(json.dumps({k: result[k] for k in ('snapshot_id', 'state', 'cursor', 'total', 'counts')}), flush=True)
+        if result['state'] != 'COMPLETE':
+            raise ValueError('CONTEXT_CORRUPT')
+        print(json.dumps({'snapshot_id': sid, 'state': 'COMPLETE', 'cursor': result['cursor'],
+                          'total': result['total'], 'roundtrip': result['roundtrip']}))
+        return 0
+    except (OSError, ValueError, sqlite3.Error) as exc:
+        code = str(exc) if re.fullmatch(r'[A-Z_]{1,100}', str(exc)) else 'REPO_CAPTURE_FAILED'
+        print(json.dumps({'state': 'FAILED', 'error': code}))
+        return 1
+
+
+if __name__ == '__main__':
+    import sys
+    sys.exit(main())

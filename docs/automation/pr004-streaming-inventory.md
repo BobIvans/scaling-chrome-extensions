@@ -37,6 +37,8 @@ CLI stdout — один compact `occ.repo-inventory-receipt.v1`, schema в `pr00
 READY возвращает snapshotId/head/tree/total и inventoryComplete=true.
 Новый snapshot имеет cursor=0, captureComplete=false; reused snapshot сохраняет
 capture state, а captureComplete=null явно оставляет byte proof прежнему owner.
+При запуске capture start_scan/scanRun используют существующую PR002 migration
+restart_size_errors для повторения старых FILE_TOO_LARGE; inventory CLI её не выполняет.
 Далее `durable.repo.scan` с этим snapshotId либо whole-repo START/STEP
 продолжают capture; UI Pause/Continue/Stop остаются частью PR001.
 
@@ -53,7 +55,7 @@ capture state, а captureComplete=null явно оставляет byte proof п
   backpressure; stderr tail и весь diagnostic budget ограничены. Reader
   exceptions и malformed/unterminated/duplicate records не дают успеха.
 - Private SQLite stage имеет уникальные paths/ordinals, bounded cache/batches,
-  optional quota. Независимый readback сверяет каждую projection и original
+  optional quota с reserve для target WAL/journal и dirty cache. Независимый readback сверяет каждую projection и original
   record с точным SHA256 NUL stream. Stage — disposable data, не metadata owner.
 - После EOF/reap публикуются snapshot и все entries одной transaction в
   `content.sqlite3`; перед публикацией повторно проверяется HEAD. Для scanRun
@@ -87,14 +89,20 @@ Cold означает первый новый процесс без eviction OS 
 процесс на том же fixture/store с validation/reuse. Linux worker `getrusage`
 измеряет application и owned Git child peaks отдельно. В receipt сохранены
 stdout bytes/hash, exact tail/ordinal, stage peak на batch checkpoints, duration,
-main DB size и версии. На 160k application peak около 20 MiB; рост с 40k около
-0.4 MiB. Git child peak около 40 MiB, stage peak около 167 MiB.
+main DB size, target sidecar peak, суммарный storage peak и версии. На 160k application peak около 20 MiB; рост с 40k около
+1 MiB. Git child peak около 40 MiB, stage peak около 167 MiB.
+Пик stage + target DB + WAL/journal на cold 160k — около 443 MiB;
+это полный наблюдённый storage peak данного synthetic corpus.
 Подробные числа: `runs/PR004_INVENTORY_RESOURCES_2026-10-04.json`.
 
 PR001 уже устранил отдельный 32 MiB reader из Git index binding и добавил Native
 progress. Этот PR их переиспользует; общий LAYA4-003 и 160-task roadmap не
 объявляются завершёнными. Windows CI проверяет portable subprocess logic,
 но installed Dell Windows 11/Chrome/native-host resource receipt остаётся
-NOT_RUN. PR002 manifest и PR003 portable payload ZIP требуют проверки actual
-merged owners, когда эти параллельные PR доступны в main. Форматы/LFS/eligibility
+NOT_RUN. PR002 #39 также вошёл в main и проверен через actual manifest owner: staged
+inventory → capture cursors 20/40/45 → manifest/range-index → deterministic reuse,
+включая tail и восстановление старых FILE_TOO_LARGE. PR003 #40 вошёл в main: отдельный runtime test проходит от staged inventory
+через capture 20/40/45 и immutable archive manifest до verified ZIP64,
+восстановления байтов tail и повторного BUILD. Existing archive crash/resume
+и binary/Unicode/empty payload regressions также проверяются текущими suites. Форматы/LFS/eligibility
 продолжаются отдельно в PR005; новый inventory не объявляет exclusions captured.
