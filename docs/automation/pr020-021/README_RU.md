@@ -43,6 +43,8 @@ python content-lab/product_qualification.py --store /absolute/store reconcile \
 
 Scope JSON содержит ровно `build`, `config`, `dataset`, `environment`. Профиль реального оператора создаётся только после проверки установленного Python, чистого checkout и фактических файлов. Для enqueue/work используются существующие команды `content-lab/automation_core.py`. Полный рабочий пример профиля и policy создаётся integration driver в выбранной внешней папке.
 
+На Windows создавайте owner checkout с `core.autocrlf=false` и исходными LF bytes. Изолированный Core отключает global Git config, поэтому чистота source должна сохраняться без глобального `autocrlf=true`. CI задаёт LF до checkout; source guard остаётся обязательным и не игнорирует изменения.
+
 ## Открытые части всей стратегии
 
 | Workstream | Этот срез | Ещё нужны |

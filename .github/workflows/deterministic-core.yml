@@ -37,6 +37,9 @@ jobs:
     # Full real-Git/SQLite scale fixtures take longer on Windows/NTFS.
     timeout-minutes: 20
     steps:
+      - name: Keep exact checkout bytes independent of Windows Git defaults
+        shell: bash
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -83,6 +86,9 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 20
     steps:
+      - name: Keep exact checkout bytes independent of Windows Git defaults
+        shell: bash
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
