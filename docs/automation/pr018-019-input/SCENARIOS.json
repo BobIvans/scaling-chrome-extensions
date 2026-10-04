@@ -1,0 +1,864 @@
+{
+  "count": 66,
+  "status": "APPLICATION_TEST_DESIGN_NOT_EXECUTED",
+  "scenarios": [
+    {
+      "case_id": "WS-023-T01",
+      "workstream_id": "WS-023",
+      "name": "false_ai_success",
+      "given_when": "AI claims merged, no artifacts",
+      "expected": "ASSERTION_ONLY; no merge/install receipt",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T02",
+      "workstream_id": "WS-023",
+      "name": "base_drift",
+      "given_when": "base changes after worker tests",
+      "expected": "STALE; integrate/revalidate exact final tree",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T03",
+      "workstream_id": "WS-023",
+      "name": "head_drift",
+      "given_when": "PR head changes after review",
+      "expected": "prior head evidence inapplicable until fresh check",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T04",
+      "workstream_id": "WS-023",
+      "name": "merge_commit",
+      "given_when": "true merge with different result SHA",
+      "expected": "mapping+final tree verified without head equality shortcut",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T05",
+      "workstream_id": "WS-023",
+      "name": "squash",
+      "given_when": "squash maps changes to new commit",
+      "expected": "final diff and reachability checked",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T06",
+      "workstream_id": "WS-023",
+      "name": "rebase",
+      "given_when": "rebase changes commit identities",
+      "expected": "result chain/tree mapping and fresh applicability",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T07",
+      "workstream_id": "WS-023",
+      "name": "manual_commit",
+      "given_when": "no PR, user provides allowed commit",
+      "expected": "manual origin observed; no forced PR prerequisite",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T08",
+      "workstream_id": "WS-023",
+      "name": "wrong_repo",
+      "given_when": "valid PR in wrong repository/account",
+      "expected": "scope mismatch; no effect",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T09",
+      "workstream_id": "WS-023",
+      "name": "duplicate_observation",
+      "given_when": "same/reordered webhook delivered repeatedly",
+      "expected": "one effective state revision; no duplicate merge/install",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T10",
+      "workstream_id": "WS-023",
+      "name": "offline_observer",
+      "given_when": "provider unavailable",
+      "expected": "PENDING+backoff+budget; no invented merge",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T11",
+      "workstream_id": "WS-023",
+      "name": "post_merge_revert",
+      "given_when": "merged change later reverted",
+      "expected": "historical receipt retained; current coverage invalidated",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T12",
+      "workstream_id": "WS-023",
+      "name": "final_ci_mismatch",
+      "given_when": "CI green on worker head only",
+      "expected": "final-tree gate stays OPEN",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T13",
+      "workstream_id": "WS-023",
+      "name": "worktree_overlap",
+      "given_when": "two patches overlap actual paths",
+      "expected": "single integrator; conflict task; combined tests",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-023-T14",
+      "workstream_id": "WS-023",
+      "name": "unregistered_verifier",
+      "given_when": "AI suggests shell argv",
+      "expected": "registered template gate rejects arbitrary command",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T01",
+      "workstream_id": "WS-024",
+      "name": "tag_spoof",
+      "given_when": "target_commitish differs from actual tag",
+      "expected": "resolve tag; reject mismatched candidate",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T02",
+      "workstream_id": "WS-024",
+      "name": "tampered_asset",
+      "given_when": "download bytes differ from manifest",
+      "expected": "reject candidate; old active digest unchanged",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T03",
+      "workstream_id": "WS-024",
+      "name": "descendant_release",
+      "given_when": "release from newer source revision",
+      "expected": "qualify actual release revision and added diff",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T04",
+      "workstream_id": "WS-024",
+      "name": "unsafe_archive",
+      "given_when": "traversal/symlink escapes staging",
+      "expected": "reject without unrelated path write",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T05",
+      "workstream_id": "WS-024",
+      "name": "disk_pressure",
+      "given_when": "staging exceeds disk budget",
+      "expected": "defer with explicit blocker; preserve corpus/jobs",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T06",
+      "workstream_id": "WS-024",
+      "name": "interrupted_download",
+      "given_when": "kill midway through acquisition",
+      "expected": "resume verified parts/new staging, active unchanged",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T07",
+      "workstream_id": "WS-024",
+      "name": "failed_migration",
+      "given_when": "rehearsal raises after partial copied DB write",
+      "expected": "production data unaffected; capsule retained",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T08",
+      "workstream_id": "WS-024",
+      "name": "post_switch_data",
+      "given_when": "new records written then rollback requested",
+      "expected": "proved data plan preserves/reconciles records or RECOVERY_REQUIRED",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T09",
+      "workstream_id": "WS-024",
+      "name": "active_job_update",
+      "given_when": "update requested while job writing",
+      "expected": "quiescence/checkpoint/defer; no mid-operation component replacement",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T10",
+      "workstream_id": "WS-024",
+      "name": "power_before_switch",
+      "given_when": "kill after durable activation intent before pointer switch",
+      "expected": "observe old active state and recover same attempt",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T11",
+      "workstream_id": "WS-024",
+      "name": "power_after_switch",
+      "given_when": "kill after pointer switch before receipt",
+      "expected": "observe actual new digest; no second install",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T12",
+      "workstream_id": "WS-024",
+      "name": "canary_failure",
+      "given_when": "functional device trial fails",
+      "expected": "qualified rollback+device observation; usable false",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T13",
+      "workstream_id": "WS-024",
+      "name": "updater_self_change",
+      "given_when": "candidate changes evaluator/grants",
+      "expected": "separate qualification; no self-authorized expansion",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T14",
+      "workstream_id": "WS-024",
+      "name": "install_unknown",
+      "given_when": "lost activation response",
+      "expected": "reconcile build/process/data before retry",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T15",
+      "workstream_id": "WS-024",
+      "name": "device_binding_drift",
+      "given_when": "different OS/profile/device/build after canary",
+      "expected": "affected usable revoked/requalification required",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-024-T16",
+      "workstream_id": "WS-024",
+      "name": "predecessor_missing",
+      "given_when": "unattended install lacks predecessor/STOP proof",
+      "expected": "block runtime; bounded initial test session only with baseline gates",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T01",
+      "workstream_id": "WS-025",
+      "name": "dst_gap",
+      "given_when": "2026-03-29 Europe/Riga 03:30",
+      "expected": "SKIP or explicit +1h SHIFT_FORWARD; no invented slot",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T02",
+      "workstream_id": "WS-025",
+      "name": "dst_fold",
+      "given_when": "2026-10-25 Europe/Riga 03:30 fold 0/1",
+      "expected": "FIRST/SECOND/BOTH deterministic, unique resolved UTC IDs",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T03",
+      "workstream_id": "WS-025",
+      "name": "tick_race",
+      "given_when": "two tick/wake workers race same slot",
+      "expected": "one durable occurrence/job",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T04",
+      "workstream_id": "WS-025",
+      "name": "sleep_catchup",
+      "given_when": "device sleeps across many schedule slots",
+      "expected": "SKIP/LATEST/BOUNDED; missed ledger; no burst fanout",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T05",
+      "workstream_id": "WS-025",
+      "name": "backward_clock",
+      "given_when": "clock rolled back across admitted slot",
+      "expected": "cursor monotonic; no duplicate",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T06",
+      "workstream_id": "WS-025",
+      "name": "schedule_edit",
+      "given_when": "new revision while old queued/running jobs exist",
+      "expected": "historical records retained; explicit supersede/keep rules",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T07",
+      "workstream_id": "WS-025",
+      "name": "cancel_restart",
+      "given_when": "cancelled intent then restart",
+      "expected": "same revision stays cancelled",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T08",
+      "workstream_id": "WS-025",
+      "name": "unknown_resume",
+      "given_when": "possible send/merge unacknowledged",
+      "expected": "reconcile first; no duplicate effect",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T09",
+      "workstream_id": "WS-025",
+      "name": "corrupt_checkpoint",
+      "given_when": "invalid hash in checkpoint output",
+      "expected": "failure capsule; safe immutable prep only",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T10",
+      "workstream_id": "WS-025",
+      "name": "price_unknown",
+      "given_when": "unknown provider cost/quota",
+      "expected": "block or conservative configured reserve; not zero",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T11",
+      "workstream_id": "WS-025",
+      "name": "budget_restart",
+      "given_when": "crash with outstanding cost reservation",
+      "expected": "restore/reconcile without double settlement",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-025-T12",
+      "workstream_id": "WS-025",
+      "name": "deadline_retry",
+      "given_when": "failed node hits retries/deadline cap",
+      "expected": "stop/deferred with next evidence",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T01",
+      "workstream_id": "WS-026",
+      "name": "windows_alias",
+      "given_when": "case/UNC/junction/symlink aliases same physical target",
+      "expected": "same canonical resource; exclusive writes",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T02",
+      "workstream_id": "WS-026",
+      "name": "unknown_alias",
+      "given_when": "physical alias resolution fails",
+      "expected": "conservative conflict; no independent write assumption",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T03",
+      "workstream_id": "WS-026",
+      "name": "stale_fence",
+      "given_when": "old worker returns after lease replacement",
+      "expected": "CAS rejects stale commit; artifact kept as unaccepted",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T04",
+      "workstream_id": "WS-026",
+      "name": "atomic_admission",
+      "given_when": "resource available but budget insufficient",
+      "expected": "neither reservation nor lease partially granted",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T05",
+      "workstream_id": "WS-026",
+      "name": "desktop_tabs",
+      "given_when": "two chats mutate focus/clipboard simultaneously",
+      "expected": "single desktop session writer",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T06",
+      "workstream_id": "WS-026",
+      "name": "read_snapshot",
+      "given_when": "two readers pin same immutable source",
+      "expected": "eligible parallel if qualified capacity allows",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T07",
+      "workstream_id": "WS-026",
+      "name": "double_baseline",
+      "given_when": "shared cache/UI baseline repeated across workers",
+      "expected": "baseline counted once, peaks reserved per worker",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T08",
+      "workstream_id": "WS-026",
+      "name": "foreground_stop",
+      "given_when": "all worker slots busy",
+      "expected": "local STOP/UI remains reachable; admissions stop",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T09",
+      "workstream_id": "WS-026",
+      "name": "aging",
+      "given_when": "finite high-priority load delays background",
+      "expected": "background eventually admitted within measured bound",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-026-T10",
+      "workstream_id": "WS-026",
+      "name": "pilot_unmeasured",
+      "given_when": "no actual Dell profile receipt",
+      "expected": "production serial default retained",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-027-T01",
+      "workstream_id": "WS-027",
+      "name": "branch_input_drift",
+      "given_when": "main advances while branches run",
+      "expected": "both remain pinned input or incomparable/stale",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-027-T02",
+      "workstream_id": "WS-027",
+      "name": "cache_lineage",
+      "given_when": "same source retold by two branches",
+      "expected": "one provenance group; not two independent proofs",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-027-T03",
+      "workstream_id": "WS-027",
+      "name": "selective_resume",
+      "given_when": "one source subtree/contract changes",
+      "expected": "only dependent nodes invalidated; verified unaffected reused",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-027-T04",
+      "workstream_id": "WS-027",
+      "name": "join_single_effect",
+      "given_when": "duplicate join callbacks compete",
+      "expected": "one final owner effect intent",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-027-T05",
+      "workstream_id": "WS-027",
+      "name": "integrated_fault_pilot",
+      "given_when": "STOP+lease expiration+updater+UI crash together",
+      "expected": "durable cancellation/fences/recovery coherent",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-027-T06",
+      "workstream_id": "WS-027",
+      "name": "accessibility",
+      "given_when": "keyboard/screen-reader without microphone",
+      "expected": "queue/start/pause/cancel/resume path on Windows receipts",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T01",
+      "workstream_id": "WS-028",
+      "name": "unknown_claim",
+      "given_when": "claim lacks primary source",
+      "expected": "UNKNOWN explicit; no verification promotion",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T02",
+      "workstream_id": "WS-028",
+      "name": "brief_early",
+      "given_when": "ledger has gaps but no installed device",
+      "expected": "draft generated with missing-binding gap",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T03",
+      "workstream_id": "WS-028",
+      "name": "repeat_brief",
+      "given_when": "same goal/gap/evidence/template revision",
+      "expected": "existing draft reused; no new goal/loop",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T04",
+      "workstream_id": "WS-028",
+      "name": "negative_trial",
+      "given_when": "hypothesis disproved",
+      "expected": "negative result retained; next evidence changes",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T05",
+      "workstream_id": "WS-028",
+      "name": "loop_no_progress",
+      "given_when": "repeated failed patch same fingerprint",
+      "expected": "stop with reason and next brief; criteria unchanged",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T06",
+      "workstream_id": "WS-028",
+      "name": "loop_budget",
+      "given_when": "time/iterations/transfers/cost exhausted",
+      "expected": "stop with complete handoff",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T07",
+      "workstream_id": "WS-028",
+      "name": "no_implicit_publish",
+      "given_when": "generated improvement proposal",
+      "expected": "no UI send/install/live effect without separate dispatch gates",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    },
+    {
+      "case_id": "WS-028-T08",
+      "workstream_id": "WS-028",
+      "name": "new_aims",
+      "given_when": "new evidence suggests wider goal",
+      "expected": "new proposed aim linked; old IDs/criteria retained",
+      "evidence_required": [
+        "event trace with revision/fence/input hashes",
+        "observable artifacts/effect counts before and after",
+        "isolated fixture or device/provider receipt as required"
+      ],
+      "execution_status": "NOT_RUN"
+    }
+  ]
+}

@@ -119,6 +119,35 @@ class ResearchBridgeTests(unittest.TestCase):
     def enqueue(self, key="task"):
         return ac.enqueue(self.store, self.policy, key, self.payload)["id"]
 
+    def test_existing_campaign_admits_research_and_binds_only_selected_profile(self):
+        import campaign_runtime as campaign
+        import workflow_state
+        manifest = {'schema':'occ.campaign.v1','campaign_id':'research-model','revision':1,
+                    'goal_ids':['WS-029'],'criteria':[{'id':'local-replay','text':'Offline model only'}],
+                    'nodes':[{'id':'model','template':'registered','needs':[], 'inputs':['dataset'],
+                              'resources':[{'id':'fixture-dataset','mode':'READ'}],'demand':{'ram':1}}],
+                    'limits':{'max_elapsed_seconds':600,'max_iterations':10,'no_progress_limit':10,'max_transfers':10}}
+        path=self.root/'campaign.json';path.write_text(ac.encoded(manifest))
+        selected={'manifest_file':str(path),'manifest_sha256':workflow_state.file_digest(path),
+                  'templates':{'registered':self.payload},'inputs':{'dataset':{'file':self.profile['dataset'],'sha256':self.profile['dataset_sha256']}},
+                  'capacity':{'ram':2},'lease_seconds':600}
+        self.policy['campaigns']={'offline':selected}
+        profile,loaded=campaign.load_manifest(self.policy,'offline')
+        fingerprint=campaign.node_fingerprint(loaded['nodes'][0],profile,self.policy)
+        from copy import deepcopy
+        changed=deepcopy(self.policy);changed['research']['unrelated']=self.profile|{'timeout_seconds':11}
+        self.assertEqual(campaign.node_fingerprint(loaded['nodes'][0],profile,changed),fingerprint)
+        changed['research']['registered']['timeout_seconds']=12
+        self.assertNotEqual(campaign.node_fingerprint(loaded['nodes'][0],profile,changed),fingerprint)
+        campaign.advance(self.store,self.policy,'offline')
+        worker=ac.Core(self.store,self.policy)
+        def command(job,*_):
+            self.receipt(job['id']);return {'reason':None,'exit_code':0}
+        with patch.object(worker,'command',side_effect=command):
+            result=worker.run_once()
+        self.assertEqual(result['state'],'SUCCEEDED');self.assertFalse(result['result']['qualified'])
+        campaign.advance(self.store,self.policy,'offline')
+
     def test_core_registered_dispatch_persists_process_and_domain_separately(self):
         job = self.enqueue()
 

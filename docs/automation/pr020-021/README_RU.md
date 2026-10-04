@@ -22,7 +22,7 @@ Claim неизменяемый и связан с точными build/config/da
 
 ## Как выполнить локальную проверку
 
-Примените два подготовленных patch в соответствующие репозитории. Точные исходные base и owner commit указаны в handoff-пакете. Зависимости Studious установите в Python 3.13 environment согласно его hash lock на Linux или version-pinned Windows profile. Owner checkout должен быть чистым, выходная папка — новой и вне обоих checkout:
+Получите ветки связанных [SCE PR #52](https://github.com/BobIvans/scaling-chrome-extensions/pull/52) и [Studious PR #565](https://github.com/BobIvans/studious-pancake/pull/565) в соответствующих репозиториях. Точные base и owner commit указаны в handoff-пакете. Зависимости Studious установите в Python 3.13 environment согласно его hash lock на Linux или version-pinned Windows profile. Owner checkout должен быть чистым, выходная папка — новой и вне обоих checkout:
 
 ```sh
 python docs/automation/pr020-021/verify_linked_replay.py \
@@ -56,4 +56,4 @@ Scope JSON содержит ровно `build`, `config`, `dataset`, `environmen
 | WS-035 | Frozen all-attempt metrics evaluator | Реальные baseline/ablations, usefulness и task ROI |
 | WS-036 | Все точные criteria, scope applicability, conflict/stale/deferred reports | Семантические criterion verifiers и применимые evidence после PR-010…019 |
 
-Никакая открытая часть не исключена из acceptance. Два физических repository PR составляют один логический PR-020+021: рыночный owner нельзя переносить в SCE. Подготовлены связанные repository PR; рыночный owner опубликован отдельно и зафиксирован точным SHA. Статусы CI проверяются на GitHub; installed Dell остаётся NOT_RUN до фактической проверки устройства.
+Никакая открытая часть не исключена из acceptance. Два физических repository PR составляют один логический PR-020+021: рыночный owner нельзя переносить в SCE. Опубликованы связанные draft PR #52 и #565; рыночный owner зафиксирован точным SHA. Новые задания поддерживаются существующим campaign runtime PR-018+019: fingerprint связывает только выбранный research profile и общую policy. Статусы CI проверяются на GitHub; installed Dell остаётся NOT_RUN до фактической проверки устройства.
