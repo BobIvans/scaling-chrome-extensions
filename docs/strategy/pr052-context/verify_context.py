@@ -20,7 +20,8 @@ for ref in sources['archive_references']:
  else:
   try:
    with ZipFile(root/ref['archive_path']) as z:
-    actual=[x.filename for x in z.infolist() if not x.is_dir()]
+    # ZipInfo.filename is OS-normalized; orig_filename preserves the archive name.
+    actual=[x.orig_filename for x in z.infolist() if not x.is_dir()]
   except __import__('zipfile').BadZipFile:
    if byhash[ref['archive_sha256']].get('parse_status')!='UNREADABLE_ZIP_DATA_PRESERVED':errors.append([ref['archive_path'],'UNEXPECTED_INVALID_ZIP'])
    continue
