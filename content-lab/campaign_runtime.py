@@ -76,9 +76,9 @@ def node_fingerprint(n,profile,policy):
     payload=profile['templates'][n['template']]
     # Manifest edits do not invalidate independent result consumers. Bind the
     # selected registered operation plus global grant/admission policy only.
-    global_policy={k:v for k,v in policy.items() if k not in {'campaigns','sources','repos','reports','workflow_operations'}}
-    registry={'sync':'sources','patch_test_ci':'repos','review_report':'reports','workflow_operation':'workflow_operations'}[payload['kind']]
-    ref=payload.get('source_profile',payload.get('repo_profile',payload.get('report_profile',payload.get('operation_profile'))))
+    global_policy={k:v for k,v in policy.items() if k not in {'campaigns','sources','repos','reports','workflow_operations','research'}}
+    registry={'sync':'sources','patch_test_ci':'repos','review_report':'reports','workflow_operation':'workflow_operations','studious_research':'research'}[payload['kind']]
+    ref=payload.get('source_profile',payload.get('repo_profile',payload.get('report_profile',payload.get('operation_profile',payload.get('research_profile')))))
     selected_policy=policy.get(registry,{}).get(ref)
     return core.digest([n,payload,{k:profile['inputs'][k] for k in n['inputs']},global_policy,selected_policy])
 

@@ -26,6 +26,7 @@ import repo_context
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 FIELDS = {
+    "durable.research.jobs": ({"type"}, {"offset", "limit", "snapshot"}),
     "durable.library": ({"type", "namespace", "action", "arguments"}, {"operationId"}),
     "durable.stop": ({"type", "requestId"}, set()),
     "durable.control.resume": ({"type", "expectedEpoch"}, set()),
@@ -63,7 +64,7 @@ ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
 DESKTOP_PROTOCOL = 'occ.desktop-stdio.v1'
 DESKTOP_READS = frozenset({'durable.info', 'durable.repo.list', 'durable.search',
                            'durable.context', 'durable.repo.manifest',
-                           'durable.repo.history', 'durable.repo.delta'})
+                           'durable.repo.history', 'durable.repo.delta', 'durable.research.jobs'})
 DESKTOP_SCAN = 'durable.repo.scanRun'
 
 
@@ -197,6 +198,9 @@ def summary(job):
     reason = receipt.get('reason')
     if isinstance(reason, str):
         result['outcome']['reason'] = reason if re.fullmatch(r'[A-Z_]{1,100}', reason) else 'LOCAL_OPERATION_BLOCKED'
+    if job['payload'].get('kind') == 'studious_research':
+        allowed = ('domain_status','receipt_sha256','records','useful_calls','verified_property','qualified','live_enabled','transactions_sent')
+        result['outcome'].update({k:receipt[k] for k in allowed if k in receipt})
     if job['payload'].get('kind') == 'review_report':
         allowed = ('state', 'sha256', 'bytes', 'filename', 'verified_property', 'findings_closed', 'reused')
         result['outcome'].update({k: receipt[k] for k in allowed if k in receipt})
@@ -226,6 +230,11 @@ def validate_request(request):
     required, optional = FIELDS[request["type"]]
     if not required.issubset(request) or set(request) - required - optional:
         raise ValueError("DURABLE_SCHEMA")
+    if request['type'] == 'durable.research.jobs':
+        strict_int(request.get('offset', 0), 0, 9_007_199_254_740_991)
+        strict_int(request.get('limit', 20), 1, 20)
+        if 'snapshot' in request and (not isinstance(request['snapshot'], str) or not ITEM_ID.fullmatch(request['snapshot'])):
+            raise ValueError('DURABLE_SCHEMA')
     if request['type'].startswith('durable.campaign.'):
         identifier(request['campaign'])
         if 'offset' in request:strict_int(request['offset'],0,9_007_199_254_740_991)
@@ -262,6 +271,10 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
             (operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile)['capabilities']) or
             (profile.get('context_service') and operation in {'durable.library','durable.stop','durable.control.resume'})):
         raise ValueError('DESKTOP_READ_ONLY')
+    if operation == 'durable.research.jobs':
+        from research_bridge import jobs_page
+        value['research'] = jobs_page(store, policy, profile['templates'], **{k:request[k] for k in ('offset','limit','snapshot') if k in request})
+        return value
     if operation in {'durable.library','durable.stop','durable.control.resume'}:
         import context_runtime as runtime
         service=profile.get('context_service')

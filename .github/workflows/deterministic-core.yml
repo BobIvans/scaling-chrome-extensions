@@ -73,6 +73,9 @@ jobs:
     # Full real-Git/SQLite scale fixtures take longer on Windows/NTFS.
     timeout-minutes: 30
     steps:
+      - name: Keep exact checkout bytes independent of Windows Git defaults
+        shell: bash
+        run: git config --global core.autocrlf false
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           ref: ${{ github.event.pull_request.head.sha || github.sha }}
@@ -110,3 +113,47 @@ jobs:
       - name: Existing extension regression
         shell: bash
         run: node --test one-click-context/tests/*.test.*
+
+  linked-research-model:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    steps:
+      - name: Keep exact checkout bytes independent of Windows Git defaults
+        shell: bash
+        run: git config --global core.autocrlf false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          path: sce
+          persist-credentials: false
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          repository: BobIvans/studious-pancake
+          ref: 905976ebd3046121728161d42f2e781c01f53e10
+          path: studious
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: '3.13'
+      - name: Install the pinned owner dependencies
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = "Linux" ]; then
+            python -m pip install --require-hashes -r studious/requirements-dev.lock
+          else
+            # Linux wheel lock contains uvloop; the declared Windows profile excludes it.
+            python -m pip install -r studious/requirements-dev.txt
+          fi
+          python -m pip install --no-deps --no-build-isolation ./studious
+      - name: Execute the actual Core to Studious to Desktop model path
+        shell: bash
+        run: |
+          python sce/docs/automation/pr020-021/verify_linked_replay.py \
+            --studious "$GITHUB_WORKSPACE/studious" \
+            --source-commit 905976ebd3046121728161d42f2e781c01f53e10 \
+            --python "$(python -c 'import sys; print(sys.executable)')" \
+            --work-dir "$RUNNER_TEMP/pr020-021-offline-model"

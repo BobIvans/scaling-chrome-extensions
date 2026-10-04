@@ -21,6 +21,7 @@ TIMEOUT_MS = 10_000
 HASH = re.compile(r'^[0-9a-f]{64}$')
 NAME = re.compile(r'^[A-Za-z0-9_.:-]{1,100}$')
 READS = {
+    'durable.research.jobs': ({'type'}, {'offset', 'limit', 'snapshot'}),
     'durable.library': ({'type','namespace','action','arguments'}, {'operationId'}),
     'durable.stop': ({'type','requestId'}, set()),
     'durable.control.resume': ({'type','expectedEpoch'}, set()),
@@ -197,6 +198,11 @@ def validate_request(request):
     elif request['type'] == 'durable.search':
         require(len(text_value(request['query'])) <= 1000)
         number(request.get('limit', 10), 1, 20)
+    elif request['type'] == 'durable.research.jobs':
+        number(request.get('offset', 0))
+        number(request.get('limit', 20), 1, 20)
+        if 'snapshot' in request:
+            hash_value(request['snapshot'])
     elif request['type'] == 'durable.context':
         ids = request['ids']
         require(isinstance(ids, list) and 1 <= len(ids) <= 10)
@@ -379,6 +385,29 @@ def validate_manifest(value, request):
                 require(row['file_ordinal'] == request['fileOrdinal'])
 
 
+def validate_research(value, request):
+    exact(value, {'schema','snapshot','offset','total','items','next_offset'})
+    require(value['schema']=='occ.research-jobs-page.v1')
+    hash_value(value['snapshot'])
+    if 'snapshot' in request:
+        require(value['snapshot']==request['snapshot'], 'RESEARCH_PAGE_SNAPSHOT_CHANGED')
+    require(number(value['offset'])==request.get('offset',0))
+    total=number(value['total']); rows=value['items']; offset=value['offset']
+    require(isinstance(rows,list) and len(rows)==min(request.get('limit',20),max(0,total-offset)))
+    next_offset=offset+len(rows) if offset+len(rows)<total else None
+    require(value['next_offset']==next_offset)
+    previous=None
+    for row in rows:
+        exact(row, {'id','state','domain_status','records','useful_calls','receipt_sha256','qualified'})
+        require(isinstance(row['id'],str) and re.fullmatch(r'[a-f0-9]{32}',row['id']))
+        require(previous is None or previous<row['id']); previous=row['id']
+        require(row['state'] in {'QUEUED','RUNNING','NEEDS_RECONCILIATION','CANCELLED','BLOCKED','FAILED','SUCCEEDED'})
+        require(row['domain_status'] is None or row['domain_status'] in {'MODEL_REPLAY_COMPLETED','PARTIAL','INVALID_CAMPAIGN'})
+        number(row['records']); number(row['useful_calls'])
+        require(row['useful_calls']<=row['records'] and row['qualified'] is False)
+        hash_value(row['receipt_sha256'],nullable=True)
+
+
 def validate_history_page(value, request):
     exact(value, {'schema', 'namespace', 'alias', 'snapshots', 'next_cursor', 'eof'})
     require(value['schema'] == 'occ.repo-history-page.v1' and
@@ -495,7 +524,7 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
              'durable.repo.manifest': 'manifest', 'durable.library':'library',
              'durable.stop':'library','durable.control.resume':'library',
              'durable.repo.history': 'page', 'durable.repo.delta': 'page',
-             'durable.repo.scanRun': 'scan_run'}[operation]
+             'durable.repo.scanRun': 'scan_run', 'durable.research.jobs': 'research'}[operation]
     exact(result, {'schema', 'operation', field})
     if field=='library':
         dto=result[field]
@@ -508,6 +537,8 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
         validate_info(result[field])
     elif operation == 'durable.context':
         validate_context(result[field], request)
+    elif operation == 'durable.research.jobs':
+        validate_research(result[field], request)
     elif operation == 'durable.repo.manifest':
         validate_manifest(result[field], request)
     elif operation == 'durable.repo.history':
