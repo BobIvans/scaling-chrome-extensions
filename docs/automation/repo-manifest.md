@@ -7,24 +7,30 @@ code. Native `durable.repo.manifest` advertises `INFO`, `ENTRIES`, and `PARTS`.
 
 ## Whole repository capture
 
-The Git scanner streams the entire NUL-delimited tree into its existing ledger.
+PR-001 (#38) owns the Git scanner and full-scan lifecycle. PR-002 extends that
+merged owner with manifest projection, legacy size-error retry, and the optional
+capture CLI. The scanner streams the entire NUL-delimited tree into its ledger.
 There is no application cap on the number of entries, tree-output bytes, or blob
 size. The former 8 MiB blob rejection and 32 MiB Git-output rejection are removed.
 When a scan is resumed, legacy `FILE_TOO_LARGE` entries are retried from the
 earliest affected ordinal. Working-copy hashes and Git-index comparisons also
-use block reads or temporary disk workspace.
+use streaming block reads.
 
 Large blobs are spooled to temporary disk to determine their exact hash and
 secret disposition before any chunks become visible. Capture then saves every
-byte as at most 4096-byte chunks, keeping UTF-8 code points intact. The 8 MiB AST
-workspace threshold changes analysis to `UTF8_STREAM_NO_AST` or
+byte as at most 4096-byte chunks, keeping UTF-8 code points intact. The merged
+scanner's 2 MiB AST workspace threshold changes analysis to
+`STREAMING_UTF8_TEXT_ONLY_NO_SYNTAX_CLAIM` or
 `BINARY_OR_NON_UTF8`; it does not omit bytes. Streaming secret detection preserves
 protected-content exclusions even across block boundaries and arbitrarily long
 field whitespace.
 
-Native requests still have their existing 10-second lifecycle. For a capture
-that takes longer than one native request, use the explicit local operator CLI,
-which has no native request timeout:
+The full-scan button automatically advances every page and preserves progress,
+pause, explicit continuation, and cancel. The native bridge's 10-second idle
+watchdog is extended by the installed backend's bounded progress frames, so an
+active large capture has no overall request-duration cap. Manifest SQL/byte
+iteration uses that same heartbeat owner. An explicit local operator CLI is
+also available:
 
 ```sh
 python -B content-lab/repo_context.py --profile /absolute/native-profile.json --repository sce

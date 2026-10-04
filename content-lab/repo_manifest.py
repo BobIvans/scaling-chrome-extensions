@@ -228,6 +228,7 @@ def write_projection(db, snap, stage):
     try:
         parts = Output(stage / ARTIFACTS[1])
         for entry in entries(db, snap['id']):
+            repo.pulse()
             manifest.write(entry_record(entry))
             if entry['state'] != 'INDEXED':
                 continue
@@ -241,6 +242,7 @@ def write_projection(db, snap, stage):
             blob.update(b'blob ' + str(entry['size']).encode('ascii') + b'\0')
             end = chunk_count = 0
             for chunk in db.execute('SELECT * FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], entry['path'])):
+                repo.pulse()
                 if chunk['ordinal'] != chunk_count or chunk['byte_start'] != end:
                     raise ValueError('CONTEXT_CORRUPT')
                 record = part_record(db, snap, entry, chunk)

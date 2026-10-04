@@ -173,3 +173,21 @@ test('disconnect kills a pending adapter and settles without waiting for process
  const bridge=new DurableBridge({enabled:true,pythonPath:python,adapterPath:path.join(lab,'native_adapter.py'),profilePath:path.join(os.tmpdir(),'profile.json')},{spawnProcess:()=>{const child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new PassThrough();child.stderr=new PassThrough();child.kill=()=>{killed=true;return true;};return child;}});
  const pending=assert.rejects(bridge.handle({type:'durable.get',jobId:'0'.repeat(32)}),/^Error: CLOSED$/);bridge.close();await pending;assert.equal(killed,true);assert.equal(bridge.children.size,0);
 });
+
+test('repository progress extends only the idle watchdog, never a total scan-size deadline',async t=>{
+ t.mock.timers.enable({apis:['setTimeout']});let child,progress=0;
+ const bridge=new DurableBridge({enabled:true,pythonPath:python,adapterPath:path.join(lab,'native_adapter.py'),profilePath:path.join(os.tmpdir(),'profile.json')},{spawnProcess:()=>{child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new PassThrough();child.stderr=new PassThrough();child.kill=()=>true;return child;}});
+ const pending=bridge.handle({type:'durable.repo.scanRun',repository:'sce',action:'STATUS'},{onProgress:()=>progress++});
+ for(let n=0;n<5;n++){t.mock.timers.tick(DURABLE_TIMEOUT_MS-1);child.stderr.write('OCC_SCAN_');child.stderr.write('PROGRESS\n');}
+ assert.equal(progress,5);
+ child.stdout.end(JSON.stringify({ok:true,result:{schema:'occ.native-durable-result.v1',operation:'durable.repo.scanRun',scan_run:null}}));child.emit('close',0);
+ assert.equal((await pending).durable.scan_run,null);bridge.close();
+});
+
+test('scan progress does not disable idle failures, strict fields or untrusted-log bounds',async t=>{
+ t.mock.timers.enable({apis:['setTimeout']});let child;
+ const bridge=new DurableBridge({enabled:true,pythonPath:python,adapterPath:path.join(lab,'native_adapter.py'),profilePath:path.join(os.tmpdir(),'profile.json')},{spawnProcess:()=>{child=new EventEmitter();child.stdin=new PassThrough();child.stdout=new PassThrough();child.stderr=new PassThrough();child.kill=()=>true;return child;}});
+ await assert.rejects(bridge.handle({type:'durable.repo.scanRun',repository:'sce',action:'START',intentKey:'a'.repeat(32),root:'/caller'}),/DURABLE_SCHEMA/);
+ const timeout=assert.rejects(bridge.handle({type:'durable.repo.scanRun',repository:'sce',action:'STATUS'}),/DURABLE_TIMEOUT/);child.stderr.write('OCC_SCAN_PROGRESS\n');t.mock.timers.tick(DURABLE_TIMEOUT_MS);await timeout;
+ const bound=assert.rejects(bridge.handle({type:'durable.repo.scanRun',repository:'sce',action:'STATUS'}),/DURABLE_OUTPUT_LIMIT/);child.stderr.write(Buffer.alloc(DURABLE_OUTPUT_BYTES+1));await bound;bridge.close();
+});

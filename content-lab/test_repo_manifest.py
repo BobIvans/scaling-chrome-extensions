@@ -346,12 +346,12 @@ class RepoManifestTests(TestCase):
         marker = b'-----BEGIN ' + b'PRIVATE KEY-----'
         secret = b'x' * (64 * 1024 - 10) + marker + b'tail'
         field_secret = b'api_key' + b' ' * 70000 + b'=' + b' ' * 70000 + b'"abcdefghijklmnopq"'
-        with mock.patch.object(repo, 'ANALYSIS_BYTES', 1024):
+        with mock.patch.object(repo, 'AST_WINDOW_BYTES', 1024):
             self.capture({'long.txt': raw, 'binary.bin': binary, 'private.txt': secret, 'field.txt': field_secret})
         self.assertEqual(self.status['counts'], {'INDEXED': 2, 'EXCLUDED': 2})
         output, _ = self.publish()
         entries = self.jsonl(output, 'REPO_MANIFEST.jsonl')
-        self.assertEqual(next(e for e in entries if e['path'] == 'long.txt')['parser'], 'UTF8_STREAM_NO_AST')
+        self.assertEqual(next(e for e in entries if e['path'] == 'long.txt')['parser'], 'STREAMING_UTF8_TEXT_ONLY_NO_SYNTAX_CLAIM')
         db = repo.db_for(self.store)
         try:
             for path, original in [('long.txt', raw), ('binary.bin', binary)]:
@@ -365,19 +365,9 @@ class RepoManifestTests(TestCase):
     def test_tree_records_stream_past_former_32mib_limit(self):
         # Exercise the real streaming reader with >32 MiB of NUL records,
         # without building hundreds of thousands of physical files.
-        class Source:
-            def __init__(self):
-                self.remaining = 33 * 1024 * 1024 // 512
-            def read(self, _size):
-                if not self.remaining:
-                    return b''
-                count = min(self.remaining, 128)
-                self.remaining -= count
-                return (b'x' * 511 + b'\0') * count
-        from contextlib import contextmanager
-        @contextmanager
         def source(*_args):
-            yield Source()
+            for _ in range(33 * 1024 * 1024 // (512 * 128)):
+                yield (b'x' * 511 + b'\0') * 128
         with mock.patch.object(repo, 'git_stream', source):
             total = sum(len(r) + 1 for r in repo.git_records(self.checkout, 'ls-tree'))
         self.assertEqual(total, 33 * 1024 * 1024)

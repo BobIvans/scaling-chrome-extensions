@@ -122,7 +122,8 @@ class RepoContextTests(TestCase):
         self.assertEqual(status['counts'], {'INDEXED': 3})
         self.assertIsNone(next(f for f in status['files'] if f['path'] == 'large.bin')['reason'])
         self.assertTrue(status['roundtrip']['exact_for_indexed'])
-        self.assertEqual(next(f for f in status['files'] if f['path'] == 'large.bin')['parser'], 'UTF8_STREAM_NO_AST')
+        self.assertTrue(status['roundtrip']['all_tracked_bytes_exportable'])
+        self.assertEqual(next(f for f in status['files'] if f['path'] == 'large.bin')['parser'], 'STREAMING_UTF8_TEXT_ONLY_NO_SYNTAX_CLAIM')
 
     def test_root_aware_dependencies_unresolved_and_scc_oracle(self):
         self.put('content-lab/main.py', b'import helper\nimport absent\n__import__("maybe")\n')

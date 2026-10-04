@@ -3,10 +3,10 @@
   "package_id": "ROADMAP-PR-002",
   "status": "IMPLEMENTED_VERIFIED",
   "repository": "BobIvans/scaling-chrome-extensions",
-  "base_sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+  "base_sha": "426f60b077fbaecc8745fcd6f22c0626b3fefafb",
   "head_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
   "actual_elapsed_minutes": null,
-  "previous_pr_verified": false,
+  "previous_pr_verified": true,
   "actual_snapshot_id": "21e3b628483c9e24dc1f65992e73f77657ab89d14f49841e96a66dff96af4aa3",
   "owner_map": [
     {
@@ -310,56 +310,7 @@
   "full_laya4_009_closed": false,
   "next_package": "ZIP-003",
   "tested_tree_sha": "a28038a641fe7b34d9d37a71a46423c2cf9dff8c",
-  "head_sha_scope": "Published implementation commit; final PR head additionally contains this receipt and a synthetic-fixture marker assembly change.",
-  "actual_repository_projection": {
-    "source_commit": "a56b98618143e45d71e3c014b7af1502da6273d1",
-    "snapshot_id": "21e3b628483c9e24dc1f65992e73f77657ab89d14f49841e96a66dff96af4aa3",
-    "batch_id": "d62c31dd9c4df98e2892db929dfe070ee5caa77cc1c3e62c4a6a50ccf0fa5ba9",
-    "entry_count": 164,
-    "indexed_count": 163,
-    "gap_count": 1,
-    "part_count": 1504,
-    "raw_bytes": 4991478,
-    "proof_scope": "ALL_INDEXED_CAPTURED_BYTES_AND_GIT_BLOB_OIDS",
-    "outputs": [
-      {
-        "bytes": 82246,
-        "path": "REPO_MANIFEST.jsonl",
-        "sha256": "b1e8cd565f21053bfef92e49ad0cddc61d29b8dac1c15400c232e2b773dfada9"
-      },
-      {
-        "bytes": 1057602,
-        "path": "PARTS_INDEX.jsonl",
-        "sha256": "7efd84211936d354c960e33f665fb44765f86e95ab42c35039bd087cf078f42e"
-      },
-      {
-        "bytes": 765,
-        "path": "VALIDATION.json",
-        "sha256": "bd193bb43d26bda465b3ebb2b649ff14fb1bc0d83eaf2ccfd55907e1bfa45b65"
-      }
-    ],
-    "native_pages": {
-      "ENTRIES": {
-        "rows": 164,
-        "pages": 9,
-        "max_frame_bytes": 12557,
-        "exact_tail_equality": true
-      },
-      "PARTS": {
-        "rows": 1504,
-        "pages": 76,
-        "max_frame_bytes": 16473,
-        "exact_tail_equality": true
-      }
-    },
-    "gaps": [
-      {
-        "path": "content-lab/test_repo_manifest.py",
-        "state": "EXCLUDED",
-        "reason": "SECRET_TEXT_HEURISTIC"
-      }
-    ]
-  },
+  "head_sha_scope": "Published initial implementation is preserved in initial_implementation; the PR additionally integrates merged PR001 #38 and is validated by exact-head CI before merge.",
   "scale_changes": {
     "corpus_file_count_cap": null,
     "blob_byte_cap": null,
@@ -371,12 +322,146 @@
     ],
     "native_rows_per_page": 20,
     "native_frame_bytes_per_page": 32768,
-    "native_timeout_ms_per_request": 10000,
-    "long_capture_owner": "Explicit operator repo_context.py CLI",
+    "native_timeout_ms_per_request": null,
+    "long_capture_owner": "PR001 full-scan controller with progress heartbeat, plus explicit repo_context.py operator CLI",
     "legacy_size_errors_retried": true,
-    "physical_limits": "Available memory/disk and Git/SQLite storage capacity; AST budget affects analysis only."
+    "physical_limits": "Available memory/disk and Git/SQLite storage capacity; AST budget affects analysis only.",
+    "native_idle_timeout_ms": 10000
   },
   "fixture_followup": "Assemble the synthetic private-key marker from two byte literals so this test source itself remains capture eligible. Production secret exclusion behavior and its test payload remain unchanged.",
-  "previous_pr_note": "PR-002 uses the existing complete snapshot owner and does not require a merged PR-001 scan controller.",
-  "elapsed_measurement_note": "No dedicated execution timer was recorded."
+  "previous_pr_note": "PR001 #38 is merged at 426f60b077fbaecc8745fcd6f22c0626b3fefafb. Its canonical streaming scanner, progress heartbeats, additive schema, and scan controller are preserved.",
+  "elapsed_measurement_note": "No dedicated execution timer was recorded.",
+  "initial_implementation": {
+    "base_sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+    "head_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+    "tree_sha": "a28038a641fe7b34d9d37a71a46423c2cf9dff8c",
+    "github_ci": {
+      "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/39",
+      "publication_status": "PUBLISHED",
+      "ci": "PASS",
+      "tested_head_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "run_id": 37194003590,
+      "run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37194003590",
+      "matrix": [
+        {
+          "os": "ubuntu-latest",
+          "job_id": 111411955964,
+          "outcome": "PASS"
+        },
+        {
+          "os": "windows-latest",
+          "job_id": 111411956156,
+          "outcome": "PASS"
+        }
+      ]
+    },
+    "actual_repository_projection": {
+      "source_commit": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "snapshot_id": "21e3b628483c9e24dc1f65992e73f77657ab89d14f49841e96a66dff96af4aa3",
+      "batch_id": "d62c31dd9c4df98e2892db929dfe070ee5caa77cc1c3e62c4a6a50ccf0fa5ba9",
+      "entry_count": 164,
+      "indexed_count": 163,
+      "gap_count": 1,
+      "part_count": 1504,
+      "raw_bytes": 4991478,
+      "proof_scope": "ALL_INDEXED_CAPTURED_BYTES_AND_GIT_BLOB_OIDS",
+      "outputs": [
+        {
+          "bytes": 82246,
+          "path": "REPO_MANIFEST.jsonl",
+          "sha256": "b1e8cd565f21053bfef92e49ad0cddc61d29b8dac1c15400c232e2b773dfada9"
+        },
+        {
+          "bytes": 1057602,
+          "path": "PARTS_INDEX.jsonl",
+          "sha256": "7efd84211936d354c960e33f665fb44765f86e95ab42c35039bd087cf078f42e"
+        },
+        {
+          "bytes": 765,
+          "path": "VALIDATION.json",
+          "sha256": "bd193bb43d26bda465b3ebb2b649ff14fb1bc0d83eaf2ccfd55907e1bfa45b65"
+        }
+      ],
+      "native_pages": {
+        "ENTRIES": {
+          "rows": 164,
+          "pages": 9,
+          "max_frame_bytes": 12557,
+          "exact_tail_equality": true
+        },
+        "PARTS": {
+          "rows": 1504,
+          "pages": 76,
+          "max_frame_bytes": 16473,
+          "exact_tail_equality": true
+        }
+      },
+      "gaps": [
+        {
+          "path": "content-lab/test_repo_manifest.py",
+          "state": "EXCLUDED",
+          "reason": "SECRET_TEXT_HEURISTIC"
+        }
+      ]
+    }
+  },
+  "integration": {
+    "base_sha": "426f60b077fbaecc8745fcd6f22c0626b3fefafb",
+    "pr001_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/38",
+    "scanner_owner": "Existing PR001 repo_context/repo_source; no second streaming scanner",
+    "idle_watchdog": "10s native inactivity, extended by trusted backend heartbeat; no total capture duration cap",
+    "scale_evidence": {
+      "files": 125000,
+      "git_tree_output_bytes": 38500000,
+      "outcome": "PASS",
+      "test": "test_tree_larger_than_previous_32_mib_cap_has_complete_inventory"
+    },
+    "local_checks": [
+      {
+        "name": "Content Lab Python",
+        "count": 203,
+        "outcome": "PASS"
+      },
+      {
+        "name": "Native bridge Node",
+        "count": 46,
+        "outcome": "PASS"
+      },
+      {
+        "name": "Extension Node",
+        "count": 112,
+        "outcome": "PASS"
+      },
+      {
+        "name": "Qualification adapter Python",
+        "count": 8,
+        "outcome": "PASS"
+      }
+    ],
+    "local_test_total": 369,
+    "final_head_ci_policy": "Merge requires successful CI for the final PR head. The PR/check URLs provide that final evidence.",
+    "tested_code_sha256": {
+      "content-lab/repo_context.py": "c9b098505afb2e9907c3b78c1b1c695391b79ff4df886564329bf23a5a2e438d",
+      "content-lab/repo_source.py": "257f4dcb0ca999e6da9b2463de726b28e7a6290f67923c80c9c44ebf4ace8cb4",
+      "content-lab/repo_manifest.py": "046a8dfbf294e6ad6d96526ce087b61c6ec9bb3a4d1b133e839d525aa5b83a9e",
+      "content-lab/native_adapter.py": "64cd78d25dae28b342cf73b2b6f1a5798b9022802fd08e3f8adbbcf20e0e1d18",
+      "agent-bridge/durable.mjs": "b4ff70421958daa2f1529d8d705c930420cb2e2dc6a6c7133ddb17d6af60e8ba",
+      "one-click-context/library/repo-review-ui.mjs": "20a88137393033f0105119485c7dac91d51e8adf74472f0d4e87196b4fa863e5",
+      "one-click-context/library/durable-ui.mjs": "570a86227d44a9c8ff513abbc9f59f779162a41acabf477827ba5535dc559889",
+      "one-click-context/tests/repo-review-ui.test.mjs": "7f742809fee55664de045b7f738aa2280cba21ca2284298b43ef5b822680078f",
+      "content-lab/test_repo_manifest.py": "d8e99b07aea0a830eaf16c430a469bf6c9e9acfb46af20d8baa7c47398779282"
+    },
+    "focused_final_checks": [
+      {
+        "suite": "manifest",
+        "count": 16,
+        "outcome": "PASS"
+      },
+      {
+        "suite": "repo-review-ui with full-scan controller to manifest",
+        "count": 12,
+        "outcome": "PASS"
+      }
+    ]
+  }
 }

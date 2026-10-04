@@ -1,9 +1,11 @@
 # Scaling Chrome Extensions
 
 Текущий локальный repo/review сценарий: выберите настроенный Git repo в библиотеке,
-продолжите scan до COMPLETE, выберите файлы или finding, экспортируйте запрос для AI
+нажмите «Собрать весь repo», затем выберите файлы или finding и экспортируйте запрос для AI
 и импортируйте JSON review. Git inventory, byte-preserving source chunks и review
 живут в существующем `content.sqlite3`; host устанавливается отдельно.
+
+[Полный scan без общего лимита числа файлов/размера дерева/blob; Pause, Continue, Stop](docs/automation/roadmap-pr001-full-repo-scan.md).
 
 [Настройка, команды и границы context foundation](docs/automation/context-foundation.md).
 Локальные regression tests выполнены на Linux; workflow проверяет Ubuntu и Windows
