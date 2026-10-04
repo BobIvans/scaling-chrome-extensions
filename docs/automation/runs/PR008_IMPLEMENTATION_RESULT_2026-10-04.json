@@ -2,8 +2,8 @@
   "schema": "occ.pr008-implementation-receipt.v1",
   "repository": "BobIvans/scaling-chrome-extensions",
   "package_id": "PR-008",
-  "actual_base_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
-  "actual_head_sha": "7a2cf10c92055da4bf73be5dc57812ee7761a247",
+  "actual_base_sha": "e6af765dcb94e9462c6adf071a3df8421e141cc5",
+  "actual_head_sha": "8572258abf3933fc9087dcc6f708ace40c50d2f3",
   "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/45",
   "merge_sha": null,
   "implementation": "IMPLEMENTED_LOCAL_TESTS_PASS",
@@ -22,7 +22,8 @@
     "complete manifest/parts stream to EOF without total cap",
     "Windows launcher/runtime/Tk preflight",
     "verified shell stage/uninstall retaining external data",
-    "existing ChatGPT prefixed namespace/source-fidelity compatibility"
+    "existing ChatGPT prefixed namespace/source-fidelity compatibility",
+    "current whole-source eligibility and classifier-version compatibility"
   ],
   "changed_files": [
     ".github/workflows/deterministic-core.yml",
@@ -67,12 +68,12 @@
   "tests_and_results": [
     {
       "suite": "content-lab",
-      "passed": 256,
+      "passed": 272,
       "failed": 0
     },
     {
       "suite": "agent-bridge Node",
-      "passed": 46,
+      "passed": 47,
       "failed": 0
     },
     {
@@ -82,12 +83,12 @@
     },
     {
       "suite": "extension Node",
-      "passed": 112,
+      "passed": 116,
       "failed": 0
     },
     {
       "suite": "desktop",
-      "passed": 21,
+      "passed": 22,
       "failed": 0,
       "skipped": 1,
       "skip_reason": "Local display absent; real Tk test enabled in Ubuntu/Windows CI"
@@ -147,7 +148,7 @@
     {
       "id": "A11",
       "status": "PASS_LOCAL",
-      "evidence": "Exact owner digest/BOM/CRLF preserved, tampering and stale source IDs rejected. Current PR009 retained ChatGPT originals also project exact derived items through Desktop."
+      "evidence": "Exact owner digest/BOM/CRLF preserved, tampering and stale source IDs rejected. Current PR009 retained ChatGPT originals also project exact derived items through Desktop. Current PR005 classifier generation and eligibility gate retained by actual Desktop read-only integration."
     },
     {
       "id": "A12",
@@ -172,7 +173,7 @@
     {
       "id": "A16",
       "status": "PASS_LOCAL",
-      "evidence": "Browser/desktop search/context/info/manifest domain DTO equality; 46 bridge regressions."
+      "evidence": "Browser/desktop search/context/info/manifest domain DTO equality; 47 bridge regressions, including current coverage dispatcher."
     },
     {
       "id": "A17",
@@ -188,14 +189,15 @@
   "observed_python_version": "3.12.14",
   "observed_tk_version": "9.0",
   "backend_profile_store_identity": {
-    "scope": "SYNTHETIC_FIXTURE_ONLY",
+    "scope": "PRIOR_IMPLEMENTATION_SYNTHETIC_FIXTURE_ONLY",
     "adapter_context": {
       "protocol": "occ.desktop-stdio.v1",
       "profile_digest": "ce4d937fd70761638ccb69dcddc8124f38856a7f385dfcf1ed6da0c09a1a1afb",
       "store_identity": "c6f335de5ff740695de759484723f3b3598f664a999ce08fc13c2df624d4b9b8",
       "adapter_sha256": "f606b56223457cd1de3ddd3498f1a80ef66bc52fbc4c3c036d77d4f69bf7f1a9",
       "backend_bundle_sha256": null
-    }
+    },
+    "measured_implementation_sha": "67f0f4c1f7f7109260797f62e824a86df431960c"
   },
   "desktop_protocol": "occ.desktop-stdio.v1",
   "source_bundle_manifest_sha256": null,
@@ -228,9 +230,9 @@
   "head_sha_scope": "Implementation commit before this receipt/manifest-only commit; final exact CI head is in PR metadata",
   "input_zip_sha256": "04e4182c262d40683d25ba3af6db249b53a5500a9c7a73ca5738ce825ca112dc",
   "observed_os": "Linux-6.18.44-x86_64-with-glibc2.39",
-  "shell_manifest_sha256": "4221828a7309c33319e361f49c41960190815e0ce5fbb2e5ab68bfaf2d46f960",
+  "shell_manifest_sha256": "222960c3d1d78726882f2de3332f771c386ab9d8919996a745b4e3666a1dbe9e",
   "initial_base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
-  "integration": "Current main PR009 original-source fidelity preserved. Namespace grammar matches existing owner, including chatgpt:code.",
+  "integration": "Current main PR009 original-source fidelity and PR005 whole-source eligibility preserved. Namespace grammar matches the owner, including chatgpt:code. Registered source classifier version accepted; current eligibility gate is shared by read-only Desktop search/context.",
   "windows_ci_regression": {
     "run_id": 37203670302,
     "job_id": 111440307123,
@@ -247,5 +249,19 @@
     "failure": "Owned-file hashes differed after Windows checkout LF/CRLF conversion",
     "fix": "desktop/** text eol=lf; binary wire fixtures explicitly -text",
     "remaining": "Final exact-head matrix required before merge"
+  },
+  "previous_integration_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+  "tests_implementation_sha": "8572258abf3933fc9087dcc6f708ace40c50d2f3",
+  "local_passed_total": 465,
+  "local_skipped_total": 1,
+  "main_integration_regression": {
+    "base_sha": "e6af765dcb94e9462c6adf071a3df8421e141cc5",
+    "reason": "PR #42 merged while Desktop Windows CI was running",
+    "preserved": "Whole-source eligibility and browser coverage, with unchanged raw manifest/ZIP64 owners",
+    "new_test": "test_current_main_source_classifier_and_readonly_gate_are_preserved",
+    "local_content_tests": 272,
+    "desktop_discovered": 23,
+    "desktop_passed": 22,
+    "desktop_skipped": 1
   }
 }
