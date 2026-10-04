@@ -127,10 +127,11 @@ def partition_stream(alias, path, stream, file_hash, *, utf8):
         buffer = buffer[end:] + stream.read(end)
 
 
-def import_graph(rows, roots):
+def import_graph(rows, roots, *, progress=lambda: None):
     modules = defaultdict(set)
     info = {}
     for row in rows:
+        progress()
         path = row['path']
         if not path.endswith(('.py', '.pyi')):
             continue
@@ -144,8 +145,10 @@ def import_graph(rows, roots):
                 info.setdefault(path, []).append(module)
     edges, unresolved = [], []
     for row in rows:
+        progress()
         analysis = json.loads(row['analysis'] or '{}')
         for imp in analysis.get('imports', []):
+            progress()
             names = []
             if imp['level']:
                 for own in info.get(row['path'], []):
@@ -178,21 +181,24 @@ def import_graph(rows, roots):
     return edges, unresolved
 
 
-def components(nodes, edges):
+def components(nodes, edges, *, progress=lambda: None):
     """Iterative Kosaraju: finish each DFS child before marking its siblings."""
     adjacency = {n: [] for n in nodes}
     reverse = {n: [] for n in nodes}
     for edge in edges:
+        progress()
         if edge['from'] in adjacency and edge['to'] in adjacency:
             adjacency[edge['from']].append(edge['to'])
             reverse[edge['to']].append(edge['from'])
     visited, order = set(), []
     for node in nodes:
+        progress()
         if node in visited:
             continue
         visited.add(node)
         stack = [(node, iter(adjacency[node]))]
         while stack:
+            progress()
             current, children = stack[-1]
             child = next(children, None)
             if child is None:
@@ -203,11 +209,13 @@ def components(nodes, edges):
                 stack.append((child, iter(adjacency[child])))
     visited, groups = set(), []
     for node in reversed(order):
+        progress()
         if node in visited:
             continue
         group, stack = [], [node]
         visited.add(node)
         while stack:
+            progress()
             current = stack.pop()
             group.append(current)
             for child in reverse[current]:

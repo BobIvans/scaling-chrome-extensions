@@ -1,0 +1,22 @@
+{
+  "schema": "occ.repo-group-pr005-adapter-map.v1",
+  "observed_head": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
+  "observed_pr": "https://github.com/BobIvans/scaling-chrome-extensions/pull/42",
+  "actual_owner": "content-lab/source_eligibility.py",
+  "actual_schema": "occ.format-eligibility.v1",
+  "actual_version": "utf8-controls-strict-lfs3.v1",
+  "owner_build": "534916549871a615d716489bccb05fafd5e265d3d413b2000d392f3327dfab0f",
+  "projection_digest": "4214226243afa6c2b1daa82130af032be1456e3e16ee79d2d7028d6ce666d084",
+  "semantic_fields": {
+    "source_binding": "facts_status(snapshot_id, repo_entries row): all source_identity fields plus classifier version/_binding",
+    "text_exportable": "SUPPORTED and text_eligibility==ELIGIBLE",
+    "python_code_analysis_eligible": "text_exportable and .py/.pyi and fact/analysis parser==PYTHON_AST, then full-source saved-analysis check",
+    "capture_disposition": "row.state / facts.raw_capture; base manifest separately proves all captured bytes",
+    "binary_lfs_external": "facts.format_kind, reasons, lfs; raw refs remain; external payload NOT_CHECKED",
+    "revision": "automation_core.digest(project_facts DTO)",
+    "projection": "SHA256 of canonical projected fact rows ordered by path"
+  },
+  "legacy_fallback": "PENDING facts preserve metadata/refs, do not infer eligibility; explicit upstream backfill only",
+  "corruption": "CORRUPT facts or mismatch -> ELIGIBILITY_BINDING_MISMATCH",
+  "owner_build_unchanged_from_74221737": true
+}

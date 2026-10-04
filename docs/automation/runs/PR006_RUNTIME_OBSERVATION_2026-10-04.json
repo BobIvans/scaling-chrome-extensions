@@ -1,0 +1,131 @@
+{
+  "schema": "occ.repo-group-runtime-observation.v1",
+  "platform": "Linux-6.18.44-x86_64-with-glibc2.39",
+  "python": "3.12.14",
+  "scope": "REAL_GIT_SQLITE_MANIFEST_PR005_FACTS_AND_AUTOMATIC_GROUPING_CLI",
+  "pr005_actual_interop": "PASS; source_eligibility.py from observed PR42 head 74221737c6234da75ec1a74c89e94a5f080dba35",
+  "cold_definition": "first new process; OS caches not evicted",
+  "warm_definition": "second new process on same inputs/output; catalog independently rebuilt, verified and reused",
+  "observations": [
+    {
+      "receipt": {
+        "schema": "occ.repo-group-receipt.v1",
+        "state": "READY",
+        "grouping_batch_id": "d5725db886168969afa8ca1d1b8c96015d4c1729f2aa51b02983abffd8a454dc",
+        "base_batch_id": "ad823fb4429a4441728f4e0fefa9eb4cf09678c8d5e73321a00f030918a91c12",
+        "counts": {
+          "entries": 70,
+          "groups": 68,
+          "segments": 105,
+          "parts": 111,
+          "relations": 11,
+          "unresolved": 15
+        },
+        "raw_reference_complete": true,
+        "graph_scope": "PYTHON_STATIC_ONLY_WITH_EXPLICIT_UNRESOLVED",
+        "reused": false,
+        "ai_delivery": "NOT_PERFORMED"
+      },
+      "application_peak_rss_bytes": 25731072,
+      "duration_seconds": 0.297628733998863,
+      "temperature": "cold"
+    },
+    {
+      "receipt": {
+        "schema": "occ.repo-group-receipt.v1",
+        "state": "READY",
+        "grouping_batch_id": "d5725db886168969afa8ca1d1b8c96015d4c1729f2aa51b02983abffd8a454dc",
+        "base_batch_id": "ad823fb4429a4441728f4e0fefa9eb4cf09678c8d5e73321a00f030918a91c12",
+        "counts": {
+          "entries": 70,
+          "groups": 68,
+          "segments": 105,
+          "parts": 111,
+          "relations": 11,
+          "unresolved": 15
+        },
+        "raw_reference_complete": true,
+        "graph_scope": "PYTHON_STATIC_ONLY_WITH_EXPLICIT_UNRESOLVED",
+        "reused": true,
+        "ai_delivery": "NOT_PERFORMED"
+      },
+      "application_peak_rss_bytes": 25731072,
+      "duration_seconds": 0.2990468370007875,
+      "temperature": "warm"
+    }
+  ],
+  "binding": {
+    "analysis_digest": "8413e0c60982fd9c3177ddfcd593d1cadd57df383a334ec171a566d35dc647b6",
+    "base_batch_id": "ad823fb4429a4441728f4e0fefa9eb4cf09678c8d5e73321a00f030918a91c12",
+    "declared_map_digest": "4e081d744be221eea7717a74ab86c3691cabaea8e767ffe8fb496f39155b117a",
+    "eligibility_adapter": {
+      "owner": "source_eligibility.facts_status/project_facts",
+      "owner_build": "534916549871a615d716489bccb05fafd5e265d3d413b2000d392f3327dfab0f",
+      "pending_sources": 0,
+      "projection_digest": "3ed71e7ff5e01b518fba10c9adc5f229a2104d469d3c3a7e04d4189b09a4a337",
+      "schema": "occ.format-eligibility.v1",
+      "state": "MAPPED",
+      "version": "utf8-controls-strict-lfs3.v1"
+    },
+    "eligibility_digest": "16de1396f516b34e888346d261d606d27c16a31595396f2b765c43d2a5977a47",
+    "namespace": "code",
+    "parser_version": {
+      "ast_window_bytes": 2097152,
+      "python": [
+        3,
+        12
+      ],
+      "source_sha256": "3ece70f07012494ebe33b8a034186a65cd9b10c1633011ba7851889eb4a2e683"
+    },
+    "planner_build": "7681cf17446b7cc51555d3259a4bc5fc58671bac7e8f0f731ba043a4a4f1fcd7",
+    "planner_version": "PYTHON_RAW_REFERENCE_GROUPS_V1",
+    "policy_digest": "0686b4b2a8eaf6eb8583449a840a8a1eec88f93f66f7949caca402eca698b9d2",
+    "profile_revision": "08c9d9aae5d682414108cfe12382021888d51423a05a946430f97515c4618af5",
+    "repository": "sce",
+    "resolver_version": "REPO_SOURCE_IMPORT_GRAPH_V1",
+    "resource_policy": {
+      "graph_input_bytes": null,
+      "schema": "occ.repo-group-resources.v1",
+      "timeout_seconds": null
+    },
+    "roots": [
+      ".",
+      "libA",
+      "libB"
+    ],
+    "schema": "occ.repo-group-batch-binding.v1",
+    "snapshot_id": "b3b903c18cac1835911644e33f3eb994539f90cf3f5307124b5d5df2fe8b3208"
+  },
+  "coverage": {
+    "ai_delivery": "NOT_PERFORMED",
+    "ai_read": "UNKNOWN",
+    "all_captured_parts_referenced": true,
+    "all_entries_grouped": true,
+    "all_tracked_bytes_exportable": false,
+    "captured_part_count": 111,
+    "entry_count": 70,
+    "gap_count": 4,
+    "graph_scope": "PYTHON_STATIC_ONLY_WITH_EXPLICIT_UNRESOLVED",
+    "group_count": 68,
+    "installed_device": "NOT_RUN",
+    "observed_test_coverage": "NOT_MEASURED",
+    "proof_scope": "ALL_CAPTURED_PART_REFERENCES_WITH_VERIFIED_BASE_BYTES",
+    "qualified_python_sources": 59,
+    "schema": "occ.repo-group-coverage.v1",
+    "segment_count": 105,
+    "status": "PASS",
+    "text_eligible_reference_count": 108,
+    "unique_raw_reference_bytes": 168764,
+    "usefulness_trial": "NOT_RUN"
+  },
+  "large_graph_runtime_case": {
+    "method": "test_large_iterative_graph_no_files_groups_or_segments_cap",
+    "nodes": 5000,
+    "scc_groups": 1,
+    "refs": 5000,
+    "segments_more_than": 1000,
+    "scope": "PURE_PLANNER_AND_SEGMENTER_ONLY"
+  },
+  "installed_dell_windows": "NOT_RUN",
+  "same_budget_usefulness_trial": "NOT_RUN"
+}

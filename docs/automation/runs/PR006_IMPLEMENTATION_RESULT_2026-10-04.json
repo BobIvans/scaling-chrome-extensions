@@ -1,0 +1,344 @@
+{
+  "schema": "roadmap.pr-implementation-result.v1",
+  "package_id": "ROADMAP-PR-006",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "implementation_state": "SCOPED_PYTHON_GROUPS_AND_ACTUAL_PR005_ADAPTER_LOCAL_CHECKS_PASS",
+  "base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
+  "head_sha": null,
+  "branch": "codex/pr006-python-scc-groups",
+  "pr_number": null,
+  "pr_url": null,
+  "merge_state": "NOT_OBSERVED_AT_RECEIPT_CREATION",
+  "required_ci_state": "PENDING_ON_PUBLISHED_PR_HEAD",
+  "actual_touched_paths": [
+    ".gitattributes",
+    "README.md",
+    "agent-bridge/Install.ps1",
+    "content-lab/fixtures/pr006/ANALYSIS.jsonl",
+    "content-lab/fixtures/pr006/DECLARED_MAP.json",
+    "content-lab/fixtures/pr006/EXPECTED_ORACLE.json",
+    "content-lab/fixtures/pr006/POLICY.json",
+    "content-lab/fixtures/pr006/README.md",
+    "content-lab/fixtures/pr006/REPO_MANIFEST.jsonl",
+    "content-lab/fixtures/pr006/SOURCE_ELIGIBILITY.jsonl",
+    "content-lab/fixtures/pr006/raw/source_000.bin",
+    "content-lab/fixtures/pr006/raw/source_001.bin",
+    "content-lab/fixtures/pr006/raw/source_002.bin",
+    "content-lab/fixtures/pr006/raw/source_003.bin",
+    "content-lab/fixtures/pr006/raw/source_004.bin",
+    "content-lab/fixtures/pr006/raw/source_005.bin",
+    "content-lab/fixtures/pr006/raw/source_006.bin",
+    "content-lab/fixtures/pr006/raw/source_007.bin",
+    "content-lab/fixtures/pr006/raw/source_008.bin",
+    "content-lab/fixtures/pr006/raw/source_009.bin",
+    "content-lab/fixtures/pr006/raw/source_010.bin",
+    "content-lab/fixtures/pr006/raw/source_012.bin",
+    "content-lab/fixtures/pr006/raw/source_013.bin",
+    "content-lab/fixtures/pr006/raw/source_014.bin",
+    "content-lab/fixtures/pr006/raw/source_015.bin",
+    "content-lab/fixtures/pr006/raw/source_016.bin",
+    "content-lab/fixtures/pr006/raw/source_017.bin",
+    "content-lab/fixtures/pr006/raw/source_018.bin",
+    "content-lab/fixtures/pr006/raw/source_019.bin",
+    "content-lab/fixtures/pr006/raw/source_020.bin",
+    "content-lab/fixtures/pr006/raw/source_021.bin",
+    "content-lab/fixtures/pr006/raw/source_022.bin",
+    "content-lab/fixtures/pr006/raw/source_023.bin",
+    "content-lab/fixtures/pr006/raw/source_024.bin",
+    "content-lab/fixtures/pr006/raw/source_025.bin",
+    "content-lab/fixtures/pr006/raw/source_026.bin",
+    "content-lab/fixtures/pr006/raw/source_027.bin",
+    "content-lab/fixtures/pr006/raw/source_028.bin",
+    "content-lab/fixtures/pr006/raw/source_029.bin",
+    "content-lab/fixtures/pr006/raw/source_030.bin",
+    "content-lab/fixtures/pr006/raw/source_031.bin",
+    "content-lab/fixtures/pr006/raw/source_032.bin",
+    "content-lab/fixtures/pr006/raw/source_033.bin",
+    "content-lab/fixtures/pr006/raw/source_034.bin",
+    "content-lab/fixtures/pr006/raw/source_035.bin",
+    "content-lab/fixtures/pr006/raw/source_036.bin",
+    "content-lab/fixtures/pr006/raw/source_037.bin",
+    "content-lab/fixtures/pr006/raw/source_038.bin",
+    "content-lab/fixtures/pr006/raw/source_039.bin",
+    "content-lab/fixtures/pr006/raw/source_040.bin",
+    "content-lab/fixtures/pr006/raw/source_041.bin",
+    "content-lab/fixtures/pr006/raw/source_042.bin",
+    "content-lab/fixtures/pr006/raw/source_043.bin",
+    "content-lab/fixtures/pr006/raw/source_044.bin",
+    "content-lab/fixtures/pr006/raw/source_045.bin",
+    "content-lab/fixtures/pr006/raw/source_046.bin",
+    "content-lab/fixtures/pr006/raw/source_047.bin",
+    "content-lab/fixtures/pr006/raw/source_048.bin",
+    "content-lab/fixtures/pr006/raw/source_049.bin",
+    "content-lab/fixtures/pr006/raw/source_050.bin",
+    "content-lab/fixtures/pr006/raw/source_051.bin",
+    "content-lab/fixtures/pr006/raw/source_052.bin",
+    "content-lab/fixtures/pr006/raw/source_053.bin",
+    "content-lab/fixtures/pr006/raw/source_054.bin",
+    "content-lab/fixtures/pr006/raw/source_055.bin",
+    "content-lab/fixtures/pr006/raw/source_056.bin",
+    "content-lab/fixtures/pr006/raw/source_057.bin",
+    "content-lab/fixtures/pr006/raw/source_060.bin",
+    "content-lab/fixtures/pr006/raw/source_061.bin",
+    "content-lab/fixtures/pr006/raw/source_062.bin",
+    "content-lab/fixtures/pr006/raw/source_063.bin",
+    "content-lab/fixtures/pr006/raw/source_064.bin",
+    "content-lab/fixtures/pr006/raw/source_065.bin",
+    "content-lab/fixtures/pr006/raw/source_066.bin",
+    "content-lab/fixtures/pr006/raw/source_067.bin",
+    "content-lab/fixtures/pr006/raw/source_068.bin",
+    "content-lab/repo_groups.py",
+    "content-lab/repo_source.py",
+    "content-lab/test_repo_groups.py",
+    "docs/automation/pr006-functions.json",
+    "docs/automation/pr006-functions.md",
+    "docs/automation/pr006/ELIGIBILITY_INPUT.example.json",
+    "docs/automation/pr006/GROUP_POLICY.example.json",
+    "docs/automation/pr006/GROUP_POLICY.schema.json",
+    "docs/automation/pr006/INPUT_PROVENANCE.json",
+    "docs/automation/pr006/PR005_ADAPTER_MAP.json",
+    "docs/automation/repo-groups.md",
+    "docs/automation/runs/PR006_CHECKOUT_QUALIFICATION_2026-10-04.json",
+    "docs/automation/runs/PR006_IMPLEMENTATION_RESULT_2026-10-04.json",
+    "docs/automation/runs/PR006_RUNTIME_OBSERVATION_2026-10-04.json"
+  ],
+  "pr005_adapter": {
+    "schema": "occ.format-eligibility.v1",
+    "version": "utf8-controls-strict-lfs3.v1",
+    "projection_digest": "3ed71e7ff5e01b518fba10c9adc5f229a2104d469d3c3a7e04d4189b09a4a337",
+    "owner": "source_eligibility.facts_status/project_facts",
+    "owner_build": "534916549871a615d716489bccb05fafd5e265d3d413b2000d392f3327dfab0f",
+    "head_sha": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
+    "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/42",
+    "interop_test": "PASS_REAL_GIT_SQLITE_AND_AUTOMATIC_CLI"
+  },
+  "grouping_batch_id": "d5725db886168969afa8ca1d1b8c96015d4c1729f2aa51b02983abffd8a454dc",
+  "base_batch_id": "ad823fb4429a4441728f4e0fefa9eb4cf09678c8d5e73321a00f030918a91c12",
+  "group_count": 68,
+  "source_count": 70,
+  "segment_count": 105,
+  "captured_part_count": 111,
+  "raw_reference_complete": true,
+  "text_eligible_reference_count": 108,
+  "graph_scope": "PYTHON_STATIC_ONLY_WITH_EXPLICIT_UNRESOLVED",
+  "tests": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p test_repo_groups.py -v",
+      "passed": 24,
+      "failed": 0
+    },
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "passed": 296,
+      "failed": 0,
+      "duration_seconds": 167.103
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "passed": 47,
+      "failed": 0
+    },
+    {
+      "command": "python -B -m unittest discover -s agent-bridge -p 'test_qualification_adapter.py' -v",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "passed": 116,
+      "failed": 0
+    },
+    {
+      "command": "git diff --check",
+      "state": "PASS"
+    }
+  ],
+  "cases": [
+    {
+      "id": "A006-01",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_full_real_ledger_raw_refs_and_immutable_base"
+      ]
+    },
+    {
+      "id": "A006-02",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_scc_independent_oracle_shuffling_and_labelled_cycle"
+      ]
+    },
+    {
+      "id": "A006-03",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_oversized_cycle_all_segments_tail_and_budgets",
+        "content-lab/test_repo_groups.py::GroupTests.test_large_iterative_graph_no_files_groups_or_segments_cap"
+      ]
+    },
+    {
+      "id": "A006-04",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_logical_ids_survive_unrelated_addition_byte_change_and_membership_change"
+      ]
+    },
+    {
+      "id": "A006-05",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_scc_independent_oracle_shuffling_and_labelled_cycle",
+        "content-lab/test_repo_groups.py::GroupTests.test_foreground_fault_rollback_reuse_and_immutable_output_conflict"
+      ]
+    },
+    {
+      "id": "A006-06",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_static_declared_and_filename_evidence_do_not_mix"
+      ]
+    },
+    {
+      "id": "A006-07",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_actual_pr005_default_cli_whole_source_binding_and_legacy_diagnostics",
+        "content-lab/test_repo_groups.py::GroupTests.test_actual_pr005_fact_corruption_preserves_valid_catalog"
+      ]
+    },
+    {
+      "id": "A006-08",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_unresolved_static_cases_and_ineligible_targets"
+      ]
+    },
+    {
+      "id": "A006-09",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_unmapped_adapter_diagnostic_cli_and_stale_hash_rejected",
+        "content-lab/test_repo_groups.py::GroupTests.test_explicit_normalized_adapter_cli_scope_schema_hash_and_no_chunk_fallback"
+      ]
+    },
+    {
+      "id": "A006-10",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_saved_analysis_tamper_is_not_published",
+        "content-lab/test_repo_groups.py::GroupTests.test_manifest_and_derived_range_membership_tamper",
+        "content-lab/test_repo_groups.py::GroupTests.test_missing_head_relation_and_windows_style_stage_handle_cleanup",
+        "content-lab/test_repo_groups.py::GroupTests.test_post_validation_tamper_never_publishes_success_header"
+      ]
+    },
+    {
+      "id": "A006-11",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_explicit_part_frame_resource_budgets_without_total_caps"
+      ]
+    },
+    {
+      "id": "A006-12",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_whole_source_binary_lfs_and_gaps_never_become_code"
+      ]
+    },
+    {
+      "id": "A006-13",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_declared_outside_excluded_and_hash_drift"
+      ]
+    },
+    {
+      "id": "A006-14",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_source_is_data_no_import_hooks_or_execution"
+      ]
+    },
+    {
+      "id": "A006-15",
+      "status": "PASS",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_foreground_fault_rollback_reuse_and_immutable_output_conflict",
+        "content-lab/test_repo_groups.py::GroupTests.test_subprocess_crash_before_publish_never_exposes_verified_catalog"
+      ]
+    },
+    {
+      "id": "A006-16",
+      "status": "PARTIAL",
+      "evidence": [
+        "content-lab/test_repo_groups.py::GroupTests.test_offline_navigation_movable_escaped_and_all_links_resolve"
+      ],
+      "limitation": "All actual generated links walked after moving output, markup escaped; local browser opening not observed."
+    },
+    {
+      "id": "A006-17",
+      "status": "NOT_RUN",
+      "evidence": null
+    },
+    {
+      "id": "A006-18",
+      "status": "NOT_RUN",
+      "evidence": null
+    }
+  ],
+  "device": "NOT_RUN",
+  "usefulness_trial": "NOT_RUN",
+  "ai_delivery": "NOT_PERFORMED",
+  "ai_read": "UNKNOWN",
+  "broad_task_state": "NOT_CLOSED",
+  "milestone_state": "NOT_CLOSED",
+  "unmet_criteria": [
+    "Local browser opening of derived navigation (static full link walk PASS)",
+    "A006-17 paired same-budget usefulness/AI trial",
+    "A006-18 installed Dell Windows 11 large-corpus/resource/responsiveness qualification",
+    "Out-of-core graph; optional Native group picker; JS/TS resolver and unified provenance remain separate work"
+  ],
+  "next_package": "ROADMAP-PR-007",
+  "separate_pr004_followups": "PR004 #41 observed merged; Native progress and streamed index binding already in PR001 #38; installed-device qualification NOT_RUN",
+  "resource_observation": "docs/automation/runs/PR006_RUNTIME_OBSERVATION_2026-10-04.json",
+  "qualification_scope": {
+    "full_captured_ledger_entries": 70,
+    "pure_graph_nodes": 5000,
+    "pure_graph_segments_more_than": 1000,
+    "source_roots_frozen_in_operator_profile": true,
+    "global_files_groups_segments_caps": null,
+    "default_processing_timeout": null,
+    "rss_is_linux_70_entry_fixture_only": true,
+    "broad_PR005_device_work_still_open": true,
+    "synthetic_adapter_fixture_alone_does_not_prove_actual_PR005_interop": true,
+    "actual_PR005_interop_independently_verified": true,
+    "actual_checkout_files": 418,
+    "actual_checkout_parts": 2097
+  },
+  "dependency_integration": {
+    "PR005": "Actual owner bytes match latest PR005 head; automatic integration PASS; upstream merge pending at receipt creation",
+    "windows_failure_observed": {
+      "job_id": 111435480657,
+      "reason": "Reserved Win32 device filename nul.txt in test fixture, git add exit 128",
+      "upstream_fix": "PR005 head 74221737 uses controls.txt; exact upstream fixture retained, with original bytes/assertions"
+    },
+    "PR007": "Parallel owner, not implemented in this PR",
+    "pr005_final_ci": {
+      "run_id": 37203174365,
+      "ubuntu": "PASS",
+      "windows": "PASS",
+      "head_sha": "74221737c6234da75ec1a74c89e94a5f080dba35"
+    },
+    "latest_dependency_ci": {
+      "head_sha": "491e5a5b2ffa3048db1a10c417078afe3f8ba134",
+      "run_id": 37204147508,
+      "state": "IN_PROGRESS_AT_RECEIPT_CREATION"
+    }
+  },
+  "tests_total": 467,
+  "as_of": "LOCAL_REVIEW_PREPARATION_BEFORE_PR_PUBLICATION",
+  "tests_subject": "PR006 + actual PR005 owner + merged PR009 main; product byte identity will be matched to published Git tree",
+  "integration_base_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
+  "full_checkout_qualification": "docs/automation/runs/PR006_CHECKOUT_QUALIFICATION_2026-10-04.json",
+  "actual_touched_paths_basis_sha": "491e5a5b2ffa3048db1a10c417078afe3f8ba134"
+}
