@@ -41,6 +41,8 @@ FIELDS = {
     "durable.review.handoff": ({"type", "namespace", "sessionId"}, set()),
     "durable.review.importBound": ({"type", "namespace", "sessionId", "review"}, set()),
     "durable.repo.list": ({"type"}, set()),
+    "durable.repo.history": ({"type", "repository"}, {"limit", "cursor"}),
+    "durable.repo.delta": ({"type", "repository", "snapshotId"}, {"limit", "cursor", "baseSnapshotId"}),
     "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
     "durable.repo.scanRun": ({"type", "repository", "action"}, {"intentKey", "runId", "expectedCursor", "expectedRevision"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
@@ -52,7 +54,9 @@ JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
 DESKTOP_PROTOCOL = 'occ.desktop-stdio.v1'
 DESKTOP_READS = frozenset({'durable.info', 'durable.repo.list', 'durable.search',
-                           'durable.context', 'durable.repo.manifest'})
+                           'durable.context', 'durable.repo.manifest',
+                           'durable.repo.history', 'durable.repo.delta'})
+DESKTOP_SCAN = 'durable.repo.scanRun'
 
 
 def adapter_context(profile, policy):
@@ -88,15 +92,39 @@ def ready_store(store, *, manifest=False):
         return False
 
 
+def ready_scan_store(store):
+    if not ready_store(store, manifest=True):
+        return False
+    try:
+        db = read_connection(store)
+        try:
+            objects = {row['name'] for row in db.execute(
+                "SELECT name FROM sqlite_master WHERE type IN ('table','trigger','index')")}
+            required = {'repo_scan_runs', 'repo_entry_counts', 'repo_count_migration',
+                        'repo_heads', 'repo_count_insert', 'repo_count_delete',
+                        'repo_count_update', 'repo_active_scan'}
+            return required <= objects and bool(db.execute(
+                'SELECT 1 FROM repo_count_migration WHERE id=1').fetchone())
+        finally:
+            db.close()
+    except (OSError, ValueError, sqlite3.Error):
+        return False
+
+
 def info(profile):
     store = Path(profile['store'])
-    capabilities = sorted((DESKTOP_READS - {'durable.repo.manifest'}) & FIELDS.keys())
+    repo_reads = {'durable.repo.manifest', 'durable.repo.history', 'durable.repo.delta'}
+    capabilities = sorted((DESKTOP_READS - repo_reads) & FIELDS.keys())
     if 'durable.repo.manifest' in FIELDS and ready_store(store, manifest=True):
         import repo_manifest
         if callable(getattr(repo_manifest, 'page', None)):
             capabilities.append('durable.repo.manifest')
+            capabilities.extend(sorted({'durable.repo.history', 'durable.repo.delta'} & FIELDS.keys()))
+            if profile.get('desktop_scan_enabled') is True and ready_scan_store(store):
+                capabilities.append(DESKTOP_SCAN)
     return {'protocol': DESKTOP_PROTOCOL, 'native_input_bytes': INPUT_BYTES,
-            'native_combined_output_bytes': OUTPUT_BYTES, 'native_timeout_ms': 10_000,
+            'native_combined_output_bytes': OUTPUT_BYTES,
+            'native_timeout_ms': 120_000 if DESKTOP_SCAN in capabilities else 10_000,
             'capabilities': capabilities, 'namespaces': list(profile['namespaces']),
             'store_path': str(store.resolve()), 'store_ready': ready_store(store),
             'backend_build_status': 'UNKNOWN_BUNDLE', 'migration_performed': False}
@@ -105,8 +133,10 @@ def info(profile):
 def operator_profile(path):
     profile = load_json(path)
     required = {"schema", "store", "policy_file", "namespaces", "templates"}
-    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories'} or profile["schema"] != "occ.native-durable-profile.v1":
+    if not isinstance(profile, dict) or not required.issubset(profile) or set(profile) - required - {'repositories', 'desktop_scan_enabled'} or profile["schema"] != "occ.native-durable-profile.v1":
         raise ValueError("DURABLE_OPERATOR_PROFILE_REQUIRED")
+    if type(profile.get('desktop_scan_enabled', False)) is not bool:
+        raise ValueError('DURABLE_OPERATOR_PROFILE_REQUIRED')
     for field in ("store", "policy_file"):
         value = profile[field]
         if not isinstance(value, str) or "\0" in value or not Path(value).is_absolute():
@@ -203,7 +233,8 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     validate_request(request)
     store, operation = Path(profile["store"]), request["type"]
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
-    if desktop and operation not in DESKTOP_READS:
+    if desktop and operation not in DESKTOP_READS and not (
+            operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile)['capabilities']):
         raise ValueError('DESKTOP_READ_ONLY')
     if operation == 'durable.repo.coverage':
         # This operation must not initialize the writer/Core/schema owners.
@@ -219,8 +250,23 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     if operation == 'durable.info':
         value['info'] = info(profile)
         return value
-    if desktop and not ready_store(store, manifest=operation == 'durable.repo.manifest'):
+    if desktop and not ready_store(store, manifest=operation in {
+            'durable.repo.manifest', 'durable.repo.history', 'durable.repo.delta', DESKTOP_SCAN}):
         raise ValueError('DESKTOP_SETUP_REQUIRED')
+    if operation in {'durable.repo.history', 'durable.repo.delta'}:
+        import repo_history
+        alias = identifier(request['repository'])
+        source = profile.get('repositories', {}).get(alias)
+        if source is None:
+            raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+        options = {k: request[k] for k in ('limit', 'cursor') if k in request}
+        if operation == 'durable.repo.history':
+            value['page'] = repo_history.snapshots(store, source['namespace'], alias, source, **options)
+        else:
+            value['page'] = repo_history.delta(store, source['namespace'], alias, source,
+                                               request['snapshotId'], base_snapshot_id=request.get('baseSnapshotId'),
+                                               **options)
+        return value
     core = None if desktop else Core(store, policy)
     if operation.startswith('durable.repo.'):
         repositories = profile.get('repositories', {})
@@ -345,7 +391,7 @@ def dispatch_desktop(request, profile_path):
     context = None
     try:
         validate_request(request)
-        if request['type'] not in DESKTOP_READS:
+        if request['type'] not in DESKTOP_READS and request['type'] != DESKTOP_SCAN:
             raise ValueError('DESKTOP_READ_ONLY')
         profile, policy = operator_profile(profile_path)
         context = adapter_context(profile, policy)
