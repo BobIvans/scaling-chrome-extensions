@@ -107,6 +107,29 @@ class TkTests(unittest.TestCase):
 
     selected = fixtures.OwnerTests.selected
 
+    def test_action_panel_fences_edited_input_and_corrects_revision(self):
+        self.pump(lambda:self.app.report is not None and not self.app.busy())
+        from desktop.actions_ui import ActionsPanel
+        from desktop.client import DesktopClient
+        import automation_core
+        from test_action_runtime import configuration
+        policy=json.loads(self.policy.read_bytes());policy['actions']=configuration()
+        self.policy.write_text(json.dumps(policy));self.client.close()
+        client=DesktopClient(self.connection);client.handshake();self.addCleanup(client.close)
+        panel=ActionsPanel(self.tk,client)
+        self.addCleanup(lambda:panel.close() if not panel.closed else None)
+        self.pump(lambda:panel.config is not None and not panel.busy)
+        panel.fields['command'].set('find');panel.fields['criteria'].set('Show source IDs')
+        panel.input.insert('1.0','needle');panel.compile()
+        self.pump(lambda:panel.intent is not None and not panel.busy)
+        panel.input.insert('end',' changed');panel.enqueue()
+        self.assertIn('INPUT_CHANGED',panel.status.get())
+        panel.correct();self.pump(lambda:panel.intent['revision']==2 and not panel.busy)
+        panel.enqueue();self.pump(lambda:not panel.busy)
+        core=automation_core.Core(self.store,policy)
+        self.assertEqual(core.run_once()['state'],'SUCCEEDED')
+        panel.close()
+
 
 if __name__ == '__main__':
     unittest.main()

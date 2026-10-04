@@ -21,6 +21,7 @@ TIMEOUT_MS = 10_000
 HASH = re.compile(r'^[0-9a-f]{64}$')
 NAME = re.compile(r'^[A-Za-z0-9_.:-]{1,100}$')
 READS = {
+    'durable.action': ({'type', 'action', 'payload'}, set()),
     'durable.info': ({'type'}, set()),
     'durable.repo.list': ({'type'}, set()),
     'durable.search': ({'type', 'namespace', 'query'}, {'limit'}),
@@ -180,7 +181,11 @@ def validate_request(request):
     for key in ('namespace', 'repository'):
         if key in request:
             require(isinstance(request[key], str) and NAME.fullmatch(request[key]))
-    if request['type'] == 'durable.search':
+    if request['type'] == 'durable.action':
+        require(request['action'] in {'INFO','CREATE','GET','CORRECT','ENQUEUE','STOP','RESUME','BIND',
+                'PACKET_START','PACKET_APPEND','PACKET_SEAL','PACKET_PAGE','RECONCILE','IMPORT_RESULT','SKILL_RECORD','SKILL_INVOKE','CONTINUE'})
+        require(isinstance(request['payload'], dict))
+    elif request['type'] == 'durable.search':
         require(len(text_value(request['query'])) <= 1000)
         number(request.get('limit', 10), 1, 20)
     elif request['type'] == 'durable.context':
@@ -359,9 +364,13 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
             and result.get('operation') == operation, 'DESKTOP_OPERATION_MISMATCH')
     field = {'durable.info': 'info', 'durable.repo.list': 'repositories',
              'durable.search': 'items', 'durable.context': 'context',
-             'durable.repo.manifest': 'manifest'}[operation]
+             'durable.repo.manifest': 'manifest', 'durable.action': 'action'}[operation]
     exact(result, {'schema', 'operation', field})
-    if operation == 'durable.info':
+    if operation == 'durable.action':
+        require(isinstance(result[field], dict), 'DESKTOP_ACTION_SCHEMA')
+        # This is typed data from the installed Core owner. It is never used as
+        # argv, local paths or authority for a subsequent action.
+    elif operation == 'durable.info':
         validate_info(result[field])
     elif operation == 'durable.context':
         validate_context(result[field], request)

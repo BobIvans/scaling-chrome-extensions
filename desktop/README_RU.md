@@ -1,5 +1,10 @@
 # Desktop 0.1: установленная библиотека без Chrome
 
+Опциональная панель «Текст / голос → действия» подключает intent/queue только
+если operator policy явно включает actions. Запуск, Core worker и незакрытая
+device qualification: [единый PR-016/017](../docs/automation/pr016-017/README_RU.md).
+Основной поиск и сохранение draft продолжают работать с прежним профилем.
+
 Окно подключается к **уже установленному текущему backend**. Нужны Python 3.11+
 с Tkinter, `content-lab/native_adapter.py`, настроенный native-profile и готовая
 библиотека `content.sqlite3`. Desktop ничего не скачивает и не регистрирует.

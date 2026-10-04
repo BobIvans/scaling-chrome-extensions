@@ -1,8 +1,9 @@
 """Deterministic local automation using Content Lab's existing SQLite store.
 
 The operator policy owns paths, patches and test commands. Jobs never supply
-shell commands, credentials or new permissions. No model, browser, push, merge,
-signer or sender is invoked. A Git worktree is isolation of edits, not a sandbox
+shell commands, credentials or new permissions. Browser actions require an
+opt-in registry, pinned qualification and target grants. No push, merge or
+signer is invoked. A Git worktree is isolation of edits, not a sandbox
 for untrusted executable code; register only reviewed patches/test profiles.
 """
 
@@ -227,6 +228,15 @@ def validate_policy(policy):
 def validate_job(payload, policy):
     if not isinstance(payload, dict):
         raise ValueError("JOB_OBJECT_REQUIRED")
+    if payload.get('kind') == 'action_plan':
+        if set(payload) != {'kind', 'intent_id', 'revision'}:
+            raise ValueError('ACTION_JOB_SCHEMA')
+        from action_intent import registry
+        registry(policy.get('actions'))
+        identifier(payload['intent_id'])
+        if type(payload['revision']) is not int or payload['revision'] < 1:
+            raise ValueError('ACTION_REVISION_REQUIRED')
+        return 1
     if payload.get('kind') == 'review_report':
         if set(payload) != {'kind', 'report_profile'}:
             raise ValueError('REPORT_JOB_SCHEMA')
@@ -321,8 +331,17 @@ class Cancelled(Exception):
 
 
 class Core:
-    def __init__(self, store, policy):
+    def __init__(self, store, policy, *, action_adapter=None):
         self.store, self.policy = Path(store), validate_policy(policy)
+        self._actions = None
+        self._action_adapter = action_adapter
+
+    @property
+    def actions(self):
+        if self._actions is None:
+            from action_runtime import ActionRuntime
+            self._actions = ActionRuntime(self, self._action_adapter)
+        return self._actions
 
     def get(self, job_id):
         db = connection(self.store)
@@ -449,7 +468,7 @@ class Core:
             current = db.execute("SELECT * FROM jobs WHERE id=?", (job["id"],)).fetchone()
             if current["lease_token"] != job["lease_token"]:
                 raise ValueError("LEASE_LOST")
-            if current["cancel_requested"] and state != "RUNNING":
+            if current["cancel_requested"] and state not in {"RUNNING", "NEEDS_RECONCILIATION"}:
                 state = "CANCELLED"
             db.execute("UPDATE jobs SET state=?,result=?,checkpoint=?,available=?,updated=? WHERE id=?",
                        (state, encoded(result or {}), encoded(checkpoint if checkpoint is not None else json.loads(current["checkpoint"])), time.time() + delay, time.time(), job["id"]))
@@ -660,6 +679,8 @@ class Core:
                 result = write_report(self.store, self.policy['reports'][job['payload']['report_profile']],
                                       progress=lambda: self.heartbeat(job))
                 self.transition(job, 'SUCCEEDED', result=result)
+            elif job['payload']['kind'] == 'action_plan':
+                self.actions.run(job)
             else:
                 self.patch_test(job)
         except Cancelled:

@@ -26,6 +26,7 @@ import repo_context
 INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 FIELDS = {
+    "durable.action": ({"type", "action", "payload"}, set()),
     "durable.info": ({"type"}, set()),
     "durable.search": ({"type", "namespace", "query"}, {"limit"}),
     "durable.context": ({"type", "namespace", "ids"}, {"maxBytes"}),
@@ -88,9 +89,14 @@ def ready_store(store, *, manifest=False):
         return False
 
 
-def info(profile):
+def info(profile, policy):
     store = Path(profile['store'])
     capabilities = sorted((DESKTOP_READS - {'durable.repo.manifest'}) & FIELDS.keys())
+    profile_policy = policy
+    if profile_policy.get('actions', {}).get('enabled') is True:
+        from action_intent import registry
+        registry(profile_policy['actions'])
+        capabilities.append('durable.action')
     if 'durable.repo.manifest' in FIELDS and ready_store(store, manifest=True):
         import repo_manifest
         if callable(getattr(repo_manifest, 'page', None)):
@@ -120,6 +126,13 @@ def operator_profile(path):
     if not isinstance(templates, dict) or len(templates) > 100:
         raise ValueError("DURABLE_TEMPLATES_REQUIRED")
     policy = validate_policy(load_json(Path(profile["policy_file"])))
+    if policy.get('actions', {}).get('enabled') is True:
+        from action_intent import registry
+        configured = registry(policy['actions'])
+        if not set(configured['namespaces']) <= set(namespaces):
+            raise ValueError('ACTION_NAMESPACE_OUTSIDE_SCOPE')
+        if any(profile.get('repositories', {}).get(k) != v for k, v in configured['repositories'].items()):
+            raise ValueError('ACTION_REPO_OUTSIDE_SCOPE')
     for name, payload in templates.items():
         identifier(name)
         validate_job(payload, policy)
@@ -203,9 +216,12 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     validate_request(request)
     store, operation = Path(profile["store"]), request["type"]
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
-    if desktop and operation not in DESKTOP_READS:
+    if desktop and operation not in DESKTOP_READS and operation != 'durable.action':
         raise ValueError('DESKTOP_READ_ONLY')
-    if operation == 'durable.repo.coverage':
+    if operation == 'durable.action':
+        value['action'] = Core(store, policy).actions.handle(request['action'], request['payload'])
+        return value
+    elif operation == 'durable.repo.coverage':
         # This operation must not initialize the writer/Core/schema owners.
         from repo_coverage import query
         alias = identifier(request['repository'])
@@ -217,7 +233,7 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
         value['coverage'] = coverage
         return value
     if operation == 'durable.info':
-        value['info'] = info(profile)
+        value['info'] = info(profile, policy)
         return value
     if desktop and not ready_store(store, manifest=operation == 'durable.repo.manifest'):
         raise ValueError('DESKTOP_SETUP_REQUIRED')
@@ -345,7 +361,7 @@ def dispatch_desktop(request, profile_path):
     context = None
     try:
         validate_request(request)
-        if request['type'] not in DESKTOP_READS:
+        if request['type'] not in DESKTOP_READS and request['type'] != 'durable.action':
             raise ValueError('DESKTOP_READ_ONLY')
         profile, policy = operator_profile(profile_path)
         context = adapter_context(profile, policy)
