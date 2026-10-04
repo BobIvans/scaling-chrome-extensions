@@ -17,7 +17,7 @@ import zipfile
 
 import repo_archive as archive
 import repo_context as repo
-import repo_manifest as manifest
+import repo_archive_input as manifest
 import repo_scan
 from repo_artifacts import file_proof
 
@@ -307,6 +307,11 @@ sys.exit(a.main(['--profile',sys.argv[2],'--repository','sce','--manifest',sys.a
         db = repo.db_for(self.store)
         db.execute('UPDATE repo_entries SET path=? WHERE snapshot_id=? AND path=?', (hostile, self.snapshot_id, 'files/000.py'))
         db.execute('UPDATE repo_chunks SET path=? WHERE snapshot_id=? AND path=?', (hostile, self.snapshot_id, 'files/000.py'))
+        for item in db.execute('SELECT id,payload FROM items'):
+            payload = json.loads(item['payload'])
+            if payload.get('path') == 'files/000.py':
+                payload['path'] = hostile
+                db.execute('UPDATE items SET payload=? WHERE id=?', (json.dumps(payload), item['id']))
         db.commit()
         db.close()
         shutil.rmtree(self.directory)
@@ -342,7 +347,7 @@ sys.exit(a.main(['--profile',sys.argv[2],'--repository','sce','--manifest',sys.a
         db.execute('INSERT INTO repo_chunks VALUES (?,?,?,?,?,?,?,?,?,?,?,?)', row)
         db.commit()
         db.close()
-        with self.assertRaisesRegex(ValueError, 'PAYLOAD_HASH_MISMATCH'):
+        with self.assertRaisesRegex(ValueError, 'PAYLOAD_HASH_MISMATCH|MANIFEST_UNVERIFIED'):
             self.build()
         self.assertFalse(self.final.exists())
 
@@ -379,9 +384,15 @@ sys.exit(a.main(['--profile',sys.argv[2],'--repository','sce','--manifest',sys.a
         self.assertEqual(receipt['state'], 'PUBLISHED')
 
     def test_status_read_only_and_no_automatic_resume(self):
-        before = sorted(p.relative_to(self.work).as_posix() for p in self.work.rglob('*'))
+        def files():
+            # SQLite read-only WAL readers may create transient lock sidecars.
+            return sorted(p.relative_to(self.work).as_posix() for p in self.work.rglob('*')
+                          if p.name not in {'content.sqlite3-wal', 'content.sqlite3-shm'})
+        before, ledger = files(), self.source_digest()
         self.assertEqual(self.build(action='STATUS')['state'], 'NEW')
-        self.assertEqual(before, sorted(p.relative_to(self.work).as_posix() for p in self.work.rglob('*')))
+        self.assertEqual(before, files())
+        self.assertEqual(ledger, self.source_digest())
+        self.assertFalse(self.output.exists())
         self.run_fault('part_after_rename')
         with self.assertRaisesRegex(ValueError, 'EXPLICIT_RESUME_REQUIRED'):
             self.build()
@@ -404,7 +415,7 @@ sys.exit(a.main(['--profile',sys.argv[2],'--repository','sce','--manifest',sys.a
         command = [sys.executable, '-I', '-X', 'utf8', str(LAB / 'repo_manifest.py'), '--profile', str(self.profile),
                    '--repository', 'sce', '--snapshot', self.snapshot_id, '--output', str(self.directory)]
         result = subprocess.run(command, capture_output=True, check=True, timeout=30)
-        self.assertEqual(json.loads(result.stdout), self.batch)
+        self.assertEqual(json.loads(result.stdout)['batch_id'], self.batch['batch_id'])
         self.build()
         self.assertEqual(repo.get_snapshot(self.store, 'code', self.snapshot_id, offset=40)['next_offset'], None)
 
@@ -431,7 +442,7 @@ sys.exit(a.main(['--profile',sys.argv[2],'--repository','sce','--manifest',sys.a
                     db.execute('BEGIN')
                     db.execute(mutation)
                     snap = repo.load_snapshot(db, 'code', self.snapshot_id)
-                    with self.assertRaisesRegex(ValueError, 'PAYLOAD_HASH_MISMATCH'):
+                    with self.assertRaisesRegex(ValueError, 'PAYLOAD_HASH_MISMATCH|MANIFEST_UNVERIFIED'):
                         manifest.validate_snapshot(db, snap)
                     db.rollback()
                 finally:

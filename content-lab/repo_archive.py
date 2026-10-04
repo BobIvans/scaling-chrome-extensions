@@ -15,7 +15,7 @@ import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from automation_core import digest, load_json
-import repo_manifest as manifest
+import repo_archive_input as manifest
 from repo_artifacts import (BUFFER_BYTES, atomic_file, atomic_json, copy_file,
                             file_proof, json_bytes, outside, process_lock, safe_path, sync_dir)
 from repo_artifacts import oid_hasher
@@ -140,12 +140,8 @@ def navigation(db, snap, payload, batch, budget):
                                Path(part_page(ordinal, part_number + 1)).name if part_number + 1 < pages else None)
             write_html(payload / part_page(ordinal, part_number), 'Source parts', body)
 
-        for part in db.execute('SELECT ordinal,revision,byte_start,byte_end,raw FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], entry['path'])):
-            try:
-                part['raw'].decode('utf-8')
-                text = True
-            except UnicodeDecodeError:
-                text = False
+        for part in db.execute('SELECT ordinal,revision,byte_start,byte_end,raw,item_id FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (snap['id'], entry['path'])):
+            text = part['item_id'] is not None
             raw_link = link('../parts/' + part['revision'] + '.bin', part['ordinal'])
             part_rows.append(f'<tr><td>{raw_link}</td><td>[{part["byte_start"]},{part["byte_end"]})</td><td><code>{hashlib.sha256(part["raw"]).hexdigest()}</code></td><td>{text}</td></tr>')
             if len(part_rows) == PAGE_ROWS:

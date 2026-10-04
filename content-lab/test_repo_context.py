@@ -111,7 +111,7 @@ class RepoContextTests(TestCase):
         self.assertEqual(db.execute('SELECT count(*) FROM repo_chunks WHERE path=?', ('.env',)).fetchone()[0], 0)
         db.close()
 
-    def test_scanner_never_imports_source_and_handles_errors_explicitly(self):
+    def test_scanner_never_imports_source_and_captures_beyond_former_file_limit(self):
         sentinel = self.root / 'executed'
         self.put('evil.py', f'from pathlib import Path\nPath({str(sentinel)!r}).touch()\n'.encode())
         self.put('broken.py', b'def missing(\n')
@@ -120,6 +120,8 @@ class RepoContextTests(TestCase):
         status = self.scan()
         self.assertFalse(sentinel.exists())
         self.assertEqual(status['counts'], {'INDEXED': 3})
+        self.assertIsNone(next(f for f in status['files'] if f['path'] == 'large.bin')['reason'])
+        self.assertTrue(status['roundtrip']['exact_for_indexed'])
         self.assertTrue(status['roundtrip']['all_tracked_bytes_exportable'])
         self.assertEqual(next(f for f in status['files'] if f['path'] == 'large.bin')['parser'], 'STREAMING_UTF8_TEXT_ONLY_NO_SYNTAX_CLAIM')
 
@@ -352,6 +354,13 @@ class RepoContextTests(TestCase):
         self.assertTrue(output['ok'], output)
         self.assertEqual(output['result']['snapshot']['state'], 'COMPLETE')
         self.assertTrue(output['result']['snapshot']['roundtrip']['exact_for_indexed'])
+        request = {'type': 'durable.repo.manifest', 'repository': 'sce',
+                   'snapshotId': output['result']['snapshot']['snapshot_id'], 'action': 'PARTS'}
+        result = subprocess.run([sys.executable, '-I', '-X', 'utf8', str(installed / 'native_adapter.py'),
+                                 '--profile', str(profile_path)], input=json.dumps(request).encode(), capture_output=True, check=True)
+        output = json.loads(result.stdout)
+        self.assertTrue(output['ok'], output)
+        self.assertEqual(output['result']['manifest']['part_count'], 1)
 
     def test_missing_promisor_blob_is_an_error_without_lazy_network_fetch(self):
         self.put('main.py', b'pass\n')

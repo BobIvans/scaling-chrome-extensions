@@ -5,13 +5,13 @@
   "date": "2026-10-04",
   "repository": "BobIvans/scaling-chrome-extensions",
   "observed_initial_main": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
-  "integrated_base": "426f60b077fbaecc8745fcd6f22c0626b3fefafb",
+  "integrated_base": "57885d4ede3a6e3f7057ff7ad9171fe3d8b35348",
   "inherited_scanner_pr": 38,
   "source_package_sha256": "03517c11625ecacdc3c8f1d8b8feda13807c365bf0c8a86fbbbe7f1593d4e39f",
   "status": "IMPLEMENTED_FOREGROUND_RAW_ARCHIVE_SLICE",
   "installed_code": [
     "content-lab/repo_archive.py",
-    "content-lab/repo_manifest.py",
+    "content-lab/repo_archive_input.py",
     "content-lab/repo_artifacts.py",
     "content-lab/repo_scan.py"
   ],
@@ -32,7 +32,7 @@
   "local_validation": [
     {
       "command": "python -m unittest discover -s content-lab -p 'test_*.py' -v",
-      "passed": 209,
+      "passed": 225,
       "result": "PASS"
     },
     {
@@ -47,7 +47,7 @@
     },
     {
       "command": "node --test one-click-context/tests/*.test.*",
-      "passed": 108,
+      "passed": 112,
       "result": "PASS"
     },
     {
@@ -189,15 +189,18 @@
   ],
   "scale_qualification": {
     "schema": "occ.pr003.scale-qualification.v1",
-    "scope": "SYNTHETIC_CAPTURED_SQLITE_LEDGER_NOT_GIT_SCAN",
+    "scope": "CURRENT_PR002_OWNER_SYNTHETIC_CAPTURED_SQLITE_LEDGER_NOT_GIT_SCAN",
     "parts": 66000,
     "entries": 1,
     "zip_members": 69309,
     "captured_bytes": 66000,
-    "zip_bytes": 38526350,
-    "zip_sha256": "9d14b0874c3aa48fbdbee3441b6c038a97417fe640c231a7e25a1cd6d96a5868",
-    "python_peak_tracemalloc_bytes": 49295573,
-    "elapsed_seconds": 300.3,
+    "zip_bytes": 38506268,
+    "zip_sha256": "385f50ec952012b0d6a8b12ea489035ec1733765cf81cdf07d854d3d31fd9cb9",
+    "peak_process_rss_bytes": 112005120,
+    "elapsed_build_seconds": 47.282,
+    "elapsed_resume_seconds": 23.38,
+    "reused_parts": 66000,
+    "written_parts_on_resume": 0,
     "archive_reconstruction": "PASS",
     "zip64_member_count": "PASS",
     "larger_than_4gib": "NOT_RUN",
@@ -207,9 +210,9 @@
     "state": "PUBLISHED",
     "reused_parts": 66000,
     "written_parts": 0,
-    "archive_sha256": "9d14b0874c3aa48fbdbee3441b6c038a97417fe640c231a7e25a1cd6d96a5868",
-    "elapsed_seconds": 22.806,
-    "scope": "CURRENT_PR001_SCANNER_OWNERS_AND_PR003_RESUME"
+    "archive_sha256": "385f50ec952012b0d6a8b12ea489035ec1733765cf81cdf07d854d3d31fd9cb9",
+    "elapsed_seconds": 23.38,
+    "scope": "CURRENT_PR002_OWNER_SYNTHETIC_CAPTURED_SQLITE_LEDGER_NOT_GIT_SCAN"
   },
   "resources": {
     "raw_copy_buffer_bytes_default": 65536,
@@ -230,5 +233,7 @@
   ],
   "broad_laya4_010_closed": false,
   "m5_02_closed": false,
-  "whole_160_task_roadmap_closed": false
+  "whole_160_task_roadmap_closed": false,
+  "inherited_manifest_pr": 39,
+  "manifest_owner": "content-lab/repo_manifest.py from PR-002; archive input adapter preserves exact metadata bytes and text item eligibility"
 }

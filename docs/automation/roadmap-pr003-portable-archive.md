@@ -8,8 +8,10 @@
 
 Это реализация raw archive slice LAYA4-010 из предоставленного ZIP PR-003.
 Сканер PR-001 уже merged в #38; новый exporter использует его существующие
-snapshot/chunk tables. Предпосылка PR-002 — локальный frozen metadata writer —
-включена здесь, поскольку в observed main `426f60b` её ещё не было.
+snapshot/chunk tables. Параллельный PR-002 (#39) включён как prerequisite: его
+`repo_manifest.py` остаётся владельцем формата, writer и Native metadata pages.
+`repo_archive_input.py` проверяет его exact frozen projection в одном read view;
+второй формат манифеста не вводится.
 
 ## Запуск на Windows 11
 
@@ -51,7 +53,7 @@ python -I -X utf8 "$occRepo\content-lab\repo_archive.py" --profile $occProfile -
 
 | Функция | Реализация и результат |
 | --- | --- |
-| Full manifest | Все entry dispositions и все captured parts, compact JSONL; никакого массивa всех part IDs в одной entry |
+| Existing PR-002 manifest | Все entry dispositions и все captured parts, compact JSONL; никакого массивa всех part IDs в одной entry |
 | Global proof | В одном read-only SQLite view: contiguous ordinals/ranges, SHA256, revision digest, SHA1/SHA256 Git blob OID, orphan/empty checks |
 | Scope/binding | Exact repository/namespace/profile/snapshot и hashes четырёх metadata файлов; изменение profile блокирует публикацию |
 | Atomic parts | Generated `parts/<revision>.bin`, fsync и same-filesystem replace до checkpoint |

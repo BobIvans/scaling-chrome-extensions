@@ -6,7 +6,7 @@ import sys
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import repo_context as repo
-from repo_manifest import operator_scope, write_manifest
+from repo_archive_input import operator_scope, write_manifest
 
 
 def scan(profile_path, alias, *, snapshot_id=None, page_rows=100, progress=lambda status: None):
