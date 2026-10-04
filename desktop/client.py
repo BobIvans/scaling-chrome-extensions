@@ -19,7 +19,7 @@ INPUT_BYTES = 16_000
 OUTPUT_BYTES = 192_000
 TIMEOUT_MS = 10_000
 HASH = re.compile(r'^[0-9a-f]{64}$')
-NAME = re.compile(r'^[A-Za-z0-9_.-]{1,100}$')
+NAME = re.compile(r'^[A-Za-z0-9_.:-]{1,100}$')
 READS = {
     'durable.info': ({'type'}, set()),
     'durable.repo.list': ({'type'}, set()),

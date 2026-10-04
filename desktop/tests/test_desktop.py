@@ -25,6 +25,7 @@ from desktop.state import Fence
 import automation_core as core
 import native_adapter as native
 import repo_context as repo
+import content_lab
 
 FIXTURES = Path(__file__).parent / 'fixtures'
 FAKE = Path(__file__).parent / 'fake_adapter.py'
@@ -259,6 +260,23 @@ class OwnerTests(unittest.TestCase):
         core.sync(self.store, 'code', self.source)
         with self.assertRaisesRegex(DesktopError, 'ITEM_OUTSIDE_SCOPE_OR_STALE'):
             self.client.request(request)
+
+    def test_current_main_chatgpt_original_fidelity_projects_through_same_read_owner(self):
+        source = ROOT / 'content-lab/fixtures/import_fidelity_golden/raw/F01.json'
+        receipt = content_lab.import_chatgpt_export(self.store, source, 'code', source_key='desktop-fixture')
+        self.assertTrue(receipt['original_retained'])
+        profile = json.loads(self.profile.read_bytes())
+        profile['namespaces'].append('chatgpt:code')
+        self.profile.write_text(json.dumps(profile), encoding='utf-8')
+        self.client.handshake()
+        parsed = content_lab.parse_chatgpt_export(source, 'code')
+        ids = [item['id'] for item in parsed['items']][:10]
+        before = sha_file(self.store / 'content.sqlite3')
+        request = {'type': 'durable.context', 'namespace': 'chatgpt:code', 'ids': ids}
+        value = self.client.request(request)['result']['context']
+        self.assertEqual(value, core.context_pack(self.store, 'chatgpt:code', ids, read_only=True))
+        self.assertEqual(before, sha_file(self.store / 'content.sqlite3'))
+        self.assertTrue(all(item['extractor'] == 'chatgpt-export.v1' for item in value['items']))
 
     def test_preflight_repeated_launch_same_store_and_isolated_cli(self):
         report = check(self.connection)
