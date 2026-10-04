@@ -76,7 +76,7 @@ class TkTests(unittest.TestCase):
     def test_search_select_draft_keyboard_cancel_and_close_on_main_thread(self):
         self.pump(lambda: self.app.report is not None and not self.app.busy())
         self.assertEqual(self.app.namespace.get(), 'code')
-        self.assertIn(str(self.store), self.app.location.get())
+        self.assertIn(str(self.store.resolve()), self.app.location.get())
         self.app.query.set('needle')
         self.app.search()
         self.pump(lambda: bool(self.app.items) and not self.app.busy())

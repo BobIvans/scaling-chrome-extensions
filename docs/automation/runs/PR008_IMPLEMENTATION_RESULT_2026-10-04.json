@@ -229,5 +229,12 @@
   "observed_os": "Linux-6.18.44-x86_64-with-glibc2.39",
   "shell_manifest_sha256": "4221828a7309c33319e361f49c41960190815e0ce5fbb2e5ab68bfaf2d46f960",
   "initial_base_sha": "9fbadef2714fae92e516a80b52d29cb9824b0e44",
-  "integration": "Current main PR009 original-source fidelity preserved. Namespace grammar matches existing owner, including chatgpt:code."
+  "integration": "Current main PR009 original-source fidelity preserved. Namespace grammar matches existing owner, including chatgpt:code.",
+  "windows_ci_regression": {
+    "run_id": 37203670302,
+    "job_id": 111440307123,
+    "failure": "Tk test compared Windows 8.3 temporary path with canonical path displayed by backend",
+    "fix": "Compare Path(store).resolve() with displayed canonical store location; preserve identity and Unicode/space tests",
+    "remaining": "Final exact-head Ubuntu/Windows CI pending"
+  }
 }
