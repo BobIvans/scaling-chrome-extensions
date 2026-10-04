@@ -20,7 +20,7 @@ python -I -B C:\OCC\content-lab\repo_inventory.py --operator-profile C:\OCC\nati
 
 Profile, repository alias, namespace, store и policy проверяются тем же
 `native_adapter.operator_profile`. Путь исходников не принимается из Native/AI
-request. Store и private stage находятся вне source; syminks в store/database
+request. Store и private stage находятся вне source; symlinks в store/database
 отклоняются. Installer включает новый sibling `repo_inventory.py`.
 
 `--budget C:\OCC\inventory-budget.json` необязателен. Пример и schema находятся

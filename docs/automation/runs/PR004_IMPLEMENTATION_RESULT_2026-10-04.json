@@ -1,0 +1,188 @@
+{
+  "schema": "roadmap.implementation-receipt.v1",
+  "package_id": "ROADMAP-PR-004",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "state": "PR004_IMPLEMENTED_LOCAL_CHECKS_PASS_CI_PENDING",
+  "base_sha": "426f60b077fbaecc8745fcd6f22c0626b3fefafb",
+  "result_sha": "1a1e1127f0f0fb996746c5e66c51033ae129380d",
+  "github_pr_url": null,
+  "application_code_changed": true,
+  "source_task": "LAYA4-003",
+  "whole_task_closed": false,
+  "application_checks": [
+    {
+      "command": "python -B -m unittest discover -s content-lab -p 'test_*.py' -v",
+      "passed": 207,
+      "failed": 0
+    },
+    {
+      "command": "python -B -m unittest test_repo_inventory.InventoryTests.test_actual_sqlite_full_during_publish_rolls_back_previous_head -v",
+      "passed": 1,
+      "failed": 0,
+      "note": "Additional test after full Python suite; runtime code unchanged"
+    },
+    {
+      "command": "node --test agent-bridge/*.test.mjs",
+      "passed": 46,
+      "failed": 0
+    },
+    {
+      "command": "python -B -m unittest discover -s agent-bridge -p 'test_qualification_adapter.py' -v",
+      "passed": 8,
+      "failed": 0
+    },
+    {
+      "command": "node --test one-click-context/tests/*.test.*",
+      "passed": 108,
+      "failed": 0
+    },
+    {
+      "command": "git diff --check",
+      "state": "PASS"
+    }
+  ],
+  "criterion_results": [
+    {
+      "criterion_id": "P004-AC01",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_head_drift_rollback_and_tree_resolution_uses_pinned_head",
+        "content-lab/test_repo_inventory.py::test_identity_atomic_inventory_and_reuse_preserve_capture"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC02",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_golden_one_byte_random_all_split_boundaries_and_exact_paths"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC03",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_real_large_tree_above_32_mib_preserves_every_ordinal"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC04",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_arbitrary_names_missing_size_links_and_protected_metadata"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC05",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_arbitrary_names_missing_size_links_and_protected_metadata"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC06",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_malformed_empty_duplicate_oid_mode_size_and_eof_never_publish",
+        "content-lab/test_repo_inventory.py::test_record_guard_before_unbounded_pending_allocation"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC07",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_nonzero_child_after_valid_stream_and_reader_fault"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC08",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_quiet_child_timeout_stops_and_reaps_in_cleanup_budget",
+        "content-lab/test_repo_inventory.py::test_sqlite_writer_busy_is_bounded_by_inventory_deadline"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC09",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_stderr_flood_is_bounded_and_valid_stderr_does_not_deadlock",
+        "content-lab/test_repo_inventory.py::test_cancel_with_backpressure_and_fresh_restart"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC10",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_cancel_with_backpressure_and_fresh_restart"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC11",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_stage_quota_and_disk_full_fault_preserve_previous_owner",
+        "content-lab/test_repo_inventory.py::test_actual_sqlite_full_during_publish_rolls_back_previous_head"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC12",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_second_connection_sees_none_then_all",
+        "content-lab/test_repo_inventory.py::test_publication_abort_rolls_back_snapshot_and_entries",
+        "content-lab/test_repo_inventory.py::test_scan_run_and_inventory_share_rollback_and_bounded_reader"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC13",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_corrupt_existing_identity_is_not_silently_repaired",
+        "content-lab/test_repo_inventory.py::test_concurrent_writers_reuse_one_complete_identity"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC14",
+      "outcome": "PASS",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_cli_scopes_and_default_has_no_total_stage_or_time_cap"
+      ]
+    },
+    {
+      "criterion_id": "P004-AC15",
+      "outcome": "PARTIAL",
+      "evidence": [
+        "content-lab/test_repo_inventory.py::test_identity_atomic_inventory_and_reuse_preserve_capture",
+        "content-lab/test_repo_inventory.py::test_scan_run_and_inventory_share_rollback_and_bounded_reader"
+      ],
+      "limitation": "PR001 Native/scan pages tested against actual merged owner. PR002/PR003 interoperability pending their merged owners; no claims about unreceived ZIP003 implementation."
+    },
+    {
+      "criterion_id": "P004-AC16",
+      "outcome": "PASS_LINUX",
+      "evidence": [
+        "content-lab/qualify_repo_inventory.py",
+        "docs/automation/runs/PR004_INVENTORY_RESOURCES_2026-10-04.json"
+      ],
+      "limitation": "Linux cold/warm RSS observed via worker getrusage; installed Dell Windows/Chrome/native resource receipt NOT_RUN."
+    }
+  ],
+  "large_resource_receipts": [
+    "docs/automation/runs/PR004_INVENTORY_RESOURCES_2026-10-04.json"
+  ],
+  "windows_device_receipt": "NOT_RUN",
+  "pr003_integration": "NOT_RUN_ARTIFACT_NOT_RECEIVED",
+  "remaining_work": [
+    "Installed Dell Windows 11/Chrome/native-host resource qualification",
+    "PR002/PR003 integration after parallel merged owners are available",
+    "Formats/LFS/source eligibility PR005 and broader roadmap"
+  ],
+  "actual_build_minutes": null,
+  "cold_definition": "first process measurement; hardware cache eviction only if independently recorded",
+  "warm_definition": "repeat same fixture/device/process recipe; retain actual OS/Git/Python versions",
+  "local_verified_tree": "163abadee100e839039189b380699b78bbebc094",
+  "input_zip_sha256": "235ae0def4c305ceddec8ceaf9593c1a0460889a301781e01890abe0628409a5",
+  "published_tree_matches_local": true,
+  "pr001_integration": "PASS: merged #38; existing _start_scan_db transaction delegates to staged inventory, existing START rollback/UI-to-native regression retained",
+  "source_request_amendment": "No corpus/runtime ceiling by default. User overrides proposed legacy cap; optional explicit deadline/stage quota, bounded buffers and scoped dispositions retained."
+}
