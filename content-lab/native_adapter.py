@@ -41,6 +41,8 @@ FIELDS = {
     "durable.review.handoff": ({"type", "namespace", "sessionId"}, set()),
     "durable.review.importBound": ({"type", "namespace", "sessionId", "review"}, set()),
     "durable.repo.list": ({"type"}, set()),
+    "durable.repo.history": ({"type", "repository"}, {"limit", "cursor"}),
+    "durable.repo.delta": ({"type", "repository", "snapshotId"}, {"limit", "cursor"}),
     "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
     "durable.repo.scanRun": ({"type", "repository", "action"}, {"intentKey", "runId", "expectedCursor", "expectedRevision"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
@@ -52,7 +54,8 @@ JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
 DESKTOP_PROTOCOL = 'occ.desktop-stdio.v1'
 DESKTOP_READS = frozenset({'durable.info', 'durable.repo.list', 'durable.search',
-                           'durable.context', 'durable.repo.manifest'})
+                           'durable.context', 'durable.repo.manifest',
+                           'durable.repo.history', 'durable.repo.delta'})
 
 
 def adapter_context(profile, policy):
@@ -221,6 +224,19 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
         return value
     if desktop and not ready_store(store, manifest=operation == 'durable.repo.manifest'):
         raise ValueError('DESKTOP_SETUP_REQUIRED')
+    if operation in {'durable.repo.history', 'durable.repo.delta'}:
+        import repo_history
+        alias = identifier(request['repository'])
+        source = profile.get('repositories', {}).get(alias)
+        if source is None:
+            raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+        options = {k: request[k] for k in ('limit', 'cursor') if k in request}
+        if operation == 'durable.repo.history':
+            value['page'] = repo_history.snapshots(store, source['namespace'], alias, source, **options)
+        else:
+            value['page'] = repo_history.delta(store, source['namespace'], alias, source,
+                                               request['snapshotId'], **options)
+        return value
     core = None if desktop else Core(store, policy)
     if operation.startswith('durable.repo.'):
         repositories = profile.get('repositories', {})
