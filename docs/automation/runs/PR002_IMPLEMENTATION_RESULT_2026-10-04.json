@@ -1,0 +1,382 @@
+{
+  "schema": "roadmap.implementation-result.v1",
+  "package_id": "ROADMAP-PR-002",
+  "status": "IMPLEMENTED_VERIFIED",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "base_sha": "da6abf4c006e4e7d26fe45ef30fa9d07a356f396",
+  "head_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+  "actual_elapsed_minutes": null,
+  "previous_pr_verified": false,
+  "actual_snapshot_id": "21e3b628483c9e24dc1f65992e73f77657ab89d14f49841e96a66dff96af4aa3",
+  "owner_map": [
+    {
+      "owner": "Content Lab existing SQLite",
+      "files": [
+        "content-lab/repo_context.py",
+        "content-lab/repo_manifest.py"
+      ]
+    },
+    {
+      "owner": "Existing native adapter/bridge",
+      "files": [
+        "content-lab/native_adapter.py",
+        "agent-bridge/durable.mjs",
+        "agent-bridge/Install.ps1"
+      ]
+    },
+    {
+      "owner": "Existing repo/review view",
+      "files": [
+        "one-click-context/library/repo-review-ui.mjs",
+        "one-click-context/library/durable-ui.mjs",
+        "one-click-context/library.html"
+      ]
+    }
+  ],
+  "changed_files": [
+    "agent-bridge/Install.ps1",
+    "agent-bridge/durable.mjs",
+    "content-lab/native_adapter.py",
+    "content-lab/repo_context.py",
+    "content-lab/repo_manifest.py",
+    "content-lab/test_repo_context.py",
+    "content-lab/test_repo_manifest.py",
+    "docs/automation/pr002-input/ACCEPTANCE_CASES.json",
+    "docs/automation/pr002-input/INPUT_PROVENANCE.json",
+    "docs/automation/pr002-input/MANIFEST_CONTRACT.json",
+    "docs/automation/pr002-input/NATIVE_REQUEST.schema.json",
+    "docs/automation/repo-manifest.md",
+    "one-click-context/library.html",
+    "one-click-context/library/durable-ui.mjs",
+    "one-click-context/library/repo-review-ui.mjs",
+    "one-click-context/tests/repo-review-ui.test.mjs"
+  ],
+  "criterion_results": [
+    {
+      "criterion_id": "AC2-001",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_50_entry_inventory_every_part_and_both_lookup_directions",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-002",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_50_entry_inventory_every_part_and_both_lookup_directions",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-003",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_streaming_large_utf8_binary_and_split_secret_marker",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "test_50_entry_inventory_every_part_and_both_lookup_directions",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "test_scanner_never_imports_source_and_captures_beyond_former_file_limit",
+          "file": "content-lab/test_repo_context.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-004",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_error_gap_preserves_original_metadata_and_missing_hash",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "test_50_entry_inventory_every_part_and_both_lookup_directions",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-005",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_byte_budget_continuation_row_envelope_failure_and_large_offset",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "test_50_entry_inventory_every_part_and_both_lookup_directions",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-006",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_50_entry_inventory_every_part_and_both_lookup_directions",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "NativeClient/real host roundtrip persists repo/review across restart and verifies dependency bytes",
+          "file": "one-click-context/tests/repo-review-ui.test.mjs"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-007",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_deterministic_binding_output_hashes_and_reuse",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-008",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_pending_deleted_entry_and_noncontiguous_inventory_are_refused",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "test_ranges_raw_revisions_missing_orphan_and_duplicate_parts_fail",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-009",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_consistently_forged_raw_hash_revision_still_fails_original_git_oid",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "test_text_item_tamper_and_nonindexed_raw_are_refused",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-010",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_one_read_view_and_historical_bytes_never_read_git_or_worktree",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-011",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_strict_operator_scope_and_real_isolated_native_roundtrip",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "test_installer_file_set_runs_real_isolated_repo_adapter",
+          "file": "content-lab/test_repo_context.py"
+        },
+        {
+          "test": "NativeClient/real host roundtrip persists repo/review across restart and verifies dependency bytes",
+          "file": "one-click-context/tests/repo-review-ui.test.mjs"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-012",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_interrupt_disk_full_damaged_target_never_publish_or_overwrite",
+          "file": "content-lab/test_repo_manifest.py"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-013",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_info_and_page_do_not_claim_full_byte_or_ai_proof",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "late manifest replies cannot overwrite a changed repository or file filter",
+          "file": "one-click-context/tests/repo-review-ui.test.mjs"
+        }
+      ]
+    },
+    {
+      "criterion_id": "AC2-014",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+      "evidence": [
+        {
+          "test": "test_empty_tree_empty_file_and_escaped_portable_names",
+          "file": "content-lab/test_repo_manifest.py"
+        },
+        {
+          "test": "manifest view renders text and wires entry to parts to source without selection limits",
+          "file": "one-click-context/tests/repo-review-ui.test.mjs"
+        }
+      ]
+    }
+  ],
+  "repository_checks": [
+    {
+      "name": "Content Lab Python",
+      "count": 189,
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1"
+    },
+    {
+      "name": "Native bridge Node",
+      "count": 44,
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1"
+    },
+    {
+      "name": "Extension Node",
+      "count": 104,
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1"
+    },
+    {
+      "name": "Qualification adapter Python",
+      "count": 8,
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1"
+    },
+    {
+      "name": "git diff --check",
+      "outcome": "PASS",
+      "subject_sha": "a56b98618143e45d71e3c014b7af1502da6273d1"
+    }
+  ],
+  "windows_device": {
+    "status": "NOT_RUN",
+    "evidence": []
+  },
+  "github": {
+    "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/39",
+    "publication_status": "PUBLISHED",
+    "ci": "PASS",
+    "tested_head_sha": "a56b98618143e45d71e3c014b7af1502da6273d1",
+    "run_id": 37194003590,
+    "run_url": "https://github.com/BobIvans/scaling-chrome-extensions/actions/runs/37194003590",
+    "matrix": [
+      {
+        "os": "ubuntu-latest",
+        "job_id": 111411955964,
+        "outcome": "PASS"
+      },
+      {
+        "os": "windows-latest",
+        "job_id": 111411956156,
+        "outcome": "PASS"
+      }
+    ]
+  },
+  "broad_m5_02_complete": false,
+  "full_laya4_009_closed": false,
+  "next_package": "ZIP-003",
+  "tested_tree_sha": "a28038a641fe7b34d9d37a71a46423c2cf9dff8c",
+  "head_sha_scope": "Published implementation commit; final PR head additionally contains this receipt and a synthetic-fixture marker assembly change.",
+  "actual_repository_projection": {
+    "source_commit": "a56b98618143e45d71e3c014b7af1502da6273d1",
+    "snapshot_id": "21e3b628483c9e24dc1f65992e73f77657ab89d14f49841e96a66dff96af4aa3",
+    "batch_id": "d62c31dd9c4df98e2892db929dfe070ee5caa77cc1c3e62c4a6a50ccf0fa5ba9",
+    "entry_count": 164,
+    "indexed_count": 163,
+    "gap_count": 1,
+    "part_count": 1504,
+    "raw_bytes": 4991478,
+    "proof_scope": "ALL_INDEXED_CAPTURED_BYTES_AND_GIT_BLOB_OIDS",
+    "outputs": [
+      {
+        "bytes": 82246,
+        "path": "REPO_MANIFEST.jsonl",
+        "sha256": "b1e8cd565f21053bfef92e49ad0cddc61d29b8dac1c15400c232e2b773dfada9"
+      },
+      {
+        "bytes": 1057602,
+        "path": "PARTS_INDEX.jsonl",
+        "sha256": "7efd84211936d354c960e33f665fb44765f86e95ab42c35039bd087cf078f42e"
+      },
+      {
+        "bytes": 765,
+        "path": "VALIDATION.json",
+        "sha256": "bd193bb43d26bda465b3ebb2b649ff14fb1bc0d83eaf2ccfd55907e1bfa45b65"
+      }
+    ],
+    "native_pages": {
+      "ENTRIES": {
+        "rows": 164,
+        "pages": 9,
+        "max_frame_bytes": 12557,
+        "exact_tail_equality": true
+      },
+      "PARTS": {
+        "rows": 1504,
+        "pages": 76,
+        "max_frame_bytes": 16473,
+        "exact_tail_equality": true
+      }
+    },
+    "gaps": [
+      {
+        "path": "content-lab/test_repo_manifest.py",
+        "state": "EXCLUDED",
+        "reason": "SECRET_TEXT_HEURISTIC"
+      }
+    ]
+  },
+  "scale_changes": {
+    "corpus_file_count_cap": null,
+    "blob_byte_cap": null,
+    "git_tree_output_byte_cap": null,
+    "removed_caps": [
+      "8 MiB file rejection",
+      "32 MiB Git-output rejection",
+      "1,000,000 source/file offset rejection"
+    ],
+    "native_rows_per_page": 20,
+    "native_frame_bytes_per_page": 32768,
+    "native_timeout_ms_per_request": 10000,
+    "long_capture_owner": "Explicit operator repo_context.py CLI",
+    "legacy_size_errors_retried": true,
+    "physical_limits": "Available memory/disk and Git/SQLite storage capacity; AST budget affects analysis only."
+  },
+  "fixture_followup": "Assemble the synthetic private-key marker from two byte literals so this test source itself remains capture eligible. Production secret exclusion behavior and its test payload remain unchanged.",
+  "previous_pr_note": "PR-002 uses the existing complete snapshot owner and does not require a merged PR-001 scan controller.",
+  "elapsed_measurement_note": "No dedicated execution timer was recorded."
+}

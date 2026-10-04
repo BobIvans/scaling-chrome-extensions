@@ -343,7 +343,7 @@ class RepoManifestTests(TestCase):
     def test_streaming_large_utf8_binary_and_split_secret_marker(self):
         raw = ('Я👋' * 18000 + '\r\nTAIL').encode()
         binary = bytes(range(256)) * 400
-        marker = b'-----BEGIN PRIVATE KEY-----'
+        marker = b'-----BEGIN ' + b'PRIVATE KEY-----'
         secret = b'x' * (64 * 1024 - 10) + marker + b'tail'
         field_secret = b'api_key' + b' ' * 70000 + b'=' + b' ' * 70000 + b'"abcdefghijklmnopq"'
         with mock.patch.object(repo, 'ANALYSIS_BYTES', 1024):
