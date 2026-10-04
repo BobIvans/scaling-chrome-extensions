@@ -193,6 +193,15 @@ class LedgerTests(unittest.TestCase):
         with db:
             for row in db.execute('SELECT * FROM repo_entries WHERE snapshot_id=?', (self.sid,)):
                 analysis = json.loads(row['analysis'] or '{}')
+                if inputs.FACT_OWNER is not None:
+                    owner = inputs.FACT_OWNER
+                    classified = owner.classify_chunks(c[0] for c in db.execute(
+                        'SELECT raw FROM repo_chunks WHERE snapshot_id=? AND path=? ORDER BY ordinal', (self.sid, row['path'])))
+                    analysis['format_eligibility'] = (owner.make_facts(self.sid, row, classified, analysis.get('parser'))
+                        if row['state'] == 'INDEXED' else owner.metadata_facts({'id': self.sid}, row))
+                    db.execute('UPDATE repo_entries SET analysis=? WHERE snapshot_id=? AND path=?',
+                               (json.dumps(analysis), self.sid, row['path']))
+                    continue
                 eligible = row['state'] == 'INDEXED' and row['path'] != 'src/binary.js'
                 analysis['format_eligibility'] = {'schema': 'occ.format-eligibility.v1', 'snapshot_id': self.sid,
                     'ordinal': str(row['ordinal']), 'path': row['path'], 'mode': row['mode'], 'kind': row['kind'],
@@ -226,6 +235,14 @@ class LedgerTests(unittest.TestCase):
                 '--repository', 'sce', '--snapshot-id', self.sid, '--output', str(self.output)]
 
     def test_default_missing_facts_no_silent_legacy_then_explicit_legacy(self):
+        # Exercise an old capture even when the new PR005 scanner is installed.
+        db = repo.db_for(self.store)
+        with db:
+            for entry in db.execute('SELECT path,analysis FROM repo_entries WHERE snapshot_id=?', (self.sid,)):
+                analysis = json.loads(entry['analysis'] or '{}'); analysis.pop('format_eligibility', None)
+                db.execute('UPDATE repo_entries SET analysis=? WHERE snapshot_id=? AND path=?',
+                           (json.dumps(analysis), self.sid, entry['path']))
+        db.close()
         result = self.build()
         self.assertEqual(result['state'], 'PARTIAL')
         self.assertEqual(result['candidate_files'], 50)
@@ -261,6 +278,17 @@ class LedgerTests(unittest.TestCase):
         self.assertTrue(self.build()['reused'])
         self.assertEqual(baseline, {name: file_proof(self.output / name) for name in app.ARTIFACTS})
         self.assertEqual([r['source_path'] for r in self.rows('JS_ANALYSIS.jsonl')], sorted(r['source_path'] for r in self.rows('JS_ANALYSIS.jsonl')))
+
+    @unittest.skipIf(inputs.FACT_OWNER is None, 'Actual PR005 owner not installed on this base')
+    def test_actual_pr005_capture_private_binding_uses_owned_projection_without_manual_facts(self):
+        before = file_proof(self.store / 'content.sqlite3')
+        result = self.build()
+        self.assertEqual((result['candidate_files'], result['local_static_edges'], result['type_only_exact_edges']), (50, 43, 1))
+        self.assertTrue(result['eligibility_complete'])
+        self.assertTrue(result['eligibility_policy_verified'])
+        self.assertEqual(before, file_proof(self.store / 'content.sqlite3'))
+        interpreted = json.loads((self.output / 'INTERPRETATION.json').read_text())
+        self.assertEqual(interpreted['eligibility_owner_sha256'], file_proof(LAB / 'source_eligibility.py')['sha256'])
 
     def test_facts_binding_schema_versions_fail_closed_and_targets_do_not_resolve(self):
         self.add_facts()

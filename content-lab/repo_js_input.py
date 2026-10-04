@@ -1,6 +1,7 @@
 """Validate PR005 facts and captured bytes without changing their owner."""
 from contextlib import contextmanager
 import hashlib
+import importlib.util
 import json
 from pathlib import Path
 import re
@@ -13,6 +14,28 @@ from repo_artifacts import oid_hasher, safe_path
 
 EXTENSIONS = frozenset({'.js', '.mjs', '.cjs', '.jsx', '.ts', '.tsx', '.mts', '.cts'})
 FACT_SCHEMA = json.loads((Path(__file__).parent / 'js-contracts/ELIGIBILITY.schema.json').read_text('utf8'))
+
+
+def installed_fact_owner():
+    """Only load the trusted application's PR005 owner, never cwd/PYTHONPATH."""
+    path = Path(__file__).resolve().parent / 'source_eligibility.py'
+    if not path.exists():
+        return None
+    path = safe_path(path)
+    spec = importlib.util.spec_from_file_location('_occ_js_pr005_owner', path)
+    owner = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(owner)
+    if (owner.SCHEMA != 'occ.format-eligibility.v1' or owner.CLASSIFIER_VERSION != 'utf8-controls-strict-lfs3.v1'
+            or owner.WIRE_FIELDS != set(FACT_SCHEMA['properties'])):
+        raise ValueError('ELIGIBILITY_OWNER_VERSION_MISMATCH')
+    return owner
+
+
+FACT_OWNER, FACT_OWNER_ERROR = None, None
+try:
+    FACT_OWNER = installed_fact_owner()
+except ValueError as exc:
+    FACT_OWNER_ERROR = str(exc)
 
 
 def extension(path):
@@ -49,6 +72,8 @@ def schema_valid(value, schema):
 
 
 def eligibility(db, snap, entry, legacy=False):
+    if FACT_OWNER_ERROR:
+        return FACT_OWNER_ERROR
     try:
         analysis = json.loads(entry['analysis'] or '{}')
         if not isinstance(analysis, dict):
@@ -68,14 +93,25 @@ def eligibility(db, snap, entry, legacy=False):
         return 'ELIGIBILITY_FACTS_INVALID'
     if facts.get('schema') != 'occ.format-eligibility.v1' or facts.get('classifier_version') != 'utf8-controls-strict-lfs3.v1':
         return 'ELIGIBILITY_VERSION_MISMATCH'
-    if not schema_valid(facts, FACT_SCHEMA):
+    # PR005 storage adds a private _binding receipt. Its public projection is
+    # the schema contract; do not confuse the two or strip unknown metadata.
+    wire = {key: value for key, value in facts.items() if key != '_binding'}
+    if not schema_valid(wire, FACT_SCHEMA):
         return 'ELIGIBILITY_FACTS_INVALID'
     bound = {'snapshot_id': snap['id'], 'ordinal': str(entry['ordinal']), 'path': entry['path'],
              'mode': entry['mode'], 'kind': entry['kind'], 'git_oid': entry['oid'],
              'git_size': None if entry['size'] is None else str(entry['size']),
              'disposition': entry['state'], 'legacy_reason': entry['reason'], 'file_sha256': entry['file_hash']}
-    if any(facts[key] != value for key, value in bound.items()):
+    if any(wire[key] != value for key, value in bound.items()):
         return 'ELIGIBILITY_BINDING_MISMATCH'
+    if FACT_OWNER is not None:
+        if FACT_OWNER.facts_status(snap['id'], entry) != 'SUPPORTED':
+            return 'ELIGIBILITY_FACTS_INVALID'
+        facts = FACT_OWNER.project_facts(snap['id'], entry)
+        if not schema_valid(facts, FACT_SCHEMA) or facts != wire:
+            return 'ELIGIBILITY_FACTS_INVALID'
+    elif '_binding' in facts:
+        return 'ELIGIBILITY_OWNER_UNAVAILABLE'
     if facts['raw_integrity'] == 'FAIL' or facts['raw_capture'] == 'CORRUPT':
         return 'RAW_INTEGRITY_FAIL'
     if (entry['state'] != 'INDEXED' or entry['kind'] != 'blob'

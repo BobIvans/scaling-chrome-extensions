@@ -29,6 +29,13 @@ disposition и file hash. Разрешены INDEXED/nonlink blob, raw RECORDED 
 ELIGIBLE + UTF8_TEXT_CANDIDATE/EMPTY. NOT_RUN raw integrity заменяется независимой
 проверкой actual chunks; FAIL не превращается в успех.
 
+Stored PR005 facts содержат внутренний `_binding`. При наличии installed owner
+адаптер вызывает его `facts_status()` и `project_facts()`, затем проверяет public
+wire schema и source identity. Owner загружается только по точному trusted
+application path; его SHA256 входит в interpretation. Private metadata без
+соответствующего owner даёт явный gap. Known ineligible format остаётся полностью
+учтённым в eligibility, хотя его syntax outcome содержит fallback.
+
 Старые captures без этих фактов дают `ELIGIBILITY_FACTS_UNAVAILABLE` и PARTIAL.
 Для них есть явный операторский `--legacy-capture-guard`: существующий indexed
 text capture + strict UTF8, без нового format detector. В interpretation

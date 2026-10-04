@@ -155,6 +155,7 @@ def interpretation(limits, legacy=False):
                'createImportExpressions': True, 'typescript_dts': False,
                'jsx_extensions': ['.jsx', '.tsx'], 'mts_cts_disallow_ambiguous_jsx': True,
                'file_budget': limits}
+    owner_path = LAB / 'source_eligibility.py'
     return {'schema': 'occ.repo-js-interpretation.v1', 'parser_id': pin['name'],
             'parser_version': pin['version'], 'parser_artifact_sha256': pin['tarball_sha256'],
             'parser_runtime_sha256': pin['files']['babel-parser.cjs']['sha256'],
@@ -168,6 +169,7 @@ def interpretation(limits, legacy=False):
             'options': options, 'options_digest': stable_digest(options),
             'eligibility_policy_version': 'LEGACY_CAPTURE_GUARD_UNVERIFIED_PR005' if legacy else 'utf8-controls-strict-lfs3.v1',
             'eligibility_schema_sha256': file_proof(LAB / 'js-contracts/ELIGIBILITY.schema.json')['sha256'],
+            'eligibility_owner_sha256': file_proof(owner_path)['sha256'] if owner_path.exists() else None,
             'output_schema_hashes': {name: file_proof(LAB / 'js-contracts' / name)['sha256']
                                      for name in ('JS_ANALYSIS.schema.json', 'RELATION.schema.json')},
             'symbol_identity': 'PATH_KIND_NAME_OCCURRENCE; anonymous semantic binding unknown',

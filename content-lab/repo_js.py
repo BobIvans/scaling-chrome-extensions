@@ -258,7 +258,10 @@ def build(profile_path, alias, snapshot_id, output, *, limits=None, legacy=False
                     row, refs = analyze_entry(db, snap, entry, interpretation_digest, source, control, legacy)
                     files.append(row); outcomes[row['analysis_status']] += 1
                     control.counts['candidate_files'] += 1
-                    eligibility_missing += int(row['analysis_status'] == 'ELIGIBILITY_GAP')
+                    # A valid known ineligible source is fully accounted by
+                    # PR005. Unknown/invalid policy facts are a separate gap.
+                    eligibility_missing += int(row['analysis_status'] == 'ELIGIBILITY_GAP'
+                        and row['reason'] not in {'TEXT_NOT_ELIGIBLE', 'LEGACY_TEXT_NOT_ELIGIBLE'})
                     for ref in refs:
                         edges.append(ref)
                         control.counts['relations'] += 1
