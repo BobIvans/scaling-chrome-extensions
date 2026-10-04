@@ -14,12 +14,15 @@ the DTOs and can atomically export complete snapshot and delta JSONL with
 checksum receipts; a cancelled export does not publish a partial directory. The existing
 `durable.repo.get` summary still shows a small preview, including its
 `display_truncated` flag. Use the new delta pages for complete path history.
+Delta rejects an incomplete head/base and accepts an optional exact
+`baseSnapshotId` for historical comparisons. Continuation binds that base.
 
 ## Validation
 
 `python3 -m unittest test_repo_history -q` covers 26 snapshots, 25 changes
 in one revision, continuation to EOF, rename peer, request scope, cursor
-misbinding, long Unicode paths, and Native dispatch against real Git and SQLite.
+misbinding, incomplete snapshots, explicit historical bases, long Unicode
+paths, and Native dispatch against real Git and SQLite.
 `desktop.tests.test_repo_history_client` covers reply validation and export.
 Existing Desktop transport tests and package manifest verification passed
 locally; Tk UI needs a Windows/Xvfb run. Device and CI

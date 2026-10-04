@@ -29,8 +29,12 @@ class HistoryClientTests(unittest.TestCase):
                               'previous_mode': '100644'}],
                  'next_cursor': None, 'eof': True, 'scope': 'PINNED_TREE_PATHS'}
         client.validate_delta_page(delta, delta_req)
+        client.validate_request(dict(delta_req, baseSnapshotId='c' * 64))
+        client.validate_delta_page(delta, dict(delta_req, baseSnapshotId='c' * 64))
         with self.assertRaises(client.DesktopError):
             client.validate_delta_page({**delta, 'snapshot_id': '0' * 64}, delta_req)
+        with self.assertRaises(client.DesktopError):
+            client.validate_delta_page(delta, dict(delta_req, baseSnapshotId='0' * 64))
 
     def test_continuation_and_cancel(self):
         class Fake:

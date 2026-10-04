@@ -94,6 +94,9 @@ Windows CI проверяет subprocess, Unicode/space paths и сохране�
 сохраняют receipt с SHA-256 и допускают отмену без публикации неполной папки.
 ID снимка можно взять из сохранённой истории. Это метаданные репозитория;
 содержимое файлов и полный dependency graph в этих двух экспортах отсутствуют.
+Программный API delta принимает `baseSnapshotId` для сравнения с выбранным
+завершённым историческим снимком; Desktop кнопка использует предыдущий
+завершённый снимок по умолчанию.
 Настоящая установка на Dell/Windows 11, peak memory, keyboard/UI и orphan cleanup
 требуют device receipt. Самостоятельный installer с runtime, TXT import,
 canonical task writes, voice/Grok/updater — следующие отдельные части roadmap.

@@ -24,7 +24,7 @@ READS = {
     'durable.info': ({'type'}, set()),
     'durable.repo.list': ({'type'}, set()),
     'durable.repo.history': ({'type', 'repository'}, {'limit', 'cursor'}),
-    'durable.repo.delta': ({'type', 'repository', 'snapshotId'}, {'limit', 'cursor'}),
+    'durable.repo.delta': ({'type', 'repository', 'snapshotId'}, {'limit', 'cursor', 'baseSnapshotId'}),
     'durable.search': ({'type', 'namespace', 'query'}, {'limit'}),
     'durable.context': ({'type', 'namespace', 'ids'}, {'maxBytes'}),
     'durable.repo.manifest': ({'type', 'repository', 'snapshotId', 'action'},
@@ -208,6 +208,8 @@ def validate_request(request):
         number(request.get('limit', 20), 1, 50)
         if request['type'] == 'durable.repo.delta':
             hash_value(request['snapshotId'])
+            if 'baseSnapshotId' in request:
+                hash_value(request['baseSnapshotId'])
         if 'cursor' in request:
             require(isinstance(request['cursor'], str) and
                     re.fullmatch(r'[A-Za-z0-9_-]{1,4096}', request['cursor']))
@@ -399,6 +401,8 @@ def validate_delta_page(value, request):
     require(value['schema'] == 'occ.repo-delta-page.v1' and
             value['snapshot_id'] == request['snapshotId'] and type(value['eof']) is bool)
     hash_value(value['base_snapshot_id'], nullable=True)
+    if 'baseSnapshotId' in request:
+        require(value['base_snapshot_id'] == request['baseSnapshotId'], 'DESKTOP_MANIFEST_BINDING')
     require(value['base_repo_sha'] is None or
             isinstance(value['base_repo_sha'], str) and
             re.fullmatch(r'[0-9a-f]{40,64}', value['base_repo_sha']))
@@ -736,13 +740,15 @@ class DesktopClient:
             require(cursor not in seen, 'DESKTOP_MANIFEST_CURSOR')
             seen.add(cursor)
 
-    def delta_pages(self, repository, snapshot_id, *, cancel=None):
+    def delta_pages(self, repository, snapshot_id, *, base_snapshot_id=None, cancel=None):
         cursor, seen, base = None, set(), None
         while True:
             if cancel is not None and cancel.is_set():
                 raise DesktopError('DESKTOP_CANCELLED')
             request = {'type': 'durable.repo.delta', 'repository': repository,
                        'snapshotId': snapshot_id, 'limit': 50}
+            if base_snapshot_id is not None:
+                request['baseSnapshotId'] = base_snapshot_id
             if cursor is not None:
                 request['cursor'] = cursor
             page = self.request(request)['result']['page']

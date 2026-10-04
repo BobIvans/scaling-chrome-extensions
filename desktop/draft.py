@@ -149,11 +149,15 @@ def save_manifest(output, client, repository, snapshot_id, action='ENTRIES', *, 
     return receipt
 
 
-def save_repo_history(output, client, repository, *, snapshot_id=None, cancel=None, progress=None):
+def save_repo_history(output, client, repository, *, snapshot_id=None, base_snapshot_id=None,
+                      cancel=None, progress=None):
     """Atomically save every snapshot or path delta row through cursor EOF."""
     action = 'DELTA' if snapshot_id is not None else 'SNAPSHOTS'
     filename = 'REPO_DELTA.jsonl' if snapshot_id is not None else 'REPO_SNAPSHOTS.jsonl'
-    pages = (client.delta_pages(repository, snapshot_id, cancel=cancel) if snapshot_id is not None
+    require(base_snapshot_id is None or snapshot_id is not None, 'DESKTOP_MANIFEST_BINDING')
+    pages = (client.delta_pages(repository, snapshot_id, cancel=cancel,
+                               **({'base_snapshot_id': base_snapshot_id} if base_snapshot_id else {}))
+             if snapshot_id is not None
              else client.history_pages(repository, cancel=cancel))
     count, base, hasher = 0, None, hashlib.sha256()
     identity = dict(client.identity) if client.identity else None
@@ -166,6 +170,8 @@ def save_repo_history(output, client, repository, *, snapshot_id=None, cancel=No
                     if base is None:
                         base = page['base_snapshot_id']
                     require(base == page['base_snapshot_id'], 'DESKTOP_MANIFEST_BINDING')
+                    if base_snapshot_id is not None:
+                        require(base == base_snapshot_id, 'DESKTOP_MANIFEST_BINDING')
                 for row in page['changes'] if snapshot_id is not None else page['snapshots']:
                     raw = (json.dumps(row, ensure_ascii=False, sort_keys=True,
                                       separators=(',', ':'), allow_nan=False) + '\n').encode('utf-8')

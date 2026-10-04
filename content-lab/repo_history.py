@@ -83,7 +83,17 @@ def _base(db, head):
                       (head['namespace'], head['alias'], head['created'], head['id'])).fetchone()
 
 
-def delta(store: Path, namespace: str, alias: str, profile: dict, snapshot_id: str, *, limit=20, cursor=None):
+def _require_complete(db, snap):
+    if (snap['cursor'] != snap['total'] or
+            db.execute('SELECT count(*) FROM repo_entries WHERE snapshot_id=?',
+                       (snap['id'],)).fetchone()[0] != snap['total'] or
+            db.execute("SELECT 1 FROM repo_entries WHERE snapshot_id=? AND state='PENDING' LIMIT 1",
+                       (snap['id'],)).fetchone()):
+        raise ValueError('REPO_SNAPSHOT_INCOMPLETE')
+
+
+def delta(store: Path, namespace: str, alias: str, profile: dict, snapshot_id: str,
+          *, limit=20, cursor=None, base_snapshot_id=None):
     """Page every added, deleted and modified path between pinned snapshots."""
     limit = _limit(limit)
     db = read_connection(store)
@@ -91,15 +101,18 @@ def delta(store: Path, namespace: str, alias: str, profile: dict, snapshot_id: s
         head = repo_context.load_snapshot(db, namespace, snapshot_id)
         if head['alias'] != identifier(alias) or json.loads(head['profile']) != profile:
             raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
-        base = _base(db, head)
+        _require_complete(db, head)
+        base = (repo_context.load_snapshot(db, namespace, base_snapshot_id)
+                if base_snapshot_id is not None else _base(db, head))
         if base is None:
             if cursor is not None:
                 raise ValueError('REPO_CURSOR_INVALID')
             return {'schema': 'occ.repo-delta-page.v1', 'snapshot_id': snapshot_id,
                     'base_snapshot_id': None, 'base_repo_sha': None, 'changes': [],
                     'next_cursor': None, 'eof': True, 'scope': 'NO_PREVIOUS_COMPLETE_SNAPSHOT'}
-        if json.loads(base['profile']) != profile:
+        if base['alias'] != alias or json.loads(base['profile']) != profile:
             raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
+        _require_complete(db, base)
         after = None
         if cursor is not None:
             key = _decode(cursor, {'v', 'head', 'base', 'path', 'kind'})

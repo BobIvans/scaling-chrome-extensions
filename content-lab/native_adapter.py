@@ -42,7 +42,7 @@ FIELDS = {
     "durable.review.importBound": ({"type", "namespace", "sessionId", "review"}, set()),
     "durable.repo.list": ({"type"}, set()),
     "durable.repo.history": ({"type", "repository"}, {"limit", "cursor"}),
-    "durable.repo.delta": ({"type", "repository", "snapshotId"}, {"limit", "cursor"}),
+    "durable.repo.delta": ({"type", "repository", "snapshotId"}, {"limit", "cursor", "baseSnapshotId"}),
     "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
     "durable.repo.scanRun": ({"type", "repository", "action"}, {"intentKey", "runId", "expectedCursor", "expectedRevision"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
@@ -264,7 +264,8 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
             value['page'] = repo_history.snapshots(store, source['namespace'], alias, source, **options)
         else:
             value['page'] = repo_history.delta(store, source['namespace'], alias, source,
-                                               request['snapshotId'], **options)
+                                               request['snapshotId'], base_snapshot_id=request.get('baseSnapshotId'),
+                                               **options)
         return value
     core = None if desktop else Core(store, policy)
     if operation.startswith('durable.repo.'):

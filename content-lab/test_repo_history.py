@@ -95,6 +95,9 @@ class RepoHistoryTests(TestCase):
         delta = native_adapter.dispatch({'type': 'durable.repo.delta',
                                          'repository': 'sce', 'snapshotId': second}, profile)
         self.assertEqual(delta['page']['changes'][0]['path'], 'b.txt')
+        explicit = native_adapter.dispatch({'type': 'durable.repo.delta', 'repository': 'sce',
+                                             'snapshotId': second, 'baseSnapshotId': first}, profile)
+        self.assertEqual(explicit['page']['base_snapshot_id'], first)
         loaded, loaded_policy = native_adapter.operator_profile(profile)
         desktop_page = native_adapter.dispatch_loaded({'type': 'durable.repo.history',
             'repository': 'sce', 'limit': 1}, loaded, loaded_policy, desktop=True)
@@ -129,3 +132,28 @@ class RepoHistoryTests(TestCase):
                                     limit=1, cursor=first['next_cursor'])
         self.assertEqual(second['changes'][0]['path'], long_path + 'x')
         self.assertTrue(second['eof'])
+
+    def test_explicit_historical_base_and_incomplete_head_fail_closed(self):
+        first = self.commit({'first.txt': b'first'})
+        middle = self.commit({'middle.txt': b'middle'})
+        head = self.commit({'last.txt': b'last'})
+        page = repo_history.delta(self.store, 'code', 'sce', self.profile, head,
+                                  base_snapshot_id=first, limit=1)
+        self.assertEqual(page['base_snapshot_id'], first)
+        self.assertEqual(page['changes'][0]['path'], 'last.txt')
+        following = repo_history.delta(self.store, 'code', 'sce', self.profile, head,
+            base_snapshot_id=first, limit=1, cursor=page['next_cursor'])
+        self.assertEqual(following['changes'][0]['path'], 'middle.txt')
+        with self.assertRaisesRegex(ValueError, 'REPO_CURSOR_INVALID'):
+            repo_history.delta(self.store, 'code', 'sce', self.profile, head,
+                               base_snapshot_id=middle, cursor=page['next_cursor'])
+        (self.repo / 'pending.txt').write_bytes(b'pending')
+        self.git('add', '-A')
+        self.git('commit', '-qm', 'pending revision')
+        pending = repo_context.start_scan(self.store, 'sce', self.profile)
+        with self.assertRaisesRegex(ValueError, 'REPO_SNAPSHOT_INCOMPLETE'):
+            repo_history.delta(self.store, 'code', 'sce', self.profile, pending,
+                               base_snapshot_id=first)
+        with self.assertRaisesRegex(ValueError, 'REPO_SNAPSHOT_INCOMPLETE'):
+            repo_history.delta(self.store, 'code', 'sce', self.profile, head,
+                               base_snapshot_id=pending)
