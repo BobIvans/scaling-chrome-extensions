@@ -93,11 +93,13 @@ def ready_store(store, *, manifest=False):
 
 def info(profile):
     store = Path(profile['store'])
-    capabilities = sorted((DESKTOP_READS - {'durable.repo.manifest'}) & FIELDS.keys())
+    repo_reads = {'durable.repo.manifest', 'durable.repo.history', 'durable.repo.delta'}
+    capabilities = sorted((DESKTOP_READS - repo_reads) & FIELDS.keys())
     if 'durable.repo.manifest' in FIELDS and ready_store(store, manifest=True):
         import repo_manifest
         if callable(getattr(repo_manifest, 'page', None)):
             capabilities.append('durable.repo.manifest')
+            capabilities.extend(sorted({'durable.repo.history', 'durable.repo.delta'} & FIELDS.keys()))
     return {'protocol': DESKTOP_PROTOCOL, 'native_input_bytes': INPUT_BYTES,
             'native_combined_output_bytes': OUTPUT_BYTES, 'native_timeout_ms': 10_000,
             'capabilities': capabilities, 'namespaces': list(profile['namespaces']),
@@ -222,7 +224,8 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     if operation == 'durable.info':
         value['info'] = info(profile)
         return value
-    if desktop and not ready_store(store, manifest=operation == 'durable.repo.manifest'):
+    if desktop and not ready_store(store, manifest=operation in {
+            'durable.repo.manifest', 'durable.repo.history', 'durable.repo.delta'}):
         raise ValueError('DESKTOP_SETUP_REQUIRED')
     if operation in {'durable.repo.history', 'durable.repo.delta'}:
         import repo_history

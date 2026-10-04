@@ -111,7 +111,8 @@ class RepoHistoryTests(TestCase):
 
     def test_long_unicode_cursor_continues_without_path_budget_cutoff(self):
         self.commit({'base.txt': b'initial'})
-        long_path = '/'.join(['я' * 60] * 4) + '/long.txt'
+        # Keep the fixture below Windows MAX_PATH while exercising UTF-8 cursors.
+        long_path = '/'.join(['я' * 40] * 2) + '/long.txt'
         target = self.repo / long_path
         target.parent.mkdir(parents=True)
         target.write_bytes(b'long')
