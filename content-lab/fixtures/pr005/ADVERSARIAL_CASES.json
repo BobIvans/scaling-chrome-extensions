@@ -1,0 +1,66 @@
+{
+  "schema": "occ.pr005-fixture-faults.v1",
+  "cases": [
+    {
+      "id": "split_utf8",
+      "chunks_hex": [
+        "d0",
+        "b0"
+      ],
+      "expected_text": "а",
+      "expected_eligibility": "ELIGIBLE"
+    },
+    {
+      "id": "truncated_utf8",
+      "chunks_hex": [
+        "d0"
+      ],
+      "expected_eligibility": "INELIGIBLE"
+    },
+    {
+      "id": "corrupt_hash",
+      "mutation": "Change stored raw byte without updating file_hash",
+      "expected": "CORRUPT_CAPTURE"
+    },
+    {
+      "id": "gap_range",
+      "mutation": "Shift second chunk byte_start by +1",
+      "expected": "CORRUPT_CAPTURE"
+    },
+    {
+      "id": "bad_revision",
+      "mutation": "Alter one chunk revision",
+      "expected": "CORRUPT_CAPTURE"
+    },
+    {
+      "id": "legacy_missing_facts",
+      "mutation": "Delete analysis.format_eligibility key",
+      "expected": "LEGACY_UNKNOWN"
+    },
+    {
+      "id": "profile_revoked",
+      "mutation": "Remove sce from trusted profile",
+      "expected": "REPO_OUTSIDE_OPERATOR_SCOPE"
+    },
+    {
+      "id": "cursor_mismatch",
+      "mutation": "Replay cursor with another snapshot/filter/policy",
+      "expected": "COVERAGE_CURSOR_SCOPE_MISMATCH"
+    },
+    {
+      "id": "large_ordinal",
+      "ordinal": "1000001",
+      "expected": "new PAGE keyset has no inherited 1,000,000 bound"
+    },
+    {
+      "id": "malicious_label",
+      "label": "<img src=x onerror=alert(1)>",
+      "expected": "textContent, no HTML execution"
+    },
+    {
+      "id": "one_row_too_big",
+      "mutation": "Serialized one-row envelope exceeds budget",
+      "expected": "ROW_ENVELOPE_LIMIT"
+    }
+  ]
+}
