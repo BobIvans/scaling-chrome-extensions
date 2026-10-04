@@ -1,0 +1,69 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "schema",
+    "planner_version",
+    "source_id_version",
+    "raw_reference_bytes_per_segment",
+    "reference_frame_bytes",
+    "max_refs_per_segment",
+    "python_roots",
+    "include_heuristic_candidates_as_topology",
+    "emit_related_references",
+    "total_source_cap",
+    "total_group_cap",
+    "total_segment_cap",
+    "resource_budget_policy"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "occ.repo-group-policy.v1"
+    },
+    "planner_version": {
+      "const": "PYTHON_RAW_REFERENCE_GROUPS_V1"
+    },
+    "source_id_version": {
+      "const": "occ.repo-logical-source.v1"
+    },
+    "raw_reference_bytes_per_segment": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "reference_frame_bytes": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "max_refs_per_segment": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "python_roots": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    },
+    "include_heuristic_candidates_as_topology": {
+      "const": false
+    },
+    "emit_related_references": {
+      "type": "boolean"
+    },
+    "total_source_cap": {
+      "const": null
+    },
+    "total_group_cap": {
+      "const": null
+    },
+    "total_segment_cap": {
+      "const": null
+    },
+    "resource_budget_policy": {
+      "const": "EXPLICIT_BLOCK_NO_TRUNCATION"
+    }
+  }
+}
