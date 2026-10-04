@@ -97,6 +97,7 @@ class Control:
         self.started, self.last_progress = time.monotonic(), 0
         self.counts = {'processed_entries': 0, 'candidate_files': 0, 'relations': 0}
         self.reason, self.peak_rss, self.child_peak, self.rss_observed = None, 0, 0, False
+        self.node_executable = None
 
     def pulse(self, child=None):
         parent_rss = rss(os.getpid())
@@ -143,9 +144,9 @@ def node_path():
     return str(Path(executable).resolve())
 
 
-def interpretation(limits, legacy=False):
+def interpretation(limits, legacy=False, executable=None):
     pin = parser_pin()
-    node = node_path()
+    node = executable or node_path()
     result = subprocess.run([node, '--version'], cwd=LAB, env=parser_environment(),
                             capture_output=True, timeout=5, check=True)
     node_version = result.stdout.decode('ascii').strip()
@@ -187,7 +188,7 @@ def parse_file(raw, extension, control):
         return failure('PARSER_INPUT_BUDGET')
     events = queue.Queue(maxsize=2)
     stopped = threading.Event()
-    child = subprocess.Popen([node_path(), f"--max-old-space-size={limits['node_old_space_mib']}",
+    child = subprocess.Popen([control.node_executable or node_path(), f"--max-old-space-size={limits['node_old_space_mib']}",
                               str(LAB / 'repo_js_parser.cjs'), str(limits['parser_input_frame_bytes']),
                               str(limits['parser_output_frame_bytes'])], cwd=LAB, env=parser_environment(),
                              stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=False,

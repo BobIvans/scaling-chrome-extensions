@@ -20,7 +20,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from repo_archive_input import operator_scope
 from repo_artifacts import atomic_json, file_proof, json_bytes, outside, process_lock, safe_path, sync_dir
 import repo_js_input as inputs
-from repo_js_runtime import Control, budget, interpretation, parse_file, stable_digest as digest
+from repo_js_runtime import Control, budget, interpretation, node_path, parse_file, stable_digest as digest
 
 ARTIFACTS = ('JS_ANALYSIS.jsonl', 'RELATIONS.jsonl', 'INTERPRETATION.json', 'ANALYSIS_STATUS.json')
 FORMS = {'ESM_IMPORT', 'ESM_SIDE_EFFECT', 'ESM_REEXPORT', 'TS_IMPORT_TYPE', 'TS_EXPORT_TYPE',
@@ -226,6 +226,10 @@ def build(profile_path, alias, snapshot_id, output, *, limits=None, legacy=False
     limits = budget(limits)
     control = Control(limits, progress)
     store, source = operator_scope(profile_path, alias)
+    control.node_executable = node_path()
+    executable = Path(control.node_executable)
+    if executable.is_relative_to(Path(source['root']).resolve()) or executable.is_relative_to(store):
+        raise ValueError('NODE_EXECUTABLE_IN_SOURCE_OR_STORE')
     output = outside(output, source['root'], store, Path(__file__).resolve().parent)
     output.parent.mkdir(parents=True, exist_ok=True)
     stage = output.with_name('.' + output.name + '.stage-' + uuid.uuid4().hex)
@@ -235,7 +239,7 @@ def build(profile_path, alias, snapshot_id, output, *, limits=None, legacy=False
         stage.mkdir(mode=0o700)
         writers = []
         try:
-            interpreted = interpretation(limits, legacy)
+            interpreted = interpretation(limits, legacy, control.node_executable)
             with inputs.read_snapshot(store, source, alias, snapshot_id, control) as (db, snap):
                 interpreted['input_binding'] = {'snapshot_id': snap['id'], 'namespace': snap['namespace'],
                     'repository': snap['alias'], 'profile_digest': digest(source),

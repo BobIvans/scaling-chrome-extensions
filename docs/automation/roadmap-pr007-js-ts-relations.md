@@ -58,6 +58,8 @@ bundle, package metadata и лицензия проверяются по фик�
 Reviewed runtime bundle самодостаточен: dependency `@babel/types` из metadata
 upstream не загружается нашим runtime. Parser/helper запускается из install area
 по одному файлу, с очищенными NODE_OPTIONS/NODE_PATH/credential variables.
+Node executable выбирается один раз до `--version`; путь внутри scanned source
+или data store отклоняется до исполнения. Child использует этот же absolute path.
 Captured source передаётся как ограниченный private frame. Он никогда не
 import/eval/transpile/emit/execute. Fatal diagnostics дают PARSER_FAILED без
 предварительных edges или symbols.

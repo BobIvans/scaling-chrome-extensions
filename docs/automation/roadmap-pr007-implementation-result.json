@@ -39,6 +39,12 @@
       "command": "git -c core.autocrlf=true checkout-index; parser_pin()",
       "outcome": "PASS",
       "scope": "Byte-identical offline parser/license/metadata with Windows-style checkout policy"
+    },
+    {
+      "command": "Final PR007 focused suite with trusted executable source/store guard",
+      "passed": 24,
+      "skipped": 1,
+      "total": 25
     }
   ],
   "application_code_changed": true,
@@ -225,6 +231,7 @@
   "pr003_runtime_integration": "PASS_REAL_GIT_SQLITE_MANIFEST_AND_ZIP_SHA256_UNCHANGED",
   "pr005_integration": "PASS_SCOPED_ACTUAL_OWNER_PREVIEW_4537c773a84474bcb613b3524494388d955552b9; consumes facts_status/project_facts and private binding; branch not yet merged into base",
   "pr006_integration": "RECEIVED_PYTHON_POLICY_BOUNDARY_PRESERVED; no automatic JS consumer; actual owner absent from base main",
+  "process_isolation": "Node executable pinned before invocation; executable inside scanned source or data store rejected before --version; child uses that exact path",
   "remaining": [
     "Qualified compiler/runtime resolver modes, CommonJS binding, aliases/workspaces",
     "Mixed-language/planner consumer with versioned topology policy",

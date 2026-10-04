@@ -372,6 +372,13 @@ class LedgerTests(unittest.TestCase):
                 self.build(limits={'file_bytes': 1})
         self.assertFalse(self.output.exists())
 
+    def test_node_executable_from_source_is_rejected_before_version_or_execution(self):
+        with mock.patch.object(app, 'node_path', return_value=str(self.checkout / 'node.exe')):
+            with mock.patch.object(runtime.subprocess, 'run', side_effect=AssertionError('must not execute source')):
+                with self.assertRaisesRegex(ValueError, 'NODE_EXECUTABLE_IN_SOURCE_OR_STORE'):
+                    self.build()
+        self.assertFalse(self.output.exists())
+
     def test_installed_offline_isolated_layout_loads_without_project_dependencies(self):
         self.add_facts()
         installed = self.work / 'installed'; installed.mkdir()
