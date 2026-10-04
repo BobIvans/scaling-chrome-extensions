@@ -18,11 +18,11 @@ export function codexEnvironment(source=process.env){const env={...source};
 }
 export class JobHost{
  constructor(config,{spawnProcess=spawn,durableSpawnProcess=spawn,qualificationSpawnProcess=spawn}={}){this.config=config;this.spawnProcess=spawnProcess;this.durable=new DurableBridge(config.durableCore,{spawnProcess:durableSpawnProcess});this.qualification=new QualificationBridge(config.qualificationCore,{spawnProcess:qualificationSpawnProcess});this.jobs=new Map();this.running=null;this.closed=false;}
- async handle(m){
+ async handle(m,onProgress=()=>{}){
   if(this.closed)throw Error('CLOSED');
   if(!m||typeof m!=='object'||typeof m.type!=='string')throw Error('SCHEMA');
   if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false,supportedModes:this.config.allowBuild===true?['analyze','build']:['analyze'],...(this.durable.enabled?{durableCommands:DURABLE_COMMANDS}: {}),...(this.qualification.enabled?{qualificationCommands:QUALIFICATION_COMMANDS}: {})};
-  if(m.type.startsWith('durable.'))return this.durable.handle(m);
+  if(m.type.startsWith('durable.'))return this.durable.handle(m,{onProgress});
   if(m.type.startsWith('qualification.'))return this.qualification.handle(m);
   if(m.type==='list')return {jobs:[...this.jobs.values()].map(j=>this.summary(j))};
   if(m.type==='begin'){
@@ -91,7 +91,7 @@ async function main(){
  const config=JSON.parse(await fs.readFile(new URL('./host-config.json',import.meta.url),'utf8'));
  if(process.argv[2]!==`chrome-extension://${config.extensionId}/`)process.exit(2);
  const host=new JobHost(config);let serial=Promise.resolve();
- const input=decoder(m=>{serial=serial.then(async()=>{try{const result=await host.handle(m);process.stdout.write(encodeFrame({requestId:m.requestId,ok:true,...result}));}catch(e){process.stdout.write(encodeFrame({requestId:m.requestId,ok:false,error:e.message}));}});},()=>{void host.close().finally(()=>process.exit(2));});
+ const input=decoder(m=>{serial=serial.then(async()=>{try{const result=await host.handle(m,()=>process.stdout.write(encodeFrame({requestId:m.requestId,progress:true})));process.stdout.write(encodeFrame({requestId:m.requestId,ok:true,...result}));}catch(e){process.stdout.write(encodeFrame({requestId:m.requestId,ok:false,error:e.message}));}});},()=>{void host.close().finally(()=>process.exit(2));});
  process.stdin.on('data',input);process.stdin.on('end',()=>{void serial.finally(()=>host.close()).finally(()=>process.exit());});
  process.on('SIGTERM',()=>{void host.close().finally(()=>process.exit());});
 }

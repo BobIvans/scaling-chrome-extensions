@@ -31,8 +31,8 @@ Draft PR #7/#25–32 не являются завершением этих сл�
 exclusions; namespace должен быть разрешён профилем, store находится вне repo.
 Документ AI эти настройки не устанавливает.
 
-В библиотеке: подключить host → получить repos → выбрать alias → начать/продолжить
-scan до COMPLETE → выбрать файл/finding → задать goal, scope, acceptance → export.
+В библиотеке: подключить обновлённый host → получить repos → выбрать alias →
+«Собрать весь repo» (автоматически проходит все порции) → выбрать файл/finding → задать goal, scope, acceptance → export.
 Один запрос обрабатывает 20 entries. Новый процесс продолжает SQLite cursor того
 же HEAD/profile. Для нового SHA выбрать текущий HEAD; SOURCE_DRIFT не требует
 отката main. UI листает весь ledger, включая exclusions/errors, а не первые 2000.
@@ -59,8 +59,17 @@ NUL-delimited `git ls-tree` exact SHA сохраняется целиком до
 Lazy fetch из promisor remote отключён через `GIT_NO_LAZY_FETCH=1`
 ([Git contract](https://git-scm.com/docs/git/2.53.0.html)); missing objects имеют ERROR.
 Cursor/chunks/порция коммитятся вместе; interruption откатывает порцию.
-Enumeration limit — 32 MiB Git output с явной ошибкой, не усечением. Blob limit
-8 MiB: oversize имеет ERROR. Empty files тоже получают partition.
+Дерево Git потоково записывается в SQLite: ограничения 32 MiB нет. Blobs любого
+размера сначала потоково проверяются во временном файле, затем сохраняются
+фрагментами; ограничения 8 MiB нет. Empty files тоже получают partition.
+AST разбирается только в окне 2 MiB; более крупный файл сохраняется полностью,
+с явным TEXT_ONLY/BINARY scope.
+
+[Whole-repo controller, Pause / Continue / Stop и evidence](roadmap-pr001-full-repo-scan.md).
+Порция из 20 entries ограничивает один запрос, а не весь репозиторий. После
+переподключения STATUS восстанавливает run без автоматического STEP. Счётчики
+являются транзакционной проекцией ledger; файловые страницы используют ordinal
+вместо линейного OFFSET. Bound native frame не ограничивает весь local inventory.
 
 Link/submodule, unsupported path, operator exclusion, credential filename и
 secret-text heuristic имеют явные причины. `wallet_logic.py`/`session_model.py`

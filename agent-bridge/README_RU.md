@@ -80,7 +80,11 @@ Request не принимает root/store/policy/argv/patch/worker overrides и
 permissions. Дочерний процесс Python запускается по зарегистрированному
 абсолютному пути с `-I -X utf8`, `shell:false`, без AI keys/HF tokens/PYTHONPATH
 и без desktop IPC. Полный request — до 16 000 bytes; stdout+stderr — до 192 000
-bytes, timeout — 10 секунд; stderr не возвращается в Chrome. При disconnect
+bytes; обычный timeout — 10 секунд. Для `durable.repo.*` это idle watchdog:
+точный служебный progress marker от установленного adapter продлевает ожидание,
+поэтому размер/время полного scan не ограничены одним timeout. NativeClient
+сохраняет ожидание страницы и queued controls по progress frames. Произвольные
+логи не продлевают ожидание, сохраняют byte limit и не возвращаются в Chrome. При disconnect
 transport child завершается, SQLite остаётся владельцем подтверждённых данных.
 
 **Timeout/disconnect означает неизвестный исход операции.** Enqueue мог уже
@@ -97,3 +101,9 @@ RUNNING/NEEDS_RECONCILIATION остаётся таким до подтвержд
 Команда принимает только task ID, одну из точных readiness-фраз и bounded source refs. Python/script/checkouts/SHA/output/timeout не приходят из Chrome или AI и берутся только из operator profile. Child запускается без shell и без AI/API secrets; ответ обязан оставаться sender-free: `qualified=false`, `release_authorized=false`, `live_authorized=false`, `transactions_sent=0`.
 
 Подробный runbook: `QUALIFICATION_ADAPTER_RU.md`. Installer копирует `qualification.mjs` и `qualification_adapter.py`, но не включает эту возможность автоматически.
+
+
+Whole-repo endpoint `durable.repo.scanRun`: START/STATUS/STEP/PAUSE/CONTINUE/CANCEL.
+Требует обновить одновременно extension, `host.mjs`, `durable.mjs` и установленные
+`content-lab` siblings. Старый host явно показывает WHOLE_REPO_SCAN_UNAVAILABLE.
+[Контракт и проверка](../docs/automation/roadmap-pr001-full-repo-scan.md).

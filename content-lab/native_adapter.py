@@ -11,6 +11,7 @@ from pathlib import Path
 import re
 import sqlite3
 import sys
+import time
 
 # -I excludes the script directory. Import only this installed adapter's siblings.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -39,6 +40,7 @@ FIELDS = {
     "durable.review.importBound": ({"type", "namespace", "sessionId", "review"}, set()),
     "durable.repo.list": ({"type"}, set()),
     "durable.repo.scan": ({"type", "repository"}, {"snapshotId"}),
+    "durable.repo.scanRun": ({"type", "repository", "action"}, {"intentKey", "runId", "expectedCursor", "expectedRevision"}),
     "durable.repo.get": ({"type", "repository", "snapshotId"}, {"offset"}),
     "durable.repo.export": ({"type", "repository", "snapshotId", "paths", "goal", "scope", "acceptance"}, {"maxBytes", "sourceOffset"}),
 }
@@ -134,6 +136,10 @@ def dispatch(request, profile_path):
                 raise ValueError('REPO_OUTSIDE_OPERATOR_SCOPE')
             source = repositories[alias]
             namespace = source['namespace']
+            if operation == 'durable.repo.scanRun':
+                fields = {k: v for k, v in request.items() if k not in {'type', 'repository', 'action'}}
+                value['scan_run'] = repo_context.scan_run(store, alias, source, request['action'], **fields)
+                return value
             snapshot_id = request.get('snapshotId')
             if operation == 'durable.repo.scan' and snapshot_id is None:
                 snapshot_id = repo_context.start_scan(store, alias, source)
@@ -242,7 +248,17 @@ def main(argv=None):
         raw = sys.stdin.buffer.read(INPUT_BYTES + 1)
         if len(raw) > INPUT_BYTES:
             raise ValueError("DURABLE_INPUT_LIMIT")
-        value = {"ok": True, "result": dispatch(strict_json(raw), args.profile)}
+        request = strict_json(raw)
+        if isinstance(request, dict) and isinstance(request.get('type'), str) and request['type'].startswith('durable.repo.'):
+            last = [0.0]
+            def progress():
+                now = time.monotonic()
+                if now - last[0] >= 1:
+                    sys.stderr.buffer.write(b'OCC_SCAN_PROGRESS\n')
+                    sys.stderr.buffer.flush()
+                    last[0] = now
+            repo_context._progress_callback = progress
+        value = {"ok": True, "result": dispatch(request, args.profile)}
         output = json.dumps(value, ensure_ascii=False, allow_nan=False).encode("utf-8")
         if len(output) > OUTPUT_BYTES:
             raise ValueError("DURABLE_OUTPUT_LIMIT")

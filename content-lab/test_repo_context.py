@@ -115,12 +115,13 @@ class RepoContextTests(TestCase):
         sentinel = self.root / 'executed'
         self.put('evil.py', f'from pathlib import Path\nPath({str(sentinel)!r}).touch()\n'.encode())
         self.put('broken.py', b'def missing(\n')
-        self.put('large.bin', b'x' * (repo.MAX_FILE + 1))
+        self.put('large.bin', b'x' * (8 * 1024 * 1024 + 1))
         self.commit()
         status = self.scan()
         self.assertFalse(sentinel.exists())
-        self.assertEqual(status['counts'], {'ERROR': 1, 'INDEXED': 2})
-        self.assertEqual(next(f for f in status['files'] if f['path'] == 'large.bin')['reason'], 'FILE_TOO_LARGE')
+        self.assertEqual(status['counts'], {'INDEXED': 3})
+        self.assertTrue(status['roundtrip']['all_tracked_bytes_exportable'])
+        self.assertEqual(next(f for f in status['files'] if f['path'] == 'large.bin')['parser'], 'STREAMING_UTF8_TEXT_ONLY_NO_SYNTAX_CLAIM')
 
     def test_root_aware_dependencies_unresolved_and_scc_oracle(self):
         self.put('content-lab/main.py', b'import helper\nimport absent\n__import__("maybe")\n')
