@@ -59,9 +59,17 @@ def load_json(path, limit=2_200_000):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def connection(store):
-    db = _database(store)
+def connection(store, *, configure=None):
+    db = _database(store) if configure is None else _database(store, configure=configure)
     db.row_factory = sqlite3.Row
+    try:
+        return _initialize_connection(db)
+    except BaseException:
+        db.close()
+        raise
+
+
+def _initialize_connection(db):
     db.executescript("""
         CREATE TABLE IF NOT EXISTS sync_heads(
           namespace TEXT, source_key TEXT, item_id TEXT, raw_hash TEXT,

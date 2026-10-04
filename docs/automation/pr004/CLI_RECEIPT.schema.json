@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roadmap:pr004:receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "state",
+    "repository",
+    "namespace",
+    "snapshotId",
+    "repoSha",
+    "treeSha",
+    "total",
+    "inventoryComplete",
+    "captureComplete",
+    "reused",
+    "reason",
+    "processStopped",
+    "proofScope"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-inventory-receipt.v1"
+    },
+    "state": {
+      "enum": [
+        "READY",
+        "FAILED",
+        "CANCELLED",
+        "BLOCKED"
+      ]
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,100}$"
+    },
+    "namespace": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,100}$"
+    },
+    "snapshotId": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repoSha": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "treeSha": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "pattern": "^([0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "total": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 0
+    },
+    "inventoryComplete": {
+      "type": "boolean"
+    },
+    "captureComplete": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "reused": {
+      "type": "boolean"
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "processStopped": {
+      "type": "boolean"
+    },
+    "proofScope": {
+      "const": "INVENTORY_ONLY_NO_CAPTURE_OR_EXPORT_PROOF"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "const": "READY"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "inventoryComplete": {
+            "const": true
+          },
+          "processStopped": {
+            "const": true
+          },
+          "reason": {
+            "const": null
+          },
+          "snapshotId": {
+            "type": "string"
+          },
+          "repoSha": {
+            "type": "string"
+          },
+          "treeSha": {
+            "type": "string"
+          },
+          "total": {
+            "type": "integer"
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "state": {
+            "enum": [
+              "FAILED",
+              "CANCELLED",
+              "BLOCKED"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "inventoryComplete": {
+            "const": false
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    }
+  ]
+}

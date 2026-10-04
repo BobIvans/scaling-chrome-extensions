@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:occ:pr004:inventory-budget",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "read_block_bytes",
+    "stdout_queue_blocks",
+    "max_record_bytes",
+    "insert_batch_rows",
+    "insert_batch_bytes",
+    "stderr_total_bytes",
+    "stderr_retained_bytes",
+    "timeout_seconds",
+    "cleanup_timeout_seconds",
+    "stage_max_bytes",
+    "stage_cache_bytes",
+    "sqlite_busy_timeout_ms",
+    "target_peak_rss_bytes",
+    "target_rss_growth_bytes"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-inventory-budget.v1"
+    },
+    "read_block_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 65536
+    },
+    "stdout_queue_blocks": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16
+    },
+    "max_record_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 65536
+    },
+    "insert_batch_rows": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 256
+    },
+    "insert_batch_bytes": {
+      "type": "integer",
+      "minimum": 262144,
+      "maximum": 262144
+    },
+    "stderr_total_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 1048576
+    },
+    "stderr_retained_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65536
+    },
+    "cleanup_timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+    },
+    "stage_cache_bytes": {
+      "type": "integer",
+      "minimum": 65536,
+      "maximum": 16777216
+    },
+    "sqlite_busy_timeout_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5000
+    },
+    "target_peak_rss_bytes": {
+      "type": "integer",
+      "minimum": 1048576,
+      "maximum": 1073741824
+    },
+    "target_rss_growth_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1073741824
+    },
+    "timeout_seconds": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1
+    },
+    "stage_max_bytes": {
+      "type": [
+        "integer",
+        "null"
+      ],
+      "minimum": 1048576
+    }
+  },
+  "$comment": "null timeout/stage quota: no total corpus or runtime ceiling; peak RSS fields are measurement targets, not enforced claims. Validate stderr_retained<=stderr_total and block_bytes*queue_blocks<=1 MiB."
+}
