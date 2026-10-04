@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Explicit overrides for the foreground JS/TS parser budget",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "occ.repo-js-analysis-budget.v1"},
+    "file_bytes": {"type": "integer", "minimum": 1, "maximum": 8388608},
+    "parser_input_frame_bytes": {"type": "integer", "minimum": 1024, "maximum": 33554432},
+    "parser_output_frame_bytes": {"type": "integer", "minimum": 1024, "maximum": 8388608},
+    "stderr_total_bytes": {"type": "integer", "minimum": 1024, "maximum": 1048576},
+    "stderr_retained_bytes": {"type": "integer", "minimum": 0, "maximum": 65536},
+    "file_timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 60},
+    "global_timeout_seconds": {"type": ["integer", "null"], "minimum": 1, "default": null},
+    "cleanup_timeout_seconds": {"type": "integer", "minimum": 1, "maximum": 5},
+    "node_old_space_mib": {"type": "integer", "minimum": 64, "maximum": 1024},
+    "stage_max_bytes": {"type": ["integer", "null"], "minimum": 1, "default": null},
+    "projection_batch_rows": {"type": "integer", "minimum": 1, "maximum": 1024},
+    "projection_batch_bytes": {"type": "integer", "minimum": 65536, "maximum": 1048576},
+    "progress_interval_ms": {"type": "integer", "minimum": 100, "maximum": 1000}
+  },
+  "$comment": "Omitted fields use reviewed defaults. No total file-count, elapsed-time or output-size ceiling by default. Validate retained stderr <= total stderr in code. A per-file parse budget preserves the raw capture and produces an explicit fallback."
+}
