@@ -4,10 +4,10 @@
   "package_id": "PR-008",
   "actual_base_sha": "8414ce4bda6618e58dea64093bc9a22a7161c5e7",
   "actual_head_sha": "7a2cf10c92055da4bf73be5dc57812ee7761a247",
-  "pr_url": null,
+  "pr_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/45",
   "merge_sha": null,
   "implementation": "IMPLEMENTED_LOCAL_TESTS_PASS",
-  "github_ci": "PENDING_EXACT_PR_HEAD",
+  "github_ci": "FINAL_STATUS_IN_PR_CHECKS_AND_DESCRIPTION",
   "windows_installed": "NOT_RUN",
   "functions_engineered": [
     "versioned durable.info handshake",
@@ -61,7 +61,8 @@
     "desktop/tests/test_desktop.py",
     "docs/automation/roadmap-pr008-desktop.md",
     "docs/automation/runs/PR008_IMPLEMENTATION_RESULT_2026-10-04.json",
-    "docs/automation/runs/PR008_FOLLOWUPS_2026-10-04.json"
+    "docs/automation/runs/PR008_FOLLOWUPS_2026-10-04.json",
+    ".gitattributes"
   ],
   "tests_and_results": [
     {
@@ -236,5 +237,15 @@
     "failure": "Tk test compared Windows 8.3 temporary path with canonical path displayed by backend",
     "fix": "Compare Path(store).resolve() with displayed canonical store location; preserve identity and Unicode/space tests",
     "remaining": "Final exact-head Ubuntu/Windows CI pending"
+  },
+  "github_ci_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/45/checks",
+  "captured_stage": "LOCAL_AND_PRIOR_CI_EVIDENCE; final PR checks are authoritative",
+  "windows_package_regression": {
+    "run_id": 37204407321,
+    "job_id": 111442489230,
+    "desktop_tests": "22 passed, including real Tk smoke and ChatGPT prefixed namespaces",
+    "failure": "Owned-file hashes differed after Windows checkout LF/CRLF conversion",
+    "fix": "desktop/** text eol=lf; binary wire fixtures explicitly -text",
+    "remaining": "Final exact-head matrix required before merge"
   }
 }
