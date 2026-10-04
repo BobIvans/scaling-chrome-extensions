@@ -1,0 +1,63 @@
+{
+  "schema": "occ.pr008-desktop-transport-design.v1",
+  "status": "PROPOSED_NOT_INTEGRATED",
+  "domain_owner": "existing native_adapter dispatcher; same loaded profile/policy",
+  "protocol": "occ.desktop-stdio.v1",
+  "request_framing": "one bare UTF8 JSON per child; stdin EOF",
+  "chrome_length_prefix": false,
+  "fixed_argv": [
+    "<configured-python>",
+    "-I",
+    "-X",
+    "utf8",
+    "<installed-native_adapter.py>",
+    "--profile",
+    "<operator-profile>",
+    "--desktop-stdio"
+  ],
+  "shell": false,
+  "desktop_allowlist": [
+    "durable.info",
+    "durable.repo.list",
+    "durable.search",
+    "durable.context"
+  ],
+  "optional_qualified_readers": [
+    "durable.repo.coverage",
+    "durable.repo.manifest"
+  ],
+  "capability_rules": "derive from actual supported FIELDS/installed schemas, not roadmap cards",
+  "budgets": {
+    "input_bytes": 16000,
+    "combined_stdout_stderr_bytes": 192000,
+    "timeout_ms": 10000,
+    "max_inflight_reads": 1,
+    "stderr_diagnostic_retained_bytes": 4096,
+    "global_repo_file_or_part_cap": null
+  },
+  "decoder": "strict UTF8, duplicate-key/NaN/trailing-data rejection, exact allowed fields",
+  "success_wrapper": "occ.desktop-stdio-result.v1 with adapter_context + shared native result",
+  "error_wrapper": "typed error, optional null context before profile load",
+  "operation_binding": "result.operation equals request.type; namespace/scope checks remain at owner",
+  "identity_binding": [
+    "protocol",
+    "profile_digest",
+    "store_identity",
+    "adapter_sha256",
+    "backend_bundle_sha256"
+  ],
+  "ui_fence": [
+    "connection_generation",
+    "request_id",
+    "expected_operation",
+    "namespace",
+    "query_revision",
+    "handshake_identity"
+  ],
+  "on_timeout": "stop/reap child, bounded pipe cleanup, typed read retry; no stale UI mutation",
+  "on_profile_change": "PROFILE_CHANGED; re-handshake, new generation; old result discarded",
+  "on_close": "invalidate generation, cancel child, no widget writes after close",
+  "browser_compatibility": "legacy argv/wrapper and public dispatch return unchanged; durable.info can be advertised",
+  "data_setup": "require ready existing backend/store; info before Core/DB init; no desktop schema migration",
+  "unsupported_mutations": "reject before execution; canonical task/import/job writes outside slice"
+}

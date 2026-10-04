@@ -1,0 +1,135 @@
+{
+  "schema": "roadmap.runtime-cases.v1",
+  "count": 16,
+  "package_checks_are_not_runtime_tests": true,
+  "cases": [
+    {
+      "criterion_id": "P004-AC01",
+      "title": "Pinned HEAD/tree identity",
+      "expected": "HEAD/tree from one pinned commit; drift before publish fails SOURCE_DRIFT, old snapshot preserved.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC02",
+      "title": "NUL and arbitrary read boundaries",
+      "expected": "One-byte/random/block splits preserve 55 ordinals, exact raw paths, modes/OIDs/sizes and tail beyond 39.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC03",
+      "title": "Actual tree above 32 MiB",
+      "expected": "Synthetic real Git tree >32 MiB ls-tree output completes opt-in CLI; final entry captured in inventory; no file-count ceiling.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC04",
+      "title": "Reversible unsupported paths",
+      "expected": "NonUTF8, backslash, colon and unsupported long names remain metadata with reversible hex and reason; tab/newline exact.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC05",
+      "title": "States and metadata compatibility",
+      "expected": "Symlink/submodule/protected/missing-size/per-blob policy preserves existing outcomes; no source code execution.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC06",
+      "title": "Malformed or unterminated output",
+      "expected": "Bad header, bad oid/mode/kind/size, empty record, duplicate path and EOF fragment fail without publish.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC07",
+      "title": "Nonzero exit after valid records",
+      "expected": "Valid NUL records followed by nonzero exit never expose partial snapshot.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC08",
+      "title": "Wall timeout and quiet child",
+      "expected": "Deadline triggers without new stdout; stop/reap/join, cleanup bounded; old snapshot unchanged.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC09",
+      "title": "Stderr flood and backpressure",
+      "expected": "Separate stderr drain avoids deadlock; bounded retained bytes/total budget and full queue cancellation work.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC10",
+      "title": "Cancellation and restart",
+      "expected": "Ctrl-C/cancel stops owned process; interrupted stage never resumed; fresh retry starts Git at zero.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC11",
+      "title": "Disk and stage quota faults",
+      "expected": "Fail before/during staging/publish: typed reason, all transaction rows absent, previous heads/chunks preserved.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC12",
+      "title": "Atomic publication and visibility",
+      "expected": "Second DB connection sees zero or all new rows; crash/duplicate insert rollback; cursor=0 and no repo_heads update.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC13",
+      "title": "Existing identity and writer race",
+      "expected": "Valid same snapshot reuses without state reset; corrupt same id blocks; two writers never duplicate/drop ordinal.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC14",
+      "title": "CLI/operator boundaries",
+      "expected": "Existing operator profile, alias/namespace/store scope enforced; stage outside source; Git isolation env and argv exact.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC15",
+      "title": "Legacy and PR002/003 interoperability",
+      "expected": "Legacy Native cap/timeout unchanged; explicit snapshotId scan processes >20/39; manifest identities/chunks preserved; PR003 actual test pending artifact.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    },
+    {
+      "criterion_id": "P004-AC16",
+      "title": "Cold/warm resource receipt",
+      "expected": "40k/160k measured separately: stdout bytes, tail, RSS parent/child, stage disk, duration/deadline; Windows NOT_RUN until observed.",
+      "outcome": "NOT_RUN",
+      "evidence": null,
+      "scope": "FUTURE_APPLICATION_RUNTIME"
+    }
+  ]
+}

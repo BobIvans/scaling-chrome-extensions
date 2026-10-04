@@ -1,0 +1,25 @@
+КАК ГОТОВИТЬ КРУПНЫЕ ZIP В ПАРАЛЛЕЛЬНЫХ ЧАТАХ
+
+Приложить master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и этот ZIP. Вставить prompts/PR_XXX_CREATE_BIG_ZIP_RU.txt. В одном чате закрепить один номер. Внутренние WS не являются новыми номерами PR. Все документы можно готовить параллельно, обозначая proposed inputs; готовность кода проверяется по dependencies.
+
+Практические направления для подготовки: repo №011/012; library №010/013/014; desktop/voice №015/016; Grok/update №017/018; campaigns/web3 №019/020; общая qualification №021. Начать три чата можно с №010, №011 и №015: desktop пишет контракт и fixtures, пока ещё проверяется готовность библиотечных prerequisites.
+
+Волны интеграции actual code:
+1. 010, 011
+2. 012, 013
+3. 014
+4. 015
+5. 016
+6. 017
+7. 018
+8. 019
+9. 020
+10. 021
+
+№005–009 в архиве являются specs, их текущий код/merge надо проверять перед использованием. Чаты не видят друг друга автоматически. Передать соседу PARALLEL_HANDOFF с actual base, proposed/current DTO, owner, touched paths, source IDs и test receipts.
+
+Canonical SQLite/Core остаются существующими owners. Один migration coordinator для schema, один UI/focus writer, один Git integrator и один updater. Репозиторные worktrees помогают разрабатывать независимо; они не делают изменения общего schema/API независимыми.
+
+Package DAG не заменяет source task DAG. Полные dependencies и критерии сохранены в source_master и coverage. Если широкая source task ждёт downstream qualification, её статус остаётся OPEN; завершение локального блока не закрывает весь критерий. Внутренний WS DAG сохранён в plan/INTERNAL_36_WORKSTREAMS.json.
+
+При фактическом split сохранить parent package ID и список внутренних stages с непересекающимися критериями. Число 12 — план крупных поставок, а не доказанное минимальное число code PR. Точный diff size/время/необходимость split оцениваются после actual code audit.

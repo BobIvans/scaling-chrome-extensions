@@ -1,0 +1,66 @@
+{
+  "schema": "roadmap.parallel-chat-routing.v1",
+  "as_of": "2026-10-04",
+  "is_automatic_sync": false,
+  "repo": "BobIvans/scaling-chrome-extensions",
+  "chats": [
+    {
+      "chat_name": "Create First PR Zip",
+      "package_ids": [
+        "ROADMAP-PR-001",
+        "ROADMAP-PR-002"
+      ],
+      "package_state": "PACKAGE_READY",
+      "application_state": "UNKNOWN",
+      "github_pr_urls": [],
+      "actual_head": null,
+      "handoff_required": [
+        "actual code SHA",
+        "BATCH/entry/part schema",
+        "proof and required CI",
+        "unmet criteria"
+      ]
+    },
+    {
+      "chat_name": "Current chat / Third PR Zip",
+      "package_ids": [
+        "ROADMAP-PR-003"
+      ],
+      "source_task_ids": [
+        "LAYA4-010"
+      ],
+      "package_state": "PACKAGE_READY",
+      "application_state": "NOT_IMPLEMENTED_BY_PACKAGING",
+      "github_pr_urls": [],
+      "actual_head": null,
+      "depends_on_actual_code": [
+        "ROADMAP-PR-002"
+      ],
+      "handoff_required": [
+        "this ZIP",
+        "actual exporter receipt after implementation"
+      ]
+    },
+    {
+      "chat_name": null,
+      "package_ids": [
+        "ROADMAP-PR-004"
+      ],
+      "source_task_ids": [
+        "LAYA4-003"
+      ],
+      "package_state": "PLANNED_NOT_ASSIGNED",
+      "application_state": "UNKNOWN",
+      "github_pr_urls": [],
+      "actual_head": null
+    }
+  ],
+  "parallel_code_rule": "Separate branch/worktree; rebase dependent PR003 to actual PR002; no shared live writer/branch",
+  "state_vocabulary": [
+    "PACKAGE_READY",
+    "CODE_IN_PROGRESS",
+    "CODE_TESTED",
+    "PR_OPEN",
+    "MERGED"
+  ]
+}

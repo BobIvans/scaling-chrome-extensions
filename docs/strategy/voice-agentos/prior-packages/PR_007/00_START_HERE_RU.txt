@@ -1,0 +1,38 @@
+ZIP №7 · JS/TS AST И SOURCE-LINKED RELATIONS · ОДИН PR
+
+Repository: BobIvans/scaling-chrome-extensions. Package ID: ROADMAP-PR-007.
+Номер №7 относится к input ZIP, не к опубликованному GitHub PR.
+Статус PREPARED_IMPLEMENTATION_BRIEF; code/merge/CI этого PR не выполнены.
+6 шагов / 60 минут focused build estimate + обязательная фактическая проверка.
+
+Следующий прирост: read-only CLI получает verified captured JS/TS bytes,
+передаёт их доверенному установленному AST parser и пишет JS_ANALYSIS.jsonl,
+RELATIONS.jsonl и ANALYSIS_STATUS.json в отдельный атомарно опубликованный
+derived bundle. Imports/re-exports имеют exact raw byte ranges, source hashes,
+parser/resolver versions и явные unresolved reasons. Raw chunks не меняются.
+
+Scope маленький: AST JS/TS/JSX/TSX и относительные пути с явным source extension.
+Alias/workspace, CommonJS, dynamic, TypeScript .js→.ts substitution и неизвестные
+режимы resolution не превращаются в guessed exact edges. Symbol exports и
+type checking не объявляются доказанными лишь потому, что file path найден.
+Это часть LAYA4-005 и LAYA4-006; UI/owner/capability слой LAYA4-007 остаётся открытым.
+
+ZIP №6 создан в другом чате по сообщению пользователя: Python code/tests/contracts
+groups, stable IDs и oversized SCC continuations. Input ZIP и contract сверены.
+№7 не переписывает Python graph/groups. Он готовит typed edge input для будущего
+подключения к тому же planner через отдельный adapter: current №6 Python policy не принимает JS records.
+№5: получен input occ.format-eligibility.v1; runtime facts ещё нужно проверить.
+№3 input получен и сверён; actual exporter implementation не проверена.
+
+Начни с EXECUTE_THIS_PR_RU.txt и 01_PR_007_IMPLEMENTATION_RU.md.
+contracts/: support matrix, edge/analysis schemas и budgets.
+fixtures/: 200 synthetic labelled cases = 20 форм × 10 variations; это не
+200 независимых форм или holdout. AST adapter здесь не установлен/не запускался.
+tools/verify_package.py проверяет только ZIP input, schemas, provenance и labels.
+plan/ACCEPTANCE_CASES.json: 16 будущих application cases, все NOT_RUN.
+
+All 160 tasks / 164 feature records / 28 goals / 24 decisions / 10 milestones
+сохранены byte-for-byte. Whole task completion не заявлена.
+Следующий по закреплённой очереди номер №8 — desktop transport/install spike;
+follow-ups №7 (resolution modes, mixed provenance, owner/UI) имеют отдельные
+незакрытые scopes без перенумерации параллельных пакетов.

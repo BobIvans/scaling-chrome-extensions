@@ -1,0 +1,119 @@
+{
+  "schema": "roadmap.pr-input.v1",
+  "package_id": "ROADMAP-PR-004",
+  "local_sequence": 4,
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "source_task": "LAYA4-003",
+  "source_milestone": "M5-02",
+  "status": "PREPARED_IMPLEMENTATION_BRIEF",
+  "estimate_minutes": 60,
+  "estimate_is_guarantee": false,
+  "application_code_changed": false,
+  "current_head_verified": false,
+  "current_head": null,
+  "github_pr_number": null,
+  "github_pr_url": null,
+  "whole_task_closed": false,
+  "previous_pr_implementation_verified": false,
+  "pr003_artifact_received": false,
+  "precondition": "Actual repo inventory owner checked; preserve immutable schema/identities; no prior package considered merged",
+  "tasks": [
+    {
+      "id": "P004-01",
+      "title": "Audit actual baseline and contracts",
+      "budget_minutes": 5,
+      "depends_on": [],
+      "source_task_ids": [
+        "LAYA4-003"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P004-02",
+      "title": "Bounded Git stream/record reader",
+      "budget_minutes": 15,
+      "depends_on": [
+        "P004-01"
+      ],
+      "source_task_ids": [
+        "LAYA4-003"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P004-03",
+      "title": "Disk stage and atomic main-ledger publish",
+      "budget_minutes": 15,
+      "depends_on": [
+        "P004-02"
+      ],
+      "source_task_ids": [
+        "LAYA4-003"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P004-04",
+      "title": "Opt-in owner/CLI and lifecycle faults",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P004-03"
+      ],
+      "source_task_ids": [
+        "LAYA4-003"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P004-05",
+      "title": "Compatibility and large fixture resource receipt",
+      "budget_minutes": 5,
+      "depends_on": [
+        "P004-04"
+      ],
+      "source_task_ids": [
+        "LAYA4-003"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P004-06",
+      "title": "Required tests and review handoff",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P004-05"
+      ],
+      "source_task_ids": [
+        "LAYA4-003"
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "read_order": [
+    "EXECUTE_THIS_PR_RU.txt",
+    "01_PR_004_IMPLEMENTATION_RU.md",
+    "contracts/INVENTORY_CONTRACT.json",
+    "plan/ACCEPTANCE_CASES.json",
+    "coordination/PR_PACKAGE_STATUS_RU.md"
+  ],
+  "outputs": [
+    "opt-in streaming CLI",
+    "atomic full repo_entries inventory",
+    "explicit failed resource receipts",
+    "focused tests and device metrics"
+  ],
+  "out_of_scope": [
+    "payload ZIP/offline index (PR003)",
+    "Native long job / Core handler wiring",
+    "streaming index_matches_head",
+    "new format eligibility",
+    "large blob streaming",
+    "JS/TS groups",
+    "desktop/voice/Web3"
+  ],
+  "remaining_parent_task_work": [
+    "Core registered inventory job and Native controls",
+    "streamed exact Git index binding",
+    "full device/Windows qualification"
+  ]
+}

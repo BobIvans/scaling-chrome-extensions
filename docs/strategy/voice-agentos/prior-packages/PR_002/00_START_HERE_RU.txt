@@ -1,0 +1,32 @@
+ZIP №2 · ОДИН PR · MANIFEST И ОБРАТНЫЕ BYTE RANGES
+
+Target: BobIvans/scaling-chrome-extensions.
+Ориентир build: ~60 минут focused implementation плюс обязательные проверки.
+Статус: PREPARED_IMPLEMENTATION_BRIEF; actual code этого PR ещё не внедрён.
+PR-002 — номер пакета, не номер опубликованного GitHub PR.
+
+Результат: любой фактически COMPLETE pinned snapshot получает полный
+REPO_MANIFEST.jsonl и PARTS_INDEX.jsonl. Каждый source entry имеет outcome,
+каждый captured chunk — hash и точные byte ranges, links работают в обе стороны.
+Canonical BATCH.json содержит scope, identity, counts и итог validation.
+Native metadata pages остаются bounded; весь repo не помещается в один response.
+
+Прочитай EXECUTE_THIS_PR_RU.txt, затем 01_PR_002_IMPLEMENTATION_RU.md.
+Контракты — contracts/; 14 scoped cases — plan/ACCEPTANCE_CASES.json.
+Независимый synthetic golden corpus — fixtures/manifest_golden/.
+tools/verify_package.py проверяет только пакет/fixture, не будущий SCE handler.
+
+Предыдущий ZIP-001 подготовил scan controller. Его implementation здесь
+не считается выполненной: нужен actual COMPLETE snapshot, который может
+быть получен существующими manual scan pages или фактическим PR-001 controller.
+Не переписывать PR-001 в этом diff. Small native manifest view переиспользует
+existing library UI; полный desktop client/ZIP payload exporter отдельны.
+
+Следующий ZIP-003: portable ZIP + offline index + resumable atomic parts export.
+Все 160 tasks, 164 feature definitions, 28 goals, 24 decisions и 10 milestones
+сохранены byte-for-byte в sources/roadmap_v5/. PR-002 реализует часть LAYA4-009;
+related graph/groups/task packet policy и broad M5-02 пока остаются открытыми.
+
+Сохранённые source copies da6abf4 и historical local V4 5574ab7 — reference.
+Сначала проверить actual HEAD/AGENTS/owners. GitHub merge/CI/Windows не проверены
+этой сборкой пакета. Read-only projection не запускает код исследуемого repo.

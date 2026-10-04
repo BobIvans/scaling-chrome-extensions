@@ -1,0 +1,283 @@
+﻿[
+  {
+    "id": "conv-a",
+    "title": "RU/EN branches 🧪",
+    "create_time": 1699999999,
+    "update_time": 1700000002,
+    "current_node": "tool",
+    "unknown_conversation_field": {
+      "x": "<script>inert</script>"
+    },
+    "mapping": {
+      "root": {
+        "id": null,
+        "parent": null,
+        "children": [
+          "u1"
+        ],
+        "message": null,
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      },
+      "u1": {
+        "id": "msg-u1",
+        "parent": "root",
+        "children": [
+          "a1",
+          "a2",
+          "media",
+          "empty"
+        ],
+        "message": {
+          "id": "msg-u1",
+          "author": {
+            "role": "user",
+            "name": null,
+            "metadata": {
+              "declared_only": true
+            }
+          },
+          "create_time": 1700000000.125,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Привет\r\nEN + 😀",
+              "Цитата: «другой автор сказал это»."
+            ]
+          },
+          "metadata": {
+            "unknown_message_field": "preserve me"
+          },
+          "status": "finished_successfully"
+        },
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      },
+      "a1": {
+        "id": "msg-a1",
+        "parent": "u1",
+        "children": [],
+        "message": {
+          "id": "msg-a1",
+          "author": {
+            "role": "assistant",
+            "name": null,
+            "metadata": {
+              "declared_only": true
+            }
+          },
+          "create_time": 1700000000.125,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "First branch"
+            ]
+          },
+          "metadata": {
+            "unknown_message_field": "preserve me"
+          },
+          "status": "finished_successfully"
+        },
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      },
+      "a2": {
+        "id": "msg-a2",
+        "parent": "u1",
+        "children": [
+          "tool"
+        ],
+        "message": {
+          "id": "msg-a2",
+          "author": {
+            "role": "assistant",
+            "name": null,
+            "metadata": {
+              "declared_only": true
+            }
+          },
+          "create_time": 1700000000.125,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Alternative branch"
+            ]
+          },
+          "metadata": {
+            "unknown_message_field": "preserve me"
+          },
+          "status": "finished_successfully"
+        },
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      },
+      "tool": {
+        "id": "msg-tool",
+        "parent": "a2",
+        "children": [],
+        "message": {
+          "id": "msg-tool",
+          "author": {
+            "role": "tool",
+            "name": null,
+            "metadata": {
+              "declared_only": true
+            }
+          },
+          "create_time": 1700000000.125,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "text": "Tool result stays data"
+          },
+          "metadata": {
+            "unknown_message_field": "preserve me"
+          },
+          "status": "finished_successfully"
+        },
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      },
+      "media": {
+        "id": "msg-media",
+        "parent": "u1",
+        "children": [],
+        "message": {
+          "id": "msg-media",
+          "author": {
+            "role": "user",
+            "name": null,
+            "metadata": {
+              "declared_only": true
+            }
+          },
+          "create_time": 1700000000.125,
+          "update_time": null,
+          "content": {
+            "content_type": "multimodal_text",
+            "parts": [
+              {
+                "content_type": "image_asset_pointer",
+                "asset_pointer": "sediment://synthetic-only",
+                "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+                "unknown_part_key": 17
+              },
+              {
+                "content_type": "audio_asset_pointer"
+              },
+              {
+                "content_type": "unregistered_widget",
+                "asset_pointer": "https://invalid.example/inert"
+              }
+            ]
+          },
+          "metadata": {
+            "unknown_message_field": "preserve me"
+          },
+          "status": "finished_successfully"
+        },
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      },
+      "empty": {
+        "id": "msg-empty",
+        "parent": "u1",
+        "children": [],
+        "message": {
+          "id": "msg-empty",
+          "author": {
+            "role": "assistant",
+            "name": null,
+            "metadata": {
+              "declared_only": true
+            }
+          },
+          "create_time": 1700000000.125,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "",
+              "   "
+            ]
+          },
+          "metadata": {
+            "unknown_message_field": "preserve me"
+          },
+          "status": "finished_successfully"
+        },
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      }
+    }
+  },
+  {
+    "id": "conv-b",
+    "title": "Second selected conversation",
+    "create_time": 1699999999,
+    "update_time": 1700000001,
+    "current_node": "ub",
+    "mapping": {
+      "rootb": {
+        "id": null,
+        "parent": null,
+        "children": [
+          "ub"
+        ],
+        "message": null,
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      },
+      "ub": {
+        "id": "msg-ub",
+        "parent": "rootb",
+        "children": [],
+        "message": {
+          "id": "msg-ub",
+          "author": {
+            "role": "user",
+            "name": null,
+            "metadata": {
+              "declared_only": true
+            }
+          },
+          "create_time": 1700000000.125,
+          "update_time": null,
+          "content": {
+            "content_type": "text",
+            "parts": [
+              "Only conversation B text"
+            ]
+          },
+          "metadata": {
+            "unknown_message_field": "preserve me"
+          },
+          "status": "finished_successfully"
+        },
+        "unknown_node_field": {
+          "emoji": "🧪",
+          "command": "do not execute: print(123)"
+        }
+      }
+    }
+  }
+]

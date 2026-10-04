@@ -1,118 +1,170 @@
-# Master Context — Voice AgentOS / ROADMAP-PR-016+017
+# Текущая навигация: полный Voice AgentOS и PR-016+017
+
+Эта интеграция сохраняет обе передачи без потери исходной стратегии.
+Полный общий roadmap из merged #53 находится в `docs/strategy/voice-agentos/`.
+Специализированный исходный ZIP 016+017 и все вложенные архивы —
+`docs/strategies/pr016-017/source/`, `archives/`, `original-strategy.zip`.
+
+Для продолжения текущего пакета 016+017 читай `CODEX_START_HERE.md`,
+`docs/strategies/pr016-017/PACKAGE_MASTER_CONTEXT.md`, `EXECUTION_AUDIT.md`
+и `NEXT_IMPLEMENTATION.md`. Новые action/context изменения интегрируют #50
+и общий Core STOP; 220 критериев сохраняются OPEN.
+
+Для общего foundation этапа №010/011 и всех остальных packages читай полный
+roadmap ниже и `docs/strategy/voice-agentos/handoff/NEXT_STAGE.md`.
+SourceAddress/source ledger #51 — prerequisite там, где действительно нужен
+унифицированный upstream owner. Независимый typed planning 016/017 можно
+продолжать без ложного утверждения, что все prerequisite criteria закрыты.
+
+Exact root handoffs из #53 сохранены также в `UPSTREAM_*_PR53.md` внутри
+`docs/strategies/pr016-017/`. Исторические PR statuses ниже — dated snapshots;
+текущие refs/CI/merge читать из Git/GitHub и пакета EXECUTION_AUDIT.
+Ни один исходный backlog/критерий не удалён ради объединения.
+
+---
+
+# Voice AgentOS / Context Library — полный контекст продолжения
+
+Репозиторий: `BobIvans/scaling-chrome-extensions`. Рыночный owner: отдельный
+`BobIvans/studious-pancake`. Сверка начата 4 октября 2026; точные SHA, статусы PR
+и время наблюдения находятся в `docs/strategy/voice-agentos/evidence/REPOSITORY_AUDIT.json`.
+Это текущий handoff; исходные документы внутри `roadmap/` сохраняют исторические
+статусы на момент создания и не переписываются задним числом.
 
 ## Цель
 
-Продолжить стратегию в `BobIvans/scaling-chrome-extensions`: текст или голос →
-проверяемый intent → существующий Core → полный immutable context packet → явно
-выбранный AI/Grok-чат → durable delivery/reconciliation → связанный результат →
-версионированный навык. Общий продукт также включает локальную библиотеку,
-инвентаризацию репозиториев, R&D, release/update и длительные campaigns.
-Не ограничивать общий scope количеством документов, файлов, частей, PR или
-произвольной оценкой часов. Порционные budgets и реальные ограничения провайдера
-должны быть явными, с continuation до EOF и учётом недоступных данных.
+Создать совместимый с Windows 11/Dell Latitude 5400 Desktop Voice AgentOS:
+локальная библиотека полного контекста из файлов, репозиториев, чатов, документов,
+медиа и web; версии, точные ссылки, поиск, метки и цели; text/voice → план →
+зарегистрированные действия; Laya, выбранные AI-вкладки, навыки, code/PR/update
+цикл и долгие R&D/qualification кампании. Studious предоставляет рыночные
+datasets, replay/paper и web3 research. Полный перечень требований сохраняется,
+а дальнейшая работа продолжается по исходным task/feature/goal/decision IDs.
 
-## Source of truth
+Пользователь просит найти уже выполненное, закончить готовую интеграцию и merge,
+поместить оставшуюся стратегию в repo, обеспечить продолжение через Codex.
+Стратегию нельзя сокращать ради удобства, произвольного размера repo, числа
+документов, файлов, parts или PR. Страницы, memory/backpressure, явные resource
+budgets и provider/transport frames допустимы; они не удостоверяют полноту
+corpus и не позволяют терять хвост. «Без лимита» не означает бесконечную память.
 
-1. Текущие Git HEAD/код/схема canonical SQLite и воспроизводимые tests определяют
-   **реализованное поведение**. Старый snapshot не доказывает состояние main.
-2. `docs/strategies/pr016-017/source/` — все 170 файлов приложенной стратегии,
-   без редактирования исходных bytes. Здесь authoritative requirements,
-   exact acceptance wording, исходные user decisions и полный вложенный backlog.
-3. `docs/strategies/pr016-017/original-strategy.zip` — точная исходная копия ZIP.
-   `PRESERVATION_MANIFEST.json` закрепляет hashes/размер каждого сохранённого файла.
-4. `docs/strategies/pr016-017/archives/` — полное распакованное содержимое 11
-   уникальных вложенных архивов. `ARCHIVE_INDEX.json` связывает каждый архив с
-   extracted tree; одинаковые ZIP переиспользуют один tree по SHA-256.
-5. `docs/automation/pr016-017/` — runtime runbook, function mapping и 220 строк
-   критериев. Эти документы объясняют реализацию, но не заменяют исходную стратегию.
-6. `docs/strategies/pr016-017/EXECUTION_AUDIT.md`, `FUNCTION_AUDIT.json`,
-   `NEXT_IMPLEMENTATION.md` и `VALIDATION.json` — текущая передача работы.
+## Source of truth и приоритет
 
-При конфликте статусов сначала сверить build/refs, код и scope-matched evidence.
-Исходные `application_code_changed=false`/`merged=false` в source — исторический
-статус создания спецификации, а не состояние GitHub сейчас. Не исправлять source
-ради нового статуса; обновлять audit/receipts. Аналогично, `next_package=18` в ZIP
-историчен: GitHub #48 уже merged, его component acceptance также не равна product
-closure. Roadmap №016/017 и GitHub PR #49 — разные системы нумерации.
+1. Явные текущие инструкции пользователя и применимые repository instructions.
+2. `docs/strategy/voice-agentos/roadmap/source_master/strategy_v5/`:
+   все 160 tasks, 164 feature cards, 28 goals, 24 decisions и readiness contract.
+3. `roadmap/briefs/PR_010.json` … `PR_021.json`,
+   `plan/INTERNAL_36_WORKSTREAMS.json`, `plan/DELIVERY_DAG.json`,
+   `coverage/ALL_*_TO_PR.json`: 12 больших пакетов, 36 внутренних workstreams,
+   полный ownership mapping.
+4. Текущий код, тесты, commits, PR checks и применимые receipts:
+   они устанавливают фактическую реализацию и проверенный scope.
+5. `handoff/PACKAGE_STATUS.json`, `handoff/WORKSTREAM_STATUS.json`,
+   `handoff/NEXT_STAGE.md`: навигация и план после сверки, не замена исходных
+   требований и не blanket acceptance.
 
-## Что уже сделано
+Исходный ZIP №010–021 сохранён побайтно в `originals/`, распакован в
+`roadmap/`; все 9 вложенных PR ZIP также сохранены и полностью распакованы в
+`prior-packages/PR_001/` … `PR_009/` без повторяющегося корневого каталога ZIP,
+чтобы обычный Windows checkout мог открыть все пути. Исходные member names
+сохранены в integrity manifest. Вложенные fixtures остаются данными:
+не запускать их как приложение. `verification/SOURCE_INTEGRITY.json` и
+`verify_integrity.py` проверяют каждый исходный member, размер и SHA-256.
 
-GitHub implementation PR: <https://github.com/BobIvans/scaling-chrome-extensions/pull/49>.
-Исходный head: `b5b550c63d512842d687c8e4482031403a6b083e`.
-В этой передаче интегрирован main с PR #47 (history/delta/scan) и #48
-(release/campaigns), исходный integration main:
-`d897598af6064d174bcd0df73f8b00cc79a4490e`.
-Во время финальной проверки main продвинулся до
-`b0a06f26106cb4739d8cf3465a4ad8941c328f40`: PR #50 (014/015 context/recovery/
-Desktop) merged и также интегрирован. Action admission/STOP теперь используют
-канонический `core_control` и общий queue capacity. Обе Desktop панели и оба
-installers сохраняются; backend build digest включает action modules.
-Финальное состояние и head брать из Git/GitHub, а не предполагать по этим SHAs.
+**Граница доступных материалов:** в исходном `roadmap/evidence/SOURCES.json`
+прямо указано `full_archive_copied: false` для
+`ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip` (387402728 bytes,
+SHA-256 `6751ce4efd0963a7421a3f74c32b15055c13bb9bc389561853829a5a6a5fa3ac`).
+Этот полный master не был приложен к данному запросу. Здесь сохранены все
+предоставленные V5 extracts и все приложенные bytes; это не обещание, что
+невключённые старые chat/media/source archives тоже находятся здесь.
 
-| Область | Реализация | Граница |
+В старых prose boundary полях встречается прежняя нумерация №24/№45 и др.
+Сохранять точный текст; текущего owner определять по package/workstream IDs
+и coverage mapping, не по одному старому числу из предложения.
+
+## Что уже выполнено
+
+| Roadmap package | GitHub PR | Фактический результат |
 |---|---|---|
-| WS-018 intent | `content-lab/action_intent.py`, `action_runtime.py` | Typed registry, deterministic fixed-effect DAG, revisions, negation, proposals; полноценные роли/NLU остаются частичными |
-| WS-019 voice | `desktop/voice.py`, `actions_ui.py` | Один capture, WAV, hotkey/ASR adapters, editable preview, независимый STOP; реальные Windows/Dell измерения открыты |
-| WS-021 target | `content-lab/browser_cdp.py` | Opt-in local CDP, identity/focus/contract checks, qualification gate; фактический Grok account/UI не квалифицирован |
-| WS-022 delivery | `content-lab/action_runtime.py` | Immutable parts/outbox, one local send invocation, unknown reconciliation, coverage, manual result import; uploads/history/finalization частичны |
-| WS-020 skills | `content-lab/action_runtime.py` | Successful Core traces → candidates, qualification API, replay/stale/failure/optimizer; параметрический перенос и устройство открыты |
-| Integration | `automation_core.py`, `native_adapter.py`, `desktop/client.py`, `agent-bridge/durable.mjs` | Общая SQLite/очередь/lease writer; action и campaign/history маршруты сосуществуют |
+| 001–004 | #38–#41, merged | Full repo scan; manifest/ranges; verified ZIP64 export/resume; streaming Git inventory |
+| 005 | #42, merged | Whole-source eligibility, format outcomes, coverage/backfill |
+| 006 | #46, merged | Python SCC, связанные tests/contracts, immutable source-part catalogs |
+| 007 | #43, merged | JS/TS AST/static relations из сохранённых bytes; расширенный resolver остаётся №011 |
+| 008 | #45, merged | Desktop stdio/Windows shell, полный manifest export; установленный Dell не квалифицирован |
+| 009 | #44, merged | Exact ChatGPT JSON originals/revisions/node fidelity; universal importer этим не закрыт |
+| 010–011 | Нет отдельного подтверждённого завершённого пакета | Частичные foundations есть в baseline и #50/#51; полный library/importer и mixed graph scope остаётся |
+| 012–013 | #47, merged; #51 continuation | Complete history/delta pages и opt-in scan ledger controls; original-capture substrate в #51, полный пакет partial |
+| 014–015 | #50, merged | Exact local source/packet/projection, NEED_CONTEXT, recovery/sync, Desktop/Core/STOP; четыре exact-head Ubuntu/Windows CI jobs прошли; merge b0a06f2 |
+| 016–017 | #49, open draft при сверке | Intent/voice entry, multipart outbox, selected-tab baseline, skills; конфликты и device/UI/Laya остаток |
+| 018–019 | #48, merged | Registered release/workflow operations, staged updater/canary/rollback, schedules, campaign DAG/leases/R&D briefs |
+| 020–021 | #52 и Studious #565, open drafts при сверке | Linked offline model replay, Desktop receipts, criterion reconciliation; полный broker/PAPER/product acceptance остаётся |
 
-Дополнительно устранены merge conflicts; installer копирует action modules;
-CLI возвращает success exit code и работает под isolated Python; прямой Core
-CLI также находит installed siblings. Independent installed-layout regression
-проходит Native CREATE → CLI ENQUEUE → Core worker → STOP без исходного repo в
-Python import path. Подробные текущие результаты — `VALIDATION.json`.
+Критически различать **merged code**, **локальные tests**, **CI на Windows**,
+**установленный Dell**, **usable**, **criterion-specific qualification**.
+В #50 сохранены 322 OPEN criteria; #49 — 220; #52 — 1133 broad criteria.
+Эти наборы пересекаются: не складывать их как уникальные закрытые требования.
+Успешный процесс/ZIP/модельный replay/AI «DONE» не закрывает смысловой критерий.
 
-Аудит всех 50 функций сохранён целиком: 13 BASELINE, 23 PARTIAL, 7 DEVICE_OPEN,
-6 UI_OPEN, 1 NOT_USED (clipboard route отсутствует). Эти метки — состояние кода,
-а не PASS исходных критериев. Все 220 критериев остаются OPEN до собственных
-receipts; merge implementation baseline не закрывает полную стратегию.
+Точные текущие PR head SHA и patches для продолжения: `evidence/`.
+Патчи являются снимками относительно записанного base SHA: не применять слепо
+на новый main. Сначала fetch, сравнить текущий branch head, продолжить существующий
+PR либо согласовать новый этап. #49/#51/#52 менялись во время этой сверки;
+live audit и более ранние patch snapshots имеют отдельные SHA.
+Старые PR #25–33 имеют другие feature-wave owners; не сливать их автоматически
+только по порядку номеров или старому зелёному CI.
 
-## Что осталось
+## Архитектура и owners
 
-- Общий mixed-effect repo → packet → send DAG, typed planner/retriever/critic
-  orchestration и полностью разрешённые critical slots без угадывания.
-- Реальный installed Laya interface/version и его normal/failure/cancel receipts.
-- Windows/Dell mic, ASR, key release, sleep/unplug/restart, Narrator, focus и
-  latency/resource corpus. Synthetic PCM и Windows CI не заменяют устройство.
-- Actual selected Grok target canary, adapter capabilities/limits, attachments,
-  complete history, reliable streaming-finalization observer и correlated import.
-- Parameterized portable skills, scoped demonstrations, full independent
-  unseen/fault qualification, selective dependency requalification/repair.
-- Проверка фактических контрактов PR-013/014/015; component presence не закрывает
-  prerequisite. На момент исходной сверки #50 (014/015) и #51 (012/013 continuation)
-  были draft/open. #50 subsequently merged и интегрирован; actual packet owners:
-  `content-lab/context_library.py`, `context_packets.py`, `context_runtime.py`,
-  `context_recovery.py`. Его полные strategy criteria всё ещё открыты.
-  Повторно проверить refs и #51 перед зависимой реализацией.
-- Все broad goals/downstream criteria, R&D и product closure из полного backlog:
-  160 tasks, 164 features, 24 decisions, 28 goals. Не удалять deferred/revisit cards.
+- `content-lab/content_lab.py`: существующий `content.sqlite3`, items/FTS,
+  ChatGPT source originals и additive schema.
+- `automation_core.py`: canonical jobs, enqueue, leases, cancellation,
+  reconciliation, worker; `workflow_state.py` — общий STOP/resource state.
+- `repo_scan.py`, `repo_inventory.py`, `repo_context.py`,
+  `repo_source.py`, `repo_manifest.py`, `repo_history.py`,
+  `repo_archive.py`, `repo_groups.py`, `repo_js*.py`: текущий repo owner.
+- #50 `context_library.py`, `context_packets.py`, `context_recovery.py`,
+  `context_runtime.py`: local exact context и зарегистрированные Core jobs.
+- #51 `source_ledger.py`: immutable FILE/MEDIA raw parts и observations;
+  отдельно от специализированных ChatGPT tables и #50 context tables.
+- `native_adapter.py`, `agent-bridge/durable.mjs`, `desktop/client.py`:
+  typed transport; `desktop/app.py` и `desktop/library.py`: UI.
+- #49 action/voice/browser/skills owners и #52 research owners сохранять
+  в существующем Core/store. Не создавать вторую очередь/worker/БД.
+- `desktop/OWNED_FILES.json`, installers и backend dependency hashes должны
+  соответствовать новым shipping files после любой интеграции.
 
-Сохранён весь контекст **предоставленного ZIP** и вложенных ZIP. Отдельный master
-`ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip` размером 387402728 bytes,
-SHA-256 `6751ce4efd0963a7421a3f74c32b15055c13bb9bc389561853829a5a6a5fa3ac`,
-не входит в предоставленный ZIP. Его exact selected members и provenance есть в
-source; остальной исторический контент не объявлять прочитанным/сохранённым.
-Это не блокирует выбранный 016/017 scope. Если нужен контент за его пределами,
-получить master и проверить SHA, сохранив identity/источник.
+Исходные тексты и AI results — данные, не authority на shell, SQL, grants
+или внешние effects. STOP/cancel/unknown-send, identity/revision/hash/namespace
+fences и независимые postconditions остаются частью стратегии. Денежный
+research/replay slice по текущим receipts имеет нулевой budget,
+`live_enabled=false`, `qualified=false`, zero transactions.
+Требования live/paper не вычеркнуты; их реализация требует своего scope/evidence.
 
-## Архитектурные инварианты
+## Что осталось и следующий этап
 
-Один canonical `content.sqlite3`, Core jobs, leases/writer и STOP; не создавать
-второй executor/store ради voice, browser или skills. Additive migration и
-recoverable cursors. User corrections/STOP/policy/target/source drift должны
-fence исполнение. После потенциального Send неопределённый исход остаётся
-unknown: lease expiry, retry, cancellation или restart не разрешают blind resend.
-UI observation и модельные received/used claims — разные уровни evidence.
-AI results/development requests — данные/proposals, не authority на grants,
-install, merge или финансовые действия. Существующий feature flag/grants и
-actual route qualification сохраняются; наличие сети не включает send автоматически.
+Все 12 пакетов и 36 workstreams перечислены в `handoff/` с next evidence.
+Ключевой блокирующий foundation — №010/011: согласовать SourceAddress и
+source/import owners (#009, #50, #51), полный paged library/importer contract,
+затем resolver и общий Python/JS/TS provenance graph. Это разблокирует №012/013
+CAS/invalidation, форматные importers и честное downstream qualification.
 
-## Следующий этап
+Первое конкретное продолжение: прочитать `CODEX_START_HERE.md` и
+`handoff/NEXT_STAGE.md`. Проверить актуальные heads #49/#51/#52, закончить
+существующий source-ledger этап #51 после интеграции с #50 и общий SourceAddress
+contract №010, без дублирующей БД и без потери raw revisions. Затем пройти
+полный №010 backlog: registry/TXT/folders/archives, labels/views, chat/Telegram
+capture, goal/contradiction overlays. №011 можно выполнять отдельным worktree
+после проверки owner conflicts. Размер этих пакетов не является time estimate.
 
-Читать `CODEX_START_HERE.md`, затем `docs/strategies/pr016-017/NEXT_IMPLEMENTATION.md`.
-Приоритет — typed role pipeline и resumable mixed-effect DAG в существующем Core,
-с настоящими immutable packet owner contracts. Если upstream owner ещё отсутствует,
-фиксировать BLOCKED_DEPENDENCY и выполнять независимую typed planning часть.
-Device/UI gates сохранять открытыми до фактического evidence.
+## Проверки
+
+Сначала `python docs/strategy/voice-agentos/verify_integrity.py`.
+Runtime gates определяет текущий `.github/workflows/deterministic-core.yml`:
+Content Lab unittest, Desktop tests (Tk/Xvfb где доступен), owned-file verify,
+Node native bridge, qualification adapter и extension regressions.
+Реальные Windows install/microphone/hotkey/account-tab, sleep/restart/STOP,
+scale/fault и usefulness/ROI проходят отдельно с фактическими receipts.
+Обновлять handoff после каждого verified merge; исходные requirements immutable.
+Не объявлять всю стратегию finished, пока исходные критерии не имеют применимого
+evidence, а BLOCKED/NOT_RUN/DEFERRED и конфликты ещё остаются.

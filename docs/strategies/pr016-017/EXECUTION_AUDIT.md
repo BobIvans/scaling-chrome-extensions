@@ -41,6 +41,13 @@ Owner audit сохраняет все 50 функций и paths в `FUNCTION_AU
   capacity и `core_control` STOP/resume; unknown worker не допускает Resume.
   Native и standalone Desktop installers копируют action modules, а SHIPPING
   build digest совпадает с фактически установленным backend file set.
+- Merged #53 добавил полный общий handoff Voice AgentOS, main
+  `ccf73e747e6743ead68040e3eb6837b3a5233fbc`. Он интегрирован без изменений runtime:
+  обе полные стратегии сохранены, root navigation разрешена явно. Предыдущий
+  scoped master/start теперь в `PACKAGE_MASTER_CONTEXT.md`/
+  `PACKAGE_CODEX_START_HERE.md`; exact upstream root docs — в `UPSTREAM_*_PR53.md`.
+  Обе integrity проверки проходят; long-path checkout применяется к каждому
+  Windows job, включая context-platform и общий strategy-integrity workflow.
 
 ## Проверки
 

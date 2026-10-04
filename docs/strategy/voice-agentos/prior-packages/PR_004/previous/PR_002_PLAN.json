@@ -1,0 +1,114 @@
+{
+  "schema": "roadmap.pr-input.v1",
+  "package_id": "ROADMAP-PR-002",
+  "local_sequence": 2,
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "status": "PREPARED_IMPLEMENTATION_BRIEF",
+  "application_code_changed": false,
+  "current_head_verified": false,
+  "current_head": null,
+  "github_pr_number": null,
+  "github_pr_url": null,
+  "estimate_minutes": 60,
+  "estimate_is_guarantee": false,
+  "source_milestone": "M5-02",
+  "source_task": "LAYA4-009",
+  "whole_task_closed": false,
+  "previous_pr_implementation_verified": false,
+  "precondition": "Actual complete immutable snapshot; PR001 controller optional. Do not assume its prior package was implemented/merged.",
+  "tasks": [
+    {
+      "id": "P002-01",
+      "title": "Baseline/COMPLETE snapshot preflight",
+      "budget_minutes": 5,
+      "depends_on": [],
+      "source_task_ids": [
+        "LAYA4-001",
+        "LAYA4-009"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P002-02",
+      "title": "Entry/part projections and stream proof",
+      "budget_minutes": 15,
+      "depends_on": [
+        "P002-01"
+      ],
+      "source_task_ids": [
+        "LAYA4-009"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P002-03",
+      "title": "Metadata writer/atomic directory",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P002-02"
+      ],
+      "source_task_ids": [
+        "LAYA4-009"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P002-04",
+      "title": "Bounded native readers/hello",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P002-02"
+      ],
+      "source_task_ids": [
+        "LAYA4-009"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P002-05",
+      "title": "UI navigation/focused cases",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P002-03",
+        "P002-04"
+      ],
+      "source_task_ids": [
+        "LAYA4-009"
+      ],
+      "status": "NOT_STARTED"
+    },
+    {
+      "id": "P002-06",
+      "title": "Required checks and handoff",
+      "budget_minutes": 10,
+      "depends_on": [
+        "P002-05"
+      ],
+      "source_task_ids": [
+        "LAYA4-009"
+      ],
+      "status": "NOT_STARTED"
+    }
+  ],
+  "outputs": [
+    "BATCH.json",
+    "REPO_MANIFEST.jsonl",
+    "PARTS_INDEX.jsonl",
+    "VALIDATION.json"
+  ],
+  "out_of_scope": [
+    "payload ZIP/resume",
+    "streaming Git enumeration",
+    "new format policy",
+    "related dependency graph",
+    "per-goal AI packet",
+    "desktop installer",
+    "voice/Laya/Grok/updater/live bot"
+  ],
+  "read_order": [
+    "EXECUTE_THIS_PR_RU.txt",
+    "01_PR_002_IMPLEMENTATION_RU.md",
+    "contracts/MANIFEST_CONTRACT.json",
+    "plan/ACCEPTANCE_CASES.json"
+  ]
+}

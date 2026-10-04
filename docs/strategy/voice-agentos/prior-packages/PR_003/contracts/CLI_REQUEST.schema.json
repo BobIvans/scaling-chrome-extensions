@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roadmap:pr003:cli-request:v1",
+  "type": "object",
+  "description": "Normalized trusted CLI request, NOT a native/UI command.",
+  "required": [
+    "schema",
+    "profile",
+    "repository",
+    "manifest",
+    "output",
+    "action"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-archive-cli-request.v1"
+    },
+    "profile": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repository": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_.:-]{1,100}$"
+    },
+    "manifest": {
+      "type": "string",
+      "minLength": 1
+    },
+    "output": {
+      "type": "string",
+      "minLength": 1
+    },
+    "action": {
+      "enum": [
+        "BUILD",
+        "RESUME",
+        "STATUS",
+        "NEW_RUN"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "$comment": "Absolute path/no symlink/profile scope/output conflicts require actual runtime checks. Mutually exclusive CLI flags map to exactly one action."
+}
