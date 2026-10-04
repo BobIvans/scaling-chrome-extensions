@@ -502,6 +502,26 @@ class RecoveryAndObserverTests(Fixture):
 
 
 class CoreGuardTests(Fixture):
+    def test_cancelled_unstarted_node_releases_admission_capacity(self):
+        self.manifest();cr.advance(self.store,self.policy,'research');cr.cancel(self.store,self.policy,'research')
+        self.assertEqual(self.sql('SELECT count(*) FROM workflow_reservations')[0][0],0)
+        self.assertEqual(self.sql('SELECT count(*) FROM workflow_leases')[0][0],0)
+
+    def test_cancel_running_node_keeps_reservation_until_worker_stops(self):
+        self.manifest();cr.advance(self.store,self.policy,'research');owner=ac.Core(self.store,self.policy);job=owner.claim()
+        cr.cancel(self.store,self.policy,'research')
+        self.assertEqual(self.sql('SELECT count(*) FROM workflow_reservations')[0][0],1)
+        owner.transition(job,'CANCELLED');cr.cancel(self.store,self.policy,'research')
+        self.assertEqual(self.sql('SELECT count(*) FROM workflow_reservations')[0][0],0)
+
+    def test_revision_refresh_releases_completed_predecessor_leases(self):
+        m=self.manifest();m['nodes']=m['nodes'][:1];p=Path(self.policy['campaigns']['research']['manifest_file']);p.write_text(ac.encoded(m));self.policy['campaigns']['research']['manifest_sha256']=ws.file_digest(p)
+        cr.advance(self.store,self.policy,'research');ac.Core(self.store,self.policy).run_once()
+        old=copy.deepcopy(self.policy);self.manifest(revision=2)
+        cr.refresh(self.store,old,self.policy,'research')
+        self.assertEqual(self.sql('SELECT count(*) FROM workflow_reservations')[0][0],0)
+        self.assertEqual(len(cr.advance(self.store,self.policy,'research')['admitted']),1)
+
     def test_running_campaign_cannot_refresh_away_its_owner(self):
         self.manifest();cr.advance(self.store,self.policy,'research');ac.Core(self.store,self.policy).claim()
         old=copy.deepcopy(self.policy);self.manifest(revision=2)

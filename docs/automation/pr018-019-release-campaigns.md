@@ -130,7 +130,7 @@ starts unfenced cleanup after lease loss.
 
 ## Проверки и оставшаяся стратегия
 
-Local Linux: 402 Content Lab tests (81 new), 121 extension tests (5 new), 47 bridge,
+Local Linux: 405 Content Lab tests (84 new), 121 extension tests (5 new), 47 bridge,
 8 qualification-adapter passed. Desktop: 23 discovered, 22 passed, one Tk/display
 case skipped because this runner lacks a display/Xvfb. Desktop owned files verified;
 Chrome package built and ZIP verified. CI includes actual-head Ubuntu + Windows core,

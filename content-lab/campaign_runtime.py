@@ -91,6 +91,19 @@ def _node_key(key,rev,node):
     return core.digest([key,rev,node])
 
 
+def _retire_terminal_leases(db,key):
+    """Canonical terminal jobs release reservations; running/unknown jobs retain them."""
+    rows=db.execute('SELECT n.revision,n.node,j.state FROM workflow_node_jobs n JOIN jobs j ON j.id=n.job_id WHERE n.campaign=?',(key,)).fetchall()
+    for row in rows:
+        if row['state'] not in core.TERMINAL:continue
+        lease_key=_node_key(key,row['revision'],row['node']);record=state.get(db,'node_lease',lease_key)
+        if not record or record['value']['state']!='RESERVED':continue
+        owner=record['value']['lease']['owner']
+        db.execute('DELETE FROM workflow_leases WHERE owner=?',(owner,))
+        db.execute('DELETE FROM workflow_reservations WHERE owner=?',(owner,))
+        state.put(db,'node_lease',lease_key,{**record['value'],'state':'RELEASED'},record['revision'])
+
+
 def _observe_nodes(db,key,manifest):
     rows={r['node']:r for r in db.execute('SELECT n.*,j.state AS job_state,j.cancel_requested,j.lease_until FROM workflow_node_jobs n JOIN jobs j ON j.id=n.job_id WHERE campaign=? AND revision=?',(key,manifest['revision']))}
     values={}
@@ -116,6 +129,7 @@ def advance(store,policy,alias,*,now=None):
         if record['manifest']!=m or record['policy_hash']!=core.digest(policy):
             # Explicit refresh() handles revisions and selective reuse.
             raise ValueError('CAMPAIGN_BINDING_CHANGED')
+        _retire_terminal_leases(db,key)
         if record['state'] in {'CANCELLED','DEFERRED','SUCCEEDED','PAUSED'}:
             return {'state':record['state'],'admitted':[]}
         rows,values=_observe_nodes(db,key,m)
@@ -131,13 +145,6 @@ def advance(store,policy,alias,*,now=None):
             if row is not None:
                 if isinstance(row,dict) and row.get('reused',False):
                     continue
-                lease=state.get(db,'node_lease',_node_key(key,m['revision'],n['id']))
-                if values[n['id']] in core.TERMINAL and lease and lease['value']['state']=='RESERVED':
-                    # Worker has stopped normally: release even if lease TTL passed;
-                    # job terminal is canonical evidence (not a wall-clock guess).
-                    db.execute('DELETE FROM workflow_leases WHERE owner=?',(lease['value']['lease']['owner'],))
-                    db.execute('DELETE FROM workflow_reservations WHERE owner=?',(lease['value']['lease']['owner'],))
-                    state.put(db,'node_lease',_node_key(key,m['revision'],n['id']),{**lease['value'],'state':'RELEASED'},lease['revision'])
                 continue
             if any(values[parent]!='SUCCEEDED' for parent in n['needs']):
                 blockers[n['id']]='DEPENDENCY_WAIT';continue
@@ -194,6 +201,7 @@ def cancel(store,policy,alias):
                     target=job[0] if job[0] in {'RUNNING','NEEDS_RECONCILIATION'} else 'CANCELLED'
                     db.execute('UPDATE jobs SET state=?,cancel_requested=1 WHERE id=?',(target,row[0]))
                     core.event(db,row[0],target,{'campaign_stop':key})
+            _retire_terminal_leases(db,key)
             state.put(db,'campaign',key,{**value,'state':'CANCELLED'},revision)
         return {'state':'CANCELLED','cancel_requested':True}
 
@@ -222,6 +230,7 @@ def refresh(store,old_policy,new_policy,alias):
         rows,values=_observe_nodes(db,key,old_manifest)
         if any(v in {'QUEUED','RUNNING','RETRY_READY','WAITING_CI','UNKNOWN_EFFECT'} for v in values.values()):
             raise ValueError('CAMPAIGN_ACTIVE_OR_UNKNOWN_EFFECT')
+        _retire_terminal_leases(db,key)
         old_nodes={n['id']:n for n in old_manifest['nodes']};reused=set()
         # Evaluate dependencies topologically without recursive graph traversal.
         remaining=list(m['nodes'])
