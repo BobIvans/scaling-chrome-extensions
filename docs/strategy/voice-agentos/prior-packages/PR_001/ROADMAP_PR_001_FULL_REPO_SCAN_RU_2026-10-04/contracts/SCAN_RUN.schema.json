@@ -1,0 +1,176 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Proposed compact scan-run projection",
+  "type": "object",
+  "required": [
+    "schema",
+    "run_id",
+    "intent_key",
+    "snapshot_id",
+    "repository",
+    "namespace",
+    "profile_revision",
+    "repo_sha",
+    "tree_sha",
+    "control_state",
+    "reason",
+    "counts",
+    "inventory_complete",
+    "exact_for_indexed",
+    "all_tracked_bytes_exportable",
+    "ai_delivery",
+    "run_revision",
+    "cursor",
+    "total",
+    "ledger_entries",
+    "processed",
+    "pending",
+    "indexed",
+    "excluded",
+    "errors"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-scan-run.v1"
+    },
+    "run_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "intent_key": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{32}$"
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repository": {
+      "type": "string"
+    },
+    "namespace": {
+      "type": "string"
+    },
+    "profile_revision": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "repo_sha": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "tree_sha": {
+      "type": "string",
+      "pattern": "^(?:[0-9a-f]{40}|[0-9a-f]{64})$"
+    },
+    "control_state": {
+      "enum": [
+        "RUNNING",
+        "PAUSED",
+        "CANCELLED",
+        "COMPLETE",
+        "BLOCKED",
+        "FAILED"
+      ]
+    },
+    "reason": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "PENDING": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "INDEXED": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "EXCLUDED": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "ERROR": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "PENDING",
+        "INDEXED",
+        "EXCLUDED",
+        "ERROR"
+      ]
+    },
+    "inventory_complete": {
+      "type": "boolean"
+    },
+    "exact_for_indexed": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "all_tracked_bytes_exportable": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "ai_delivery": {
+      "const": "NOT_PERFORMED"
+    },
+    "run_revision": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "cursor": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "total": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "ledger_entries": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "processed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "pending": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "indexed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "excluded": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    },
+    "errors": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9007199254740991
+    }
+  },
+  "additionalProperties": false,
+  "description": "Counts and identity are projections of existing snapshot data; only control metadata is added."
+}

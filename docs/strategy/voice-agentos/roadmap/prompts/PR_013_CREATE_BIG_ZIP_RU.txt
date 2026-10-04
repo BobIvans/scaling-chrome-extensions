@@ -1,0 +1,89 @@
+Создай большой подробный ZIP ROADMAP-PR-013: «Импорт документов и внешних источников: PDF/Office/OCR, media, RSS/web и GitHub history».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Расширить importer registry форматными adapters с точными page/cell/time ranges, полными cursors и provenance всех наблюдений.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: ACTION5-07, ACTION5-08
+Feature cards: LIB-043, LIB-044, LIB-045, LIB-046, LIB-059, RND-005, RND-037
+Decisions: 
+Goals: GOAL5-05, GOAL5-07, GOAL5-26
+Dependencies: PR-010
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-009 — PDF, Office, OCR и таблицы с точными ссылками и проверкой чисел
+Scope:
+- Ленивые PDF/Office extractors с версиями
+- Page/table/cell/text spans и обратная связь с оригиналом
+- OCR uncertainty, units/numbers/table fidelity corpus
+Граница: Использует SourceAddress №10 и importer protocol №16. Не объявлять все форматы поддержанными по одному fixture; у каждого adapter своя support matrix.
+Приёмка:
+- Оригинал остаётся неизменным
+- Цитата ведёт к нужной странице/ячейке
+- OCR не перезаписывает подтверждённый текст
+- Неизвестный mapping явно UNKNOWN
+- Cancel/retry не теряет source identity
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-010 — Аудио и видео: импорт, транскрипция и временные ссылки
+Scope:
+- Media originals и версии transcript/ASR
+- Time spans, авторы/speaker uncertainty и metadata
+- Ленивая очередь, cancel/resume и corpus RU/EN/code-switch
+Граница: Это обработка сохранённых media. Живой микрофон/hotkey и intent — №28. Конкретные media/ASR зависимости выбирать по актуальным primary docs.
+Приёмка:
+- Text span открывает соответствующий time range
+- ASR output связан с exact media hash/model/config
+- Ошибки и недоступные media сохранены в ledger
+- Повтор не создаёт ложную source version
+- Качество и стоимость измерены на реальном corpus
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-011 — RSS, web snapshots и история GitHub PR/issues/CI с полной пагинацией
+Scope:
+- Версии web/RSS body и provenance
+- Полная история GitHub PR/issues/reviews/CI и неудачных попыток
+- Incremental cursors, rate limits, partial/freshness ledger
+Граница: Read-only сбор. PR patch/merge workflow — №32; news-to-experiment и сценарии — №37.
+Приёмка:
+- Все страницы обработаны до явного EOF
+- Редакции страницы и PR не затирают историю
+- Отсутствие данных отличается от no-match
+- Повторная синдикация не считается новым первоисточником
+- Backoff/resume сохраняют cursor и raw responses
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+ACTION5-07 — Разделить PDF/Office текст, таблицы и OCR
+- Клик по найденному тексту открывает исходную страницу/ячейку и версию файла.
+- Числа, единицы, отрицательные значения и merged cells сверены на размеченном corpus; потеря структуры помечена.
+- Scanned PDF имеет OCR-derived label и сохраняет original page; OCR не выдаётся за точный imported text.
+- Password-protected/unsupported embedded object остаётся конкретным gap.
+ACTION5-08 — Импортировать audio/video с проверяемым transcript
+- Фрагмент transcript открывает соответствующий time range оригинала.
+- Unintelligible segment обозначен UNKNOWN; speaker identity не выводится без evidence.
+- RU/EN/code-switch corrections не изменяют ASR оригинал; модель/версия сохранены.
+- Без разрешённого внешнего profile медиа остаётся локальным.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

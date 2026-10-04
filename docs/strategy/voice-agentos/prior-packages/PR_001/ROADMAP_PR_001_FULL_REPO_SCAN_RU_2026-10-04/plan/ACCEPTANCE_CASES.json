@@ -1,0 +1,114 @@
+{
+  "schema": "roadmap.acceptance-cases.v1",
+  "scope": "PR001 controller; broad roadmap/device qualification stays separate",
+  "count": 12,
+  "runtime_cases_executed_for_this_package": false,
+  "cases": [
+    {
+      "criterion_id": "AC-001",
+      "title": "Whole pinned tree with more than two pages",
+      "setup_and_action": "Use included 45-file Git fixture; start once and pump sequentially.",
+      "expected": "3 page commits at default 20, tail file accounted, pending=0, cursor=total=45, one run/snapshot, exact_for_indexed=true; captured binary is not labelled AI-read.",
+      "evidence_required": "Git/SQLite plus UI-native integration receipt",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-002",
+      "title": "Idempotent START and STEP replay",
+      "setup_and_action": "Double START using one intentKey; lose a STEP response after commit, replay the exact expectedCursor.",
+      "expected": "Same run_id/snapshot; replay does not process another page or duplicate chunks; current cursor returned. A second active intent yields ACTIVE_SCAN_EXISTS.",
+      "evidence_required": "Real SQLite row/count evidence",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-003",
+      "title": "Crash before and after commit",
+      "setup_and_action": "Inject failure after chunk insertion but before transaction commit; separately simulate response loss after commit.",
+      "expected": "First case rolls back entries/chunks/cursor consistently; second resumes from committed cursor after STATUS. No skipped/duplicated source ranges.",
+      "evidence_required": "Fault injection plus new native process reopening store",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-004",
+      "title": "Pause/restart/Continue",
+      "setup_and_action": "Pause after a page; close UI; reopen a fresh client and STATUS; explicitly Continue.",
+      "expected": "Same run/snapshot/cursor and PAUSED state; zero automatic STEP on reopen; explicit Continue reaches tail. Reopen a RUNNING run too: explicit Continue uses reconciled current revision; reconnect itself makes no STEP.",
+      "evidence_required": "Fresh-client state restoration + real backend receipt",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-005",
+      "title": "Cancel and late reply",
+      "setup_and_action": "Cancel with a STEP in flight; allow an already-started page to finish; deliver a delayed old UI reply; reopen and replay START with original key.",
+      "expected": "No next STEP after pause/cancel intent; committed CANCELLED persists, old intent remains terminal, late reply never revives pump. New explicit intent is distinct.",
+      "evidence_required": "Backend control history plus deferred UI response fixture",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-006",
+      "title": "Changed HEAD and profile",
+      "setup_and_action": "Change commit between pages; separately revoke/change operator profile or selected alias.",
+      "expected": "SOURCE_DRIFT/BLOCKED or typed scope failure; no mixed HEAD bytes, old snapshot preserved; wrong namespace/profile cannot inspect or step the run.",
+      "evidence_required": "Two real Git commits and profile/scope negative cases",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-007",
+      "title": "Legacy and existing database compatibility",
+      "setup_and_action": "Create old-style DB/snapshot/review records with legacy endpoints, upgrade additive control schema, reopen again.",
+      "expected": "Old records and legacy scan/get/export still readable; migration idempotent; state table not a second store; downgrade limitations recorded.",
+      "evidence_required": "Old-schema data comparison and legacy endpoint results",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-008",
+      "title": "Typed native endpoint roundtrip",
+      "setup_and_action": "Run UI→NativeClient→JobHost→DurableBridge→installed Python adapter→SQLite; test hello negotiation/invalid fields.",
+      "expected": "New command advertised only when available; exact fields; UI cannot supply root/argv/store; envelopes stay inside actual native limits; older host gives explicit unavailable.",
+      "evidence_required": "Actual native subprocess integration trace",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-009",
+      "title": "Controls, counters and responsiveness",
+      "setup_and_action": "Hold a STEP promise; use keyboard-accessible Pause/Stop; return initial ledger with all entries PENDING and switch selected repo/client.",
+      "expected": "Controls remain enabled while scanning; processed initially 0, not accounted=total; no parallel requests; stale responses ignored; event-loop yields between pages.",
+      "evidence_required": "UI controller/DOM integration with counters and control assertions; Windows device status separate",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-010",
+      "title": "Empty and already completed snapshot",
+      "setup_and_action": "Start on an empty Git tree and on an already COMPLETE saved snapshot.",
+      "expected": "Terminal COMPLETE without endless STEP; totals and raw proof valid; no duplicate source insertion. Preserve existing snapshot completion/head publication semantics for empty trees.",
+      "evidence_required": "Real empty-tree and completed-snapshot tests",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-011",
+      "title": "Explicit limits and metadata gaps",
+      "setup_and_action": "Force existing Git output limit; force oversized blob; inspect existing link/submodule/exclusion metadata and captured non-UTF8 fixture.",
+      "expected": "No silent truncation or cap-removal; limit failure blocks completion appropriately; processed dispositions persist; COMPLETE inventory with gaps never becomes all bytes/AI-read claim.",
+      "evidence_required": "Limit fault fixture and entry-outcome report",
+      "outcome": "NOT_RUN"
+    },
+    {
+      "criterion_id": "AC-012",
+      "title": "No-progress/timeout reconciliation",
+      "setup_and_action": "Native STEP times out or repeatedly returns unchanged cursor; lose PAUSE/CANCEL reply; deliver late CONTINUE with stale revision.",
+      "expected": "Stop pump and show explicit blocker; STATUS reconciles unknown commit/control outcome; no tight retry loop or stale unpause; cursor/revision checks are atomic.",
+      "evidence_required": "Timeout/no-progress/native reconciliation and stale-control fixtures",
+      "outcome": "NOT_RUN"
+    }
+  ],
+  "device_gate": {
+    "platform": "Windows 11 / user Dell",
+    "status": "NOT_RUN",
+    "requires": [
+      "installed exact-build receipt",
+      "keyboard controls during actual scan",
+      "latency/RAM measurements with declared corpus"
+    ],
+    "not_required_to_falsely_mark_linux_controller_tests": true
+  }
+}

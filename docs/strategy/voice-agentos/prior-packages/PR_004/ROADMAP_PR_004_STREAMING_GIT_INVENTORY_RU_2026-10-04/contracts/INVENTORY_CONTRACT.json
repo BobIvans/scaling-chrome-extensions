@@ -1,0 +1,74 @@
+{
+  "schema": "roadmap.proposed-inventory-contract.v1",
+  "status": "PROPOSED_NOT_IMPLEMENTED",
+  "entrypoint": "content-lab/repo_inventory.py operator CLI",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "source_task": "LAYA4-003",
+  "scope": "CLI opt-in streaming inventory; Native/Core long job and index binding follow-ups",
+  "owner": "repo_context -> existing Content Lab content.sqlite3",
+  "authoritative_tables": [
+    "repo_snapshots",
+    "repo_entries",
+    "repo_chunks",
+    "repo_heads"
+  ],
+  "new_metadata_owner": false,
+  "new_executor": false,
+  "new_native_endpoint": false,
+  "legacy_route": "inventory_budget=None keeps existing explicit MAX_TREE=33554432 until independently qualified",
+  "snapshot_id": "Existing automation_core.digest(alias, profile, head, tree); preserve JSON defaults",
+  "head_rule": "Read HEAD once; resolve tree from pinned head; enumerate pinned head and recheck before publish",
+  "argv_tail": [
+    "ls-tree",
+    "-r",
+    "-z",
+    "-l",
+    "--full-tree",
+    "PINNED_HEAD"
+  ],
+  "path_rule": "First TAB splits header; NUL terminates record; path bytes remain exact",
+  "unsupported_path": "existing git-path-hex:<hex>, existing disposition/reason, raw bytes reversible",
+  "stream_eof_required": [
+    "no unterminated bytes",
+    "both stdout/stderr drained",
+    "child reaped",
+    "exit_code == 0"
+  ],
+  "stage": "private disposable disk SQLite outside source; bounded cache/batches/quota; no authority",
+  "publication": "single BEGIN IMMEDIATE transaction inserts snapshot(cursor=0,total=N) and N exact entries; no OR IGNORE",
+  "existing_id": "reuse only scoped valid complete inventory; do not overwrite captured states; corrupt inventory errors",
+  "inventory_ready": "all tree records committed; capture cursor initially 0; not a COMPLETE capture assertion",
+  "snapshot_complete": "existing cursor==total, counts, no PENDING and exact raw indexed proof after scan pages",
+  "repo_heads_rule": "unchanged until existing capture completion, not advanced by CLI inventory",
+  "failure_preserves": [
+    "previous snapshot",
+    "previous repo_heads",
+    "existing chunks and revisions"
+  ],
+  "retry": "fresh Git enumeration from byte 0 after confirmed process stop; partial stage never resumed",
+  "failure_reasons": [
+    "REPO_UNAVAILABLE",
+    "REPO_GIT_READ_FAILED",
+    "REPO_INVENTORY_STREAM_MALFORMED",
+    "REPO_INVENTORY_RECORD_LIMIT",
+    "REPO_INVENTORY_TIMEOUT",
+    "REPO_INVENTORY_STDERR_LIMIT",
+    "REPO_INVENTORY_STAGE_LIMIT",
+    "REPO_INVENTORY_DISK_FULL",
+    "SOURCE_DRIFT",
+    "CONTEXT_INCOMPLETE",
+    "CANCEL_REQUESTED",
+    "PROCESS_STOP_UNCONFIRMED"
+  ],
+  "limits": "operator budgets explicitly fail; no fixed total file count and no opt-in stdout corpus cap",
+  "outstanding": [
+    "Core registered job + Native progress/control",
+    "streaming index_matches_head",
+    "device resource qualification and Windows process lifecycle"
+  ],
+  "compatibility_contracts": [
+    "previous/PR_001_SCAN_CONTRACT.json",
+    "previous/PR_002_MANIFEST_CONTRACT.json"
+  ],
+  "pr003_contract_received": false
+}

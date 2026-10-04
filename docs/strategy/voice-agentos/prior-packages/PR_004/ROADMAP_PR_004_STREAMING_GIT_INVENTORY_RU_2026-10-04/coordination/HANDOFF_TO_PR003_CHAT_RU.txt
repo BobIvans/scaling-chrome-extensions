@@ -1,0 +1,19 @@
+Готов input ZIP №4: ROADMAP_PR_004_STREAMING_GIT_INVENTORY_RU_2026-10-04.zip.
+Owner: BobIvans/scaling-chrome-extensions → PR-004 → LAYA4-003 (CLI subset).
+ZIP №3 / LAYA4-010 остаётся в вашем чате: payload archive, offline index,
+verified saved parts и rebuild ZIP после interruption.
+
+№4: opt-in streaming git ls-tree -r -z -l --full-tree pinned HEAD, bounded
+buffers и disposable disk stage; atomic publish repo_snapshots/repo_entries.
+Схема, snapshot digest, states, chunk identities/ranges/hashes не меняются.
+READY inventory != COMPLETE captured snapshot. Export №3 читает только фактический
+complete snapshot, не stage. Перерыв inventory требует fresh enumeration;
+reuse payload chunks/parts в вашем export recovery от этого не меняется.
+
+Suggested №4 touches: new content-lab/repo_inventory.py и start_scan opt-in hunk.
+№4 не меняет ваш exporter/offline index. Если есть общие hunks repo_context.py,
+сверить actual diffs, затем capture→manifest→payload ZIP regression.
+Native long job и streaming index binding отложены явно, parent LAYA4-003 open.
+Все 160 roadmap tasks остаются backlog. Следующий номер №5 — LAYA4-004.
+Передайте actual №3 ZIP/diff/SHA/receipt для integration; автоматической общей
+видимости чатов нет. Этот handoff подготовлен как текст, никому не отправлен.

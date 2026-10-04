@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "python_path",
+    "adapter_path",
+    "profile_path",
+    "expected_adapter_sha256",
+    "preferred_namespace",
+    "protocol"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.desktop-connection.v1"
+    },
+    "python_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adapter_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "profile_path": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_adapter_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "preferred_namespace": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "protocol": {
+      "const": "occ.desktop-stdio.v1"
+    }
+  },
+  "$comment": "Runtime validates absolute installed paths/no NUL/reparse policy; JSON Schema does not assert filesystem safety."
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "roadmap.design-source-notes.v1",
+  "retrieved_at": "2026-10-04",
+  "facts_not_implementation_evidence": true,
+  "architecture": "Local engineering proposal based on archived owner and source task, not mandated by external docs",
+  "sources": [
+    {
+      "url": "https://git-scm.com/docs/git-ls-tree",
+      "fact": "-r recurses, -l adds blob size, -z uses NUL termination and verbatim paths; --full-tree ignores current-directory restriction."
+    },
+    {
+      "url": "https://docs.python.org/3/library/subprocess.html",
+      "fact": "Binary mode avoids newline conversion. communicate buffers captured data. Waiting with undrained pipes can deadlock; timeout cleanup requires terminating and reaping the process."
+    },
+    {
+      "url": "https://git-scm.com/docs/git-mktree",
+      "fact": "mktree constructs a tree from ls-tree style input; -z accepts NUL-delimited input. Used only in synthetic fixture generator."
+    }
+  ]
+}

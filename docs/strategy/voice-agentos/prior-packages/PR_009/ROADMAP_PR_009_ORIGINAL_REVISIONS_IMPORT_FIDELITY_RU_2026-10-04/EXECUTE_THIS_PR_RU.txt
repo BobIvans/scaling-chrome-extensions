@@ -1,0 +1,49 @@
+РЕАЛИЗУЙ ROADMAP-PR-009: ORIGINAL BYTES + CHATGPT JSON FIDELITY
+Target BobIvans/scaling-chrome-extensions. Ориентир ~60 минут + required checks.
+Пакет содержит contracts/examples, не готовую реализацию importer.
+
+1. Заморозь actual base SHA, прочитай AGENTS.md, проверь текущие Content Lab
+   import_chatgpt_export/parse_chatgpt_export/_insert_item и schema owners.
+   Existing original-blob owner может уже появиться после archived source:
+   переиспользуй его; DRAFT_OWNER_SCHEMA.sql — только additive fallback, не second DB.
+2. В existing content.sqlite3 добавь raw blob/source version/origin/extraction/head
+   records. Читай выбранный regular JSON один раз, в bounded immutable buffer;
+   hash, raw storage и extraction обязаны использовать те же bytes. Symlink,
+   changed input, I/O/budget rejection => NOT_CAPTURED, explicit operation outcome.
+   Бюджеты сохраняют current input≤64MiB и добавляют total mapping-node guard.
+3. Для captured invalid JSON/UTF8/schema сохрани оригинал и ERROR extraction
+   одним commit; derived message/attachment heads при этом не меняй. Storage
+   failure => whole rollback, original_retained=false; никаких успешных receipts.
+4. На valid input переиспользуй legacy text/attachment logic и item IDs; добавь
+   extraction ledger для ВСЕХ mapping nodes, включая message=null/non-text/empty.
+   Preserve parent, declared children, current_node, role/time/content metadata
+   через JSON Pointer/raw origin. Missing refs/mismatch/parent-cycle => explicit
+   topology gaps и PARTIAL coverage. Не flatten только current branch и не fetch
+   attachment payload. Pointer PRESENT не означает bytes present.
+5. Свяжи каждый derivation с exact raw version/extractor key. Metadata-only edit
+   меняет raw/extraction revision, даже если legacy text item ID тот же. Не меняй
+   старые items payload/export_sha256 задним числом. Time captured/source message/
+   first observed — разные поля; declared author role не verified authorship.
+6. Исправь absence reconciliation: update present=0 только для message/attachment
+   heads внутри conversations, наблюдаемых в ЭТОМ valid export. Вне selection
+   heads не трогать. present=0 здесь = NOT_OBSERVED_IN_SELECTED_EXPORT, не remote
+   deletion. Whole namespace replace option и remote tombstones — later PR.
+7. Original/ledger/items/FTS/attachment/conversation heads commit атомарно в одном
+   SQLite owner. Durable DB result authoritative; post-commit item JSON receipts
+   rebuildable. Ошибка receipt => COMMITTED_WITH_RECEIPT_WARNING, retry idempotent.
+   Не выполнять source text/unknown fields и не запускать новый worker/store.
+8. Add bounded CLI metadata inspection/read-original route к exact revision.
+   Original download/file write — explicit path, verified hash/length и atomic
+   replace; stdout не содержит большой raw blob. Новые Native/desktop IPC commands
+   не входят; cross-surface DTO согласовать отдельным adapter после №8 result.
+9. Выполни 20 runtime cases из plan/ACCEPTANCE_CASES.json, meaningful focused
+   tests на actual DB/importer/CLI и required current CI. Package verifier и schema
+   experiment показывают только synthetic data contract; runtime PASS не подменять.
+   Заполни receipts/IMPLEMENTATION_RESULT_TEMPLATE.json фактическими SHA/commands.
+
+Scope: один local ChatGPT JSON importer. DOM full-scroll/remote branches,
+PDF/Office/OCR, correction overlays, normalized search offsets, attachment payload
+retrieval, arbitrary folder resume, Windows installer/Native DTO — следующие PR.
+Все широкие ACTION5-04/05/06 остаются OPEN до полного evidence. Час — ориентир,
+а не повод оставить потерю bytes, broken transaction или required checks.
+Не cherry-pick/rewrite parallel №8 без сверки owners и actual merge-base.

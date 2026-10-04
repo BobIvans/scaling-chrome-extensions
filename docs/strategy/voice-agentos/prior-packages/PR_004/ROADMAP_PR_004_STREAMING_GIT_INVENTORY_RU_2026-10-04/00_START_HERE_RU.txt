@@ -1,0 +1,35 @@
+ZIP №4 · ОДИН ЧАСОВОЙ PR · STREAMING GIT INVENTORY
+
+Repository: BobIvans/scaling-chrome-extensions.
+Roadmap: LAYA4-003, часовой CLI-срез; whole task остаётся открытой.
+Номер PR-004 — номер этого пакета, не опубликованного GitHub PR.
+Статус: PREPARED_IMPLEMENTATION_BRIEF. Код приложения этим ZIP не изменён.
+
+Результат будущего PR: operator CLI перечисляет весь pinned Git tree,
+включая tree с выводом больше прежних 32 MiB, с ограниченными buffers.
+NUL-safe записи проходят disk staging и одной транзакцией становятся
+repo_snapshots/repo_entries в существующей Content Lab SQLite.
+Никакого общего потолка 20/39 files. Page=20 и resource budgets — разные вещи.
+Нарушенный stream или budget возвращает ошибку, а не усечённый успех.
+
+Прочитай EXECUTE_THIS_PR_RU.txt и 01_PR_004_IMPLEMENTATION_RU.md.
+6 задач / 60 минут planned build; 16 runtime cases — ещё NOT_RUN.
+Contracts: contracts/. Fixtures и проверяющие tools работают офлайн.
+tools/verify_package.py проверяет входной пакет; это не тест будущего handler.
+
+Параллельный ZIP №3: PR-003 / LAYA4-010 — captured payload archive,
+offline index и recovery экспорта. Он строится в другом чате по сообщению
+пользователя; сам ZIP, код и merge не получены. №3 здесь не пересобирается.
+Граница: №4 создаёт полный inventory; №3 экспортирует уже сохранённые chunks.
+coordination/ содержит statuses, shared invariants и текст для другого чата.
+
+Часовой срез не включает async Native/Core wiring и streaming index binding.
+Native сохранил 10-second timeout, старый enumeration cap остаётся явным
+до отдельной квалификации нового пути. Large CLI inventory можно обработать
+существующим durable.repo.scan с явно переданным snapshotId по 20 записей.
+Review binding для больших trees остаётся ограниченным index_matches_head.
+Это открытая часть LAYA4-003, не обещание полной готовности всего large-repo UX.
+
+Все 160 задач, 164 feature records, 28 goals, 24 decisions, 10 milestones
+сохранены byte-for-byte. Ни одна задача не объявлена выполненной.
+Следующий номер ZIP №5 — LAYA4-004: formats, gaps и source eligibility.

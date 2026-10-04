@@ -1,0 +1,34 @@
+{
+  "schema": "roadmap.pr007-pr005-adapter-map.v1",
+  "status": "INPUT_CONTRACTS_VERIFIED_RUNTIME_NOT_RUN",
+  "facts_owner_key": "repo_entries.analysis.format_eligibility",
+  "facts_schema": "occ.format-eligibility.v1",
+  "facts_schema_sha256": "2d0daafe1dac66fabf8d4dd669fd96552df2f642d23a9c3ac9b0b39f68fecb9d",
+  "classifier_version": "utf8-controls-strict-lfs3.v1",
+  "source_identity_fields": [
+    "snapshot_id",
+    "ordinal",
+    "path",
+    "mode",
+    "kind",
+    "git_oid",
+    "git_size",
+    "disposition",
+    "file_sha256"
+  ],
+  "ordinal_and_size_encoding": "canonical decimal strings from PR005; compare exact integers without JS Number conversion",
+  "allowed": {
+    "disposition": "INDEXED",
+    "kind": "blob",
+    "raw_capture": "RECORDED",
+    "text_eligibility": "ELIGIBLE",
+    "format_kind": [
+      "UTF8_TEXT_CANDIDATE",
+      "EMPTY"
+    ]
+  },
+  "raw_integrity_rule": "NOT_RUN requires independent captured byte/range/revision proof; FAIL/CORRUPT blocks",
+  "default_missing_facts": "ELIGIBILITY_FACTS_UNAVAILABLE",
+  "legacy_fallback": "Explicit opt-in only; UNVERIFIED_PR005 interpretation marker",
+  "pr005_implementation_observed": false
+}
