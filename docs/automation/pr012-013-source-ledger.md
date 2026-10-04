@@ -16,6 +16,10 @@ STAGING parts, which the same bytes can verify and reuse. A changed source
 starts a distinct raw version. The version/head/observation are published in
 one final SQLite transaction. `versions` and `raw_parts` traverse to EOF with
 bounded pages; `read_part` verifies the requested bytes against its digest.
+`delta_parts` compares two versions of the same source/scope, returning exact
+ADDED/REPLACED/DELETED 64 KiB part ranges with a pair-bound continuation token.
+Its scope is fixed-size byte parts, so an insertion may change many subsequent
+parts; it does not claim minimal text changes or semantic media segments.
 
 Example for an explicitly selected local original:
 
@@ -32,7 +36,7 @@ invalidate criterion evidence. The older ChatGPT import keeps its specialized
 Do not treat a captured binary as searchable or a successful importer result.
 
 Local tests use exact binary bytes, two origins with one raw object, two path
-aliases for one stable key, 23 versions,
+aliases for one stable key, 23 versions, delta continuation and scope,
 an interrupted stage and replay, source mutation, corruption, namespace scope,
 and the installed-style isolated Python CLI. Device, large-corpus peak RAM and
 the full combined acceptance matrix remain open.

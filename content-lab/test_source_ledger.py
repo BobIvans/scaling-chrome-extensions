@@ -164,6 +164,29 @@ class SourceLedgerTests(unittest.TestCase):
         self.assertEqual(writer.execute('SELECT count(*) FROM source_ledger_migrations').fetchone()[0], 1)
         writer.close()
 
+    def test_delta_parts_to_eof_and_cursor_pair_binding(self):
+        self.first.write_bytes(b'a' * ledger.PART_BYTES + b'b' * ledger.PART_BYTES)
+        base = ledger.capture_file(self.store, 'docs', 'FILE', self.first, '1' * 32)
+        self.first.write_bytes(b'a' * ledger.PART_BYTES + b'c' * ledger.PART_BYTES +
+                               b'd' * ledger.PART_BYTES)
+        head = ledger.capture_file(self.store, 'docs', 'FILE', self.first, '2' * 32)
+        first = ledger.delta_parts(self.store, 'docs', base['version_id'],
+                                   head['version_id'], limit=1)
+        self.assertEqual((first['changes'][0]['ordinal'], first['changes'][0]['kind']),
+                         (1, 'REPLACED'))
+        self.assertEqual((first['changes'][0]['base_start'], first['changes'][0]['head_start']),
+                         (ledger.PART_BYTES, ledger.PART_BYTES))
+        last = ledger.delta_parts(self.store, 'docs', base['version_id'], head['version_id'],
+                                  cursor=first['next_cursor'], limit=1)
+        self.assertEqual((last['changes'][0]['ordinal'], last['changes'][0]['kind']),
+                         (2, 'ADDED'))
+        self.assertTrue(last['eof'])
+        with self.assertRaisesRegex(ValueError, 'SOURCE_CURSOR_INVALID'):
+            ledger.delta_parts(self.store, 'docs', head['version_id'], base['version_id'],
+                               cursor=first['next_cursor'])
+        with self.assertRaisesRegex(ValueError, 'SOURCE_OUTSIDE_SCOPE'):
+            ledger.delta_parts(self.store, 'other', base['version_id'], head['version_id'])
+
 
 if __name__ == '__main__':
     unittest.main()

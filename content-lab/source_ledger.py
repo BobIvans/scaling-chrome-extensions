@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import hashlib
 import argparse
+import base64
+import binascii
 import json
 import os
 from pathlib import Path
@@ -308,6 +310,85 @@ def read_part(store: Path, namespace: str, version_id: str, ordinal: int):
         if hashlib.sha256(raw).hexdigest() != page['parts'][0]['part_sha']:
             raise ValueError('SOURCE_RAW_CORRUPT')
         return raw
+    finally:
+        db.close()
+
+
+def _page_cursor(base_id, head_id, ordinal):
+    raw = json.dumps([1, base_id, head_id, ordinal], separators=(',', ':')).encode('ascii')
+    return base64.urlsafe_b64encode(raw).decode('ascii').rstrip('=')
+
+
+def _read_page_cursor(value, base_id, head_id):
+    if (not isinstance(value, str) or len(value) > 4096 or
+            not re.fullmatch(r'[A-Za-z0-9_-]+', value)):
+        raise ValueError('SOURCE_CURSOR_INVALID')
+    try:
+        raw = base64.b64decode(value + '=' * (-len(value) % 4), altchars=b'-_', validate=True)
+        decoded = json.loads(raw)
+    except (ValueError, UnicodeError, binascii.Error) as exc:
+        raise ValueError('SOURCE_CURSOR_INVALID') from exc
+    if (not isinstance(decoded, list) or len(decoded) != 4 or decoded[:3] !=
+            [1, base_id, head_id] or type(decoded[3]) is not int or decoded[3] < 0):
+        raise ValueError('SOURCE_CURSOR_INVALID')
+    return decoded[3]
+
+
+def delta_parts(store: Path, namespace: str, base_version_id: str,
+                head_version_id: str, *, cursor=None, limit=20):
+    """Exact fixed-size byte ranges, not a semantic edit or fuzzy rename diff."""
+    identifier(namespace)
+    if any(not isinstance(v, str) or not HEX.fullmatch(v)
+           for v in (base_version_id, head_version_id)):
+        raise ValueError('SOURCE_VERSION_REQUIRED')
+    strict_int(limit, 1, PAGE)
+    after = _read_page_cursor(cursor, base_version_id, head_version_id) if cursor else -1
+    db = read_connection(store)
+    try:
+        versions_by_id = {}
+        for version_id in (base_version_id, head_version_id):
+            row = db.execute('''SELECT v.source_id,v.raw_sha,v.encoding,v.scope,r.state
+                FROM source_versions v JOIN source_raw_objects r
+                ON r.namespace=v.namespace AND r.raw_sha=v.raw_sha AND r.encoding=v.encoding
+                WHERE v.namespace=? AND v.version_id=?''', (namespace, version_id)).fetchone()
+            if row is None:
+                raise ValueError('SOURCE_OUTSIDE_SCOPE')
+            if row['state'] != 'COMPLETE':
+                raise ValueError('SOURCE_RAW_CORRUPT')
+            versions_by_id[version_id] = row
+        base, head = versions_by_id[base_version_id], versions_by_id[head_version_id]
+        if base['source_id'] != head['source_id'] or base['scope'] != head['scope']:
+            raise ValueError('SOURCE_SCOPE_MISMATCH')
+        if base['raw_sha'] == head['raw_sha']:
+            return {'schema': 'occ.source-delta-page.v1', 'base_version_id': base_version_id,
+                    'head_version_id': head_version_id, 'changes': [], 'next_cursor': None,
+                    'eof': True, 'scope': 'FIXED_64K_BYTE_PARTS'}
+        sql = '''WITH keys AS (
+            SELECT ordinal FROM source_raw_parts WHERE namespace=? AND raw_sha=? AND encoding=?
+            UNION SELECT ordinal FROM source_raw_parts WHERE namespace=? AND raw_sha=? AND encoding=?
+        ) SELECT k.ordinal,b.byte_start AS base_start,b.byte_end AS base_end,
+            b.part_sha AS base_sha,h.byte_start AS head_start,h.byte_end AS head_end,
+            h.part_sha AS head_sha FROM keys k
+            LEFT JOIN source_raw_parts b ON b.namespace=? AND b.raw_sha=? AND b.encoding=?
+                AND b.ordinal=k.ordinal
+            LEFT JOIN source_raw_parts h ON h.namespace=? AND h.raw_sha=? AND h.encoding=?
+                AND h.ordinal=k.ordinal
+            WHERE k.ordinal>? AND b.part_sha IS NOT h.part_sha
+            ORDER BY k.ordinal LIMIT ?'''
+        args = (namespace, base['raw_sha'], base['encoding'],
+                namespace, head['raw_sha'], head['encoding'],
+                namespace, base['raw_sha'], base['encoding'],
+                namespace, head['raw_sha'], head['encoding'], after, limit + 1)
+        rows = [dict(r) for r in db.execute(sql, args)]
+        page = rows[:limit]
+        for row in page:
+            row['kind'] = ('ADDED' if row['base_sha'] is None else
+                           'DELETED' if row['head_sha'] is None else 'REPLACED')
+        return {'schema': 'occ.source-delta-page.v1', 'base_version_id': base_version_id,
+                'head_version_id': head_version_id, 'changes': page,
+                'next_cursor': _page_cursor(base_version_id, head_version_id,
+                                            page[-1]['ordinal']) if len(rows) > limit else None,
+                'eof': len(rows) <= limit, 'scope': 'FIXED_64K_BYTE_PARTS'}
     finally:
         db.close()
 
