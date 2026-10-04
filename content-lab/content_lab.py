@@ -549,17 +549,24 @@ def transcribe_file(
     )
 
 
-def _database(store: Path) -> sqlite3.Connection:
+def _database(store: Path, *, configure=None) -> sqlite3.Connection:
     store.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(store / "content.sqlite3", timeout=10)
-    connection.execute("PRAGMA journal_mode=WAL")
-    connection.execute("PRAGMA busy_timeout=10000")
-    connection.execute(
-        "CREATE TABLE IF NOT EXISTS items(id TEXT PRIMARY KEY, payload TEXT NOT NULL)"
-    )
-    connection.execute(
-        "CREATE VIRTUAL TABLE IF NOT EXISTS content_fts USING fts5(id UNINDEXED, text)"
-    )
+    try:
+        if configure is not None:
+            configure(connection)
+        connection.execute("PRAGMA journal_mode=WAL")
+        if configure is None:
+            connection.execute("PRAGMA busy_timeout=10000")
+        connection.execute(
+            "CREATE TABLE IF NOT EXISTS items(id TEXT PRIMARY KEY, payload TEXT NOT NULL)"
+        )
+        connection.execute(
+            "CREATE VIRTUAL TABLE IF NOT EXISTS content_fts USING fts5(id UNINDEXED, text)"
+        )
+    except BaseException:
+        connection.close()
+        raise
     return connection
 
 

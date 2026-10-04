@@ -151,8 +151,16 @@ def validate_profile(value):
     return value
 
 
-def db_for(store):
-    db = connection(store)
+def db_for(store, *, configure=None):
+    db = connection(store) if configure is None else connection(store, configure=configure)
+    try:
+        return _initialize_repo_schema(db, configure)
+    except BaseException:
+        db.close()
+        raise
+
+
+def _initialize_repo_schema(db, configure):
     db.executescript('''
         CREATE TABLE IF NOT EXISTS repo_snapshots(
           id TEXT PRIMARY KEY, namespace TEXT NOT NULL, alias TEXT NOT NULL,
@@ -199,7 +207,8 @@ def db_for(store):
         CREATE UNIQUE INDEX IF NOT EXISTS repo_active_scan ON repo_scan_runs(namespace,alias,profile_hash)
           WHERE state IN ('RUNNING','PAUSED');
     ''')
-    db.set_progress_handler(pulse, 10000)
+    if configure is None:
+        db.set_progress_handler(pulse, 10000)
     if not db.execute('SELECT 1 FROM repo_count_migration WHERE id=1').fetchone():
         with db:
             db.execute('BEGIN IMMEDIATE')
@@ -234,11 +243,11 @@ def load_snapshot(db, namespace, snapshot_id):
     return dict(row)
 
 
-def check_root(profile):
+def check_root(profile, *, read=None):
     root = Path(profile['root'])
     if not root.is_dir() or any(p.is_symlink() for p in (root, *root.parents)):
         raise ValueError('REPO_ROOT_REQUIRED')
-    top = Path(os.fsdecode(git(root, 'rev-parse', '--show-toplevel')).strip()).resolve()
+    top = Path(os.fsdecode((read or git)(root, 'rev-parse', '--show-toplevel')).strip()).resolve()
     if root.resolve() != top:
         raise ValueError('REPO_TOP_LEVEL_REQUIRED')
     return root.resolve()
@@ -277,57 +286,17 @@ def index_matches_head(root, head):
 
 
 def _start_scan_db(db, store, alias, profile):
-    identifier(alias)
-    profile = validate_profile(profile)
-    root = check_root(profile)
-    if store.resolve().is_relative_to(root):
-        raise ValueError('STORE_MUST_BE_OUTSIDE_SOURCE')
-    head = git(root, 'rev-parse', 'HEAD').decode('ascii').strip()
-    tree = git(root, 'rev-parse', head + '^{tree}').decode('ascii').strip()
-    snapshot_id = digest({'alias': alias, 'profile': profile, 'head': head, 'tree': tree})
-    if db.execute('SELECT 1 FROM repo_snapshots WHERE id=?', (snapshot_id,)).fetchone():
-        restart_size_errors(db, snapshot_id)
-        return snapshot_id
-    db.execute('INSERT INTO repo_snapshots VALUES (?,?,?,?,?,?,?,?,?)',
-               (snapshot_id, profile['namespace'], alias, json.dumps(profile), head, tree, 0, 0, time.time()))
-    total = 0
-    # The inventory goes directly to SQLite, never a whole-tree list/buffer.
-    for entry in git_records(root, 'ls-tree', '-r', '-z', '-l', '--full-tree', head):
-        meta, path_raw = entry.split(b'\t', 1)
-        mode, kind, oid, size = meta.decode('ascii').split()
-        try:
-            path = source_path(path_raw.decode('utf-8'))
-            state, reason = 'PENDING', None
-        except (UnicodeDecodeError, ValueError):
-            path, state, reason = 'git-path-hex:' + path_raw.hex(), 'EXCLUDED', 'UNSUPPORTED_PATH'
-        if kind != 'blob' or mode == '120000':
-            state, reason = 'EXCLUDED', 'LINK_OR_SUBMODULE_METADATA_ONLY'
-        elif SECRET_NAME.search(path) or any(path == p or path.startswith(p + '/') for p in profile['exclusions']):
-            state, reason = 'EXCLUDED', 'PROTECTED_NAME_OR_OPERATOR_EXCLUSION'
-        elif not size.isdigit():
-            state, reason = 'ERROR', 'BLOB_SIZE_UNAVAILABLE'
-        db.execute('INSERT INTO repo_entries(snapshot_id,ordinal,path,mode,kind,oid,size,state,reason) VALUES (?,?,?,?,?,?,?,?,?)',
-                   (snapshot_id, total, path, mode, kind, oid,
-                    int(size) if size.isdigit() else None, state, reason))
-        total += 1
-        pulse()
-    db.execute('UPDATE repo_snapshots SET total=? WHERE id=?', (total, snapshot_id))
-    return snapshot_id
+    from repo_inventory import inventory
+    return inventory(store, alias, profile, progress=pulse, _db=db,
+                     _retry_size_errors=True)["snapshotId"]
 
 
-def start_scan(store, alias, profile):
-    identifier(alias)
-    validate_profile(profile)
-    root = check_root(profile)
-    if store.resolve().is_relative_to(root):
-        raise ValueError('STORE_MUST_BE_OUTSIDE_SOURCE')
-    db = db_for(store)
-    try:
-        with db:
-            db.execute('BEGIN IMMEDIATE')
-            return _start_scan_db(db, store, alias, profile)
-    finally:
-        db.close()
+def start_scan(store, alias, profile, *, inventory_budget=None, progress=None):
+    # A bounded buffer is not a corpus limit. The user's no-size-cap contract
+    # makes streaming the default; explicit operator budgets remain opt-in.
+    from repo_inventory import inventory
+    return inventory(store, alias, profile, budget=inventory_budget,
+                     progress=progress or pulse, _retry_size_errors=True)['snapshotId']
 
 
 class SecretDetector:
