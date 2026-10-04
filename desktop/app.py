@@ -13,7 +13,7 @@ from tkinter import filedialog, messagebox, ttk
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from desktop import SHELL_VERSION
 from desktop.client import Connection, DesktopClient, DesktopError, PROTOCOL
-from desktop.draft import save_draft, save_manifest
+from desktop.draft import save_draft, save_manifest, save_repo_history
 from desktop.preflight import check
 from desktop.state import Fence
 
@@ -113,8 +113,14 @@ class App:
         ttk.Entry(inventory, textvariable=self.snapshot).grid(row=0, column=3, sticky='ew')
         self.inventory_button = ttk.Button(inventory, text='Сохранить весь список', command=self.export_inventory, state='disabled')
         self.inventory_button.grid(row=0, column=4, padx=6)
+        self.history_button = ttk.Button(inventory, text='Сохранить историю снимков',
+                                         command=self.export_history, state='disabled')
+        self.history_button.grid(row=1, column=0, columnspan=2, sticky='w', pady=(5, 0))
+        self.delta_button = ttk.Button(inventory, text='Сохранить изменения снимка',
+                                       command=self.export_delta, state='disabled')
+        self.delta_button.grid(row=1, column=2, columnspan=2, sticky='w', pady=(5, 0))
         ttk.Label(inventory, text='Снимок должен быть уже собран backend. Список читается до конца; размер репозитория не ограничен.',
-                  wraplength=920).grid(row=1, column=0, columnspan=5, sticky='w', pady=(4, 0))
+                  wraplength=920).grid(row=2, column=0, columnspan=5, sticky='w', pady=(4, 0))
         root.bind('<Escape>', lambda _event: self.cancel())
         root.protocol('WM_DELETE_WINDOW', self.close)
         self.query.trace_add('write', self.query_changed)
@@ -139,6 +145,10 @@ class App:
         self.save_button.configure(state='normal' if idle and self.context is not None else 'disabled')
         manifest = idle and 'durable.repo.manifest' in self.client.info['capabilities'] if ready else False
         self.inventory_button.configure(state='normal' if manifest else 'disabled')
+        capabilities = self.client.info['capabilities'] if ready else []
+        self.history_button.configure(state='normal' if idle and 'durable.repo.history' in capabilities else 'disabled')
+        self.delta_button.configure(state='normal' if idle and 'durable.repo.delta' in capabilities and
+                                    len(self.snapshot.get()) == 64 else 'disabled')
 
     def clear_context(self):
         self.context = None
@@ -397,6 +407,27 @@ class App:
                    lambda cancel, progress: save_manifest(output, client, repository, snapshot,
                                                          cancel=cancel, progress=progress),
                    lambda value: self.status.set(f'Полный список сохранён: {value["rows"]} файлов · {output}'))
+
+    def export_history(self):
+        output = self.output_folder('repository-history')
+        if output is None:
+            return
+        client, repository = self.client, self.repository.get()
+        self.start('durable.repo.history',
+                   lambda cancel, progress: save_repo_history(output, client, repository,
+                                                               cancel=cancel, progress=progress),
+                   lambda value: self.status.set(f'История сохранена: {value["rows"]} снимков · {output}'))
+
+    def export_delta(self):
+        output = self.output_folder('repository-delta')
+        if output is None:
+            return
+        client, repository, snapshot = self.client, self.repository.get(), self.snapshot.get()
+        self.start('durable.repo.delta',
+                   lambda cancel, progress: save_repo_history(output, client, repository,
+                                                               snapshot_id=snapshot,
+                                                               cancel=cancel, progress=progress),
+                   lambda value: self.status.set(f'Изменения сохранены: {value["rows"]} путей · {output}'))
 
     def diagnostics(self):
         window = tk.Toplevel(self.root)

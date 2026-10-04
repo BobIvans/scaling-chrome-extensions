@@ -76,6 +76,11 @@ shell files и локальная connection.json. Backend, policy, corpus и р
 сохраняются. Папка shell не удаляется рекурсивно.
 
 Windows CI проверяет subprocess, Unicode/space paths и сохранение данных.
+При поддержке backend можно сохранить полную историю снимков и изменения
+указанного снимка в отдельные JSONL-папки. Кнопки читают страницы до явного EOF,
+сохраняют receipt с SHA-256 и допускают отмену без публикации неполной папки.
+ID снимка можно взять из сохранённой истории. Это метаданные репозитория;
+содержимое файлов и полный dependency graph в этих двух экспортах отсутствуют.
 Настоящая установка на Dell/Windows 11, peak memory, keyboard/UI и orphan cleanup
 требуют device receipt. Самостоятельный installer с runtime, TXT import,
 canonical task writes, voice/Grok/updater — следующие отдельные части roadmap.

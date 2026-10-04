@@ -147,3 +147,41 @@ def save_manifest(output, client, repository, snapshot_id, action='ENTRIES', *, 
                    'global_repo_file_or_part_cap': None, 'authority': 'DATA_ONLY'}
         write_verified(stage / 'EXPORT_RECEIPT.json', json_bytes(receipt))
     return receipt
+
+
+def save_repo_history(output, client, repository, *, snapshot_id=None, cancel=None, progress=None):
+    """Atomically save every snapshot or path delta row through cursor EOF."""
+    action = 'DELTA' if snapshot_id is not None else 'SNAPSHOTS'
+    filename = 'REPO_DELTA.jsonl' if snapshot_id is not None else 'REPO_SNAPSHOTS.jsonl'
+    pages = (client.delta_pages(repository, snapshot_id, cancel=cancel) if snapshot_id is not None
+             else client.history_pages(repository, cancel=cancel))
+    count, base, hasher = 0, None, hashlib.sha256()
+    identity = dict(client.identity) if client.identity else None
+    with publication(output) as stage:
+        path = stage / filename
+        with path.open('xb') as stream:
+            for page in pages:
+                if snapshot_id is not None:
+                    require(page['snapshot_id'] == snapshot_id, 'DESKTOP_MANIFEST_BINDING')
+                    if base is None:
+                        base = page['base_snapshot_id']
+                    require(base == page['base_snapshot_id'], 'DESKTOP_MANIFEST_BINDING')
+                for row in page['changes'] if snapshot_id is not None else page['snapshots']:
+                    raw = (json.dumps(row, ensure_ascii=False, sort_keys=True,
+                                      separators=(',', ':'), allow_nan=False) + '\n').encode('utf-8')
+                    stream.write(raw)
+                    hasher.update(raw)
+                    count += 1
+                if progress is not None:
+                    progress(count, None)
+            stream.flush()
+            os.fsync(stream.fileno())
+        require(cancel is None or not cancel.is_set(), 'DESKTOP_CANCELLED')
+        require(sha_file(path) == hasher.hexdigest(), 'DESKTOP_OUTPUT_VERIFY_FAILED')
+        receipt = {'schema': 'occ.desktop-repo-history-export.v1', 'action': action,
+                   'repository': repository, 'snapshot_id': snapshot_id,
+                   'base_snapshot_id': base, 'rows': count, 'eof': True,
+                   'adapter_context': identity, 'filename': filename,
+                   'sha256': hasher.hexdigest(), 'authority': 'DATA_ONLY'}
+        write_verified(stage / 'EXPORT_RECEIPT.json', json_bytes(receipt))
+    return receipt

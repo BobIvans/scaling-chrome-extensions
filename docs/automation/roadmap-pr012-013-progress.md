@@ -9,7 +9,9 @@ delta reports additions, deletions, modifications, and uniquely provable
 same-byte rename peers. No total snapshot/path count is configured.
 
 The Native profile chooses the repository and namespace; callers cannot pass
-filesystem roots. The installer carries `repo_history.py`. The existing
+filesystem roots. The installer carries `repo_history.py`. Desktop validates
+the DTOs and can atomically export complete snapshot and delta JSONL with
+checksum receipts; a cancelled export does not publish a partial directory. The existing
 `durable.repo.get` summary still shows a small preview, including its
 `display_truncated` flag. Use the new delta pages for complete path history.
 
@@ -17,7 +19,10 @@ filesystem roots. The installer carries `repo_history.py`. The existing
 
 `python3 -m unittest test_repo_history -q` covers 26 snapshots, 25 changes
 in one revision, continuation to EOF, rename peer, request scope, cursor
-misbinding, and Native dispatch against real Git and SQLite. Device and CI
+misbinding, long Unicode paths, and Native dispatch against real Git and SQLite.
+`desktop.tests.test_repo_history_client` covers reply validation and export.
+Existing Desktop transport tests and package manifest verification passed
+locally; Tk UI needs a Windows/Xvfb run. Device and CI
 qualification are separate from this local test.
 
 ## Open stages from the combined package
