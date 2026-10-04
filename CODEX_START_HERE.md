@@ -8,6 +8,9 @@
 1. Прочитай применимые `AGENTS.md`; зафиксируй `git status`, branch, HEAD, main и
    PR #49. Не перезаписывай чужие изменения. Обнови remote refs и повторно проверь
    статусы prerequisites #50/#51, поскольку параллельные чаты меняют main.
+   На Windows включи `git config core.longpaths true` в checkout; для нового
+   клона передай `git -c core.longpaths=true clone ...`. Исходные архивы включают
+   длинные пути. CI использует эту настройку и проверяет все сохранённые bytes.
 2. Прочитай `MASTER_CONTEXT.md`, затем
    `docs/strategies/pr016-017/EXECUTION_AUDIT.md` и `NEXT_IMPLEMENTATION.md`.
 3. Прочитай исходные `source/01_PR_DESCRIPTION_RU.md`, `02_IMPLEMENTATION_RU.md`,

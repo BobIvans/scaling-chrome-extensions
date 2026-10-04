@@ -32,6 +32,9 @@ Owner audit сохраняет все 50 функций и paths в `FUNCTION_AU
   2132 файла, 45128005 bytes. Нет отбора только кратких документов.
 - Root `MASTER_CONTEXT.md`, `CODEX_START_HERE.md`, следующий implementation brief,
   README navigation и reproducible context verification доступны Codex.
+- Windows CI checkout включает `core.longpaths` через command-scope Git config:
+  полный nested corpus превышает legacy Windows path length. CI на обеих OS
+  дополнительно проверяет сохранённые source/archive bytes и 220 критериев.
 
 ## Проверки
 
