@@ -1,3 +1,88 @@
+# ROADMAP PR-016 + PR-017 / GitHub PR #49 — отдельная ветка продолжения Codex
+
+**Название исходного PR:** «PR-016 + PR-017: Core voice/delivery/skills baseline
+and full Codex strategy handoff».
+**Репозиторий:** `BobIvans/scaling-chrome-extensions`.
+**Рабочая ветка этой передачи:** `codex/pr016-017-codex-continuation-20261004`.
+**Основа:** текущий проверенный head PR #49,
+`9a4fd3acb4ac66a14a55656f60a4d0727a378fcd`.
+
+Это продолжение объединённого roadmap-пакета 016/017: текст/голос → intent →
+Core → immutable context packet → выбранный Grok/AI-чат → durable delivery →
+связанный результат → переносимый квалифицированный skill. Номера roadmap 016/017
+и номер GitHub #49 различаются. Работа уже выполнена частично; начать следует
+с существующего кода, не с повторной реализации ZIP с нуля.
+
+Датированная повторная сверка: 4 октября 2026, 16:55 UTC / 19:55 Europe/Riga.
+PR #49 наблюдался OPEN/DRAFT, mergeable=true, merged=false. Main:
+`ccf73e747e6743ead68040e3eb6837b3a5233fbc`.
+Пять из шести exact-head CI jobs прошли; `core (windows-latest)` ещё выполнялся.
+CI/статусы ниже являются снимком: перед дальнейшей работой прочитать live refs.
+
+## Source of truth для этой ветки
+
+1. Текущий пользовательский scope и применимые repository instructions.
+2. Полный неизменённый ZIP и распакованные требования:
+   `docs/strategies/pr016-017/original-strategy.zip`, `source/`, `archives/`,
+   `PRESERVATION_MANIFEST.json`, `ARCHIVE_INDEX.json`. Приложенный ZIP побайтно
+   совпадает с сохранённым: SHA-256
+   `7d42f5f65fc79d13e0c3ee6f0cf7043cee95909b14dca1b1b68f67efd6cd5c91`.
+3. Фактический код/tests/Git и соответствующие scope evidence определяют progress.
+   Исторический `application_code_changed=false` внутри ZIP не описывает PR #49.
+4. Новая передача:
+   `docs/strategies/pr016-017/handoff/CONTINUATION_PROGRESS.md` и `.json` —
+   current source head, owners/hashes, что перепроверено, CI snapshot и remaining.
+   `NEXT_IMPLEMENTATION.md` — подробная спецификация следующего этапа.
+5. `PACKAGE_MASTER_CONTEXT.md`, `EXECUTION_AUDIT.md`, `FUNCTION_AUDIT.json`,
+   `VALIDATION.json` и `docs/automation/pr016-017/` — полная предыдущая передача
+   и runtime runbooks. В датированных status fields могут быть ранние SHA.
+6. Общий полный roadmap из #53 сохранён ниже и в `docs/strategy/voice-agentos/`.
+   Его 160 tasks / 164 features / 28 goals / 24 decisions сохраняются целиком.
+
+## Подтверждённый progress и следующая работа
+
+В основе уже есть typed intent/correction/negation и fixed-effect DAG,
+PTT/editable preview/независимый STOP, target binding, immutable multipart outbox,
+unknown-send reconciliation, result import, skill candidates/receipts/stale/failure,
+установочные маршруты и shared Core queue/STOP. Это реализация baseline.
+
+Повторная локальная проверка этой передачи: 32 action tests PASS; 6 voice/IPC
+tests PASS; 6 installed-style context workflow tests OK с одним display skip.
+Оба integrity verifier и owned-file verifier PASS. Все 170 исходных members,
+11 nested ZIP trees, 2132 сохранённых файла и точный текст 220 критериев целы.
+Критерии остаются OPEN до своего evidence; 50 функций имеют inherited code-status
+mapping: 13 BASELINE, 23 PARTIAL, 7 DEVICE_OPEN, 6 UI_OPEN, 1 NOT_USED.
+
+**Первый этап для Codex:** выполнить `NEXT_IMPLEMENTATION.md`: versioned typed
+retriever/planner/critic outputs, per-step typed references и resumable mixed-effect
+`repo → canonical packet → selected-target delivery` в существующем Core.
+Compiler сейчас отклоняет другой effect class в DAG; `ActionRuntime.run()`
+не имеет полной durable per-step output-reference orchestration. Реальный
+packet owner PR #50 уже доступен, его надо адаптировать без второго store.
+
+Затем остаются полный Grok upload/history/finalization adapter, параметрические
+skills и selective qualification, installed Laya и физические Windows/Dell
+mic/hotkey/ASR/Narrator/focus/latency receipts. Полные remaining criteria,
+prerequisite DAG и downstream goals сохраняются в source и подробном handoff.
+Отдельный master ZIP 387402728 bytes не был приложен; доступны его точные
+selected members и provenance. Это не выдаётся за сохранение всего master.
+
+## Как эта ветка связана с PR #49
+
+Новая ветка наследует весь выполненный код и обе стратегии от exact head #49.
+PR #49 по-прежнему связан с `codex/pr016-017-intent-voice-delivery-skills`;
+commits в новой ветке автоматически его не меняют. Эта передача создала отдельную
+ветку по просьбе пользователя; merge/retarget/new PR не выполнялись.
+Продолжать код следует в новой ветке. Если #49 или main уже изменились, сначала
+сравнить историю, сохранить новый progress и интегрировать подходящий upstream.
+Текущий запрос — подготовка продолжения; дальнейшая публикация code PR/merge
+определяется инструкцией пользователя в coding-сессии и фактическими checks.
+
+Предыдущий полный root context ниже сохранён без сокращения. Новая датированная
+сверка выше имеет приоритет над историческими статусами в последующем тексте.
+
+---
+
 # Текущая навигация: полный Voice AgentOS и PR-016+017
 
 Эта интеграция сохраняет обе передачи без потери исходной стратегии.

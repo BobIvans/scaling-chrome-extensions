@@ -1,5 +1,10 @@
 # Master Context — Voice AgentOS / ROADMAP-PR-016+017
 
+Новая отдельная ветка продолжения от current PR #49 head `9a4fd3a`:
+`codex/pr016-017-codex-continuation-20261004`. Fresh dated progress и CI/tests:
+`handoff/CONTINUATION_PROGRESS.md` и `.json`. Начать с root `CODEX_START_HERE.md`;
+весь предыдущий package context ниже сохранён, ранние SHAs являются snapshots.
+
 ## Цель
 
 Продолжить стратегию в `BobIvans/scaling-chrome-extensions`: текст или голос →

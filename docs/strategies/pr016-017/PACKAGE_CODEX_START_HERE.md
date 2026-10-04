@@ -1,5 +1,10 @@
 # Codex: начать здесь
 
+Актуальный branch-specific entry point: root `CODEX_START_HERE.md` для
+`codex/pr016-017-codex-continuation-20261004`, ROADMAP PR-016+017 / GitHub #49.
+Fresh audit: `handoff/CONTINUATION_PROGRESS.md` и `.json` относительно этого каталога.
+Предыдущая подробная package инструкция ниже сохранена без сокращения.
+
 Целевой repo: `BobIvans/scaling-chrome-extensions`.
 Цель и authoritative sources: [MASTER_CONTEXT.md](MASTER_CONTEXT.md).
 
