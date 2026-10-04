@@ -144,6 +144,17 @@ def main():
     }
     store = work / "store"
     worker = core.Core(store, policy)
+    # Fixture-only diagnostics: production receipts deliberately omit child output.
+    last_command = {}
+    original_command = worker.command
+
+    def observed_command(*args):
+        process = original_command(*args)
+        last_command.clear()
+        last_command.update({key: process.get(key) for key in ("exit_code", "reason", "output")})
+        return process
+
+    worker.command = observed_command
     jobs = []
     metrics = []
     for pack in payloads:
@@ -153,7 +164,7 @@ def main():
             result = worker.run_once()
             elapsed = time.monotonic_ns() - start
             if result["id"] != job["id"] or result["state"] != "SUCCEEDED":
-                raise AssertionError(result)
+                raise AssertionError({"job": result, "offline_fixture_child": last_command})
             receipt = result["result"]
             if (
                 receipt["records"] != 47
