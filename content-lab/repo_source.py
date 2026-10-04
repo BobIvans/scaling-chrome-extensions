@@ -98,6 +98,35 @@ def partition(alias, path, raw, file_hash, boundaries=()):
     return out
 
 
+def partition_stream(alias, path, stream, file_hash, *, utf8):
+    """Bounded-memory byte coverage for files too large for the AST window.
+
+    The parse window limits syntax analysis, never source capture. Even a single
+    line larger than RAM is split into exact, stable source fragments.
+    """
+    start, part, line = 0, 0, 1
+    buffer = stream.read(CHUNK_BYTES + 4)
+    while buffer or part == 0:
+        end = min(CHUNK_BYTES, len(buffer))
+        if end < len(buffer):
+            if utf8:
+                while end and buffer[end] & 0xc0 == 0x80:
+                    end -= 1
+            if end and buffer[end - 1:end + 1] == b'\r\n':
+                end -= 1
+        raw = buffer[:end]
+        logical = digest([alias, path, 'preamble', 0, part])
+        next_line = line + len(re.findall(rb'\r\n|\r|\n', raw))
+        end_line = next_line - int(raw.endswith((b'\r', b'\n')))
+        yield {'logical_id': logical,
+               'revision': digest([logical, file_hash, sha(raw), start, start + end]),
+               'byte_start': start, 'byte_end': start + end,
+               'start_line': line if raw else 0, 'end_line': end_line if raw else 0,
+               'fragment': part, 'oversized_fragment': True, 'raw': raw}
+        start, part, line = start + end, part + 1, next_line
+        buffer = buffer[end:] + stream.read(end)
+
+
 def import_graph(rows, roots):
     modules = defaultdict(set)
     info = {}
@@ -187,4 +216,3 @@ def components(nodes, edges):
                     stack.append(child)
         groups.append(sorted(group))
     return groups
-
