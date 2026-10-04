@@ -19,3 +19,6 @@ nine Core/Native/Desktop conflicts без потери action/context/campaign/r
 
 Сначала прочитать linked full handoff и проверить `python docs/strategy/pr052-context/verify_context.py`.
 Все исходные требования сохранены; docs handoff не является implementation или merge всей стратегии.
+
+При main integration также объединить оба root handoff без потери общего контекста;
+подробная инструкция — в пакетном NEXT_IMPLEMENTATION.md.
