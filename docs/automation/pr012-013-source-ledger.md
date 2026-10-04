@@ -40,3 +40,9 @@ aliases for one stable key, 23 versions, delta continuation and scope,
 an interrupted stage and replay, source mutation, corruption, namespace scope,
 and the installed-style isolated Python CLI. Device, large-corpus peak RAM and
 the full combined acceptance matrix remain open.
+
+Windows CI initially exposed a false `SOURCE_DRIFT` after a preceding file
+rewrite: path and open-handle timestamp views did not agree. Windows capture
+now checks the same handle's identity/size across both exact byte passes and
+the final path's file identity. POSIX additionally requires unchanged mtime and
+ctime on the path. The installed Windows device gate remains separate.
