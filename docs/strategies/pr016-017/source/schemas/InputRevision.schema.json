@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "InputRevision",
+  "description": "Proposed application contract v1; no vendor API claim",
+  "type": "object",
+  "properties": {
+    "schema_version": {
+      "const": "input.v1"
+    },
+    "input_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "modality": {
+      "type": "string",
+      "enum": [
+        "TEXT",
+        "VOICE",
+        "LAYA_PROPOSAL"
+      ]
+    },
+    "original_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "original_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "corrected_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "corrected_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "author_ref": {
+      "type": "string",
+      "minLength": 1
+    },
+    "supersedes_revision": {
+      "anyOf": [
+        {
+          "type": "integer",
+          "minimum": 1
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provenance_refs": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "minItems": 1
+    }
+  },
+  "required": [
+    "schema_version",
+    "input_id",
+    "revision",
+    "modality",
+    "original_ref",
+    "original_sha256",
+    "corrected_ref",
+    "corrected_sha256",
+    "author_ref",
+    "supersedes_revision",
+    "provenance_refs"
+  ],
+  "additionalProperties": false
+}

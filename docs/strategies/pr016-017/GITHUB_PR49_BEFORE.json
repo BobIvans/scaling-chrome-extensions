@@ -1,0 +1,41 @@
+{
+  "observed_at": "2026-10-04",
+  "snapshot": {
+    "url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+    "number": 49,
+    "state": "open",
+    "merged": false,
+    "mergeable": false,
+    "draft": true,
+    "body": "## Problem and resulting behavior\n\nPR-016 and PR-017 need one shared implementation path: edited text or a final voice transcript must enter the existing Core queue, and an uncertain external Send must survive cancellation/restart without another click.\n\nThis draft adds an opt-in action registry/compiler, immutable intent revisions, desktop text/PTT entry, packet/outbox/coverage/result records and candidate skills in the canonical Core SQLite. Enqueue uses existing jobs/leases and the single global writer. Revision/policy/STOP fences reject stale execution. Send requires an explicit SEND mode, target grants and pinned selected-UI qualification; frozen prompts retain goal, criteria and exact part hashes. Lost acknowledgement remains NEEDS_RECONCILIATION, with no blind resend.\n\n## Included\n\n- Typed Native/desktop/CLI dispatcher; unknown capabilities remain development proposals.\n- Topologically ordered fixed-effect DAGs, closed payloads, text/voice semantic parity, original transcript provenance and correction cancellation.\n- Streaming WAV PTT with one OS capture lease, optional Windows hotkey/local CPU ASR, editable preview and a separate STOP connection.\n- Immutable multipart ledger with no total part-count cap; current eligible namespace sources and durable per-part observations.\n- Optional operator-configured local CDP text composer route, exact account/workspace/conversation binding, focus/draft checks and browser/code/contract receipt admission.\n- Correlated manual result import; UI observations and model received/used claims remain distinct.\n- Successful Core trace → skill candidate, pinned dependency/code receipts, fixture/device distinction, scope fencing, stale invalidation, retained failures and a conservative optimizer that creates another unqualified candidate.\n- Russian launch/qualification/rollback instructions, all 50 function mappings and all 220 original criterion rows with exact wording preserved.\n\n## Validation\n\nOn the current main integration base (including PR-006/007):\n- Content Lab: **353 passed**, real Git/SQLite and the existing 125000-file inventory fixture.\n- Desktop: **30 tests, passed, 2 skipped** because a local Tk display is unavailable; includes real Native IPC and synthetic PCM lifecycle tests.\n- Native bridge: **47 passed**; extension: **116 passed**; qualification adapter: **8 passed**.\n- Desktop owned-file hashes and git diff whitespace checks pass.\n\nRemote tree bytes were verified against the local implementation tree before publishing. Existing CI runs full regressions on Ubuntu/Windows and Linux Tk through Xvfb.\n\n## Why draft / remaining scope\n\nAll **220 source criteria remain OPEN** until criterion-level evidence and required device/UI receipts. This is a combined implementation baseline, not a claim that the whole strategy is finished.\n\nNot yet qualified/implemented: actual Windows microphone/ASR/hotkey latency corpus, installed Laya vendor interface, actual selected Grok account/UI, binary uploads/provider limits, complete remote history or automatic streaming-finalization import, parameterized portable skills, mixed-effect end-to-end DAGs and full planner/retriever/critic orchestration. Clipboard is unused. PR-013/014/015 prerequisites are only reused where an actual owner exists in main.\n\nFeature remains disabled unless the operator enables actions. Migrations are additive in the existing store. For rollback: STOP, stop the worker, reconcile possible remote effects, then disable actions; retain ledger tables as evidence.\n\nRunbook: `docs/automation/pr016-017/README_RU.md`\nQualification: `docs/automation/pr016-017/QUALIFICATION_RU.md`\nFull mapping: `docs/automation/pr016-017/CRITERION_COVERAGE.json`\n",
+    "title": "PR-016 + PR-017: shared intent, voice entry, durable delivery and skill baseline",
+    "base": "main",
+    "base_sha": "eb99d1c2cbc0faccf5eb7fb19b331c9bb9d5f80f",
+    "head": "codex/pr016-017-intent-voice-delivery-skills",
+    "head_sha": "b5b550c63d512842d687c8e4482031403a6b083e",
+    "head_repo_id": 1361815317,
+    "head_repo_full_name": "BobIvans/scaling-chrome-extensions",
+    "merge_commit_sha": null,
+    "user": {
+      "login": "BobIvans",
+      "name": "BobIvans",
+      "email": null,
+      "avatar_url": "https://avatars.githubusercontent.com/u/130351128?v=4",
+      "id": 130351128
+    },
+    "requested_reviewers": null,
+    "requested_team_reviewers": null,
+    "diff": null,
+    "comments": null,
+    "created_at": "2026-10-04T14:51:58Z",
+    "updated_at": "2026-10-04T14:51:58Z",
+    "closed_at": null,
+    "merged_at": null,
+    "commits": 2,
+    "changed_files": 27,
+    "additions": 9777,
+    "deletions": 19,
+    "display_url": "https://github.com/BobIvans/scaling-chrome-extensions/pull/49",
+    "display_title": "PR-016 + PR-017: shared intent, voice entry, durable delivery and skill baseline"
+  }
+}

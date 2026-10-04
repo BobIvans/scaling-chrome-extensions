@@ -5,6 +5,10 @@ Browser doubles are fixture evidence, never selected UI/device qualification.
 import copy
 import hashlib
 import json
+import re
+import shutil
+import subprocess
+import sys
 from pathlib import Path
 import tempfile
 import time
@@ -154,6 +158,52 @@ class RuntimeTests(unittest.TestCase):
         self.assertEqual(first['id'],self.runtime.enqueue(intent['intent_id'],1)['id'])
         self.assertEqual(self.core.run_once()['state'],'SUCCEEDED')
         self.assertEqual(len(self.read_db('SELECT * FROM jobs')),1)
+
+    def test_installer_layout_runs_isolated_native_cli_and_worker(self):
+        lab = Path(__file__).resolve().parent
+        installer = (lab.parent / 'agent-bridge' / 'Install.ps1').read_text()
+        names = re.findall(r"'([^']+)'", re.search(
+            r'foreach\(\$occFile in @\((.*?)\)\)', installer).group(1))
+        installed = Path(self.temp.name) / 'installed'
+        installed.mkdir()
+        for name in names:
+            shutil.copyfile(lab / name, installed / name)
+        policy_path = installed.parent / 'policy.json'
+        policy_path.write_text(json.dumps(self.policy), encoding='utf-8')
+        profile_path = installed.parent / 'profile.json'
+        profile_path.write_text(json.dumps({
+            'schema': 'occ.native-durable-profile.v1', 'store': str(self.store),
+            'policy_file': str(policy_path), 'namespaces': ['code'], 'templates': {}}),
+            encoding='utf-8')
+
+        def native(request):
+            process = subprocess.run([
+                sys.executable, '-I', '-X', 'utf8', str(installed / 'native_adapter.py'),
+                '--profile', str(profile_path)], input=json.dumps(request).encode(),
+                capture_output=True, check=True, timeout=20)
+            reply = json.loads(process.stdout)
+            self.assertTrue(reply['ok'], reply)
+            return reply['result']['action']
+
+        def cli(action, value):
+            payload_path = installed.parent / 'payload.json'
+            payload_path.write_text(json.dumps(value), encoding='utf-8')
+            process = subprocess.run([
+                sys.executable, '-I', '-X', 'utf8', str(installed / 'action_cli.py'),
+                '--profile', str(profile_path), action, '--payload', str(payload_path)],
+                capture_output=True, check=True, timeout=20)
+            return json.loads(process.stdout)['action']
+
+        self.assertEqual(cli('INFO', {})['queue_owner'], 'CORE_JOBS')
+        intent = native({'type': 'durable.action', 'action': 'CREATE', 'payload': input_value()})
+        job = cli('ENQUEUE', {'intent_id': intent['intent_id'], 'revision': 1})
+        subprocess.run([
+            sys.executable, '-I', '-X', 'utf8', str(installed / 'automation_core.py'),
+            '--store', str(self.store), 'work', '--policy', str(policy_path)],
+            capture_output=True, check=True, timeout=20)
+        self.assertEqual(self.core.get(job['id'])['state'], 'SUCCEEDED')
+        self.assertEqual(native({'type': 'durable.action', 'action': 'STOP',
+                                 'payload': {}})['state'], 'STOPPED')
 
     def test_correction_cancels_old_unexecuted_job_preserves_raw(self):
         raw=dict(input_value(),modality='VOICE',original_text='raw ASR')

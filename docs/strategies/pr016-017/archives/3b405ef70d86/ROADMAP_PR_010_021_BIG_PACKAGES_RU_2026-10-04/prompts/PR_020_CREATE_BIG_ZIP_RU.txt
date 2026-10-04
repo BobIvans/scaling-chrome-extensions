@@ -1,0 +1,126 @@
+Создай большой подробный ZIP ROADMAP-PR-020: «SCE → Studious: datasets, qualification, replay/paper и новые web3 research packs».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions + BobIvans/studious-pancake.
+
+Результат: Подключить реальные Studious handlers, данные и qualification campaigns; добавить воспроизводимые atomic и delayed-capital research packs текущего roadmap.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: ACTION5-27, ACTION5-28, ACTION5-29
+Feature cards: RND-009, RND-010, RND-012, RND-013, RND-014, RND-015, RND-016, RND-017, RND-018, RND-019, RND-020, RND-021, RND-022, RND-027, RND-028, RND-029, RND-030, RND-031, RND-032, RND-033, RND-034, RND-035
+Decisions: DEC5-24
+Goals: GOAL5-24, GOAL5-25
+Dependencies: PR-013, PR-014, PR-015, PR-016, PR-019
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-029 — SCE → Studious: каталог реальных функций и qualification bridge
+Scope:
+- Актуальная карта command/function/test handlers обоих repo
+- Typed READ_ONLY/REPLAY/PAPER profiles через существующий qualification owner
+- Dataset/config/repo identities и UI результатов в SCE
+Граница: SCE владеет контекстом и orchestration; Studious — рыночными/qualification handlers. Этот аудит не был выполнен текущим документом; #38 должен прочитать оба repo.
+Приёмка:
+- Каждый handler найден в actual code либо помечен GAP
+- Нет второго trading runtime или market-data owner
+- Result сохраняет exact config/dataset/build
+- Missing credentials/data показаны отдельным blocker
+- Read-only/replay/paper режимы не смешиваются
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-030 — Рыночные datasets: broker, freshness, point-in-time и независимые views
+Scope:
+- Адаптация существующего market-data owner к research observations
+- Raw/provider/version/time/hash и point-in-time anchors
+- Backpressure/quotas/completeness, opportunity identity и общий dataset cache
+Граница: Аудитировать и развивать текущий Studious broker; SCE сохраняет references/receipts. Цены и live APIs изучать заново при создании detailed ZIP.
+Приёмка:
+- Missing/stale data не объявляется отсутствием opportunity
+- Provider views имеют независимое происхождение
+- Look-ahead исключён проверкой времени входов
+- Повтор dataset не увеличивает число независимых наблюдений
+- Offline fixtures и реальный acquisition имеют разные receipts
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-031 — Replay/paper qualification: repayment, экономика, holdout и stateful campaigns
+Scope:
+- Exact dataset/config replay и PAPER/SHADOW outputs
+- Repayment/boundary/fuzz/stateful corpus
+- Fees/slippage/latency/units, all-trial registry и time/venue holdout
+Граница: Переиспользовать реализованные qualification commands Studious. Не добавлять автоматический money-moving маршрут как условие закрытия исследовательского scope.
+Приёмка:
+- Replay воспроизводим по hashes/config
+- Stateful campaign непустая и проверяет инварианты
+- Полная экономика включает заявленные затраты
+- Неудачные trials и unknown включены в denominator
+- Paper/replay outcome не маркируется live profit
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-032 — Research packs: circular/triangular, liquidation и peg/wrapper opportunities
+Scope:
+- Atlas рынков/протоколов и eligibility каждого route
+- Сопоставимые packs circular/triangular, liquidation+swap, stable peg/wrappers
+- Atomic boundary, costs, liquidity/settlement и отрицательные cases
+Граница: Это конечный набор research packs текущих feature cards RND-030..033, не обещание всех будущих протоколов. SCE содержит workflows; экономический код принадлежит Studious.
+Приёмка:
+- Каждый pack имеет dataset, hypothesis и verifier contract
+- Неподдерживаемый protocol явно GAP
+- Route repayment/settlement проверяется в своей модели
+- Независимый holdout сохранён
+- Opportunity не выдаётся за исполнимую прибыль без evidence
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-033 — Research packs: intent/clearing, cross-chain, basis и funding
+Scope:
+- Intent/clearing/coincidence-of-wants solver experiment
+- Cross-chain/basis/funding с моделью времени, капитала и settlement
+- Сравнение с атомарными pack baselines и failure cases
+Граница: Закрывает определения и проверяемые эксперименты RND-034/035. Для реальных protocol execution adapters потребуются подтверждённые отдельные scopes.
+Приёмка:
+- Atomic и delayed-capital модели разделены
+- Capital lock/finality/hedging assumptions заданы явно
+- Нет look-ahead в funding/venue данных
+- Settlement failure и stale quote входят в corpus
+- Результат имеет mode и scope, пригодный для повторной проверки
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+ACTION5-27 — Сверить SCE→Studious read-only capability bridge
+- Каждая предлагаемая команда подтверждена code entrypoint и текущим test/contract либо отмечена GAP.
+- Bridge сохраняет repo/build identity и явный режим READ_ONLY/REPLAY/PAPER; данные не становятся live permission.
+- Signer/sender/wallet/grants не создаются через context importer или Laya proposal.
+- Нет второго market-data owner, trading runtime или независимого job executor.
+ACTION5-28 — Собрать research observations с freshness и provenance
+- Каждое observation связано с provider/version/time and raw hash; отсутствующая информация остаётся UNKNOWN.
+- Quota/backpressure/partial capture отражаются отдельно от отсутствия opportunity.
+- Повторное использование одного dataset исследователями не считается независимым provider evidence.
+- Offline fixture run воспроизводим; реальный сетевой run требует установленного adapter и его scope.
+ACTION5-29 — Привязать replay/paper гипотезу к замороженным критериям
+- Paper/replay output имеет свой mode label и не выдаётся за on-chain execution или measured real profit.
+- Стоимость, комиссии, slippage и delay assumptions указаны с units и coverage gaps.
+- Criteria/holdout frozen до запуска; неудачные trials сохраняются в реестре.
+- Итог привязан к exact dataset/config/repo revision; source drift переводит evidence в stale.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

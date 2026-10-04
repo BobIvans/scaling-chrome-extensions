@@ -1,0 +1,125 @@
+Создай большой подробный ZIP ROADMAP-PR-012: «Repo engine до конца: Core jobs, streaming, полные страницы, delta, CAS и resume».
+
+Используй master ALL_IN_ONE_PRODUCT_ROADMAP_RND_RU_2026-10-03.zip и ROADMAP_PR_010_021_BIG_PACKAGES_RU_2026-10-04.zip. Репозиторий: BobIvans/scaling-chrome-extensions.
+
+Результат: Свести №1–4 в устойчивый repo lifecycle, закрыть paging/delta/history ограничения и добавить reuse/invalidation, сохранив готовый exporter и inventory.
+
+Пользователь выбрал меньше крупных пакетов. Включи все назначенные внутренние WS в этот ZIP, подготовь цельный implementation plan и один целевой итоговый PR. Не превращай каждую мелкую функцию в обязательный отдельный PR. Для сложной интеграции допускаются явные внутренние stages; пакет остаётся незакрытым до полной scoped приёмки.
+
+Source tasks: EVO3-010, TAB4-18, LAYA4-002, LAYA4-003, LAYA4-009, LAYA4-010, LAYA4-011, LAYA4-012
+Feature cards: LIB-002, LIB-003, LIB-004, LIB-008, LIB-011, LIB-023, LIB-024, LIB-028
+Decisions: DEC5-08, DEC5-09
+Goals: GOAL5-02, GOAL5-03, GOAL5-05, GOAL5-15
+Dependencies: PR-001, PR-002, PR-003, PR-004, PR-011
+
+Порядок подготовки:
+1. Прочитать actual AGENTS/HEAD/owners, текущие receipts и исходные criteria; разделить already done и настоящий gap.
+2. Согласовать общие DTO/schema/identities и внутренние WS contracts с соседними крупными пакетами.
+3. Описать конкретные изменения каждого WS: handler, данные, состояние, errors, recovery, dependencies и migration.
+4. Собрать последовательность внутренних implementations/commits в один связанный итоговый PR; дать integration/rollback plan.
+5. Подготовить criterion matrix, independent corpus/oracles, normal/fault/scale acceptance и device qualification runbook.
+6. Проверить ZIP/hash/index/links и передать coding-чату точные inputs, незакрытые критерии, owners и следующий checkpoint.
+
+WS-002 — Долгие repo-задания через существующий Core: прогресс, отмена и resume
+Scope:
+- Registered scan/inventory job в текущем Core
+- START/STATUS/PAUSE/RESUME/CANCEL возвращают job identity
+- Перезапуск клиента/процесса и проверяемые checkpoints
+Граница: Native progress и streaming START уже есть в main; проверить недостающий durable lifecycle. Не создавать второй scheduler/executor и не переделывать inventory.
+Приёмка:
+- UI остаётся отзывчивым при долгом Git tree
+- Disconnect не теряет job identity
+- Cancel не оживает после restart
+- Повтор START не создаёт второй job
+- Inventory/capture используют владельцев №1/4
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-003 — Полная выдача repo, delta и истории без скрытых общих лимитов
+Scope:
+- Полная пагинация snapshots, selections и delta paths
+- Потоковые проверки всего manifest и экспорт через №2/3
+- Аудит всех entrypoints на cap, потерю хвоста и накопление памяти
+Граница: В main уже потоковые blobs, index_matches_head и verify_roundtrip_db. Реальные остатки: list_snapshots LIMIT 20 и snapshot_changes с массивами и [:20]. Инвалидация производных и CAS — №15.
+Приёмка:
+- Более 20 snapshots и более 20 delta paths доступны до EOF
+- Точное восстановление последнего source и последнего chunk
+- Размер page/frame ограничивает порцию, а не корпус
+- Fault/disk-full не публикует частичный успех
+- Нет повторной реализации уже потоковых blob/index/proof путей
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+WS-006 — Инкрементальные snapshots, CAS, delta-context и инвалидация доказательств
+Scope:
+- Переиспользование immutable blobs без потери нескольких origins
+- Версии commit/dirty/history и rename/delete semantics
+- Dependency-based stale graph для extraction, packet, tests и skills
+Граница: №12 отвечает за полную выдачу и потоковую обработку; здесь — semantics reuse и invalidation. Получение специальных payloads принадлежит №16.
+Приёмка:
+- Неизменившиеся bytes переиспользуются по hash
+- Изменения сохраняют предыдущие версии
+- Delta перечисляет added/replaced/deleted ranges полностью
+- Инвалидируются зависимые evidence, независимые сохраняются
+- Dirty/LFS/submodule scope объявлен отдельно от HEAD
+- Повтор/restart/cancel/source drift имеют отдельные фактические исходы.
+- Проверена совместимость с предоставляющими и потребляющими пакетами.
+- Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test.
+
+Полные исходные criteria задач (сопоставить каждый, не объявлять broad task закрытой узким slice):
+EVO3-010 — Граф устаревания evidence и избирательная повторная проверка
+- Head/base/asset/installed build/UI profile/grant changes распространяют stale на зависимые evidence.
+- Исторический факт не удаляется; current applicability пересчитывается отдельной проекцией.
+- Reuse незатронутого evidence содержит обоснование, dependency digest и policy version.
+TAB4-18 — Delta-контекст LAYA после изменения репозитория
+- Части имеют стабильный логический ID и версию из исходных байтов; изменённые файлы не оставляют старые ссылки как актуальные.
+- Граф различает подтверждённые и предполагаемые связи; циклы и межфайловые зависимости представлены явно.
+- Delta-обход пересчитывает затронутые тесты/контракты и сравнивается с полным обходом на эталонных репозиториях.
+- Пакеты имеют индекс snapshot, порядок продолжения, coverage и перечень неподдержанных файлов/языков.
+- При лимите памяти/размера задача возобновляется без молчаливого пропуска.
+LAYA4-002 — Одна кнопка продолжает scan всего выбранного HEAD
+- Один start intent фиксирует repo/profile/HEAD; UI последовательно вызывает bounded scan_page до terminal state.
+- Double click и network timeout не создают новый snapshot/run intent; перезапуск продолжает сохранённый cursor.
+- Экран показывает total/accounted/pending/errors/excluded; progress и Pause/Continue/Stop доступны с клавиатуры.
+- Изменение HEAD или revoked profile сохраняет SOURCE_DRIFT/BLOCKED; разные commits не смешиваются.
+- Локальное окно можно закрыть без потери ledger; продолжение не требует повторного чтения уже committed pages.
+LAYA4-003 — Масштабировать inventory без скрытого усечения
+- Текущий предел остаётся явной ошибкой, пока streaming reader не прошёл отдельную квалификацию.
+- Streaming Git enumeration сохраняет NUL-safe пути, mode/OID/size и exact HEAD; частичный inventory не публикуется COMPLETE.
+- Поток имеет bounded buffer, timeout, stderr budget и temp-stage до atomic publish; subprocess завершён перед restart.
+- Неоднозначные/неподдерживаемые paths представлены metadata с причиной и исходным reversible path encoding.
+- Cold/warm resource measurements включают большой tree; введён configurable budget вместо безлимитного считывания.
+LAYA4-009 — Собрать manifest всего repo и обратный индекс частей
+- REPO_MANIFEST содержит все tracked entries, включая errors/exclusions; accounted равен pinned inventory total.
+- PARTS_INDEX хранит hashes/bytes/ranges/dependencies и позволяет из части перейти к исходнику и обратно.
+- Batch identity включает snapshot, goal revision, grouping/parser versions и export policy.
+- Каждая текстовая omission имеет reason: budget/unsupported/protected/missing/selected_out; их нельзя превратить в read coverage.
+- Manifest validation не требует размещения всех data bytes в одном native response; текущие transport limits сохраняются.
+LAYA4-010 — Сделать resumable сборку ZIP и offline index
+- Part publication atomic: staged bytes проверены, затем manifest head указывает на finished part.
+- Resume повторно проверяет hashes завершённых parts и не генерирует дубликаты при replay.
+- Количество частей определяется размером/бюджетом, фиксированного потолка 20/39 частей нет.
+- Offline index открывает цель, группы, gaps, source paths и relative part references; portable ZIP не зависит от абсолютного пути машины.
+- ZIP manifest перечисляет каждый output; archive checksum и reconstruction report сохраняются отдельно от утверждений AI.
+LAYA4-011 — Инвалидировать только затронутые sources и evidence
+- Изменение bytes/parser/resolver/policy учитывается отдельными input hashes; старые results не объявляются current.
+- Добавления/удаления/rename сохраняют lineage; old path identity не переписывается задним числом.
+- Affected dependents строятся по доказанным edges; unresolved dynamic relations добавляют uncertainty.
+- Packets и criterion evidence показывают STALE/RECHECK_REQUIRED с конкретным changed input.
+- Clean rebuild и incremental rebuild дают эквивалентный семантический graph/manifest для одинакового source snapshot.
+LAYA4-012 — Переиспользовать immutable blobs и ограничить RAM
+- Parse cache keyed by raw hash/parser version/resolver config/extraction policy; отсутствие ключа запрещает reuse.
+- Один DB writer; read workers ограничены memory/CPU admission, не самостоятельными schedulers.
+- Новые cache links не дублируют raw blob; cache eviction удаляет derived data, не origin evidence.
+- UI paginated; backlog fragments и hot cache bounded; весь archive не загружается в память.
+- Current Core max_parallel=1 не ослаблен; parser parallel extension имеет отдельный measured gate.
+
+Прочитать полные feature/decision/goal cards из source_master и master. Для каждого criterion указать current handler/evidence или новый planned change, acceptance, owner и downstream gate. Context/plans/results не заменяют фактические tests/device receipts.
+
+Состав ZIP: START_RU.txt; IMPLEMENTATION_RU.txt; PR_PLAN.json; WORKSTREAMS.json; versioned contracts/schemas; normal/fault/scale corpus; ACCEPTANCE_CASES.json; CURRENT_VS_PLANNED.json; CRITERION_COVERAGE.json; BASELINE/PROVENANCE; RESULT_TEMPLATE; PARALLEL_HANDOFF; EXECUTE_THIS_PR_RU.txt; index.json; MANIFEST SHA256; package verification.
+
+Переиспользовать текущие SQLite/Core/scheduler/review/qualification owners. Сохранить exact original bytes, sources, IDs и весь backlog. Page/frame/chunk budgets управляют порциями, не ограничивают общий repo/corpus. Все gaps сохраняются с next action. Read/replay/paper/live и delivered/installed/usable имеют самостоятельные статусы. Проверить primary docs для изменяемых внешних APIs при создании этого ZIP.
+
+Нельзя обещать весь пакет за один час без actual code estimate. Оценить workstreams по найденным handlers/defects и проверкам; считать coding, CI и device qualification отдельно. Один час — ориентир рабочей сессии, не критерий завершения.

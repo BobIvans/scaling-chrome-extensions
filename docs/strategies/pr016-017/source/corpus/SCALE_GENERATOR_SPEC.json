@@ -1,0 +1,24 @@
+{
+  "kind": "parameterized synthetic corpus specification, not performed workload",
+  "parts_samples": [
+    1,
+    21,
+    257,
+    4097
+  ],
+  "parameter": "N any positive integer bounded by actual disk/test budget, not product cap",
+  "payload_generation": "Deterministic bytes from seed and part ordinal; independently precompute IDs/sizes/SHA256 manifest",
+  "checkpoints": [
+    "every page",
+    "every committed receipt",
+    "after restart"
+  ],
+  "assertions": [
+    "all N IDs accounted",
+    "manifest hashes exact",
+    "bounded resident page",
+    "unavailable/missing parts visible",
+    "no silent truncation"
+  ],
+  "runtime_status": "NOT_RUN"
+}

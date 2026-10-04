@@ -1,0 +1,56 @@
+РЕАЛИЗУЙ ROADMAP-PR-006 / scoped LAYA4-008
+Repo: BobIvans/scaling-chrome-extensions. Ориентир ~60 минут + обязательная QA.
+Это design/implementation-input, не готовый код приложения или merge evidence.
+
+1. Зафиксируй actual base SHA/AGENTS/CI и owners. Existing archived repo_source
+   уже содержит analyze/import_graph/iterative components; actual main может
+   быть новее. Сначала проверь PR-002 manifests и фактический PR-005 output.
+   contracts/PR005_ADAPTER_MAP_REQUIRED.json — semantic draft, НЕ schema №5.
+   Сверь его field names/types/version/digest с actual eligibility owner.
+2. Добавь pure grouping overlay к existing repo_source/repo_context/writer,
+   небольшой sibling repo_groups.py допустим. Existing SQLite — source owner.
+   Foreground CLI/profile scope переиспользуется; новые native endpoints,
+   background worker, second store и JS/TS parser в этот diff не входят.
+3. Читай full entry/part manifest №2, saved analysis и source-level eligibility
+   №5. Graph topology использует только unambiguous Python static imports,
+   оба endpoints qualified для code analysis. При отсутствии eligibility mapping
+   exact graph claim blocked; diagnostic rows permitted. Binary/LFS/parse-failed,
+   external/dynamic/ambiguous/JS/TS случаи имеют explicit gaps, не guessed edges.
+   Не импортируй/исполняй scanned modules, не вызывай repository hooks/installs.
+4. Reuse existing iterative SCC с deterministic input ordering. Каждая source
+   row получает stable source_id и ровно один logical group. Noncode/gap source
+   остаётся metadata singleton. IDs не основаны на global ordinals; membership
+   changes создают новый group ID, byte revisions меняют group revision.
+5. Related tests: direct static test import — static relation, coverage UNKNOWN;
+   filename match — HEURISTIC_TEST_CANDIDATE; trusted declared contract mapping
+   — отдельный type с source/target hash binding. Candidate/declared links не
+   участвуют в SCC и не становятся measured test coverage/installed capability.
+   Related sources — ссылки, не duplicated primary chunk ownership.
+6. Разбей oversized group в bounded reference segments по actual byte/frame
+   policy. Все captured parts входят primary mapping ровно один раз, включая
+   empty/raw-only parts. Preserve part_id/revision/source_start/source_end.
+   Prev/next links и relation locator продолжают group до EOF; общего cap на
+   files/groups/segments/parts нет. One immutable part > budget => explicit
+   PART_BUDGET_TOO_SMALL, никакой обрезки или fabricated subrange.
+7. Emit GROUPS.json header + streaming GROUP_HEADS/GROUP_MEMBERS/GROUP_PARTS,
+   RELATIONS и UNRESOLVED JSONL + COVERAGE. Child grouping_batch_id binds base
+   batch, eligibility digest, graph/planner versions, roots/map/policy. Старые
+   BATCH/PARTS_INDEX bytes не переписывай. Foreground writer atomically publishes
+   verified derived directory; не модифицируй checksum уже опубликованного ZIP №3.
+8. Сделай minimal offline group/source/segment navigation в derived output.
+   Source paths escaped metadata, href только generated IDs. Whole-repo grouped
+   packet отправка/AI execution и desktop picker требуют своих later adapters.
+   Preserve selected bounded export semantics №2/3, no native huge payload.
+9. Проверь 18 cases из plan/ACCEPTANCE_CASES.json: real SQLite/CLI roundtrip,
+   independent SCC oracle, shuffled input, unrelated-add stable IDs, budget
+   tails, source-level eligibility, related-link evidence classes, hash/range
+   tamper и legacy regressions. Required current CI и coherent diff обязательны.
+   Fixture checks не присваивают PASS runtime cases. Device/usefulness experiments
+   остаются NOT_RUN до actual observed receipt.
+
+Scope boundaries: №5 classification/eligibility не переписывать; №4 inventory/
+Core/Native timeout и index verifier scale не включать; №7 JS/TS/provenance
+не начинать. Broad LAYA4-007/008/M5-02 не помечать DONE без полного evidence.
+Если prerequisite отсутствует, сохрани точный gap; не заявляй completion по часу.
+PR number/URL/CI/merge фиксировать только после наблюдения. Публикация/merge —
+по инструкции implementation-чата. Заполни IMPLEMENTATION_RESULT_TEMPLATE.

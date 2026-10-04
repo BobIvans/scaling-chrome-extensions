@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:roadmap:pr004:inventory-budget",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "read_block_bytes",
+    "stdout_queue_blocks",
+    "max_record_bytes",
+    "insert_batch_rows",
+    "stderr_total_bytes",
+    "stderr_retained_bytes",
+    "timeout_seconds",
+    "cleanup_timeout_seconds",
+    "stage_max_bytes",
+    "stage_cache_bytes",
+    "sqlite_busy_timeout_ms",
+    "target_peak_rss_bytes",
+    "target_rss_growth_bytes",
+    "insert_batch_bytes"
+  ],
+  "properties": {
+    "schema": {
+      "const": "occ.repo-inventory-budget.v1"
+    },
+    "read_block_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 262144
+    },
+    "stdout_queue_blocks": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16
+    },
+    "max_record_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 262144
+    },
+    "insert_batch_rows": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 1024
+    },
+    "stderr_total_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 1048576
+    },
+    "stderr_retained_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 65536
+    },
+    "timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 3600
+    },
+    "cleanup_timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+    },
+    "stage_max_bytes": {
+      "type": "integer",
+      "minimum": 1048576,
+      "maximum": 17179869184
+    },
+    "stage_cache_bytes": {
+      "type": "integer",
+      "minimum": 65536,
+      "maximum": 16777216
+    },
+    "sqlite_busy_timeout_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 5000
+    },
+    "target_peak_rss_bytes": {
+      "type": "integer",
+      "minimum": 1048576,
+      "maximum": 1073741824
+    },
+    "target_rss_growth_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1073741824
+    },
+    "insert_batch_bytes": {
+      "type": "integer",
+      "minimum": 262144,
+      "maximum": 1048576
+    }
+  },
+  "$comment": "Validate additional invariants in code: stderr_retained_bytes<=stderr_total_bytes; read_block_bytes*stdout_queue_blocks<=1048576; application RSS fields are qualification targets, not measured/effectively enforced limits. Budgets bound stage and deadlines without a total file-count cap."
+}

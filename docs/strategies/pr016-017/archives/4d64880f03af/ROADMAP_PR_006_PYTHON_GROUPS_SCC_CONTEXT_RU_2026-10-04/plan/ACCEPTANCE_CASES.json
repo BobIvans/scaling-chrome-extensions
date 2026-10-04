@@ -1,0 +1,170 @@
+{
+  "schema": "roadmap.acceptance-cases.v1",
+  "package_id": "ROADMAP-PR-006",
+  "count": 18,
+  "application_case_execution": "NOT_RUN",
+  "cases": [
+    {
+      "id": "A006-01",
+      "title": "Full membership and raw mapping",
+      "setup": "All fixture entries, gaps and chunks",
+      "expected": "one group/source; one primary raw ref/chunk; no cap",
+      "evidence_required": "Real SQLite/CLI ledger + independent byte proof",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-02",
+      "title": "SCC correctness",
+      "setup": "3-node cycle plus one-way imports",
+      "expected": "manual SCC expectations match independent mutual-reachability oracle",
+      "evidence_required": "Actual planner + independent oracle, shuffled ordering",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-03",
+      "title": "Oversized SCC continuation",
+      "setup": "large cycle source >20 raw chunks",
+      "expected": "one group, >20 segments, full tail; prev/next exact",
+      "evidence_required": "Actual output/frame/raw-budget checks",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-04",
+      "title": "Stable logical IDs",
+      "setup": "add unrelated source sorting before existing paths",
+      "expected": "old source/group IDs unchanged; display ordinals may move",
+      "evidence_required": "Actual base/add fixture planner output comparison",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-05",
+      "title": "Determinism",
+      "setup": "shuffle nodes/edges/SQL row ordering",
+      "expected": "same frozen input gives same canonical grouping digest",
+      "evidence_required": "Actual repeated planner runs with shuffled input",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-06",
+      "title": "Related evidence types",
+      "setup": "static test import, declared contract, filename-only candidate",
+      "expected": "only qualified static edges in SCC; evidence classes stay distinct",
+      "evidence_required": "Real adapter links + provenance assertions",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-07",
+      "title": "Whole-source eligibility",
+      "setup": "binary .py with UTF8-looking prefix; LFS .py pointer",
+      "expected": "metadata/raw refs present, text/code interpretation false",
+      "evidence_required": "Actual PR005→PR006 interop, no per-chunk fallback",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-08",
+      "title": "Unresolved and unsupported graph",
+      "setup": "external, dynamic, ambiguous, parse failed, JS/TS",
+      "expected": "explicit unresolved rows; no guessed targets",
+      "evidence_required": "Actual graph fixtures and expected omissions",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-09",
+      "title": "Bad/unknown PR005 mapping",
+      "setup": "missing schema map or mismatched eligibility digest/hash",
+      "expected": "exact graph publication blocked or diagnostic-only with reason",
+      "evidence_required": "Actual adapter negative tests",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-10",
+      "title": "Metadata identity/hash/range corruption",
+      "setup": "alter raw part revision/range or source membership",
+      "expected": "reject corrupt derived catalog; prior valid output untouched",
+      "evidence_required": "Real writer validation with tamper injection",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-11",
+      "title": "Budgets and overlarge reference",
+      "setup": "small segment/frame budgets; single part larger than budget",
+      "expected": "continuation for fitting rows; explicit blocker for one nonfitting part",
+      "evidence_required": "Actual UTF8 frame-size checks and no-tail-loss proof",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-12",
+      "title": "Empty/binary/gaps coverage separation",
+      "setup": "empty source, raw-only binary, excluded/missing entries",
+      "expected": "empty raw ref kept, raw coverage ≠ text/graph/AI read",
+      "evidence_required": "Actual counters and eligibility fixtures",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-13",
+      "title": "Declared mapping drift",
+      "setup": "outside target, excluded target or stale target hash",
+      "expected": "explicit unresolved/stale reason; no fabricated endpoint",
+      "evidence_required": "Actual map scope/version/hash negative fixtures",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-14",
+      "title": "Source as data / legacy regression",
+      "setup": "source raises on import; old snapshots/API selected exports",
+      "expected": "no module execution; old manifest/selection/review behaviour preserved",
+      "evidence_required": "Marker absence and current required regressions",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-15",
+      "title": "Atomic output/disk failure",
+      "setup": "interrupt derived write or inject disk full",
+      "expected": "no verified GROUPS head on partial output; existing catalog retained",
+      "evidence_required": "Real foreground writer subprocess/fault hooks",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-16",
+      "title": "Offline navigation",
+      "setup": "move output folder, Unicode/markup source labels",
+      "expected": "all group/source/segment links resolve; escaped labels",
+      "evidence_required": "Actual generated output link walk + local opening",
+      "required_for_code_slice": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-17",
+      "title": "Same-budget usefulness trial",
+      "setup": "frozen tasks compare independent source selection vs grouped refs",
+      "expected": "paired budget/corpus results and negative trials recorded",
+      "evidence_required": "Actual trial receipt; broad LAYA4-008 NOT_RUN until observed",
+      "required_for_code_slice": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A006-18",
+      "title": "Windows/device large corpus",
+      "setup": "intended repo on user-like Dell/Windows 11",
+      "expected": "actual RAM/time/responsiveness/budget scope measured",
+      "evidence_required": "Device/build/corpus receipt; no infinite-size claim",
+      "required_for_code_slice": false,
+      "status": "NOT_RUN"
+    }
+  ]
+}

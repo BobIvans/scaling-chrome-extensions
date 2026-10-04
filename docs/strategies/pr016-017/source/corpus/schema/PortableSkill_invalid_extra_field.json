@@ -1,0 +1,50 @@
+{
+  "schema_version": "skill.v1",
+  "skill_id": "skill-1",
+  "version": "1",
+  "code_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+  "recording_refs": [
+    "fixture:demo"
+  ],
+  "input_contract_ref": "fixture:input-schema",
+  "output_contract_ref": "fixture:output-schema",
+  "scope": {
+    "grant_ref": "fixture:grant",
+    "scope_digest": "0000000000000000000000000000000000000000000000000000000000000000",
+    "effect_kind": "AI_MESSAGE",
+    "repo_ref": "fixture:repo",
+    "target_binding_ref": "fixture:binding"
+  },
+  "dependency_refs": [
+    "fixture:adapter@1"
+  ],
+  "preconditions": [
+    "exact target match"
+  ],
+  "steps": [
+    {
+      "step_id": "step-1",
+      "capability_ref": "fixture:prepare",
+      "capability_version": "1",
+      "depends_on": [],
+      "input_refs": [
+        "fixture:source"
+      ],
+      "expected_output_criteria": [
+        "packet manifest hashes match"
+      ],
+      "effect_kind": "LOCAL_READ"
+    }
+  ],
+  "invariants": [
+    "STOP blocks new effects"
+  ],
+  "recovery_contract_ref": "fixture:unknown-reconciliation",
+  "credential_refs": [],
+  "failure_capsule_refs": [],
+  "qualification_receipt_refs": [],
+  "state": "CANDIDATE",
+  "unrecognized_executable_argv": [
+    "fixture-not-executable"
+  ]
+}

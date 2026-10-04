@@ -1,0 +1,46 @@
+{
+  "schema": "occ.pr008-windows-package-design.v1",
+  "stage": "EXISTING_BACKEND_PILOT",
+  "target": "Windows 11 / Dell Latitude 5400 / 16 GB",
+  "device_status": "NOT_RUN",
+  "runtime": "observed compatible installed Python with Tk; exact pin from preflight/actual backend",
+  "shell_candidate": "Tkinter stdlib",
+  "backend_location": "existing operator installation, no archived source replacement",
+  "required_files": [
+    "desktop/app.py",
+    "desktop/client.py",
+    "desktop/preflight.py",
+    "desktop/Launch_Windows.ps1",
+    "desktop/connection.json",
+    "desktop/OWNED_FILES.json"
+  ],
+  "owned_manifest_fields": [
+    "shell_version",
+    "source_sha",
+    "file path/hash set",
+    "backend external reference",
+    "data preserve roots"
+  ],
+  "preflight": [
+    "runtime and Tk available",
+    "installed adapter SHA matches config",
+    "profile absolute/valid",
+    "ready existing store",
+    "protocol/capability match",
+    "actual data path displayed",
+    "namespace exists"
+  ],
+  "transport_needs_chrome": false,
+  "direct_route_needs_node_or_codex": false,
+  "automatic_downloads": false,
+  "registry_or_path_mutation": false,
+  "db_schema_migrations": false,
+  "uninstall": "owned shell file list only; backend/profile/corpus/output roots retained",
+  "rollback": "select previous shell, re-handshake; no backend/data rollback in this slice",
+  "followups": [
+    "zero-setup/runtime-bundled installer",
+    "TXT/large import",
+    "canonical task writes",
+    "installed device measurements"
+  ]
+}

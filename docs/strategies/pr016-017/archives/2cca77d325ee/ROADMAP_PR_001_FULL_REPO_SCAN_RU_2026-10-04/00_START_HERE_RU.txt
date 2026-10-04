@@ -1,0 +1,38 @@
+ПЕРВЫЙ ZIP ДЛЯ ОДНОГО PR · 2026-10-04
+
+Целевой репозиторий: BobIvans/scaling-chrome-extensions.
+Локальный номер пакета: PR-001. Это НЕ номер созданного GitHub PR.
+Статус пакета: PREPARED_IMPLEMENTATION_BRIEF; код PR здесь ещё не внедрён.
+Ориентир: 60 минут focused build + необходимые проверки; это оценка, не SLA.
+
+Результат PR: выбрать разрешённый локальный repo, один раз нажать
+«Собрать весь repo» и последовательно пройти сохранённый scan cursor.
+Видны pinned SHA, progress, gaps и Pause / Continue / Stop. После закрытия
+UI cursor и отмена сохраняются; Continue требует явного действия пользователя.
+
+Порядок чтения coding-агентом:
+1. EXECUTE_THIS_PR_RU.txt — готовая команда реализации.
+2. 01_PR_001_IMPLEMENTATION_RU.md — scope, owners, изменения и приёмка.
+3. plan/PR_PLAN.json и contracts/SCAN_RUN_CONTRACT.json — точные задачи/API.
+4. plan/ACCEPTANCE_CASES.json — проверяемые случаи и evidence.
+5. sources/archived_sce/ — справочные исходники сохранённого snapshot.
+
+02_NEXT_PR_ZIPS_RU.md содержит очередь продолжения. Остальные 160 task cards,
+164 feature definitions, 28 goals, 24 decisions и 10 milestones сохранены
+в sources/roadmap_v5/. В этом PR реализуется только их обозначенный срез.
+Не включайте весь backlog в один часовой diff.
+
+Основа выбора: актуальный в приложенном архиве V5 рекомендует M5-02.
+Код SCE, реально включённый в источник: historical da6abf4c006e4e7d26fe45ef30fa9d07a356f396.
+V4 документирует local 5574ab768b39605d4631651a1e8f2451483344db; исходники этого
+commit в выделенном snapshot не подтверждены. Сначала сравнить actual HEAD.
+Реализованный после этих версий controller не нужно писать повторно.
+
+Это переносимый PR-input, а не полная копия исходного ZIP ~387 MB.
+Сохранены каталоги стратегии, выбранные документы и 21 source file.
+Исходный большой master остаётся архивом истории; его SHA256 и выбранные
+member paths находятся в provenance/SOURCE_ARCHIVE.json.
+
+Проверка пакета после распаковки: python tools/verify_package.py
+Она проверяет целостность/связи пакета; это не тесты будущего приложения.
+Шаблон фактического результата: receipts/IMPLEMENTATION_RESULT_TEMPLATE.json.

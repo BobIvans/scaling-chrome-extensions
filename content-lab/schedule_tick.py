@@ -27,6 +27,9 @@ MAX_BYTES = 16_000
 
 def validate_schedule(value):
     """Return a validated copy; reject coercions and unrecognized permissions."""
+    if isinstance(value, dict) and value.get('schema') == 'occ.durable-schedule.v2':
+        from durable_schedule import validate
+        return validate(value)
     if not isinstance(value, dict) or set(value) != FIELDS or value.get("schema") != SCHEMA:
         raise ValueError("SCHEDULE_SCHEMA")
     for key in ("schedule_id", "template"):
@@ -113,6 +116,9 @@ def _runtime():
 
 
 def tick(schedule, profile_path, *, apply=False, stop=False, now=None):
+    if isinstance(schedule, dict) and schedule.get('schema') == 'occ.durable-schedule.v2':
+        from durable_schedule import tick as durable_tick
+        return durable_tick(schedule, profile_path, apply=apply, stop=stop, now=now)
     schedule = validate_schedule(schedule)
     if type(apply) is not bool or type(stop) is not bool or (apply and stop):
         raise ValueError("SCHEDULE_MODE")

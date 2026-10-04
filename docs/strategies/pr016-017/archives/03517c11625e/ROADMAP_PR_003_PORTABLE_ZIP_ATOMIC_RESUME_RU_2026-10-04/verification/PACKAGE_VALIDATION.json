@@ -1,0 +1,97 @@
+{
+  "status": "PASS",
+  "scope": "PACKAGE_AND_SYNTHETIC_ARTIFACT_ONLY",
+  "package_files": 261,
+  "json_jsonl_files_parsed": 41,
+  "preserved_files_verified": 98,
+  "preserved_source_tasks": 160,
+  "plan_steps": 6,
+  "planned_minutes": 60,
+  "runtime_acceptance_cases": 16,
+  "runtime_acceptance_execution": "NOT_RUN",
+  "cli_schema": "STRICT_STRUCTURAL_VALID_AND_NEGATIVE_REQUESTS_CHECKED",
+  "synthetic_bundle": {
+    "status": "PASS",
+    "scope": "SYNTHETIC_GOLDEN_ONLY_NOT_APPLICATION_RUNTIME",
+    "entry_count": 50,
+    "indexed_count": 46,
+    "gap_count": 4,
+    "part_count": 78,
+    "raw_bytes": 133399,
+    "output_files": 136,
+    "relative_links": 318,
+    "application_runtime_tests": "NOT_RUN",
+    "fault_recovery_tests": "NOT_RUN",
+    "windows": "NOT_RUN"
+  },
+  "zip_extraction": "PASS",
+  "source_byte_comparison": "PASS",
+  "negative_mutations": [
+    {
+      "mutation": "payload-byte-change",
+      "expected": "OUTPUT_HASH",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "payload-missing",
+      "expected": "OUTPUT_MISSING",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "extra-output",
+      "expected": "OUTPUT_SET",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "duplicate-output-record",
+      "expected": "OUTPUT_DUPLICATE_OR_SELF",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "unsafe-output-path",
+      "expected": "UNSAFE_OUTPUT_PATH",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "range-gap-with-valid-file-hashes",
+      "expected": "PART_RANGE",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "wrong-batch-digest",
+      "expected": "BATCH_DIGEST",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "broken-relative-link",
+      "expected": "BROKEN_OFFLINE_LINK",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "gap-without-reason",
+      "expected": "GAP_REASON_REQUIRED",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "duplicate-part-id",
+      "expected": "PART_DUPLICATE",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "extra-gap-payload",
+      "expected": "PAYLOAD_SET",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "active-offline-script",
+      "expected": "ACTIVE_OFFLINE_HTML",
+      "status": "REJECTED_AS_EXPECTED"
+    }
+  ],
+  "application_code_changed": false,
+  "current_head_verified": false,
+  "github_pr_created": false,
+  "remote_ci": "NOT_RUN",
+  "windows_device": "NOT_RUN",
+  "actual_exporter_fault_recovery": "NOT_RUN"
+}

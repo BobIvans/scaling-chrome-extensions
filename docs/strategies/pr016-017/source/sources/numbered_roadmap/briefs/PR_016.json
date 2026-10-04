@@ -1,0 +1,141 @@
+{
+  "number": 16,
+  "package_id": "ROADMAP-PR-016",
+  "title": "Текст и голос → действия: IntentSpec, Laya, ASR, corrections и planner/retriever/critic",
+  "user_outcome": "Дать один проверяемый plan для text/voice, подключить сменные Laya/ASR adapters и измерить реальные critical-slot errors на Windows.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    13,
+    14,
+    15
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "Текст → план действий: IntentSpec, Laya и роли planner/retriever/critic",
+      "lane": "Автоматизация",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Общий typed IntentSpec и deterministic route известных команд",
+        "Laya как заменяемый advisory adapter",
+        "Раздельные planning/retrieval/critique outputs и запрос недостающих slots"
+      ],
+      "acceptance": [
+        "Одинаковый исправленный input даёт тот же plan при тех же версиях",
+        "Неоднозначные repo/recipient/effect не угадываются",
+        "Correction отзывает старый неисполненный intent",
+        "Unknown capability создаёт связанный development request",
+        "Laya proposal не обходит registry/template validation",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Контракты выбранного Laya adapter проверить по фактически доступной интеграции; не выдавать предложенный JSON за уже поддерживаемый vendor API. Voice — №28.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "PAR3-005",
+        "LAYA4-022",
+        "ACTION5-20"
+      ],
+      "feature_ids": [
+        "ACT-001",
+        "ACT-006",
+        "ACT-007",
+        "ACT-008"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-17"
+      ],
+      "workstream_id": "WS-018",
+      "parent_package": "ROADMAP-PR-016",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-013",
+        "WS-017"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Голосовое управление Windows: hotkey, ASR, исправления и STOP",
+      "lane": "Автоматизация",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Один capture stream и push-to-talk",
+        "Сменный ASR RU/EN/code-switch и critical slots",
+        "Text/voice parity, correction revisions, TTS/background rejection"
+      ],
+      "acceptance": [
+        "Повтор hotkey не открывает второй микрофон",
+        "Микрофон освобождается после crash/stop",
+        "Critical-slot errors измерены отдельно от WER",
+        "Текстовое исправление меняет intent revision до effect",
+        "STOP и keyboard path работают при отказе ASR",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Media extraction №19 переиспользуется; live capture имеет собственный device receipt. Не считать Linux fixture измерением микрофона Dell.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "TAB4-16",
+        "LAYA4-023",
+        "ACTION5-22"
+      ],
+      "feature_ids": [
+        "ACT-028",
+        "ACT-029",
+        "ACT-030",
+        "ACT-031",
+        "ACT-034",
+        "ACT-058"
+      ],
+      "decision_ids": [
+        "DEC5-17"
+      ],
+      "goal_ids": [
+        "GOAL5-18",
+        "GOAL5-19"
+      ],
+      "workstream_id": "WS-019",
+      "parent_package": "ROADMAP-PR-016",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-010",
+        "WS-018"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "PAR3-005",
+    "TAB4-16",
+    "LAYA4-022",
+    "LAYA4-023",
+    "ACTION5-20",
+    "ACTION5-22"
+  ],
+  "feature_ids": [
+    "ACT-001",
+    "ACT-006",
+    "ACT-007",
+    "ACT-008",
+    "ACT-028",
+    "ACT-029",
+    "ACT-030",
+    "ACT-031",
+    "ACT-034",
+    "ACT-058"
+  ],
+  "decision_ids": [
+    "DEC5-17"
+  ],
+  "goal_ids": [
+    "GOAL5-17",
+    "GOAL5-18",
+    "GOAL5-19"
+  ]
+}

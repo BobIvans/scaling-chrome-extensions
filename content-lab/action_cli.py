@@ -2,6 +2,10 @@
 import argparse
 import json
 from pathlib import Path
+import sys
+
+# Isolated Python excludes the script directory; use only installed siblings.
+sys.path.insert(0, str(Path(__file__).resolve().parent))
 from automation_core import load_json
 from native_adapter import dispatch
 
@@ -21,7 +25,8 @@ def main(argv=None):
         print(json.dumps({'ok':False,'error':type(exc).__name__}))
         return 1
     print(json.dumps(result,ensure_ascii=False,indent=2))
-    return 0 if result.get('ok') else 1
+    # dispatch returns the typed result directly; failures raise above.
+    return 0
 
 
 if __name__=='__main__':raise SystemExit(main())

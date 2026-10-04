@@ -1,0 +1,49 @@
+{
+  "schema": "roadmap.proposed-static-relations.v1",
+  "status": "PROPOSED_NOT_IMPLEMENTED",
+  "owner": "Content Lab repo_source/repo_context sibling read-only derived adapter",
+  "output_files": [
+    "JS_ANALYSIS.jsonl",
+    "RELATIONS.jsonl",
+    "ANALYSIS_STATUS.json",
+    "INTERPRETATION.json"
+  ],
+  "snapshot_source": "verified existing immutable capture; no working-tree bytes",
+  "default_capture_changed": false,
+  "raw_chunks_changed": false,
+  "new_database": false,
+  "new_runtime": false,
+  "new_native_endpoint": false,
+  "logical_edge_id": "sha256(canonical_json([domain, namespace, alias, source_path, syntax_form, decoded_specifier_or_null, occurrence]))",
+  "canonical_json": "UTF8, ensure_ascii=False, sort_keys=True, separators=(comma,colon), allow_nan=False; digest uses explicit domain",
+  "edge_revision": "sha256(canonical_json([edge_id,snapshot_id,source_hash,target_hash,byte_start,byte_end,range_hash,interpretation_digest,status,reason]))",
+  "source_range": "half-open raw UTF8 bytes; not UTF16/string indices; include BOM and CRLF",
+  "parser_selection": "Pending measured ADR; exact version/artifact/options mandatory for actual output",
+  "evidence_classes": [
+    "JS_TS_STATIC_SYNTAX",
+    "PYTHON_STATIC",
+    "DECLARED_MAPPING",
+    "HEURISTIC_CANDIDATE",
+    "OBSERVED_COVERAGE"
+  ],
+  "this_slice_evidence_class": "JS_TS_STATIC_SYNTAX",
+  "other_classes_not_fabricated": true,
+  "resolution_statuses": [
+    "LOCAL_STATIC_EXACT_PATH",
+    "UNRESOLVED"
+  ],
+  "resolution_scope": "MANIFEST_SOURCE_PATH_ONLY",
+  "symbol_binding": "NOT_TYPECHECKED",
+  "scc_eligible": "status LOCAL_STATIC_EXACT_PATH and dependency_kind VALUE_OR_MIXED; no dynamic/type-only/heuristic edges",
+  "completeness": "one outcome per JS/TS candidate entry; all source manifest entries remain preserved",
+  "ready_not_resolution_complete": true,
+  "no_global_file_count_limit": true,
+  "pr005_eligibility": "Verified input occ.format-eligibility.v1 / utf8-controls-strict-lfs3.v1, analysis.format_eligibility; runtime facts still must be observed",
+  "pr006_groups": "Verified PYTHON_RAW_REFERENCE_GROUPS_V1 contract; does not accept JS dialect. Separate future adapter/policy required",
+  "remaining": [
+    "qualified resolver modes/CJS/workspaces",
+    "mixed graph query API",
+    "owner/tests/contracts UI",
+    "real-world holdout and Windows package/device proof"
+  ]
+}

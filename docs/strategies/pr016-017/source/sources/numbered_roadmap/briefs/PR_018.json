@@ -1,0 +1,183 @@
+{
+  "number": 18,
+  "package_id": "ROADMAP-PR-018",
+  "title": "Код → проверенный PR/merge → установленное обновление с canary и rollback",
+  "user_outcome": "Замкнуть worktree/diff/tests/CI/final-tree/release/install цикл с одним integrator/updater и qualification новых capabilities.",
+  "repository": "BobIvans/scaling-chrome-extensions",
+  "prerequisite_packages": [
+    11,
+    12,
+    14,
+    15,
+    17
+  ],
+  "status": "PROPOSED_BIG_PACKAGE",
+  "code_pr_count": "TARGET_ONE_COHERENT_PR; actual code audit may require explicit internal stages",
+  "implementation_hours": null,
+  "time_estimate_status": "NOT_ESTIMATED_FROM_CODE; package count is not person-hours or agent wall-clock hours",
+  "workstreams": [
+    {
+      "title": "AI patch → worktree → проверки → PR/CI → подтверждённый merge",
+      "lane": "Разработка",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Изолированный worktree и source fence для каждого изменения",
+        "Registered verifier, diff/review и точная связь final tree с CI",
+        "GitHub merge observer для merge/squash/rebase и ручного внедрения"
+      ],
+      "acceptance": [
+        "Проверяется фактический artifact, а не фраза AI",
+        "Base drift вызывает rebase/revalidation",
+        "Повторное наблюдение не создаёт второй effect",
+        "CI связан с окончательной ревизией",
+        "Manual «я внедрил» проверяет реальную версию",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Историю read-only собирает №20. Пакет сам не доказывает установленное обновление; это №33. Один интегратор владеет итоговой веткой.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "G3-007",
+        "UI3-013",
+        "UI3-014",
+        "PAR3-012",
+        "PAR3-013",
+        "PAR3-017",
+        "EVO3-005",
+        "EVO3-007",
+        "EVO3-008",
+        "EVO3-009",
+        "EVO3-011",
+        "TAB4-09",
+        "TAB4-10",
+        "TAB4-11",
+        "TAB4-12"
+      ],
+      "feature_ids": [
+        "ACT-011",
+        "ACT-012",
+        "RND-006",
+        "RND-007"
+      ],
+      "decision_ids": [],
+      "goal_ids": [
+        "GOAL5-05",
+        "GOAL5-14",
+        "GOAL5-15"
+      ],
+      "workstream_id": "WS-023",
+      "parent_package": "ROADMAP-PR-018",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-005",
+        "WS-006",
+        "WS-013",
+        "WS-017",
+        "WS-022"
+      ],
+      "original_package_inputs": []
+    },
+    {
+      "title": "Воспроизводимый release, staged updater, canary и проверенный rollback",
+      "lane": "Обновления",
+      "repository": "BobIvans/scaling-chrome-extensions",
+      "scope": [
+        "Source/build/assets provenance и получение exact candidate",
+        "Rehearsal migration, quiescence и атомарная активация",
+        "Installed receipt, capability diff, canary и rollback"
+      ],
+      "acceptance": [
+        "Release связан с точным source и asset hash",
+        "Работающий component не заменяется посреди операции",
+        "Сбой миграции оставляет рабочую предыдущую версию",
+        "Canary измеряет функцию на устройстве",
+        "Usable capability связана с installed build и qualification",
+        "Повтор/restart/cancel/source drift имеют отдельные фактические исходы.",
+        "Проверена совместимость с предоставляющими и потребляющими пакетами.",
+        "Каждый незакрытый source criterion сохранён с owner и next evidence; package validation не считается runtime test."
+      ],
+      "boundary": "Переиспользует data backup №23 и registry №26. Merge/download не заполняет installed/usable статус.",
+      "application_code_changed": false,
+      "source_task_ids": [
+        "UI3-020",
+        "PAR3-018",
+        "EVO3-013",
+        "EVO3-015",
+        "EVO3-016",
+        "EVO3-018",
+        "EVO3-020",
+        "TAB4-13",
+        "TAB4-14",
+        "TAB4-15"
+      ],
+      "feature_ids": [
+        "ACT-046",
+        "ACT-047",
+        "RND-008"
+      ],
+      "decision_ids": [
+        "DEC5-20"
+      ],
+      "goal_ids": [
+        "GOAL5-15",
+        "GOAL5-16"
+      ],
+      "workstream_id": "WS-024",
+      "parent_package": "ROADMAP-PR-018",
+      "status": "PLANNED_INTERNAL_STAGE",
+      "prerequisite_workstreams": [
+        "WS-014",
+        "WS-016",
+        "WS-017",
+        "WS-023"
+      ],
+      "original_package_inputs": []
+    }
+  ],
+  "source_task_ids": [
+    "G3-007",
+    "UI3-013",
+    "UI3-014",
+    "UI3-020",
+    "PAR3-012",
+    "PAR3-013",
+    "PAR3-017",
+    "PAR3-018",
+    "EVO3-005",
+    "EVO3-007",
+    "EVO3-008",
+    "EVO3-009",
+    "EVO3-011",
+    "EVO3-013",
+    "EVO3-015",
+    "EVO3-016",
+    "EVO3-018",
+    "EVO3-020",
+    "TAB4-09",
+    "TAB4-10",
+    "TAB4-11",
+    "TAB4-12",
+    "TAB4-13",
+    "TAB4-14",
+    "TAB4-15"
+  ],
+  "feature_ids": [
+    "ACT-011",
+    "ACT-012",
+    "ACT-046",
+    "ACT-047",
+    "RND-006",
+    "RND-007",
+    "RND-008"
+  ],
+  "decision_ids": [
+    "DEC5-20"
+  ],
+  "goal_ids": [
+    "GOAL5-05",
+    "GOAL5-14",
+    "GOAL5-15",
+    "GOAL5-16"
+  ]
+}

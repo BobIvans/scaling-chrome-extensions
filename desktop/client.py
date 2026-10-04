@@ -24,10 +24,14 @@ READS = {
     'durable.action': ({'type', 'action', 'payload'}, set()),
     'durable.info': ({'type'}, set()),
     'durable.repo.list': ({'type'}, set()),
+    'durable.repo.history': ({'type', 'repository'}, {'limit', 'cursor'}),
+    'durable.repo.delta': ({'type', 'repository', 'snapshotId'}, {'limit', 'cursor', 'baseSnapshotId'}),
     'durable.search': ({'type', 'namespace', 'query'}, {'limit'}),
     'durable.context': ({'type', 'namespace', 'ids'}, {'maxBytes'}),
     'durable.repo.manifest': ({'type', 'repository', 'snapshotId', 'action'},
                              {'offset', 'limit', 'fileOrdinal'}),
+    'durable.repo.scanRun': ({'type', 'repository', 'action'},
+                             {'intentKey', 'runId', 'expectedCursor', 'expectedRevision'}),
 }
 IDENTITY_KEYS = {'protocol', 'profile_digest', 'store_identity', 'adapter_sha256',
                  'backend_bundle_sha256'}
@@ -205,6 +209,34 @@ def validate_request(request):
         if 'fileOrdinal' in request:
             require(request['action'] == 'PARTS')
             number(request['fileOrdinal'])
+    elif request['type'] in {'durable.repo.history', 'durable.repo.delta'}:
+        number(request.get('limit', 20), 1, 50)
+        if request['type'] == 'durable.repo.delta':
+            hash_value(request['snapshotId'])
+            if 'baseSnapshotId' in request:
+                hash_value(request['baseSnapshotId'])
+        if 'cursor' in request:
+            require(isinstance(request['cursor'], str) and
+                    re.fullmatch(r'[A-Za-z0-9_-]{1,4096}', request['cursor']))
+    elif request['type'] == 'durable.repo.scanRun':
+        action = request['action']
+        actions = {'START': ({'intentKey'}, set()), 'STATUS': (set(), {'runId'}),
+                   'STEP': ({'runId', 'expectedCursor', 'expectedRevision'}, set()),
+                   'PAUSE': ({'runId', 'expectedRevision'}, set()),
+                   'CONTINUE': ({'runId', 'expectedRevision'}, set()),
+                   'CANCEL': ({'runId', 'expectedRevision'}, set())}
+        require(isinstance(action, str) and action in actions)
+        required, optional = actions[action]
+        fields = set(request) - {'type', 'repository', 'action'}
+        require(required <= fields <= required | optional)
+        if 'intentKey' in request:
+            require(isinstance(request['intentKey'], str) and
+                    re.fullmatch(r'[0-9a-f]{32}', request['intentKey']))
+        if 'runId' in request:
+            hash_value(request['runId'])
+        for key in ('expectedCursor', 'expectedRevision'):
+            if key in request:
+                number(request[key])
     return request
 
 
@@ -342,6 +374,97 @@ def validate_manifest(value, request):
                 require(row['file_ordinal'] == request['fileOrdinal'])
 
 
+def validate_history_page(value, request):
+    exact(value, {'schema', 'namespace', 'alias', 'snapshots', 'next_cursor', 'eof'})
+    require(value['schema'] == 'occ.repo-history-page.v1' and
+            value['alias'] == request['repository'] and type(value['eof']) is bool)
+    require(isinstance(value['namespace'], str) and NAME.fullmatch(value['namespace']))
+    rows = value['snapshots']
+    require(isinstance(rows, list) and len(rows) <= request.get('limit', 20))
+    for row in rows:
+        exact(row, {'snapshot_id', 'alias', 'repo_sha', 'cursor', 'total', 'created'})
+        hash_value(row['snapshot_id'])
+        require(row['alias'] == value['alias'])
+        require(isinstance(row['repo_sha'], str) and re.fullmatch(r'[0-9a-f]{40,64}', row['repo_sha']))
+        require(number(row['cursor']) <= number(row['total']))
+        require(type(row['created']) in (int, float) and math.isfinite(row['created']))
+    _validate_page_cursor(value, rows)
+
+
+def _validate_page_cursor(value, rows):
+    token = value['next_cursor']
+    require(value['eof'] == (token is None), 'DESKTOP_MANIFEST_CURSOR')
+    if token is not None:
+        require(bool(rows) and isinstance(token, str) and
+                re.fullmatch(r'[A-Za-z0-9_-]{1,4096}', token), 'DESKTOP_MANIFEST_CURSOR')
+
+
+def validate_delta_page(value, request):
+    keys = {'schema', 'snapshot_id', 'base_snapshot_id', 'base_repo_sha',
+            'changes', 'next_cursor', 'eof', 'scope'}
+    exact(value, keys)
+    require(value['schema'] == 'occ.repo-delta-page.v1' and
+            value['snapshot_id'] == request['snapshotId'] and type(value['eof']) is bool)
+    hash_value(value['base_snapshot_id'], nullable=True)
+    if 'baseSnapshotId' in request:
+        require(value['base_snapshot_id'] == request['baseSnapshotId'], 'DESKTOP_MANIFEST_BINDING')
+    require(value['base_repo_sha'] is None or
+            isinstance(value['base_repo_sha'], str) and
+            re.fullmatch(r'[0-9a-f]{40,64}', value['base_repo_sha']))
+    text_value(value['scope'])
+    rows = value['changes']
+    require(isinstance(rows, list) and len(rows) <= request.get('limit', 20))
+    for row in rows:
+        require(isinstance(row, dict) and set(row) in (
+            {'path', 'kind', 'oid', 'mode', 'previous_oid', 'previous_mode'},
+            {'path', 'kind', 'oid', 'mode', 'previous_oid', 'previous_mode', 'rename_peer'}))
+        text_value(row['path'])
+        require(row['kind'] in {'ADDED', 'DELETED', 'MODIFIED'})
+        for key in ('oid', 'previous_oid'):
+            require(row[key] is None or isinstance(row[key], str) and
+                    re.fullmatch(r'[0-9a-f]{40,64}', row[key]))
+        for key in ('mode', 'previous_mode'):
+            require(row[key] is None or isinstance(row[key], str) and
+                    re.fullmatch(r'[0-7]{6}', row[key]))
+        if 'rename_peer' in row:
+            text_value(row['rename_peer'])
+    _validate_page_cursor(value, rows)
+
+
+def validate_scan_run(value, request):
+    require(isinstance(value, dict) and {'schema', 'run_id', 'intent_key', 'repository',
+            'namespace', 'snapshot_id', 'repo_sha', 'state', 'run_revision', 'reason',
+            'cursor', 'total', 'ledger_entries', 'processed', 'pending', 'indexed',
+            'excluded', 'errors', 'inventory_complete', 'exact_for_indexed',
+            'all_tracked_bytes_exportable', 'files', 'authority',
+            'execution_authorized'}.issubset(value))
+    require(value['schema'] == 'occ.repo-scan-run.v1' and
+            value['repository'] == request['repository'] and
+            isinstance(value['namespace'], str) and NAME.fullmatch(value['namespace']))
+    hash_value(value['run_id'])
+    require(isinstance(value['intent_key'], str) and re.fullmatch(r'[0-9a-f]{32}', value['intent_key']))
+    hash_value(value['snapshot_id'])
+    require(isinstance(value['repo_sha'], str) and re.fullmatch(r'[0-9a-f]{40,64}', value['repo_sha']))
+    require(value['state'] in {'RUNNING', 'PAUSED', 'COMPLETE', 'CANCELLED', 'BLOCKED', 'FAILED'})
+    if 'runId' in request:
+        require(value['run_id'] == request['runId'], 'DESKTOP_SCAN_BINDING')
+    if request['action'] == 'START':
+        require(value['intent_key'] == request['intentKey'], 'DESKTOP_SCAN_BINDING')
+    for key in ('run_revision', 'cursor', 'total', 'ledger_entries', 'processed',
+                'pending', 'indexed', 'excluded', 'errors'):
+        number(value[key])
+    require(value['cursor'] <= value['total'] == value['ledger_entries'] and
+            value['processed'] + value['pending'] == value['total'] and
+            value['indexed'] + value['excluded'] + value['errors'] + value['pending'] == value['total'],
+            'DESKTOP_SCAN_BINDING')
+    require(value['reason'] is None or isinstance(value['reason'], str) and
+            re.fullmatch(r'[A-Z_]{1,100}', value['reason']))
+    for key in ('inventory_complete', 'exact_for_indexed', 'all_tracked_bytes_exportable'):
+        require(type(value[key]) is bool)
+    require(isinstance(value['files'], list) and len(value['files']) <= 20)
+    require(value['authority'] == 'DATA_ONLY' and value['execution_authorized'] is False)
+
+
 def validate_reply(raw, request, adapter_sha, expected_identity=None):
     value = strict_json(raw)
     require(isinstance(value, dict) and type(value.get('ok')) is bool)
@@ -364,7 +487,9 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
             and result.get('operation') == operation, 'DESKTOP_OPERATION_MISMATCH')
     field = {'durable.info': 'info', 'durable.repo.list': 'repositories',
              'durable.search': 'items', 'durable.context': 'context',
-             'durable.repo.manifest': 'manifest', 'durable.action': 'action'}[operation]
+             'durable.repo.manifest': 'manifest', 'durable.action': 'action',
+             'durable.repo.history': 'page', 'durable.repo.delta': 'page',
+             'durable.repo.scanRun': 'scan_run'}[operation]
     exact(result, {'schema', 'operation', field})
     if operation == 'durable.action':
         require(isinstance(result[field], dict), 'DESKTOP_ACTION_SCHEMA')
@@ -376,6 +501,15 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
         validate_context(result[field], request)
     elif operation == 'durable.repo.manifest':
         validate_manifest(result[field], request)
+    elif operation == 'durable.repo.history':
+        validate_history_page(result[field], request)
+    elif operation == 'durable.repo.delta':
+        validate_delta_page(result[field], request)
+    elif operation == 'durable.repo.scanRun':
+        require(result[field] is None and request['action'] == 'STATUS' or
+                result[field] is not None, 'DESKTOP_SCAN_BINDING')
+        if result[field] is not None:
+            validate_scan_run(result[field], request)
     else:
         rows = result[field]
         require(isinstance(rows, list))
@@ -459,7 +593,8 @@ class DesktopClient:
             request = strict_json(raw)
             input_limit = min(INPUT_BYTES, self.info['native_input_bytes']) if self.info else INPUT_BYTES
             output_limit = min(OUTPUT_BYTES, self.info['native_combined_output_bytes']) if self.info else OUTPUT_BYTES
-            timeout = min(TIMEOUT_MS, self.info['native_timeout_ms']) if self.info else TIMEOUT_MS
+            operation_limit = 120_000 if operation == 'durable.repo.scanRun' else TIMEOUT_MS
+            timeout = min(operation_limit, self.info['native_timeout_ms']) if self.info else TIMEOUT_MS
             require(len(raw) <= input_limit, 'DESKTOP_INPUT_LIMIT')
             reply = self._exchange(raw, cancel, output_limit, timeout)
             value = validate_reply(reply, request, self.connection.expected_adapter_sha256,
@@ -551,9 +686,9 @@ class DesktopClient:
             require(not io_fault.is_set(), 'DESKTOP_PIPE_FAILED')
             return bytes(stdout)
         finally:
-            # Only this isolated read adapter is owned here; it cannot start jobs.
-            # On POSIX also close its process group if an unexpected child inherited
-            # pipes. Windows read owners launch no descendants; device QA is separate.
+            # The adapter owns only this request process. Scan pages commit in
+            # SQLite; killing an in-flight page rolls it back, not the run.
+            # POSIX also closes the process group if a child inherited pipes.
             if os.name != 'nt':
                 try:
                     os.killpg(child.pid, signal.SIGKILL)
@@ -596,3 +731,42 @@ class DesktopClient:
             if value['nextOffset'] is None:
                 return
             offset = value['nextOffset']
+
+    def history_pages(self, repository, *, cancel=None):
+        cursor, seen = None, set()
+        while True:
+            if cancel is not None and cancel.is_set():
+                raise DesktopError('DESKTOP_CANCELLED')
+            request = {'type': 'durable.repo.history', 'repository': repository, 'limit': 50}
+            if cursor is not None:
+                request['cursor'] = cursor
+            page = self.request(request)['result']['page']
+            require(page['namespace'] in self.info['namespaces'])
+            yield page
+            cursor = page['next_cursor']
+            if cursor is None:
+                return
+            require(cursor not in seen, 'DESKTOP_MANIFEST_CURSOR')
+            seen.add(cursor)
+
+    def delta_pages(self, repository, snapshot_id, *, base_snapshot_id=None, cancel=None):
+        cursor, seen, base = None, set(), None
+        while True:
+            if cancel is not None and cancel.is_set():
+                raise DesktopError('DESKTOP_CANCELLED')
+            request = {'type': 'durable.repo.delta', 'repository': repository,
+                       'snapshotId': snapshot_id, 'limit': 50}
+            if base_snapshot_id is not None:
+                request['baseSnapshotId'] = base_snapshot_id
+            if cursor is not None:
+                request['cursor'] = cursor
+            page = self.request(request)['result']['page']
+            if base is None:
+                base = page['base_snapshot_id']
+            require(page['base_snapshot_id'] == base, 'DESKTOP_MANIFEST_BINDING')
+            yield page
+            cursor = page['next_cursor']
+            if cursor is None:
+                return
+            require(cursor not in seen, 'DESKTOP_MANIFEST_CURSOR')
+            seen.add(cursor)

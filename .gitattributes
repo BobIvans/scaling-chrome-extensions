@@ -15,3 +15,9 @@ content-lab/fixtures/import_fidelity_golden/raw/** -text whitespace=blank-at-eol
 desktop/** text eol=lf
 desktop/tests/fixtures/*.bin -text
 content-lab/fixtures/pr006/** -text whitespace=blank-at-eol,blank-at-eof,space-before-tab,cr-at-eol
+
+# Immutable imported strategies/corpora must retain original bytes on Windows.
+# Their deliberate negative fixtures and line endings are verified by hashes.
+docs/strategies/pr016-017/source/** -text -whitespace
+docs/strategies/pr016-017/archives/** -text -whitespace
+docs/strategies/pr016-017/original-strategy.zip -text

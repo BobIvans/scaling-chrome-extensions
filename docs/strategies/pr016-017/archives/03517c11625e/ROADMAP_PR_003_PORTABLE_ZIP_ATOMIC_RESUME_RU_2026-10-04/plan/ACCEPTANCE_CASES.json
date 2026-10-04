@@ -1,0 +1,168 @@
+{
+  "schema": "roadmap.acceptance-cases.v1",
+  "package_id": "ROADMAP-PR-003",
+  "application_case_execution": "NOT_RUN",
+  "count": 16,
+  "cases": [
+    {
+      "id": "A003-01",
+      "title": "All entries/parts, no total cap",
+      "setup": "50 entries / 78 parts; one source 33 parts; page through full tails",
+      "expected": "archive has all 78 parts, all 50 entries, exact counts, 4 reasons",
+      "required_evidence": "Real SQLite → CLI output + manifest/member set",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-02",
+      "title": "Byte reconstruction and identity",
+      "setup": "UTF8/RU, binary, empty, long line and spaced JSON revision digest",
+      "expected": "all INDEXED SHA/revision/Git OID/ranges exact; binary not forced to text",
+      "required_evidence": "Independent output proof and raw fixture comparisons",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-03",
+      "title": "Atomic part crash windows",
+      "setup": "Kill before rename / after rename before checkpoint",
+      "expected": "temp not committed; valid renamed part rediscovered; no duplicated part",
+      "required_evidence": "Real exporter subprocess fault hook + resume hashes",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-04",
+      "title": "Crash during ZIP assembly",
+      "setup": "Terminate while writing ZIP .partial",
+      "expected": "no ready receipt; next resume reuses parts and rebuilds ZIP safely",
+      "required_evidence": "Before/after stage hashes + closed valid final ZIP",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-05",
+      "title": "Disk-full / permission failure",
+      "setup": "Inject OSError at payload write and ZIP write separately",
+      "expected": "BLOCKED with specific reason; completed parts retained; no published success",
+      "required_evidence": "Injected I/O at real exporter boundaries, then successful resume",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-06",
+      "title": "Duplicate/concurrent resume",
+      "setup": "Two actual writer processes same export identity",
+      "expected": "OS lock permits one writer; second EXPORT_LOCKED; repeated completed build verifies/reuses",
+      "required_evidence": "Subprocess concurrency and identical member set",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-07",
+      "title": "Corrupted staged part",
+      "setup": "Alter/delete completed payload after checkpoint",
+      "expected": "resume rehash detects damage and rebuilds only affected staged part from exact captured data",
+      "required_evidence": "Modified stage + per-part rewrite counters/hashes",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-08",
+      "title": "Wrong batch/profile/unverified manifest",
+      "setup": "Tamper binding/JSONL hashes; revoke profile; pending snapshot; missing global proof",
+      "expected": "refuse payload build/publication with specific blocker, no identity substitution",
+      "required_evidence": "Real negative request/schema/DB evidence",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-09",
+      "title": "Explicit cancel/restart",
+      "setup": "Ctrl+C after at least one part; call --resume, then explicit --new-run",
+      "expected": "CANCELLED remains terminal; new run_id required; no startup auto resume",
+      "required_evidence": "Persisted terminal receipt and fresh run identity",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-10",
+      "title": "Offline links and hostile source paths",
+      "setup": "Move extracted directory; paths include Unicode/tab/newline/quotes/markup/reserved names",
+      "expected": "every relative link resolves; raw paths remain escaped metadata; no remote assets or HTML injection",
+      "required_evidence": "HTML/fragment walker + rendered manual opening scope",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-11",
+      "title": "Gaps and protected data",
+      "setup": "4 non-INDEXED entries; add orphan raw chunk or forbidden payload",
+      "expected": "no raw gap payload; all_tracked_bytes_exportable=false; orphan/extra outputs rejected",
+      "required_evidence": "Exact exclusion member set and corruption rejection",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-12",
+      "title": "Rename-before-receipt / existing output conflict",
+      "setup": "Kill after final ZIP rename before external receipt; separately corrupt existing final",
+      "expected": "exact archive reconciles sidecars; damaged final blocks without silent overwrite",
+      "required_evidence": "Real publish-boundary injection, checksum/receipt comparison",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-13",
+      "title": "Resource boundaries and ZIP64",
+      "setup": "Use incremental copy with small buffers; force ZIP64 writer path; exceed declared disk/time budget",
+      "expected": "no whole-corpus raw load, explicit resource blocker, valid ZIP64-compatible archive",
+      "required_evidence": "Measured fixture RSS/buffer path and ZIP64 archive inspection; no unmeasured >4GiB claim",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-14",
+      "title": "Manifest/legacy regression",
+      "setup": "Existing PR002 APIs and previous DB records after export",
+      "expected": "unchanged native INFO/ENTRIES/PARTS and scan/get/export/review behaviour",
+      "required_evidence": "Actual current required regression commands + before/after source rows",
+      "required_for_code_slice": true,
+      "required_for_broad_device_claim": false,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-15",
+      "title": "Windows local opening",
+      "setup": "Extract/open exported INDEX.html on user-like Windows 11 environment",
+      "expected": "source↔parts/gaps navigation opens locally; Unicode/portable output paths correct",
+      "required_evidence": "OS/build/path/browser receipt; NOT_RUN until observed",
+      "required_for_code_slice": false,
+      "required_for_broad_device_claim": true,
+      "status": "NOT_RUN"
+    },
+    {
+      "id": "A003-16",
+      "title": "Device responsiveness and memory",
+      "setup": "Run actual intended corpus on Dell-class device and compare cold/warm",
+      "expected": "record corpus scope/parts/disk/RSS/latency; budgets honest, no infinite-size performance claim",
+      "required_evidence": "Device metrics/config/run SHA; NOT_RUN until observed",
+      "required_for_code_slice": false,
+      "required_for_broad_device_claim": true,
+      "status": "NOT_RUN"
+    }
+  ]
+}

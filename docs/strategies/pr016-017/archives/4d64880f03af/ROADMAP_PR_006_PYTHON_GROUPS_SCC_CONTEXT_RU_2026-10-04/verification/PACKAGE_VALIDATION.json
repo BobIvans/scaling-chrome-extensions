@@ -1,0 +1,102 @@
+{
+  "status": "PASS",
+  "scope": "PACKAGE_AND_SYNTHETIC_GROUP_DATA_ONLY",
+  "package_files": 324,
+  "json_jsonl_files_parsed": 42,
+  "preserved_files_verified": 43,
+  "source_tasks_preserved": 160,
+  "plan_steps": 6,
+  "estimated_minutes": 60,
+  "runtime_cases": 18,
+  "runtime_cases_execution": "NOT_RUN",
+  "pr005_exact_schema": "NOT_OBSERVED",
+  "policy_validation": "STRICT_STRUCTURAL_CHECK_PASS",
+  "fixture": {
+    "status": "PASS",
+    "scope": "SYNTHETIC_DATA_CONTRACT_ONLY_NOT_APPLICATION_RUNTIME",
+    "entry_count": 70,
+    "group_count": 68,
+    "segment_count": 104,
+    "raw_part_count": 106,
+    "cycle_member_count": 3,
+    "cycle_segments": 40,
+    "relations": 11,
+    "unresolved": 9,
+    "raw_source_bytes": 168764,
+    "relative_links": 668,
+    "scc_oracle": "INDEPENDENT_MUTUAL_REACHABILITY_PASS",
+    "stable_id_oracle": "PASS",
+    "shuffled_oracle": "PASS",
+    "application_planner_tests": "NOT_RUN",
+    "pr005_interop": "NOT_RUN",
+    "device": "NOT_RUN",
+    "usefulness_trial": "NOT_RUN"
+  },
+  "negative_mutations": [
+    {
+      "mutation": "duplicate-membership",
+      "expected": "MEMBERSHIP_DUPLICATE_OR_ORPHAN",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "lost-primary-raw-ref",
+      "expected": "RAW_REFERENCE_SET",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "binary-as-text-code",
+      "expected": "WHOLE_SOURCE_ELIGIBILITY",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "heuristic-as-topology",
+      "expected": "RELATION_TOPOLOGY_CLASS",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "wrong-segment-next",
+      "expected": "SEGMENT_CHAIN",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "raw-reference-range-tamper",
+      "expected": "RAW_REFERENCE_BINDING",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "unstable-group-id",
+      "expected": "GROUP_ID",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "lost-unresolved",
+      "expected": "UNRESOLVED_SET",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "broken-local-link",
+      "expected": "BROKEN_LINK",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "raw-budget-overflow",
+      "expected": "RAW_SEGMENT_BUDGET",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "frame-budget-overflow",
+      "expected": "FRAME_SEGMENT_BUDGET",
+      "status": "REJECTED_AS_EXPECTED"
+    },
+    {
+      "mutation": "source-byte-tamper",
+      "expected": "RAW_SOURCE_HASH",
+      "status": "REJECTED_AS_EXPECTED"
+    }
+  ],
+  "application_code_changed": false,
+  "current_head_verified": false,
+  "github_pr_created": false,
+  "remote_ci": "NOT_RUN",
+  "windows": "NOT_RUN"
+}

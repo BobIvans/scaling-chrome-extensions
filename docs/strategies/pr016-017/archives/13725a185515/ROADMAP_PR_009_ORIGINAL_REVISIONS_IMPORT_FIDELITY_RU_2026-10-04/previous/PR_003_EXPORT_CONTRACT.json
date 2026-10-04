@@ -1,0 +1,181 @@
+{
+  "schema": "roadmap.proposed-repo-archive-contract.v1",
+  "implementation_status": "PROPOSED_NOT_INSTALLED",
+  "package_id": "ROADMAP-PR-003",
+  "source_task": "LAYA4-010",
+  "required_pr002_contract": "previous/PR_002_MANIFEST_CONTRACT.json",
+  "owner": "Existing Content Lab store/export owner; foreground pure sibling permitted",
+  "transport": "Trusted foreground CLI only; no new native payload endpoint/worker",
+  "input": {
+    "metadata_files": [
+      "BATCH.json",
+      "REPO_MANIFEST.jsonl",
+      "PARTS_INDEX.jsonl",
+      "VALIDATION.json"
+    ],
+    "source_bytes": "existing repo_chunks.raw",
+    "preconditions": [
+      "Current profile scope matches frozen binding",
+      "Full PR002 metadata and global proof valid",
+      "No PENDING entries or orphan raw chunks",
+      "Output outside source/store/input",
+      "Writer holds export identity process lock"
+    ]
+  },
+  "export_binding": {
+    "schema": "occ.repo-archive-binding.v1",
+    "batch_id": "PR002 batch_id",
+    "metadata_sha256": {
+      "BATCH.json": "exact file SHA256",
+      "REPO_MANIFEST.jsonl": "exact file SHA256",
+      "PARTS_INDEX.jsonl": "exact file SHA256",
+      "VALIDATION.json": "exact file SHA256"
+    },
+    "format": "ZIP64_V1",
+    "payload_policy": "ALL_CAPTURED_INDEXED_RAW_V1",
+    "index_policy": "STATIC_PAGED_RELATIVE_HTML_V1"
+  },
+  "export_id_algorithm": "actual automation_core.digest(export_binding); archived helper uses spaced sorted JSON",
+  "run_id": "random lowercase 32-hex per explicit new run; not part of export_id",
+  "metadata_policy": "Preserve PR002 BATCH/entry/part bytes and IDs; do not reinterpret char offsets",
+  "part_payload": {
+    "path": "parts/<part_id>.bin",
+    "part_id": "PR002 revision, not raw SHA",
+    "hash": "SHA256 raw bytes",
+    "intervals": "half-open source_start/source_end",
+    "empty_file": "one empty part [0,0)",
+    "binary": "raw exact bytes, text_eligible independent",
+    "atomic_sequence": [
+      "write generated .tmp",
+      "hash/bytes/revision verify",
+      "flush/fsync/close",
+      "same-filesystem atomic replace",
+      "atomic derivable checkpoint"
+    ]
+  },
+  "states": [
+    "NEW",
+    "STAGING",
+    "ASSEMBLING",
+    "VERIFYING",
+    "PUBLISHED",
+    "BLOCKED",
+    "CANCELLED"
+  ],
+  "resume": {
+    "requires_explicit_flag": true,
+    "recheck_completed_part_bytes": true,
+    "rebuild_counts_from_frozen_inventory": true,
+    "repair_bad_staged_parts_from_exact_source": true,
+    "partial_zip": "Discard/rebuild .partial after failure, preserve verified staged parts",
+    "cancelled": "Cannot --resume; --new-run creates new run_id and records prior terminal state",
+    "published_without_receipt": "Verify exact archive/member set/reconstruction then repair sidecars",
+    "damaged_published_archive": "Block; explicit repair/quarantine only, no silent overwrite"
+  },
+  "checkpoint": {
+    "filename": "EXPORT_STATE.json",
+    "role": "rebuildable private artifact projection; not source ledger",
+    "schema": "occ.repo-export-state.v1",
+    "bounded_summary_only": true,
+    "fields": [
+      "schema",
+      "export_id",
+      "batch_id",
+      "run_id",
+      "state",
+      "phase",
+      "completed_parts",
+      "expected_parts",
+      "completed_bytes",
+      "last_committed_part",
+      "reason"
+    ]
+  },
+  "payload_selection": "Every and only INDEXED chunk; non-indexed entries have metadata/reason and no raw payload",
+  "bundle_outputs": [
+    "BUNDLE.json",
+    "BATCH.json",
+    "REPO_MANIFEST.jsonl",
+    "PARTS_INDEX.jsonl",
+    "VALIDATION.json",
+    "README_RU.txt",
+    "INDEX.html",
+    "navigation/*.html",
+    "parts/<part_id>.bin",
+    "EXPORT_MANIFEST.jsonl"
+  ],
+  "output_manifest": {
+    "schema": "occ.repo-archive-output.v1",
+    "row_fields": [
+      "schema",
+      "path",
+      "bytes",
+      "sha256"
+    ],
+    "order": "ASCII relative path lexicographic order",
+    "self_record": "EXCLUDED_EXPLICITLY; all other archive files included once",
+    "checksum_location": "External receipt has output-manifest and ZIP SHA256"
+  },
+  "offline_navigation": {
+    "source_paths": "metadata only; escape before HTML; no raw original href",
+    "assets": "static inline style, no network/script/fetch",
+    "page_rows_default": 20,
+    "corpus_cap": null,
+    "groups": "NOT_GENERATED for PR002 raw slice",
+    "links": "All generated relative links exist; source↔all parts across pages"
+  },
+  "publication": [
+    "closed ZIP64 .partial",
+    "member/CRC/output-hash/reconstruction verification",
+    "fsync and atomic final ZIP rename",
+    "atomic external checksum and receipt",
+    "PUBLISHED checkpoint"
+  ],
+  "integrity_scope": [
+    "exact indexed raw source reconstruction",
+    "source Git blob OID",
+    "entry count and gaps",
+    "part revision/range/hash",
+    "output set",
+    "relative offline links"
+  ],
+  "claim_separation": {
+    "inventory_complete": "all pinned ledger entries accounted",
+    "captured_export_complete": "every INDEXED part included and exact",
+    "all_tracked_bytes_exportable": "false whenever any gap exists",
+    "ai_delivery": "NOT_PERFORMED",
+    "ai_read": "UNKNOWN",
+    "dependency_graph": "NOT_GENERATED"
+  },
+  "resources": {
+    "buffer_bytes_proposed": 65536,
+    "disk_time_budgets": "operator-configurable explicit blockers",
+    "fixed_total_file_cap": null,
+    "fixed_total_part_cap": null,
+    "zip_central_directory": "stdlib ZIP metadata uses memory proportional to members; measure, no infinite-memory claim",
+    "preserved_native_input_bytes_baseline": 16000,
+    "preserved_native_output_bytes_baseline": 192000,
+    "preserved_native_timeout_ms_baseline": 10000
+  },
+  "failure_codes": [
+    "PR002_PREREQUISITE_MISSING",
+    "MANIFEST_UNVERIFIED",
+    "BATCH_BINDING_MISMATCH",
+    "PROFILE_CHANGED",
+    "PAYLOAD_MISSING",
+    "PAYLOAD_HASH_MISMATCH",
+    "EXPORT_LOCKED",
+    "DISK_FULL",
+    "RESOURCE_BUDGET_EXCEEDED",
+    "CANCELLED_REQUIRES_NEW_RUN",
+    "ZIP_INVALID",
+    "OUTPUT_CONFLICT",
+    "CHECKPOINT_IDENTITY_MISMATCH"
+  ],
+  "draft_cli_schema": "contracts/CLI_REQUEST.schema.json",
+  "compatibility": [
+    "legacy repo scan/get/export/review",
+    "PR002 native INFO/ENTRIES/PARTS",
+    "existing SQLite raw owners"
+  ]
+}
