@@ -78,3 +78,9 @@ class CoreClient:
         if command:payload['command']=command
         return self.action('CREATE',payload)
     def enqueue_action(self, intent_id, revision):return self.action('ENQUEUE',{'intent_id':intent_id,'revision':revision})
+    def skill_record(self,record):return self.action('SKILL_RECORD',record)
+    def skill_qualify(self,skill_id,version,receipt):return self.action('SKILL_QUALIFY',{'skill_id':skill_id,'version':version,'receipt':receipt})
+    def skill_failure(self,skill_id,version,failure):return self.action('SKILL_FAILURE',{'skill_id':skill_id,'version':version,'failure':failure})
+    def skill_invalidate(self,dependency,new_digest):return self.action('SKILL_INVALIDATE',{'dependency':dependency,'new_digest':new_digest})
+    def skill_optimize(self,skill_id,version,new_version):return self.action('SKILL_OPTIMIZE',{'skill_id':skill_id,'version':version,'new_version':new_version})
+    def skill_invoke(self,skill_id,version,input_value,dependencies):return self.action('SKILL_INVOKE',{'skill_id':skill_id,'version':version,'input':input_value,'dependencies':dependencies})
