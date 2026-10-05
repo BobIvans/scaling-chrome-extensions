@@ -358,6 +358,8 @@ async function handleAgentOSLocalControl(message) {
       status: cap.status, capturedAt: cap.capturedAt, text: cap.text, warnings: cap.warnings || [], source: cap.source || ''};
   }
   if (message.command === 'system2.codex.submit') return await agentosCodexSubmit(message.args || {});
+  if (message.command === 'system2.codex.artifacts') return await agentosCodexArtifacts(message.args || {});
+  if (message.command === 'system2.codex.artifact') return await agentosCodexArtifact(message.args || {});
   if (message.command === 'system2.codex.status') return await agentosCodexStatus(message.args || {});
   if (message.command === 'system2.codex.result') return await agentosCodexResult(message.args || {});
   if (message.command === 'tab.capture.start') {
@@ -471,6 +473,29 @@ async function agentosCodexStatus(args) {
   const job = Array.isArray(list.jobs) ? list.jobs.find(x => x.id === args.jobId) : null;
   if (!job) throw new Error('SYSTEM2_CODEX_JOB_NOT_FOUND');
   return {job};
+}
+async function agentosCodexArtifacts(args) {
+  if (!args || typeof args.jobId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  const value=await agentosNativeRequest({type:'artifacts',jobId:args.jobId});
+  if(!Array.isArray(value.artifacts))throw new Error('SYSTEM2_CODEX_ARTIFACTS_SCHEMA');
+  return {artifacts:value.artifacts};
+}
+async function agentosCodexArtifact(args) {
+  if (!args || typeof args.jobId !== 'string' || typeof args.artifactId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  let offset=0,total=null,sha=null,chunks=[];
+  while(total===null||offset<total){
+    const frame=await agentosNativeRequest({type:'artifact',jobId:args.jobId,artifactId:args.artifactId,offset});
+    if(!Number.isSafeInteger(frame.bytes)||frame.bytes<0||frame.offset!==offset||typeof frame.base64!=='string'||typeof frame.sha256!=='string')
+      throw new Error('SYSTEM2_CODEX_ARTIFACT_SCHEMA');
+    if(total!==null&&(frame.bytes!==total||frame.sha256!==sha))throw new Error('SYSTEM2_CODEX_ARTIFACT_CHANGED');
+    total=frame.bytes;sha=frame.sha256;
+    const raw=Uint8Array.from(atob(frame.base64),ch=>ch.charCodeAt(0));chunks.push(raw);offset+=raw.length;
+    if(!raw.length&&offset<total)throw new Error('SYSTEM2_CODEX_ARTIFACT_SCHEMA');
+  }
+  const bytes=new Uint8Array(total||0);let cursor=0;
+  for(const part of chunks){bytes.set(part,cursor);cursor+=part.length;}
+  if(await agentosSha256(bytes)!==sha)throw new Error('SYSTEM2_CODEX_ARTIFACT_HASH');
+  return {bytes_base64:bytesToBase64(bytes),bytes:bytes.length,sha256:sha};
 }
 async function agentosCodexResult(args) {
   if (!args || typeof args.jobId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
