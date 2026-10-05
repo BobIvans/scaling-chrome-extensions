@@ -1,0 +1,42 @@
+{
+  "mission_route": {
+    "type": "choice",
+    "instructions": "Choose the fastest useful safe next route for this mission state.",
+    "criteria": {
+      "KNOWN_RECIPE": "A currently registered capability/recipe can advance the mission directly.",
+      "GATHER_CONTEXT": "More local/library/repo/browser evidence should be gathered first.",
+      "SYSTEM2": "Novel reasoning, research, design or coding from a generative model is worth the cost.",
+      "CAPABILITY_GAP": "A missing capability blocks the useful route and should be specified/built.",
+      "WAIT": "An external event/quota/time condition is currently the bottleneck.",
+      "STOP": "No safe useful continuation exists inside the current scope."
+    }
+  },
+  "system2_role": {
+    "type": "choice",
+    "instructions": "If System-2 is useful, which role should it perform?",
+    "criteria": {
+      "PLANNER": "Decompose a novel goal and alternatives.",
+      "RESEARCHER": "Find missing evidence or primary sources.",
+      "CODER": "Implement a bounded code change.",
+      "DEBUGGER": "Explain a concrete failure/root cause.",
+      "TOOL_DESIGNER": "Design a missing automation capability.",
+      "CRITIC": "Attack a plan, risky assumption or completion claim.",
+      "NONE": "No System-2 call is needed now."
+    }
+  },
+  "progress": {
+    "type": "score",
+    "instructions": "How much verified useful progress would the proposed next route likely create?",
+    "criteria": [
+      "none",
+      "tiny",
+      "partial",
+      "meaningful",
+      "major"
+    ]
+  },
+  "needs_human": {
+    "type": "noul",
+    "instructions": "Is user input/permission truly blocking useful autonomous work right now?"
+  }
+}
