@@ -183,28 +183,31 @@ class System2ProviderRegistry:
                'role':role,'mode':mode,'request_digest':request_digest,'created_at':now,'updated_at':now,
                'state':'SUBMITTING','result':None,'error':None,'local_job_id':None,'site':None}
         self._save(state)
-        if cfg['kind']=='LOCAL_CODEX':
-            submitted=self.bridge.codex_submit(instruction,text,mode)
-            job=submitted.get('job') if isinstance(submitted,dict) else None
-            job_id=job.get('id') if isinstance(job,dict) else None
-            if not isinstance(job_id,str) or not job_id:
-                state.update(state='FAILED',error='SYSTEM2_CODEX_JOB_SCHEMA',updated_at=time.time());self._save(state)
-                raise System2RegistryError('SYSTEM2_CODEX_JOB_SCHEMA')
-            state.update(state='WAITING',local_job_id=job_id,updated_at=time.time())
-        else:
-            profile_id=cfg['profile_id'];tab_id=cfg['tab_id']
-            binding=self.site_runtime.bind(profile_id,tab_id,require_qualified=True)
-            baseline=self.site_runtime.read(binding)
-            baseline_keys=sorted({key for key in (_response_key(x) for x in baseline.get('responses',[])) if key})
-            prompt=self._site_prompt(instruction,text,role,request_digest)
-            operation_id='s2'+hashlib.sha256((session_id+'\0'+request_digest).encode()).hexdigest()[:30]
-            sent=self.site_runtime.send_once(profile_id,prompt,tab_id=tab_id,operation_id=operation_id)
-            site_binding=sent.get('site_binding') or binding
-            state.update(state='WAITING' if sent.get('state')=='MESSAGE_OBSERVED' else 'UNKNOWN_EFFECT',
-                         site={'profile_id':profile_id,'tab_id':site_binding.get('tab_id'),'binding':site_binding,
-                               'operation_id':operation_id,'baseline_keys':baseline_keys,
-                               'deadline':now+cfg['response_timeout_seconds'],'prompt_sha256':_digest_text(prompt)},
-                         updated_at=time.time())
+        try:
+            if cfg['kind']=='LOCAL_CODEX':
+                submitted=self.bridge.codex_submit(instruction,text,mode)
+                job=submitted.get('job') if isinstance(submitted,dict) else None
+                job_id=job.get('id') if isinstance(job,dict) else None
+                if not isinstance(job_id,str) or not job_id:
+                    raise System2RegistryError('SYSTEM2_CODEX_JOB_SCHEMA')
+                state.update(state='WAITING',local_job_id=job_id,updated_at=time.time())
+            else:
+                profile_id=cfg['profile_id'];tab_id=cfg['tab_id']
+                binding=self.site_runtime.bind(profile_id,tab_id,require_qualified=True)
+                baseline=self.site_runtime.read(binding)
+                baseline_keys=sorted({key for key in (_response_key(x) for x in baseline.get('responses',[])) if key})
+                prompt=self._site_prompt(instruction,text,role,request_digest)
+                operation_id='s2'+hashlib.sha256((session_id+'\0'+request_digest).encode()).hexdigest()[:30]
+                sent=self.site_runtime.send_once(profile_id,prompt,tab_id=tab_id,operation_id=operation_id)
+                site_binding=sent.get('site_binding') or binding
+                state.update(state='WAITING' if sent.get('state')=='MESSAGE_OBSERVED' else 'UNKNOWN_EFFECT',
+                             site={'profile_id':profile_id,'tab_id':site_binding.get('tab_id'),'binding':site_binding,
+                                   'operation_id':operation_id,'baseline_keys':baseline_keys,
+                                   'deadline':now+cfg['response_timeout_seconds'],'prompt_sha256':_digest_text(prompt)},
+                             updated_at=time.time())
+        except Exception as exc:
+            state.update(state='FAILED',error=str(exc)[:500],updated_at=time.time());self._save(state)
+            raise
         self._save(state)
         return self.summary(state)
 
