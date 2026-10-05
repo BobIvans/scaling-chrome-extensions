@@ -15,6 +15,7 @@ let agentosNativePort = null;
 let agentosNativeSeq = 0;
 let agentosNativeConnectPromise = null;
 const agentosNativePending = new Map();
+const agentosArchiveStreams = new Map();
 const utf8 = text => new TextEncoder().encode(text);
 
 function validStatus(value) {
@@ -220,6 +221,69 @@ function agentosRejectPending(reason) {
   }
   agentosNativePending.clear();
 }
+function agentosStream(controlId, chunk) {
+  if (!agentosNativePort) throw new Error('NATIVE_BRIDGE_UNAVAILABLE');
+  agentosNativePort.postMessage({type:'agentos.control.stream',controlId,chunk});
+}
+async function agentosFrameSnapshots(tabId, controlId) {
+  try {
+    const frames=await chrome.scripting.executeScript({target:{tabId,allFrames:true},func:()=>{
+      const MAX=300000,skip=new Set(['SCRIPT','STYLE','NOSCRIPT','TEMPLATE','HEAD','SVG','CANVAS']);
+      const visible=el=>{
+        if(!el?.isConnected||el.hidden||el.getAttribute?.('aria-hidden')==='true')return false;
+        const css=getComputedStyle(el);return css.display!=='none'&&css.visibility!=='hidden'&&css.visibility!=='collapse'&&!!el.getClientRects().length;
+      };
+      const out=[];let chars=0;
+      const selector='p,pre,li,h1,h2,h3,h4,h5,h6,blockquote,table,[role="document"],article';
+      for(const el of document.querySelectorAll(selector)){
+        if(skip.has(el.tagName)||!visible(el)||el.closest('nav,header,footer,[role="navigation"],form'))continue;
+        const text=(el.tagName==='PRE'?el.textContent:(el.innerText||el.textContent||'')).trim();
+        if(!text||text.length<2)continue;
+        if(chars+text.length>MAX)break;
+        out.push(text);chars+=text.length;
+      }
+      return {source:location.origin+location.pathname,title:document.title||'',content_type:document.contentType||'',
+        text:out.join('\n\n'),chars,ready_state:document.readyState};
+    }});
+    for(const frame of frames){
+      if(!frame?.result?.text)continue;
+      agentosStream(controlId,{kind:'frame',frameId:frame.frameId,documentId:frame.documentId||null,...frame.result});
+    }
+    return {frames:frames.length,error:null};
+  } catch(error) {
+    return {frames:0,error:error.message||'FRAME_CAPTURE_FAILED'};
+  }
+}
+async function agentosArchiveCapture(tab, controlId, args={}) {
+  if(active)throw new Error('CAPTURE_BUSY');
+  if(!tab||!Number.isInteger(tab.id))throw new Error('ACTIVE_TAB_UNAVAILABLE');
+  const token=crypto.randomUUID();
+  const job=active={tabId:tab.id,token,documentId:null,cancelled:false,committing:false,archive:true};
+  const session={controlId,tabId:tab.id,lastSequence:0};agentosArchiveStreams.set(token,session);
+  let injected=false;
+  try{
+    const url=tab.url||'';
+    if(!/^(https?:|file:)/i.test(url)||/^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/i.test(url))throw new Error('CAPTURE_URL_UNSUPPORTED');
+    await chrome.scripting.executeScript({target:{tabId:tab.id},files:['artifact-inventory.js','capture-regions.js','content.js']});injected=true;
+    const maxMs=Math.max(5000,Math.min(240000,Number.isSafeInteger(args.maxMs)?args.maxMs:120000));
+    const maxSteps=Math.max(10,Math.min(8000,Number.isSafeInteger(args.maxSteps)?args.maxSteps:3000));
+    const maxBytes=Math.max(1024*1024,Math.min(64*1024*1024,Number.isSafeInteger(args.maxBytes)?args.maxBytes:64*1024*1024));
+    const results=await chrome.scripting.executeScript({target:{tabId:tab.id},func:opts=>globalThis.__occCapture(opts),
+      args:[{scroll:true,sourceMode:'auto',operationToken:token,headless:true,streamRecords:true,
+        maxMs,maxSteps,maxBytes,settleMs:Math.max(120,Math.min(1500,args.settleMs||260))}]});
+    const result=results?.[0]?.result;
+    if(!result||result.streamed!==true||!Array.isArray(result.order)||!result.coverage)throw new Error('ARCHIVE_CAPTURE_SCHEMA');
+    const frameInfo=await agentosFrameSnapshots(tab.id,controlId);
+    return {state:'ARCHIVE_CAPTURED',tabId:tab.id,source:result.source,status:result.status,mode:result.mode,
+      count:result.count,steps:result.steps,contentVersion:result.contentVersion,scanId:result.scanId,
+      regionIds:result.regionIds,warnings:result.warnings,artifacts:result.artifacts,coverage:result.coverage,
+      order:result.order,frame_capture:frameInfo};
+  } finally {
+    agentosArchiveStreams.delete(token);
+    if(injected)void chrome.scripting.executeScript({target:{tabId:tab.id},func:()=>globalThis.__occCancel?.()}).catch(()=>{});
+    if(active===job)active=null;
+  }
+}
 async function handleAgentOSLocalControl(message) {
   if (message.command === 'tabs.list') {
     const tabs = await chrome.tabs.query({});
@@ -236,6 +300,12 @@ async function handleAgentOSLocalControl(message) {
     return {id: tab.id, windowId: tab.windowId, active: true,
       title: typeof tab.title === 'string' ? tab.title : '',
       url: typeof tab.url === 'string' ? tab.url : ''};
+  }
+  if (message.command === 'tab.capture.archive') {
+    let tab;
+    if (Number.isInteger(message.args?.tabId)) tab=await chrome.tabs.get(message.args.tabId);
+    else tab=(await chrome.tabs.query({active:true,lastFocusedWindow:true}))[0];
+    return await agentosArchiveCapture(tab,message.controlId,message.args||{});
   }
   if (message.command === 'capture.get') {
     const found = await getCapture();
