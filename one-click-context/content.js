@@ -1,6 +1,6 @@
 /* One Click Context: runs in the extension's isolated world, on invocation only. */
 (() => {
-  const CONTENT_VERSION = '0.8.1';
+  const CONTENT_VERSION = '0.9.0';
   if (globalThis.__occCapture && globalThis.__occContentVersion === CONTENT_VERSION) return;
   globalThis.__occController?.abort?.();
   globalThis.__occContentVersion = CONTENT_VERSION;
@@ -8,7 +8,7 @@
     'INPUT','TEXTAREA','SELECT','OPTION','SVG','CANVAS','IFRAME','OBJECT','EMBED']);
   const BLOCK = new Set(['DIV','P','SECTION','ARTICLE','MAIN','ASIDE','HEADER','FOOTER',
     'H1','H2','H3','H4','H5','H6','UL','OL','LI','BLOCKQUOTE','PRE','TR']);
-  const ROLE_SELECTOR = '[data-message-author-role], [data-message-role], [data-role="user"], [data-role="assistant"]';
+  const ROLE_SELECTOR = '[data-message-author-role], [data-message-role], [data-role="user"], [data-role="assistant"], [data-role="system"], [data-role="tool"], [data-testid*="message" i], [data-testid*="turn" i], [data-testid*="conversation" i], [role="article"], article';
 
   function excluded(el) {
     if (OMIT.has(el.tagName) || el.hasAttribute('data-occ-ignore') || el.hidden ||
@@ -116,6 +116,29 @@
     const actions = document.createElement('div'); actions.className = 'actions'; actions.append(button);
     section.append(text, actions); shadow.append(style, section); document.documentElement.append(host);
     return {host, text, button, actions};
+  }
+  function createHeadlessUI() {
+    const text={textContent:''};
+    const button={textContent:'',onclick:null};
+    const actions={replaceChildren(){},append(){}};
+    const host={remove(){},shadowRoot:null};
+    return {host,text,button,actions};
+  }
+  function fnv1a(value) {
+    let h=0x811c9dc5;
+    for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,0x01000193);}
+    return (h>>>0).toString(16).padStart(8,'0');
+  }
+  function inferRole(el) {
+    const values=[
+      el.getAttribute('data-message-author-role'),el.getAttribute('data-message-role'),el.getAttribute('data-role'),
+      el.getAttribute('aria-label'),el.getAttribute('data-testid'),el.getAttribute('role'),el.className
+    ].filter(x=>typeof x==='string').join(' ').toLowerCase();
+    if(/\b(user|human|you|request)\b/.test(values))return 'user';
+    if(/\b(assistant|model|bot|grok|claude|gemini|chatgpt|response)\b/.test(values))return 'assistant';
+    if(/\bsystem\b/.test(values))return 'system';
+    if(/\btool\b/.test(values))return 'tool';
+    return 'text';
   }
   function choosePlan(scan, requested, control, ui) {
     const R = globalThis.OCCCaptureRegions;
