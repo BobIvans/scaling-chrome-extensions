@@ -270,6 +270,40 @@
     const timedOut = () => performance.now() - start >= opt.maxMs || steps >= opt.maxSteps;
     const alive = () => !control.signal.aborted && !timedOut() && !tooLarge;
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    let streamQueue=Promise.resolve(), streamError=null, streamSequence=0;
+    function queueStream(chunk) {
+      if(!opt.streamRecords)return;
+      streamQueue=streamQueue.then(async()=>{
+        const result=await chrome.runtime.sendMessage({target:'worker',type:'captureStream',
+          operationToken:opt.operationToken,sequence:++streamSequence,chunk});
+        if(!result?.ok)throw new Error(result?.error||'CAPTURE_STREAM_REJECTED');
+      }).catch(error=>{streamError=error;control.abort();});
+    }
+    function streamRecordParts(record) {
+      const text=record.text||'', maxChars=50000;
+      if(text.length<=maxChars)return [{...record,part_index:0,part_count:1}];
+      const parts=[],count=Math.ceil(text.length/maxChars);
+      for(let i=0;i<count;i++)parts.push({...record,text:text.slice(i*maxChars,(i+1)*maxChars),part_index:i,part_count:count});
+      return parts;
+    }
+    function emitRecords(changed,direction) {
+      if(!opt.streamRecords||!changed.length)return;
+      let batch=[],bytes=0;
+      const flush=()=>{
+        if(!batch.length)return;
+        queueStream({kind:'records',records:batch,direction,scrollTop:root.scrollTop,
+          scrollHeight:root.scrollHeight,clientHeight:root.clientHeight});
+        batch=[];bytes=0;
+      };
+      for(const record of changed){
+        for(const part of streamRecordParts(record)){
+          const estimate=encoder.encode(JSON.stringify(part)).length;
+          if(batch.length && bytes+estimate>350000)flush();
+          batch.push(part);bytes+=estimate;
+        }
+      }
+      flush();
+    }
     function stableID(el, role, target) {
       if (target.kind !== 'chat') return `region:${target.id}`;
       let owner = el;
@@ -285,21 +319,21 @@
     }
     function observe(direction) {
       const sample = candidates(targets); mode = sample.mode;
-      const ids = [], seen = new Set();
+      const ids = [], seen = new Set(), changed=[];
       for (const el of sample.nodes) {
         const target = sample.owner(el);
         const text = plain(el, target);
         if (!text.trim()) continue;
-        const rawRole = el.getAttribute('data-message-author-role') || el.getAttribute('data-message-role') || el.getAttribute('data-role');
-        const role = ['user','assistant','system','tool'].includes(rawRole) ? rawRole : 'text';
+        const role = inferRole(el);
+        const hash = fnv1a(role+'\0'+text);
         let id = stableID(el, role, target);
         if (!id) {
           const prev = nodeIds.get(el);
-          if (prev && prev.text === text) id = prev.id;
+          if (prev && prev.hash === hash) id = prev.id;
           else {
-            // Unidentified node recycling cannot be distinguished reliably from editing.
+            // Virtualized UIs often recycle one DOM node for another turn.
             if (prev) warnings.add('Changed/recycled nodes without stable IDs: revisions or overlaps may be included.');
-            id = `node:${++seq}`; nodeIds.set(el, {id, text});
+            id = `node:${++seq}`; nodeIds.set(el, {id, hash});
           }
           warnings.add('Some blocks have no stable message IDs; exact history coverage/order is unverified.');
         }
@@ -313,8 +347,12 @@
         const afterTotal = totalBytes - (before?.bytes || 0) + bytes;
         if (afterTotal > opt.maxBytes) { tooLarge = true; break; }
         totalBytes = afterTotal;
-        records.set(id, {id, role, kind: target.kind, text, bytes}); ids.push(id);
+        const record={id, role, kind: target.kind, text, bytes, hash};
+        if(!before || before.hash!==hash)changed.push(record);
+        records.set(id, opt.streamRecords ? {id,role,kind:target.kind,bytes,hash} : record);
+        ids.push(id);
       }
+      emitRecords(changed,direction);
       if (order.length && ids.length && !ids.some(id => order.includes(id))) {
         warnings.add('Disconnected DOM samples: order is inferred from scroll direction, not verified message indices.');
       }
