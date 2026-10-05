@@ -1,5 +1,5 @@
 from __future__ import annotations
-import argparse, ctypes, hashlib, json, os, queue, re, threading, time
+import argparse, ctypes, hashlib, json, os, queue, re, subprocess, threading, time
 from datetime import datetime, timezone
 from pathlib import Path
 import tkinter as tk
@@ -131,6 +131,7 @@ class Mini:
         ttk.Button(buttons,text='Preview / Laya',command=self.preview_mission).pack(side='left')
         ttk.Button(buttons,text='Run registered',command=self.run_mission).pack(side='left',padx=6)
         ttk.Button(buttons,text='Watch merges now',command=self.poll_merges_once).pack(side='left')
+        ttk.Button(buttons,text='Library / Repos',command=self.open_full_workspace).pack(side='left',padx=6)
         self.details=tk.Text(body,height=22);self.details.pack(fill='both',expand=True,pady=8)
         self.details.insert('1.0',('Context: '+str(self.context_file)) if self.context_file else 'Context: none — press Observe first or use Library/Repo.')
 
@@ -172,6 +173,19 @@ class Mini:
                 try:self.events.put(('details',{'stop':self.core.stop()}))
                 except Exception as exc:self.events.put(('error','STOP: '+str(exc)))
             threading.Thread(target=work,daemon=True).start()
+
+    def open_full_workspace(self):
+        try:
+            connection=json.loads(Path(expand(self.settings['connection_path'])).read_text(encoding='utf-8'))
+            shell=Path(expand(self.settings['connection_path'])).resolve().parent
+            app=shell/'app.py'
+            python_path=connection.get('python_path')
+            if not app.is_file() or not python_path:raise RuntimeError('LOCAL_WORKSPACE_NOT_INSTALLED_NEXT_TO_CONNECTION')
+            kwargs={'cwd':str(shell),'shell':False}
+            if os.name=='nt':kwargs['creationflags']=subprocess.CREATE_NO_WINDOW
+            subprocess.Popen([python_path,'-I','-X','utf8',str(app),'--config',str(Path(expand(self.settings['connection_path'])).resolve())],**kwargs)
+            self.status.set('Opened local Library / Repo workspace')
+        except Exception as exc:self.status.set('Workspace: '+str(exc))
 
     def poll_merges_once(self):self.events.put(('poll_merges',None))
 
