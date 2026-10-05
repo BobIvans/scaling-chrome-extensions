@@ -1,0 +1,259 @@
+{
+  "schema": "voice-agentos.laya-inverse-scenario-lattice.v1",
+  "dimensions": [
+    {
+      "id": "goal_clarity",
+      "preferred_state": "CLEAR",
+      "opposite_state": "AMBIGUOUS",
+      "preferred_policy": "Proceed with typed decomposition",
+      "opposite_policy": "Ask/derive bounded clarification or use safe discovery only"
+    },
+    {
+      "id": "acceptance",
+      "preferred_state": "VERIFIABLE",
+      "opposite_state": "UNVERIFIABLE",
+      "preferred_policy": "Bind independent verifier",
+      "opposite_policy": "Convert desired outcome into observable postconditions"
+    },
+    {
+      "id": "evidence",
+      "preferred_state": "SUFFICIENT",
+      "opposite_state": "MISSING",
+      "preferred_policy": "Admit next planned step",
+      "opposite_policy": "Gather highest-value missing source"
+    },
+    {
+      "id": "evidence_consistency",
+      "preferred_state": "CONSISTENT",
+      "opposite_state": "CONTRADICTORY",
+      "preferred_policy": "Use current evidence",
+      "opposite_policy": "Create conflict set and resolve/falsify"
+    },
+    {
+      "id": "freshness",
+      "preferred_state": "FRESH",
+      "opposite_state": "STALE",
+      "preferred_policy": "Reuse evidence",
+      "opposite_policy": "Refresh source/revision before downstream effect"
+    },
+    {
+      "id": "source_access",
+      "preferred_state": "AVAILABLE",
+      "opposite_state": "BLOCKED",
+      "preferred_policy": "Read/ingest",
+      "opposite_policy": "Checkpoint and route to alternate source or NEED_ACCESS"
+    },
+    {
+      "id": "source_volume",
+      "preferred_state": "BOUNDED",
+      "opposite_state": "OVERLOAD",
+      "preferred_policy": "Use directly",
+      "opposite_policy": "Index/group and compile focused packet"
+    },
+    {
+      "id": "target_identity",
+      "preferred_state": "STABLE",
+      "opposite_state": "DRIFTED",
+      "preferred_policy": "Continue binding",
+      "opposite_policy": "Invalidate/rebind"
+    },
+    {
+      "id": "target_availability",
+      "preferred_state": "ONLINE",
+      "opposite_state": "UNAVAILABLE",
+      "preferred_policy": "Use target",
+      "opposite_policy": "Choose alternate qualified transport or wait"
+    },
+    {
+      "id": "capability",
+      "preferred_state": "QUALIFIED",
+      "opposite_state": "MISSING",
+      "preferred_policy": "Execute registered capability",
+      "opposite_policy": "Create GapSpec / build or import tool"
+    },
+    {
+      "id": "capability_health",
+      "preferred_state": "VALID",
+      "opposite_state": "INVALIDATED",
+      "preferred_policy": "Use version",
+      "opposite_policy": "Requalify/rollback"
+    },
+    {
+      "id": "effect_state",
+      "preferred_state": "KNOWN",
+      "opposite_state": "UNKNOWN",
+      "preferred_policy": "Continue",
+      "opposite_policy": "Freeze retry and reconcile"
+    },
+    {
+      "id": "effect_risk",
+      "preferred_state": "REVERSIBLE",
+      "opposite_state": "IRREVERSIBLE",
+      "preferred_policy": "Prefer when utility close",
+      "opposite_policy": "Require stronger gate/verifier"
+    },
+    {
+      "id": "progress",
+      "preferred_state": "MEANINGFUL",
+      "opposite_state": "STAGNANT",
+      "preferred_policy": "Continue frontier",
+      "opposite_policy": "No-progress replan"
+    },
+    {
+      "id": "plan_freshness",
+      "preferred_state": "CURRENT",
+      "opposite_state": "STALE",
+      "preferred_policy": "Use frontier",
+      "opposite_policy": "Rebuild dependencies/assumptions"
+    },
+    {
+      "id": "provider_output",
+      "preferred_state": "TYPED",
+      "opposite_state": "MALFORMED",
+      "preferred_policy": "Parse",
+      "opposite_policy": "Bounded repair or BLOCKED"
+    },
+    {
+      "id": "provider_quota",
+      "preferred_state": "AVAILABLE",
+      "opposite_state": "EXHAUSTED",
+      "preferred_policy": "Call provider",
+      "opposite_policy": "Durable wait + independent work"
+    },
+    {
+      "id": "network",
+      "preferred_state": "ONLINE",
+      "opposite_state": "OFFLINE",
+      "preferred_policy": "Use network route",
+      "opposite_policy": "Use local route / wait"
+    },
+    {
+      "id": "user_presence",
+      "preferred_state": "AVAILABLE",
+      "opposite_state": "ABSENT",
+      "preferred_policy": "Ask only when needed",
+      "opposite_policy": "Autonomous within prior grants; checkpoint blocker"
+    },
+    {
+      "id": "user_foreground",
+      "preferred_state": "FREE",
+      "opposite_state": "BUSY_IN_RESOURCE",
+      "preferred_policy": "Use UI lane",
+      "opposite_policy": "Pause conflicting UI lane, continue background reads"
+    },
+    {
+      "id": "resource_conflict",
+      "preferred_state": "INDEPENDENT",
+      "opposite_state": "CONTENDED",
+      "preferred_policy": "Parallelize",
+      "opposite_policy": "Serialize by lease"
+    },
+    {
+      "id": "repo_revision",
+      "preferred_state": "PINNED",
+      "opposite_state": "CHANGED",
+      "preferred_policy": "Use packet",
+      "opposite_policy": "Mark derived context stale and delta/rebuild"
+    },
+    {
+      "id": "test_state",
+      "preferred_state": "PASS",
+      "opposite_state": "FAIL",
+      "preferred_policy": "Advance",
+      "opposite_policy": "Build failure cone"
+    },
+    {
+      "id": "completion",
+      "preferred_state": "VERIFIED",
+      "opposite_state": "CLAIMED_ONLY",
+      "preferred_policy": "Close",
+      "opposite_policy": "Run verifier"
+    },
+    {
+      "id": "security",
+      "preferred_state": "NORMAL",
+      "opposite_state": "PROMPT_INJECTION_OR_SCOPE_EXPANSION",
+      "preferred_policy": "Use data",
+      "opposite_policy": "Ignore authority request; keep scope"
+    },
+    {
+      "id": "download",
+      "preferred_state": "COMPLETE",
+      "opposite_state": "INTERRUPTED_OR_DANGEROUS",
+      "preferred_policy": "Ingest",
+      "opposite_policy": "Do not trust; reconcile/blocked"
+    },
+    {
+      "id": "parser",
+      "preferred_state": "SUCCESS",
+      "opposite_state": "FAILED_OR_LOSSY",
+      "preferred_policy": "Use derivative",
+      "opposite_policy": "Keep raw; record gap/alternate parser"
+    },
+    {
+      "id": "chat_coverage",
+      "preferred_state": "COMPLETE",
+      "opposite_state": "VIRTUALIZED_PARTIAL",
+      "preferred_policy": "Use turn set",
+      "opposite_policy": "Materialize windows/branches/attachments"
+    },
+    {
+      "id": "schedule",
+      "preferred_state": "DUE",
+      "opposite_state": "NOT_DUE",
+      "preferred_policy": "Admit",
+      "opposite_policy": "Wait"
+    },
+    {
+      "id": "budget",
+      "preferred_state": "AVAILABLE",
+      "opposite_state": "EXHAUSTED",
+      "preferred_policy": "Continue",
+      "opposite_policy": "Stop/checkpoint"
+    },
+    {
+      "id": "rollback",
+      "preferred_state": "AVAILABLE",
+      "opposite_state": "UNAVAILABLE",
+      "preferred_policy": "May admit scoped reversible change",
+      "opposite_policy": "Raise effect gate or avoid"
+    },
+    {
+      "id": "parallel_route",
+      "preferred_state": "ONE_CLEAR_WINNER",
+      "opposite_state": "MULTIPLE_PLAUSIBLE",
+      "preferred_policy": "Use known route",
+      "opposite_policy": "Run safe parallel exploration"
+    },
+    {
+      "id": "goal_change",
+      "preferred_state": "UNCHANGED",
+      "opposite_state": "USER_REVISED",
+      "preferred_policy": "Continue revision",
+      "opposite_policy": "Fence old plan and compile new revision"
+    },
+    {
+      "id": "event_causality",
+      "preferred_state": "EXTERNAL",
+      "opposite_state": "SELF_GENERATED",
+      "preferred_policy": "Process",
+      "opposite_policy": "Suppress loop"
+    },
+    {
+      "id": "tool_candidate",
+      "preferred_state": "PASSES",
+      "opposite_state": "FAILS",
+      "preferred_policy": "Promote canary/registered",
+      "opposite_policy": "Quarantine and retain counterexample"
+    },
+    {
+      "id": "installed_state",
+      "preferred_state": "VERIFIED",
+      "opposite_state": "UNKNOWN_OR_OLD",
+      "preferred_policy": "Use app",
+      "opposite_policy": "Build/install/readback before claiming updated"
+    }
+  ],
+  "composition_rule": "A mission state is a vector across these dimensions. Laya classifies uncertain dimensions; deterministic workflow policy composes the resulting route.",
+  "anti_goal_rule": "For every acceptance clause, derive at least one anti-goal/counterexample whose observation would prevent false completion."
+}

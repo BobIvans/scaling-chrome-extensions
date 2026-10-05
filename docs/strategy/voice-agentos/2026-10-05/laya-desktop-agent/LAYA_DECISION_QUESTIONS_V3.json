@@ -1,0 +1,482 @@
+{
+  "schema": "voice-agentos.laya-decision-questions.v3",
+  "runtime_requirements": {
+    "primitives": [
+      "choice",
+      "score",
+      "noul"
+    ],
+    "batch_preferred": true,
+    "confidence_gate": true,
+    "abstention": true,
+    "decision_state_max_tokens": "benchmark_and_pin; Python multilingual candidate supports up to 8192 but runtime must record actual checkpoint/config"
+  },
+  "question_sets": [
+    {
+      "id": "goal_shape",
+      "questions": {
+        "goal_type": {
+          "type": "choice",
+          "criteria": [
+            "FIND_INFORMATION",
+            "ORGANIZE_DATA",
+            "ANALYZE",
+            "CREATE_DOCUMENT",
+            "CHANGE_CODE",
+            "OPERATE_BROWSER",
+            "OPERATE_WINDOWS",
+            "GIT_GITHUB",
+            "COMMUNICATE",
+            "MONITOR",
+            "SCHEDULE",
+            "BUILD_CAPABILITY",
+            "MULTI_DOMAIN",
+            "UNKNOWN"
+          ]
+        },
+        "clarity": {
+          "type": "score",
+          "criteria": [
+            "AMBIGUOUS",
+            "PARTIAL",
+            "USABLE",
+            "CLEAR",
+            "EXACT"
+          ]
+        },
+        "can_start_read_only": {
+          "type": "noul",
+          "instructions": "Can useful read-only work begin without asking the user anything else?"
+        }
+      }
+    },
+    {
+      "id": "inverse_risk",
+      "questions": {
+        "likely_failure": {
+          "type": "choice",
+          "criteria": [
+            "WRONG_TARGET",
+            "MISSING_CONTEXT",
+            "STALE_DATA",
+            "MISSING_TOOL",
+            "BAD_PLAN",
+            "PROVIDER_FAILURE",
+            "RESOURCE_CONFLICT",
+            "NO_PROGRESS",
+            "UNVERIFIED_COMPLETION",
+            "BUDGET",
+            "ACCESS",
+            "SECURITY_SCOPE",
+            "OTHER",
+            "NONE"
+          ]
+        },
+        "failure_probability": {
+          "type": "score",
+          "criteria": [
+            "VERY_LOW",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "VERY_HIGH"
+          ]
+        },
+        "cheap_counterexample_available": {
+          "type": "noul",
+          "instructions": "Is there a low-cost observation/test that can falsify the risky assumption?"
+        }
+      }
+    },
+    {
+      "id": "frontier_utility",
+      "questions": {
+        "progress": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "TINY",
+            "SMALL",
+            "MEANINGFUL",
+            "MAJOR"
+          ]
+        },
+        "information_gain": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "VERY_HIGH"
+          ]
+        },
+        "latency": {
+          "type": "score",
+          "criteria": [
+            "INSTANT",
+            "SHORT",
+            "MEDIUM",
+            "LONG",
+            "VERY_LONG"
+          ]
+        },
+        "human_attention": {
+          "type": "score",
+          "criteria": [
+            "ZERO",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "BLOCKING"
+          ]
+        },
+        "risk": {
+          "type": "score",
+          "criteria": [
+            "READ_ONLY",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "IRREVERSIBLE"
+          ]
+        },
+        "reversibility": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "HARD",
+            "MEDIUM",
+            "EASY",
+            "TRIVIAL"
+          ]
+        },
+        "unlock_count": {
+          "type": "score",
+          "criteria": [
+            "ZERO",
+            "ONE",
+            "FEW",
+            "MANY",
+            "CRITICAL_PATH"
+          ]
+        },
+        "parallelizable": {
+          "type": "noul",
+          "instructions": "Can this candidate run concurrently with current work without mutable-resource conflict?"
+        }
+      }
+    },
+    {
+      "id": "source_route",
+      "questions": {
+        "next_source_action": {
+          "type": "choice",
+          "criteria": [
+            "USE_CURRENT",
+            "SEARCH_LIBRARY",
+            "SEARCH_REPO",
+            "READ_CHAT_HISTORY",
+            "OBSERVE_SELECTED_TAB",
+            "OPEN_LINK",
+            "DOWNLOAD_ATTACHMENT",
+            "QUERY_API",
+            "WAIT_FOR_NEW_DATA",
+            "ASK_USER",
+            "ABSTAIN"
+          ]
+        },
+        "source_relevance": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "source_is_fresh_enough": {
+          "type": "noul",
+          "instructions": "Is the source revision fresh enough for the intended downstream decision?"
+        }
+      }
+    },
+    {
+      "id": "context_strategy",
+      "questions": {
+        "pack": {
+          "type": "choice",
+          "criteria": [
+            "WHOLE_REPO_INDEXED",
+            "INTERCONNECTED_FILES",
+            "TECH_DEBT_FOCUSED",
+            "ERROR_AND_BROKEN_PATHS",
+            "HIGH_VALUE_FILES",
+            "TEST_IMPACT",
+            "RUNTIME_PATH",
+            "DELTA",
+            "CHAT_OPEN_LOOPS",
+            "CUSTOM_CART",
+            "NONE"
+          ]
+        },
+        "breadth": {
+          "type": "score",
+          "criteria": [
+            "SINGLE_REF",
+            "NARROW",
+            "MODULE",
+            "MULTI_MODULE",
+            "GLOBAL"
+          ]
+        },
+        "overflow_risk": {
+          "type": "noul",
+          "instructions": "Would sending the raw selected corpus cause context overload or hide important relationships?"
+        }
+      }
+    },
+    {
+      "id": "action_route",
+      "questions": {
+        "route": {
+          "type": "choice",
+          "criteria": [
+            "READ_ONLY_TOOL",
+            "LOCAL_WRITE_TOOL",
+            "BROWSER_BOUND_ACTION",
+            "WINDOWS_BOUND_ACTION",
+            "REPO_CODE_ACTION",
+            "GITHUB_ACTION",
+            "AI_PROVIDER_TURN",
+            "WAIT",
+            "BUILD_CAPABILITY",
+            "ASK_USER",
+            "STOP",
+            "ABSTAIN"
+          ]
+        },
+        "known_recipe": {
+          "type": "noul",
+          "instructions": "Does a qualified recipe already cover this action without generative planning?"
+        },
+        "verifier_available": {
+          "type": "noul",
+          "instructions": "Is an independent verifier available for the expected postcondition?"
+        }
+      }
+    },
+    {
+      "id": "plan_strategy",
+      "questions": {
+        "mental_frame": {
+          "type": "choice",
+          "criteria": [
+            "FORWARD_CHAIN",
+            "BACKWARD_CHAIN",
+            "PREMORTEM",
+            "COUNTEREXAMPLE_FIRST",
+            "BOTTLENECK_FIRST",
+            "INFORMATION_GAIN",
+            "FASTEST_VERIFIED",
+            "HUMAN_ATTENTION",
+            "REVERSIBLE_FIRST",
+            "PARALLEL_EXPLORE",
+            "KNOWN_RECIPE",
+            "CAPABILITY_LEVERAGE",
+            "FRESHNESS_FIRST",
+            "WEAKEST_EVIDENCE",
+            "ALTERNATE_TRANSPORT",
+            "WAIT_VALUE",
+            "STOP_VALUE",
+            "OPTION_VALUE"
+          ]
+        },
+        "planner_needed": {
+          "type": "noul",
+          "instructions": "Is generative planning necessary, or can a known typed recipe proceed?"
+        },
+        "plan_stale": {
+          "type": "noul",
+          "instructions": "Has evidence/target/repo revision changed enough to invalidate the existing plan?"
+        }
+      }
+    },
+    {
+      "id": "conversation_response",
+      "questions": {
+        "kind": {
+          "type": "choice",
+          "criteria": [
+            "ANSWER",
+            "SOURCE_LIST",
+            "CONTEXT_REQUEST",
+            "MULTI_STEP_PLAN",
+            "ACTION_PROPOSAL",
+            "PATCH",
+            "TOOL_PROPOSAL",
+            "COMPLETION_CLAIM",
+            "ERROR",
+            "PARTIAL",
+            "MALFORMED",
+            "ABSTAIN"
+          ]
+        },
+        "attachment_value": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "followup_needed": {
+          "type": "noul",
+          "instructions": "Are acceptance clauses still unresolved after this response?"
+        }
+      }
+    },
+    {
+      "id": "capability_route",
+      "questions": {
+        "resolution": {
+          "type": "choice",
+          "criteria": [
+            "USE_EXISTING",
+            "COMPOSE_EXISTING",
+            "CONFIGURE_EXISTING",
+            "IMPORT_GITHUB_TOOL",
+            "GENERATE_ADAPTER",
+            "GENERATE_NEW_TOOL",
+            "REQUEST_PERMISSION",
+            "IMPOSSIBLE_NOW",
+            "ABSTAIN"
+          ]
+        },
+        "leverage": {
+          "type": "score",
+          "criteria": [
+            "ONE_OFF",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "PLATFORM_LEVEL"
+          ]
+        },
+        "resume_original_goal": {
+          "type": "noul",
+          "instructions": "Can the original mission resume automatically after this capability is qualified?"
+        }
+      }
+    },
+    {
+      "id": "progress_control",
+      "questions": {
+        "delta": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "TINY",
+            "PARTIAL",
+            "MEANINGFUL",
+            "MAJOR"
+          ]
+        },
+        "repeating": {
+          "type": "noul",
+          "instructions": "Are recent cycles repeating the same route/question without new verified evidence?"
+        },
+        "stop_or_replan": {
+          "type": "choice",
+          "criteria": [
+            "CONTINUE",
+            "PREFETCH_PARALLEL",
+            "ASK_ALTERNATIVE_PLAN",
+            "EXPAND_CONTEXT",
+            "BUILD_TOOL",
+            "WAIT",
+            "PAUSE",
+            "STOP_NO_PROGRESS",
+            "ABSTAIN"
+          ]
+        }
+      }
+    },
+    {
+      "id": "completion_gate",
+      "questions": {
+        "completion": {
+          "type": "choice",
+          "criteria": [
+            "NOT_CLOSE",
+            "PARTIAL",
+            "CLAIMED_NEEDS_VERIFY",
+            "VERIFIED_DONE",
+            "BLOCKED",
+            "IMPOSSIBLE_WITH_CURRENT_SCOPE",
+            "ABSTAIN"
+          ]
+        },
+        "all_acceptance_verified": {
+          "type": "noul",
+          "instructions": "Does every required acceptance clause have current direct verifier evidence?"
+        }
+      }
+    },
+    {
+      "id": "library_labels",
+      "questions": {
+        "record_type": {
+          "type": "choice",
+          "criteria": [
+            "NOTE",
+            "DOCUMENT",
+            "CONVERSATION",
+            "TURN",
+            "ATTACHMENT",
+            "WEB_PAGE",
+            "REPO",
+            "CODE",
+            "TEST",
+            "AI_RESULT",
+            "RECEIPT",
+            "SKILL",
+            "OTHER"
+          ]
+        },
+        "usefulness": {
+          "type": "score",
+          "criteria": [
+            "NOISE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CORE_REFERENCE"
+          ]
+        },
+        "suggested_collection": {
+          "type": "choice",
+          "criteria": [
+            "INBOX",
+            "ACTIVE_PROJECT",
+            "REFERENCE",
+            "DECISIONS",
+            "OPEN_LOOPS",
+            "ERRORS",
+            "RESEARCH",
+            "CODE",
+            "AUTOMATIONS",
+            "ARCHIVE"
+          ]
+        },
+        "user_review_needed": {
+          "type": "noul",
+          "instructions": "Would auto-labeling materially change retrieval or action scope and therefore need user review?"
+        }
+      }
+    }
+  ]
+}

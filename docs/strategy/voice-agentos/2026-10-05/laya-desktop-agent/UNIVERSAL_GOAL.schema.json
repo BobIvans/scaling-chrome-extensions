@@ -1,0 +1,175 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/voice-agentos/UniversalGoal.schema.json",
+  "title": "UniversalGoal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "goal_id",
+    "revision",
+    "goal",
+    "acceptance",
+    "constraints",
+    "prohibitions",
+    "context_scope",
+    "effect_scope",
+    "budgets",
+    "stop_policy",
+    "automation_mode"
+  ],
+  "properties": {
+    "schema": {
+      "const": "voice-agentos.universal-goal.v1"
+    },
+    "goal_id": {
+      "type": "string"
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_outcome": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "acceptance": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "criterion",
+          "verifier_class"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "criterion": {
+            "type": "string"
+          },
+          "verifier_class": {
+            "type": "string"
+          },
+          "status": {
+            "enum": [
+              "OPEN",
+              "TRUE",
+              "FALSE",
+              "UNKNOWN",
+              "BLOCKED",
+              "STALE"
+            ]
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "constraints": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "prohibitions": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "context_scope": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "target_scope": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "effect_scope": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "budgets": {
+      "type": "object",
+      "properties": {
+        "money": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "time_seconds": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "attempts": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "parallel_reads": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        }
+      },
+      "additionalProperties": true
+    },
+    "stop_policy": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "automation_mode": {
+      "enum": [
+        "OBSERVE",
+        "PREVIEW",
+        "RUN_REGISTERED",
+        "LONG_HORIZON",
+        "WAIT_AND_RESUME"
+      ]
+    },
+    "selected_context_set": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "selected_target_binding": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "repo_binding": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "schedule": {
+      "type": [
+        "object",
+        "null"
+      ],
+      "additionalProperties": true
+    }
+  }
+}

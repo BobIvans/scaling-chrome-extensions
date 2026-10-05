@@ -1,0 +1,327 @@
+{
+  "schema": "voice-agentos.laya-universal-workflows.v3",
+  "inheritance": [
+    "voice-agentos.laya-universal-autonomy-workflows.v2",
+    "voice-agentos.laya-desktop-workflows.v1"
+  ],
+  "workflows": [
+    {
+      "id": "v3.workspace.capture_to_library",
+      "trigger": [
+        "FILE_IMPORT",
+        "TAB_CAPTURE",
+        "CHAT_CAPTURE",
+        "REPO_CAPTURE",
+        "RESULT_CAPTURE"
+      ],
+      "steps": [
+        "normalize_any_source",
+        "store_original",
+        "create_library_record",
+        "laya_suggest_labels",
+        "index_search_projection",
+        "link_relations",
+        "show_in_inbox"
+      ]
+    },
+    {
+      "id": "v3.workspace.search_everything",
+      "trigger": [
+        "SEARCH"
+      ],
+      "steps": [
+        "parse_query_filters",
+        "fts_search",
+        "relation_expand",
+        "freshness_rank",
+        "return_revisioned_results"
+      ]
+    },
+    {
+      "id": "v3.workspace.context_cart",
+      "trigger": [
+        "ADD_TO_CONTEXT"
+      ],
+      "steps": [
+        "pin_record_revisions",
+        "deduplicate",
+        "detect_conflicts",
+        "resolve_dependencies",
+        "estimate_receiver_budget",
+        "compile_logical_parts",
+        "save_context_set"
+      ]
+    },
+    {
+      "id": "v3.workspace.chat_open_loops",
+      "trigger": [
+        "EXTRACT_OPEN_LOOPS"
+      ],
+      "steps": [
+        "select_conversation_turns",
+        "laya_classify_decisions_tasks_questions",
+        "link_source_turns",
+        "create_proposals",
+        "show_review_queue"
+      ]
+    },
+    {
+      "id": "v3.workspace.repo_goal_pack",
+      "trigger": [
+        "REPO_GOAL"
+      ],
+      "steps": [
+        "ensure_snapshot",
+        "select_pack_mode",
+        "build_logical_pack",
+        "add_to_cart",
+        "bind_goal"
+      ]
+    },
+    {
+      "id": "v3.mission.from_context_and_target",
+      "trigger": [
+        "NEW_MISSION"
+      ],
+      "steps": [
+        "normalize_goal",
+        "bind_context_set",
+        "bind_target",
+        "derive_acceptance",
+        "derive_antigoals",
+        "build_h2_h1",
+        "preview_h0",
+        "persist_revision"
+      ]
+    },
+    {
+      "id": "v3.mission.inverse_planning",
+      "trigger": [
+        "FRONTIER_BUILD"
+      ],
+      "steps": [
+        "forward_chain",
+        "backward_chain",
+        "premortem",
+        "counterexample_candidates",
+        "bottleneck_candidates",
+        "information_gain_candidates",
+        "deduplicate_candidates",
+        "laya_score_components",
+        "deterministic_frontier_select"
+      ]
+    },
+    {
+      "id": "v3.mission.fastest_verified",
+      "trigger": [
+        "TIME_PRIORITY"
+      ],
+      "steps": [
+        "estimate_latency",
+        "estimate_progress",
+        "estimate_success",
+        "prefer_parallel_reads",
+        "select_fastest_verifiable_route",
+        "execute_atomic",
+        "verify"
+      ]
+    },
+    {
+      "id": "v3.mission.low_attention",
+      "trigger": [
+        "USER_BUSY"
+      ],
+      "steps": [
+        "filter_candidates_inside_existing_grants",
+        "maximize_background_and_known_recipes",
+        "pause_foreground_ui_conflicts",
+        "surface_only_blocking_user_input"
+      ]
+    },
+    {
+      "id": "v3.mission.parallel_exploration",
+      "trigger": [
+        "MULTIPLE_UNCERTAIN_ROUTES"
+      ],
+      "steps": [
+        "partition_by_resources",
+        "launch_read_test_research_lanes",
+        "checkpoint_each",
+        "cancel_dominated_lane_when_evidence_clear",
+        "join_frontier"
+      ]
+    },
+    {
+      "id": "v3.mission.counterexample_gate",
+      "trigger": [
+        "COMPLETION_OR_MAJOR_ASSUMPTION"
+      ],
+      "steps": [
+        "derive_failure_counterexample",
+        "run_cheapest_independent_probe",
+        "if_counterexample_then_replan",
+        "else_strengthen_evidence"
+      ]
+    },
+    {
+      "id": "v3.library.auto_label",
+      "trigger": [
+        "NEW_LIBRARY_RECORD"
+      ],
+      "steps": [
+        "build_label_projection",
+        "laya_record_type",
+        "laya_usefulness",
+        "laya_collection",
+        "save_proposed_labels",
+        "respect_user_correction"
+      ]
+    },
+    {
+      "id": "v3.library.relate",
+      "trigger": [
+        "NEW_OR_CHANGED_RECORD"
+      ],
+      "steps": [
+        "exact_identity_links",
+        "content_hash_links",
+        "project_session_links",
+        "repo_symbol_links",
+        "conversation_attachment_links",
+        "mission_evidence_links",
+        "save_edges"
+      ]
+    },
+    {
+      "id": "v3.conversation.attachment_continue",
+      "trigger": [
+        "NEW_ATTACHMENT"
+      ],
+      "steps": [
+        "inventory",
+        "triage",
+        "bind",
+        "safe_open_or_download",
+        "verify_artifact",
+        "ingest",
+        "label",
+        "relate",
+        "update_goal",
+        "continue_frontier"
+      ]
+    },
+    {
+      "id": "v3.conversation.plan_to_frontier",
+      "trigger": [
+        "MULTI_STEP_PLAN"
+      ],
+      "steps": [
+        "persist_original",
+        "extract_steps",
+        "map_capabilities",
+        "mark_tentative",
+        "derive_dependencies",
+        "derive_verifiers",
+        "score_h1",
+        "admit_h0_only"
+      ]
+    },
+    {
+      "id": "v3.capability.platform_bottleneck",
+      "trigger": [
+        "CAPABILITY_GAP"
+      ],
+      "steps": [
+        "estimate_unlock_count",
+        "search_existing_skills",
+        "search_config_composition",
+        "search_github_candidate",
+        "generate_if_needed",
+        "qualify",
+        "promote",
+        "resume_all_compatible_waiting_goals"
+      ]
+    },
+    {
+      "id": "v3.work_session.background",
+      "trigger": [
+        "WORK_SESSION_ACTIVE"
+      ],
+      "steps": [
+        "capture_selected_sources",
+        "background_index",
+        "background_repo_analysis",
+        "background_test_or_research",
+        "respect_foreground_leases",
+        "checkpoint_open_loops"
+      ]
+    },
+    {
+      "id": "v3.automation.inbox_processor",
+      "trigger": [
+        "SCHEDULE_OR_NEW_INBOX"
+      ],
+      "steps": [
+        "list_unclassified",
+        "laya_label_and_relevance",
+        "relate_to_active_projects",
+        "suggest_missions",
+        "archive_noise_after_policy"
+      ]
+    },
+    {
+      "id": "v3.automation.watch_target",
+      "trigger": [
+        "BOUND_TARGET_CHANGE"
+      ],
+      "steps": [
+        "observe_delta",
+        "causal_filter",
+        "ingest_new_turns_artifacts",
+        "match_active_missions",
+        "update_frontiers",
+        "notify_only_if_actionable"
+      ]
+    },
+    {
+      "id": "v3.automation.watch_repo",
+      "trigger": [
+        "REPO_CHANGE"
+      ],
+      "steps": [
+        "capture_delta",
+        "invalidate_stale_context",
+        "run_test_impact",
+        "update_active_missions",
+        "optionally_prepare_packet"
+      ]
+    },
+    {
+      "id": "v3.evidence.completion",
+      "trigger": [
+        "COMPLETION_CANDIDATE"
+      ],
+      "steps": [
+        "evaluate_acceptance",
+        "derive_antigoal_counterexamples",
+        "run_verifiers",
+        "check_freshness",
+        "close_or_reopen_frontier"
+      ]
+    },
+    {
+      "id": "v3.recovery.opposite_route",
+      "trigger": [
+        "BLOCKED_OR_NO_PROGRESS"
+      ],
+      "steps": [
+        "classify_blocker",
+        "select_inverse_frame",
+        "try_alternate_source_or_transport",
+        "try_tool_gap",
+        "wait_if_external_condition",
+        "stop_with_exact_gate_if_exhausted"
+      ]
+    }
+  ]
+}

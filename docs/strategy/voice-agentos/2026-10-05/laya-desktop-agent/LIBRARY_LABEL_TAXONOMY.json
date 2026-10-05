@@ -1,0 +1,83 @@
+{
+  "schema": "voice-agentos.library-label-taxonomy.v1",
+  "rules": {
+    "auto_labels_default_state": "PROPOSED",
+    "user_labels_default_state": "ACCEPTED",
+    "user_correction_overrides_auto": true,
+    "labels_never_grant_effect_permission": true
+  },
+  "dimensions": {
+    "project": [
+      "Inbox",
+      "VoiceAgentOS",
+      "StudiousPancake",
+      "Other"
+    ],
+    "lifecycle": [
+      "active",
+      "reference",
+      "open_loop",
+      "decision",
+      "todo",
+      "blocked",
+      "done",
+      "stale",
+      "archive"
+    ],
+    "source_type": [
+      "chat",
+      "document",
+      "repo",
+      "code",
+      "test",
+      "web",
+      "attachment",
+      "voice",
+      "image",
+      "receipt",
+      "tool"
+    ],
+    "authority": [
+      "user_command",
+      "source_fact",
+      "observed",
+      "derived",
+      "model_claim",
+      "system_receipt"
+    ],
+    "usefulness": [
+      "noise",
+      "low",
+      "medium",
+      "high",
+      "core_reference"
+    ],
+    "freshness": [
+      "fresh",
+      "aging",
+      "stale",
+      "unknown"
+    ],
+    "actionability": [
+      "knowledge_only",
+      "needs_context",
+      "action_candidate",
+      "capability_gap",
+      "verifier_needed",
+      "waiting_event"
+    ],
+    "risk": [
+      "read_only",
+      "local_write",
+      "external_write",
+      "irreversible",
+      "unknown"
+    ],
+    "privacy": [
+      "public",
+      "personal",
+      "private",
+      "secret_reference_only"
+    ]
+  }
+}
