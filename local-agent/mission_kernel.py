@@ -16,6 +16,7 @@ class MissionKernel:
     def _answer(self,answers,key,default=None):
         value=(answers or {}).get(key,default)
         if isinstance(value,dict):
+            if value.get('voice_agentos_admitted') is False or value.get('abstention') is True:return default
             for field in ('choice','label','answer','value'):
                 if field in value:return value[field]
         return value
