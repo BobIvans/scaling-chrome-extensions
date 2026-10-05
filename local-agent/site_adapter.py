@@ -32,9 +32,9 @@ class SiteAdapterRegistry:
             if parsed.scheme!='https' or not parsed.hostname or parsed.path not in {'','/'} or parsed.query or parsed.fragment or parsed.username or parsed.password:
                 raise SiteAdapterError('SITE_ORIGIN_SCHEMA')
             selectors=row['selectors']
-            if not isinstance(selectors,dict) or set(selectors)!={'account','workspace','conversation','composer','send','outgoing','response'}:raise SiteAdapterError('SITE_SELECTORS_SCHEMA')
+            if not isinstance(selectors,dict) or set(selectors)!={'account','workspace','conversation','composer','send','outgoing','response','response_final'}:raise SiteAdapterError('SITE_SELECTORS_SCHEMA')
             for name,value in selectors.items():
-                if name=='conversation' and value is None:continue
+                if name in {'conversation','response_final'} and value is None:continue
                 if not isinstance(value,str) or not value or len(value)>500:raise SiteAdapterError('SITE_SELECTORS_SCHEMA')
             if not isinstance(row['max_text_bytes'],int) or not 1<=row['max_text_bytes']<=2000000:raise SiteAdapterError('SITE_TEXT_LIMIT')
             q=row['qualification']
