@@ -346,6 +346,10 @@ class Mini:
                         if not digest or digest in seen_context:
                             self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'BROWSER_CONTEXT_UNCHANGED','history':history[-8:]}));return
                         seen_context.add(digest);text=gathered.get('text','')
+                        try:
+                            progress=self.kernel.record_progress(current,True,['context:'+digest],candidate_done=step.get('h0_candidate_id'))
+                            if progress:self._update_goal_revision(current,progress)
+                        except Exception as exc:self.events.put(('log','Goal progress context: '+str(exc)))
                         base=current.get('context_text','')
                         combined=(base+'\n\n===== NEW BROWSER CONTEXT =====\n'+text)[-2_000_000:]
                         current=dict(current,context_text=combined,context_sha256=digest,context_metadata=gathered.get('archive'))
@@ -391,7 +395,12 @@ class Mini:
                         digest=result.get('sha256')
                         if digest in seen_system2:
                             self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'REPEATED_SYSTEM2_RESULT','history':history[-8:]}));return
-                        if digest:seen_system2.add(digest)
+                        if digest:
+                            seen_system2.add(digest)
+                            try:
+                                progress=self.kernel.record_progress(current,True,['system2:'+digest],candidate_done=step.get('h0_candidate_id'))
+                                if progress:self._update_goal_revision(current,progress)
+                            except Exception as exc:self.events.put(('log','Goal progress System2: '+str(exc)))
                         text=result.get('text','')
                         if not text:return
                         base=current.get('context_text','')
