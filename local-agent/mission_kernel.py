@@ -94,7 +94,7 @@ class MissionKernel:
         if compile_result.get('state')=='COMPILED':
             effect=((compile_result.get('plan') or {}).get('capability') or {}).get('effect','LOCAL_READ')
             mapped={'LOCAL_READ':'LOCAL_READ','LOCAL_WRITE':'LOCAL_WRITE','EXTERNAL_WRITE':'MESSAGE_SEND'}.get(effect,'LOCAL_READ')
-            add('route_known','KNOWN_RECIPE','Execute compiled registered Core capability',mapped,90,20,90,10,10,20,False,['core:action'])
+            add('route_known','KNOWN_RECIPE','Execute compiled registered Core capability',mapped,98,20,98,5,5,35,False,['core:action'])
         add('route_context','GATHER_CONTEXT','Gather fresh exact context before acting','READ',35,95,95,20,0,25,True,['library:read'])
         if ui and ui.get('candidates'):add('route_browser','BROWSER_UI','Advance context through exact-bound browser READ_NAV','BROWSER_WRITE',45,85,85,20,15,30,False,['browser:foreground'])
         if windows_ui and windows_ui.get('candidates'):add('route_windows','WINDOWS_UI','Advance context through exact-bound Windows UIA READ_NAV','WINDOWS_WRITE',40,75,75,30,20,25,False,['windows:foreground'])
