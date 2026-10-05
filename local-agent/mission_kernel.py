@@ -167,7 +167,7 @@ class MissionKernel:
         path=self.root/('windows_'+str(int(time.time()))+'_'+digest[:10]+'.txt')
         path.write_text(text,encoding='utf-8')
         receipt=self.core.capture_file(path,'windows_ui_'+digest[:18])
-        try:self.core.annotate_capture(receipt,project='WindowsUI',note='foreground Windows UI Automation snapshot')
+        try:self.core.annotate_capture(receipt,project='WindowsUI',note='foreground Windows UI Automation snapshot',labels=['source:windows-uia','type:ui-context'])
         except Exception:pass
         return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_CONTEXT_GATHERED','text':bounded_utf8(text),
                 'sha256':digest,'snapshot':snap.get('snapshot'),'library_receipt':receipt}
@@ -187,7 +187,7 @@ class MissionKernel:
             if not path:continue
             digest=hashlib.sha256(Path(path).read_bytes()).hexdigest()
             receipt=self.core.capture_file(path,prefix+'_'+digest[:18]);receipts.append(receipt)
-            try:self.core.annotate_capture(receipt,project='AgentOS',note='mission browser context '+str(archive.get('source')))
+            try:self.core.annotate_capture(receipt,project='AgentOS',note='mission browser context '+str(archive.get('source')),labels=['source:browser','type:mission-context','status:'+str(archive.get('status') or 'unknown').lower()])
             except Exception:pass
         text=Path(archive['txt_path']).read_text(encoding='utf-8',errors='replace')
         return {'schema':'voice-agentos.mission-step.v1','state':'CONTEXT_GATHERED','text':bounded_utf8(text),
@@ -203,6 +203,6 @@ class MissionKernel:
         digest=result.get('sha256') or hashlib.sha256(text.encode()).hexdigest()
         path=self.root/('system2_'+job_id+'_'+digest[:10]+'.txt');path.write_text(text,encoding='utf-8')
         receipt=self.core.capture_file(path,'system2_'+digest[:20])
-        try:self.core.annotate_capture(receipt,project='AgentOS',note='System2 result job='+job_id)
+        try:self.core.annotate_capture(receipt,project='AgentOS',note='System2 result job='+job_id,labels=['source:system2','type:ai-result'])
         except Exception:pass
         return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_RESULT_INGESTED','system2_job':job,'text':text,'sha256':digest,'path':str(path),'library_receipt':receipt}
