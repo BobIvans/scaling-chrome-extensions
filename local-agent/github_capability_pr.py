@@ -31,7 +31,7 @@ class GitHubCapabilityPipeline:
     def enabled(self):return self.c.get('enabled') is True
     def _validate(self):
         if not self.enabled:return
-        required={'repo_full_name','token_env','remote','base_branch','branch_prefix','required_checks','merge_method','allow_auto_merge'}
+        required={'enabled','repo_full_name','token_env','remote','base_branch','branch_prefix','required_checks','merge_method','allow_auto_merge'}
         if set(self.c)!=required or not REPO.fullmatch(str(self.c['repo_full_name'])):raise GitHubPipelineError('GITHUB_PIPELINE_CONFIG')
         if not isinstance(self.c['required_checks'],list) or any(not isinstance(x,str) or not x for x in self.c['required_checks']):raise GitHubPipelineError('GITHUB_REQUIRED_CHECKS')
         if self.c['merge_method'] not in {'merge','squash','rebase'}:raise GitHubPipelineError('GITHUB_MERGE_METHOD')
