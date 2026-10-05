@@ -5,6 +5,12 @@
   globalThis.__occUIVersion=VERSION;
   const MAX_ELEMENTS=1200, MAX_NAME=240, MAX_VALUE=100000;
   const SNAPSHOTS=globalThis.__occUISnapshots instanceof Map ? globalThis.__occUISnapshots : new Map();
+  if(!Number.isFinite(globalThis.__occLastHumanActivity))globalThis.__occLastHumanActivity=0;
+  if(!globalThis.__occHumanActivityBound){
+    globalThis.__occHumanActivityBound=true;
+    const mark=event=>{if(event?.isTrusted)globalThis.__occLastHumanActivity=performance.now();};
+    for(const type of ['pointerdown','mousedown','keydown','beforeinput','input','touchstart','wheel'])addEventListener(type,mark,true);
+  }
   globalThis.__occUISnapshots=SNAPSHOTS;
   const SELECTOR=[
     'button','a[href]','input:not([type="hidden"])','textarea','select',
@@ -89,7 +95,10 @@
       const info=describe(el,++n);elements.push(info);map.set(info.element_id,{el,fingerprint:info.fingerprint,risk:info.risk,role:info.role});
       if(elements.length>=MAX_ELEMENTS)break;
     }
-    const snap={snapshot_id,document_token:docToken(),url:location.href,title:document.title||'',created_at:new Date().toISOString(),elements};
+    const now=performance.now();
+    const snap={snapshot_id,document_token:docToken(),url:location.href,title:document.title||'',created_at:new Date().toISOString(),
+      human_activity_ms:Number.isFinite(globalThis.__occLastHumanActivity)?Math.max(0,Math.round(now-globalThis.__occLastHumanActivity)):null,
+      document_has_focus:document.hasFocus(),visibility_state:document.visibilityState,elements};
     SNAPSHOTS.set(snapshot_id,{map,document_token:snap.document_token,url:snap.url,created:Date.now()});
     while(SNAPSHOTS.size>4)SNAPSHOTS.delete(SNAPSHOTS.keys().next().value);
     return snap;
@@ -114,6 +123,9 @@
   }
   function act(req={}){
     const snap=SNAPSHOTS.get(req.snapshot_id);if(!snap)throw new Error('UI_SNAPSHOT_STALE');
+    const quietMs=Math.max(500,Math.min(10000,Number.isFinite(req.human_quiet_ms)?req.human_quiet_ms:1800));
+    const sinceHuman=Number.isFinite(globalThis.__occLastHumanActivity)?performance.now()-globalThis.__occLastHumanActivity:Infinity;
+    if(document.hasFocus()&&sinceHuman<quietMs)throw new Error('UI_HUMAN_FOREGROUND_LEASE');
     if(snap.document_token!==req.document_token||snap.url!==location.href||snap.document_token!==docToken())throw new Error('UI_DOCUMENT_CHANGED');
     const bound=snap.map.get(req.element_id);if(!bound||!bound.el?.isConnected||!visible(bound.el))throw new Error('UI_ELEMENT_STALE');
     const now=describe(bound.el,0);if(now.fingerprint!==req.expected_fingerprint||bound.fingerprint!==req.expected_fingerprint)throw new Error('UI_ELEMENT_DRIFT');
