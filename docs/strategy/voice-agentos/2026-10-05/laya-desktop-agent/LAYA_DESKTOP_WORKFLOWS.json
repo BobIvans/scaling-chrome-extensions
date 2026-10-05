@@ -1,0 +1,281 @@
+{
+  "schema": "occ.laya-desktop-workflows.v1",
+  "generated_at": "2026-10-05",
+  "authority": "DATA_ONLY",
+  "workflows": [
+    {
+      "id": "laya.repo.acquire_github.v1",
+      "trigger": "UI_GITHUB_REPO_ADD",
+      "questions": [
+        "mission_route"
+      ],
+      "steps": [
+        "validate_url_and_operator_scope",
+        "registered_git_clone_or_fetch",
+        "pin_commit_tree",
+        "register_repo_alias",
+        "open_repo_workbench"
+      ],
+      "effect_boundary": "LOCAL_GIT_WRITE_REGISTERED",
+      "acceptance": [
+        "receipt has remote/root/commit/tree/adapter",
+        "no free-form shell from model"
+      ]
+    },
+    {
+      "id": "laya.repo.full_initial.v1",
+      "trigger": "FIRST_REPO_SCAN",
+      "questions": [
+        "repo_pack_mode"
+      ],
+      "steps": [
+        "capture_complete_snapshot",
+        "verify_complete_accounting",
+        "build_graph_and_groups",
+        "compile_WHOLE_REPO_INDEXED",
+        "emit_manifest_coverage_and_index"
+      ],
+      "effect_boundary": "LOCAL_WRITE",
+      "acceptance": [
+        "every source accounted",
+        "logical parts reopen exact source",
+        "restart/resume tested"
+      ]
+    },
+    {
+      "id": "laya.repo.interconnected_files.v1",
+      "trigger": "FOCUSED_PACK_REQUEST",
+      "questions": [
+        "repo_pack_mode"
+      ],
+      "steps": [
+        "resolve_seed_refs",
+        "expand_dependency_test_contract_graph",
+        "rank_frontier",
+        "compile_interconnected_pack"
+      ],
+      "effect_boundary": "LOCAL_WRITE",
+      "acceptance": [
+        "all included edges have provenance",
+        "frontier recorded"
+      ]
+    },
+    {
+      "id": "laya.repo.tech_debt.v1",
+      "trigger": "TECH_DEBT_REQUEST",
+      "questions": [
+        "tech_debt_triage"
+      ],
+      "steps": [
+        "collect_static_history_test_drift_candidates",
+        "laya_mass_triage",
+        "cross_check_high_priority",
+        "compile_tech_debt_pack"
+      ],
+      "effect_boundary": "LOCAL_WRITE",
+      "acceptance": [
+        "no debt finding without source/evidence refs"
+      ]
+    },
+    {
+      "id": "laya.repo.errors.v1",
+      "trigger": "FAILURE_OR_CI_INPUT",
+      "questions": [
+        "error_cone_triage"
+      ],
+      "steps": [
+        "normalize_failure",
+        "link_test_symbol_dependency_config",
+        "expand_until_cause_or_budget",
+        "compile_error_cone_pack"
+      ],
+      "effect_boundary": "LOCAL_WRITE",
+      "acceptance": [
+        "failure evidence + unresolved alternatives preserved"
+      ]
+    },
+    {
+      "id": "laya.repo.high_value.v1",
+      "trigger": "HIGH_VALUE_REQUEST",
+      "questions": [
+        "repo_pack_mode"
+      ],
+      "steps": [
+        "compute_runtime_graph_scores",
+        "add_test_history_effect_boundary_scores",
+        "laya_goal_relevance_rank",
+        "compile_high_value_pack"
+      ],
+      "effect_boundary": "LOCAL_WRITE"
+    },
+    {
+      "id": "laya.repo.delta.v1",
+      "trigger": "NEW_REPO_REVISION",
+      "questions": [
+        "repo_pack_mode"
+      ],
+      "steps": [
+        "diff_snapshots",
+        "invalidate_affected_groups",
+        "recompute_impacted_facts",
+        "compile_delta_pack"
+      ],
+      "effect_boundary": "LOCAL_WRITE",
+      "acceptance": [
+        "old packets marked stale"
+      ]
+    },
+    {
+      "id": "laya.browser.tab_discovery.v1",
+      "trigger": "UI_REFRESH_TABS",
+      "questions": [
+        "tab_target_triage"
+      ],
+      "steps": [
+        "extension_or_cdp_list_tabs",
+        "classify_for_display",
+        "return_tab_candidates"
+      ],
+      "effect_boundary": "LOCAL_READ",
+      "acceptance": [
+        "display guesses never become target identity"
+      ]
+    },
+    {
+      "id": "laya.browser.bind_selected_tab.v1",
+      "trigger": "USER_SELECTS_TAB",
+      "questions": [
+        "tab_target_triage"
+      ],
+      "steps": [
+        "user_selects_tab",
+        "runtime_observe_exact_identity",
+        "persist_target_binding_revision",
+        "read_only_canary"
+      ],
+      "effect_boundary": "LOCAL_WRITE",
+      "acceptance": [
+        "account/workspace/conversation identity present",
+        "rebind on change"
+      ]
+    },
+    {
+      "id": "laya.grok.selected_tab_roundtrip.v1",
+      "trigger": "MISSION_SEND_TO_SELECTED_AI",
+      "questions": [
+        "mission_route",
+        "ai_response_next_action"
+      ],
+      "steps": [
+        "build_or_select_packet",
+        "revalidate_binding",
+        "persist_effect_intent",
+        "prepare_and_verify_draft",
+        "send_once",
+        "reconcile",
+        "read_response",
+        "import_ai_claim",
+        "compile_feedback_doc"
+      ],
+      "effect_boundary": "AI_MESSAGE",
+      "acceptance": [
+        "0 blind retries after unknown",
+        "response tied to exact request and conversation"
+      ]
+    },
+    {
+      "id": "laya.grok_build.code_task.v1",
+      "trigger": "CODE_CHANGE_PROPOSAL",
+      "questions": [
+        "ai_response_next_action",
+        "capability_gap_triage"
+      ],
+      "steps": [
+        "choose_web_or_headless_or_acp_transport",
+        "pin_worktree_and_repo_revision",
+        "send_structured_task",
+        "collect_patch_test_receipts",
+        "verify_before_pr_or_followup"
+      ],
+      "effect_boundary": "REGISTERED_CODING_TRANSPORT",
+      "acceptance": [
+        "transport shares Intent/Packet/Receipt contracts",
+        "no merge/install claim without evidence"
+      ]
+    },
+    {
+      "id": "laya.mission.loop.v1",
+      "trigger": "RUN_MISSION",
+      "questions": [
+        "mission_route",
+        "ai_response_next_action",
+        "capability_gap_triage"
+      ],
+      "steps": [
+        "persist_mission_revision",
+        "gather_context",
+        "run_typed_decisions",
+        "compile_registered_plan",
+        "execute_one_admitted_step",
+        "verify",
+        "compile_feedback_doc",
+        "route_next_step"
+      ],
+      "effect_boundary": "VARIES_BY_REGISTERED_STEP",
+      "stop_conditions": [
+        "acceptance_verified",
+        "operator_stop",
+        "attempt_budget",
+        "blocking_unknown",
+        "blocked_external_gate"
+      ]
+    },
+    {
+      "id": "laya.mission.need_context.v1",
+      "trigger": "NEEDS_CONTEXT",
+      "questions": [
+        "repo_pack_mode"
+      ],
+      "steps": [
+        "parse_exact_missing_refs_or_questions",
+        "retrieve_from_canonical_sources",
+        "compile_delta_context_packet",
+        "resume_same_mission_revision"
+      ],
+      "effect_boundary": "LOCAL_READ_WRITE"
+    },
+    {
+      "id": "laya.capability.gap.v1",
+      "trigger": "UNKNOWN_CAPABILITY",
+      "questions": [
+        "capability_gap_triage"
+      ],
+      "steps": [
+        "create_development_request",
+        "define_typed_io_effect_verifier",
+        "isolate_implementation",
+        "unit_fault_heldout_tests",
+        "device_qualify_if_required",
+        "promote_immutable_version",
+        "resume_original_mission"
+      ],
+      "effect_boundary": "ISOLATED_CODE_THEN_QUALIFIED_REGISTRY"
+    },
+    {
+      "id": "laya.evidence.feedback_doc.v1",
+      "trigger": "AFTER_ANY_STEP",
+      "questions": [
+        "ai_response_next_action"
+      ],
+      "steps": [
+        "collect_goal_revision",
+        "collect_actions_and_receipts",
+        "collect_verifier_results",
+        "collect_errors_gaps_questions",
+        "select_relevant_source_parts",
+        "emit_feedback_md_json"
+      ],
+      "effect_boundary": "LOCAL_WRITE"
+    }
+  ]
+}
