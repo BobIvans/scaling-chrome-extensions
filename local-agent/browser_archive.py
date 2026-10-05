@@ -27,6 +27,13 @@ class BrowserArchiveAssembler:
         self.chunk_count=0
         self.stream_bytes=0
 
+    def abort(self, reason='ABORTED'):
+        try:
+            self._raw.write(json.dumps({'kind':'aborted','reason':str(reason)},ensure_ascii=False,separators=(',',':'))+'\n')
+            self._raw.close()
+        except Exception:
+            pass
+
     def _write_raw(self, chunk):
         self._raw.write(json.dumps(chunk, ensure_ascii=False, separators=(',',':'))+'\n')
         self._raw.flush()
