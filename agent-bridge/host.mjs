@@ -93,10 +93,16 @@ async function main(){
  if(process.argv[2]!==('chrome-extension://'+config.extensionId+'/'))process.exit(2);
  const host=new JobHost(config),control=new LocalControlBridge(config);let serial=Promise.resolve();
  const write=value=>process.stdout.write(encodeFrame(value));
- await control.start(write);
  const shutdown=code=>{void serial.finally(()=>Promise.allSettled([host.close(),control.close()])).finally(()=>process.exit(code));};
  const input=decoder(m=>{
   if(control.acceptChromeReply(m))return;
+  if(m?.type==='agentos.bridge.claim'){
+   serial=serial.then(async()=>{
+    try{const state=await control.start(write);write({requestId:m.requestId,ok:true,localControl:{state:state?'READY':'DISABLED'}});}
+    catch(e){write({requestId:m.requestId,ok:false,error:e.message});}
+   });
+   return;
+  }
   serial=serial.then(async()=>{
    try{
     const result=await host.handle(m,()=>write({requestId:m.requestId,progress:true}));
