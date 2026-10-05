@@ -13,6 +13,7 @@ const viewerURL = () => chrome.runtime.getURL('viewer.html');
 const AGENTOS_NATIVE_HOST = 'com.one_click_context.codex';
 let agentosNativePort = null;
 let agentosNativeSeq = 0;
+let agentosNativeConnectPromise = null;
 const agentosNativePending = new Map();
 const utf8 = text => new TextEncoder().encode(text);
 
@@ -268,16 +269,34 @@ function agentosHandleNativeMessage(message, port) {
 }
 async function ensureAgentOSNativeBridge() {
   if (agentosNativePort) return agentosNativePort;
-  if (!(await agentosNativePermission())) throw new Error('NATIVE_PERMISSION_REQUIRED');
-  const port = chrome.runtime.connectNative(AGENTOS_NATIVE_HOST);
-  agentosNativePort = port;
-  port.onMessage.addListener(message => agentosHandleNativeMessage(message, port));
-  port.onDisconnect.addListener(() => {
-    if (agentosNativePort !== port) return;
+  if (agentosNativeConnectPromise) return await agentosNativeConnectPromise;
+  agentosNativeConnectPromise = (async () => {
+    if (!(await agentosNativePermission())) throw new Error('NATIVE_PERMISSION_REQUIRED');
+    const port = chrome.runtime.connectNative(AGENTOS_NATIVE_HOST);
+    agentosNativePort = port;
+    port.onMessage.addListener(message => agentosHandleNativeMessage(message, port));
+    port.onDisconnect.addListener(() => {
+      if (agentosNativePort !== port) return;
+      agentosNativePort = null;
+      agentosRejectPending(chrome.runtime.lastError?.message || 'NATIVE_DISCONNECTED');
+    });
+    const requestId = 'agentos-claim-' + Date.now() + '-' + (++agentosNativeSeq);
+    await new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        agentosNativePending.delete(requestId);
+        reject(new Error('LOCAL_CONTROL_CLAIM_TIMEOUT'));
+      }, 10000);
+      agentosNativePending.set(requestId, {resolve, reject, timer});
+      port.postMessage({type: 'agentos.bridge.claim', requestId});
+    });
+    return port;
+  })();
+  try { return await agentosNativeConnectPromise; }
+  catch (error) {
+    try { agentosNativePort?.disconnect(); } catch {}
     agentosNativePort = null;
-    agentosRejectPending(chrome.runtime.lastError?.message || 'NATIVE_DISCONNECTED');
-  });
-  return port;
+    throw error;
+  } finally { agentosNativeConnectPromise = null; }
 }
 async function agentosNativeRequest(request, onProgress) {
   const port = await ensureAgentOSNativeBridge();
