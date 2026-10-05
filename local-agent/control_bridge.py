@@ -71,3 +71,5 @@ class ChromeBridge:
     def codex_submit(self,instruction,text,mode='analyze'):return self.request('system2.codex.submit',{'instruction':instruction,'text':text,'mode':mode},45)
     def codex_status(self,job_id):return self.request('system2.codex.status',{'jobId':job_id},10)
     def codex_result(self,job_id):return self.request('system2.codex.result',{'jobId':job_id},45)
+    def codex_artifacts(self,job_id):return self.request('system2.codex.artifacts',{'jobId':job_id},20)
+    def codex_artifact(self,job_id,artifact_id):return self.request('system2.codex.artifact',{'jobId':job_id,'artifactId':artifact_id},45)
