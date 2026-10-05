@@ -24,7 +24,7 @@ class Bridge:
 
 class Tests(unittest.TestCase):
     def cfg(self,code):
-        base={'profile_id':'x','origin':'https://x.invalid','selectors':{'account':'#a','workspace':'#w','conversation':None,'composer':'#c','send':'#s','outgoing':'.u','response':'.a'},'max_text_bytes':1000}
+        base={'profile_id':'x','origin':'https://x.invalid','selectors':{'account':'#a','workspace':'#w','conversation':None,'composer':'#c','send':'#s','outgoing':'.u','response':'.a','response_final':'.a.done'},'max_text_bytes':1000}
         d=_digest(base)
         return {'enabled':True,'profiles':{'x':{'origin':base['origin'],'selectors':base['selectors'],'max_text_bytes':1000,
             'qualification':{'status':'PASS','adapter_version':ADAPTER_VERSION,'code_digest':code,'contract_digest':d,'evidence_refs':['fixture']}}}}
