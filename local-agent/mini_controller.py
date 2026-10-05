@@ -179,7 +179,8 @@ class Mini:
                         digest=hashlib.sha256(Path(p).read_bytes()).hexdigest()
                         receipt=self.core.capture_file(p,keybase+'_'+digest[:18]);receipts.append(receipt)
                         try:self.core.annotate_capture(receipt,project='BrowserArchive',
-                            note='streamed browser capture source='+str(archive.get('source'))+' status='+str(archive.get('status')))
+                            note='streamed browser capture source='+str(archive.get('source'))+' status='+str(archive.get('status')),
+                            labels=['source:browser','type:browser-archive','status:'+str(archive.get('status') or 'unknown').lower()])
                         except Exception:pass
                     self.events.put(('details',{'browser_archive':archive,'library_receipts':receipts}))
                 except Exception as exc:self.events.put(('log','Archive Library import blocked: '+str(exc)))
@@ -196,7 +197,7 @@ class Mini:
             def ingest():
                 try:
                     receipt=self.core.capture_file(path,'windows_ui_'+digest[:18])
-                    try:self.core.annotate_capture(receipt,project='WindowsUI',note='foreground UI Automation context')
+                    try:self.core.annotate_capture(receipt,project='WindowsUI',note='foreground UI Automation context',labels=['source:windows-uia','type:ui-context'])
                     except Exception:pass
                     self.events.put(('details',{'windows_ui_capture':snap.get('snapshot'),'library_receipt':receipt}))
                 except Exception as exc:self.events.put(('log','Windows UI Library import blocked: '+str(exc)))
