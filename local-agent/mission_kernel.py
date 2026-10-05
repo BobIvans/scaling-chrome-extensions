@@ -96,8 +96,8 @@ class MissionKernel:
             mapped={'LOCAL_READ':'LOCAL_READ','LOCAL_WRITE':'LOCAL_WRITE','EXTERNAL_WRITE':'MESSAGE_SEND'}.get(effect,'LOCAL_READ')
             add('route_known','KNOWN_RECIPE','Execute compiled registered Core capability',mapped,98,20,98,5,5,35,False,['core:action'])
         add('route_context','GATHER_CONTEXT','Gather fresh exact context before acting','READ',35,95,95,20,0,25,True,['library:read'])
-        if ui and ui.get('candidates'):add('route_browser','BROWSER_UI','Advance context through exact-bound browser READ_NAV','BROWSER_WRITE',45,85,85,20,15,30,False,['browser:foreground'])
-        if windows_ui and windows_ui.get('candidates'):add('route_windows','WINDOWS_UI','Advance context through exact-bound Windows UIA READ_NAV','WINDOWS_WRITE',40,75,75,30,20,25,False,['windows:foreground'])
+        if ui and ui.get('candidates'):add('route_browser','BROWSER_UI','Advance context through exact-bound browser READ_NAV','BROWSER_WRITE',55,95,90,15,10,45,False,['browser:foreground'])
+        if windows_ui and windows_ui.get('candidates'):add('route_windows','WINDOWS_UI','Advance context through exact-bound Windows UIA READ_NAV','WINDOWS_WRITE',60,90,90,20,12,45,False,['windows:foreground'])
         add('route_system2','SYSTEM2','Ask System-2 for novel reasoning or design','LOCAL_PROCESS',65,75,75,55,5,50,True,['system2:local'])
         if compile_result.get('state')!='COMPILED':add('route_capability','CAPABILITY_GAP','Resolve missing capability and qualify a reusable tool','LOCAL_PROCESS',60,65,60,75,20,95,True,['repo:candidate'])
         return rows
