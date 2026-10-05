@@ -18,6 +18,17 @@ class GoalTests(unittest.TestCase):
         a=goal_runtime.admit(self.store,gid,p['revision'],'a');self.assertEqual(a['h0']['state'],'ADMITTED_PROPOSAL')
         d=goal_runtime.progress(self.store,gid,a['revision'],{'digest':'a'*64,'meaningful':True,'evidence_refs':['receipt:x'],'closed_acceptance':[],'candidate_done':'a','state':'ACTIVE'})
         self.assertEqual(d['value']['h1'][0]['state'],'DONE');self.assertEqual(d['value']['no_progress'],0)
+
+    def test_checkpoint_list_and_closed_acceptance_accumulate(self):
+        g=goal_runtime.create(self.store,self.spec(),goal_id='goalx')
+        cp=goal_runtime.checkpoint(self.store,'goalx',g['revision'],{'pending_kind':'SYSTEM2','job_id':'abc'},goal_state='WAITING')
+        self.assertEqual(cp['value']['state'],'WAITING')
+        listed=goal_runtime.list_goals(self.store,0,10)
+        self.assertEqual(listed['items'][0]['goal_id'],'goalx')
+        p=goal_runtime.plan(self.store,'goalx',cp['revision'],[],[self.candidate('a')],{})
+        a=goal_runtime.admit(self.store,'goalx',p['revision'],'a')
+        d=goal_runtime.progress(self.store,'goalx',a['revision'],{'digest':'b'*64,'meaningful':True,'evidence_refs':['r'],'closed_acceptance':['verified'],'candidate_done':'a','state':'ACTIVE'})
+        self.assertEqual(d['value']['closed_acceptance'],['verified'])
     def test_effect_scope_and_dependencies_gate_h0(self):
         g=goal_runtime.create(self.store,self.spec());gid=g['goal_id']
         write=self.candidate('w');write['effect_class']='GITHUB_WRITE'
