@@ -1,5 +1,4 @@
-const HOST='com.one_click_context.codex';
-const MAX_BYTES=2_200_000,CHUNK=49_152;
+const MAX_BYTES=2200000,CHUNK=49152;
 const enc=new TextEncoder();
 
 async function sha256(bytes){
@@ -11,28 +10,12 @@ function b64(bytes){
   return btoa(out);
 }
 export class NativeClient{
-  constructor(port){
-    this.port=port;this.pending=new Map();this.closed=false;this.seq=0;
-    port.onMessage.addListener(message=>{
-      const p=this.pending.get(message?.requestId);if(!p)return;
-      if(message.progress===true){p.onProgress?.();return;}
-      this.pending.delete(message.requestId);clearTimeout(p.timer);
-      message.ok?p.resolve(message):p.reject(new Error(message.error||'NATIVE_OPERATION_FAILED'));
-    });
-    port.onDisconnect.addListener(()=>{
-      this.closed=true;const error=chrome.runtime.lastError?.message||'Native host disconnected';
-      for(const p of this.pending.values()){clearTimeout(p.timer);p.reject(new Error(error));}
-      this.pending.clear();
-    });
-  }
-  request(type,args={},onProgress){
-    if(this.closed)return Promise.reject(new Error('NATIVE_CLOSED'));
-    const requestId='agentos-'+Date.now()+'-'+(++this.seq);
-    return new Promise((resolve,reject)=>{
-      const timer=setTimeout(()=>{this.pending.delete(requestId);reject(new Error('NATIVE_TIMEOUT'));},130000);
-      this.pending.set(requestId,{resolve,reject,timer,onProgress});
-      this.port.postMessage({requestId,type,...args});
-    });
+  constructor(){this.closed=false;}
+  async request(type,args={}){
+    if(this.closed)throw new Error('NATIVE_CLOSED');
+    const reply=await chrome.runtime.sendMessage({target:'agentos-background',type:'nativeRequest',request:{type,...args}});
+    if(!reply?.ok)throw new Error(reply?.error||'NATIVE_OPERATION_FAILED');
+    return reply.result;
   }
   hello(){return this.request('hello');}
   async durableAction(action,payload={}){
@@ -53,10 +36,12 @@ export class NativeClient{
       await this.request('run',{jobId});return jobId;
     }catch(error){await this.request('discard',{jobId}).catch(()=>{});throw error;}
   }
-  close(){this.closed=true;try{this.port.disconnect();}catch{}}
+  close(){this.closed=true;}
 }
 export async function connectNative(){
   const ok=await chrome.permissions.request({permissions:['nativeMessaging']});
   if(!ok)throw new Error('NATIVE_PERMISSION_REQUIRED');
-  return new NativeClient(chrome.runtime.connectNative(HOST));
+  const enabled=await chrome.runtime.sendMessage({target:'agentos-background',type:'enableNativeBridge'});
+  if(!enabled?.ok)throw new Error(enabled?.error||'NATIVE_BRIDGE_UNAVAILABLE');
+  return new NativeClient();
 }
