@@ -176,7 +176,12 @@ class MissionKernel:
         answers=(decision or {}).get('answers',{})
         laya_route=self._answer(answers,'mission_route')
         frontier=self._route_frontier(mission,compile_result,ui,win)
-        fast=self.fast_decision.choose(frontier,laya_route,mission.get('effects',['READ']),prefetch)
+        if laya_route in {'WAIT','STOP'}:
+            fast={'schema':'voice-agentos.fast-decision.v1','route':laya_route,'candidate_id':None,
+                  'reason':'LAYA_CONTROL_STATE','laya_route':laya_route,'ranked':[],'blocked':[],
+                  'prefetch_elapsed_ms':prefetch.get('elapsed_ms')}
+        else:
+            fast=self.fast_decision.choose(frontier,laya_route,mission.get('effects',['READ']),prefetch)
         route=fast.get('route')
         # Exact UI effects still need an element/action selected by Laya. The
         # deterministic policy may rank the surface, but never invents a click.
