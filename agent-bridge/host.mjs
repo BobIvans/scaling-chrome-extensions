@@ -5,6 +5,7 @@ import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
 import {DurableBridge,DURABLE_COMMANDS} from './durable.mjs';
 import {QualificationBridge,QUALIFICATION_COMMANDS} from './qualification.mjs';
+import {LocalControlBridge} from './local-control.mjs';
 export const MAX_BYTES=2200000, CHUNK=49152, MAX_FRAME=262144;
 const hash=b=>createHash('sha256').update(b).digest('hex');
 export function encodeFrame(value){const bytes=Buffer.from(JSON.stringify(value));if(bytes.length>MAX_FRAME)throw Error('FRAME_LIMIT');const header=Buffer.alloc(4);header.writeUInt32LE(bytes.length);return Buffer.concat([header,bytes]);}
@@ -21,7 +22,7 @@ export class JobHost{
  async handle(m,onProgress=()=>{}){
   if(this.closed)throw Error('CLOSED');
   if(!m||typeof m!=='object'||typeof m.type!=='string')throw Error('SCHEMA');
-  if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false,supportedModes:this.config.allowBuild===true?['analyze','build']:['analyze'],...(this.durable.enabled?{durableCommands:DURABLE_COMMANDS}: {}),...(this.qualification.enabled?{qualificationCommands:QUALIFICATION_COMMANDS}: {})};
+  if(m.type==='hello')return {version:1,provider:'codex-cli',maxBytes:MAX_BYTES,chunkBytes:CHUNK,cloudSync:false,supportedModes:this.config.allowBuild===true?['analyze','build']:['analyze'],...(this.durable.enabled?{durableCommands:DURABLE_COMMANDS}: {}),...(this.qualification.enabled?{qualificationCommands:QUALIFICATION_COMMANDS}: {}),...(this.config?.localControl?.enabled===true?{localControl:'LOOPBACK_AUTHENTICATED'}:{})};
   if(m.type.startsWith('durable.'))return this.durable.handle(m,{onProgress});
   if(m.type.startsWith('qualification.'))return this.qualification.handle(m);
   if(m.type==='list')return {jobs:[...this.jobs.values()].map(j=>this.summary(j))};
@@ -89,10 +90,20 @@ export class JobHost{
 }
 async function main(){
  const config=JSON.parse(await fs.readFile(new URL('./host-config.json',import.meta.url),'utf8'));
- if(process.argv[2]!==`chrome-extension://${config.extensionId}/`)process.exit(2);
- const host=new JobHost(config);let serial=Promise.resolve();
- const input=decoder(m=>{serial=serial.then(async()=>{try{const result=await host.handle(m,()=>process.stdout.write(encodeFrame({requestId:m.requestId,progress:true})));process.stdout.write(encodeFrame({requestId:m.requestId,ok:true,...result}));}catch(e){process.stdout.write(encodeFrame({requestId:m.requestId,ok:false,error:e.message}));}});},()=>{void host.close().finally(()=>process.exit(2));});
- process.stdin.on('data',input);process.stdin.on('end',()=>{void serial.finally(()=>host.close()).finally(()=>process.exit());});
- process.on('SIGTERM',()=>{void host.close().finally(()=>process.exit());});
+ if(process.argv[2]!==('chrome-extension://'+config.extensionId+'/'))process.exit(2);
+ const host=new JobHost(config),control=new LocalControlBridge(config);let serial=Promise.resolve();
+ const write=value=>process.stdout.write(encodeFrame(value));
+ await control.start(write);
+ const shutdown=code=>{void serial.finally(()=>Promise.allSettled([host.close(),control.close()])).finally(()=>process.exit(code));};
+ const input=decoder(m=>{
+  if(control.acceptChromeReply(m))return;
+  serial=serial.then(async()=>{
+   try{
+    const result=await host.handle(m,()=>write({requestId:m.requestId,progress:true}));
+    write({requestId:m.requestId,ok:true,...result});
+   }catch(e){write({requestId:m.requestId,ok:false,error:e.message});}
+  });
+ },()=>shutdown(2));
+ process.stdin.on('data',input);process.stdin.on('end',()=>shutdown(0));process.on('SIGTERM',()=>shutdown(0));
 }
 if(process.argv[1]&&path.resolve(process.argv[1])===fileURLToPath(import.meta.url))void main().catch(()=>process.exit(2));
