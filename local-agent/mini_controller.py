@@ -255,6 +255,10 @@ class Mini:
                     if self.mission_cancel.is_set():self.events.put(('details',{'state':'CANCELLED_BY_USER','history':history}));return
                     step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-6:]}))
                     state=step.get('state')
+                    if state=='WAITING_HUMAN_FOREGROUND':
+                        self.events.put(('status','Human foreground lease · AgentOS yielding target UI'))
+                        if self.mission_cancel.wait(max(0.5,float(self.settings.get('human_foreground_retry_seconds',2.0)))):return
+                        continue
                     if state in {'NEEDS_CONTEXT','BROWSER_UI_EFFECT','WINDOWS_UI_EFFECT'}:
                         if state=='WINDOWS_UI_EFFECT':
                             gathered=self.kernel.capture_windows_context();event_key='windows_context'
