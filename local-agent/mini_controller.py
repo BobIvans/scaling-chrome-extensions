@@ -301,13 +301,12 @@ class Mini:
 
     def preview_mission(self):
         state=self._mission_state();result={'state':state}
-        endpoint=self.settings.get('laya_endpoint','')
-        if endpoint:
+        if self.laya and self.laya.enabled:
             try:
                 questions=json.loads((Path(__file__).parent/'laya_questions.json').read_text(encoding='utf-8'))
-                result['laya']=LayaClient(endpoint).decide(state,questions,float(self.settings.get('laya_min_confidence',0.72)))
+                result['laya']=self.laya.decide(state,questions,float((self.settings.get('laya_runtime') or {}).get('min_confidence',self.settings.get('laya_min_confidence',0.72))))
             except Exception as exc:result['laya_error']=str(exc)
-        else:result['laya']='UNCONFIGURED — Core compiler only; configure local Laya endpoint for typed routing.'
+        else:result['laya']='UNCONFIGURED — Core compiler only; install/enable pinned local Laya runtime.'
         self._show(result)
 
     def run_mission(self):
