@@ -11,8 +11,8 @@ def bounded_utf8(text,limit=1_400_000):
 
 class MissionKernel:
     """UI/orchestration projection. Core remains the only effect authority."""
-    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None,github_pipeline=None,decision_config=None):
-        self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.candidate_pipeline=candidate_pipeline;self.github_pipeline=github_pipeline;self.questions_path=Path(questions_path)
+    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None,github_pipeline=None,decision_config=None,system2_registry=None):
+        self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.candidate_pipeline=candidate_pipeline;self.github_pipeline=github_pipeline;self.system2_registry=system2_registry;self.questions_path=Path(questions_path)
         self.root=Path(inbox_root).expanduser().resolve();self.root.mkdir(parents=True,exist_ok=True)
         self.fast_decision=FastDecisionEngine(core,bridge,windows_ui,self.root/'fast-decision-stats.json',decision_config)
     def _answer(self,answers,key,default=None):
@@ -59,6 +59,9 @@ class MissionKernel:
                 'core_compile':compile_result,'time':time.time()}
         if ui:value['browser_ui']=ui
         if windows_ui:value['windows_ui']=windows_ui
+        if self.system2_registry and self.system2_registry.enabled:
+            try:value['system2_providers']=self.system2_registry.describe()
+            except Exception:value['system2_providers']=[]
         if isinstance(prefetch,dict):
             library=((prefetch.get('lanes') or {}).get('library') or {})
             if library.get('state')=='OK':value['library_prefetch']=library.get('value')
@@ -82,6 +85,17 @@ class MissionKernel:
                 criteria[item['element_id']]=('risk='+str(item['risk'])+' role='+str(item['role'])+' name='+str(item['name']))[:300]
             questions['windows_ui_candidate']={'type':'choice',
                 'instructions':'Choose one exact Windows UI element only if it safely advances the mission. Prefer READ_NAV; choose NONE when uncertain.',
+                'criteria':criteria}
+        providers=state.get('system2_providers') if isinstance(state,dict) else None
+        if isinstance(providers,list) and providers:
+            criteria={'AUTO':'Let the deterministic provider registry choose the best compatible qualified provider.'}
+            for row in providers:
+                pid=row.get('provider_id')
+                if isinstance(pid,str):
+                    criteria[pid]=('kind='+str(row.get('kind'))+' roles='+','.join(row.get('roles') or [])+
+                                   ' latency_ms='+str(row.get('estimated_latency_ms'))+' state='+str(row.get('state')))[:400]
+            questions['system2_provider']={'type':'choice',
+                'instructions':'Choose a qualified System-2 provider only when its continuity/capability matters; otherwise choose AUTO.',
                 'criteria':criteria}
         return self.laya.decide(state,questions)
     def _route_frontier(self,mission,compile_result,ui,windows_ui):
@@ -259,16 +273,28 @@ class MissionKernel:
                     raise
                 return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_EFFECT','compile':compile_result,
                         'laya':decision,'candidate':candidate,'ui_receipt':receipt})
-        if not self.bridge:return decorate({'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision})
+        if not self.bridge and not (self.system2_registry and self.system2_registry.enabled):
+            return decorate({'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision})
         role=self._system2_role(decision,compile_result)
         context=bounded_utf8(mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False))
         prompt=self._system2_prompt(mission,state,role)
         mode='build' if role in {'CODER','TOOL_DESIGNER'} else 'analyze'
+        preferred=self._answer(answers,'system2_provider','AUTO')
+        preferred=None if preferred in {None,'AUTO','NONE'} else preferred
+        if self.system2_registry and self.system2_registry.enabled:
+            try:submitted=self.system2_registry.submit(role,prompt,context,mode,preferred_provider=preferred)
+            except Exception:
+                if mode!='build':raise
+                mode='analyze';submitted=self.system2_registry.submit(role,prompt,context,mode,preferred_provider=preferred)
+            session_id=submitted.get('session_id')
+            if not session_id:raise ValueError('SYSTEM2_SESSION_ID_REQUIRED')
+            return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,
+                'role':role,'system2_mode':mode,'system2_provider':submitted.get('provider_id'),'system2_session_id':session_id,
+                'system2_job_id':submitted.get('local_job_id'),'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate})
         try:submitted=self.bridge.codex_submit(prompt,context,mode)
         except Exception:
             if mode!='build':raise
-            submitted=self.bridge.codex_submit(prompt,context,'analyze')
-            mode='analyze'
+            submitted=self.bridge.codex_submit(prompt,context,'analyze');mode='analyze'
         job=submitted.get('job') if isinstance(submitted,dict) else None
         job_id=job.get('id') if isinstance(job,dict) else None
         if not job_id:raise ValueError('SYSTEM2_JOB_ID_REQUIRED')
