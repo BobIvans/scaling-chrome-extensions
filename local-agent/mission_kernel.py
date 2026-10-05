@@ -32,7 +32,8 @@ class MissionKernel:
                          'name':name[:180],'fingerprint':item.get('fingerprint')})
         rows=sorted(rows,key=lambda x:(x['risk']!='READ_NAV',x['role']!='button',len(x['name'])))[:60]
         return {'snapshot_id':full.get('snapshot_id'),'document_token':full.get('document_token'),'tab_id':full.get('tabId'),
-                'url':full.get('url'),'title':full.get('title'),'candidates':rows},full
+                'url':full.get('url'),'title':full.get('title'),'human_activity_ms':full.get('human_activity_ms'),
+                'document_has_focus':full.get('document_has_focus'),'visibility_state':full.get('visibility_state'),'candidates':rows},full
     def _windows_inventory(self,mission):
         if not self.windows_ui or 'WINDOWS_WRITE' not in set(mission.get('effects',[])):return None,None
         try:full=self.windows_ui.inventory()
@@ -141,7 +142,12 @@ class MissionKernel:
                 route='SYSTEM2'
             else:return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','candidate':candidate,'laya':decision}
             if route=='BROWSER_UI':
-                receipt=self.bridge.ui_act(request,ui.get('tab_id'))
+                try:receipt=self.bridge.ui_act(request,ui.get('tab_id'))
+                except Exception as exc:
+                    if 'UI_HUMAN_FOREGROUND_LEASE' in str(exc):
+                        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'BROWSER',
+                                'compile':compile_result,'laya':decision,'candidate':candidate}
+                    raise
                 return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_EFFECT','compile':compile_result,
                         'laya':decision,'candidate':candidate,'ui_receipt':receipt}
         if not self.bridge:return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision}
