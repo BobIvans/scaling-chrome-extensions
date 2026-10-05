@@ -73,6 +73,12 @@ class CoreClient:
         if labels:args['labels']=[str(x) for x in labels]
         req={'type':'durable.library','namespace':ns,'action':'SEARCH','arguments':args}
         return self.request(req,30)['library']['data']
+    def effect_begin(self,operation_id,binding):
+        return self.request({'type':'durable.effect','action':'BEGIN','arguments':{'operation_id':operation_id,'binding':binding}},30)['effect']
+    def effect_inspect(self,operation_id):
+        return self.request({'type':'durable.effect','action':'INSPECT','arguments':{'operation_id':operation_id}},30)['effect']
+    def effect_transition(self,operation_id,state,expected_revision,evidence):
+        return self.request({'type':'durable.effect','action':'TRANSITION','arguments':{'operation_id':operation_id,'state':state,'expected_revision':int(expected_revision),'evidence':list(evidence)}},30)['effect']
     def goal_create(self,spec,goal_id=None):
         args={'spec':spec}
         if goal_id:args['goal_id']=goal_id
