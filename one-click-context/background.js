@@ -284,6 +284,34 @@ async function agentosArchiveCapture(tab, controlId, args={}) {
     if(active===job)active=null;
   }
 }
+async function agentosResolveTab(args={}) {
+  let tab;
+  if(Number.isInteger(args.tabId))tab=await chrome.tabs.get(args.tabId);
+  else tab=(await chrome.tabs.query({active:true,lastFocusedWindow:true}))[0];
+  if(!tab||!Number.isInteger(tab.id))throw new Error('ACTIVE_TAB_UNAVAILABLE');
+  const url=tab.url||'';
+  if(!/^(https?:|file:)/i.test(url)||/^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/i.test(url))throw new Error('UI_URL_UNSUPPORTED');
+  return tab;
+}
+async function agentosUIInventory(args={}) {
+  const tab=await agentosResolveTab(args);
+  await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js']});
+  const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:()=>globalThis.__occUIInventory?.()});
+  const result=rows?.[0]?.result;
+  if(!result||typeof result.snapshot_id!=='string'||!Array.isArray(result.elements))throw new Error('UI_INVENTORY_SCHEMA');
+  return {tabId:tab.id,...result};
+}
+async function agentosUIAct(args={}) {
+  const tab=await agentosResolveTab(args);
+  if(!args.request||typeof args.request!=='object')throw new Error('UI_ACTION_SCHEMA');
+  const request={...args.request};
+  if(request.action!=='scroll_into_view'&&request.effect_class!=='BROWSER_WRITE')throw new Error('UI_EFFECT_GRANT_REQUIRED');
+  await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js']});
+  const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:req=>globalThis.__occUIAct?.(req),args:[request]});
+  const result=rows?.[0]?.result;
+  if(!result||typeof result.state!=='string')throw new Error('UI_ACTION_RESULT_SCHEMA');
+  return {tabId:tab.id,...result};
+}
 async function handleAgentOSLocalControl(message) {
   if (message.command === 'tabs.list') {
     const tabs = await chrome.tabs.query({});
@@ -293,6 +321,8 @@ async function handleAgentOSLocalControl(message) {
       url: typeof tab.url === 'string' ? tab.url : ''
     }));
   }
+  if (message.command === 'browser.ui.inventory') return await agentosUIInventory(message.args||{});
+  if (message.command === 'browser.ui.act') return await agentosUIAct(message.args||{});
   if (message.command === 'tabs.active') {
     const tabs = await chrome.tabs.query({active: true, lastFocusedWindow: true});
     const tab = tabs[0];
