@@ -1,0 +1,86 @@
+{
+  "schema": "voice-agentos.grok-artifact-continuation.v1",
+  "goal": "Allow Laya/Goal Kernel to use a document/link/attachment inside the selected Grok/Grok Build conversation as new evidence and continue the same goal.",
+  "input": {
+    "selected_target_binding": "exact browser/account/conversation binding revision",
+    "observed_message": "message/turn/branch revision",
+    "artifact_candidate": "element identity, visible label, href/download hint, MIME hint",
+    "goal_revision": "current goal",
+    "gather_spec": "allowed origins/types/depth/bytes/time/quota"
+  },
+  "steps": [
+    {
+      "id": "observe",
+      "operation": "inventory_message_artifacts",
+      "effect": "READ"
+    },
+    {
+      "id": "triage",
+      "operation": "laya_artifact_triage",
+      "effect": "DATA_ONLY"
+    },
+    {
+      "id": "bind",
+      "operation": "bind_exact_artifact_element",
+      "effect": "READ"
+    },
+    {
+      "id": "admit",
+      "operation": "classify_open_download_effect_and_scope",
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "lease",
+      "operation": "acquire_selected_tab_writer_lease",
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "revalidate",
+      "operation": "revalidate_target_message_element_identity",
+      "effect": "READ"
+    },
+    {
+      "id": "act",
+      "operation": "open_allowed_link_or_download_allowed_artifact",
+      "effect": "LOCAL_UI_MUTATION"
+    },
+    {
+      "id": "observe_result",
+      "operation": "observe_new_tab_or_download_completion",
+      "effect": "READ"
+    },
+    {
+      "id": "ingest",
+      "operation": "hash_persist_raw_artifact",
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "parse",
+      "operation": "derive_text_structure_metadata_with_exact_refs",
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "update",
+      "operation": "update_goal_evidence_frontier",
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "continue",
+      "operation": "laya_select_next_route",
+      "effect": "DATA_ONLY"
+    }
+  ],
+  "safety": [
+    "Never treat a generic click as read-only without classified effect semantics.",
+    "No payment/delete/logout/merge/submit-like element through this workflow.",
+    "Unknown or ambiguous effect => ABSTAIN/BLOCKED.",
+    "Newly opened tab is a source binding unless separately chosen as action target.",
+    "Downloads are verified by completion + path/size/hash; browser prose is insufficient."
+  ],
+  "chrome_extension_candidate": {
+    "tabs": "Enumerate/select exact tabs",
+    "downloads": "Monitor qualified downloads after explicit extension permission",
+    "content_script": "Observe/bind DOM element identity",
+    "native_messaging": "Send bounded events/receipts to local Core"
+  }
+}

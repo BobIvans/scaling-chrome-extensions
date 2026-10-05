@@ -1,0 +1,216 @@
+{
+  "schema": "voice-agentos.long-horizon-function-backlog.v1",
+  "source_lineage": [
+    "AUTO-GL-01",
+    "AUTO-GL-02",
+    "AUTO-GL-03",
+    "AUTO-GL-07",
+    "AUTO-GL-08",
+    "AUTO-GL-09",
+    "AUTO-EASY-04",
+    "AUTO-OBS-16",
+    "AUTO-PARALLEL",
+    "AUTO-V3-4",
+    "AUTO-V3CAT-005",
+    "AUTO-V3CAT-135",
+    "AUTO-VOICE-04",
+    "AUTO-VOICE-10",
+    "AUTO-VOICE-11",
+    "AUTO-VOICE-16",
+    "AUTO-WORK-SESSION"
+  ],
+  "functions": [
+    {
+      "id": "LH001",
+      "name": "normalize_any_source_envelope",
+      "purpose": "Normalize any observed datum into immutable source metadata + bounded decision projection.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH002",
+      "name": "browser_artifact_inventory",
+      "purpose": "Inventory links/attachments/branches per exact message revision.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH003",
+      "name": "bind_artifact_element",
+      "purpose": "Create exact element binding tied to tab/conversation/message/DOM contract.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH004",
+      "name": "open_allowed_artifact",
+      "purpose": "Perform one scoped open UI mutation with lease/revalidation.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH005",
+      "name": "download_allowed_artifact",
+      "purpose": "Start/observe one permitted download and produce completion/hash receipt.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH006",
+      "name": "ingest_downloaded_artifact",
+      "purpose": "Persist raw bytes + origin + hash and create parse job.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH007",
+      "name": "gather_spec_runtime",
+      "purpose": "Execute bounded link/document gathering with cursors and gaps.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH008",
+      "name": "goal_state_store",
+      "purpose": "Persist GoalSpec, acceptance clauses, evidence ledger, budgets and current status.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH009",
+      "name": "plan_horizon_store",
+      "purpose": "Persist H2 strategy, H1 frontier and H0 admitted step separately.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH010",
+      "name": "frontier_builder",
+      "purpose": "Generate candidate actions from gaps, events, plans and capabilities.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH011",
+      "name": "laya_decision_state_builder",
+      "purpose": "Compress current state for Laya without discarding canonical data.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH012",
+      "name": "laya_batch_question_runner",
+      "purpose": "Run choice/score/noul sets with checkpoint/version/confidence/abstention evidence.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH013",
+      "name": "laya_frontier_router",
+      "purpose": "Map Laya output to registered workflow IDs only.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH014",
+      "name": "import_multistep_ai_plan",
+      "purpose": "Parse Grok multi-step plan into tentative typed candidates/DAG.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH015",
+      "name": "future_step_invalidator",
+      "purpose": "Invalidate future plan nodes after changed evidence/target/repo revision.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH016",
+      "name": "atomic_step_admission",
+      "purpose": "Admit one effectful step only after current bindings/grants/lease/STOP checks.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH017",
+      "name": "parallel_read_scheduler",
+      "purpose": "Run independent read/test/research lanes while serializing mutable resources.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH018",
+      "name": "progress_delta_meter",
+      "purpose": "Measure acceptance/evidence/gap/capability progress after every cycle.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH019",
+      "name": "no_progress_controller",
+      "purpose": "Detect loops and force alternate plan/context/tool gap or stop.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH020",
+      "name": "durable_wait_resume",
+      "purpose": "Persist provider quota/event waits and resume after revalidation.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH021",
+      "name": "human_foreground_lease",
+      "purpose": "Pause UI lane while user uses target resource; keep safe background lanes running.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH022",
+      "name": "unknown_effect_reconciler",
+      "purpose": "Prove present/absent/conflict/unknown before retrying external effect.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH023",
+      "name": "goal_feedback_compiler",
+      "purpose": "Compile current verified state + gaps + next bounded question for provider.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH024",
+      "name": "capability_gap_factory",
+      "purpose": "Create typed missing-capability spec bound to original goal.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH025",
+      "name": "capability_candidate_builder",
+      "purpose": "Build adapter/tool in isolated worktree using generated or imported source.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH026",
+      "name": "capability_qualification",
+      "purpose": "Static/unit/fault/heldout/device qualification + versioned promotion/rollback.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH027",
+      "name": "resume_goal_after_tool",
+      "purpose": "Resume original goal at checkpoint after schema-compatible tool promotion.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH028",
+      "name": "selected_tab_continuous_observer",
+      "purpose": "Capture streamed message deltas/artifacts with virtualized coverage.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH029",
+      "name": "cross_tab_source_binding",
+      "purpose": "Bind new tab opened by an artifact as source without inheriting action permission.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH030",
+      "name": "long_horizon_campaign_runtime",
+      "purpose": "Child runs, checkpoint/restart/quota/no-progress/deadline/STOP behavior.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH031",
+      "name": "work_session_capture_resume",
+      "purpose": "Record selected work-session observations and derive continuation frontier.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "LH032",
+      "name": "end_to_end_long_horizon_qualification",
+      "purpose": "Frozen scenarios spanning document click→ingest→Grok→tool/action→verify→continue.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    }
+  ]
+}

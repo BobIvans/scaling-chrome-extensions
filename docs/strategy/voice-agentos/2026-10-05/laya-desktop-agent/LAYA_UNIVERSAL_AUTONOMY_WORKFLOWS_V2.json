@@ -1,0 +1,394 @@
+{
+  "schema": "voice-agentos.laya-universal-autonomy-workflows.v2",
+  "generated_at": "2026-10-05",
+  "source_lineage": [
+    "AUTO-GL-01",
+    "AUTO-GL-02",
+    "AUTO-GL-03",
+    "AUTO-GL-07",
+    "AUTO-GL-08",
+    "AUTO-GL-09",
+    "AUTO-EASY-04",
+    "AUTO-OBS-16",
+    "AUTO-PARALLEL",
+    "AUTO-V3-4",
+    "AUTO-V3CAT-005",
+    "AUTO-V3CAT-135",
+    "AUTO-VOICE-04",
+    "AUTO-VOICE-10",
+    "AUTO-VOICE-11",
+    "AUTO-VOICE-16",
+    "AUTO-WORK-SESSION"
+  ],
+  "workflows": [
+    {
+      "id": "v2.goal.continuation.kernel",
+      "trigger": [
+        "USER_GOAL",
+        "RESUME",
+        "EVENT"
+      ],
+      "steps": [
+        "load_goal_revision",
+        "load_checkpoint",
+        "ingest_new_sources",
+        "update_evidence_ledger",
+        "check_acceptance",
+        "build_frontier",
+        "laya_rank_frontier",
+        "compile_h0_atomic_step",
+        "admit_and_execute",
+        "verify",
+        "checkpoint",
+        "update_h1_h2",
+        "loop_or_wait"
+      ],
+      "stop": [
+        "ACCEPTANCE_VERIFIED",
+        "USER_STOP",
+        "BUDGET",
+        "NO_PROGRESS",
+        "BLOCKING_UNKNOWN",
+        "UNAVAILABLE_REQUIRED_SCOPE"
+      ]
+    },
+    {
+      "id": "v2.source.ingest.any",
+      "trigger": [
+        "NEW_SOURCE"
+      ],
+      "steps": [
+        "capture_raw_identity",
+        "normalize_any_source_envelope",
+        "persist_original",
+        "derive_bounded_projection",
+        "link_to_goal_and_parent",
+        "update_frontier"
+      ],
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "v2.browser.observe.selected_scope",
+      "trigger": [
+        "TAB_BOUND",
+        "TAB_MUTATION"
+      ],
+      "steps": [
+        "revalidate_tab_identity",
+        "capture_message_revision",
+        "inventory_links_attachments_branches",
+        "update_virtualized_coverage",
+        "emit_source_envelopes"
+      ],
+      "effect": "READ_WITH_BOUNDED_UI_MATERIALIZATION"
+    },
+    {
+      "id": "v2.browser.attachment.open_download",
+      "trigger": [
+        "ARTIFACT_CANDIDATE"
+      ],
+      "questions": [
+        "artifact_triage"
+      ],
+      "steps": [
+        "bind_exact_message_element",
+        "classify_effect_semantics",
+        "check_download_or_open_scope",
+        "acquire_ui_lease",
+        "revalidate_binding",
+        "invoke_open_or_download_once",
+        "observe_download_or_new_tab",
+        "hash_and_ingest",
+        "parse_derivatives",
+        "release_lease",
+        "update_goal_state"
+      ],
+      "effect": "LOCAL_UI_MUTATION_OR_DOWNLOAD"
+    },
+    {
+      "id": "v2.browser.link.gather",
+      "trigger": [
+        "GATHER_SPEC"
+      ],
+      "steps": [
+        "collect_selected_links",
+        "rank_relevance",
+        "open_allowed_link",
+        "capture_redirect_and_origin",
+        "download_allowed_artifact_when_applicable",
+        "persist_graph_and_gaps"
+      ],
+      "effect": "BOUNDED_READ_UI"
+    },
+    {
+      "id": "v2.grok.ask.planner",
+      "trigger": [
+        "NEEDS_GENERATIVE_REASONING"
+      ],
+      "steps": [
+        "compile_goal_state_packet",
+        "send_to_bound_provider",
+        "reconcile_send",
+        "read_bound_reply",
+        "persist_original_response",
+        "parse_typed_envelopes",
+        "update_frontier"
+      ],
+      "effect": "AI_MESSAGE"
+    },
+    {
+      "id": "v2.plan.import.multistep",
+      "trigger": [
+        "PLAN_PROPOSAL"
+      ],
+      "questions": [
+        "ai_response"
+      ],
+      "steps": [
+        "extract_candidate_steps",
+        "map_known_capabilities",
+        "create_gap_specs",
+        "build_dependencies_resources_verifiers",
+        "mark_future_steps_tentative",
+        "store_h2_h1",
+        "rank_next_h0"
+      ],
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "v2.frontier.rank",
+      "trigger": [
+        "FRONTIER_CHANGED"
+      ],
+      "questions": [
+        "frontier_rank",
+        "parallelism"
+      ],
+      "steps": [
+        "build_compact_decision_state",
+        "batch_laya_questions",
+        "apply_confidence_abstention_policy",
+        "select_h0_and_parallel_reads"
+      ],
+      "effect": "DATA_ONLY"
+    },
+    {
+      "id": "v2.step.execute.atomic",
+      "trigger": [
+        "H0_SELECTED"
+      ],
+      "steps": [
+        "validate_goal_revision",
+        "validate_source_target_bindings",
+        "lease_resources",
+        "persist_effect_intent_if_needed",
+        "execute_registered_capability",
+        "independent_verify",
+        "persist_receipt",
+        "release_or_renew_leases"
+      ],
+      "effect": "CAPABILITY_DEFINED"
+    },
+    {
+      "id": "v2.context.gap.fill",
+      "trigger": [
+        "CONTEXT_REQUEST",
+        "NEEDS_CONTEXT"
+      ],
+      "steps": [
+        "resolve_exact_source_requests",
+        "parallel_read_prefetch",
+        "compile_delta_packet",
+        "verify_refs",
+        "resume_original_plan_revision"
+      ],
+      "effect": "LOCAL_READ_WRITE"
+    },
+    {
+      "id": "v2.parallel.background.reads",
+      "trigger": [
+        "INDEPENDENT_READ_FRONTIER"
+      ],
+      "questions": [
+        "parallelism"
+      ],
+      "steps": [
+        "partition_resource_sets",
+        "run_bounded_read_lanes",
+        "preserve_late_evidence",
+        "join_incrementally",
+        "update_frontier"
+      ],
+      "effect": "READ_PARALLEL"
+    },
+    {
+      "id": "v2.human.active.chrome",
+      "trigger": [
+        "USER_USING_CHROME"
+      ],
+      "steps": [
+        "detect_foreground_resource",
+        "pause_conflicting_ui_lane",
+        "continue_background_read_code_lanes",
+        "wait_for_ui_lease",
+        "rebind_before_resume"
+      ],
+      "effect": "RESOURCE_COORDINATION"
+    },
+    {
+      "id": "v2.unknown.effect.reconcile",
+      "trigger": [
+        "UNKNOWN_EFFECT"
+      ],
+      "questions": [
+        "recovery"
+      ],
+      "steps": [
+        "freeze_repeat",
+        "observe_external_target",
+        "match_operation_identity",
+        "classify_present_absent_conflict_unknown",
+        "resume_only_if_safe"
+      ],
+      "effect": "READ_RECONCILIATION"
+    },
+    {
+      "id": "v2.no.progress.replan",
+      "trigger": [
+        "NO_MEANINGFUL_PROGRESS"
+      ],
+      "questions": [
+        "progress_health"
+      ],
+      "steps": [
+        "stop_repeated_route",
+        "compile_failure_capsule",
+        "ask_alternative_plan",
+        "expand_context_within_scope",
+        "consider_capability_gap",
+        "reset_progress_window_or_stop"
+      ],
+      "effect": "LOCAL_WRITE"
+    },
+    {
+      "id": "v2.quota.wait.resume",
+      "trigger": [
+        "PROVIDER_QUOTA"
+      ],
+      "steps": [
+        "persist_wait_reason_and_due",
+        "release_nonessential_resources",
+        "continue_independent_work",
+        "wake_on_due_or_event",
+        "revalidate_goal_target_sources",
+        "resume"
+      ],
+      "effect": "WAIT"
+    },
+    {
+      "id": "v2.capability.grow",
+      "trigger": [
+        "CAPABILITY_GAP"
+      ],
+      "questions": [
+        "capability_gap"
+      ],
+      "steps": [
+        "create_gap_spec",
+        "gather_existing_repo_tool_candidates",
+        "generate_adapter_or_tool_in_isolated_worktree",
+        "static_review",
+        "unit_fault_heldout_tests",
+        "canary_device_if_needed",
+        "promote_versioned_capability",
+        "resume_original_goal_checkpoint"
+      ],
+      "effect": "ISOLATED_CODE_AND_REGISTRY"
+    },
+    {
+      "id": "v2.github.capability.import",
+      "trigger": [
+        "GITHUB_TOOL_SOURCE"
+      ],
+      "steps": [
+        "pin_repo_revision",
+        "read_license_api_dependencies",
+        "identify_entrypoint",
+        "build_adapter_candidate",
+        "test_isolated",
+        "canary",
+        "register_or_reject",
+        "resume_goal"
+      ],
+      "effect": "LOCAL_GIT_AND_CODE"
+    },
+    {
+      "id": "v2.code.change.to.release",
+      "trigger": [
+        "PATCH_CANDIDATE"
+      ],
+      "steps": [
+        "pin_base",
+        "create_worktree",
+        "implement_patch",
+        "run_tests",
+        "independent_review",
+        "create_or_update_pr",
+        "verify_ci",
+        "merge_if_scope_allows",
+        "verify_remote_merge",
+        "build_install_if_required",
+        "device_readback",
+        "update_goal_state"
+      ],
+      "effect": "GIT_GITHUB_INSTALL_SCOPED"
+    },
+    {
+      "id": "v2.work.session.continue",
+      "trigger": [
+        "SESSION_CAPTURE_ENABLED"
+      ],
+      "steps": [
+        "capture_selected_tabs_windows_terminal_voice_git",
+        "separate_observation_from_inference",
+        "checkpoint_timeline",
+        "derive_open_frontier",
+        "resume_goal"
+      ],
+      "effect": "OBSERVE_AND_LOCAL_WRITE"
+    },
+    {
+      "id": "v2.stop.resume.unfinished",
+      "trigger": [
+        "STOP_OR_RESUME"
+      ],
+      "steps": [
+        "durable_stop_fence",
+        "inspect_partial_effects",
+        "reconcile_unknown",
+        "mark_completed_vs_unfinished",
+        "new_continuation_identity",
+        "resume_eligible_remainder"
+      ],
+      "effect": "CONTROL"
+    },
+    {
+      "id": "v2.completion.decide",
+      "trigger": [
+        "AFTER_VERIFY"
+      ],
+      "questions": [
+        "completion",
+        "progress_health"
+      ],
+      "steps": [
+        "evaluate_each_acceptance_clause",
+        "collect_direct_receipts",
+        "if_verified_close_goal",
+        "else_update_frontier",
+        "if_blocked_record_exact_gate"
+      ],
+      "effect": "DATA_ONLY_LOCAL_WRITE"
+    }
+  ]
+}

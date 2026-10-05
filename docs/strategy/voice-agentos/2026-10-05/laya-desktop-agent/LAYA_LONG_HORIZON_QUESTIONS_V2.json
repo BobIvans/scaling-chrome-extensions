@@ -1,0 +1,227 @@
+{
+  "schema": "voice-agentos.laya-long-horizon-questions.v2",
+  "authority": "DATA_ONLY",
+  "runtime_note": "Run questions against bounded DecisionState; full corpus remains in canonical library.",
+  "sets": [
+    {
+      "id": "frontier_rank",
+      "questions": {
+        "next_route": {
+          "type": "choice",
+          "criteria": [
+            "READ_MORE_CONTEXT",
+            "OPEN_OR_DOWNLOAD_ARTIFACT",
+            "ASK_GENERATIVE_PLANNER",
+            "RUN_REGISTERED_TOOL",
+            "RUN_TEST_OR_VERIFIER",
+            "CREATE_CAPABILITY_GAP",
+            "WAIT_FOR_EVENT",
+            "REPLAN",
+            "FINISH",
+            "ABSTAIN"
+          ]
+        },
+        "expected_value": {
+          "type": "score",
+          "criteria": [
+            "VERY_LOW",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "VERY_HIGH"
+          ]
+        },
+        "risk": {
+          "type": "score",
+          "criteria": [
+            "READ_ONLY",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "IRREVERSIBLE"
+          ]
+        },
+        "enough_evidence": {
+          "type": "noul",
+          "instructions": "Is there enough verified evidence to admit the candidate as the next atomic step?"
+        }
+      }
+    },
+    {
+      "id": "artifact_triage",
+      "questions": {
+        "action": {
+          "type": "choice",
+          "criteria": [
+            "IGNORE",
+            "CAPTURE_METADATA",
+            "OPEN_READ_ONLY",
+            "DOWNLOAD_AND_INGEST",
+            "REQUEST_USER_SCOPE",
+            "ABSTAIN"
+          ]
+        },
+        "relevance": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "WEAK",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL"
+          ]
+        },
+        "ambiguous_effect": {
+          "type": "noul",
+          "instructions": "Is the click/link effect semantics ambiguous or potentially more than read/download?"
+        }
+      }
+    },
+    {
+      "id": "ai_response",
+      "questions": {
+        "kind": {
+          "type": "choice",
+          "criteria": [
+            "KNOWLEDGE",
+            "PLAN_PROPOSAL",
+            "ACTION_PROPOSAL",
+            "CONTEXT_REQUEST",
+            "CODE_PATCH_PROPOSAL",
+            "TOOL_PROPOSAL",
+            "COMPLETION_CLAIM",
+            "BLOCKER",
+            "MALFORMED",
+            "ABSTAIN"
+          ]
+        },
+        "needs_verifier": {
+          "type": "noul",
+          "instructions": "Does this response make a claim that must be independently verified before acceptance?"
+        },
+        "contains_future_steps": {
+          "type": "noul",
+          "instructions": "Does the response contain multiple future actions that should be imported as a tentative horizon rather than executed immediately?"
+        }
+      }
+    },
+    {
+      "id": "progress_health",
+      "questions": {
+        "progress": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "TINY",
+            "PARTIAL",
+            "MEANINGFUL",
+            "MAJOR"
+          ]
+        },
+        "repeat_loop": {
+          "type": "noul",
+          "instructions": "Is the system repeating essentially the same action/question without new evidence?"
+        },
+        "replan_needed": {
+          "type": "noul",
+          "instructions": "Do changed evidence, target identity, repo revision or failures invalidate the current near-term plan?"
+        }
+      }
+    },
+    {
+      "id": "parallelism",
+      "questions": {
+        "lane": {
+          "type": "choice",
+          "criteria": [
+            "READ_PARALLEL",
+            "TEST_PARALLEL",
+            "RESEARCH_PARALLEL",
+            "EXCLUSIVE_UI",
+            "EXCLUSIVE_GIT_WRITE",
+            "EXCLUSIVE_INSTALL",
+            "WAIT",
+            "ABSTAIN"
+          ]
+        },
+        "conflicts": {
+          "type": "noul",
+          "instructions": "Would this candidate conflict with any currently leased mutable resource?"
+        }
+      }
+    },
+    {
+      "id": "capability_gap",
+      "questions": {
+        "route": {
+          "type": "choice",
+          "criteria": [
+            "USE_EXISTING",
+            "COMPOSE_EXISTING",
+            "CREATE_ADAPTER",
+            "CREATE_NEW_TOOL",
+            "REQUEST_SCOPE",
+            "IMPOSSIBLE_NOW",
+            "ABSTAIN"
+          ]
+        },
+        "development_cost": {
+          "type": "score",
+          "criteria": [
+            "TRIVIAL",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "DEVICE_EXTERNAL"
+          ]
+        },
+        "resume_after_tool": {
+          "type": "noul",
+          "instructions": "Can the original goal resume automatically after a qualified capability is promoted?"
+        }
+      }
+    },
+    {
+      "id": "completion",
+      "questions": {
+        "state": {
+          "type": "choice",
+          "criteria": [
+            "NOT_CLOSE",
+            "PARTIAL",
+            "PROBABLY_DONE_NEEDS_VERIFY",
+            "VERIFIED_DONE",
+            "BLOCKED",
+            "ABSTAIN"
+          ]
+        },
+        "unresolved_acceptance": {
+          "type": "noul",
+          "instructions": "Does any acceptance clause still lack direct verifier evidence?"
+        }
+      }
+    },
+    {
+      "id": "recovery",
+      "questions": {
+        "route": {
+          "type": "choice",
+          "criteria": [
+            "RECONCILE_TARGET",
+            "RETRY_READ_ONLY",
+            "WAIT",
+            "REBIND",
+            "REPLAN",
+            "MANUAL_CHECK",
+            "STOP",
+            "ABSTAIN"
+          ]
+        },
+        "safe_to_retry_effect": {
+          "type": "noul",
+          "instructions": "Has absence of the previous external effect been independently proven?"
+        }
+      }
+    }
+  ]
+}
