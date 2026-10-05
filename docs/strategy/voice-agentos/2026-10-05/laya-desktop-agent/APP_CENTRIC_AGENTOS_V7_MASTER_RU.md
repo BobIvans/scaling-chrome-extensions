@@ -86,7 +86,8 @@ The app may open advanced local sections (Library, Repositories, Context Cart, M
   - invoke System-2 for novel planning/tool design;
   - feed System-2 result back into context;
   - repeat only up to configured `max_system2_cycles`;
-  - stop on repeated result/no-progress.
+  - route safe browser/Windows READ_NAV controls through exact fingerprints;
+  - recapture after UI action and stop on unchanged context/no-progress.
 
 ### GitHub/update groundwork
 Already inherited from V6/current Core:
@@ -97,6 +98,35 @@ Already inherited from V6/current Core:
 - configurable tests;
 - versioned staging;
 - existing `release_updater.py` with isolated activation/rollback support.
+
+## Universal capture and UI execution now implemented in V7
+
+The local app no longer depends on a single 2 MB One Click Context snapshot for long AI conversations.
+
+Browser capture is a layered capability:
+
+1. `capture-regions.js` discovers explicit message markers **and** generic repeated conversation blocks.
+2. `content.js` materializes virtualized history by scrolling both directions, follows recycled sibling groups, hashes/deduplicates message revisions, and streams message records while they are visible.
+3. Final coverage explicitly reports top/bottom reach, blocks, bytes, steps, frame count, stable-ID quality and complete/partial state.
+4. `background.js` streams records and supplemental frame text over the authenticated bridge.
+5. `browser_archive.py` assembles a large local TXT derivative plus metadata JSON and raw JSONL event stream; missing chunks remain explicit gaps.
+6. The complete artifacts enter the canonical Context Library; only a bounded working packet enters Laya/System-2.
+7. Optional BrowserWatch automatically repeats this for allowed tabs and imports only changed hashes.
+
+This directly addresses the old OCC failure mode where virtualized Grok/user turns could disappear because only the currently materialized DOM and one bounded snapshot were observed.
+
+Generic UI automation is also layered:
+
+- Browser: `ui-inventory.js` → exact snapshot/document/element fingerprint → Laya candidate choice → deterministic revalidation → safe READ_NAV click/scroll → recapture.
+- Windows desktop: built-in UI Automation inventory → runtime-id/fingerprint binding → safe READ_NAV invoke/scroll → recapture.
+- Generic brokers **do not** click destructive/financial/send/merge/logout controls. Those require a qualified site/app adapter with effect-specific reconciliation.
+- Vision/coordinate automation remains a last-resort candidate after structural DOM/UIA routes; it is not treated as an authority or proof of outcome.
+
+The execution ladder is therefore:
+`registered function/API/CLI → structural browser adapter → exact generic browser UI → Windows UIA/Win32 → qualified vision fallback → human`.
+Failures should change executor class or return an explicit blocker; they must not create blind repeated clicks.
+
+Canonical Library now stores typed labels in the same annotation/event store and SEARCH can filter them. Browser, Drive, conversation-export, System-2 and Windows sources are labelled at ingest without creating a second memory database.
 
 ## Not yet complete / do not overclaim
 
