@@ -478,11 +478,11 @@ def dispatch_desktop(request, profile_path):
     context = None
     try:
         validate_request(request)
-        if request['type'] not in DESKTOP_READS | {'durable.action','durable.library','durable.stop','durable.control.resume', DESKTOP_SCAN}:
+        if request['type'] not in DESKTOP_READS | {'durable.action','durable.goal','durable.library','durable.stop','durable.control.resume', DESKTOP_SCAN}:
             raise ValueError('DESKTOP_READ_ONLY')
         profile, policy = operator_profile(profile_path)
         if request['type'] not in DESKTOP_READS and not (
-                (request['type'] == 'durable.action' and 'durable.action' in info(profile, policy)['capabilities']) or
+                (request['type'] in {'durable.action','durable.goal'} and request['type'] in info(profile, policy)['capabilities']) or
                 (request['type'] == DESKTOP_SCAN and DESKTOP_SCAN in info(profile, policy)['capabilities']) or
                 (profile.get('context_service') and request['type'] in {'durable.library','durable.stop','durable.control.resume'})):
             raise ValueError('DESKTOP_READ_ONLY')
