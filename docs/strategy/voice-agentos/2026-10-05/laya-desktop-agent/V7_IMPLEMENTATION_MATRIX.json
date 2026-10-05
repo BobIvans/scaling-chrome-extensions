@@ -1,6 +1,6 @@
 {
   "schema": "voice-agentos.v7-implementation-matrix.v1",
-  "baseline": "main@3fb4a51f7d36f6e29bbda38226b66436d66d0fc4",
+  "baseline": "main@bb74c5719fe6fb608d427161ef72e427b2a7bf84 + Fast Decision V8 branch",
   "states": [
     "IMPLEMENTED",
     "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
@@ -90,15 +90,21 @@
     },
     {
       "id": "laya-client",
-      "state": "PARTIAL",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
       "owners": [
         "local-agent/laya_client.py",
-        "local-agent/laya_questions.json"
+        "local-agent/laya_questions.json",
+        "local-agent/laya_supervisor.py",
+        "local-agent/Setup_Laya_Windows.ps1"
       ],
-      "missing": [
-        "pinned runtime/checkpoint",
-        "device benchmark",
-        "health supervisor"
+      "evidence": [
+        "pinned runtime identity",
+        "health/restart supervisor",
+        "typed choice/score/noul client",
+        "benchmark receipt path"
+      ],
+      "qualification_pending": [
+        "target-device benchmark/qualification"
       ]
     },
     {
@@ -126,10 +132,21 @@
     },
     {
       "id": "persistent-h2-h1-h0-runtime",
-      "state": "NOT_IMPLEMENTED",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
       "owners": [
-        "content-lab/action_runtime.py",
-        "content-lab/campaign_runtime.py"
+        "content-lab/goal_runtime.py",
+        "content-lab/native_adapter.py",
+        "local-agent/core_client.py",
+        "local-agent/mission_kernel.py",
+        "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "durable GoalState revisions",
+        "persistent H2 milestones",
+        "utility-scored H1",
+        "effect/dependency-gated H0",
+        "progress/no-progress receipts",
+        "restart goal pointer"
       ]
     },
     {
@@ -376,6 +393,25 @@
         "merge REST request bound to head SHA"
       ],
       "note": "Auto merge is disabled by default and requires explicit GITHUB_WRITE plus local allow_auto_merge."
+    },
+    {
+      "id": "fastest-decision-parallel-prefetch",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/fast_decision.py",
+        "local-agent/mission_kernel.py",
+        "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "concurrent Library/browser/Windows prefetch",
+        "measured lane latency in utility",
+        "qualified-recipe fast path",
+        "Laya-within-margin route",
+        "deterministic abstention fallback",
+        "human-foreground block",
+        "safe disjoint parallel-lane plan"
+      ],
+      "semantics": "System-1 semantic ranking plus deterministic fastest-verified admission; Core still owns effects."
     }
   ],
   "updated_for": "App-centric universal capture/UI/self-growth runtime on PR #61"
