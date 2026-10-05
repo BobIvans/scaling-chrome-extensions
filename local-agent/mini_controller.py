@@ -7,6 +7,7 @@ from tkinter import ttk
 import sys
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
+from browser_archive import BrowserArchiveAssembler
 from control_bridge import ChromeBridge
 from core_client import CoreClient
 from github_merge_watch import MergeWatcher
@@ -37,7 +38,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -83,10 +84,26 @@ class Mini:
         except tk.TclError:return ''
 
     def observe(self):
-        before=self._clipboard();self.status.set('Observe · waiting for Chrome capture…')
+        before=self._clipboard();self.status.set('Observe · streaming Chrome context…')
         def start():
             direct=False
             if self.bridge:
+                assembler=None
+                try:
+                    tab=self.bridge.active_tab();tid=tab.get('id') if isinstance(tab,dict) else None
+                    root=Path(expand(self.settings['inbox_root']))/'browser-archives'
+                    prefix='tab_'+str(tid or 'active')+'_'+datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ')
+                    assembler=BrowserArchiveAssembler(root,prefix)
+                    manifest=self.bridge.capture_archive(tid,on_chunk=assembler.add_chunk,
+                        max_bytes=int(self.settings.get('browser_archive_max_bytes',67108864)),
+                        max_steps=int(self.settings.get('browser_archive_max_steps',3000)),
+                        max_ms=int(self.settings.get('browser_archive_max_ms',120000)))
+                    archive=assembler.finalize(manifest)
+                    self.events.put(('archive_capture',archive));direct=True
+                except Exception as exc:
+                    if assembler:assembler.abort(str(exc))
+                    self.events.put(('log','stream archive fallback: '+str(exc)))
+            if not direct and self.bridge:
                 try:
                     tab=self.bridge.active_tab();tid=tab.get('id') if isinstance(tab,dict) else None
                     self.bridge.start_capture(tid)
@@ -94,7 +111,7 @@ class Mini:
                     text=captured.get('text') if isinstance(captured,dict) else None
                     if not isinstance(text,str) or CAPTURE_MARKER not in text:raise RuntimeError('DIRECT_CAPTURE_TEXT_UNAVAILABLE')
                     self.events.put(('capture_text',text));direct=True
-                except Exception as exc:self.events.put(('log','bridge fallback: '+str(exc)))
+                except Exception as exc:self.events.put(('log','single capture fallback: '+str(exc)))
             if not direct:
                 try:press_capture_hotkey(self.settings.get('capture_hotkey',['ALT','SHIFT','C']))
                 except Exception as exc:self.events.put(('error','Observe failed: '+str(exc)));return
@@ -111,7 +128,7 @@ class Mini:
     def _accept_capture(self,text):
         digest=hashlib.sha256(text.encode()).hexdigest();root=Path(expand(self.settings['inbox_root']));root.mkdir(parents=True,exist_ok=True)
         stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ');path=root/f'chrome_{stamp}_{digest[:10]}.txt'
-        path.write_text(text,encoding='utf-8');self.context=text;self.context_file=path
+        path.write_text(text,encoding='utf-8');self.context=text;self.context_file=path;self.context_sha256=digest;self.context_metadata=None
         match=SOURCE_RE.search(text);source=match.group(1) if match else 'Chrome'
         self.status.set(f'Observed · {source[:28]} · {len(text.encode()):,} B')
         if self.core:
@@ -120,6 +137,32 @@ class Mini:
                     key='chrome_'+stamp.replace('T','_').replace('Z','')+'_'+digest[:8]
                     receipt=self.core.capture_file(path,key);self.events.put(('status','Library captured · '+str(receipt.get('state','OK'))))
                 except Exception as exc:self.events.put(('log','Library capture pending/manual: '+str(exc)))
+            threading.Thread(target=ingest,daemon=True).start()
+
+    def _accept_archive(self,archive):
+        path=Path(archive['txt_path']).resolve();size=path.stat().st_size
+        raw=path.read_bytes()
+        if len(raw)<=1400000:context=raw.decode('utf-8',errors='replace')
+        else:
+            head=raw[:700000].decode('utf-8',errors='ignore');tail=raw[-700000:].decode('utf-8',errors='ignore')
+            context=head+'\n\n[WORKING CONTEXT TRUNCATED; FULL BROWSER ARCHIVE IS IN LOCAL LIBRARY]\n\n'+tail
+        self.context=context;self.context_file=path;self.context_sha256=archive['txt_sha256'];self.context_metadata=archive
+        coverage=archive.get('coverage') or {};complete='complete' if coverage.get('complete') else 'partial'
+        self.status.set(f"Archived · {size:,} B · {complete} · gaps {len(archive.get('gaps') or [])}")
+        if self.core:
+            def ingest():
+                try:
+                    receipts=[]
+                    for suffix,keybase in [('txt_path','browser_txt'),('metadata_path','browser_meta'),('raw_stream_path','browser_stream')]:
+                        p=archive.get(suffix)
+                        if not p:continue
+                        digest=hashlib.sha256(Path(p).read_bytes()).hexdigest()
+                        receipt=self.core.capture_file(p,keybase+'_'+digest[:18]);receipts.append(receipt)
+                        try:self.core.annotate_capture(receipt,project='BrowserArchive',
+                            note='streamed browser capture source='+str(archive.get('source'))+' status='+str(archive.get('status')))
+                        except Exception:pass
+                    self.events.put(('details',{'browser_archive':archive,'library_receipts':receipts}))
+                except Exception as exc:self.events.put(('log','Archive Library import blocked: '+str(exc)))
             threading.Thread(target=ingest,daemon=True).start()
 
     def open_automate(self):
@@ -146,7 +189,8 @@ class Mini:
         goal=self.goal.get('1.0','end').strip();criteria=[x.strip() for x in self.acceptance.get('1.0','end').splitlines() if x.strip()]
         effects=['READ']+[k for k,v in self.effect_vars.items() if v.get()]
         return {'goal':goal,'acceptance':criteria,'effects':effects,'context_file':str(self.context_file) if self.context_file else None,
-                'context_sha256':hashlib.sha256(self.context.encode()).hexdigest() if self.context else None,'context_text':self.context or ''}
+                'context_sha256':self.context_sha256 or (hashlib.sha256(self.context.encode()).hexdigest() if self.context else None),
+                'context_metadata':self.context_metadata,'context_text':self.context or ''}
 
     def preview_mission(self):
         state=self._mission_state();result={'state':state}
@@ -266,6 +310,7 @@ class Mini:
                 kind,value=self.events.get_nowait()
                 if kind=='wait_clipboard':self._check_clipboard(*value)
                 elif kind=='capture_text':self._accept_capture(value)
+                elif kind=='archive_capture':self._accept_archive(value)
                 elif kind=='status':self.status.set(value)
                 elif kind=='error':self.status.set(value)
                 elif kind=='details':self._show(value)
