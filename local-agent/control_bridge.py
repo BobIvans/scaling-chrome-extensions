@@ -61,6 +61,26 @@ class ChromeBridge:
               'respectHumanLease':bool(respect_human_lease),'humanQuietMs':int(human_quiet_ms)}
         if tab_id is not None:args['tabId']=int(tab_id)
         return self.request_stream('tab.capture.archive',args,on_chunk=on_chunk,timeout=max(180,int(max_ms/1000)+60))
+    def site_bind(self,profile,tab_id=None):
+        args={'profile':profile}
+        if tab_id is not None:args['tabId']=int(tab_id)
+        return self.request('browser.site.bind',args,30)
+    def site_prepare(self,profile,binding,draft,tab_id=None):
+        args={'profile':profile,'binding':binding,'draft':draft}
+        if tab_id is not None:args['tabId']=int(tab_id)
+        return self.request('browser.site.prepare',args,30)
+    def site_send(self,profile,binding,draft,tab_id=None):
+        args={'profile':profile,'binding':binding,'draft':draft}
+        if tab_id is not None:args['tabId']=int(tab_id)
+        return self.request('browser.site.send',args,30)
+    def site_reconcile(self,profile,binding,draft,tab_id=None):
+        args={'profile':profile,'binding':binding,'draft':draft}
+        if tab_id is not None:args['tabId']=int(tab_id)
+        return self.request('browser.site.reconcile',args,30)
+    def site_read(self,profile,binding,tab_id=None):
+        args={'profile':profile,'binding':binding}
+        if tab_id is not None:args['tabId']=int(tab_id)
+        return self.request('browser.site.read',args,30)
     def ui_inventory(self,tab_id=None):
         args={} if tab_id is None else {'tabId':int(tab_id)}
         return self.request('browser.ui.inventory',args,20)
