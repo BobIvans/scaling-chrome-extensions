@@ -10,8 +10,8 @@ def bounded_utf8(text,limit=1_400_000):
 
 class MissionKernel:
     """UI/orchestration projection. Core remains the only effect authority."""
-    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None):
-        self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.candidate_pipeline=candidate_pipeline;self.questions_path=Path(questions_path)
+    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None,github_pipeline=None):
+        self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.candidate_pipeline=candidate_pipeline;self.github_pipeline=github_pipeline;self.questions_path=Path(questions_path)
         self.root=Path(inbox_root).expanduser().resolve();self.root.mkdir(parents=True,exist_ok=True)
     def _answer(self,answers,key,default=None):
         value=(answers or {}).get(key,default)
@@ -178,6 +178,14 @@ class MissionKernel:
         job_id=job.get('id') if isinstance(job,dict) else None
         if not job_id:raise ValueError('SYSTEM2_JOB_ID_REQUIRED')
         return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id}
+    def observe_capability_pr(self,pr_receipt):
+        if not self.github_pipeline:raise ValueError('GITHUB_PIPELINE_UNAVAILABLE')
+        return self.github_pipeline.observe(pr_receipt)
+
+    def merge_capability_pr(self,pr_receipt,effect_scope):
+        if not self.github_pipeline:raise ValueError('GITHUB_PIPELINE_UNAVAILABLE')
+        return self.github_pipeline.merge(pr_receipt,effect_scope)
+
     def capture_windows_context(self):
         if not self.windows_ui:raise ValueError('WINDOWS_UI_UNAVAILABLE')
         snap=self.windows_ui.text_snapshot()
@@ -225,10 +233,15 @@ class MissionKernel:
         receipt=self.core.capture_file(path,'system2_'+digest[:20])
         try:self.core.annotate_capture(receipt,project='AgentOS',note='System2 result job='+job_id,labels=['source:system2','type:ai-result'])
         except Exception:pass
-        candidate=None
+        candidate=None;capability_pr=None
         if self.candidate_pipeline and {'LOCAL_WRITE','GIT_WRITE'} & set(mission.get('effects',[])):
             try:candidate=self.candidate_pipeline.try_qualify_job(job_id)
             except Exception as exc:candidate={'state':'CAPABILITY_CANDIDATE_BLOCKED','reason':str(exc)}
-        return {'schema':'voice-agentos.mission-step.v1',
-                'state':'CAPABILITY_CANDIDATE_TESTED' if isinstance(candidate,dict) and candidate.get('state')=='ISOLATED_TESTED' else 'SYSTEM2_RESULT_INGESTED',
-                'system2_job':job,'text':text,'sha256':digest,'path':str(path),'library_receipt':receipt,'capability_candidate':candidate}
+        if isinstance(candidate,dict) and candidate.get('state')=='ISOLATED_TESTED' and self.github_pipeline and 'GITHUB_WRITE' in set(mission.get('effects',[])):
+            try:capability_pr=self.github_pipeline.publish(candidate,mission.get('effects',[]))
+            except Exception as exc:capability_pr={'state':'CAPABILITY_PR_BLOCKED','reason':str(exc)}
+        final_state='SYSTEM2_RESULT_INGESTED'
+        if isinstance(candidate,dict) and candidate.get('state')=='ISOLATED_TESTED':final_state='CAPABILITY_CANDIDATE_TESTED'
+        if isinstance(capability_pr,dict) and capability_pr.get('state')=='PR_OPEN':final_state='CAPABILITY_PR_OPEN'
+        return {'schema':'voice-agentos.mission-step.v1','state':final_state,'system2_job':job,'text':text,'sha256':digest,
+                'path':str(path),'library_receipt':receipt,'capability_candidate':candidate,'capability_pr':capability_pr}
