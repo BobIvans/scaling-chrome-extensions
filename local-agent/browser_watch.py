@@ -86,7 +86,7 @@ class BrowserWatch:
                 for field,prefix in [('txt_path','browser_watch_txt'),('metadata_path','browser_watch_meta'),('raw_stream_path','browser_watch_stream')]:
                     path=archive[field];raw_hash=hashlib.sha256(Path(path).read_bytes()).hexdigest()
                     receipt=self.core.capture_file(path,prefix+'_'+raw_hash[:18]);receipts.append(receipt)
-                    try:self.core.annotate_capture(receipt,project='BrowserWatch',note='scheduled browser observation '+str(tab.get('url')))
+                    try:self.core.annotate_capture(receipt,project='BrowserWatch',note='scheduled browser observation '+str(tab.get('url')),labels=['source:browser-watch','type:web-context','status:'+str(archive.get('status') or 'unknown').lower()])
                     except Exception:pass
                 next_state[binding]=digest
                 results.append({'state':'CAPTURED','tab':{'id':tab['id'],'url':tab.get('url'),'title':tab.get('title')},
