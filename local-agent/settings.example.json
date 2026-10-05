@@ -67,5 +67,50 @@
     "enabled": true,
     "powershell": "powershell.exe"
   },
-  "human_foreground_retry_seconds": 2
+  "human_foreground_retry_seconds": 2,
+  "capability_growth": {
+    "enabled": false,
+    "test_timeout_seconds": 900,
+    "repo_profiles": {
+      "agentos": {
+        "source_checkout": "C:\\Code\\scaling-chrome-extensions",
+        "allowed_paths": [
+          "local-agent",
+          "content-lab",
+          "agent-bridge",
+          "one-click-context",
+          "desktop",
+          "docs/strategy/voice-agentos"
+        ],
+        "test_profiles": {
+          "local_agent": [
+            [
+              "python",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "local-agent/tests",
+              "-p",
+              "test_*.py",
+              "-v"
+            ]
+          ],
+          "deterministic_core": [
+            [
+              "python",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "content-lab",
+              "-p",
+              "test_*.py",
+              "-v"
+            ]
+          ]
+        }
+      }
+    }
+  }
 }
