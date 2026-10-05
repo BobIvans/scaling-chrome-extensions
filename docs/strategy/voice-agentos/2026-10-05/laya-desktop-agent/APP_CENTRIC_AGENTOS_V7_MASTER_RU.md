@@ -181,3 +181,7 @@ The same AgentOS should support a long-running paper/simulation R&D mission:
 Codex should start with this file, `V7_IMPLEMENTATION_MATRIX.json`,
 `V7_REMAINING_FUNCTIONS.json`, and `V7_ACCEPTANCE_CAMPAIGN.json`.
 Older V2–V6 documents remain source-of-intent and compatibility constraints, but V7 overrides their UI ownership: **local app is primary; browser extension is a hidden capability layer.**
+
+## CI anchor
+
+The final V7 PR must pass both strategy-integrity and deterministic-core workflows on the same current head SHA before merge.

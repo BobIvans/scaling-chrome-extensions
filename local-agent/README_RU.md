@@ -116,3 +116,5 @@ Main remaining areas:
 - production updater activation;
 - secure Drive OAuth onboarding;
 - Windows installed end-to-end qualification.
+
+V7 execution source of truth: `docs/strategy/voice-agentos/2026-10-05/laya-desktop-agent/APP_CENTRIC_AGENTOS_V7_MASTER_RU.md`.
