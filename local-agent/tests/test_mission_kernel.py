@@ -29,6 +29,23 @@ class Laya:
     def __init__(self,answers):self.answers=answers
     def decide(self,state,questions):return {'answers':self.answers}
 
+class Registry:
+    enabled=True
+    def __init__(self):self.preferred=None;self.sessions={}
+    def describe(self,role=None):
+        return [{'provider_id':'web','kind':'AI_SITE','roles':['PLANNER','RESEARCHER'],'priority':100,'estimated_latency_ms':100,'supports_artifacts':False,'available':True,'state':'QUALIFIED'},
+                {'provider_id':'codex','kind':'LOCAL_CODEX','roles':['PLANNER','CODER','TOOL_DESIGNER'],'priority':90,'estimated_latency_ms':1000,'supports_artifacts':True,'available':True,'state':'READY'}]
+    def submit(self,role,instruction,text,mode='analyze',preferred_provider=None,request_id=None):
+        self.preferred=preferred_provider;sid='d'*32
+        provider='web' if preferred_provider=='web' else 'codex'
+        self.sessions[sid]={'provider_id':provider,'role':role,'mode':mode}
+        return {'session_id':sid,'provider_id':provider,'kind':'AI_SITE' if provider=='web' else 'LOCAL_CODEX','state':'WAITING','local_job_id':None if provider=='web' else 'local-job'}
+    def is_session(self,sid):return sid in self.sessions
+    def poll(self,sid):
+        row=self.sessions[sid]
+        return {'session_id':sid,'provider_id':row['provider_id'],'kind':'AI_SITE' if row['provider_id']=='web' else 'LOCAL_CODEX',
+                'role':row['role'],'mode':row['mode'],'state':'COMPLETE','local_job_id':None if row['provider_id']=='web' else 'local-job',
+                'result':{'text':'provider answer','sha256':'e'*64}}
 class KernelTests(unittest.TestCase):
     def kernel(self,core,laya=None,bridge=None):
         td=tempfile.TemporaryDirectory();self.addCleanup(td.cleanup)
@@ -52,6 +69,18 @@ class KernelTests(unittest.TestCase):
         bridge=Bridge();laya=Laya({'mission_route':'BROWSER_UI','ui_candidate':'e2','ui_action':'CLICK_READ_NAV'})
         out=self.kernel(Core('GAP'),laya,bridge).start({'goal':'x','acceptance':['done'],'effects':['READ','BROWSER_WRITE'],'context_text':''})
         self.assertEqual(out['state'],'BROWSER_UI_BLOCKED');self.assertEqual(bridge.acts,[])
+    def test_laya_can_choose_qualified_web_system2_provider(self):
+        td=tempfile.TemporaryDirectory();self.addCleanup(td.cleanup)
+        q=Path(td.name)/'q.json';q.write_text('{}')
+        registry=Registry();bridge=Bridge()
+        laya=Laya({'mission_route':'SYSTEM2','system2_role':'PLANNER','system2_provider':'web'})
+        kernel=MissionKernel(Core('GAP'),bridge,laya,q,td.name,system2_registry=registry)
+        out=kernel.start({'goal':'plan','acceptance':['done'],'effects':['READ'],'context_text':'existing context'})
+        self.assertEqual(out['state'],'WAITING_SYSTEM2');self.assertEqual(out['system2_provider'],'web')
+        self.assertEqual(out['system2_session_id'],'d'*32);self.assertEqual(registry.preferred,'web')
+        result=kernel.poll_system2(out['system2_session_id'],{'goal':'plan','acceptance':['done'],'effects':['READ']})
+        self.assertEqual(result['state'],'SYSTEM2_RESULT_INGESTED');self.assertEqual(result['system2_provider'],'web')
+        self.assertEqual(result['text'],'provider answer')
     def test_system2_result_is_ingested(self):
         core=Core('GAP');bridge=Bridge();kernel=self.kernel(core,None,bridge)
         out=kernel.poll_system2('s2',{'goal':'x','acceptance':[],'effects':['READ']})
