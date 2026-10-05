@@ -29,6 +29,7 @@ FIELDS = {
     "durable.action": ({"type", "action", "payload"}, set()),
     "durable.library": ({"type", "namespace", "action", "arguments"}, {"operationId"}),
     "durable.goal": ({"type", "action", "arguments"}, set()),
+    "durable.effect": ({"type", "action", "arguments"}, set()),
     "durable.stop": ({"type", "requestId"}, set()),
     "durable.control.resume": ({"type", "expectedEpoch"}, set()),
     'durable.campaign.inspect': ({'type','campaign'}, {'offset','limit'}),
@@ -128,7 +129,7 @@ def info(profile, policy):
     if policy.get('actions', {}).get('enabled') is True:
         from action_intent import registry
         registry(policy['actions'])
-        capabilities.extend(['durable.action','durable.goal'])
+        capabilities.extend(['durable.action','durable.goal','durable.effect'])
     if 'durable.repo.manifest' in FIELDS and ready_store(store, manifest=True):
         import repo_manifest
         if callable(getattr(repo_manifest, 'page', None)):
@@ -242,6 +243,9 @@ def validate_request(request):
     if request['type']=='durable.goal':
         if request['action'] not in {'CREATE','INSPECT','REVISE','PLAN','ADMIT','PROGRESS'} or not isinstance(request['arguments'],dict):
             raise ValueError('DURABLE_SCHEMA')
+    if request['type']=='durable.effect':
+        if request['action'] not in {'BEGIN','INSPECT','TRANSITION'} or not isinstance(request['arguments'],dict):
+            raise ValueError('DURABLE_SCHEMA')
     if request['type'].startswith('durable.campaign.'):
         identifier(request['campaign'])
         if 'offset' in request:strict_int(request['offset'],0,9_007_199_254_740_991)
@@ -275,7 +279,7 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     store, operation = Path(profile["store"]), request["type"]
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
     if desktop and operation not in DESKTOP_READS and not (
-            operation in {'durable.action','durable.goal'} or
+            operation in {'durable.action','durable.goal','durable.effect'} or
             (operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile, policy)['capabilities']) or
             (profile.get('context_service') and operation in {'durable.library','durable.stop','durable.control.resume'})):
         raise ValueError('DESKTOP_READ_ONLY')
@@ -293,6 +297,22 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
         elif action=='PROGRESS':result=goals.progress(store,args['goal_id'],args['expected_revision'],args['delta'])
         else:raise ValueError('GOAL_ACTION_UNAVAILABLE')
         value['goal']=result
+        return value
+    if operation == 'durable.effect':
+        import workflow_state as ws
+        action=request['action'];args=request['arguments']
+        if action=='BEGIN':
+            with ws.transaction(store) as db:result=ws.begin_effect(db,args['operation_id'],args['binding'])
+        elif action=='INSPECT':
+            with ws.transaction(store) as db:
+                row=ws.get(db,'effect',args['operation_id'])
+                if row is None:raise ValueError('WORKFLOW_EFFECT_NOT_FOUND')
+                result=row
+        elif action=='TRANSITION':
+            with ws.transaction(store) as db:result={'revision':ws.effect_transition(db,args['operation_id'],args['state'],args['expected_revision'],args['evidence'])}
+            with ws.transaction(store) as db:result['value']=ws.get(db,'effect',args['operation_id'])['value']
+        else:raise ValueError('WORKFLOW_EFFECT_ACTION')
+        value['effect']=result
         return value
     if operation in {'durable.library','durable.stop','durable.control.resume'}:
         import context_runtime as runtime
@@ -478,11 +498,11 @@ def dispatch_desktop(request, profile_path):
     context = None
     try:
         validate_request(request)
-        if request['type'] not in DESKTOP_READS | {'durable.action','durable.goal','durable.library','durable.stop','durable.control.resume', DESKTOP_SCAN}:
+        if request['type'] not in DESKTOP_READS | {'durable.action','durable.goal','durable.effect','durable.library','durable.stop','durable.control.resume', DESKTOP_SCAN}:
             raise ValueError('DESKTOP_READ_ONLY')
         profile, policy = operator_profile(profile_path)
         if request['type'] not in DESKTOP_READS and not (
-                (request['type'] in {'durable.action','durable.goal'} and request['type'] in info(profile, policy)['capabilities']) or
+                (request['type'] in {'durable.action','durable.goal','durable.effect'} and request['type'] in info(profile, policy)['capabilities']) or
                 (request['type'] == DESKTOP_SCAN and DESKTOP_SCAN in info(profile, policy)['capabilities']) or
                 (profile.get('context_service') and request['type'] in {'durable.library','durable.stop','durable.control.resume'})):
             raise ValueError('DESKTOP_READ_ONLY')
