@@ -582,6 +582,10 @@ class ActionRuntime:
             'RECONCILE':lambda:self.reconcile(exact(value,{'attempt_id'})['attempt_id']),
             'IMPORT_RESULT':lambda:self.import_result(value),
             'SKILL_RECORD':lambda:self.skill_record(value),
+            'SKILL_QUALIFY':lambda:self.qualify_skill(value['skill_id'],value['version'],exact(value,{'skill_id','version','receipt'})['receipt']),
+            'SKILL_FAILURE':lambda:self.failure(value['skill_id'],value['version'],exact(value,{'skill_id','version','failure'})['failure']),
+            'SKILL_INVALIDATE':lambda:self.invalidate(value['dependency'],exact(value,{'dependency','new_digest'})['new_digest']),
+            'SKILL_OPTIMIZE':lambda:self.optimize_skill(value['skill_id'],value['version'],exact(value,{'skill_id','version','new_version'})['new_version']),
             'SKILL_INVOKE':lambda:self.invoke_skill(value['skill_id'],value['version'],value['input'],exact(value,{'skill_id','version','input','dependencies'})['dependencies']),
             'CONTINUE':lambda:self.continue_delivery(value['job_id'],exact(value,{'job_id','process_stopped'})['process_stopped']),
         }
