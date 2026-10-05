@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Voice AgentOS</title>
+  <link rel="stylesheet" href="sidepanel.css">
+</head>
+<body>
+<header>
+  <div>
+    <strong>Voice AgentOS</strong>
+    <small>Chrome control surface · V5 shell</small>
+  </div>
+  <button id="open-library" type="button">Library</button>
+</header>
+
+<main>
+  <section>
+    <h2>1 · Target / source tab</h2>
+    <div class="row">
+      <button id="refresh-tabs" type="button">Обновить вкладки</button>
+      <button id="active-tab" type="button">Выбрать активную</button>
+    </div>
+    <div id="tabs" class="list" aria-live="polite"></div>
+    <div id="tab-summary" class="status">Вкладка не выбрана.</div>
+    <div class="row">
+      <button id="observe-tab" type="button" disabled>Observe / capture</button>
+      <button id="bind-target" type="button" disabled>Bind action target</button>
+    </div>
+  </section>
+
+  <section>
+    <h2>2 · Local runtime</h2>
+    <div class="row">
+      <button id="connect-native" type="button">Подключить native host</button>
+      <button id="stop" class="danger" type="button" disabled>STOP</button>
+    </div>
+    <div id="native-status" class="status">Native host не подключён.</div>
+  </section>
+
+  <section>
+    <h2>3 · Mission</h2>
+    <label>Команда / цель
+      <textarea id="command" rows="8" placeholder="Observe tab link: https://...&#10;Research and implement automation X. Gather missing context, ask any qualified AI provider when deeper reasoning is needed, create missing capability safely, verify and continue until acceptance."></textarea>
+    </label>
+    <label>Acceptance (по строке)
+      <textarea id="acceptance" rows="4" placeholder="The requested automation works on a frozen test case&#10;Every external effect has a verified receipt"></textarea>
+    </label>
+    <label>Режим
+      <select id="mode">
+        <option value="PREVIEW">PREVIEW</option>
+        <option value="RUN_REGISTERED">RUN_REGISTERED</option>
+        <option value="LONG_HORIZON" selected>LONG_HORIZON</option>
+        <option value="RND_CAMPAIGN">RND_CAMPAIGN</option>
+        <option value="OBSERVE">OBSERVE</option>
+      </select>
+    </label>
+
+    <fieldset>
+      <legend>Разрешённые классы эффектов для этой mission</legend>
+      <label><input type="checkbox" data-effect="READ" checked disabled> READ</label>
+      <label><input type="checkbox" data-effect="LOCAL_WRITE"> LOCAL_WRITE</label>
+      <label><input type="checkbox" data-effect="LOCAL_PROCESS"> LOCAL_PROCESS</label>
+      <label><input type="checkbox" data-effect="BROWSER_WRITE"> BROWSER_WRITE</label>
+      <label><input type="checkbox" data-effect="GIT_WRITE"> GIT_WRITE</label>
+      <label><input type="checkbox" data-effect="GITHUB_WRITE"> GITHUB_WRITE</label>
+      <label><input type="checkbox" data-effect="MESSAGE_SEND"> MESSAGE_SEND</label>
+      <label><input type="checkbox" data-effect="INSTALL_UPDATE"> INSTALL_UPDATE</label>
+    </fieldset>
+
+    <div class="row">
+      <button id="preview-mission" type="button">Preview typed mission</button>
+      <button id="run-mission" class="primary" type="button" disabled>Run through AgentOS</button>
+    </div>
+    <label>Typed mission
+      <textarea id="mission-json" rows="12" readonly></textarea>
+    </label>
+  </section>
+
+  <section>
+    <h2>4 · Captured context</h2>
+    <div id="capture-status" class="status">Нет capture.</div>
+    <textarea id="capture-preview" rows="12" readonly></textarea>
+    <div class="row">
+      <button id="codex-analyze" type="button" disabled>System‑2: analyze via local Codex</button>
+      <button id="codex-build" type="button" disabled>System‑2: build artifact in sandbox</button>
+    </div>
+    <p class="note">Эти две кнопки используют уже существующий local Codex native host как fallback. Они не означают, что generic AI-site send/write уже квалифицирован.</p>
+  </section>
+
+  <section>
+    <h2>5 · Runtime log</h2>
+    <pre id="log"></pre>
+  </section>
+</main>
+
+<script type="module" src="sidepanel.mjs"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "schema": "voice-agentos.ai-claim-to-self-renew.v1",
+  "trigger": "MODEL_OR_PROVIDER_CLAIMS_MERGED_OR_CAPABILITY_READY",
+  "steps": [
+    "capture_provider_claim_as_source",
+    "parse_repo_pr_head_hints",
+    "verify_github_remote_state",
+    "resolve_exact_merged_change",
+    "registered_git_fetch_or_clone_isolated_checkout",
+    "verify_source_commit_tree",
+    "build_candidate_artifact",
+    "run_tests_and_qualification",
+    "stage_with_release_updater",
+    "run_canary",
+    "verify_installed_readback",
+    "activate_pointer_if_qualified",
+    "restart_or_reconnect_runtime",
+    "reload_original_goal_checkpoint",
+    "rebind_provider_tabs_sessions",
+    "continue_original_frontier"
+  ],
+  "alternative_download_ui_route": [
+    "open_verified_github_artifact_or_archive",
+    "monitor_download",
+    "verify_hash/source identity",
+    "unpack_to_isolated_stage",
+    "never overwrite active installation"
+  ],
+  "forbidden": [
+    "trust model merged claim",
+    "download unknown archive and execute it",
+    "overwrite running installation in place",
+    "reuse stale mission plan without revalidation"
+  ]
+}
