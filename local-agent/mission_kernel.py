@@ -10,8 +10,8 @@ def bounded_utf8(text,limit=1_400_000):
 
 class MissionKernel:
     """UI/orchestration projection. Core remains the only effect authority."""
-    def __init__(self,core,bridge,laya,questions_path,inbox_root):
-        self.core=core;self.bridge=bridge;self.laya=laya;self.questions_path=Path(questions_path)
+    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None):
+        self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.questions_path=Path(questions_path)
         self.root=Path(inbox_root).expanduser().resolve();self.root.mkdir(parents=True,exist_ok=True)
     def _answer(self,answers,key,default=None):
         value=(answers or {}).get(key,default)
@@ -33,14 +33,28 @@ class MissionKernel:
         rows=sorted(rows,key=lambda x:(x['risk']!='READ_NAV',x['role']!='button',len(x['name'])))[:60]
         return {'snapshot_id':full.get('snapshot_id'),'document_token':full.get('document_token'),'tab_id':full.get('tabId'),
                 'url':full.get('url'),'title':full.get('title'),'candidates':rows},full
-    def _state(self,mission,compile_result=None,ui=None):
+    def _windows_inventory(self,mission):
+        if not self.windows_ui or 'WINDOWS_WRITE' not in set(mission.get('effects',[])):return None,None
+        try:full=self.windows_ui.inventory()
+        except Exception:return None,None
+        rows=[]
+        for item in full.get('elements',[]):
+            if not isinstance(item,dict) or item.get('risk') not in {'READ_NAV','INPUT'}:continue
+            name=str(item.get('name') or item.get('value') or item.get('text') or '').strip()
+            if not name:continue
+            rows.append({'element_id':item.get('element_id'),'role':item.get('control_type'),'risk':item.get('risk'),
+                         'name':name[:180],'fingerprint':item.get('fingerprint')})
+        rows=sorted(rows,key=lambda x:(x['risk']!='READ_NAV',len(x['name'])))[:60]
+        return {'snapshot_id':full.get('snapshot_id'),'hwnd':full.get('hwnd'),'candidates':rows},full
+    def _state(self,mission,compile_result=None,ui=None,windows_ui=None):
         value={'schema':'voice-agentos.decision-state.v1','goal':mission['goal'],'acceptance':mission.get('acceptance',[]),
                 'effect_scope':mission.get('effects',['READ']),'has_context':bool(mission.get('context_text')),
                 'context_sha256':hashlib.sha256(mission.get('context_text','').encode()).hexdigest() if mission.get('context_text') else None,
                 'core_compile':compile_result,'time':time.time()}
         if ui:value['browser_ui']=ui
+        if windows_ui:value['windows_ui']=windows_ui
         return value
-    def _laya(self,state,ui=None):
+    def _laya(self,state,ui=None,windows_ui=None):
         if not self.laya or not self.laya.enabled:return None
         questions=json.loads(self.questions_path.read_text(encoding='utf-8'))
         if ui and ui.get('candidates'):
@@ -49,6 +63,13 @@ class MissionKernel:
                 criteria[item['element_id']]=('risk='+str(item['risk'])+' role='+str(item['role'])+' name='+str(item['name']))[:300]
             questions['ui_candidate']={'type':'choice',
                 'instructions':'Choose one exact visible UI element only if it safely advances the mission. Prefer READ_NAV for context gathering; choose NONE when uncertain.',
+                'criteria':criteria}
+        if windows_ui and windows_ui.get('candidates'):
+            criteria={'NONE':'No visible exact-bound Windows control safely advances the current goal.'}
+            for item in windows_ui['candidates']:
+                criteria[item['element_id']]=('risk='+str(item['risk'])+' role='+str(item['role'])+' name='+str(item['name']))[:300]
+            questions['windows_ui_candidate']={'type':'choice',
+                'instructions':'Choose one exact Windows UI element only if it safely advances the mission. Prefer READ_NAV; choose NONE when uncertain.',
                 'criteria':criteria}
         return self.laya.decide(state,questions)
     def _system2_role(self,decision,compile_result):
@@ -72,9 +93,10 @@ class MissionKernel:
         refs=[mission.get('context_sha256')] if mission.get('context_sha256') else []
         compile_result=self.core.create_action(mission['goal'],criteria,refs)
         ui,ui_full=self._browser_inventory(mission)
-        state=self._state(mission,compile_result,ui)
+        win,win_full=self._windows_inventory(mission)
+        state=self._state(mission,compile_result,ui,win)
         decision=None
-        try:decision=self._laya(state,ui)
+        try:decision=self._laya(state,ui,win)
         except Exception as exc:decision={'error':str(exc),'answers':{}}
         answers=(decision or {}).get('answers',{})
         route=self._answer(answers,'mission_route')
@@ -84,6 +106,24 @@ class MissionKernel:
         if route=='STOP':return {'schema':'voice-agentos.mission-step.v1','state':'STOPPED_BY_ROUTER','compile':compile_result,'laya':decision}
         if route=='WAIT':return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_EXTERNAL','compile':compile_result,'laya':decision}
         if route=='GATHER_CONTEXT':return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision}
+        if route=='WINDOWS_UI':
+            if not win or not win_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_WINDOWS_BINDING','compile':compile_result,'laya':decision}
+            candidate_id=self._answer(answers,'windows_ui_candidate','NONE');action=self._answer(answers,'windows_ui_action','ABSTAIN')
+            candidates={x.get('element_id'):x for x in win_full.get('elements',[]) if isinstance(x,dict)}
+            candidate=candidates.get(candidate_id)
+            if not candidate or candidate_id=='NONE':return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','laya':decision}
+            request={'snapshot_id':win['snapshot_id'],'element_id':candidate_id,'expected_fingerprint':candidate.get('fingerprint')}
+            if action=='SCROLL_INTO_VIEW':
+                request['action']='scroll_into_view';request['effect_class']='READ'
+            elif action=='INVOKE_READ_NAV':
+                if candidate.get('risk')!='READ_NAV':return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision}
+                request['action']='invoke';request['effect_class']='WINDOWS_WRITE'
+            elif action=='NEED_TYPED_INPUT':
+                route='SYSTEM2'
+            else:return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','candidate':candidate,'laya':decision}
+            if route=='WINDOWS_UI':
+                receipt=self.windows_ui.act(request)
+                return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_EFFECT','compile':compile_result,'laya':decision,'candidate':candidate,'ui_receipt':receipt}
         if route=='BROWSER_UI':
             if not ui or not ui_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_BINDING','compile':compile_result,'laya':decision}
             candidate_id=self._answer(answers,'ui_candidate','NONE');action=self._answer(answers,'ui_action','ABSTAIN')
@@ -118,6 +158,20 @@ class MissionKernel:
         job_id=job.get('id') if isinstance(job,dict) else None
         if not job_id:raise ValueError('SYSTEM2_JOB_ID_REQUIRED')
         return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id}
+    def capture_windows_context(self):
+        if not self.windows_ui:raise ValueError('WINDOWS_UI_UNAVAILABLE')
+        snap=self.windows_ui.text_snapshot()
+        text=snap.get('text','')
+        if not text.strip():raise ValueError('WINDOWS_UI_TEXT_EMPTY')
+        digest=hashlib.sha256(text.encode()).hexdigest()
+        path=self.root/('windows_'+str(int(time.time()))+'_'+digest[:10]+'.txt')
+        path.write_text(text,encoding='utf-8')
+        receipt=self.core.capture_file(path,'windows_ui_'+digest[:18])
+        try:self.core.annotate_capture(receipt,project='WindowsUI',note='foreground Windows UI Automation snapshot')
+        except Exception:pass
+        return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_CONTEXT_GATHERED','text':bounded_utf8(text),
+                'sha256':digest,'snapshot':snap.get('snapshot'),'library_receipt':receipt}
+
     def capture_browser_context(self):
         if not self.bridge:raise ValueError('BROWSER_BRIDGE_UNAVAILABLE')
         tab=self.bridge.active_tab();tab_id=tab.get('id') if isinstance(tab,dict) else None
