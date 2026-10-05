@@ -123,7 +123,12 @@ class MissionKernel:
                 route='SYSTEM2'
             else:return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','candidate':candidate,'laya':decision}
             if route=='WINDOWS_UI':
-                receipt=self.windows_ui.act(request)
+                try:receipt=self.windows_ui.act(request)
+                except Exception as exc:
+                    if 'WINDOWS_UI_HUMAN_FOREGROUND_LEASE' in str(exc):
+                        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'WINDOWS',
+                                'compile':compile_result,'laya':decision,'candidate':candidate}
+                    raise
                 return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_EFFECT','compile':compile_result,'laya':decision,'candidate':candidate,'ui_receipt':receipt}
         if route=='BROWSER_UI':
             if not ui or not ui_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_BINDING','compile':compile_result,'laya':decision}
