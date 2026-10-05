@@ -28,6 +28,7 @@ OUTPUT_BYTES = 192_000
 FIELDS = {
     "durable.action": ({"type", "action", "payload"}, set()),
     "durable.library": ({"type", "namespace", "action", "arguments"}, {"operationId"}),
+    "durable.goal": ({"type", "action", "arguments"}, set()),
     "durable.stop": ({"type", "requestId"}, set()),
     "durable.control.resume": ({"type", "expectedEpoch"}, set()),
     'durable.campaign.inspect': ({'type','campaign'}, {'offset','limit'}),
@@ -127,7 +128,7 @@ def info(profile, policy):
     if policy.get('actions', {}).get('enabled') is True:
         from action_intent import registry
         registry(policy['actions'])
-        capabilities.append('durable.action')
+        capabilities.extend(['durable.action','durable.goal'])
     if 'durable.repo.manifest' in FIELDS and ready_store(store, manifest=True):
         import repo_manifest
         if callable(getattr(repo_manifest, 'page', None)):
@@ -238,6 +239,9 @@ def validate_request(request):
     required, optional = FIELDS[request["type"]]
     if not required.issubset(request) or set(request) - required - optional:
         raise ValueError("DURABLE_SCHEMA")
+    if request['type']=='durable.goal':
+        if request['action'] not in {'CREATE','INSPECT','REVISE','PLAN','ADMIT','PROGRESS'} or not isinstance(request['arguments'],dict):
+            raise ValueError('DURABLE_SCHEMA')
     if request['type'].startswith('durable.campaign.'):
         identifier(request['campaign'])
         if 'offset' in request:strict_int(request['offset'],0,9_007_199_254_740_991)
@@ -271,12 +275,24 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
     store, operation = Path(profile["store"]), request["type"]
     value = {"schema": "occ.native-durable-result.v1", "operation": operation}
     if desktop and operation not in DESKTOP_READS and not (
-            operation == 'durable.action' or
+            operation in {'durable.action','durable.goal'} or
             (operation == DESKTOP_SCAN and DESKTOP_SCAN in info(profile, policy)['capabilities']) or
             (profile.get('context_service') and operation in {'durable.library','durable.stop','durable.control.resume'})):
         raise ValueError('DESKTOP_READ_ONLY')
     if operation == 'durable.action':
         value['action'] = Core(store, policy).actions.handle(request['action'], request['payload'])
+        return value
+    if operation == 'durable.goal':
+        import goal_runtime as goals
+        action=request['action'];args=request['arguments']
+        if action=='CREATE':result=goals.create(store,args['spec'],goal_id=args.get('goal_id'))
+        elif action=='INSPECT':result=goals.inspect(store,args['goal_id'])
+        elif action=='REVISE':result=goals.revise(store,args['goal_id'],args['expected_revision'],args['spec'])
+        elif action=='PLAN':result=goals.plan(store,args['goal_id'],args['expected_revision'],args['h2'],args['h1'],args['decision'])
+        elif action=='ADMIT':result=goals.admit(store,args['goal_id'],args['expected_revision'],args['candidate_id'])
+        elif action=='PROGRESS':result=goals.progress(store,args['goal_id'],args['expected_revision'],args['delta'])
+        else:raise ValueError('GOAL_ACTION_UNAVAILABLE')
+        value['goal']=result
         return value
     if operation in {'durable.library','durable.stop','durable.control.resume'}:
         import context_runtime as runtime
