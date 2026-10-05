@@ -8,6 +8,7 @@ import sys
 
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from browser_archive import BrowserArchiveAssembler
+from browser_watch import BrowserWatch
 from control_bridge import ChromeBridge
 from core_client import CoreClient
 from github_merge_watch import MergeWatcher
@@ -38,7 +39,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -78,6 +79,13 @@ class Mini:
             self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',expand(self.settings['inbox_root']))
             try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
             except Exception as exc:self.events.put(('log','LifeContext disabled: '+str(exc)))
+            try:
+                bw=self.settings.get('browser_watch') or {}
+                if self.bridge and bw.get('enabled'):
+                    self.browser_watch=BrowserWatch(self.bridge,self.core,bw,
+                        Path(expand(self.settings['inbox_root']))/'browser-watch-state.json',
+                        expand(self.settings['inbox_root']))
+            except Exception as exc:self.events.put(('log','BrowserWatch disabled: '+str(exc)))
 
     def _clipboard(self):
         try:return self.root.clipboard_get()
@@ -278,6 +286,18 @@ class Mini:
                         if result.get('results'):self.events.put(('life_context',result))
                     except Exception as exc:self.events.put(('log','life context: '+str(exc)))
             threading.Thread(target=life_loop,daemon=True).start()
+        if self.browser_watch:
+            def browser_watch_loop():
+                cfg=self.settings.get('browser_watch') or {}
+                interval=max(30,int(cfg.get('interval_seconds',300)))
+                first=True
+                while not self.shutdown_event.wait(interval):
+                    try:
+                        result=self.browser_watch.poll_once(emit_existing=bool(first and cfg.get('capture_existing_on_first_run')))
+                        first=False
+                        if result.get('results'):self.events.put(('browser_watch',result))
+                    except Exception as exc:self.events.put(('log','browser watch: '+str(exc)))
+            threading.Thread(target=browser_watch_loop,daemon=True).start()
 
     def _handle_merge(self,row):
         root=Path(expand(self.settings['inbox_root']));root.mkdir(parents=True,exist_ok=True)
@@ -318,6 +338,10 @@ class Mini:
                 elif kind=='file':self._handle_file(value)
                 elif kind=='life_context':
                     self.status.set('Life context updated · '+str(len(value.get('results',[])))+' records')
+                    self._show(value)
+                elif kind=='browser_watch':
+                    changed=sum(1 for x in value.get('results',[]) if x.get('state')=='CAPTURED')
+                    if changed:self.status.set('Browser context archived · '+str(changed)+' changed tabs')
                     self._show(value)
                 elif kind=='poll_merges':
                     gh=self.settings.get('github_watch') or {}
