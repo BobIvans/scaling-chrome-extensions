@@ -16,6 +16,7 @@
     const u=new URL(profile.origin);if(u.protocol!=='https:'||u.origin!==profile.origin||u.pathname!=='/')throw new Error('SITE_ORIGIN_SCHEMA');
     const s=profile.selectors||{};for(const key of ['account','workspace','composer','send','outgoing','response'])selector(s[key]);
     if(s.conversation!=null)selector(s.conversation);
+    if(s.response_final!=null)selector(s.response_final);
     if(!Number.isSafeInteger(profile.max_text_bytes)||profile.max_text_bytes<1||profile.max_text_bytes>2000000)throw new Error('SITE_TEXT_LIMIT');
     if(typeof profile.contract_digest!=='string'||!/^[a-f0-9]{64}$/.test(profile.contract_digest))throw new Error('SITE_CONTRACT_DIGEST');
     return profile;
@@ -95,9 +96,11 @@
   function read(profile,binding){
     validate(profile);const {identity:id}=revalidate(profile,binding,{composer:false,send:false});
     const rows=[...document.querySelectorAll(profile.selectors.response)].filter(visible).slice(-MAX_ROWS);
+    let finals=new Set();
+    if(profile.selectors.response_final)finals=new Set([...document.querySelectorAll(profile.selectors.response_final)]);
     return {state:'RESPONSES_OBSERVED',identity:id,responses:rows.map((x,i)=>({ordinal:i,text:(x.innerText||x.textContent||'').trim(),
       message_id:x.getAttribute('data-message-id')||x.getAttribute('data-turn-id')||null,
-      finalized:x.getAttribute('data-finalized')==='true'||x.getAttribute('aria-busy')==='false'}))};
+      finalized:profile.selectors.response_final?finals.has(x):(x.getAttribute('data-finalized')==='true'||x.getAttribute('aria-busy')==='false')}))};
   }
   globalThis.__occSiteAdapter={version:VERSION,bind,prepare,send,reconcile,read};
 })();
