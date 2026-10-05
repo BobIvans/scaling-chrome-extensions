@@ -122,6 +122,7 @@
     if(bound.risk==='DANGEROUS')throw new Error('UI_DANGEROUS_GENERIC_ACTION_BLOCKED');
     const before={url:location.href,name:now.name,risk:bound.risk,fingerprint:now.fingerprint};
     if(req.action==='click'){
+      if(bound.risk!=='READ_NAV')throw new Error('UI_GENERIC_CLICK_REQUIRES_QUALIFIED_ADAPTER');
       bound.el.scrollIntoView({block:'center',inline:'nearest',behavior:'instant'});bound.el.focus?.();bound.el.click();
       return{state:'UI_CLICK_INVOKED',before,after_url:location.href,desired_outcome_verified:false};
     }
