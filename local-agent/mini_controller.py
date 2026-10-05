@@ -168,13 +168,13 @@ class Mini:
                 history=[]
                 for cycle in range(limit+1):
                     if self.mission_cancel.is_set():self.events.put(('details',{'state':'CANCELLED_BY_USER','history':history}));return
-                    step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-4:]})
+                    step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-4:]}))
                     if step.get('state')!='WAITING_SYSTEM2':return
                     job_id=step['system2_job_id']
                     while not self.mission_cancel.wait(2):
                         result=self.kernel.poll_system2(job_id,current)
                         if result.get('state')=='WAITING_SYSTEM2':continue
-                        history.append(result);self.events.put(('details',{'cycle':cycle,'system2':result,'history':history[-4:]})
+                        history.append(result);self.events.put(('details',{'cycle':cycle,'system2':result,'history':history[-4:]}))
                         digest=result.get('sha256')
                         if digest in seen:self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'REPEATED_SYSTEM2_RESULT','history':history[-6:]}));return
                         seen.add(digest)
