@@ -1,4 +1,4 @@
-import tempfile,time,unittest
+import tempfile,threading,time,unittest
 from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
@@ -11,24 +11,30 @@ def candidate(cid,kind,effect='READ',progress=50,info=50,success=80,latency=20,r
             'state':'CANDIDATE'}
 
 class Core:
+    def __init__(self,barrier=None):self.barrier=barrier
     def library_search(self,query='',limit=8,**kw):
-        time.sleep(.05);return {'state':'MATCHES','rows':[{'source_ref':{'source_key':'x','revision':'r'},'annotation':{'project':'P','labels':['a']},'snippet':'hello','why_selected':'EXACT_QUOTE','total_bytes':10}]}
+        if self.barrier:self.barrier.wait(timeout=1)
+        return {'state':'MATCHES','rows':[{'source_ref':{'source_key':'x','revision':'r'},'annotation':{'project':'P','labels':['a']},'snippet':'hello','why_selected':'EXACT_QUOTE','total_bytes':10}]}
 class Bridge:
-    def __init__(self,activity=999999):self.activity=activity
+    def __init__(self,activity=999999,barrier=None):self.activity=activity;self.barrier=barrier
     def ui_inventory(self):
-        time.sleep(.05);return {'tabId':1,'snapshot_id':'s','document_token':'d','human_activity_ms':self.activity,'document_has_focus':True,'elements':[]}
+        if self.barrier:self.barrier.wait(timeout=1)
+        return {'tabId':1,'snapshot_id':'s','document_token':'d','human_activity_ms':self.activity,'document_has_focus':True,'elements':[]}
 class Win:
+    def __init__(self,barrier=None):self.barrier=barrier
     def inventory(self):
-        time.sleep(.05);return {'snapshot_id':'w','elements':[]}
+        if self.barrier:self.barrier.wait(timeout=1)
+        return {'snapshot_id':'w','elements':[]}
 
 class FastDecisionTests(unittest.TestCase):
     def test_prefetch_runs_independent_reads_in_parallel(self):
         with tempfile.TemporaryDirectory() as td:
-            e=FastDecisionEngine(Core(),Bridge(),Win(),Path(td)/'s.json')
-            start=time.perf_counter();r=e.prefetch({'goal':'find exact flashloan context'})
-            elapsed=time.perf_counter()-start
+            barrier=threading.Barrier(3)
+            e=FastDecisionEngine(Core(barrier),Bridge(barrier=barrier),Win(barrier),Path(td)/'s.json')
+            r=e.prefetch({'goal':'find exact flashloan context'})
             self.assertEqual(set(r['lanes']),{'library','browser_ui','windows_ui'})
-            self.assertTrue(r['parallel']);self.assertLess(elapsed,.14)
+            self.assertTrue(r['parallel'])
+            self.assertTrue(all(x['state']=='OK' for x in r['lanes'].values()))
             self.assertEqual(r['lanes']['library']['value']['rows'][0]['source_key'],'x')
     def test_abstention_uses_fastest_verified_route(self):
         e=FastDecisionEngine(Core(),None,None,config={'laya_override_margin':5})
