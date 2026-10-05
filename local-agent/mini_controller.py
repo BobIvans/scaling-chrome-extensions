@@ -13,6 +13,7 @@ from capability_candidate import CapabilityCandidatePipeline
 from control_bridge import ChromeBridge
 from core_client import CoreClient
 from github_merge_watch import MergeWatcher
+from github_capability_pr import GitHubCapabilityPipeline
 from laya_client import LayaClient
 from life_context_pipeline import LifeContextPipeline
 from mission_kernel import MissionKernel
@@ -41,7 +42,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.github_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -86,8 +87,13 @@ class Mini:
             if self.bridge and cg.get('enabled'):
                 try:self.candidate_pipeline=CapabilityCandidatePipeline(self.bridge,cg,Path(expand(self.settings['inbox_root']))/'capability-candidates')
                 except Exception as exc:self.events.put(('log','Capability growth disabled: '+str(exc)))
+            gp=self.settings.get('capability_pr') or {}
+            if gp.get('enabled'):
+                try:self.github_pipeline=GitHubCapabilityPipeline(gp)
+                except Exception as exc:self.events.put(('log','Capability PR pipeline disabled: '+str(exc)))
             self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',
-                expand(self.settings['inbox_root']),windows_ui=self.windows_ui,candidate_pipeline=self.candidate_pipeline)
+                expand(self.settings['inbox_root']),windows_ui=self.windows_ui,candidate_pipeline=self.candidate_pipeline,
+                github_pipeline=self.github_pipeline)
             try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
             except Exception as exc:self.events.put(('log','LifeContext disabled: '+str(exc)))
             try:
