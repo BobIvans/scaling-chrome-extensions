@@ -21,7 +21,7 @@ export class LocalControlBridge{
        typeof c.stateFile!=='string'||!path.isAbsolute(c.stateFile))throw Error('LOCAL_CONTROL_CONFIG');
   }
   async start(push){
-    if(!this.enabled)return null;this.validate();this.push=push;
+    if(!this.enabled)return null;if(this.server)return this.state;this.validate();this.push=push;
     this.server=this.createServer(socket=>this.connection(socket));
     this.server.on('error',()=>{});
     await new Promise((resolve,reject)=>{
@@ -33,7 +33,7 @@ export class LocalControlBridge{
     const state={schema:'occ.agentos-local-control.v1',host:this.config.host,port:address.port,token:this.config.token,
       pid:process.pid,started_at:new Date().toISOString(),commands:[...COMMANDS]};
     await this.writeFile(this.config.stateFile,JSON.stringify(state),{encoding:'utf8',mode:0o600});
-    return state;
+    this.state=state;return state;
   }
   connection(socket){
     socket.setTimeout(20000,()=>socket.destroy());let raw=Buffer.alloc(0),handled=false;
