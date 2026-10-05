@@ -185,7 +185,7 @@ class Mini:
                         current=dict(current,context_text=combined[-2_000_000:],context_sha256=hashlib.sha256(combined[-2_000_000:].encode()).hexdigest())
                         break
                     else:return
-                self.events.put(('details',{'state':'STOPPED_SYSTEM2_BUDGET','max_cycles':limit,'history':history[-6:]})
+                self.events.put(('details',{'state':'STOPPED_SYSTEM2_BUDGET','max_cycles':limit,'history':history[-6:]}))
             except Exception as exc:self.events.put(('error','Mission: '+str(exc)))
         threading.Thread(target=work,daemon=True).start()
 
