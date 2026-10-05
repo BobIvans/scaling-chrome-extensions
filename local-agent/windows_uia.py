@@ -1,5 +1,5 @@
 from __future__ import annotations
-import hashlib,json,os,re,subprocess,time
+import ctypes,hashlib,json,os,re,subprocess,time
 from pathlib import Path
 from uuid import uuid4
 
@@ -25,9 +25,19 @@ def _risk(row):
     return 'READ_ONLY'
 
 class WindowsUIBroker:
-    def __init__(self,script_path,powershell='powershell.exe',runner=subprocess.run):
+    def __init__(self,script_path,powershell='powershell.exe',runner=subprocess.run,human_quiet_ms=1800):
         self.script=Path(script_path).resolve();self.powershell=powershell;self.runner=runner;self.snapshots={}
+        self.human_quiet_ms=max(500,min(10000,int(human_quiet_ms)))
         if not self.script.is_file():raise WindowsUIError('WINDOWS_UI_SCRIPT_MISSING')
+
+    def _last_input_age_ms(self):
+        if os.name!='nt':return float('inf')
+        class LASTINPUTINFO(ctypes.Structure):
+            _fields_=[('cbSize',ctypes.c_uint),('dwTime',ctypes.c_uint)]
+        info=LASTINPUTINFO();info.cbSize=ctypes.sizeof(LASTINPUTINFO)
+        if not ctypes.windll.user32.GetLastInputInfo(ctypes.byref(info)):return float('inf')
+        now=ctypes.windll.kernel32.GetTickCount()
+        return int((now-info.dwTime)&0xffffffff)
 
     def _call(self,mode,request,timeout=30):
         argv=[self.powershell,'-NoProfile','-NonInteractive','-ExecutionPolicy','Bypass','-File',str(self.script),'-Mode',mode,'-RequestJson',json.dumps(request,ensure_ascii=False,separators=(',',':'))]
@@ -66,6 +76,8 @@ class WindowsUIBroker:
         now=next((x for x in current['elements'] if x['runtime_id']==bound['runtime_id']),None)
         if not now or now['fingerprint']!=bound['fingerprint']:raise WindowsUIError('WINDOWS_UI_ELEMENT_DRIFT')
         action=request.get('action')
+        if action in {'invoke','expand','set_value'} and self._last_input_age_ms()<self.human_quiet_ms:
+            raise WindowsUIError('WINDOWS_UI_HUMAN_FOREGROUND_LEASE')
         if action in {'invoke','expand'}:
             if request.get('effect_class')!='WINDOWS_WRITE':raise WindowsUIError('WINDOWS_UI_EFFECT_GRANT_REQUIRED')
             if now['risk']!='READ_NAV':raise WindowsUIError('WINDOWS_UI_GENERIC_INVOKE_REQUIRES_QUALIFIED_ADAPTER')
