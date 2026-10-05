@@ -1,6 +1,7 @@
 from __future__ import annotations
 import hashlib,json,os,re,time,uuid
 from pathlib import Path
+from urllib.parse import urlsplit
 
 HEX=re.compile(r'^[0-9a-f]{64}$')
 ID=re.compile(r'^[A-Za-z0-9_.-]{1,80}$')
@@ -25,8 +26,11 @@ class SiteAdapterRegistry:
             if not ID.fullmatch(str(key)) or not isinstance(row,dict):raise SiteAdapterError('SITE_PROFILE_SCHEMA')
             required={'origin','selectors','max_text_bytes','qualification'}
             if set(row)!=required:raise SiteAdapterError('SITE_PROFILE_SCHEMA')
-            if not isinstance(row['origin'],str) or not row['origin'].startswith('https://') or row['origin'].rstrip('/')!=row['origin'].replace('https://','https://').rstrip('/'):
-                pass
+            if not isinstance(row['origin'],str):
+                raise SiteAdapterError('SITE_ORIGIN_SCHEMA')
+            parsed=urlsplit(row['origin'])
+            if parsed.scheme!='https' or not parsed.hostname or parsed.path not in {'','/'} or parsed.query or parsed.fragment or parsed.username or parsed.password:
+                raise SiteAdapterError('SITE_ORIGIN_SCHEMA')
             selectors=row['selectors']
             if not isinstance(selectors,dict) or set(selectors)!={'account','workspace','conversation','composer','send','outgoing','response'}:raise SiteAdapterError('SITE_SELECTORS_SCHEMA')
             for name,value in selectors.items():
