@@ -1,0 +1,116 @@
+{
+  "schema": "voice-agentos.execution-phases.v1",
+  "date": "2026-10-05",
+  "phases": [
+    {
+      "id": "V0",
+      "title": "Actual repo audit + strategy import",
+      "goal": "Establish real HEAD/owners/installed state and import this strategy without replacing existing canonical owners.",
+      "exit": [
+        "repository instructions/AGENTS read if present",
+        "remote/base/head/dirty captured",
+        "existing handlers/UI/store/bridge owners mapped",
+        "old claims classified as present/missing/stale",
+        "strategy present under docs/strategy/voice-agentos/2026-10-05",
+        "implementation branch/worktree isolated"
+      ]
+    },
+    {
+      "id": "V1",
+      "title": "Context Core + large-source ingestion",
+      "goal": "Selected repo/docs/chat exports become durable source versions with exact reopening and bounded context packets.",
+      "exit": [
+        "streaming manifest includes binary/LFS/symlink/submodule/nested ZIP/gaps",
+        "content-addressed raw bytes verified",
+        "FTS/exact range read works",
+        "resumable import survives restart",
+        "context packet has hashes/anchors/missing ledger",
+        "repo AST/import graph is derived, not source of truth"
+      ]
+    },
+    {
+      "id": "V2",
+      "title": "Existing Chrome to selected Grok roundtrip",
+      "goal": "First end-to-end user value.",
+      "exit": [
+        "exact profile/tab/account/conversation/branch/epoch binding",
+        "observer/read capture qualified",
+        "writer lease/fence before first send",
+        "durable effect intent + nonce",
+        "context packet sent/read back",
+        "response correlated and persisted",
+        "crash-after-send returns VERIFIED or UNKNOWN, never blind duplicate",
+        "STOP/takeover tests pass",
+        "0 wrong-target effects in frozen corpus"
+      ]
+    },
+    {
+      "id": "V3",
+      "title": "Voice + recipes + durable scheduler",
+      "goal": "Voice/text/hotkey create persistent tasks that use known recipes and can pause/resume.",
+      "exit": [
+        "RU/EN/noise ASR benchmark",
+        "critical slots verified",
+        "typed intent/recipe compile",
+        "event/schedule idempotency",
+        "missed-run/sleep/restart policy",
+        "global STOP outside model",
+        "parallel reads + serialized external writers"
+      ]
+    },
+    {
+      "id": "V4",
+      "title": "Capability gap to new tool to promotion",
+      "goal": "Unknown task can become a tested reusable capability without granting arbitrary code execution.",
+      "exit": [
+        "gap object with exact unmet criterion",
+        "isolated coding worker",
+        "tool manifest/schema/effect class/verifier",
+        "unit + fault + heldout tests",
+        "immutable registry promotion",
+        "rollback/quarantine",
+        "original task resumes with promoted version"
+      ]
+    },
+    {
+      "id": "V5",
+      "title": "Coding + GitHub + installed update loop",
+      "goal": "Agent can carry a code change to a verified installed release.",
+      "exit": [
+        "isolated worktree per writer",
+        "stale head/conflict gates",
+        "PR/CI/merge receipts",
+        "build artifact hash",
+        "verified installer path as applicable",
+        "installed version readback + health",
+        "rollback path tested",
+        "no claim of updated app from git pull alone"
+      ]
+    },
+    {
+      "id": "V6",
+      "title": "Domain campaigns",
+      "goal": "Add Studious/Web3, media, research, Telegram/connectors, knowledge graph and other families behind domain verifiers.",
+      "exit": [
+        "each domain has its own frozen dataset/criteria",
+        "Studious remains paper/simulation by default",
+        "24h qualification uses real elapsed interval",
+        "negative/blocked results preserved",
+        "generic browser success never substitutes domain proof"
+      ]
+    },
+    {
+      "id": "V7",
+      "title": "Parallel autonomy + self-improvement",
+      "goal": "Scale to parallel goals and skill reuse while retaining evidence and resource control.",
+      "exit": [
+        "DAG scheduling with resource leases",
+        "no-progress detector and bounded attempts",
+        "trajectory-to-skill extraction with heldout evaluation",
+        "provider/model replacement without memory migration",
+        "continuous capability inventory and stale invalidation",
+        "human-readable receipts and recovery remain first-class"
+      ]
+    }
+  ]
+}
