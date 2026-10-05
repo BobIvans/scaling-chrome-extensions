@@ -115,13 +115,15 @@ class GoogleDriveIngestor:
         token=self._token();rows=self._list(token);state=self._state();old=state['files'];fresh=[];next_state={}
         for row in rows:
             fid=row['id'];finger='|'.join(str(row.get(x,'')) for x in ('modifiedTime','md5Checksum','size','mimeType'))
-            next_state[fid]=finger
-            if old.get(fid)==finger:continue
-            if not old and not emit_existing:continue
+            if old.get(fid)==finger:
+                next_state[fid]=finger;continue
+            if not old and not emit_existing:
+                next_state[fid]=finger;continue
             try:download=self._download(row,token)
             except DriveError as exc:
                 fresh.append({'state':'BLOCKED','file_id':fid,'name':row.get('name',''),'mime_type':row.get('mimeType',''),'reason':str(exc)})
                 continue
+            next_state[fid]=finger
             fresh.append({'state':'DOWNLOADED','file_id':fid,'name':row.get('name',''),'mime_type':row.get('mimeType',''),
                           'modified_time':row.get('modifiedTime'),'parents':row.get('parents',[]),**download})
         self._save({'schema':'voice-agentos.drive-ingest-state.v1','checked_at':time.time(),'files':next_state})
