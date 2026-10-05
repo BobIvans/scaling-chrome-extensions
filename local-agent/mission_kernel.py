@@ -53,6 +53,7 @@ class MissionKernel:
             return {'schema':'voice-agentos.mission-step.v1','state':'CORE_JOB_QUEUED','compile':compile_result,'laya':decision,'job':job}
         if route=='STOP':return {'schema':'voice-agentos.mission-step.v1','state':'STOPPED_BY_ROUTER','compile':compile_result,'laya':decision}
         if route=='WAIT':return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_EXTERNAL','compile':compile_result,'laya':decision}
+        if route=='GATHER_CONTEXT':return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision}
         if not self.bridge:return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision}
         role=self._system2_role(decision,compile_result)
         context=mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False)
