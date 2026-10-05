@@ -56,8 +56,9 @@ class ChromeBridge:
     def list_tabs(self):return self.request('tabs.list')
     def start_capture(self,tab_id=None):return self.request('tab.capture.start',{} if tab_id is None else {'tabId':tab_id},40)
     def get_capture(self,tab_id=None):return self.request('capture.get',{} if tab_id is None else {'tabId':tab_id},10)
-    def capture_archive(self,tab_id=None,on_chunk=None,max_bytes=67108864,max_steps=3000,max_ms=120000):
-        args={'maxBytes':int(max_bytes),'maxSteps':int(max_steps),'maxMs':int(max_ms)}
+    def capture_archive(self,tab_id=None,on_chunk=None,max_bytes=67108864,max_steps=3000,max_ms=120000,respect_human_lease=True,human_quiet_ms=1800):
+        args={'maxBytes':int(max_bytes),'maxSteps':int(max_steps),'maxMs':int(max_ms),
+              'respectHumanLease':bool(respect_human_lease),'humanQuietMs':int(human_quiet_ms)}
         if tab_id is not None:args['tabId']=int(tab_id)
         return self.request_stream('tab.capture.archive',args,on_chunk=on_chunk,timeout=max(180,int(max_ms/1000)+60))
     def ui_inventory(self,tab_id=None):
