@@ -95,7 +95,15 @@ class MissionKernel:
             effect=((compile_result.get('plan') or {}).get('capability') or {}).get('effect','LOCAL_READ')
             mapped={'LOCAL_READ':'LOCAL_READ','LOCAL_WRITE':'LOCAL_WRITE','EXTERNAL_WRITE':'MESSAGE_SEND'}.get(effect,'LOCAL_READ')
             add('route_known','KNOWN_RECIPE','Execute compiled registered Core capability',mapped,98,20,98,5,5,35,False,['core:action'])
-        add('route_context','GATHER_CONTEXT','Gather fresh exact context before acting','READ',35,95,95,20,0,25,True,['library:read'])
+        metadata=mission.get('context_metadata') if isinstance(mission.get('context_metadata'),dict) else {}
+        coverage=metadata.get('coverage') if isinstance(metadata.get('coverage'),dict) else {}
+        if coverage.get('complete') is True:
+            context_score=(12,20,95,10,0,10)
+        elif mission.get('context_text'):
+            context_score=(20,40,90,15,0,18)
+        else:
+            context_score=(35,95,95,20,0,25)
+        add('route_context','GATHER_CONTEXT','Gather fresh exact context before acting','READ',*context_score,True,['library:read'])
         if ui and ui.get('candidates'):add('route_browser','BROWSER_UI','Advance context through exact-bound browser READ_NAV','BROWSER_WRITE',55,95,90,15,10,45,False,['browser:foreground'])
         if windows_ui and windows_ui.get('candidates'):add('route_windows','WINDOWS_UI','Advance context through exact-bound Windows UIA READ_NAV','WINDOWS_WRITE',60,90,90,20,12,45,False,['windows:foreground'])
         add('route_system2','SYSTEM2','Ask System-2 for novel reasoning or design','LOCAL_PROCESS',65,75,75,55,5,50,True,['system2:local'])
