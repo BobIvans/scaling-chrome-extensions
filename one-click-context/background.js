@@ -245,6 +245,9 @@ async function handleAgentOSLocalControl(message) {
     return {state: 'CAPTURE_AVAILABLE', tabId: cap.sourceTabId, captureId: cap.captureId, revision: cap.revision,
       status: cap.status, capturedAt: cap.capturedAt, text: cap.text, warnings: cap.warnings || [], source: cap.source || ''};
   }
+  if (message.command === 'system2.codex.submit') return await agentosCodexSubmit(message.args || {});
+  if (message.command === 'system2.codex.status') return await agentosCodexStatus(message.args || {});
+  if (message.command === 'system2.codex.result') return await agentosCodexResult(message.args || {});
   if (message.command === 'tab.capture.start') {
     let tab;
     if (Number.isInteger(message.args?.tabId)) tab = await chrome.tabs.get(message.args.tabId);
@@ -321,6 +324,61 @@ async function agentosNativeRequest(request, onProgress) {
     agentosNativePending.set(requestId, {resolve, reject, timer, onProgress});
     port.postMessage({...request, requestId});
   });
+}
+async function agentosSha256(bytes) {
+  const raw = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(raw)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+async function agentosCodexSubmit(args) {
+  if (!args || typeof args.instruction !== 'string' || !args.instruction.trim() ||
+      typeof args.text !== 'string' || !args.text || !['analyze','build'].includes(args.mode || 'analyze')) {
+    throw new Error('SYSTEM2_CODEX_SCHEMA');
+  }
+  const bytes = utf8(args.text);
+  if (bytes.byteLength > MAX_BYTES) throw new Error('SYSTEM2_CODEX_INPUT_LIMIT');
+  const mode = args.mode || 'analyze';
+  const begin = await agentosNativeRequest({type:'begin', instruction:args.instruction, mode,
+    bytes:bytes.byteLength, sha256:await agentosSha256(bytes)});
+  const jobId = begin.job?.id;
+  if (typeof jobId !== 'string') throw new Error('SYSTEM2_CODEX_JOB_SCHEMA');
+  try {
+    for (let offset = 0; offset < bytes.length; offset += 49152) {
+      const part = bytes.subarray(offset, Math.min(bytes.length, offset + 49152));
+      await agentosNativeRequest({type:'append', jobId, offset, base64:bytesToBase64(part)});
+    }
+    const run = await agentosNativeRequest({type:'run', jobId});
+    return {job:run.job || begin.job};
+  } catch (error) {
+    await agentosNativeRequest({type:'discard', jobId}).catch(() => {});
+    throw error;
+  }
+}
+async function agentosCodexStatus(args) {
+  if (!args || typeof args.jobId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  const list = await agentosNativeRequest({type:'list'});
+  const job = Array.isArray(list.jobs) ? list.jobs.find(x => x.id === args.jobId) : null;
+  if (!job) throw new Error('SYSTEM2_CODEX_JOB_NOT_FOUND');
+  return {job};
+}
+async function agentosCodexResult(args) {
+  if (!args || typeof args.jobId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  const status = await agentosCodexStatus(args);
+  if (status.job.state !== 'COMPLETE') return status;
+  let offset = 0, total = null, sha = null, chunks = [];
+  while (total === null || offset < total) {
+    const frame = await agentosNativeRequest({type:'result', jobId:args.jobId, offset});
+    if (!Number.isSafeInteger(frame.bytes) || frame.bytes < 0 || frame.offset !== offset ||
+        typeof frame.base64 !== 'string' || typeof frame.sha256 !== 'string') throw new Error('SYSTEM2_CODEX_RESULT_SCHEMA');
+    if (total !== null && (frame.bytes !== total || frame.sha256 !== sha)) throw new Error('SYSTEM2_CODEX_RESULT_CHANGED');
+    total = frame.bytes; sha = frame.sha256;
+    const raw = Uint8Array.from(atob(frame.base64), ch => ch.charCodeAt(0));
+    chunks.push(raw); offset += raw.length;
+    if (!raw.length && offset < total) throw new Error('SYSTEM2_CODEX_RESULT_SCHEMA');
+  }
+  const bytes = new Uint8Array(total || 0); let cursor = 0;
+  for (const part of chunks) { bytes.set(part, cursor); cursor += part.length; }
+  if (await agentosSha256(bytes) !== sha) throw new Error('SYSTEM2_CODEX_RESULT_HASH');
+  return {job:status.job, text:new TextDecoder('utf-8',{fatal:true}).decode(bytes), sha256:sha};
 }
 void agentosNativePermission().then(ok => { if (ok) void ensureAgentOSNativeBridge().catch(() => {}); });
 chrome.runtime.onStartup?.addListener(() => {
