@@ -529,6 +529,15 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   if (message.type === 'progress' && sender.tab?.id === active?.tabId && message.operationToken === active.token) {
     active.documentId ||= sender.documentId || ''; void badge(sender.tab.id, String(message.blocks).slice(0, 4)); respond({ok: true}); return false;
   }
+  if (message.type === 'captureStream') {
+    const session=agentosArchiveStreams.get(message.operationToken);
+    if(!session||sender.tab?.id!==session.tabId||!Number.isSafeInteger(message.sequence)||message.sequence<=session.lastSequence||
+       !message.chunk||typeof message.chunk!=='object'){respond({ok:false,error:'CAPTURE_STREAM_SCOPE'});return false;}
+    session.lastSequence=message.sequence;
+    try{agentosStream(session.controlId,{sequence:message.sequence,...message.chunk});respond({ok:true});}
+    catch(error){respond({ok:false,error:error.message||'CAPTURE_STREAM_FAILED'});}
+    return false;
+  }
   if (message.type === 'captureContext' && sender.tab?.id === active?.tabId && message.operationToken === active.token) {
     active.documentId = sender.documentId || ''; respond({ok: true}); return false;
   }
