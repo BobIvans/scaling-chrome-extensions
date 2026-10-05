@@ -19,6 +19,8 @@ from laya_supervisor import LayaSupervisor
 from life_context_pipeline import LifeContextPipeline
 from mission_kernel import MissionKernel
 from self_renew import VerifiedRenewal
+from site_adapter import SiteAdapterRuntime
+from system2_registry import System2ProviderRegistry
 from windows_uia import WindowsUIBroker
 
 CAPTURE_MARKER='BEGIN CAPTURED SOURCE TEXT'
@@ -43,7 +45,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.laya_supervisor=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.github_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.laya_supervisor=None;self.site_runtime=None;self.system2_registry=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.github_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None;self.current_goal=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -110,9 +112,18 @@ class Mini:
             if gp.get('enabled'):
                 try:self.github_pipeline=GitHubCapabilityPipeline(gp)
                 except Exception as exc:self.events.put(('log','Capability PR pipeline disabled: '+str(exc)))
+            sites=self.settings.get('ai_sites') or {}
+            if self.bridge and sites.get('enabled'):
+                try:self.site_runtime=SiteAdapterRuntime(self.core,self.bridge,sites,Path(expand(self.settings['inbox_root']))/'site-outbox')
+                except Exception as exc:self.events.put(('log','AI site runtime disabled: '+str(exc)))
+            s2=self.settings.get('system2_providers') or {}
+            if s2.get('enabled'):
+                try:self.system2_registry=System2ProviderRegistry(self.bridge,self.site_runtime,s2,Path(expand(self.settings['inbox_root']))/'system2-registry')
+                except Exception as exc:self.events.put(('log','System2 registry disabled: '+str(exc)))
             self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',
                 expand(self.settings['inbox_root']),windows_ui=self.windows_ui,candidate_pipeline=self.candidate_pipeline,
-                github_pipeline=self.github_pipeline,decision_config=self.settings.get('fast_decision') or {})
+                github_pipeline=self.github_pipeline,decision_config=self.settings.get('fast_decision') or {},
+                system2_registry=self.system2_registry)
             try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
             except Exception as exc:self.events.put(('log','LifeContext disabled: '+str(exc)))
             try:
@@ -356,7 +367,8 @@ class Mini:
                     if state!='WAITING_SYSTEM2':return
                     if system2_count>=max_system2:
                         self.events.put(('details',{'state':'STOPPED_SYSTEM2_BUDGET','max_system2_cycles':max_system2,'history':history[-8:]}));return
-                    system2_count+=1;job_id=step['system2_job_id']
+                    system2_count+=1;job_id=step.get('system2_session_id') or step.get('system2_job_id')
+                    if not job_id:raise RuntimeError('SYSTEM2_HANDLE_REQUIRED')
                     while not self.mission_cancel.wait(2):
                         result=self.kernel.poll_system2(job_id,current)
                         if result.get('state')=='WAITING_SYSTEM2':continue
