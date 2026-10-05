@@ -28,7 +28,7 @@ class ChromeBridge:
         if value.get('ok') is not True:raise BridgeError(value.get('error','CHROME_BRIDGE_FAILED'))
         return value.get('result')
     def request_stream(self,command,args=None,on_chunk=None,timeout=260):
-        state=self.state();payload=json.dumps({'token':state['token'],'command':command,'args':args or {}},separators=(',',':')).encode()+b'\\n'
+        state=self.state();payload=json.dumps({'token':state['token'],'command':command,'args':args or {}},separators=(',',':')).encode()+b'\n'
         try:
             with socket.create_connection((state['host'],state['port']),timeout=5) as sock:
                 sock.settimeout(timeout);sock.sendall(payload);buffer=b''
@@ -39,8 +39,8 @@ class ChromeBridge:
                         raise BridgeError('CHROME_BRIDGE_STREAM_CLOSED')
                     buffer+=chunk
                     if len(buffer)>4800000:raise BridgeError('CHROME_BRIDGE_STREAM_FRAME_LIMIT')
-                    while b'\\n' in buffer:
-                        raw,buffer=buffer.split(b'\\n',1)
+                    while b'\n' in buffer:
+                        raw,buffer=buffer.split(b'\n',1)
                         if not raw:continue
                         try:value=json.loads(raw.decode())
                         except Exception as exc:raise BridgeError('CHROME_BRIDGE_STREAM_RESPONSE') from exc
