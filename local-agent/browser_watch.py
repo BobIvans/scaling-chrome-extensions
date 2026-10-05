@@ -59,7 +59,8 @@ class BrowserWatch:
         try:
             manifest=self.bridge.capture_archive(tab['id'],on_chunk=assembler.add_chunk,
                 max_bytes=int(self.c.get('max_bytes',67108864)),max_steps=int(self.c.get('max_steps',2500)),
-                max_ms=int(self.c.get('max_ms',90000)))
+                max_ms=int(self.c.get('max_ms',90000)),respect_human_lease=True,
+                human_quiet_ms=int(self.c.get('human_quiet_ms',1800)))
             return assembler.finalize(manifest)
         except Exception as exc:
             assembler.abort(str(exc));raise
