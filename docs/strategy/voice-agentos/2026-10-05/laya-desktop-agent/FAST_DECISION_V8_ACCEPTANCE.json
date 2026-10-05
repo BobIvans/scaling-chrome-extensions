@@ -1,0 +1,51 @@
+{
+  "schema": "voice-agentos.fast-decision-v8-acceptance.v1",
+  "gates": [
+    {
+      "id": "FD1",
+      "name": "Parallel prefetch",
+      "acceptance": [
+        "Library/browser/Windows independent reads execute concurrently",
+        "lane failure does not erase successful lanes",
+        "latency/state receipts are returned"
+      ]
+    },
+    {
+      "id": "FD2",
+      "name": "Fastest admission",
+      "acceptance": [
+        "known qualified recipe wins default fast path",
+        "safe Laya route is retained within margin",
+        "abstention falls back deterministically",
+        "WAIT/STOP cannot be utility-overridden"
+      ]
+    },
+    {
+      "id": "FD3",
+      "name": "Human foreground",
+      "acceptance": [
+        "human-active target is not mutated",
+        "independent background lanes continue",
+        "mission remains resumable"
+      ]
+    },
+    {
+      "id": "FD4",
+      "name": "Durable frontier",
+      "acceptance": [
+        "H2/H1/H0 persisted",
+        "fast decision + parallel plan persisted",
+        "step exposes route rationale/timing"
+      ]
+    },
+    {
+      "id": "FD5",
+      "name": "Avoid expensive reasoning",
+      "acceptance": [
+        "known recipe avoids System-2",
+        "fresh local evidence can outrank model call",
+        "missing capability routes to reusable-tool path"
+      ]
+    }
+  ]
+}

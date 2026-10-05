@@ -2,6 +2,7 @@ from __future__ import annotations
 import hashlib, json, time
 from pathlib import Path
 from browser_archive import BrowserArchiveAssembler
+from fast_decision import FastDecisionEngine
 
 def bounded_utf8(text,limit=1_400_000):
     raw=str(text or '').encode('utf-8')
@@ -10,9 +11,10 @@ def bounded_utf8(text,limit=1_400_000):
 
 class MissionKernel:
     """UI/orchestration projection. Core remains the only effect authority."""
-    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None,github_pipeline=None):
+    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None,github_pipeline=None,decision_config=None):
         self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.candidate_pipeline=candidate_pipeline;self.github_pipeline=github_pipeline;self.questions_path=Path(questions_path)
         self.root=Path(inbox_root).expanduser().resolve();self.root.mkdir(parents=True,exist_ok=True)
+        self.fast_decision=FastDecisionEngine(core,bridge,windows_ui,self.root/'fast-decision-stats.json',decision_config)
     def _answer(self,answers,key,default=None):
         value=(answers or {}).get(key,default)
         if isinstance(value,dict):
@@ -20,10 +22,11 @@ class MissionKernel:
             for field in ('choice','label','answer','value'):
                 if field in value:return value[field]
         return value
-    def _browser_inventory(self,mission):
+    def _browser_inventory(self,mission,full=None):
         if not self.bridge or 'BROWSER_WRITE' not in set(mission.get('effects',[])):return None,None
-        try:full=self.bridge.ui_inventory()
-        except Exception:return None,None
+        if full is None:
+            try:full=self.bridge.ui_inventory()
+            except Exception:return None,None
         rows=[]
         for item in full.get('elements',[]):
             if not isinstance(item,dict) or item.get('risk') not in {'READ_NAV','INPUT'}:continue
@@ -35,10 +38,11 @@ class MissionKernel:
         return {'snapshot_id':full.get('snapshot_id'),'document_token':full.get('document_token'),'tab_id':full.get('tabId'),
                 'url':full.get('url'),'title':full.get('title'),'human_activity_ms':full.get('human_activity_ms'),
                 'document_has_focus':full.get('document_has_focus'),'visibility_state':full.get('visibility_state'),'candidates':rows},full
-    def _windows_inventory(self,mission):
+    def _windows_inventory(self,mission,full=None):
         if not self.windows_ui or 'WINDOWS_WRITE' not in set(mission.get('effects',[])):return None,None
-        try:full=self.windows_ui.inventory()
-        except Exception:return None,None
+        if full is None:
+            try:full=self.windows_ui.inventory()
+            except Exception:return None,None
         rows=[]
         for item in full.get('elements',[]):
             if not isinstance(item,dict) or item.get('risk') not in {'READ_NAV','INPUT'}:continue
@@ -48,13 +52,19 @@ class MissionKernel:
                          'name':name[:180],'fingerprint':item.get('fingerprint')})
         rows=sorted(rows,key=lambda x:(x['risk']!='READ_NAV',len(x['name'])))[:60]
         return {'snapshot_id':full.get('snapshot_id'),'hwnd':full.get('hwnd'),'candidates':rows},full
-    def _state(self,mission,compile_result=None,ui=None,windows_ui=None):
+    def _state(self,mission,compile_result=None,ui=None,windows_ui=None,prefetch=None):
         value={'schema':'voice-agentos.decision-state.v1','goal':mission['goal'],'acceptance':mission.get('acceptance',[]),
                 'effect_scope':mission.get('effects',['READ']),'has_context':bool(mission.get('context_text')),
                 'context_sha256':hashlib.sha256(mission.get('context_text','').encode()).hexdigest() if mission.get('context_text') else None,
                 'core_compile':compile_result,'time':time.time()}
         if ui:value['browser_ui']=ui
         if windows_ui:value['windows_ui']=windows_ui
+        if isinstance(prefetch,dict):
+            library=((prefetch.get('lanes') or {}).get('library') or {})
+            if library.get('state')=='OK':value['library_prefetch']=library.get('value')
+            value['prefetch']={'elapsed_ms':prefetch.get('elapsed_ms'),'parallel':prefetch.get('parallel'),
+                'lanes':{k:{'state':v.get('state'),'elapsed_ms':v.get('elapsed_ms'),'error':v.get('error')}
+                         for k,v in (prefetch.get('lanes') or {}).items()}}
         return value
     def _laya(self,state,ui=None,windows_ui=None):
         if not self.laya or not self.laya.enabled:return None
@@ -76,22 +86,30 @@ class MissionKernel:
         return self.laya.decide(state,questions)
     def _route_frontier(self,mission,compile_result,ui,windows_ui):
         rows=[]
-        def add(cid,kind,text,effect,progress,info,success,latency,risk,unlock,parallel):
+        def add(cid,kind,text,effect,progress,info,success,latency,risk,unlock,parallel,resources=None):
             rows.append({'id':cid,'kind':kind,'text':text,'depends_on':[],'effect_class':effect,'verifier':'independent receipt/evidence delta',
-                'resources':[],'components':{'progress':progress,'information_gain':info,'success_probability':success,
+                'resources':list(resources or []),'components':{'progress':progress,'information_gain':info,'success_probability':success,
                 'latency_cost':latency,'human_cost':0,'resource_cost':10,'risk_penalty':risk,'freshness_penalty':5,
                 'unlock_count':unlock,'parallelizable':parallel},'state':'CANDIDATE'})
         if compile_result.get('state')=='COMPILED':
             effect=((compile_result.get('plan') or {}).get('capability') or {}).get('effect','LOCAL_READ')
             mapped={'LOCAL_READ':'LOCAL_READ','LOCAL_WRITE':'LOCAL_WRITE','EXTERNAL_WRITE':'MESSAGE_SEND'}.get(effect,'LOCAL_READ')
-            add('route_known','KNOWN_RECIPE','Execute compiled registered Core capability',mapped,90,20,90,10,10,20,False)
-        add('route_context','GATHER_CONTEXT','Gather fresh exact context before acting','READ',35,95,95,20,0,25,True)
-        if ui and ui.get('candidates'):add('route_browser','BROWSER_UI','Advance context through exact-bound browser READ_NAV','BROWSER_WRITE',45,85,85,20,15,30,False)
-        if windows_ui and windows_ui.get('candidates'):add('route_windows','WINDOWS_UI','Advance context through exact-bound Windows UIA READ_NAV','WINDOWS_WRITE',40,75,75,30,20,25,False)
-        add('route_system2','SYSTEM2','Ask System-2 for novel reasoning or design','LOCAL_PROCESS',65,75,75,55,5,50,True)
-        if compile_result.get('state')!='COMPILED':add('route_capability','CAPABILITY_GAP','Resolve missing capability and qualify a reusable tool','LOCAL_PROCESS',60,65,60,75,20,95,True)
+            add('route_known','KNOWN_RECIPE','Execute compiled registered Core capability',mapped,98,20,98,5,5,35,False,['core:action'])
+        metadata=mission.get('context_metadata') if isinstance(mission.get('context_metadata'),dict) else {}
+        coverage=metadata.get('coverage') if isinstance(metadata.get('coverage'),dict) else {}
+        if coverage.get('complete') is True:
+            context_score=(12,20,95,10,0,10)
+        elif mission.get('context_text'):
+            context_score=(20,40,90,15,0,18)
+        else:
+            context_score=(35,95,95,20,0,25)
+        add('route_context','GATHER_CONTEXT','Gather fresh exact context before acting','READ',*context_score,True,['library:read'])
+        if ui and ui.get('candidates'):add('route_browser','BROWSER_UI','Advance context through exact-bound browser READ_NAV','BROWSER_WRITE',55,95,90,15,10,45,False,['browser:foreground'])
+        if windows_ui and windows_ui.get('candidates'):add('route_windows','WINDOWS_UI','Advance context through exact-bound Windows UIA READ_NAV','WINDOWS_WRITE',60,90,90,20,12,45,False,['windows:foreground'])
+        add('route_system2','SYSTEM2','Ask System-2 for novel reasoning or design','LOCAL_PROCESS',65,75,75,55,5,50,True,['system2:local'])
+        if compile_result.get('state')!='COMPILED':add('route_capability','CAPABILITY_GAP','Resolve missing capability and qualify a reusable tool','LOCAL_PROCESS',60,65,60,75,20,95,True,['repo:candidate'])
         return rows
-    def _persist_frontier(self,mission,compile_result,decision,ui,windows_ui,route):
+    def _persist_frontier(self,mission,compile_result,decision,ui,windows_ui,route,frontier=None,fast_decision=None,parallel_lanes=None):
         gid=mission.get('goal_id');rev=mission.get('goal_revision')
         if not gid or not isinstance(rev,int):return None,None
         h2=mission.get('h2')
@@ -101,8 +119,10 @@ class MissionKernel:
                 {'id':'outcome','text':'Achieve the requested outcome using qualified capabilities','state':'TENTATIVE','acceptance':['Requested outcome exists in reality'],'depends_on':['evidence']},
                 {'id':'verify','text':'Verify acceptance independently and preserve receipts','state':'TENTATIVE','acceptance':['Every acceptance criterion has independent evidence'],'depends_on':['outcome']}
             ]
-        frontier=self._route_frontier(mission,compile_result,ui,windows_ui)
-        plan=self.core.goal_plan(gid,rev,h2,frontier,{'route':route,'laya':decision or {},'observed_at':time.time()})
+        frontier=frontier if isinstance(frontier,list) else self._route_frontier(mission,compile_result,ui,windows_ui)
+        decision_record={'route':route,'laya':decision or {},'fast_decision':fast_decision or {},
+                         'parallel_lanes':parallel_lanes or [],'observed_at':time.time()}
+        plan=self.core.goal_plan(gid,rev,h2,frontier,decision_record)
         route_ids={'KNOWN_RECIPE':'route_known','GATHER_CONTEXT':'route_context','BROWSER_UI':'route_browser',
                    'WINDOWS_UI':'route_windows','SYSTEM2':'route_system2','CAPABILITY_GAP':'route_capability'}
         cid=route_ids.get(route)
@@ -150,71 +170,96 @@ class MissionKernel:
         criteria=[str(x) for x in mission.get('acceptance',[]) if str(x).strip()]
         refs=[mission.get('context_sha256')] if mission.get('context_sha256') else []
         compile_result=self.core.create_action(mission['goal'],criteria,refs)
-        ui,ui_full=self._browser_inventory(mission)
-        win,win_full=self._windows_inventory(mission)
-        state=self._state(mission,compile_result,ui,win)
+        prefetch=self.fast_decision.prefetch(mission)
+        lanes=prefetch.get('lanes') or {}
+        browser_lane=lanes.get('browser_ui') or {};windows_lane=lanes.get('windows_ui') or {}
+        browser_full=browser_lane.get('value') if browser_lane.get('state')=='OK' else None
+        windows_full=windows_lane.get('value') if windows_lane.get('state')=='OK' else None
+        ui,ui_full=self._browser_inventory(mission,browser_full)
+        win,win_full=self._windows_inventory(mission,windows_full)
+        state=self._state(mission,compile_result,ui,win,prefetch)
         decision=None
         try:decision=self._laya(state,ui,win)
         except Exception as exc:decision={'error':str(exc),'answers':{}}
         answers=(decision or {}).get('answers',{})
-        route=self._answer(answers,'mission_route')
-        goal_revision,h0_candidate=self._persist_frontier(mission,compile_result,decision,ui,win,route)
+        laya_route=self._answer(answers,'mission_route')
+        frontier=self._route_frontier(mission,compile_result,ui,win)
+        if laya_route in {'WAIT','STOP'}:
+            fast={'schema':'voice-agentos.fast-decision.v1','route':laya_route,'candidate_id':None,
+                  'reason':'LAYA_CONTROL_STATE','laya_route':laya_route,'ranked':[],'blocked':[],
+                  'prefetch_elapsed_ms':prefetch.get('elapsed_ms')}
+        else:
+            fast=self.fast_decision.choose(frontier,laya_route,mission.get('effects',['READ']),prefetch)
+        route=fast.get('route')
+        # Exact UI effects still need an element/action selected by Laya. The
+        # deterministic policy may rank the surface, but never invents a click.
+        if route=='BROWSER_UI' and self._answer(answers,'ui_candidate','NONE')=='NONE':
+            route='GATHER_CONTEXT';fast={**fast,'route':route,'candidate_id':'route_context','reason':'UI_CHOICE_REQUIRED_FALLBACK'}
+        if route=='WINDOWS_UI' and self._answer(answers,'windows_ui_candidate','NONE')=='NONE':
+            route='GATHER_CONTEXT';fast={**fast,'route':route,'candidate_id':'route_context','reason':'UI_CHOICE_REQUIRED_FALLBACK'}
+        primary_id=fast.get('candidate_id')
+        parallel_lanes=self.fast_decision.parallel_plan(frontier,primary_id,mission.get('effects',['READ']),prefetch)
+        goal_revision,h0_candidate=self._persist_frontier(mission,compile_result,decision,ui,win,route,
+            frontier=frontier,fast_decision=fast,parallel_lanes=parallel_lanes)
         if goal_revision is not None:mission['goal_revision']=goal_revision
+        decision_meta={'fast_decision':fast,'parallel_lanes':parallel_lanes,'prefetch':state.get('prefetch')}
+        def decorate(value):
+            return {**value,**decision_meta}
         if compile_result.get('state')=='COMPILED' and route not in {'SYSTEM2','CAPABILITY_GAP','GATHER_CONTEXT','WAIT','STOP'}:
             job=self.core.enqueue_action(compile_result['intent_id'],compile_result['revision'])
-            return {'schema':'voice-agentos.mission-step.v1','state':'CORE_JOB_QUEUED','compile':compile_result,'laya':decision,'job':job,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate}
-        if route=='STOP':return {'schema':'voice-agentos.mission-step.v1','state':'STOPPED_BY_ROUTER','compile':compile_result,'laya':decision}
-        if route=='WAIT':return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_EXTERNAL','compile':compile_result,'laya':decision}
-        if route=='GATHER_CONTEXT':return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate}
+            return decorate({'schema':'voice-agentos.mission-step.v1','state':'CORE_JOB_QUEUED','compile':compile_result,'laya':decision,'job':job,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate})
+        if route=='STOP':return decorate({'schema':'voice-agentos.mission-step.v1','state':'STOPPED_BY_ROUTER','compile':compile_result,'laya':decision})
+        if route=='WAIT':return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_EXTERNAL','compile':compile_result,'laya':decision})
+        if route=='GATHER_CONTEXT':return decorate({'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate})
         if route=='WINDOWS_UI':
-            if not win or not win_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_WINDOWS_BINDING','compile':compile_result,'laya':decision}
+            if not win or not win_full:return decorate({'schema':'voice-agentos.mission-step.v1','state':'NEEDS_WINDOWS_BINDING','compile':compile_result,'laya':decision})
             candidate_id=self._answer(answers,'windows_ui_candidate','NONE');action=self._answer(answers,'windows_ui_action','ABSTAIN')
             candidates={x.get('element_id'):x for x in win_full.get('elements',[]) if isinstance(x,dict)}
             candidate=candidates.get(candidate_id)
-            if not candidate or candidate_id=='NONE':return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','laya':decision}
+            if not candidate or candidate_id=='NONE':return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','laya':decision})
             request={'snapshot_id':win['snapshot_id'],'element_id':candidate_id,'expected_fingerprint':candidate.get('fingerprint')}
             if action=='SCROLL_INTO_VIEW':
                 request['action']='scroll_into_view';request['effect_class']='READ'
             elif action=='INVOKE_READ_NAV':
-                if candidate.get('risk')!='READ_NAV':return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision}
+                if candidate.get('risk')!='READ_NAV':return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision})
                 request['action']='invoke';request['effect_class']='WINDOWS_WRITE'
             elif action=='NEED_TYPED_INPUT':
                 route='SYSTEM2'
-            else:return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','candidate':candidate,'laya':decision}
+            else:return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','candidate':candidate,'laya':decision})
             if route=='WINDOWS_UI':
                 try:receipt=self.windows_ui.act(request)
                 except Exception as exc:
                     if 'WINDOWS_UI_HUMAN_FOREGROUND_LEASE' in str(exc):
-                        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'WINDOWS',
-                                'compile':compile_result,'laya':decision,'candidate':candidate}
+                        return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'WINDOWS',
+                                'compile':compile_result,'laya':decision,'candidate':candidate})
                     raise
-                return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_EFFECT','compile':compile_result,'laya':decision,'candidate':candidate,'ui_receipt':receipt}
+                return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_EFFECT','compile':compile_result,'laya':decision,'candidate':candidate,'ui_receipt':receipt})
         if route=='BROWSER_UI':
-            if not ui or not ui_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_BINDING','compile':compile_result,'laya':decision}
+            if not ui or not ui_full:return decorate({'schema':'voice-agentos.mission-step.v1','state':'NEEDS_BINDING','compile':compile_result,'laya':decision})
             candidate_id=self._answer(answers,'ui_candidate','NONE');action=self._answer(answers,'ui_action','ABSTAIN')
             candidates={x.get('element_id'):x for x in ui_full.get('elements',[]) if isinstance(x,dict)}
             candidate=candidates.get(candidate_id)
-            if not candidate or candidate_id=='NONE':return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','compile':compile_result,'laya':decision}
+            if not candidate or candidate_id=='NONE':return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','compile':compile_result,'laya':decision})
             request={'snapshot_id':ui['snapshot_id'],'document_token':ui['document_token'],'element_id':candidate_id,
                      'expected_fingerprint':candidate.get('fingerprint')}
             if action=='SCROLL_INTO_VIEW':
                 request['action']='scroll_into_view';request['effect_class']='READ'
             elif action=='CLICK_READ_NAV':
-                if candidate.get('risk')!='READ_NAV':return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision}
+                if candidate.get('risk')!='READ_NAV':return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision})
                 request['action']='click';request['effect_class']='BROWSER_WRITE'
             elif action=='NEED_TYPED_INPUT':
                 route='SYSTEM2'
-            else:return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','candidate':candidate,'laya':decision}
+            else:return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','candidate':candidate,'laya':decision})
             if route=='BROWSER_UI':
                 try:receipt=self.bridge.ui_act(request,ui.get('tab_id'))
                 except Exception as exc:
                     if 'UI_HUMAN_FOREGROUND_LEASE' in str(exc):
-                        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'BROWSER',
-                                'compile':compile_result,'laya':decision,'candidate':candidate}
+                        return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'BROWSER',
+                                'compile':compile_result,'laya':decision,'candidate':candidate})
                     raise
-                return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_EFFECT','compile':compile_result,
-                        'laya':decision,'candidate':candidate,'ui_receipt':receipt}
-        if not self.bridge:return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision}
+                return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_EFFECT','compile':compile_result,
+                        'laya':decision,'candidate':candidate,'ui_receipt':receipt})
+        if not self.bridge:return decorate({'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision})
         role=self._system2_role(decision,compile_result)
         context=bounded_utf8(mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False))
         prompt=self._system2_prompt(mission,state,role)
@@ -227,7 +272,7 @@ class MissionKernel:
         job=submitted.get('job') if isinstance(submitted,dict) else None
         job_id=job.get('id') if isinstance(job,dict) else None
         if not job_id:raise ValueError('SYSTEM2_JOB_ID_REQUIRED')
-        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate}
+        return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate})
     def observe_capability_pr(self,pr_receipt):
         if not self.github_pipeline:raise ValueError('GITHUB_PIPELINE_UNAVAILABLE')
         return self.github_pipeline.observe(pr_receipt)

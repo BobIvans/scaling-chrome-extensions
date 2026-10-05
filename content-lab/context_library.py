@@ -436,12 +436,15 @@ def search_sources(store, namespace, query='', *, offset=0, limit=20, as_of=None
     rows=[]; seen=0; more=False
     with view(store) as db:
         # Namespace/tombstones/time BEFORE excerpts/ranking; deterministic pagination.
+        # An explicit label filter is revision-addressable metadata, so it may
+        # intentionally surface a tagged historical revision even when history=False.
         cursor = db.execute('''SELECT s.* FROM context_sources s
             LEFT JOIN context_source_heads h ON s.namespace=h.namespace AND s.source_key=h.source_key
             WHERE s.namespace=? AND s.complete=1
               AND NOT EXISTS (SELECT 1 FROM context_tombstones t WHERE t.namespace=s.namespace AND t.source_key=s.source_key)
-              AND (? OR ? IS NOT NULL OR h.revision=s.revision)
-            ORDER BY s.source_key,s.observed DESC,s.revision''', (namespace, int(history), as_of))
+              AND (? OR ? IS NOT NULL OR ? OR h.revision=s.revision)
+            ORDER BY s.source_key,s.observed DESC,s.revision''',
+            (namespace, int(history), as_of, int(labels is not None)))
         temporal_seen=set()
         for row in cursor:
             annrow=db.execute('''SELECT a.payload FROM context_annotations a JOIN context_events e

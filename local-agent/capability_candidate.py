@@ -40,7 +40,9 @@ class CapabilityCandidatePipeline:
         if not isinstance(listing,list) or len(listing)>20:raise CandidateError('CANDIDATE_ARTIFACT_LIST')
         files={}
         for item in listing:
-            if not isinstance(item,dict) or not isinstance(item.get('id'),str) or not isinstance(item.get('name'),str):
+            artifact_id=item.get('id') if isinstance(item,dict) else None
+            if (not isinstance(item,dict) or isinstance(artifact_id,bool) or
+                    not isinstance(artifact_id,(str,int)) or not isinstance(item.get('name'),str)):
                 raise CandidateError('CANDIDATE_ARTIFACT_SCHEMA')
             name=item['name'].replace('\\','/')
             if name.startswith('/') or '..' in Path(name).parts or len(name)>300:raise CandidateError('CANDIDATE_ARTIFACT_PATH')
