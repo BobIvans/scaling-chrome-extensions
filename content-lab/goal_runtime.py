@@ -93,7 +93,7 @@ def create(store,spec,goal_id=None):
     now=time.time()
     value={'schema':'voice-agentos.goal-state.v1','goal_id':gid,'state':'ACTIVE','spec':spec,
            'h2':[],'h1':[],'h0':None,'evidence_refs':[],'progress_digest':None,'progress_events':0,
-           'no_progress':0,'created_at':now,'updated_at':now,'last_decision':None}
+           'no_progress':0,'closed_acceptance':[],'runtime':{},'created_at':now,'updated_at':now,'last_decision':None}
     with state.transaction(store) as db:
         if state.get(db,'goal',gid):raise ValueError('GOAL_ALREADY_EXISTS')
         revision=state.put(db,'goal',gid,value,0)
@@ -163,9 +163,35 @@ def progress(store,goal_id,expected_revision,delta):
             h1.append({**row,'state':'DONE'} if candidate_done and row['id']==candidate_done else row)
         refs=list(dict.fromkeys([*old['value']['evidence_refs'],*delta['evidence_refs']]))[-500:]
         no_progress=0 if delta['meaningful'] else old['value']['no_progress']+1
+        all_closed=list(dict.fromkeys([*old['value'].get('closed_acceptance',[]),*closed]))
         value={**old['value'],'h1':h1,'h0':None,'state':delta['state'],'evidence_refs':refs,
                'progress_digest':delta['digest'],'progress_events':old['value']['progress_events']+1,
-               'no_progress':no_progress,'updated_at':time.time(),
+               'no_progress':no_progress,'closed_acceptance':all_closed,'updated_at':time.time(),
                'last_progress':{'meaningful':delta['meaningful'],'closed_acceptance':closed,'candidate_done':candidate_done}}
         revision=state.put(db,'goal',gid,value,expected_revision)
     return {'goal_id':gid,'revision':revision,'value':value}
+
+def checkpoint(store,goal_id,expected_revision,runtime,goal_state=None):
+    gid=core.identifier(goal_id);state.integer(expected_revision,1)
+    if not isinstance(runtime,dict) or len(core.encoded(runtime))>32000:raise ValueError('GOAL_RUNTIME_SCHEMA')
+    if goal_state is not None and goal_state not in {'ACTIVE','WAITING','BLOCKED','STOPPED'}:raise ValueError('GOAL_STATE')
+    with state.transaction(store) as db:
+        old=state.get(db,'goal',gid)
+        if not old or old['revision']!=expected_revision:raise ValueError('GOAL_REVISION_CONFLICT')
+        value={**old['value'],'runtime':runtime,'updated_at':time.time()}
+        if goal_state is not None:value['state']=goal_state
+        revision=state.put(db,'goal',gid,value,expected_revision)
+    return {'goal_id':gid,'revision':revision,'value':value}
+
+def list_goals(store,offset=0,limit=50):
+    state.integer(offset,0);state.integer(limit,1)
+    if limit>200:raise ValueError('GOAL_LIST_LIMIT')
+    with state.transaction(store) as db:
+        rows=db.execute("SELECT id,revision,payload FROM workflow_records WHERE kind='goal' ORDER BY rowid DESC LIMIT ? OFFSET ?",(limit,offset)).fetchall()
+        out=[]
+        for row in rows:
+            value=__import__('json').loads(row['payload'])
+            out.append({'goal_id':row['id'],'revision':row['revision'],'state':value.get('state'),
+                        'goal':value.get('spec',{}).get('goal'),'updated_at':value.get('updated_at'),
+                        'h0':value.get('h0'),'no_progress':value.get('no_progress',0)})
+        return {'items':out,'offset':offset,'limit':limit}

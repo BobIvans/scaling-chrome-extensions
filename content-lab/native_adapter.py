@@ -64,7 +64,7 @@ FIELDS = {
 JOB_ID = re.compile(r"^[0-9a-f]{32}$")
 ITEM_ID = re.compile(r"^[0-9a-f]{64}$")
 DESKTOP_PROTOCOL = 'occ.desktop-stdio.v1'
-DESKTOP_READS = frozenset({'durable.info', 'durable.repo.list', 'durable.search',
+DESKTOP_READS = frozenset({'durable.info', 'durable.get', 'durable.repo.list', 'durable.search',
                            'durable.context', 'durable.repo.manifest',
                            'durable.repo.history', 'durable.repo.delta'})
 DESKTOP_SCAN = 'durable.repo.scanRun'
@@ -229,7 +229,12 @@ def scoped_job(core, profile, policy, job_id):
     if not isinstance(job_id, str) or not JOB_ID.fullmatch(job_id):
         raise ValueError("DURABLE_JOB_ID_REQUIRED")
     job = core.get(job_id)
-    if job["policy_hash"] != digest(policy) or job["payload_hash"] != digest(job["payload"]) or not any(job["payload"] == template for template in profile["templates"].values()):
+    payload=job["payload"]
+    registered=any(payload == template for template in profile["templates"].values())
+    action_read=(payload.get("kind")=="action_plan" and policy.get("actions",{}).get("enabled") is True)
+    if action_read:
+        validate_job(payload,policy)
+    if job["policy_hash"] != digest(policy) or job["payload_hash"] != digest(payload) or not (registered or action_read):
         raise ValueError("DURABLE_JOB_OUTSIDE_SCOPE")
     return job
 
@@ -241,7 +246,7 @@ def validate_request(request):
     if not required.issubset(request) or set(request) - required - optional:
         raise ValueError("DURABLE_SCHEMA")
     if request['type']=='durable.goal':
-        if request['action'] not in {'CREATE','INSPECT','REVISE','PLAN','ADMIT','PROGRESS'} or not isinstance(request['arguments'],dict):
+        if request['action'] not in {'CREATE','INSPECT','REVISE','PLAN','ADMIT','PROGRESS','CHECKPOINT','LIST'} or not isinstance(request['arguments'],dict):
             raise ValueError('DURABLE_SCHEMA')
     if request['type']=='durable.effect':
         if request['action'] not in {'BEGIN','INSPECT','TRANSITION'} or not isinstance(request['arguments'],dict):
@@ -295,6 +300,8 @@ def dispatch_loaded(request, profile, policy, *, desktop=False):
         elif action=='PLAN':result=goals.plan(store,args['goal_id'],args['expected_revision'],args['h2'],args['h1'],args['decision'])
         elif action=='ADMIT':result=goals.admit(store,args['goal_id'],args['expected_revision'],args['candidate_id'])
         elif action=='PROGRESS':result=goals.progress(store,args['goal_id'],args['expected_revision'],args['delta'])
+        elif action=='CHECKPOINT':result=goals.checkpoint(store,args['goal_id'],args['expected_revision'],args['runtime'],goal_state=args.get('state'))
+        elif action=='LIST':result=goals.list_goals(store,args.get('offset',0),args.get('limit',50))
         else:raise ValueError('GOAL_ACTION_UNAVAILABLE')
         value['goal']=result
         return value

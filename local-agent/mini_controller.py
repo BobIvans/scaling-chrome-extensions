@@ -18,6 +18,7 @@ from laya_client import LayaClient
 from laya_supervisor import LayaSupervisor
 from life_context_pipeline import LifeContextPipeline
 from mission_kernel import MissionKernel
+from persistent_mission import PersistentMissionController
 from self_renew import VerifiedRenewal
 from windows_uia import WindowsUIBroker
 
@@ -310,105 +311,33 @@ class Mini:
         self._show(result)
 
     def run_mission(self):
-        if not self.kernel:self.status.set('AgentOS kernel offline');return
+        if not self.persistent:self.status.set('Persistent AgentOS offline');return
         mission=self._mission_state();self.mission_cancel.clear()
-        try:
-            goal=self._ensure_goal(mission)
-            mission.update(goal_id=goal['goal_id'],goal_revision=goal['revision'],h2=goal['value'].get('h2') or [])
-        except Exception as exc:self.status.set('Goal persistence: '+str(exc));return
         def work():
             try:
-                current=dict(mission);seen_system2=set();seen_context=set()
-                max_system2=max(1,min(8,int(self.settings.get('max_system2_cycles',3))))
-                max_cycles=max(2,min(40,int(self.settings.get('max_agent_cycles',12))))
-                system2_count=0;history=[]
-                if current.get('context_sha256'):seen_context.add(current['context_sha256'])
-                for cycle in range(max_cycles):
-                    if self.mission_cancel.is_set():self.events.put(('details',{'state':'CANCELLED_BY_USER','history':history}));return
-                    step=self.kernel.start(current);history.append(step);self._update_goal_revision(current,step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-6:]}))
-                    state=step.get('state')
-                    if state=='WAITING_HUMAN_FOREGROUND':
-                        self.events.put(('status','Human foreground lease · AgentOS yielding target UI'))
-                        if self.mission_cancel.wait(max(0.5,float(self.settings.get('human_foreground_retry_seconds',2.0)))):return
+                goal_id=self.current_goal_id
+                max_steps=max(1,min(100,int(self.settings.get('max_persistent_steps',24))))
+                history=[]
+                for step_no in range(max_steps):
+                    if self.mission_cancel.is_set():
+                        self.events.put(('details',{'state':'CANCELLED_BY_USER','goal_id':goal_id,'history':history[-8:]}));return
+                    result=self.persistent.step(mission,goal_id)
+                    if isinstance(result,dict):
+                        goal_id=result.get('goal_id') or (result.get('goal') or {}).get('goal_id') or goal_id
+                    if goal_id:self.current_goal_id=goal_id
+                    history.append(result);self.events.put(('details',{'persistent_step':step_no,'goal_id':goal_id,'result':result,'history':history[-6:]}))
+                    state=result.get('state') if isinstance(result,dict) else None
+                    goal=(result.get('goal') if isinstance(result,dict) else None)
+                    if goal and isinstance(goal,dict):
+                        state=goal.get('value',{}).get('state') or state
+                    if state in {'TERMINAL','ACCEPTED','STOPPED','BLOCKED'}:return
+                    if state in {'WAITING_SYSTEM2','WAITING_CORE_JOB'}:
+                        if self.mission_cancel.wait(2):return
                         continue
-                    if state in {'NEEDS_CONTEXT','BROWSER_UI_EFFECT','WINDOWS_UI_EFFECT'}:
-                        if state=='WINDOWS_UI_EFFECT':
-                            gathered=self.kernel.capture_windows_context();event_key='windows_context'
-                        else:
-                            try:gathered=self.kernel.capture_browser_context();event_key='browser_context'
-                            except Exception:
-                                if not self.windows_ui:raise
-                                gathered=self.kernel.capture_windows_context();event_key='windows_context'
-                        history.append(gathered)
-                        digest=gathered.get('sha256')
-                        self.events.put(('details',{'cycle':cycle,event_key:gathered,'history':history[-6:]}))
-                        if not digest or digest in seen_context:
-                            self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'BROWSER_CONTEXT_UNCHANGED','history':history[-8:]}));return
-                        seen_context.add(digest);text=gathered.get('text','')
-                        try:
-                            progress=self.kernel.record_progress(current,True,['context:'+digest],candidate_done=step.get('h0_candidate_id'))
-                            if progress:self._update_goal_revision(current,progress)
-                        except Exception as exc:self.events.put(('log','Goal progress context: '+str(exc)))
-                        base=current.get('context_text','')
-                        combined=(base+'\n\n===== NEW BROWSER CONTEXT =====\n'+text)[-2_000_000:]
-                        current=dict(current,context_text=combined,context_sha256=digest,context_metadata=gathered.get('archive'))
-                        continue
-                    if state!='WAITING_SYSTEM2':return
-                    if system2_count>=max_system2:
-                        self.events.put(('details',{'state':'STOPPED_SYSTEM2_BUDGET','max_system2_cycles':max_system2,'history':history[-8:]}));return
-                    system2_count+=1;job_id=step['system2_job_id']
-                    while not self.mission_cancel.wait(2):
-                        result=self.kernel.poll_system2(job_id,current)
-                        if result.get('state')=='WAITING_SYSTEM2':continue
-                        history.append(result);self.events.put(('details',{'cycle':cycle,'system2':result,'history':history[-6:]}))
-                        if result.get('state')=='CAPABILITY_CANDIDATE_TESTED':
-                            self.events.put(('details',{'state':'WAITING_CAPABILITY_PROMOTION','candidate':result.get('capability_candidate'),'history':history[-8:]}));return
-                        if result.get('state')=='CAPABILITY_PR_OPEN':
-                            pr_receipt=result.get('capability_pr');deadline=time.monotonic()+max(30,int(self.settings.get('github_ci_timeout_seconds',1800)))
-                            observation=None
-                            while time.monotonic()<deadline and not self.mission_cancel.wait(max(2,float(self.settings.get('github_ci_poll_seconds',15)))):
-                                observation=self.kernel.observe_capability_pr(pr_receipt)
-                                self.events.put(('details',{'state':'CAPABILITY_PR_MONITORING','pr':pr_receipt,'observation':observation,'history':history[-6:]}))
-                                failed=[name for name,row in (observation.get('required_checks') or {}).items()
-                                        if row.get('status')=='completed' and row.get('conclusion') not in {'success','neutral','skipped'}]
-                                if failed:
-                                    self.events.put(('details',{'state':'CAPABILITY_CI_FAILED','failed_checks':failed,'observation':observation,'history':history[-8:]}));return
-                                if observation.get('all_required_pass'):break
-                            if not observation or not observation.get('all_required_pass'):
-                                self.events.put(('details',{'state':'WAITING_CAPABILITY_CI','pr':pr_receipt,'observation':observation,'history':history[-8:]}));return
-                            try:merged=self.kernel.merge_capability_pr(pr_receipt,current.get('effects',[]))
-                            except Exception as exc:
-                                self.events.put(('details',{'state':'WAITING_CAPABILITY_MERGE','pr':pr_receipt,'observation':observation,'reason':str(exc),'history':history[-8:]}));return
-                            history.append(merged);self.events.put(('details',{'state':'CAPABILITY_MERGED_REMOTE','merge':merged,'history':history[-8:]}))
-                            renew_cfg=self.settings.get('renewal') or {}
-                            if 'INSTALL_UPDATE' not in set(current.get('effects',[])) or not renew_cfg.get('enabled'):
-                                self.events.put(('details',{'state':'WAITING_CAPABILITY_UPDATE','merge':merged,'history':history[-8:]}));return
-                            cfg=dict(renew_cfg);cfg['source_checkout']=expand(cfg['source_checkout']);cfg['staging_root']=expand(cfg['staging_root'])
-                            merge_event={'repo':(self.settings.get('capability_pr') or {}).get('repo_full_name'),'number':merged.get('number'),
-                                'title':'AgentOS capability','merged_at':datetime.now(timezone.utc).isoformat(),
-                                'merge_commit_sha':merged['merge_commit_sha'],'head_sha':merged['head_sha'],
-                                'base_ref':(self.settings.get('capability_pr') or {}).get('base_branch')}
-                            staged=VerifiedRenewal(cfg,Path(expand(self.settings['inbox_root']))/'renewal-receipts').stage_merge(merge_event)
-                            history.append(staged);self.events.put(('details',{'state':'CAPABILITY_UPDATE_STAGED','merge':merged,'renewal':staged,'history':history[-8:]}))
-                            self.events.put(('details',{'state':'WAITING_QUALIFIED_ACTIVATION','reason':'Production activation/device qualification remains a separate stable-controller gate.','renewal':staged,'history':history[-8:]}));return
-                        digest=result.get('sha256')
-                        if digest in seen_system2:
-                            self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'REPEATED_SYSTEM2_RESULT','history':history[-8:]}));return
-                        if digest:
-                            seen_system2.add(digest)
-                            try:
-                                progress=self.kernel.record_progress(current,True,['system2:'+digest],candidate_done=step.get('h0_candidate_id'))
-                                if progress:self._update_goal_revision(current,progress)
-                            except Exception as exc:self.events.put(('log','Goal progress System2: '+str(exc)))
-                        text=result.get('text','')
-                        if not text:return
-                        base=current.get('context_text','')
-                        combined=(base+'\n\n===== SYSTEM2 RESULT =====\n'+text)[-2_000_000:]
-                        current=dict(current,context_text=combined,context_sha256=hashlib.sha256(combined.encode()).hexdigest())
-                        break
-                    else:return
-                self.events.put(('details',{'state':'STOPPED_AGENT_CYCLE_BUDGET','max_cycles':max_cycles,'history':history[-8:]}))
-            except Exception as exc:self.events.put(('error','Mission: '+str(exc)))
+                    if isinstance(result,dict) and result.get('value',{}).get('no_progress',0)>=3:
+                        self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','goal_id':goal_id,'history':history[-8:]}));return
+                self.events.put(('details',{'state':'STOPPED_PERSISTENT_STEP_BUDGET','goal_id':goal_id,'max_steps':max_steps,'history':history[-8:]}))
+            except Exception as exc:self.events.put(('error','Persistent mission: '+str(exc)))
         threading.Thread(target=work,daemon=True).start()
 
     def stop(self):
