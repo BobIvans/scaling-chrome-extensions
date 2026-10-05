@@ -1,0 +1,158 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/voice-agentos/AnySourceEnvelope.schema.json",
+  "title": "AnySourceEnvelope",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source_id",
+    "source_kind",
+    "origin",
+    "observed_at",
+    "revision",
+    "authority",
+    "effect_semantics",
+    "locator",
+    "content_refs",
+    "coverage"
+  ],
+  "properties": {
+    "schema": {
+      "const": "voice-agentos.any-source-envelope.v1"
+    },
+    "source_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "source_kind": {
+      "enum": [
+        "user_text",
+        "user_voice",
+        "browser_turn",
+        "browser_attachment",
+        "browser_link",
+        "downloaded_file",
+        "local_file",
+        "repo_snapshot",
+        "repo_delta",
+        "test_result",
+        "ci_result",
+        "terminal_output",
+        "git_receipt",
+        "github_receipt",
+        "api_response",
+        "windows_observation",
+        "image",
+        "media",
+        "other"
+      ]
+    },
+    "origin": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "observed_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "revision": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "parent_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "task_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "authority": {
+      "enum": [
+        "USER_COMMAND",
+        "OBSERVED_DATA",
+        "TOOL_OUTPUT",
+        "SYSTEM_RECEIPT",
+        "MODEL_CLAIM",
+        "DERIVED_ANALYSIS"
+      ]
+    },
+    "effect_semantics": {
+      "enum": [
+        "READ_ONLY",
+        "LOCAL_UI_MUTATION",
+        "LOCAL_WRITE",
+        "EXTERNAL_WRITE",
+        "UNKNOWN"
+      ]
+    },
+    "locator": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "content_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ref"
+        ],
+        "properties": {
+          "ref": {
+            "type": "string"
+          },
+          "sha256": {
+            "type": "string"
+          },
+          "mime": {
+            "type": "string"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "coverage": {
+      "type": "object",
+      "required": [
+        "state"
+      ],
+      "properties": {
+        "state": {
+          "enum": [
+            "COMPLETE",
+            "PARTIAL",
+            "BLOCKED",
+            "UNKNOWN"
+          ]
+        },
+        "gaps": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "additionalProperties": true
+    },
+    "security": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "decision_projection": {
+      "type": "object",
+      "description": "Bounded state/features presented to Laya; never replaces raw source.",
+      "additionalProperties": true
+    }
+  }
+}
