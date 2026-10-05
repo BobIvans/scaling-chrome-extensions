@@ -1,5 +1,5 @@
 from __future__ import annotations
-import hashlib, json, os, re, time
+import hashlib, inspect, json, os, re, time
 from pathlib import Path
 from urllib.parse import urlparse
 
@@ -57,10 +57,21 @@ class BrowserWatch:
         stamp=time.strftime('%Y%m%dT%H%M%SZ',time.gmtime())
         assembler=BrowserArchiveAssembler(self.root/'browser-watch','watch_'+str(tab['id'])+'_'+stamp)
         try:
-            manifest=self.bridge.capture_archive(tab['id'],on_chunk=assembler.add_chunk,
-                max_bytes=int(self.c.get('max_bytes',67108864)),max_steps=int(self.c.get('max_steps',2500)),
-                max_ms=int(self.c.get('max_ms',90000)),respect_human_lease=True,
-                human_quiet_ms=int(self.c.get('human_quiet_ms',1800)))
+            capture=self.bridge.capture_archive
+            kwargs={'on_chunk':assembler.add_chunk,
+                    'max_bytes':int(self.c.get('max_bytes',67108864)),
+                    'max_steps':int(self.c.get('max_steps',2500)),
+                    'max_ms':int(self.c.get('max_ms',90000))}
+            try:
+                params=inspect.signature(capture).parameters
+            except (TypeError,ValueError):
+                params={}
+            supports_kwargs=any(p.kind is inspect.Parameter.VAR_KEYWORD for p in params.values())
+            if supports_kwargs or 'respect_human_lease' in params:
+                kwargs['respect_human_lease']=True
+            if supports_kwargs or 'human_quiet_ms' in params:
+                kwargs['human_quiet_ms']=int(self.c.get('human_quiet_ms',1800))
+            manifest=capture(tab['id'],**kwargs)
             return assembler.finalize(manifest)
         except Exception as exc:
             assembler.abort(str(exc));raise
