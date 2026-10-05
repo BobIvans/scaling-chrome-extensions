@@ -15,6 +15,7 @@ from core_client import CoreClient
 from github_merge_watch import MergeWatcher
 from github_capability_pr import GitHubCapabilityPipeline
 from laya_client import LayaClient
+from laya_supervisor import LayaSupervisor
 from life_context_pipeline import LifeContextPipeline
 from mission_kernel import MissionKernel
 from self_renew import VerifiedRenewal
@@ -42,7 +43,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.github_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.laya_supervisor=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.github_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -76,8 +77,24 @@ class Mini:
         try:
             self.bridge=ChromeBridge(expand(self.settings['chrome_control_state']));self.bridge.request('ping')
         except Exception:self.bridge=None
+        runtime=self.settings.get('laya_runtime') or {}
         endpoint=self.settings.get('laya_endpoint','')
-        self.laya=LayaClient(endpoint) if endpoint else None
+        if runtime.get('enabled'):
+            try:
+                cfg=dict(runtime);cfg['python_path']=expand(cfg['python_path'])
+                self.laya_supervisor=LayaSupervisor(cfg)
+                ready=self.laya_supervisor.ensure();endpoint=ready.get('endpoint') or endpoint
+                self.status.set('Laya ready · '+str((ready.get('health') or {}).get('device','local')))
+                if runtime.get('benchmark_on_start'):
+                    bench_client=LayaClient(endpoint,api_key_env=runtime.get('api_key_env',''),model=runtime.get('default_model'))
+                    receipt=self.laya_supervisor.benchmark(bench_client,int(runtime.get('benchmark_rounds',3)))
+                    path=Path(expand(self.settings['inbox_root']))/'laya-benchmark.json';path.parent.mkdir(parents=True,exist_ok=True)
+                    path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
+                    if self.core:
+                        try:self.core.capture_file(path,'laya_benchmark_'+hashlib.sha256(path.read_bytes()).hexdigest()[:16])
+                        except Exception:pass
+            except Exception as exc:self.events.put(('log','Pinned Laya unavailable: '+str(exc)))
+        self.laya=LayaClient(endpoint,api_key_env=runtime.get('api_key_env',''),model=runtime.get('default_model')) if endpoint else None
         if self.core:
             win_cfg=self.settings.get('windows_ui') or {}
             if os.name=='nt' and win_cfg.get('enabled',True):
