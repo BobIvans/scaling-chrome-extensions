@@ -79,7 +79,7 @@ class Mini:
         if self.core:
             win_cfg=self.settings.get('windows_ui') or {}
             if os.name=='nt' and win_cfg.get('enabled',True):
-                try:self.windows_ui=WindowsUIBroker(Path(__file__).parent/'windows_uia.ps1',powershell=win_cfg.get('powershell','powershell.exe'))
+                try:self.windows_ui=WindowsUIBroker(Path(__file__).parent/'windows_uia.ps1',powershell=win_cfg.get('powershell','powershell.exe'),human_quiet_ms=int(win_cfg.get('human_quiet_ms',1800)))
                 except Exception as exc:self.events.put(('log','Windows UIA disabled: '+str(exc)))
             self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',expand(self.settings['inbox_root']),windows_ui=self.windows_ui)
             try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
