@@ -63,11 +63,16 @@ class MissionKernel:
         role=self._system2_role(decision,compile_result)
         context=bounded_utf8(mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False))
         prompt=self._system2_prompt(mission,state,role)
-        submitted=self.bridge.codex_submit(prompt,context,'build' if role in {'CODER','TOOL_DESIGNER'} else 'analyze')
+        mode='build' if role in {'CODER','TOOL_DESIGNER'} else 'analyze'
+        try:submitted=self.bridge.codex_submit(prompt,context,mode)
+        except Exception:
+            if mode!='build':raise
+            submitted=self.bridge.codex_submit(prompt,context,'analyze')
+            mode='analyze'
         job=submitted.get('job') if isinstance(submitted,dict) else None
         job_id=job.get('id') if isinstance(job,dict) else None
         if not job_id:raise ValueError('SYSTEM2_JOB_ID_REQUIRED')
-        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_job_id':job_id}
+        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id}
     def poll_system2(self,job_id,mission):
         result=self.bridge.codex_result(job_id)
         job=result.get('job') if isinstance(result,dict) else None
