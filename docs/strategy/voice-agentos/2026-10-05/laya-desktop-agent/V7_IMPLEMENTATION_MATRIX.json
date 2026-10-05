@@ -1,0 +1,233 @@
+{
+  "schema": "voice-agentos.v7-implementation-matrix.v1",
+  "baseline": "main@3fb4a51f7d36f6e29bbda38226b66436d66d0fc4",
+  "states": [
+    "IMPLEMENTED",
+    "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+    "PARTIAL",
+    "SPECIFIED",
+    "NOT_IMPLEMENTED",
+    "EXTERNAL_SETUP_REQUIRED"
+  ],
+  "capabilities": [
+    {
+      "id": "local-mini-ui",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "Observe/Automate+/STOP code"
+      ]
+    },
+    {
+      "id": "app-browser-direct-observe",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/control_bridge.py",
+        "agent-bridge/local-control.mjs",
+        "one-click-context/background.js"
+      ],
+      "evidence": [
+        "authenticated loopback",
+        "new capture revision check",
+        "direct capture.get"
+      ]
+    },
+    {
+      "id": "browser-any-http-read-scope",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "one-click-context/manifest.json",
+        "one-click-context/background.js"
+      ],
+      "evidence": [
+        "optional host permissions",
+        "one-time explicit HTTP(S) grant"
+      ]
+    },
+    {
+      "id": "canonical-library-ingest",
+      "state": "IMPLEMENTED",
+      "owners": [
+        "content-lab/context_library.py",
+        "content-lab/context_runtime.py",
+        "local-agent/core_client.py"
+      ]
+    },
+    {
+      "id": "library-search-annotation",
+      "state": "IMPLEMENTED",
+      "owners": [
+        "content-lab/context_library.py",
+        "local-agent/core_client.py"
+      ]
+    },
+    {
+      "id": "local-folder-life-context",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/folder_watch.py",
+        "local-agent/life_context_pipeline.py"
+      ]
+    },
+    {
+      "id": "previous-ai-export-ingest",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/conversation_exports.py",
+        "local-agent/life_context_pipeline.py"
+      ]
+    },
+    {
+      "id": "google-drive-cloud-read",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/google_drive_ingest.py",
+        "local-agent/life_context_pipeline.py"
+      ],
+      "external_setup": "OAuth environment credentials + Drive consent"
+    },
+    {
+      "id": "laya-client",
+      "state": "PARTIAL",
+      "owners": [
+        "local-agent/laya_client.py",
+        "local-agent/laya_questions.json"
+      ],
+      "missing": [
+        "pinned runtime/checkpoint",
+        "device benchmark",
+        "health supervisor"
+      ]
+    },
+    {
+      "id": "system2-local-codex-relay",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "one-click-context/background.js",
+        "local-agent/control_bridge.py",
+        "agent-bridge/host.mjs"
+      ]
+    },
+    {
+      "id": "bounded-app-mission-loop",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/mission_kernel.py",
+        "local-agent/mini_controller.py"
+      ]
+    },
+    {
+      "id": "persistent-h2-h1-h0-runtime",
+      "state": "NOT_IMPLEMENTED",
+      "owners": [
+        "content-lab/action_runtime.py",
+        "content-lab/campaign_runtime.py"
+      ]
+    },
+    {
+      "id": "generic-ai-observe",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "one-click-context/content.js",
+        "one-click-context/background.js"
+      ]
+    },
+    {
+      "id": "generic-ai-effectful-adapter",
+      "state": "NOT_IMPLEMENTED",
+      "owners": [
+        "future provider adapter registry"
+      ]
+    },
+    {
+      "id": "provider-neutral-system2-registry",
+      "state": "PARTIAL",
+      "owners": [
+        "docs + local Codex relay"
+      ],
+      "missing": [
+        "qualified web/headless/ACP/API provider plugins"
+      ]
+    },
+    {
+      "id": "capability-gap-detection",
+      "state": "PARTIAL",
+      "owners": [
+        "content-lab/action_intent.py",
+        "local-agent/mission_kernel.py"
+      ]
+    },
+    {
+      "id": "capability-build-qualification-promotion",
+      "state": "NOT_IMPLEMENTED",
+      "owners": [
+        "future capability runtime"
+      ]
+    },
+    {
+      "id": "github-merge-watch",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/github_merge_watch.py",
+        "content-lab/workflow_github.py"
+      ]
+    },
+    {
+      "id": "git-sync-tested-stage",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/self_renew.py",
+        "content-lab/workflow_github.py"
+      ]
+    },
+    {
+      "id": "production-self-activation",
+      "state": "NOT_IMPLEMENTED",
+      "owners": [
+        "content-lab/release_updater.py"
+      ],
+      "note": "isolated/test-target activation exists; production unattended activation intentionally blocked"
+    },
+    {
+      "id": "resume-after-qualified-update",
+      "state": "PARTIAL",
+      "owners": [
+        "docs + current checkpoint/recovery primitives"
+      ]
+    },
+    {
+      "id": "notion-like-local-workspace",
+      "state": "PARTIAL",
+      "owners": [
+        "desktop/library.py",
+        "desktop/app.py",
+        "one-click-context/library legacy UI"
+      ],
+      "missing": [
+        "unified local nav/labels/relations/missions surface"
+      ]
+    },
+    {
+      "id": "parallel-rnd-campaigns",
+      "state": "PARTIAL",
+      "owners": [
+        "content-lab/campaign_runtime.py",
+        "docs/strategy/.../PARALLEL_RND_LANES.json"
+      ]
+    },
+    {
+      "id": "studious-pancake-paper-rnd",
+      "state": "SPECIFIED",
+      "owners": [
+        "FLASHLOAN_RND_MISSION_TEMPLATE.json"
+      ]
+    },
+    {
+      "id": "windows-installed-device-qualification",
+      "state": "NOT_IMPLEMENTED",
+      "external_setup": "target Windows + Chrome + accounts + local credentials"
+    }
+  ]
+}
