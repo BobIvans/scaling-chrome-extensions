@@ -73,6 +73,20 @@ class CoreClient:
         if labels:args['labels']=[str(x) for x in labels]
         req={'type':'durable.library','namespace':ns,'action':'SEARCH','arguments':args}
         return self.request(req,30)['library']['data']
+    def goal_create(self,spec,goal_id=None):
+        args={'spec':spec}
+        if goal_id:args['goal_id']=goal_id
+        return self.request({'type':'durable.goal','action':'CREATE','arguments':args},30)['goal']
+    def goal_inspect(self,goal_id):
+        return self.request({'type':'durable.goal','action':'INSPECT','arguments':{'goal_id':goal_id}},30)['goal']
+    def goal_revise(self,goal_id,expected_revision,spec):
+        return self.request({'type':'durable.goal','action':'REVISE','arguments':{'goal_id':goal_id,'expected_revision':int(expected_revision),'spec':spec}},30)['goal']
+    def goal_plan(self,goal_id,expected_revision,h2,h1,decision):
+        return self.request({'type':'durable.goal','action':'PLAN','arguments':{'goal_id':goal_id,'expected_revision':int(expected_revision),'h2':h2,'h1':h1,'decision':decision}},30)['goal']
+    def goal_admit(self,goal_id,expected_revision,candidate_id):
+        return self.request({'type':'durable.goal','action':'ADMIT','arguments':{'goal_id':goal_id,'expected_revision':int(expected_revision),'candidate_id':candidate_id}},30)['goal']
+    def goal_progress(self,goal_id,expected_revision,delta):
+        return self.request({'type':'durable.goal','action':'PROGRESS','arguments':{'goal_id':goal_id,'expected_revision':int(expected_revision),'delta':delta}},30)['goal']
     def create_action(self, text, criteria, source_refs=None, command=None, slots=None):
         payload={'text':text,'modality':'TEXT','slots':slots or {},'criteria':criteria or ['Verify requested outcome.'],'source_refs':source_refs or []}
         if command:payload['command']=command
