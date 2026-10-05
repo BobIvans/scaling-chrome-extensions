@@ -131,6 +131,14 @@ with sync_playwright() as p:
   else: require(any('recycled' in w for w in r['warnings']),r)
  check('virtualized stable-ID messages accumulated in order',virtual)
  check('recycled nodes without IDs disclose uncertainty',lambda:virtual(False))
+ def virtual_roleless():
+  fixture('<main><div id="scroll" style="height:200px;overflow-y:auto;position:relative"><div id="space" style="height:1000px;position:relative"></div></div><div id="composer" contenteditable="true" style="width:400px;height:40px">Type here</div></main>')
+  page.evaluate('''()=>{const s=document.querySelector('#scroll'),space=document.querySelector('#space');for(let i=0;i<4;i++){let e=document.createElement('div');e.style.cssText='position:absolute;height:80px;width:500px;margin:0';space.append(e)}function render(){let first=Math.max(0,Math.min(6,Math.floor(s.scrollTop/100)));[...space.children].forEach((e,j)=>{let n=first+j;e.className=n%2?'assistant-turn':'user-turn';e.textContent='Roleless '+n;e.style.top=(n*100)+'px'})}s.addEventListener('scroll',render);s.scrollTop=350;render();}''')
+  r=capture(scroll=True,settleMs=30,maxMs=7000,sourceMode='chat')
+  for i in range(10):require(f'Roleless {i}' in r['text'],r['text'])
+  require('[USER' in r['text'] and '[ASSISTANT' in r['text'],r['text'])
+  require(any('stable message IDs' in w for w in r['warnings']),r)
+ check('role-less recycled virtualized chat is accumulated by semantic sibling discovery',virtual_roleless)
  def infinite():
   fixture('<main><div id="scroll" style="height:200px;overflow:auto">'+''.join(f'<p data-message-id="m{i}" data-message-author-role="user" style="height:100px">Row {i}</p>' for i in range(4))+'</div></main>')
   page.evaluate('''const s=document.querySelector('#scroll');let i=4;s.addEventListener('scroll',()=>{if(s.scrollTop+s.clientHeight>=s.scrollHeight-20){let e=document.createElement('p');e.dataset.messageId='m'+i;e.dataset.messageAuthorRole='user';e.style.height='100px';e.textContent='Row '+i++;s.append(e)}})''');r=capture(scroll=True,settleMs=10,maxMs=2000,maxSteps=18);require(r['status']=='PARTIAL',r);require(any('bound' in w for w in r['warnings']),r)
