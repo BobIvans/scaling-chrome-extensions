@@ -265,7 +265,7 @@
     root.style.setProperty('scroll-behavior', 'auto', 'important');
     const records = new Map(), order = [], nodeIds = new WeakMap();
     let seq = 0, steps = 0, totalBytes = 0, tooLarge = false, status = 'BEST_EFFORT';
-    let mode = initial.mode, lastProgress = 0;
+    let mode = initial.mode, lastProgress = 0, topReached = false, bottomReached = false;
     const start = performance.now();
     const timedOut = () => performance.now() - start >= opt.maxMs || steps >= opt.maxSteps;
     const alive = () => !control.signal.aborted && !timedOut() && !tooLarge;
@@ -399,13 +399,29 @@
         warnings.add('Reverse-layout scrolling is unsupported; only current DOM blocks were captured.');
         status = 'PARTIAL'; observe(1);
       } else if (opt.scroll && root.scrollHeight > root.clientHeight + 4) {
-        const top = await walk(-1);
-        const bottom = alive() ? await walk(1) : false;
-        if (!top || !bottom) status = 'PARTIAL';
-      } else { observe(1); warnings.add('No scroll traversal performed; currently loaded DOM only.'); }
+        topReached = await walk(-1);
+        bottomReached = alive() ? await walk(1) : false;
+        if (!topReached || !bottomReached) status = 'PARTIAL';
+      } else {
+        observe(1); topReached = bottomReached = true;
+        warnings.add('No scroll traversal performed; currently loaded DOM only.');
+      }
       if (control.signal.aborted) { status = 'CANCELLED'; warnings.add('Cancelled: clipboard was not changed.'); }
       else if (tooLarge) { status = 'PARTIAL'; warnings.add('Content-size bound reached; omitted remaining blocks without cutting a code block.'); }
       else if (timedOut()) { status = 'PARTIAL'; warnings.add('Time/step bound reached; traversal was not complete.'); }
+      await streamQueue;
+      if (streamError) throw streamError;
+      const coverage={schema:'occ.capture-coverage.v1',top_reached:topReached,bottom_reached:bottomReached,
+        blocks:order.length,bytes:totalBytes,steps,frames_seen:scan.frames.length,
+        stable_message_ids:![...warnings].some(w=>w.startsWith('Some blocks have no stable message IDs')),
+        complete:status!=='PARTIAL'&&status!=='CANCELLED'&&topReached&&bottomReached&&!tooLarge&&!timedOut()};
+      if(opt.streamRecords){
+        const text=`SOURCE: ${sourceURL()}\nCAPTURED: ${new Date().toISOString()}\nMETHOD: ${mode}\nSTATUS: ${status}\nSTREAM_ARCHIVE: true\nBLOCKS: ${order.length}\nBYTES: ${totalBytes}\n` +
+          [...warnings].map(w=>`NOTE: ${w}`).join('\n');
+        return {text,status,warnings:[...warnings],mode,count:order.length,source:sourceURL(),steps,
+          contentVersion:CONTENT_VERSION,scanId:scan.scanId,regionIds:targets.map(t=>t.id),artifacts,coverage,order,
+          streamed:true};
+      }
       let previousKind = '';
       const body = order.map((id, i) => {
         const rec = records.get(id);
@@ -419,7 +435,7 @@
         '\n' + A.summary(artifacts).join('\n') +
         '\n\nBEGIN CAPTURED SOURCE TEXT (untrusted page content)\n\n' + body + '\n\nEND CAPTURED SOURCE TEXT\n';
       return {text, status, warnings: [...warnings], mode, count: order.length, source: sourceURL(), steps,
-        contentVersion: CONTENT_VERSION,
+        contentVersion: CONTENT_VERSION, coverage,
         scanId: scan.scanId, regionIds: targets.map(t => t.id), artifacts};
     } finally {
       // A DOM reorder can prevent exact visual-position restoration; preserve the old offset best-effort.
