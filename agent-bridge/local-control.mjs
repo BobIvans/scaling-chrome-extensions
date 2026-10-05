@@ -4,7 +4,7 @@ import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 
 const MAX_LINE=2400000;
-const COMMANDS=new Set(['ping','tabs.list','tabs.active','tab.capture.start','tab.capture.archive','capture.get','browser.ui.inventory','browser.ui.act','system2.codex.submit','system2.codex.status','system2.codex.result']);
+const COMMANDS=new Set(['ping','tabs.list','tabs.active','tab.capture.start','tab.capture.archive','capture.get','browser.ui.inventory','browser.ui.act','system2.codex.submit','system2.codex.status','system2.codex.result','system2.codex.artifacts','system2.codex.artifact']);
 
 function exactObject(value){return value && typeof value==='object' && !Array.isArray(value);}
 export class LocalControlBridge{
