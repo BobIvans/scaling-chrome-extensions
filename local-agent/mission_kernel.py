@@ -162,16 +162,34 @@ class MissionKernel:
         criteria=[str(x) for x in mission.get('acceptance',[]) if str(x).strip()]
         refs=[mission.get('context_sha256')] if mission.get('context_sha256') else []
         compile_result=self.core.create_action(mission['goal'],criteria,refs)
-        ui,ui_full=self._browser_inventory(mission)
-        win,win_full=self._windows_inventory(mission)
-        state=self._state(mission,compile_result,ui,win)
+        prefetch=self.fast_decision.prefetch(mission)
+        lanes=prefetch.get('lanes') or {}
+        browser_lane=lanes.get('browser_ui') or {};windows_lane=lanes.get('windows_ui') or {}
+        browser_full=browser_lane.get('value') if browser_lane.get('state')=='OK' else None
+        windows_full=windows_lane.get('value') if windows_lane.get('state')=='OK' else None
+        ui,ui_full=self._browser_inventory(mission,browser_full)
+        win,win_full=self._windows_inventory(mission,windows_full)
+        state=self._state(mission,compile_result,ui,win,prefetch)
         decision=None
         try:decision=self._laya(state,ui,win)
         except Exception as exc:decision={'error':str(exc),'answers':{}}
         answers=(decision or {}).get('answers',{})
-        route=self._answer(answers,'mission_route')
-        goal_revision,h0_candidate=self._persist_frontier(mission,compile_result,decision,ui,win,route)
+        laya_route=self._answer(answers,'mission_route')
+        frontier=self._route_frontier(mission,compile_result,ui,win)
+        fast=self.fast_decision.choose(frontier,laya_route,mission.get('effects',['READ']),prefetch)
+        route=fast.get('route')
+        # Exact UI effects still need an element/action selected by Laya. The
+        # deterministic policy may rank the surface, but never invents a click.
+        if route=='BROWSER_UI' and self._answer(answers,'ui_candidate','NONE')=='NONE':
+            route='GATHER_CONTEXT';fast={**fast,'route':route,'candidate_id':'route_context','reason':'UI_CHOICE_REQUIRED_FALLBACK'}
+        if route=='WINDOWS_UI' and self._answer(answers,'windows_ui_candidate','NONE')=='NONE':
+            route='GATHER_CONTEXT';fast={**fast,'route':route,'candidate_id':'route_context','reason':'UI_CHOICE_REQUIRED_FALLBACK'}
+        primary_id=fast.get('candidate_id')
+        parallel_lanes=self.fast_decision.parallel_plan(frontier,primary_id,mission.get('effects',['READ']),prefetch)
+        goal_revision,h0_candidate=self._persist_frontier(mission,compile_result,decision,ui,win,route,
+            frontier=frontier,fast_decision=fast,parallel_lanes=parallel_lanes)
         if goal_revision is not None:mission['goal_revision']=goal_revision
+        decision_meta={'fast_decision':fast,'parallel_lanes':parallel_lanes,'prefetch':state.get('prefetch')}
         if compile_result.get('state')=='COMPILED' and route not in {'SYSTEM2','CAPABILITY_GAP','GATHER_CONTEXT','WAIT','STOP'}:
             job=self.core.enqueue_action(compile_result['intent_id'],compile_result['revision'])
             return {'schema':'voice-agentos.mission-step.v1','state':'CORE_JOB_QUEUED','compile':compile_result,'laya':decision,'job':job,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate}
