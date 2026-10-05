@@ -10,6 +10,10 @@ let storageQueue = Promise.resolve();
 function mutateStorage(fn) { const pending=storageQueue.catch(()=>{}).then(fn); storageQueue=pending; return pending; }
 const downloads = new Map();
 const viewerURL = () => chrome.runtime.getURL('viewer.html');
+const AGENTOS_NATIVE_HOST = 'com.one_click_context.codex';
+let agentosNativePort = null;
+let agentosNativeSeq = 0;
+const agentosNativePending = new Map();
 const utf8 = text => new TextEncoder().encode(text);
 
 function validStatus(value) {
@@ -200,6 +204,98 @@ async function run(tab, scroll = true, sourceMode = 'auto') {
   } finally { if (active === job) active = null; }
 }
 
+async function agentosNativePermission() {
+  return await chrome.permissions.contains({permissions: ['nativeMessaging']});
+}
+function agentosExtensionPage(sender) {
+  return sender?.id === chrome.runtime.id && !sender.tab && typeof sender.url === 'string' &&
+    sender.url.startsWith(chrome.runtime.getURL(''));
+}
+function agentosRejectPending(reason) {
+  for (const pending of agentosNativePending.values()) {
+    clearTimeout(pending.timer);
+    pending.reject(new Error(reason));
+  }
+  agentosNativePending.clear();
+}
+async function handleAgentOSLocalControl(message) {
+  if (message.command === 'tabs.list') {
+    const tabs = await chrome.tabs.query({});
+    return tabs.filter(tab => Number.isInteger(tab.id)).map(tab => ({
+      id: tab.id, windowId: tab.windowId, active: tab.active === true,
+      title: typeof tab.title === 'string' ? tab.title : '',
+      url: typeof tab.url === 'string' ? tab.url : ''
+    }));
+  }
+  if (message.command === 'tabs.active') {
+    const tabs = await chrome.tabs.query({active: true, lastFocusedWindow: true});
+    const tab = tabs[0];
+    if (!tab || !Number.isInteger(tab.id)) throw new Error('ACTIVE_TAB_UNAVAILABLE');
+    return {id: tab.id, windowId: tab.windowId, active: true,
+      title: typeof tab.title === 'string' ? tab.title : '',
+      url: typeof tab.url === 'string' ? tab.url : ''};
+  }
+  if (message.command === 'tab.capture.start') {
+    let tab;
+    if (Number.isInteger(message.args?.tabId)) tab = await chrome.tabs.get(message.args.tabId);
+    else tab = (await chrome.tabs.query({active: true, lastFocusedWindow: true}))[0];
+    if (!tab || !Number.isInteger(tab.id)) throw new Error('ACTIVE_TAB_UNAVAILABLE');
+    await run(tab, true, 'auto');
+    const found = await getCapture();
+    if (!found || found.capture.sourceTabId !== tab.id) throw new Error('CAPTURE_NOT_CONFIRMED');
+    return {state: 'CAPTURE_CONFIRMED', tabId: tab.id, captureId: found.capture.captureId,
+      revision: found.capture.revision, status: found.capture.status};
+  }
+  throw new Error('LOCAL_CONTROL_COMMAND_UNAVAILABLE');
+}
+function agentosHandleNativeMessage(message, port) {
+  if (message?.push === true && message.channel === 'agentos-local-control') {
+    Promise.resolve().then(() => handleAgentOSLocalControl(message)).then(
+      result => port.postMessage({type: 'agentos.control.reply', controlId: message.controlId, ok: true, result}),
+      error => port.postMessage({type: 'agentos.control.reply', controlId: message.controlId, ok: false, error: error.message || 'LOCAL_CONTROL_FAILED'})
+    );
+    return;
+  }
+  const pending = agentosNativePending.get(message?.requestId);
+  if (!pending) return;
+  if (message.progress === true) {
+    pending.onProgress?.();
+    return;
+  }
+  agentosNativePending.delete(message.requestId);
+  clearTimeout(pending.timer);
+  message.ok === true ? pending.resolve(message) : pending.reject(new Error(message.error || 'NATIVE_OPERATION_FAILED'));
+}
+async function ensureAgentOSNativeBridge() {
+  if (agentosNativePort) return agentosNativePort;
+  if (!(await agentosNativePermission())) throw new Error('NATIVE_PERMISSION_REQUIRED');
+  const port = chrome.runtime.connectNative(AGENTOS_NATIVE_HOST);
+  agentosNativePort = port;
+  port.onMessage.addListener(message => agentosHandleNativeMessage(message, port));
+  port.onDisconnect.addListener(() => {
+    if (agentosNativePort !== port) return;
+    agentosNativePort = null;
+    agentosRejectPending(chrome.runtime.lastError?.message || 'NATIVE_DISCONNECTED');
+  });
+  return port;
+}
+async function agentosNativeRequest(request, onProgress) {
+  const port = await ensureAgentOSNativeBridge();
+  const requestId = 'agentos-bg-' + Date.now() + '-' + (++agentosNativeSeq);
+  return await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => {
+      agentosNativePending.delete(requestId);
+      reject(new Error('NATIVE_TIMEOUT'));
+    }, 130000);
+    agentosNativePending.set(requestId, {resolve, reject, timer, onProgress});
+    port.postMessage({...request, requestId});
+  });
+}
+void agentosNativePermission().then(ok => { if (ok) void ensureAgentOSNativeBridge().catch(() => {}); });
+chrome.runtime.onStartup.addListener(() => {
+  void agentosNativePermission().then(ok => { if (ok) void ensureAgentOSNativeBridge().catch(() => {}); });
+});
+
 chrome.action.onClicked.addListener(tab => { void run(tab); });
 chrome.runtime.onInstalled.addListener(() => {
   void chrome.storage.local.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
@@ -212,6 +308,7 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({id: 'capture-document', title: 'Собрать открытый документ', contexts: ['action']});
     chrome.contextMenus.create({id: 'capture-both', title: 'Собрать переписку + документ', contexts: ['action']});
     chrome.contextMenus.create({id: 'loaded', title: 'Собрать загруженный текст без прокрутки', contexts: ['action']});
+    chrome.contextMenus.create({id: 'agentos-enable', title: 'Включить локальный AgentOS bridge', contexts: ['action']});
   });
 });
 void chrome.storage.local.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
@@ -219,6 +316,12 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'viewer') void openViewer();
   if (info.menuItemId === 'library') void chrome.tabs.create({url: chrome.runtime.getURL('library.html')});
   if (info.menuItemId === 'loaded') void run(tab, false);
+  if (info.menuItemId === 'agentos-enable') {
+    void chrome.permissions.request({permissions: ['nativeMessaging']}).then(granted => {
+      if (granted) return ensureAgentOSNativeBridge();
+      throw new Error('NATIVE_PERMISSION_REQUIRED');
+    }).catch(() => {});
+  }
   if (info.menuItemId === 'capture-chat') void run(tab, true, 'chat');
   if (info.menuItemId === 'capture-document') void run(tab, true, 'document');
   if (info.menuItemId === 'capture-both') void run(tab, true, 'chat+document');
@@ -240,6 +343,19 @@ chrome.downloads.onChanged.addListener(delta => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, respond) => {
+  if (message?.target === 'agentos-background') {
+    if (!agentosExtensionPage(sender)) return false;
+    if (message.type === 'enableNativeBridge') {
+      ensureAgentOSNativeBridge().then(() => respond({ok: true}), error => respond({ok: false, error: error.message}));
+      return true;
+    }
+    if (message.type === 'nativeRequest' && message.request && typeof message.request.type === 'string') {
+      agentosNativeRequest(message.request).then(result => respond({ok: true, result}), error => respond({ok: false, error: error.message}));
+      return true;
+    }
+    return false;
+  }
+
   // Exact library page only: capture reads and bounded recent-session commands; no arbitrary payloads.
   if (message?.target === 'library') {
     if (sender.id !== chrome.runtime.id || sender.tab || sender.url !== chrome.runtime.getURL('library.html')) return false;
