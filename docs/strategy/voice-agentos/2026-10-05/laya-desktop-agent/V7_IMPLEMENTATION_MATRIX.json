@@ -116,6 +116,12 @@
       "owners": [
         "local-agent/mission_kernel.py",
         "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "Core→Laya→System2 loop",
+        "browser UI read-navigation→recapture→replan",
+        "Windows UIA read-navigation→recapture→replan",
+        "no-progress hash stop"
       ]
     },
     {
@@ -130,8 +136,96 @@
       "id": "generic-ai-observe",
       "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
       "owners": [
+        "one-click-context/capture-regions.js",
         "one-click-context/content.js",
-        "one-click-context/background.js"
+        "one-click-context/background.js",
+        "local-agent/browser_archive.py"
+      ],
+      "evidence": [
+        "headless streamed virtualized capture",
+        "role-less/recycled sibling detection",
+        "explicit coverage/gaps/order",
+        "frame supplements",
+        "local TXT/metadata/raw JSONL assembly"
+      ]
+    },
+    {
+      "id": "streamed-browser-archive",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "one-click-context/capture-regions.js",
+        "one-click-context/content.js",
+        "one-click-context/background.js",
+        "agent-bridge/local-control.mjs",
+        "local-agent/control_bridge.py",
+        "local-agent/browser_archive.py"
+      ],
+      "evidence": [
+        "up to configured 64MiB local streamed archive",
+        "message-level record chunks",
+        "coverage contract",
+        "TXT + metadata JSON + raw JSONL",
+        "single snapshot no longer bounds lifetime capture"
+      ]
+    },
+    {
+      "id": "automatic-browser-watch",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/browser_watch.py",
+        "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "scheduled allowed-tab scan",
+        "hash dedup",
+        "only changed archive imported to canonical Library"
+      ]
+    },
+    {
+      "id": "generic-browser-ui-read-navigation",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "one-click-context/ui-inventory.js",
+        "one-click-context/background.js",
+        "local-agent/control_bridge.py",
+        "local-agent/mission_kernel.py"
+      ],
+      "evidence": [
+        "snapshot/document/element fingerprint",
+        "Laya dynamic candidate choice",
+        "generic click restricted to READ_NAV",
+        "recapture/no-progress"
+      ]
+    },
+    {
+      "id": "windows-uia-structured-fallback",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/windows_uia.ps1",
+        "local-agent/windows_uia.py",
+        "local-agent/mission_kernel.py",
+        "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "foreground window inventory",
+        "runtime-id/fingerprint revalidation",
+        "generic invoke restricted to READ_NAV",
+        "Value readback broker",
+        "Windows context capture"
+      ]
+    },
+    {
+      "id": "canonical-library-labels",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "content-lab/context_library.py",
+        "content-lab/context_runtime.py",
+        "local-agent/core_client.py"
+      ],
+      "evidence": [
+        "labels stored in canonical annotation payload",
+        "SEARCH label subset filter",
+        "source/type/status labels at ingest"
       ]
     },
     {
@@ -229,5 +323,6 @@
       "state": "NOT_IMPLEMENTED",
       "external_setup": "target Windows + Chrome + accounts + local credentials"
     }
-  ]
+  ],
+  "updated_for": "App-centric universal capture/UI runtime on PR #61"
 }
