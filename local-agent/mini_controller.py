@@ -216,28 +216,46 @@ class Mini:
         mission=self._mission_state();self.mission_cancel.clear()
         def work():
             try:
-                current=dict(mission);seen=set();limit=max(1,min(8,int(self.settings.get('max_system2_cycles',3))))
-                history=[]
-                for cycle in range(limit+1):
+                current=dict(mission);seen_system2=set();seen_context=set()
+                max_system2=max(1,min(8,int(self.settings.get('max_system2_cycles',3))))
+                max_cycles=max(2,min(40,int(self.settings.get('max_agent_cycles',12))))
+                system2_count=0;history=[]
+                if current.get('context_sha256'):seen_context.add(current['context_sha256'])
+                for cycle in range(max_cycles):
                     if self.mission_cancel.is_set():self.events.put(('details',{'state':'CANCELLED_BY_USER','history':history}));return
-                    step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-4:]}))
-                    if step.get('state')!='WAITING_SYSTEM2':return
-                    job_id=step['system2_job_id']
+                    step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-6:]}))
+                    state=step.get('state')
+                    if state in {'NEEDS_CONTEXT','BROWSER_UI_EFFECT'}:
+                        gathered=self.kernel.capture_browser_context();history.append(gathered)
+                        digest=gathered.get('sha256')
+                        self.events.put(('details',{'cycle':cycle,'browser_context':gathered,'history':history[-6:]}))
+                        if not digest or digest in seen_context:
+                            self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'BROWSER_CONTEXT_UNCHANGED','history':history[-8:]}));return
+                        seen_context.add(digest);text=gathered.get('text','')
+                        base=current.get('context_text','')
+                        combined=(base+'\n\n===== NEW BROWSER CONTEXT =====\n'+text)[-2_000_000:]
+                        current=dict(current,context_text=combined,context_sha256=digest,context_metadata=gathered.get('archive'))
+                        continue
+                    if state!='WAITING_SYSTEM2':return
+                    if system2_count>=max_system2:
+                        self.events.put(('details',{'state':'STOPPED_SYSTEM2_BUDGET','max_system2_cycles':max_system2,'history':history[-8:]}));return
+                    system2_count+=1;job_id=step['system2_job_id']
                     while not self.mission_cancel.wait(2):
                         result=self.kernel.poll_system2(job_id,current)
                         if result.get('state')=='WAITING_SYSTEM2':continue
-                        history.append(result);self.events.put(('details',{'cycle':cycle,'system2':result,'history':history[-4:]}))
+                        history.append(result);self.events.put(('details',{'cycle':cycle,'system2':result,'history':history[-6:]}))
                         digest=result.get('sha256')
-                        if digest in seen:self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'REPEATED_SYSTEM2_RESULT','history':history[-6:]}));return
-                        seen.add(digest)
+                        if digest in seen_system2:
+                            self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'REPEATED_SYSTEM2_RESULT','history':history[-8:]}));return
+                        if digest:seen_system2.add(digest)
                         text=result.get('text','')
                         if not text:return
                         base=current.get('context_text','')
-                        combined=(base+'\n\n===== SYSTEM2 RESULT =====\n'+text)
-                        current=dict(current,context_text=combined[-2_000_000:],context_sha256=hashlib.sha256(combined[-2_000_000:].encode()).hexdigest())
+                        combined=(base+'\n\n===== SYSTEM2 RESULT =====\n'+text)[-2_000_000:]
+                        current=dict(current,context_text=combined,context_sha256=hashlib.sha256(combined.encode()).hexdigest())
                         break
                     else:return
-                self.events.put(('details',{'state':'STOPPED_SYSTEM2_BUDGET','max_cycles':limit,'history':history[-6:]}))
+                self.events.put(('details',{'state':'STOPPED_AGENT_CYCLE_BUDGET','max_cycles':max_cycles,'history':history[-8:]}))
             except Exception as exc:self.events.put(('error','Mission: '+str(exc)))
         threading.Thread(target=work,daemon=True).start()
 
