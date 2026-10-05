@@ -199,9 +199,12 @@ class FastDecisionEngine:
         top=ranked[0]
         laya_id=ROUTE_TO_ID.get(laya_route)
         laya_candidate=next((x for x in ranked if x.get('id')==laya_id),None)
+        known=next((x for x in ranked if x.get('id')=='route_known'),None)
         margin=float(self.config['laya_override_margin'])
         if laya_candidate and laya_candidate['utility']>=top['utility']-margin:
             selected=laya_candidate;reason='LAYA_WITHIN_FAST_MARGIN'
+        elif not laya_candidate and known is not None:
+            selected=known;reason='QUALIFIED_RECIPE_FAST_PATH'
         else:
             selected=top;reason='DETERMINISTIC_FASTEST_VERIFIED'
         route=ID_TO_ROUTE.get(selected['id'],selected.get('kind'))
