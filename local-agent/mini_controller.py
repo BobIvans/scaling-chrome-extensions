@@ -297,6 +297,36 @@ class Mini:
                         result=self.kernel.poll_system2(job_id,current)
                         if result.get('state')=='WAITING_SYSTEM2':continue
                         history.append(result);self.events.put(('details',{'cycle':cycle,'system2':result,'history':history[-6:]}))
+                        if result.get('state')=='CAPABILITY_CANDIDATE_TESTED':
+                            self.events.put(('details',{'state':'WAITING_CAPABILITY_PROMOTION','candidate':result.get('capability_candidate'),'history':history[-8:]}));return
+                        if result.get('state')=='CAPABILITY_PR_OPEN':
+                            pr_receipt=result.get('capability_pr');deadline=time.monotonic()+max(30,int(self.settings.get('github_ci_timeout_seconds',1800)))
+                            observation=None
+                            while time.monotonic()<deadline and not self.mission_cancel.wait(max(2,float(self.settings.get('github_ci_poll_seconds',15)))):
+                                observation=self.kernel.observe_capability_pr(pr_receipt)
+                                self.events.put(('details',{'state':'CAPABILITY_PR_MONITORING','pr':pr_receipt,'observation':observation,'history':history[-6:]}))
+                                failed=[name for name,row in (observation.get('required_checks') or {}).items()
+                                        if row.get('status')=='completed' and row.get('conclusion') not in {'success','neutral','skipped'}]
+                                if failed:
+                                    self.events.put(('details',{'state':'CAPABILITY_CI_FAILED','failed_checks':failed,'observation':observation,'history':history[-8:]}));return
+                                if observation.get('all_required_pass'):break
+                            if not observation or not observation.get('all_required_pass'):
+                                self.events.put(('details',{'state':'WAITING_CAPABILITY_CI','pr':pr_receipt,'observation':observation,'history':history[-8:]}));return
+                            try:merged=self.kernel.merge_capability_pr(pr_receipt,current.get('effects',[]))
+                            except Exception as exc:
+                                self.events.put(('details',{'state':'WAITING_CAPABILITY_MERGE','pr':pr_receipt,'observation':observation,'reason':str(exc),'history':history[-8:]}));return
+                            history.append(merged);self.events.put(('details',{'state':'CAPABILITY_MERGED_REMOTE','merge':merged,'history':history[-8:]}))
+                            renew_cfg=self.settings.get('renewal') or {}
+                            if 'INSTALL_UPDATE' not in set(current.get('effects',[])) or not renew_cfg.get('enabled'):
+                                self.events.put(('details',{'state':'WAITING_CAPABILITY_UPDATE','merge':merged,'history':history[-8:]}));return
+                            cfg=dict(renew_cfg);cfg['source_checkout']=expand(cfg['source_checkout']);cfg['staging_root']=expand(cfg['staging_root'])
+                            merge_event={'repo':(self.settings.get('capability_pr') or {}).get('repo_full_name'),'number':merged.get('number'),
+                                'title':'AgentOS capability','merged_at':datetime.now(timezone.utc).isoformat(),
+                                'merge_commit_sha':merged['merge_commit_sha'],'head_sha':merged['head_sha'],
+                                'base_ref':(self.settings.get('capability_pr') or {}).get('base_branch')}
+                            staged=VerifiedRenewal(cfg,Path(expand(self.settings['inbox_root']))/'renewal-receipts').stage_merge(merge_event)
+                            history.append(staged);self.events.put(('details',{'state':'CAPABILITY_UPDATE_STAGED','merge':merged,'renewal':staged,'history':history[-8:]}))
+                            self.events.put(('details',{'state':'WAITING_QUALIFIED_ACTIVATION','reason':'Production activation/device qualification remains a separate stable-controller gate.','renewal':staged,'history':history[-8:]}));return
                         digest=result.get('sha256')
                         if digest in seen_system2:
                             self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'REPEATED_SYSTEM2_RESULT','history':history[-8:]}));return
