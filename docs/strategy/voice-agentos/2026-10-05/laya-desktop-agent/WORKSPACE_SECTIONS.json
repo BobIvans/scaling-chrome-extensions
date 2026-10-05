@@ -1,0 +1,259 @@
+{
+  "schema": "voice-agentos.workspace-sections.v1",
+  "sections": [
+    {
+      "id": "home",
+      "title": "Home / Inbox",
+      "icon": "home",
+      "primary_actions": [
+        "capture",
+        "import",
+        "new_mission",
+        "resume",
+        "voice",
+        "search"
+      ],
+      "views": [
+        "recent",
+        "active",
+        "waiting",
+        "unclassified",
+        "stale",
+        "gaps",
+        "due"
+      ]
+    },
+    {
+      "id": "library",
+      "title": "Library",
+      "icon": "library",
+      "record_types": [
+        "note",
+        "document",
+        "browser_turn",
+        "attachment",
+        "web_page",
+        "repo_snapshot",
+        "repo_group",
+        "code_symbol",
+        "test_result",
+        "ci_result",
+        "terminal_output",
+        "ai_result",
+        "mission_result",
+        "image",
+        "media",
+        "archive",
+        "git_receipt",
+        "github_receipt",
+        "skill_artifact"
+      ],
+      "facets": [
+        "project",
+        "session",
+        "type",
+        "source",
+        "tags",
+        "labels",
+        "status",
+        "authority",
+        "freshness",
+        "validity",
+        "collection"
+      ]
+    },
+    {
+      "id": "conversations",
+      "title": "Conversations",
+      "icon": "messages",
+      "providers": [
+        "grok",
+        "grok_build",
+        "chatgpt",
+        "codex_work",
+        "telegram",
+        "other"
+      ],
+      "actions": [
+        "observe_live",
+        "capture",
+        "extract_open_loops",
+        "extract_tasks",
+        "extract_decisions",
+        "extract_sources",
+        "add_to_context_cart",
+        "continue_in_target"
+      ]
+    },
+    {
+      "id": "repositories",
+      "title": "Repositories",
+      "icon": "code",
+      "actions": [
+        "open_local",
+        "clone_github",
+        "fetch",
+        "pin_revision",
+        "scan_full",
+        "resume_scan",
+        "build_groups",
+        "whole_repo_pack",
+        "interconnected_pack",
+        "tech_debt_pack",
+        "error_pack",
+        "high_value_pack",
+        "test_impact_pack",
+        "runtime_path_pack",
+        "delta_pack",
+        "custom_pack"
+      ]
+    },
+    {
+      "id": "context_cart",
+      "title": "Context Cart",
+      "icon": "cart",
+      "actions": [
+        "add",
+        "remove",
+        "group",
+        "deduplicate",
+        "resolve_conflict",
+        "build_packet",
+        "split_parts",
+        "export",
+        "send_to_target",
+        "save_context_set"
+      ]
+    },
+    {
+      "id": "ai_targets",
+      "title": "AI Targets",
+      "icon": "target",
+      "actions": [
+        "refresh",
+        "select",
+        "bind",
+        "observe",
+        "revalidate",
+        "send",
+        "read_result",
+        "human_takeover",
+        "stop"
+      ]
+    },
+    {
+      "id": "missions",
+      "title": "Missions / Actions",
+      "icon": "mission",
+      "views": [
+        "goal",
+        "h2_strategy",
+        "h1_frontier",
+        "h0_next",
+        "timeline",
+        "resources",
+        "evidence",
+        "blockers"
+      ],
+      "actions": [
+        "preview",
+        "run",
+        "pause",
+        "resume",
+        "stop",
+        "gather_context",
+        "ask_ai",
+        "create_gap"
+      ]
+    },
+    {
+      "id": "automations",
+      "title": "Automations / Campaigns",
+      "icon": "automation",
+      "actions": [
+        "create",
+        "inspect",
+        "advance",
+        "pause",
+        "resume",
+        "cancel",
+        "schedule",
+        "watch_event"
+      ]
+    },
+    {
+      "id": "skills",
+      "title": "Skills / Tools",
+      "icon": "tools",
+      "views": [
+        "registered",
+        "staging",
+        "canary",
+        "invalidated",
+        "failed",
+        "gaps"
+      ],
+      "actions": [
+        "inspect",
+        "qualify",
+        "promote",
+        "rollback",
+        "quarantine"
+      ]
+    },
+    {
+      "id": "evidence",
+      "title": "Evidence / Receipts",
+      "icon": "receipt",
+      "views": [
+        "sources",
+        "effects",
+        "tests",
+        "git",
+        "release",
+        "device",
+        "unknown",
+        "blocked",
+        "stale"
+      ]
+    },
+    {
+      "id": "work_sessions",
+      "title": "Work Sessions",
+      "icon": "session",
+      "actions": [
+        "capture",
+        "checkpoint",
+        "resume",
+        "close",
+        "export"
+      ]
+    },
+    {
+      "id": "settings",
+      "title": "Settings / Policies",
+      "icon": "settings",
+      "views": [
+        "data_roots",
+        "labels",
+        "providers",
+        "browser_profiles",
+        "laya",
+        "models",
+        "grants",
+        "budgets",
+        "schedules",
+        "privacy",
+        "qualification"
+      ]
+    }
+  ],
+  "common_item_actions": [
+    "open",
+    "label",
+    "relate",
+    "add_to_context_cart",
+    "start_mission",
+    "inspect_evidence"
+  ]
+}

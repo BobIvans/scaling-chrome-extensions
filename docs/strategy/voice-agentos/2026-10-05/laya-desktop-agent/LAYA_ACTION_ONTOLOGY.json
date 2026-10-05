@@ -1,0 +1,249 @@
+{
+  "schema": "voice-agentos.action-ontology.v1",
+  "principle": "Every arbitrary goal is decomposed into typed actions; unknown actions become capability gaps rather than arbitrary execution.",
+  "categories": [
+    {
+      "id": "observe",
+      "effect": "READ",
+      "actions": [
+        "observe_source",
+        "observe_tab",
+        "observe_window",
+        "observe_file",
+        "observe_repo",
+        "observe_event",
+        "observe_process",
+        "observe_download"
+      ]
+    },
+    {
+      "id": "retrieve",
+      "effect": "READ_OR_BOUNDED_UI",
+      "actions": [
+        "search",
+        "find_exact",
+        "read_range",
+        "scroll_materialize",
+        "open_allowed_link",
+        "download_allowed_artifact",
+        "query_api",
+        "fetch_git_metadata"
+      ]
+    },
+    {
+      "id": "ingest",
+      "effect": "LOCAL_WRITE",
+      "actions": [
+        "capture_raw",
+        "import_file",
+        "import_chat",
+        "import_attachment",
+        "import_repo_snapshot",
+        "import_result",
+        "hash_and_store"
+      ]
+    },
+    {
+      "id": "organize",
+      "effect": "LOCAL_WRITE",
+      "actions": [
+        "label",
+        "tag",
+        "relate",
+        "group",
+        "deduplicate",
+        "mark_conflict",
+        "mark_stale",
+        "annotate",
+        "tombstone",
+        "create_collection"
+      ]
+    },
+    {
+      "id": "context",
+      "effect": "LOCAL_WRITE",
+      "actions": [
+        "select_context",
+        "build_context_cart",
+        "compile_packet",
+        "split_packet",
+        "build_delta",
+        "request_more_context",
+        "export_handoff"
+      ]
+    },
+    {
+      "id": "decide",
+      "effect": "DATA_ONLY",
+      "actions": [
+        "laya_choice",
+        "laya_score",
+        "laya_noul",
+        "rank_frontier",
+        "classify_response",
+        "detect_gap",
+        "detect_no_progress",
+        "select_recipe"
+      ]
+    },
+    {
+      "id": "plan",
+      "effect": "DATA_ONLY",
+      "actions": [
+        "ask_planner",
+        "import_plan",
+        "build_dag",
+        "backchain_acceptance",
+        "premortem",
+        "counterexample_plan",
+        "replan"
+      ]
+    },
+    {
+      "id": "browser",
+      "effect": "READ_OR_UI_WRITE",
+      "actions": [
+        "list_tabs",
+        "bind_tab",
+        "fill_bound_draft",
+        "upload_bound_parts",
+        "submit_bound_prompt",
+        "read_bound_reply",
+        "reconcile_send",
+        "human_takeover"
+      ]
+    },
+    {
+      "id": "repo",
+      "effect": "LOCAL_WRITE_OR_GIT",
+      "actions": [
+        "clone_repo",
+        "fetch_repo",
+        "scan_repo",
+        "build_groups",
+        "analyze_symbols",
+        "analyze_dependencies",
+        "create_worktree",
+        "apply_patch",
+        "run_tests",
+        "commit"
+      ]
+    },
+    {
+      "id": "github",
+      "effect": "EXTERNAL_WRITE_SCOPED",
+      "actions": [
+        "read_pr",
+        "read_ci",
+        "create_pr",
+        "update_pr",
+        "comment",
+        "request_review",
+        "merge_if_admitted",
+        "verify_merge"
+      ]
+    },
+    {
+      "id": "process",
+      "effect": "LOCAL_PROCESS",
+      "actions": [
+        "run_registered_command",
+        "start_worker",
+        "stop_worker",
+        "run_converter",
+        "run_build",
+        "run_test_suite"
+      ]
+    },
+    {
+      "id": "windows",
+      "effect": "UI_WRITE_SCOPED",
+      "actions": [
+        "focus_window",
+        "click_bound_control",
+        "fill_bound_control",
+        "select_bound_item",
+        "open_app",
+        "launch_installed_app"
+      ]
+    },
+    {
+      "id": "communication",
+      "effect": "EXTERNAL_WRITE_SCOPED",
+      "actions": [
+        "send_bound_ai_prompt",
+        "send_message",
+        "draft_message",
+        "notify_user"
+      ]
+    },
+    {
+      "id": "wait",
+      "effect": "CONTROL",
+      "actions": [
+        "wait_for_event",
+        "wait_for_quota",
+        "wait_until",
+        "schedule",
+        "debounce",
+        "coalesce"
+      ]
+    },
+    {
+      "id": "verify",
+      "effect": "READ",
+      "actions": [
+        "verify_postcondition",
+        "verify_file_hash",
+        "verify_target_identity",
+        "verify_test",
+        "verify_ci",
+        "verify_merge",
+        "verify_build",
+        "verify_install",
+        "verify_device"
+      ]
+    },
+    {
+      "id": "capability",
+      "effect": "ISOLATED_CODE_AND_REGISTRY",
+      "actions": [
+        "create_gap_spec",
+        "find_existing_tool",
+        "import_tool_candidate",
+        "generate_tool_candidate",
+        "test_candidate",
+        "canary_candidate",
+        "promote_skill",
+        "rollback_skill",
+        "invalidate_skill"
+      ]
+    },
+    {
+      "id": "control",
+      "effect": "CONTROL",
+      "actions": [
+        "stop",
+        "pause",
+        "resume",
+        "cancel",
+        "checkpoint",
+        "reconcile_unknown",
+        "release_lease",
+        "acquire_lease"
+      ]
+    },
+    {
+      "id": "result",
+      "effect": "LOCAL_WRITE",
+      "actions": [
+        "compile_feedback_doc",
+        "compile_evidence_report",
+        "close_acceptance",
+        "record_blocker",
+        "record_unknown",
+        "archive_session"
+      ]
+    }
+  ]
+}

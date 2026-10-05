@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.local/voice-agentos/LibraryRecord.schema.json",
+  "title": "LibraryRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "record_id",
+    "record_type",
+    "title",
+    "source_ref",
+    "revision",
+    "authority",
+    "created_at",
+    "labels",
+    "relations",
+    "provenance",
+    "status"
+  ],
+  "properties": {
+    "schema": {
+      "const": "voice-agentos.library-record.v1"
+    },
+    "record_id": {
+      "type": "string",
+      "minLength": 16
+    },
+    "record_type": {
+      "type": "string"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_ref": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "revision": {
+      "type": [
+        "string",
+        "integer"
+      ]
+    },
+    "authority": {
+      "enum": [
+        "USER",
+        "SOURCE",
+        "OBSERVED",
+        "DERIVED",
+        "MODEL_CLAIM",
+        "SYSTEM_RECEIPT"
+      ]
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "observed_at": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "project": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "session": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "collection_ids": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "tags": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "labels": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "name",
+          "origin",
+          "state"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "value": {},
+          "origin": {
+            "enum": [
+              "USER",
+              "RULE",
+              "LAYA",
+              "MODEL",
+              "IMPORT"
+            ]
+          },
+          "confidence": {
+            "type": [
+              "number",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 1
+          },
+          "state": {
+            "enum": [
+              "PROPOSED",
+              "ACCEPTED",
+              "CORRECTED",
+              "REJECTED"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "status": {
+      "enum": [
+        "ACTIVE",
+        "HISTORICAL",
+        "STALE",
+        "CONFLICT",
+        "BLOCKED",
+        "TOMBSTONED"
+      ]
+    },
+    "valid_from": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "valid_until": {
+      "type": [
+        "string",
+        "null"
+      ],
+      "format": "date-time"
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "sensitivity": {
+      "enum": [
+        "PUBLIC",
+        "PERSONAL",
+        "PRIVATE",
+        "SECRET_REFERENCE_ONLY"
+      ]
+    },
+    "relations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "type",
+          "target"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "target": {
+            "type": "string"
+          },
+          "evidence_ref": {
+            "type": [
+              "string",
+              "null"
+            ]
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "content_refs": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true
+      }
+    },
+    "search_projection": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": true
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "dependent_objects": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    }
+  }
+}
