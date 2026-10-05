@@ -195,61 +195,63 @@ class MissionKernel:
             frontier=frontier,fast_decision=fast,parallel_lanes=parallel_lanes)
         if goal_revision is not None:mission['goal_revision']=goal_revision
         decision_meta={'fast_decision':fast,'parallel_lanes':parallel_lanes,'prefetch':state.get('prefetch')}
+        def decorate(value):
+            return {**value,**decision_meta}
         if compile_result.get('state')=='COMPILED' and route not in {'SYSTEM2','CAPABILITY_GAP','GATHER_CONTEXT','WAIT','STOP'}:
             job=self.core.enqueue_action(compile_result['intent_id'],compile_result['revision'])
-            return {'schema':'voice-agentos.mission-step.v1','state':'CORE_JOB_QUEUED','compile':compile_result,'laya':decision,'job':job,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate}
-        if route=='STOP':return {'schema':'voice-agentos.mission-step.v1','state':'STOPPED_BY_ROUTER','compile':compile_result,'laya':decision}
-        if route=='WAIT':return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_EXTERNAL','compile':compile_result,'laya':decision}
-        if route=='GATHER_CONTEXT':return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate}
+            return decorate({'schema':'voice-agentos.mission-step.v1','state':'CORE_JOB_QUEUED','compile':compile_result,'laya':decision,'job':job,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate})
+        if route=='STOP':return decorate({'schema':'voice-agentos.mission-step.v1','state':'STOPPED_BY_ROUTER','compile':compile_result,'laya':decision})
+        if route=='WAIT':return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_EXTERNAL','compile':compile_result,'laya':decision})
+        if route=='GATHER_CONTEXT':return decorate({'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate})
         if route=='WINDOWS_UI':
-            if not win or not win_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_WINDOWS_BINDING','compile':compile_result,'laya':decision}
+            if not win or not win_full:return decorate({'schema':'voice-agentos.mission-step.v1','state':'NEEDS_WINDOWS_BINDING','compile':compile_result,'laya':decision})
             candidate_id=self._answer(answers,'windows_ui_candidate','NONE');action=self._answer(answers,'windows_ui_action','ABSTAIN')
             candidates={x.get('element_id'):x for x in win_full.get('elements',[]) if isinstance(x,dict)}
             candidate=candidates.get(candidate_id)
-            if not candidate or candidate_id=='NONE':return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','laya':decision}
+            if not candidate or candidate_id=='NONE':return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','laya':decision})
             request={'snapshot_id':win['snapshot_id'],'element_id':candidate_id,'expected_fingerprint':candidate.get('fingerprint')}
             if action=='SCROLL_INTO_VIEW':
                 request['action']='scroll_into_view';request['effect_class']='READ'
             elif action=='INVOKE_READ_NAV':
-                if candidate.get('risk')!='READ_NAV':return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision}
+                if candidate.get('risk')!='READ_NAV':return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision})
                 request['action']='invoke';request['effect_class']='WINDOWS_WRITE'
             elif action=='NEED_TYPED_INPUT':
                 route='SYSTEM2'
-            else:return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','candidate':candidate,'laya':decision}
+            else:return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_ABSTAIN','candidate':candidate,'laya':decision})
             if route=='WINDOWS_UI':
                 try:receipt=self.windows_ui.act(request)
                 except Exception as exc:
                     if 'WINDOWS_UI_HUMAN_FOREGROUND_LEASE' in str(exc):
-                        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'WINDOWS',
-                                'compile':compile_result,'laya':decision,'candidate':candidate}
+                        return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'WINDOWS',
+                                'compile':compile_result,'laya':decision,'candidate':candidate})
                     raise
-                return {'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_EFFECT','compile':compile_result,'laya':decision,'candidate':candidate,'ui_receipt':receipt}
+                return decorate({'schema':'voice-agentos.mission-step.v1','state':'WINDOWS_UI_EFFECT','compile':compile_result,'laya':decision,'candidate':candidate,'ui_receipt':receipt})
         if route=='BROWSER_UI':
-            if not ui or not ui_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_BINDING','compile':compile_result,'laya':decision}
+            if not ui or not ui_full:return decorate({'schema':'voice-agentos.mission-step.v1','state':'NEEDS_BINDING','compile':compile_result,'laya':decision})
             candidate_id=self._answer(answers,'ui_candidate','NONE');action=self._answer(answers,'ui_action','ABSTAIN')
             candidates={x.get('element_id'):x for x in ui_full.get('elements',[]) if isinstance(x,dict)}
             candidate=candidates.get(candidate_id)
-            if not candidate or candidate_id=='NONE':return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','compile':compile_result,'laya':decision}
+            if not candidate or candidate_id=='NONE':return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','compile':compile_result,'laya':decision})
             request={'snapshot_id':ui['snapshot_id'],'document_token':ui['document_token'],'element_id':candidate_id,
                      'expected_fingerprint':candidate.get('fingerprint')}
             if action=='SCROLL_INTO_VIEW':
                 request['action']='scroll_into_view';request['effect_class']='READ'
             elif action=='CLICK_READ_NAV':
-                if candidate.get('risk')!='READ_NAV':return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision}
+                if candidate.get('risk')!='READ_NAV':return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision})
                 request['action']='click';request['effect_class']='BROWSER_WRITE'
             elif action=='NEED_TYPED_INPUT':
                 route='SYSTEM2'
-            else:return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','candidate':candidate,'laya':decision}
+            else:return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','candidate':candidate,'laya':decision})
             if route=='BROWSER_UI':
                 try:receipt=self.bridge.ui_act(request,ui.get('tab_id'))
                 except Exception as exc:
                     if 'UI_HUMAN_FOREGROUND_LEASE' in str(exc):
-                        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'BROWSER',
-                                'compile':compile_result,'laya':decision,'candidate':candidate}
+                        return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_HUMAN_FOREGROUND','surface':'BROWSER',
+                                'compile':compile_result,'laya':decision,'candidate':candidate})
                     raise
-                return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_EFFECT','compile':compile_result,
-                        'laya':decision,'candidate':candidate,'ui_receipt':receipt}
-        if not self.bridge:return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision}
+                return decorate({'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_EFFECT','compile':compile_result,
+                        'laya':decision,'candidate':candidate,'ui_receipt':receipt})
+        if not self.bridge:return decorate({'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision})
         role=self._system2_role(decision,compile_result)
         context=bounded_utf8(mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False))
         prompt=self._system2_prompt(mission,state,role)
@@ -262,7 +264,7 @@ class MissionKernel:
         job=submitted.get('job') if isinstance(submitted,dict) else None
         job_id=job.get('id') if isinstance(job,dict) else None
         if not job_id:raise ValueError('SYSTEM2_JOB_ID_REQUIRED')
-        return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate}
+        return decorate({'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id,'goal_revision':mission.get('goal_revision'),'h0_candidate_id':h0_candidate})
     def observe_capability_pr(self,pr_receipt):
         if not self.github_pipeline:raise ValueError('GITHUB_PIPELINE_UNAVAILABLE')
         return self.github_pipeline.observe(pr_receipt)
