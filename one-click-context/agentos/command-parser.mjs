@@ -1,11 +1,19 @@
 function cleanLines(value){
   return String(value||'').split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
 }
+function canonicalHttp(raw){
+  const value=String(raw||'').replace(/[.,;:!?]+$/,'');
+  if(!/^https?:\/\//i.test(value))return null;
+  if(typeof globalThis.URL==='function'){
+    try{const u=new globalThis.URL(value);return ['http:','https:'].includes(u.protocol)?u.href:null;}catch{}
+  }
+  return /^(https?):\/\/[^\s<>"')\]]+$/i.test(value)?value:null;
+}
 export function extractUrls(text){
   const seen=new Set(),urls=[];
   for(const match of String(text||'').matchAll(/https?:\/\/[^\s<>"')\]]+/gi)){
-    const raw=match[0].replace(/[.,;:!?]+$/,'');
-    try{const u=new URL(raw);if(!seen.has(u.href)){seen.add(u.href);urls.push(u.href);}}catch{}
+    const value=canonicalHttp(match[0]);
+    if(value&&!seen.has(value)){seen.add(value);urls.push(value);}
   }
   return urls;
 }
