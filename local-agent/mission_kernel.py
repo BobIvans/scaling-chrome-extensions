@@ -10,8 +10,8 @@ def bounded_utf8(text,limit=1_400_000):
 
 class MissionKernel:
     """UI/orchestration projection. Core remains the only effect authority."""
-    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None):
-        self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.questions_path=Path(questions_path)
+    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None):
+        self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.candidate_pipeline=candidate_pipeline;self.questions_path=Path(questions_path)
         self.root=Path(inbox_root).expanduser().resolve();self.root.mkdir(parents=True,exist_ok=True)
     def _answer(self,answers,key,default=None):
         value=(answers or {}).get(key,default)
@@ -80,12 +80,21 @@ class MissionKernel:
         if compile_result and compile_result.get('state')!='COMPILED':return 'TOOL_DESIGNER'
         return 'PLANNER'
     def _system2_prompt(self,mission,state,role):
+        candidate_rule=''
+        if role in {'CODER','TOOL_DESIGNER'}:
+            candidate_rule=(
+                '\nIf you propose a repo implementation and can create artifacts, write exactly two proposal artifacts: '
+                'CAPABILITY_MANIFEST.json and PATCH.diff. CAPABILITY_MANIFEST.json schema must be voice-agentos.capability-candidate.v1 '
+                'with only: schema, skill_id, version, kind="repo_patch", repo_profile, base_commit (40 hex), summary, effect_class, '
+                'required_test_profile, expected_files, verifier. Do NOT include shell commands or credentials. PATCH.diff must apply to the exact base commit. '
+                'The local runtime, not you, chooses and runs registered tests.\n'
+            )
         return (
             'System-2 role: '+role+'\n'
             'You are a reasoning/coding service inside Voice AgentOS. You do not have effect authority.\n'
             'Return a concrete typed next result for the current goal. If a missing capability blocks progress, define a GapSpec/ToolCandidate with inputs, outputs, verifier, tests and effect class. '
-            'If code is appropriate, create artifacts only in the bounded job sandbox. Do not claim merge/install/device success without receipts.\n\n'
-            'MISSION:\n'+json.dumps({'goal':mission['goal'],'acceptance':mission.get('acceptance',[]),'effects':mission.get('effects',[])},ensure_ascii=False)+'\n\n'
+            'If code is appropriate, create artifacts only in the bounded job sandbox. Do not claim merge/install/device success without receipts.'
+            +candidate_rule+'\nMISSION:\n'+json.dumps({'goal':mission['goal'],'acceptance':mission.get('acceptance',[]),'effects':mission.get('effects',[])},ensure_ascii=False)+'\n\n'
             'DECISION_STATE:\n'+json.dumps(state,ensure_ascii=False)
         )
     def start(self,mission):
@@ -216,4 +225,10 @@ class MissionKernel:
         receipt=self.core.capture_file(path,'system2_'+digest[:20])
         try:self.core.annotate_capture(receipt,project='AgentOS',note='System2 result job='+job_id,labels=['source:system2','type:ai-result'])
         except Exception:pass
-        return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_RESULT_INGESTED','system2_job':job,'text':text,'sha256':digest,'path':str(path),'library_receipt':receipt}
+        candidate=None
+        if self.candidate_pipeline and {'LOCAL_WRITE','GIT_WRITE'} & set(mission.get('effects',[])):
+            try:candidate=self.candidate_pipeline.try_qualify_job(job_id)
+            except Exception as exc:candidate={'state':'CAPABILITY_CANDIDATE_BLOCKED','reason':str(exc)}
+        return {'schema':'voice-agentos.mission-step.v1',
+                'state':'CAPABILITY_CANDIDATE_TESTED' if isinstance(candidate,dict) and candidate.get('state')=='ISOLATED_TESTED' else 'SYSTEM2_RESULT_INGESTED',
+                'system2_job':job,'text':text,'sha256':digest,'path':str(path),'library_receipt':receipt,'capability_candidate':candidate}
