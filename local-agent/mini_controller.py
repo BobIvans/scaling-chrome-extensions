@@ -113,7 +113,7 @@ class Mini:
                 except Exception as exc:self.events.put(('log','Capability PR pipeline disabled: '+str(exc)))
             self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',
                 expand(self.settings['inbox_root']),windows_ui=self.windows_ui,candidate_pipeline=self.candidate_pipeline,
-                github_pipeline=self.github_pipeline)
+                github_pipeline=self.github_pipeline,decision_config=self.settings.get('fast_decision') or {})
             try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
             except Exception as exc:self.events.put(('log','LifeContext disabled: '+str(exc)))
             try:
