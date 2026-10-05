@@ -92,7 +92,7 @@ class System2ProviderRegistry:
         except Exception as exc:
             return False,str(exc)[:160]
 
-    def describe(self,role=None):
+    def describe(self,role=None,effect_scope=None):
         if not self.enabled:
             return []
         rows=[]
@@ -100,15 +100,17 @@ class System2ProviderRegistry:
             if role and role not in row['roles']:
                 continue
             available,state=self._provider_available(pid,row)
+            if row['kind']=='AI_SITE' and 'MESSAGE_SEND' not in set(effect_scope or []):
+                available=False;state='MESSAGE_SEND_SCOPE_REQUIRED'
             rows.append({'provider_id':pid,'kind':row['kind'],'roles':list(row['roles']),'priority':row['priority'],
                          'estimated_latency_ms':row['estimated_latency_ms'],'supports_artifacts':row['supports_artifacts'],
                          'available':available,'state':state,'profile_id':row.get('profile_id')})
         return sorted(rows,key=lambda x:(not x['available'],-x['priority'],x['estimated_latency_ms'],x['provider_id']))
 
-    def choose(self,role,preferred=None,require_artifacts=False):
+    def choose(self,role,preferred=None,require_artifacts=False,effect_scope=None):
         if role not in ROLES:
             raise System2RegistryError('SYSTEM2_ROLE')
-        candidates=[x for x in self.describe(role) if x['available'] and (not require_artifacts or x['supports_artifacts'])]
+        candidates=[x for x in self.describe(role,effect_scope=effect_scope) if x['available'] and (not require_artifacts or x['supports_artifacts'])]
         if not candidates:
             raise System2RegistryError('SYSTEM2_NO_PROVIDER')
         by_id={x['provider_id']:x for x in candidates}
@@ -165,14 +167,14 @@ class System2ProviderRegistry:
             'CONTEXT:\n'+text
         )
 
-    def submit(self,role,instruction,text,mode='analyze',preferred_provider=None,request_id=None):
+    def submit(self,role,instruction,text,mode='analyze',preferred_provider=None,request_id=None,effect_scope=None):
         if not self.enabled:
             raise System2RegistryError('SYSTEM2_REGISTRY_DISABLED')
         if role not in ROLES or not isinstance(instruction,str) or not instruction.strip() or not isinstance(text,str):
             raise System2RegistryError('SYSTEM2_REQUEST_SCHEMA')
         if mode not in {'analyze','build'}:
             raise System2RegistryError('SYSTEM2_MODE')
-        provider=self.choose(role,preferred_provider,require_artifacts=(mode=='build'))
+        provider=self.choose(role,preferred_provider,require_artifacts=(mode=='build'),effect_scope=effect_scope)
         pid=provider['provider_id']
         cfg=self.c['providers'][pid]
         session_id=uuid.uuid4().hex
