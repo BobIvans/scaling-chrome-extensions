@@ -2,6 +2,7 @@ from __future__ import annotations
 import hashlib, json, time
 from pathlib import Path
 from browser_archive import BrowserArchiveAssembler
+from fast_decision import FastDecisionEngine
 
 def bounded_utf8(text,limit=1_400_000):
     raw=str(text or '').encode('utf-8')
@@ -10,9 +11,10 @@ def bounded_utf8(text,limit=1_400_000):
 
 class MissionKernel:
     """UI/orchestration projection. Core remains the only effect authority."""
-    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None,github_pipeline=None):
+    def __init__(self,core,bridge,laya,questions_path,inbox_root,windows_ui=None,candidate_pipeline=None,github_pipeline=None,decision_config=None):
         self.core=core;self.bridge=bridge;self.laya=laya;self.windows_ui=windows_ui;self.candidate_pipeline=candidate_pipeline;self.github_pipeline=github_pipeline;self.questions_path=Path(questions_path)
         self.root=Path(inbox_root).expanduser().resolve();self.root.mkdir(parents=True,exist_ok=True)
+        self.fast_decision=FastDecisionEngine(core,bridge,windows_ui,self.root/'fast-decision-stats.json',decision_config)
     def _answer(self,answers,key,default=None):
         value=(answers or {}).get(key,default)
         if isinstance(value,dict):
@@ -20,10 +22,11 @@ class MissionKernel:
             for field in ('choice','label','answer','value'):
                 if field in value:return value[field]
         return value
-    def _browser_inventory(self,mission):
+    def _browser_inventory(self,mission,full=None):
         if not self.bridge or 'BROWSER_WRITE' not in set(mission.get('effects',[])):return None,None
-        try:full=self.bridge.ui_inventory()
-        except Exception:return None,None
+        if full is None:
+            try:full=self.bridge.ui_inventory()
+            except Exception:return None,None
         rows=[]
         for item in full.get('elements',[]):
             if not isinstance(item,dict) or item.get('risk') not in {'READ_NAV','INPUT'}:continue
@@ -35,10 +38,11 @@ class MissionKernel:
         return {'snapshot_id':full.get('snapshot_id'),'document_token':full.get('document_token'),'tab_id':full.get('tabId'),
                 'url':full.get('url'),'title':full.get('title'),'human_activity_ms':full.get('human_activity_ms'),
                 'document_has_focus':full.get('document_has_focus'),'visibility_state':full.get('visibility_state'),'candidates':rows},full
-    def _windows_inventory(self,mission):
+    def _windows_inventory(self,mission,full=None):
         if not self.windows_ui or 'WINDOWS_WRITE' not in set(mission.get('effects',[])):return None,None
-        try:full=self.windows_ui.inventory()
-        except Exception:return None,None
+        if full is None:
+            try:full=self.windows_ui.inventory()
+            except Exception:return None,None
         rows=[]
         for item in full.get('elements',[]):
             if not isinstance(item,dict) or item.get('risk') not in {'READ_NAV','INPUT'}:continue
@@ -48,13 +52,19 @@ class MissionKernel:
                          'name':name[:180],'fingerprint':item.get('fingerprint')})
         rows=sorted(rows,key=lambda x:(x['risk']!='READ_NAV',len(x['name'])))[:60]
         return {'snapshot_id':full.get('snapshot_id'),'hwnd':full.get('hwnd'),'candidates':rows},full
-    def _state(self,mission,compile_result=None,ui=None,windows_ui=None):
+    def _state(self,mission,compile_result=None,ui=None,windows_ui=None,prefetch=None):
         value={'schema':'voice-agentos.decision-state.v1','goal':mission['goal'],'acceptance':mission.get('acceptance',[]),
                 'effect_scope':mission.get('effects',['READ']),'has_context':bool(mission.get('context_text')),
                 'context_sha256':hashlib.sha256(mission.get('context_text','').encode()).hexdigest() if mission.get('context_text') else None,
                 'core_compile':compile_result,'time':time.time()}
         if ui:value['browser_ui']=ui
         if windows_ui:value['windows_ui']=windows_ui
+        if isinstance(prefetch,dict):
+            library=((prefetch.get('lanes') or {}).get('library') or {})
+            if library.get('state')=='OK':value['library_prefetch']=library.get('value')
+            value['prefetch']={'elapsed_ms':prefetch.get('elapsed_ms'),'parallel':prefetch.get('parallel'),
+                'lanes':{k:{'state':v.get('state'),'elapsed_ms':v.get('elapsed_ms'),'error':v.get('error')}
+                         for k,v in (prefetch.get('lanes') or {}).items()}}
         return value
     def _laya(self,state,ui=None,windows_ui=None):
         if not self.laya or not self.laya.enabled:return None
