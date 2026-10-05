@@ -4,14 +4,16 @@
  */
 (function (scope) {
   'use strict';
-  const CHAT = '[data-message-author-role], [data-message-role], [data-role="user"], [data-role="assistant"]';
+  const CHAT_EXPLICIT = '[data-message-author-role], [data-message-role], [data-role="user"], [data-role="assistant"], [data-role="system"], [data-role="tool"]';
+  const CHAT_HINT = '[data-testid*="message" i], [data-testid*="turn" i], [data-testid*="conversation" i], [role="article"], article';
+  const CHAT = CHAT_EXPLICIT + ', ' + CHAT_HINT;
   const MAIN = 'main, [role="main"]';
   const EDITOR = '.cm-editor, .monaco-editor, .ProseMirror';
   const DOCUMENT = '[role="document"], [role="dialog"], aside, [role="complementary"], ' + EDITOR + ', textarea[readonly]';
   const NAV = 'nav, [role="navigation"], [role="menu"], [role="menubar"]';
   const IGNORE = '[hidden], [aria-hidden="true"], [inert], [data-occ-ignore], script, style, template, noscript, ' + NAV;
   const CONTROL = 'button, [role="button"], input, select, [role="toolbar"], header, footer';
-  const COMPOSER = '#prompt-textarea, [data-testid="prompt-textarea"], [data-testid="composer"]';
+  const COMPOSER = '#prompt-textarea, [data-testid="prompt-textarea"], [data-testid="composer"], textarea:not([readonly]), [role="textbox"], [contenteditable="true"]';
   const TEXT = 'p, pre, h1, h2, h3, h4, h5, h6, table, blockquote, li';
   const LIMITS = Object.freeze({nodes: 12000, surfaces: 40, depth: 256});
   const ERR = code => Object.assign(new Error(code), {code});
@@ -70,6 +72,55 @@
     if (!el.matches('aside, [role="complementary"]')) return true;
     return !!el.querySelector('pre, textarea[readonly], [role="document"], .cm-editor, .monaco-editor, .ProseMirror');
   }
+  function compactText(el) {
+    const value=(el?.textContent||'').replace(/\s+/g,' ').trim();
+    return value.length;
+  }
+  function conversationComposer(live,doc) {
+    const height=doc.defaultView?.innerHeight||800;
+    return live.some(el=>{
+      if(!el.matches(COMPOSER)||ancestor(el,'form [type="password"], input[type="password"]'))return false;
+      const r=el.getBoundingClientRect();
+      return r.width>=180 && r.height>=20 && r.top>=-height && r.top<=height*1.2;
+    });
+  }
+  function repeatedConversationBlocks(live,doc) {
+    const result=[],viewport=doc.defaultView?.innerWidth||1000;
+    const parents=new Set(live.map(el=>el.parentElement).filter(Boolean));
+    for(const parentEl of parents){
+      if(result.length>=3000)break;
+      if(!within(doc.body||doc.documentElement,parentEl)||ancestor(parentEl,NAV+', form, '+COMPOSER))continue;
+      const children=[...parentEl.children].filter(el=>visible(el)&&!el.matches(CONTROL+', '+COMPOSER)&&!ancestor(el,NAV));
+      if(children.length<2||children.length>240)continue;
+      const rich=children.filter(el=>{
+        const len=compactText(el);if(len<12||len>250000)return false;
+        const r=el.getBoundingClientRect();
+        return r.width>=Math.min(220,viewport*0.28)&&r.height>=16;
+      });
+      if(rich.length<2)continue;
+      const signatures=new Map();
+      for(const el of rich){
+        const sig=[el.tagName,el.getAttribute('role')||'',(el.getAttribute('data-testid')||'').replace(/\d+/g,'#')].join('|');
+        signatures.set(sig,(signatures.get(sig)||0)+1);
+      }
+      for(const el of rich){
+        const sig=[el.tagName,el.getAttribute('role')||'',(el.getAttribute('data-testid')||'').replace(/\d+/g,'#')].join('|');
+        if((signatures.get(sig)||0)>=2)result.push(el);
+      }
+    }
+    return result;
+  }
+  function dedupeMessages(items) {
+    const unique=[...new Set(items)].filter(visible);
+    return unique.filter(el=>!unique.some(other=>other!==el && within(el,other) && compactText(other)>=Math.max(12,compactText(el)*0.65)));
+  }
+  function conversationMessages(live,doc) {
+    const explicit=live.filter(e=>e.matches(CHAT_EXPLICIT)&&!ancestor(e,COMPOSER));
+    if(explicit.length>=2)return dedupeMessages(explicit);
+    if(!conversationComposer(live,doc))return dedupeMessages(explicit);
+    const hinted=live.filter(e=>e.matches(CHAT_HINT)&&!ancestor(e,COMPOSER)&&compactText(e)>=8);
+    return dedupeMessages([...explicit,...hinted,...repeatedConversationBlocks(live,doc)]);
+  }
 
   let serial = 0;
   function discover(doc, options = {}) {
@@ -90,7 +141,7 @@
     if (doc.contentType === 'text/plain') {
       add(doc.body, 'document', ['PLAIN_TEXT_DOCUMENT'], ['DOM_TEXT_IS_NOT_ORIGINAL_FILE_BYTES']);
     } else {
-      const messageNodes = live.filter(e => e.matches(CHAT) && !ancestor(e, COMPOSER));
+      const messageNodes = conversationMessages(live, doc);
       const mains = live.filter(e => e.matches(MAIN));
       const assigned = new Set();
       mains.sort((a, b) => within(a, b) ? 1 : within(b, a) ? -1 : 0);
