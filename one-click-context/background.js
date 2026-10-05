@@ -257,6 +257,18 @@ async function agentosFrameSnapshots(tabId, controlId) {
 async function agentosArchiveCapture(tab, controlId, args={}) {
   if(active)throw new Error('CAPTURE_BUSY');
   if(!tab||!Number.isInteger(tab.id))throw new Error('ACTIVE_TAB_UNAVAILABLE');
+  if(args.respectHumanLease!==false){
+    try{
+      await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js']});
+      const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:()=>globalThis.__occUIInventory?.()});
+      const info=rows?.[0]?.result;
+      const quietMs=Math.max(500,Math.min(10000,Number.isFinite(args.humanQuietMs)?args.humanQuietMs:1800));
+      if(info?.document_has_focus===true&&Number.isFinite(info.human_activity_ms)&&info.human_activity_ms<quietMs)
+        throw new Error('UI_HUMAN_FOREGROUND_LEASE');
+    }catch(error){
+      if(error?.message==='UI_HUMAN_FOREGROUND_LEASE')throw error;
+    }
+  }
   const token=crypto.randomUUID();
   const job=active={tabId:tab.id,token,documentId:null,cancelled:false,committing:false,archive:true};
   const session={controlId,tabId:tab.id,lastSequence:0};agentosArchiveStreams.set(token,session);
