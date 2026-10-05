@@ -5,7 +5,7 @@ param(
 $ErrorActionPreference='Stop'
 $root=[IO.Path]::GetFullPath($Destination)
 New-Item -ItemType Directory -Path $root -Force | Out-Null
-$files=@('mini_controller.py','core_client.py','control_bridge.py','github_merge_watch.py','folder_watch.py','laya_client.py','self_renew.py','laya_questions.json','Run_Windows.ps1','README_RU.md')
+$files=@('mini_controller.py','core_client.py','control_bridge.py','github_merge_watch.py','folder_watch.py','google_drive_ingest.py','life_context_pipeline.py','laya_client.py','mission_kernel.py','self_renew.py','laya_questions.json','Run_Windows.ps1','README_RU.md')
 foreach($f in $files){Copy-Item -LiteralPath (Join-Path $PSScriptRoot $f) -Destination (Join-Path $root $f) -Force}
 if(!(Test-Path -LiteralPath (Join-Path $root 'settings.json'))){Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'settings.example.json') -Destination (Join-Path $root 'settings.json')}
 $shortcut=Join-Path ([Environment]::GetFolderPath('StartMenu')) 'Programs\Voice AgentOS Mini.lnk'
