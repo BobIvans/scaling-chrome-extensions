@@ -252,7 +252,7 @@ class Mini:
         self.status.set('New library source · '+Path(row['path']).name)
         if self.core:
             def ingest():
-                try:self.events.put(('log','Auto-captured '+str(self.core.capture_file(row['path'],'auto_'+row['sha256'][:16]).get('state')))
+                try:self.events.put(('log','Auto-captured '+str(self.core.capture_file(row['path'],'auto_'+row['sha256'][:16]).get('state'))))
                 except Exception as exc:self.events.put(('log','Auto-import blocked: '+str(exc)))
             threading.Thread(target=ingest,daemon=True).start()
 
