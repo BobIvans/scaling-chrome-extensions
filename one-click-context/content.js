@@ -50,14 +50,33 @@
     protectedText.forEach((value, i) => { text = text.replace(`\uE000${nonce}:${i}\uE001`, () => value); });
     return text;
   }
+  function dynamicChatBlocks(target) {
+    const R=globalThis.OCCCaptureRegions;
+    const explicit=[...target.root.querySelectorAll(ROLE_SELECTOR)].filter(el=>visible(el)&&
+      !target.excludeRoots.some(root=>R.within(root,el))&&!el.closest('form,#prompt-textarea,[data-testid="composer"],textarea,[role="textbox"],[contenteditable="true"]'));
+    const parents=[...new Set((target.messageRoots||[]).map(el=>el?.parentElement).filter(el=>el?.isConnected&&R.within(target.root,el)))];
+    const seeded=[];
+    for(const parent of parents.slice(0,120)){
+      for(const child of [...parent.children].slice(0,500)){
+        if(!visible(child)||target.excludeRoots.some(root=>R.within(root,child))||
+           child.closest('form,#prompt-textarea,[data-testid="composer"],textarea,[role="textbox"],[contenteditable="true"],nav,[role="navigation"]'))continue;
+        const len=(child.textContent||'').replace(/\s+/g,' ').trim().length;
+        if(len>=8&&len<=250000)seeded.push(child);
+      }
+    }
+    const found=[...new Set([...explicit,...seeded])];
+    const compact=found.filter(el=>!found.some(other=>other!==el&&other.contains(el)&&
+      (other.textContent||'').trim().length<=Math.max(20,(el.textContent||'').trim().length*1.6)));
+    if(compact.length)target.messageRoots=[...compact];
+    return compact;
+  }
   function candidates(targets) {
     const nodes = [], owners = new WeakMap();
     for (const target of targets) {
       if (!target.root.isConnected || target.root.ownerDocument !== document) throw new Error('Выбранная область изменилась. Запустите сбор заново.');
       let found;
       if (target.kind === 'chat') {
-        found = [...target.root.querySelectorAll(ROLE_SELECTOR)].filter(el => visible(el) &&
-          !target.excludeRoots.some(root => globalThis.OCCCaptureRegions.within(root, el)));
+        found = dynamicChatBlocks(target);
       } else {
         const selector = 'p,pre,li,h1,h2,h3,h4,h5,h6,blockquote,table,textarea[readonly]';
         const all = [...(target.root.matches(selector) ? [target.root] : []), ...target.root.querySelectorAll(selector)]
