@@ -13,6 +13,7 @@ if(Test-Path -LiteralPath $occDestination){throw 'Destination already exists. Us
 New-Item -ItemType Directory -Path $occDestination | Out-Null
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'host.mjs') -Destination $occDestination
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'durable.mjs') -Destination $occDestination
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'local-control.mjs') -Destination $occDestination
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'qualification.mjs') -Destination $occDestination
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'qualification_adapter.py') -Destination $occDestination
 # Preserve the adapter's sibling layout. Durable access remains opt-in in host-config.json.
@@ -34,7 +35,12 @@ foreach($occPackage in @('occ_v4','occ_v5')){
 }
 & $occCompiler /nologo /target:exe /reference:System.Web.Extensions.dll "/out:$occDestination/occ-native-host.exe" (Join-Path $PSScriptRoot 'NativeHost.cs')
 if($LASTEXITCODE -ne 0){throw 'Compilation failed; registry unchanged.'}
-$occConfig=@{extensionId=$ExtensionId;nodePath=$occNode;codexPath=$occCodex;dataRoot=(Join-Path $occDestination 'jobs')}
+$occTokenBytes=New-Object byte[] 32
+$occRng=[Security.Cryptography.RandomNumberGenerator]::Create()
+try{$occRng.GetBytes($occTokenBytes)}finally{$occRng.Dispose()}
+$occControlToken=[Convert]::ToBase64String($occTokenBytes)
+$occControlState=Join-Path $occDestination 'local-control.json'
+$occConfig=@{extensionId=$ExtensionId;nodePath=$occNode;codexPath=$occCodex;dataRoot=(Join-Path $occDestination 'jobs');localControl=@{enabled=$true;host='127.0.0.1';port=0;token=$occControlToken;stateFile=$occControlState}}
 [IO.File]::WriteAllText((Join-Path $occDestination 'host-config.json'),($occConfig|ConvertTo-Json),[Text.UTF8Encoding]::new($false))
 $occManifest=@{name='com.one_click_context.codex';description='Explicit One Click Context jobs through the local Codex CLI';path=(Join-Path $occDestination 'occ-native-host.exe');type='stdio';allowed_origins=@("chrome-extension://$ExtensionId/")}
 $occManifestPath=Join-Path $occDestination 'native-host.json'
