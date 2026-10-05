@@ -30,3 +30,4 @@ class ChromeBridge:
     def active_tab(self):return self.request('tabs.active')
     def list_tabs(self):return self.request('tabs.list')
     def start_capture(self,tab_id=None):return self.request('tab.capture.start',{} if tab_id is None else {'tabId':tab_id},40)
+    def get_capture(self,tab_id=None):return self.request('capture.get',{} if tab_id is None else {'tabId':tab_id},10)
