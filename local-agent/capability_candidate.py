@@ -85,6 +85,13 @@ class CapabilityCandidatePipeline:
         if not allowed:raise CandidateError('CANDIDATE_ALLOWED_PATHS')
         return root,allowed,tests
 
+    def try_qualify_job(self,job_id):
+        if not self.enabled:return {'state':'DISABLED'}
+        listing=self.bridge.codex_artifacts(job_id).get('artifacts') or []
+        names={x.get('name') for x in listing if isinstance(x,dict)}
+        if 'CAPABILITY_MANIFEST.json' not in names:return {'state':'NO_CAPABILITY_MANIFEST'}
+        return self.qualify_job(job_id)
+
     def qualify_job(self,job_id):
         if not self.enabled:return {'state':'DISABLED'}
         files=self._fetch(job_id);m=self._manifest(files);patch=files.get('PATCH.diff')
@@ -118,10 +125,13 @@ class CapabilityCandidatePipeline:
                 if result['exit_code']:raise CandidateError('CANDIDATE_TEST_FAILED')
             diff=_run(['git','diff','--check'],worktree,30);results.append(diff)
             if diff['exit_code']:raise CandidateError('CANDIDATE_DIFF_CHECK_FAILED')
+            add=_run(['git','add','-A'],worktree,30);results.append(add)
+            if add['exit_code']:raise CandidateError('CANDIDATE_INDEX_FAILED')
             tree=_run(['git','write-tree'],worktree,30);results.append(tree)
+            if tree['exit_code']:raise CandidateError('CANDIDATE_TREE_FAILED')
             receipt={'schema':'voice-agentos.capability-qualification.v1','state':'ISOLATED_TESTED','skill_id':m['skill_id'],'version':m['version'],
                      'effect_class':m['effect_class'],'repo_profile':m['repo_profile'],'base_commit':m['base_commit'],
-                     'patch_sha256':patch['sha256'],'changed_files':changed,'test_profile':m['required_test_profile'],
+                     'patch_sha256':patch['sha256'],'changed_files':changed,'candidate_tree':tree['stdout_tail'].strip(),'test_profile':m['required_test_profile'],
                      'tests':results,'candidate_worktree':str(worktree),'verifier':m['verifier'],'created_at':time.time(),
                      'next':'CREATE_BOUNDED_PR_OR_DEVICE_CANARY'}
             receipt_path=candidate_root/'qualification.json';receipt_path.write_text(json.dumps(receipt,ensure_ascii=False,indent=2),encoding='utf-8')
