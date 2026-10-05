@@ -16,6 +16,7 @@ from laya_client import LayaClient
 from life_context_pipeline import LifeContextPipeline
 from mission_kernel import MissionKernel
 from self_renew import VerifiedRenewal
+from windows_uia import WindowsUIBroker
 
 CAPTURE_MARKER='BEGIN CAPTURED SOURCE TEXT'
 SOURCE_RE=re.compile(r'^SOURCE:\s*(.+)$',re.M)
@@ -39,7 +40,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -76,7 +77,11 @@ class Mini:
         endpoint=self.settings.get('laya_endpoint','')
         self.laya=LayaClient(endpoint) if endpoint else None
         if self.core:
-            self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',expand(self.settings['inbox_root']))
+            win_cfg=self.settings.get('windows_ui') or {}
+            if os.name=='nt' and win_cfg.get('enabled',True):
+                try:self.windows_ui=WindowsUIBroker(Path(__file__).parent/'windows_uia.ps1',powershell=win_cfg.get('powershell','powershell.exe'))
+                except Exception as exc:self.events.put(('log','Windows UIA disabled: '+str(exc)))
+            self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',expand(self.settings['inbox_root']),windows_ui=self.windows_ui)
             try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
             except Exception as exc:self.events.put(('log','LifeContext disabled: '+str(exc)))
             try:
@@ -120,6 +125,13 @@ class Mini:
                     if not isinstance(text,str) or CAPTURE_MARKER not in text:raise RuntimeError('DIRECT_CAPTURE_TEXT_UNAVAILABLE')
                     self.events.put(('capture_text',text));direct=True
                 except Exception as exc:self.events.put(('log','single capture fallback: '+str(exc)))
+            if not direct and self.windows_ui:
+                try:
+                    snap=self.windows_ui.text_snapshot()
+                    text=snap.get('text','')
+                    if not text.strip():raise RuntimeError('WINDOWS_UI_TEXT_EMPTY')
+                    self.events.put(('windows_capture',snap));direct=True
+                except Exception as exc:self.events.put(('log','Windows UIA fallback: '+str(exc)))
             if not direct:
                 try:press_capture_hotkey(self.settings.get('capture_hotkey',['ALT','SHIFT','C']))
                 except Exception as exc:self.events.put(('error','Observe failed: '+str(exc)));return
@@ -173,6 +185,23 @@ class Mini:
                 except Exception as exc:self.events.put(('log','Archive Library import blocked: '+str(exc)))
             threading.Thread(target=ingest,daemon=True).start()
 
+    def _accept_windows_capture(self,snap):
+        text=str(snap.get('text') or '')
+        digest=hashlib.sha256(text.encode()).hexdigest()
+        root=Path(expand(self.settings['inbox_root']))/'windows-ui';root.mkdir(parents=True,exist_ok=True)
+        stamp=datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ');path=root/f'windows_{stamp}_{digest[:10]}.txt'
+        path.write_text(text,encoding='utf-8');self.context=text;self.context_file=path;self.context_sha256=digest;self.context_metadata={'windows_ui':snap.get('snapshot')}
+        self.status.set(f'Windows UI observed · {len(text.encode()):,} B')
+        if self.core:
+            def ingest():
+                try:
+                    receipt=self.core.capture_file(path,'windows_ui_'+digest[:18])
+                    try:self.core.annotate_capture(receipt,project='WindowsUI',note='foreground UI Automation context')
+                    except Exception:pass
+                    self.events.put(('details',{'windows_ui_capture':snap.get('snapshot'),'library_receipt':receipt}))
+                except Exception as exc:self.events.put(('log','Windows UI Library import blocked: '+str(exc)))
+            threading.Thread(target=ingest,daemon=True).start()
+
     def open_automate(self):
         if self.panel and self.panel.winfo_exists():self.panel.lift();return
         w=self.panel=tk.Toplevel(self.root);w.title('Voice AgentOS · Automate+');w.geometry('760x700');w.attributes('-topmost',True)
@@ -182,7 +211,7 @@ class Mini:
         ttk.Label(body,text='Acceptance · one line each').pack(anchor='w',pady=(8,0));self.acceptance=tk.Text(body,height=4);self.acceptance.pack(fill='x')
         self.acceptance.insert('1.0','The requested outcome is independently verified.\nNo UNKNOWN external effect is blindly retried.')
         flags=ttk.LabelFrame(body,text='Explicit effect scope');flags.pack(fill='x',pady=8);self.effect_vars={}
-        for i,name in enumerate(['LOCAL_WRITE','LOCAL_PROCESS','BROWSER_WRITE','GIT_WRITE','GITHUB_WRITE','MESSAGE_SEND','INSTALL_UPDATE']):
+        for i,name in enumerate(['LOCAL_WRITE','LOCAL_PROCESS','BROWSER_WRITE','WINDOWS_WRITE','GIT_WRITE','GITHUB_WRITE','MESSAGE_SEND','INSTALL_UPDATE']):
             v=tk.BooleanVar(value=name in {'LOCAL_WRITE','LOCAL_PROCESS'});self.effect_vars[name]=v
             ttk.Checkbutton(flags,text=name,variable=v).grid(row=i//3,column=i%3,sticky='w',padx=6)
         buttons=ttk.Frame(body);buttons.pack(fill='x')
@@ -225,10 +254,17 @@ class Mini:
                     if self.mission_cancel.is_set():self.events.put(('details',{'state':'CANCELLED_BY_USER','history':history}));return
                     step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-6:]}))
                     state=step.get('state')
-                    if state in {'NEEDS_CONTEXT','BROWSER_UI_EFFECT'}:
-                        gathered=self.kernel.capture_browser_context();history.append(gathered)
+                    if state in {'NEEDS_CONTEXT','BROWSER_UI_EFFECT','WINDOWS_UI_EFFECT'}:
+                        if state=='WINDOWS_UI_EFFECT':
+                            gathered=self.kernel.capture_windows_context();event_key='windows_context'
+                        else:
+                            try:gathered=self.kernel.capture_browser_context();event_key='browser_context'
+                            except Exception:
+                                if not self.windows_ui:raise
+                                gathered=self.kernel.capture_windows_context();event_key='windows_context'
+                        history.append(gathered)
                         digest=gathered.get('sha256')
-                        self.events.put(('details',{'cycle':cycle,'browser_context':gathered,'history':history[-6:]}))
+                        self.events.put(('details',{'cycle':cycle,event_key:gathered,'history':history[-6:]}))
                         if not digest or digest in seen_context:
                             self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'BROWSER_CONTEXT_UNCHANGED','history':history[-8:]}));return
                         seen_context.add(digest);text=gathered.get('text','')
@@ -348,6 +384,7 @@ class Mini:
                 kind,value=self.events.get_nowait()
                 if kind=='wait_clipboard':self._check_clipboard(*value)
                 elif kind=='capture_text':self._accept_capture(value)
+                elif kind=='windows_capture':self._accept_windows_capture(value)
                 elif kind=='archive_capture':self._accept_archive(value)
                 elif kind=='status':self.status.set(value)
                 elif kind=='error':self.status.set(value)
