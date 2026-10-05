@@ -50,6 +50,24 @@ class CoreClient:
         ns=self.connection.get('preferred_namespace') or self.info['namespaces'][0]
         req={'type':'durable.library','namespace':ns,'action':'CAPTURE','arguments':{'path':str(Path(path).resolve()),'source_key':source_key},'operationId':uuid4().hex}
         return self.request(req,130)['library']['data']
+    def annotate_capture(self, receipt, project='Inbox', note='', valid_from=0, valid_until=2147483647, supersedes=None, conflict_group=None):
+        if self.info is None:self.handshake()
+        ns=receipt.get('namespace') or self.connection.get('preferred_namespace') or self.info['namespaces'][0]
+        required=('source_key','revision','sha256','bytes')
+        if not isinstance(receipt,dict) or any(k not in receipt for k in required):raise CoreError('MINI_CAPTURE_RECEIPT_REQUIRED')
+        ref={'namespace':ns,'source_key':receipt['source_key'],'revision':receipt['revision'],'sha256':receipt['sha256'],
+             'start':0,'end':int(receipt['bytes']),'offset_space':'RAW_BYTES'}
+        annotation={'project':str(project)[:100],'valid_from':int(valid_from),'valid_until':int(valid_until),
+                    'supersedes':supersedes,'conflict_group':conflict_group,'note':str(note)[:16000]}
+        req={'type':'durable.library','namespace':ns,'action':'ANNOTATE','arguments':{'source_ref':ref,'annotation':annotation},'operationId':uuid4().hex}
+        return self.request(req,30)['library']['data']
+    def library_search(self, query='', limit=20, offset=0, project=None):
+        if self.info is None:self.handshake()
+        ns=self.connection.get('preferred_namespace') or self.info['namespaces'][0]
+        args={'query':str(query),'limit':int(limit),'offset':int(offset),'history':False}
+        if project:args['project']=str(project)
+        req={'type':'durable.library','namespace':ns,'action':'SEARCH','arguments':args}
+        return self.request(req,30)['library']['data']
     def create_action(self, text, criteria, source_refs=None, command=None, slots=None):
         payload={'text':text,'modality':'TEXT','slots':slots or {},'criteria':criteria or ['Verify requested outcome.'],'source_refs':source_refs or []}
         if command:payload['command']=command
