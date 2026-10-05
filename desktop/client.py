@@ -22,6 +22,8 @@ HASH = re.compile(r'^[0-9a-f]{64}$')
 NAME = re.compile(r'^[A-Za-z0-9_.:-]{1,100}$')
 READS = {
     'durable.action': ({'type', 'action', 'payload'}, set()),
+    'durable.goal': ({'type','action','arguments'}, set()),
+    'durable.effect': ({'type','action','arguments'}, set()),
     'durable.library': ({'type','namespace','action','arguments'}, {'operationId'}),
     'durable.stop': ({'type','requestId'}, set()),
     'durable.control.resume': ({'type','expectedEpoch'}, set()),
@@ -192,6 +194,10 @@ def validate_request(request):
         require(request['action'] in {'INFO','CREATE','GET','CORRECT','ENQUEUE','STOP','RESUME','BIND',
                 'PACKET_START','PACKET_APPEND','PACKET_SEAL','PACKET_PAGE','RECONCILE','IMPORT_RESULT','SKILL_RECORD','SKILL_INVOKE','CONTINUE'})
         require(isinstance(request['payload'], dict))
+    if request['type'] in {'durable.goal','durable.effect'}:
+        allowed={'durable.goal':{'CREATE','INSPECT','REVISE','PLAN','ADMIT','PROGRESS'},
+                 'durable.effect':{'BEGIN','INSPECT','TRANSITION'}}[request['type']]
+        require(isinstance(request['action'],str) and request['action'] in allowed and isinstance(request['arguments'],dict))
     if request['type']=='durable.library':
         require(isinstance(request['action'],str) and isinstance(request['arguments'],dict))
         if 'operationId' in request:require(isinstance(request['operationId'],str) and NAME.fullmatch(request['operationId']))
@@ -506,6 +512,9 @@ def validate_reply(raw, request, adapter_sha, expected_identity=None):
         require(isinstance(result[field], dict), 'DESKTOP_ACTION_SCHEMA')
         # This is typed data from the installed Core owner. It is never used as
         # argv, local paths or authority for a subsequent action.
+    elif operation in {'durable.goal','durable.effect'}:
+        require(isinstance(result[field],dict), 'DESKTOP_DURABLE_STATE_SCHEMA')
+        require(len(json.dumps(result[field],ensure_ascii=False).encode())<=96_000,'DESKTOP_OUTPUT_LIMIT')
     elif field=='library':
         dto=result[field]
         exact(dto,{'schema','namespace','action','data','authority'})
