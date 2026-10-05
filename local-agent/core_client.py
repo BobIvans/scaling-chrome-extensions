@@ -93,6 +93,14 @@ class CoreClient:
         return self.request({'type':'durable.goal','action':'ADMIT','arguments':{'goal_id':goal_id,'expected_revision':int(expected_revision),'candidate_id':candidate_id}},30)['goal']
     def goal_progress(self,goal_id,expected_revision,delta):
         return self.request({'type':'durable.goal','action':'PROGRESS','arguments':{'goal_id':goal_id,'expected_revision':int(expected_revision),'delta':delta}},30)['goal']
+    def goal_checkpoint(self,goal_id,expected_revision,runtime,state=None):
+        args={'goal_id':goal_id,'expected_revision':int(expected_revision),'runtime':runtime}
+        if state is not None:args['state']=state
+        return self.request({'type':'durable.goal','action':'CHECKPOINT','arguments':args},30)['goal']
+    def goal_list(self,offset=0,limit=50):
+        return self.request({'type':'durable.goal','action':'LIST','arguments':{'offset':int(offset),'limit':int(limit)}},30)['goal']
+    def job_get(self,job_id):
+        return self.request({'type':'durable.get','jobId':job_id},30)['job']
     def create_action(self, text, criteria, source_refs=None, command=None, slots=None):
         payload={'text':text,'modality':'TEXT','slots':slots or {},'criteria':criteria or ['Verify requested outcome.'],'source_refs':source_refs or []}
         if command:payload['command']=command
