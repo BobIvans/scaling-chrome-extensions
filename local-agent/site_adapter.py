@@ -107,7 +107,7 @@ class SiteAdapterRuntime:
                         'site_binding':site['binding'],'draft_sha256':draft_sha,'draft_path':str(path)}
         effect=self.core.effect_begin(operation_id,effect_binding)
         state=effect['value']['state'];revision=effect['revision']
-        if state=='OBSERVED':return {'state':'MESSAGE_OBSERVED','operation_id':operation_id,'effect':effect,'reused':True}
+        if state=='OBSERVED':return {'state':'MESSAGE_OBSERVED','operation_id':operation_id,'effect':effect,'site_binding':site,'reused':True}
         if state not in {'INTENT_RECORDED','DISPATCHING','UNKNOWN_EFFECT','NOT_APPLIED'}:
             raise SiteAdapterError('SITE_EFFECT_STATE')
         if state in {'DISPATCHING','UNKNOWN_EFFECT'}:return self.reconcile_operation(operation_id)
@@ -126,9 +126,9 @@ class SiteAdapterRuntime:
         if observation.get('state')=='MESSAGE_OBSERVED':
             evidence=['site-message:'+binding['draft_sha256']]
             effect=self.core.effect_transition(operation_id,'OBSERVED',revision,evidence)
-            return {'state':'MESSAGE_OBSERVED','operation_id':operation_id,'observation':observation,'effect':effect}
+            return {'state':'MESSAGE_OBSERVED','operation_id':operation_id,'observation':observation,'effect':effect,'site_binding':{'schema':'voice-agentos.site-binding.v1','profile_id':binding['profile_id'],'tab_id':binding['tab_id'],'adapter_version':binding['adapter_version'],'code_digest':binding['code_digest'],'contract_digest':binding['contract_digest'],'binding':binding['site_binding']}}
         effect=self.core.effect_transition(operation_id,'UNKNOWN_EFFECT',revision,[])
-        return {'state':'EFFECT_UNKNOWN','operation_id':operation_id,'observation':observation,'effect':effect}
+        return {'state':'EFFECT_UNKNOWN','operation_id':operation_id,'observation':observation,'effect':effect,'site_binding':{'schema':'voice-agentos.site-binding.v1','profile_id':binding['profile_id'],'tab_id':binding['tab_id'],'adapter_version':binding['adapter_version'],'code_digest':binding['code_digest'],'contract_digest':binding['contract_digest'],'binding':binding['site_binding']}}
     def reconcile_operation(self,operation_id):
         effect=self.core.effect_inspect(operation_id);binding=effect['value']['binding'];state=effect['value']['state'];revision=effect['revision']
         if binding.get('kind')!='AI_SITE_MESSAGE':raise SiteAdapterError('SITE_EFFECT_KIND')
