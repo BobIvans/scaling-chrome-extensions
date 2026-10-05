@@ -1,0 +1,18 @@
+{
+  "schema": "voice-agentos.github-merge-watch-workflow.v1",
+  "default_repo": "BobIvans/scaling-chrome-extensions",
+  "mode": "READ_ONLY_POLL",
+  "default_interval_seconds": 90,
+  "unauthenticated_min_interval_seconds": 65,
+  "steps": [
+    "GET closed pull requests",
+    "filter merged=true and merged_at",
+    "deduplicate by merge_commit_sha",
+    "persist event",
+    "update active missions",
+    "optionally create verified renewal staging intent"
+  ],
+  "auto_stage_default": false,
+  "activation_default": false,
+  "truth_rule": "Provider text saying merged never substitutes GitHub observation."
+}
