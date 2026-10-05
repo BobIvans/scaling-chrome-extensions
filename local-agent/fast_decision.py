@@ -150,7 +150,7 @@ class FastDecisionEngine:
     def _eligible(self,candidate,effect_scope,prefetch):
         if candidate.get('state')!='CANDIDATE':return False,'NOT_CANDIDATE'
         effect=candidate.get('effect_class')
-        if effect not in {'READ','LOCAL_READ'} and effect not in set(effect_scope):return False,'EFFECT_SCOPE'
+        if effect not in {'READ','LOCAL_READ','LOCAL_PROCESS'} and effect not in set(effect_scope):return False,'EFFECT_SCOPE'
         cid=candidate.get('id')
         lanes=prefetch.get('lanes',{}) if isinstance(prefetch,dict) else {}
         if cid=='route_browser':
