@@ -172,9 +172,12 @@ class FastDecisionEngine:
         lane=None
         if cid=='route_browser':lane=lanes.get('browser_ui')
         elif cid=='route_windows':lane=lanes.get('windows_ui')
-        elif cid=='route_context':lane=lanes.get('library')
+        elif cid=='route_context':
+            context_lanes=[x for x in (lanes.get('library'),lanes.get('browser_ui'),lanes.get('windows_ui')) if isinstance(x,dict)]
+            healthy=[x for x in context_lanes if x.get('state')=='OK']
+            lane=min(healthy,key=lambda x:_number(x.get('elapsed_ms'),999999)) if healthy else (context_lanes[0] if context_lanes else None)
         if lane:
-            # Convert measured p50-ish milliseconds into bounded 0..100 latency cost.
+            # Convert measured milliseconds into bounded 0..100 latency cost.
             ms=_number(lane.get('elapsed_ms'),1000)
             c['latency_cost']=min(100.0,max(0.0,math.log10(max(1.0,ms))*18.0))
             if lane.get('state')=='BLOCKED':
