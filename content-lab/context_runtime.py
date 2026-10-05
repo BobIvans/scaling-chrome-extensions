@@ -19,7 +19,7 @@ import context_recovery as recovery
 from automation_core import Core, enqueue, identifier, load_json, read_connection
 
 READS = {
- 'SEARCH': ({'query'}, {'offset','limit','as_of','project','history'}),
+ 'SEARCH': ({'query'}, {'offset','limit','as_of','project','labels','history'}),
  'READ': ({'source_ref'}, set()),
  'DOCUMENT': ({'document_id'}, {'kind','offset','limit'}),
  'PART': ({'document_id','ordinal'}, set()),
@@ -102,6 +102,9 @@ def validate_arguments(action,args,c):
     if 'ordinal' in args:lib.strict_int(args['ordinal'],0,lib.MAX_INT)
     if 'offset' in args:lib.strict_int(args['offset'],0,lib.MAX_INT)
     if 'limit' in args:lib.strict_int(args['limit'],1,100)
+    if 'labels' in args:
+        if not isinstance(args['labels'],list) or len(args['labels'])>20 or len(set(args['labels']))!=len(args['labels']):raise ValueError('CONTEXT_LABEL_FILTER')
+        for label in args['labels']:lib.text(label,100)
     if action=='BUILD_PACKET':
         lib.text(args['goal']);
         if not isinstance(args['criteria'],list) or not args['criteria']:raise ValueError('CRITERIA_REQUIRED')
