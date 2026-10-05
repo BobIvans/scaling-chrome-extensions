@@ -1,6 +1,7 @@
 from __future__ import annotations
 import hashlib, json, os, time
 from pathlib import Path
+from conversation_exports import extract_conversations,ConversationExportError
 from folder_watch import FolderWatcher
 from google_drive_ingest import GoogleDriveIngestor
 
@@ -26,6 +27,15 @@ class LifeContextPipeline:
                 try:
                     receipt=self._capture(row['path'],key,'LifeContext','local-file '+Path(row['path']).name)
                     results.append({'source':'folder','state':'CAPTURED','file':row,'receipt':receipt})
+                    if Path(row['path']).suffix.lower() in {'.json','.jsonl'}:
+                        try:
+                            derived=extract_conversations(row['path'],self.root/'derived-conversations')
+                            for conv in derived:
+                                ckey='conversation_'+conv['sha256'][:20]
+                                creceipt=self._capture(conv['path'],ckey,'Conversations','derived from '+str(conv['source_export'])+' id='+str(conv['conversation_id']))
+                                results.append({'source':'conversation_export','state':'CAPTURED','conversation':conv,'receipt':creceipt})
+                        except ConversationExportError:
+                            pass
                 except Exception as exc:results.append({'source':'folder','state':'BLOCKED','file':row,'reason':str(exc)})
         if self.drive:
             for row in self.drive.poll(emit_existing=emit_existing_drive):
