@@ -296,6 +296,33 @@ async function agentosArchiveCapture(tab, controlId, args={}) {
     if(active===job)active=null;
   }
 }
+const agentosExtensionDigests=new Map();
+async function agentosExtensionDigest(name){
+  if(agentosExtensionDigests.has(name))return agentosExtensionDigests.get(name);
+  const response=await fetch(chrome.runtime.getURL(name),{cache:'no-store'});
+  if(!response.ok)throw new Error('EXTENSION_CODE_READ_FAILED');
+  const bytes=new Uint8Array(await response.arrayBuffer()),raw=await crypto.subtle.digest('SHA-256',bytes);
+  const digest=[...new Uint8Array(raw)].map(x=>x.toString(16).padStart(2,'0')).join('');
+  agentosExtensionDigests.set(name,digest);return digest;
+}
+async function agentosSiteCall(operation,args={}){
+  const tab=await agentosResolveTab(args);
+  const profile=args.profile,binding=args.binding,draft=args.draft;
+  if(!profile||typeof profile!=='object')throw new Error('SITE_PROFILE_SCHEMA');
+  await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js','site-adapter.js']});
+  const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:payload=>{
+    const adapter=globalThis.__occSiteAdapter;if(!adapter)throw new Error('SITE_ADAPTER_UNAVAILABLE');
+    if(payload.operation==='bind')return adapter.bind(payload.profile);
+    if(payload.operation==='prepare')return adapter.prepare(payload.profile,payload.binding,payload.draft);
+    if(payload.operation==='send')return adapter.send(payload.profile,payload.binding,payload.draft);
+    if(payload.operation==='reconcile')return adapter.reconcile(payload.profile,payload.binding,payload.draft);
+    if(payload.operation==='read')return adapter.read(payload.profile,payload.binding);
+    throw new Error('SITE_OPERATION_UNAVAILABLE');
+  },args:[{operation,profile,binding,draft}]});
+  const result=rows?.[0]?.result;
+  if(!result||typeof result!=='object')throw new Error('SITE_ADAPTER_RESULT_SCHEMA');
+  return {tabId:tab.id,adapter_version:'browser-site-text.v1',code_digest:await agentosExtensionDigest('site-adapter.js'),result};
+}
 async function agentosResolveTab(args={}) {
   let tab;
   if(Number.isInteger(args.tabId))tab=await chrome.tabs.get(args.tabId);
@@ -333,6 +360,11 @@ async function handleAgentOSLocalControl(message) {
       url: typeof tab.url === 'string' ? tab.url : ''
     }));
   }
+  if (message.command === 'browser.site.bind') return await agentosSiteCall('bind',message.args||{});
+  if (message.command === 'browser.site.prepare') return await agentosSiteCall('prepare',message.args||{});
+  if (message.command === 'browser.site.send') return await agentosSiteCall('send',message.args||{});
+  if (message.command === 'browser.site.reconcile') return await agentosSiteCall('reconcile',message.args||{});
+  if (message.command === 'browser.site.read') return await agentosSiteCall('read',message.args||{});
   if (message.command === 'browser.ui.inventory') return await agentosUIInventory(message.args||{});
   if (message.command === 'browser.ui.act') return await agentosUIAct(message.args||{});
   if (message.command === 'tabs.active') {
