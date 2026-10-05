@@ -255,9 +255,25 @@
     },
     {
       "id": "capability-build-qualification-promotion",
-      "state": "NOT_IMPLEMENTED",
+      "state": "PARTIAL",
       "owners": [
-        "future capability runtime"
+        "content-lab/action_runtime.py",
+        "local-agent/capability_candidate.py",
+        "local-agent/mission_kernel.py",
+        "local-agent/core_client.py"
+      ],
+      "evidence": [
+        "Core CANDIDATE/FIXTURE_QUALIFIED/QUALIFIED skill states",
+        "System2 hashed artifact retrieval",
+        "CAPABILITY_MANIFEST+PATCH validation",
+        "isolated exact-base worktree",
+        "policy-owned test profiles",
+        "skill qualify/failure/invalidate/invoke durable API"
+      ],
+      "missing": [
+        "device canary for new code path",
+        "post-install REGISTERED linkage",
+        "waiting-goal resume after installed capability"
       ]
     },
     {
@@ -322,7 +338,45 @@
       "id": "windows-installed-device-qualification",
       "state": "NOT_IMPLEMENTED",
       "external_setup": "target Windows + Chrome + accounts + local credentials"
+    },
+    {
+      "id": "human-foreground-parallel-lease",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "one-click-context/ui-inventory.js",
+        "one-click-context/background.js",
+        "local-agent/windows_uia.py",
+        "local-agent/mission_kernel.py",
+        "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "trusted browser mouse/keyboard/input activity timestamp",
+        "automatic archive skips busy foreground tab",
+        "browser UI effects yield with WAITING_HUMAN_FOREGROUND",
+        "Windows last-input lease",
+        "mission resumes after quiet period"
+      ],
+      "semantics": "Independent tabs/read/research lanes may run in parallel; one mutable foreground target yields to human ownership."
+    },
+    {
+      "id": "capability-pr-ci-exact-merge",
+      "state": "IMPLEMENTED_NOT_DEVICE_QUALIFIED",
+      "owners": [
+        "local-agent/github_capability_pr.py",
+        "local-agent/mission_kernel.py",
+        "local-agent/mini_controller.py"
+      ],
+      "evidence": [
+        "local-policy repo/base/test/check names",
+        "isolated candidate branch",
+        "Git push",
+        "REST PR creation",
+        "exact head SHA observation",
+        "required check gate",
+        "merge REST request bound to head SHA"
+      ],
+      "note": "Auto merge is disabled by default and requires explicit GITHUB_WRITE plus local allow_auto_merge."
     }
   ],
-  "updated_for": "App-centric universal capture/UI runtime on PR #61"
+  "updated_for": "App-centric universal capture/UI/self-growth runtime on PR #61"
 }
