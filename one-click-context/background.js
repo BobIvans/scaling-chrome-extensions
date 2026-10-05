@@ -241,9 +241,12 @@ async function handleAgentOSLocalControl(message) {
     if (Number.isInteger(message.args?.tabId)) tab = await chrome.tabs.get(message.args.tabId);
     else tab = (await chrome.tabs.query({active: true, lastFocusedWindow: true}))[0];
     if (!tab || !Number.isInteger(tab.id)) throw new Error('ACTIVE_TAB_UNAVAILABLE');
+    const prior = await getCapture();
+    const priorKey = prior ? prior.capture.captureId + ':' + prior.capture.revision : null;
     await run(tab, true, 'auto');
     const found = await getCapture();
-    if (!found || found.capture.sourceTabId !== tab.id) throw new Error('CAPTURE_NOT_CONFIRMED');
+    const currentKey = found ? found.capture.captureId + ':' + found.capture.revision : null;
+    if (!found || found.capture.sourceTabId !== tab.id || currentKey === priorKey) throw new Error('CAPTURE_NOT_CONFIRMED');
     return {state: 'CAPTURE_CONFIRMED', tabId: tab.id, captureId: found.capture.captureId,
       revision: found.capture.revision, status: found.capture.status};
   }
