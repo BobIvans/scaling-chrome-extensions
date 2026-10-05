@@ -9,9 +9,10 @@ import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from control_bridge import ChromeBridge
 from core_client import CoreClient
-from folder_watch import FolderWatcher
 from github_merge_watch import MergeWatcher
 from laya_client import LayaClient
+from life_context_pipeline import LifeContextPipeline
+from mission_kernel import MissionKernel
 from self_renew import VerifiedRenewal
 
 CAPTURE_MARKER='BEGIN CAPTURED SOURCE TEXT'
@@ -36,7 +37,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.core=None;self.bridge=None;self.stop_event=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -70,6 +71,12 @@ class Mini:
         try:
             self.bridge=ChromeBridge(expand(self.settings['chrome_control_state']));self.bridge.request('ping')
         except Exception:self.bridge=None
+        endpoint=self.settings.get('laya_endpoint','')
+        self.laya=LayaClient(endpoint) if endpoint else None
+        if self.core:
+            self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',expand(self.settings['inbox_root']))
+            try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
+            except Exception as exc:self.events.put(('log','LifeContext disabled: '+str(exc)))
 
     def _clipboard(self):
         try:return self.root.clipboard_get()
@@ -129,7 +136,7 @@ class Mini:
             ttk.Checkbutton(flags,text=name,variable=v).grid(row=i//3,column=i%3,sticky='w',padx=6)
         buttons=ttk.Frame(body);buttons.pack(fill='x')
         ttk.Button(buttons,text='Preview / Laya',command=self.preview_mission).pack(side='left')
-        ttk.Button(buttons,text='Run registered',command=self.run_mission).pack(side='left',padx=6)
+        ttk.Button(buttons,text='Run AgentOS',command=self.run_mission).pack(side='left',padx=6)
         ttk.Button(buttons,text='Watch merges now',command=self.poll_merges_once).pack(side='left')
         ttk.Button(buttons,text='Library / Repos',command=self.open_full_workspace).pack(side='left',padx=6)
         self.details=tk.Text(body,height=22);self.details.pack(fill='both',expand=True,pady=8)
@@ -139,7 +146,7 @@ class Mini:
         goal=self.goal.get('1.0','end').strip();criteria=[x.strip() for x in self.acceptance.get('1.0','end').splitlines() if x.strip()]
         effects=['READ']+[k for k,v in self.effect_vars.items() if v.get()]
         return {'goal':goal,'acceptance':criteria,'effects':effects,'context_file':str(self.context_file) if self.context_file else None,
-                'context_sha256':hashlib.sha256(self.context.encode()).hexdigest() if self.context else None}
+                'context_sha256':hashlib.sha256(self.context.encode()).hexdigest() if self.context else None,'context_text':self.context or ''}
 
     def preview_mission(self):
         state=self._mission_state();result={'state':state}
@@ -153,21 +160,37 @@ class Mini:
         self._show(result)
 
     def run_mission(self):
-        if not self.core:self.status.set('Core offline');return
-        state=self._mission_state()
+        if not self.kernel:self.status.set('AgentOS kernel offline');return
+        mission=self._mission_state();self.mission_cancel.clear()
         def work():
             try:
-                refs=[state['context_sha256']] if state['context_sha256'] else []
-                created=self.core.create_action(state['goal'],state['acceptance'],refs)
-                out={'created':created}
-                if created.get('state')=='COMPILED':out['job']=self.core.enqueue_action(created['intent_id'],created['revision'])
-                else:out['next']='Use missing_slots/development_request; Cognitive Relay maps it to System-2/capability growth when available.'
-                self.events.put(('details',out))
+                current=dict(mission);seen=set();limit=max(1,min(8,int(self.settings.get('max_system2_cycles',3))))
+                history=[]
+                for cycle in range(limit+1):
+                    if self.mission_cancel.is_set():self.events.put(('details',{'state':'CANCELLED_BY_USER','history':history}));return
+                    step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-4:]})
+                    if step.get('state')!='WAITING_SYSTEM2':return
+                    job_id=step['system2_job_id']
+                    while not self.mission_cancel.wait(2):
+                        result=self.kernel.poll_system2(job_id,current)
+                        if result.get('state')=='WAITING_SYSTEM2':continue
+                        history.append(result);self.events.put(('details',{'cycle':cycle,'system2':result,'history':history[-4:]})
+                        digest=result.get('sha256')
+                        if digest in seen:self.events.put(('details',{'state':'STOPPED_NO_PROGRESS','reason':'REPEATED_SYSTEM2_RESULT','history':history[-6:]}));return
+                        seen.add(digest)
+                        text=result.get('text','')
+                        if not text:return
+                        base=current.get('context_text','')
+                        combined=(base+'\n\n===== SYSTEM2 RESULT =====\n'+text)
+                        current=dict(current,context_text=combined[-2_000_000:],context_sha256=hashlib.sha256(combined[-2_000_000:].encode()).hexdigest())
+                        break
+                    else:return
+                self.events.put(('details',{'state':'STOPPED_SYSTEM2_BUDGET','max_cycles':limit,'history':history[-6:]})
             except Exception as exc:self.events.put(('error','Mission: '+str(exc)))
         threading.Thread(target=work,daemon=True).start()
 
     def stop(self):
-        self.stop_event.set();self.status.set('STOP requested…')
+        self.mission_cancel.set();self.status.set('STOP requested…')
         if self.core:
             def work():
                 try:self.events.put(('details',{'stop':self.core.stop()}))
@@ -195,21 +218,22 @@ class Mini:
             def merge_loop():
                 watcher=MergeWatcher(gh['repo'],Path(expand(self.settings['inbox_root']))/'merge-watch.json',gh.get('token_env','GITHUB_TOKEN'))
                 interval=max(65 if not os.environ.get(gh.get('token_env','GITHUB_TOKEN')) else 15,int(gh.get('poll_seconds',90)))
-                while not self.stop_event.wait(interval):
+                while not self.shutdown_event.wait(interval):
                     try:
                         for row in watcher.poll():self.events.put(('merge',row))
                     except Exception as exc:self.events.put(('log','merge watch: '+str(exc)))
             threading.Thread(target=merge_loop,daemon=True).start()
-        roots=[expand(x) for x in self.settings.get('watch_folders',[]) if str(x).strip()]
-        if roots:
-            def folder_loop():
-                watcher=FolderWatcher(roots,Path(expand(self.settings['inbox_root']))/'folder-watch.json')
+        if self.life:
+            def life_loop():
                 interval=max(5,int(self.settings.get('folder_poll_seconds',30)))
-                while not self.stop_event.wait(interval):
+                first=True
+                while not self.shutdown_event.wait(interval):
                     try:
-                        for row in watcher.scan():self.events.put(('file',row))
-                    except Exception as exc:self.events.put(('log','folder watch: '+str(exc)))
-            threading.Thread(target=folder_loop,daemon=True).start()
+                        emit_drive=bool(first and (self.settings.get('google_drive') or {}).get('import_existing_on_first_run'))
+                        result=self.life.poll_once(emit_existing_drive=emit_drive);first=False
+                        if result.get('results'):self.events.put(('life_context',result))
+                    except Exception as exc:self.events.put(('log','life context: '+str(exc)))
+            threading.Thread(target=life_loop,daemon=True).start()
 
     def _handle_merge(self,row):
         root=Path(expand(self.settings['inbox_root']));root.mkdir(parents=True,exist_ok=True)
@@ -247,6 +271,9 @@ class Mini:
                 elif kind=='details':self._show(value)
                 elif kind=='merge':self._handle_merge(value)
                 elif kind=='file':self._handle_file(value)
+                elif kind=='life_context':
+                    self.status.set('Life context updated · '+str(len(value.get('results',[])))+' records')
+                    self._show(value)
                 elif kind=='poll_merges':
                     gh=self.settings.get('github_watch') or {}
                     if gh.get('enabled'):
