@@ -14,10 +14,15 @@ class Core:
     def annotate_capture(self,*a,**k):return {'state':'ANNOTATED'}
 
 class Bridge:
-    def __init__(self):self.submits=[]
+    def __init__(self):self.submits=[];self.acts=[]
     def codex_submit(self,instruction,text,mode='analyze'):
         self.submits.append((instruction,text,mode));return {'job':{'id':'s2','state':'QUEUED'}}
     def codex_result(self,job_id):return {'job':{'id':job_id,'state':'COMPLETE'},'text':'tool candidate','sha256':'c'*64}
+    def ui_inventory(self):
+        return {'tabId':7,'snapshot_id':'s','document_token':'d','url':'https://x','title':'X','elements':[
+            {'element_id':'e1','role':'button','name':'Show more','risk':'READ_NAV','fingerprint':'f1'},
+            {'element_id':'e2','role':'button','name':'Delete all','risk':'DANGEROUS','fingerprint':'f2'}]}
+    def ui_act(self,request,tab_id=None):self.acts.append((request,tab_id));return {'state':'UI_CLICK_INVOKED'}
 
 class Laya:
     enabled=True
@@ -39,6 +44,14 @@ class KernelTests(unittest.TestCase):
         bridge=Bridge();laya=Laya({'mission_route':'GATHER_CONTEXT','system2_role':'RESEARCHER'})
         out=self.kernel(Core('GAP'),laya,bridge).start({'goal':'x','acceptance':['done'],'effects':['READ'],'context_text':''})
         self.assertEqual(out['state'],'NEEDS_CONTEXT');self.assertEqual(bridge.submits,[])
+    def test_laya_safe_read_nav_ui_action_is_exact_bound(self):
+        bridge=Bridge();laya=Laya({'mission_route':'BROWSER_UI','ui_candidate':'e1','ui_action':'CLICK_READ_NAV'})
+        out=self.kernel(Core('GAP'),laya,bridge).start({'goal':'expand context','acceptance':['done'],'effects':['READ','BROWSER_WRITE'],'context_text':''})
+        self.assertEqual(out['state'],'BROWSER_UI_EFFECT');self.assertEqual(bridge.acts[0][0]['expected_fingerprint'],'f1');self.assertEqual(bridge.acts[0][1],7)
+    def test_laya_cannot_use_generic_dangerous_click(self):
+        bridge=Bridge();laya=Laya({'mission_route':'BROWSER_UI','ui_candidate':'e2','ui_action':'CLICK_READ_NAV'})
+        out=self.kernel(Core('GAP'),laya,bridge).start({'goal':'x','acceptance':['done'],'effects':['READ','BROWSER_WRITE'],'context_text':''})
+        self.assertEqual(out['state'],'BROWSER_UI_BLOCKED');self.assertEqual(bridge.acts,[])
     def test_system2_result_is_ingested(self):
         core=Core('GAP');bridge=Bridge();kernel=self.kernel(core,None,bridge)
         out=kernel.poll_system2('s2',{'goal':'x','acceptance':[],'effects':['READ']})
