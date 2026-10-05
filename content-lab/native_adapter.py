@@ -229,7 +229,12 @@ def scoped_job(core, profile, policy, job_id):
     if not isinstance(job_id, str) or not JOB_ID.fullmatch(job_id):
         raise ValueError("DURABLE_JOB_ID_REQUIRED")
     job = core.get(job_id)
-    if job["policy_hash"] != digest(policy) or job["payload_hash"] != digest(job["payload"]) or not any(job["payload"] == template for template in profile["templates"].values()):
+    payload=job["payload"]
+    registered=any(payload == template for template in profile["templates"].values())
+    action_read=(payload.get("kind")=="action_plan" and policy.get("actions",{}).get("enabled") is True)
+    if action_read:
+        validate_job(payload,policy)
+    if job["policy_hash"] != digest(policy) or job["payload_hash"] != digest(payload) or not (registered or action_read):
         raise ValueError("DURABLE_JOB_OUTSIDE_SCOPE")
     return job
 
