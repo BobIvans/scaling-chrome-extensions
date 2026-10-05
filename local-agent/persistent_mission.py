@@ -20,7 +20,6 @@ class PersistentMissionController:
 
     def _spec(self,mission):
         effects=list(dict.fromkeys(['READ',*mission.get('effects',[])]))
-        if 'LOCAL_PROCESS' not in effects:effects.append('LOCAL_PROCESS')
         return {'goal':str(mission['goal']).strip(),'acceptance':[str(x) for x in mission.get('acceptance',[]) if str(x).strip()] or ['Outcome independently verified.'],
                 'constraints':[str(x) for x in mission.get('constraints',[]) if str(x).strip()],
                 'prohibitions':[str(x) for x in mission.get('prohibitions',[]) if str(x).strip()],
@@ -52,9 +51,10 @@ class PersistentMissionController:
             rows.append({'id':'browser_context','kind':'context','text':'Capture current browser context and ingest exact archive evidence.',
                          'depends_on':[],'effect_class':'READ','verifier':'Browser archive hash and coverage receipt are recorded.',
                          'resources':['browser:selected:read'],'components':_components(progress=55,information_gain=95,success_probability=80,latency_cost=20,human_cost=0,resource_cost=8,unlock_count=40),'state':'CANDIDATE'})
-        rows.append({'id':'mission_step','kind':'decision','text':'Run one bounded AgentOS mission step through existing Core/Laya/System2/browser capability owners.',
-                     'depends_on':[],'effect_class':'LOCAL_PROCESS','verifier':'Step returns a typed receipt or a durable waiting checkpoint.',
-                     'resources':['agentos:mission'],'components':_components(progress=90,information_gain=55,success_probability=75,latency_cost=25,human_cost=0,resource_cost=15,risk_penalty=10 if no_progress else 2,unlock_count=60,parallelizable=False),'state':'CANDIDATE'})
+        if 'LOCAL_PROCESS' in set(state['spec']['effect_scope']):
+            rows.append({'id':'mission_step','kind':'decision','text':'Run one bounded AgentOS mission step through existing Core/Laya/System2/browser capability owners.',
+                         'depends_on':[],'effect_class':'LOCAL_PROCESS','verifier':'Step returns a typed receipt or a durable waiting checkpoint.',
+                         'resources':['agentos:mission'],'components':_components(progress=90,information_gain=55,success_probability=75,latency_cost=25,human_cost=0,resource_cost=15,risk_penalty=10 if no_progress else 2,unlock_count=60,parallelizable=False),'state':'CANDIDATE'})
         return rows
 
     def _choose(self,state,candidates):
