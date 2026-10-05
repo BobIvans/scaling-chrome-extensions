@@ -4,14 +4,26 @@ const HINTS=[
 ];
 
 export function httpUrl(value){
-  try{const u=new URL(value);return ['http:','https:'].includes(u.protocol)?u:null;}catch{return null;}
+  const raw=String(value||'').trim();
+  if(!/^https?:\/\//i.test(raw))return null;
+  if(typeof globalThis.URL==='function'){
+    try{
+      const u=new globalThis.URL(raw);
+      if(!['http:','https:'].includes(u.protocol))return null;
+      return {href:u.href,origin:u.origin,hostname:u.hostname.toLowerCase(),protocol:u.protocol};
+    }catch{}
+  }
+  const match=/^(https?):\/\/([^\s\/?#]+)([^\s]*)$/i.exec(raw);
+  if(!match)return null;
+  const protocol=match[1].toLowerCase()+':',hostname=match[2].toLowerCase();
+  return {href:raw,origin:protocol+'//'+hostname,hostname,protocol};
 }
 export function originPattern(value){
-  const u=httpUrl(value);return u?`${u.origin}/*`:null;
+  const u=httpUrl(value);return u?u.origin+'/*':null;
 }
 export function classifyTab(tab){
   const u=httpUrl(tab?.url||'');
-  const host=u?.hostname?.toLowerCase()||'';
+  const host=u?.hostname||'';
   const hint=HINTS.find(([suffix])=>host===suffix||host.endsWith('.'+suffix));
   return {
     schema:'voice-agentos.tab-candidate.v1',
