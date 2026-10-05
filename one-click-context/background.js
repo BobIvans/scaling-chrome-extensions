@@ -206,6 +206,7 @@ async function run(tab, scroll = true, sourceMode = 'auto') {
 }
 
 async function agentosNativePermission() {
+  if (!chrome.permissions?.contains || !chrome.runtime?.connectNative) return false;
   return await chrome.permissions.contains({permissions: ['nativeMessaging']});
 }
 function agentosExtensionPage(sender) {
@@ -322,7 +323,7 @@ async function agentosNativeRequest(request, onProgress) {
   });
 }
 void agentosNativePermission().then(ok => { if (ok) void ensureAgentOSNativeBridge().catch(() => {}); });
-chrome.runtime.onStartup.addListener(() => {
+chrome.runtime.onStartup?.addListener(() => {
   void agentosNativePermission().then(ok => { if (ok) void ensureAgentOSNativeBridge().catch(() => {}); });
 });
 
