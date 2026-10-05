@@ -392,8 +392,13 @@ def read_span(store, namespace, ref):
 
 
 def annotate(store, namespace, ref, annotation, operation_id):
-    exact(annotation, {'project', 'valid_from', 'valid_until', 'supersedes', 'conflict_group', 'note'})
+    exact(annotation, {'project', 'valid_from', 'valid_until', 'supersedes', 'conflict_group', 'note'}, {'labels'})
     text(annotation['project'], 100); text(annotation['note'])
+    labels=annotation.get('labels',[])
+    if not isinstance(labels,list) or len(labels)>40 or len(set(labels))!=len(labels):
+        raise ValueError('CONTEXT_LABELS_REQUIRED')
+    for label in labels:
+        text(label,100)
     for k in ('valid_from', 'valid_until'):
         if annotation[k] is not None:
             strict_int(annotation[k], 0, MAX_INT)
@@ -416,7 +421,7 @@ def annotate(store, namespace, ref, annotation, operation_id):
 
 
 def search_sources(store, namespace, query='', *, offset=0, limit=20, as_of=None,
-                   project=None, history=False):
+                   project=None, labels=None, history=False):
     identifier(namespace); strict_int(offset, 0, MAX_INT); strict_int(limit, 1, 100)
     if not isinstance(query, str) or len(query.encode()) > 1000 or type(history) is not bool:
         raise ValueError('CONTEXT_QUERY_REQUIRED')
@@ -424,6 +429,10 @@ def search_sources(store, namespace, query='', *, offset=0, limit=20, as_of=None
         strict_int(as_of, 0, MAX_INT)
     if project is not None:
         text(project, 100)
+    if labels is not None:
+        if not isinstance(labels,list) or len(labels)>20 or len(set(labels))!=len(labels):
+            raise ValueError('CONTEXT_LABEL_FILTER')
+        for label in labels:text(label,100)
     rows=[]; seen=0; more=False
     with view(store) as db:
         # Namespace/tombstones/time BEFORE excerpts/ranking; deterministic pagination.
@@ -441,6 +450,8 @@ def search_sources(store, namespace, query='', *, offset=0, limit=20, as_of=None
                               (namespace,row['revision'])).fetchone()
             ann=json.loads(annrow[0]) if annrow else {}
             if project is not None and ann.get('project') != project:
+                continue
+            if labels is not None and not set(labels) <= set(ann.get('labels') or []):
                 continue
             if as_of is not None:
                 start=ann.get('valid_from') if ann.get('valid_from') is not None else row['observed']
