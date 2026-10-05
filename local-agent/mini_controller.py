@@ -82,12 +82,16 @@ class Mini:
             if self.bridge:
                 try:
                     tab=self.bridge.active_tab();tid=tab.get('id') if isinstance(tab,dict) else None
-                    self.bridge.start_capture(tid);direct=True
+                    self.bridge.start_capture(tid)
+                    captured=self.bridge.get_capture(tid)
+                    text=captured.get('text') if isinstance(captured,dict) else None
+                    if not isinstance(text,str) or CAPTURE_MARKER not in text:raise RuntimeError('DIRECT_CAPTURE_TEXT_UNAVAILABLE')
+                    self.events.put(('capture_text',text));direct=True
                 except Exception as exc:self.events.put(('log','bridge fallback: '+str(exc)))
             if not direct:
                 try:press_capture_hotkey(self.settings.get('capture_hotkey',['ALT','SHIFT','C']))
                 except Exception as exc:self.events.put(('error','Observe failed: '+str(exc)));return
-            self.events.put(('wait_clipboard',(before,time.monotonic())))
+                self.events.put(('wait_clipboard',(before,time.monotonic())))
         threading.Thread(target=start,daemon=True).start()
 
     def _check_clipboard(self,before,started):
@@ -223,6 +227,7 @@ class Mini:
             while True:
                 kind,value=self.events.get_nowait()
                 if kind=='wait_clipboard':self._check_clipboard(*value)
+                elif kind=='capture_text':self._accept_capture(value)
                 elif kind=='status':self.status.set(value)
                 elif kind=='error':self.status.set(value)
                 elif kind=='details':self._show(value)
