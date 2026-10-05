@@ -9,6 +9,7 @@ import sys
 sys.path.insert(0,str(Path(__file__).resolve().parent))
 from browser_archive import BrowserArchiveAssembler
 from browser_watch import BrowserWatch
+from capability_candidate import CapabilityCandidatePipeline
 from control_bridge import ChromeBridge
 from core_client import CoreClient
 from github_merge_watch import MergeWatcher
@@ -40,7 +41,7 @@ def press_capture_hotkey(keys):
 class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
-        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
+        self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
         self.panel=None;self.details=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
@@ -81,7 +82,12 @@ class Mini:
             if os.name=='nt' and win_cfg.get('enabled',True):
                 try:self.windows_ui=WindowsUIBroker(Path(__file__).parent/'windows_uia.ps1',powershell=win_cfg.get('powershell','powershell.exe'),human_quiet_ms=int(win_cfg.get('human_quiet_ms',1800)))
                 except Exception as exc:self.events.put(('log','Windows UIA disabled: '+str(exc)))
-            self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',expand(self.settings['inbox_root']),windows_ui=self.windows_ui)
+            cg=self.settings.get('capability_growth') or {}
+            if self.bridge and cg.get('enabled'):
+                try:self.candidate_pipeline=CapabilityCandidatePipeline(self.bridge,cg,Path(expand(self.settings['inbox_root']))/'capability-candidates')
+                except Exception as exc:self.events.put(('log','Capability growth disabled: '+str(exc)))
+            self.kernel=MissionKernel(self.core,self.bridge,self.laya,Path(__file__).parent/'laya_questions.json',
+                expand(self.settings['inbox_root']),windows_ui=self.windows_ui,candidate_pipeline=self.candidate_pipeline)
             try:self.life=LifeContextPipeline(self.core,self.settings,expand(self.settings['inbox_root']))
             except Exception as exc:self.events.put(('log','LifeContext disabled: '+str(exc)))
             try:
