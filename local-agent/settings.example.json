@@ -32,5 +32,123 @@
       "profile_path": "C:\\ContextData\\profile.json",
       "timeout_seconds": 600
     }
+  },
+  "max_system2_cycles": 3,
+  "google_drive": {
+    "enabled": false,
+    "download_root": "%LOCALAPPDATA%\\VoiceAgentOSMini\\drive-cache",
+    "folder_ids": [],
+    "access_token_env": "",
+    "refresh_token_env": "GOOGLE_DRIVE_REFRESH_TOKEN",
+    "client_id_env": "GOOGLE_DRIVE_CLIENT_ID",
+    "client_secret_env": "GOOGLE_DRIVE_CLIENT_SECRET",
+    "max_files_per_poll": 100,
+    "max_bytes_per_file": 10000000,
+    "import_existing_on_first_run": false
+  },
+  "browser_archive_max_bytes": 67108864,
+  "browser_archive_max_steps": 3000,
+  "browser_archive_max_ms": 120000,
+  "browser_watch": {
+    "enabled": false,
+    "interval_seconds": 300,
+    "include_hosts": [],
+    "exclude_hosts": [],
+    "title_regex": "",
+    "max_tabs_per_cycle": 4,
+    "capture_existing_on_first_run": false,
+    "max_bytes": 67108864,
+    "max_steps": 2500,
+    "max_ms": 90000,
+    "human_quiet_ms": 1800
+  },
+  "max_agent_cycles": 12,
+  "windows_ui": {
+    "enabled": true,
+    "powershell": "powershell.exe"
+  },
+  "human_foreground_retry_seconds": 2,
+  "capability_growth": {
+    "enabled": false,
+    "test_timeout_seconds": 900,
+    "repo_profiles": {
+      "agentos": {
+        "source_checkout": "C:\\Code\\scaling-chrome-extensions",
+        "allowed_paths": [
+          "local-agent",
+          "content-lab",
+          "agent-bridge",
+          "one-click-context",
+          "desktop",
+          "docs/strategy/voice-agentos"
+        ],
+        "test_profiles": {
+          "local_agent": [
+            [
+              "python",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "local-agent/tests",
+              "-p",
+              "test_*.py",
+              "-v"
+            ]
+          ],
+          "deterministic_core": [
+            [
+              "python",
+              "-m",
+              "unittest",
+              "discover",
+              "-s",
+              "content-lab",
+              "-p",
+              "test_*.py",
+              "-v"
+            ]
+          ]
+        }
+      }
+    }
+  },
+  "capability_pr": {
+    "enabled": false,
+    "repo_full_name": "BobIvans/scaling-chrome-extensions",
+    "token_env": "GITHUB_TOKEN",
+    "remote": "origin",
+    "base_branch": "main",
+    "branch_prefix": "agentos/capability",
+    "required_checks": [
+      "core (ubuntu-latest)",
+      "core (windows-latest)"
+    ],
+    "merge_method": "squash",
+    "allow_auto_merge": false
+  },
+  "laya_runtime": {
+    "enabled": false,
+    "python_path": "%LOCALAPPDATA%\\VoiceAgentOSMini\\laya-v0.3.23\\venv\\Scripts\\python.exe",
+    "host": "127.0.0.1",
+    "port": 8765,
+    "device": "cpu",
+    "models": [
+      "multilingual"
+    ],
+    "default_model": "multilingual",
+    "threads": 4,
+    "max_loaded": 1,
+    "preload": true,
+    "api_key_env": "",
+    "min_confidence": 0.72,
+    "startup_timeout_seconds": 180,
+    "idle_unload_seconds": 0,
+    "benchmark_on_start": false,
+    "benchmark_rounds": 3
+  },
+  "ai_sites": {
+    "enabled": false,
+    "profiles": {}
   }
 }

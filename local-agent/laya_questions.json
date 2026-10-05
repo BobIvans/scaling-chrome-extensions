@@ -8,7 +8,9 @@
       "SYSTEM2": "Novel reasoning, research, design or coding from a generative model is worth the cost.",
       "CAPABILITY_GAP": "A missing capability blocks the useful route and should be specified/built.",
       "WAIT": "An external event/quota/time condition is currently the bottleneck.",
-      "STOP": "No safe useful continuation exists inside the current scope."
+      "STOP": "No safe useful continuation exists inside the current scope.",
+      "BROWSER_UI": "A visible read-navigation control can safely advance context gathering through the exact-bound UI broker.",
+      "WINDOWS_UI": "A visible exact-bound Windows UI Automation control can safely advance context gathering."
     }
   },
   "system2_role": {
@@ -38,5 +40,25 @@
   "needs_human": {
     "type": "noul",
     "instructions": "Is user input/permission truly blocking useful autonomous work right now?"
+  },
+  "ui_action": {
+    "type": "choice",
+    "instructions": "When mission_route is BROWSER_UI, choose the safest useful generic UI action. Generic clicks are allowed only for READ_NAV controls.",
+    "criteria": {
+      "CLICK_READ_NAV": "Click one exact READ_NAV control such as show more, load more, expand, open, next or older.",
+      "SCROLL_INTO_VIEW": "Only bring an exact element into view.",
+      "NEED_TYPED_INPUT": "A textbox needs content; request System-2 or a qualified recipe for the exact text.",
+      "ABSTAIN": "No generic UI action is safe/useful."
+    }
+  },
+  "windows_ui_action": {
+    "type": "choice",
+    "instructions": "When mission_route is WINDOWS_UI, choose the safest useful structured UIA action. Generic invoke is allowed only for READ_NAV controls.",
+    "criteria": {
+      "INVOKE_READ_NAV": "Invoke one exact safe READ_NAV control such as show more/open/next/older.",
+      "SCROLL_INTO_VIEW": "Bring the exact UIA element into view without invoking it.",
+      "NEED_TYPED_INPUT": "A value/text control needs content; request System-2 or a qualified recipe for exact text.",
+      "ABSTAIN": "No generic Windows UI action is safe/useful."
+    }
   }
 }

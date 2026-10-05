@@ -15,6 +15,7 @@ let agentosNativePort = null;
 let agentosNativeSeq = 0;
 let agentosNativeConnectPromise = null;
 const agentosNativePending = new Map();
+const agentosArchiveStreams = new Map();
 const utf8 = text => new TextEncoder().encode(text);
 
 function validStatus(value) {
@@ -220,6 +221,136 @@ function agentosRejectPending(reason) {
   }
   agentosNativePending.clear();
 }
+function agentosStream(controlId, chunk) {
+  if (!agentosNativePort) throw new Error('NATIVE_BRIDGE_UNAVAILABLE');
+  agentosNativePort.postMessage({type:'agentos.control.stream',controlId,chunk});
+}
+async function agentosFrameSnapshots(tabId, controlId) {
+  try {
+    const frames=await chrome.scripting.executeScript({target:{tabId,allFrames:true},func:()=>{
+      const MAX=300000,skip=new Set(['SCRIPT','STYLE','NOSCRIPT','TEMPLATE','HEAD','SVG','CANVAS']);
+      const visible=el=>{
+        if(!el?.isConnected||el.hidden||el.getAttribute?.('aria-hidden')==='true')return false;
+        const css=getComputedStyle(el);return css.display!=='none'&&css.visibility!=='hidden'&&css.visibility!=='collapse'&&!!el.getClientRects().length;
+      };
+      const out=[];let chars=0;
+      const selector='p,pre,li,h1,h2,h3,h4,h5,h6,blockquote,table,[role="document"],article';
+      for(const el of document.querySelectorAll(selector)){
+        if(skip.has(el.tagName)||!visible(el)||el.closest('nav,header,footer,[role="navigation"],form'))continue;
+        const text=(el.tagName==='PRE'?el.textContent:(el.innerText||el.textContent||'')).trim();
+        if(!text||text.length<2)continue;
+        if(chars+text.length>MAX)break;
+        out.push(text);chars+=text.length;
+      }
+      return {source:location.origin+location.pathname,title:document.title||'',content_type:document.contentType||'',
+        text:out.join('\n\n'),chars,ready_state:document.readyState};
+    }});
+    for(const frame of frames){
+      if(!frame?.result?.text)continue;
+      agentosStream(controlId,{kind:'frame',frameId:frame.frameId,documentId:frame.documentId||null,...frame.result});
+    }
+    return {frames:frames.length,error:null};
+  } catch(error) {
+    return {frames:0,error:error.message||'FRAME_CAPTURE_FAILED'};
+  }
+}
+async function agentosArchiveCapture(tab, controlId, args={}) {
+  if(active)throw new Error('CAPTURE_BUSY');
+  if(!tab||!Number.isInteger(tab.id))throw new Error('ACTIVE_TAB_UNAVAILABLE');
+  if(args.respectHumanLease!==false){
+    try{
+      await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js']});
+      const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:()=>globalThis.__occUIInventory?.()});
+      const info=rows?.[0]?.result;
+      const quietMs=Math.max(500,Math.min(10000,Number.isFinite(args.humanQuietMs)?args.humanQuietMs:1800));
+      if(info?.document_has_focus===true&&Number.isFinite(info.human_activity_ms)&&info.human_activity_ms<quietMs)
+        throw new Error('UI_HUMAN_FOREGROUND_LEASE');
+    }catch(error){
+      if(error?.message==='UI_HUMAN_FOREGROUND_LEASE')throw error;
+    }
+  }
+  const token=crypto.randomUUID();
+  const job=active={tabId:tab.id,token,documentId:null,cancelled:false,committing:false,archive:true};
+  const session={controlId,tabId:tab.id,lastSequence:0};agentosArchiveStreams.set(token,session);
+  let injected=false;
+  try{
+    const url=tab.url||'';
+    if(!/^(https?:|file:)/i.test(url)||/^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/i.test(url))throw new Error('CAPTURE_URL_UNSUPPORTED');
+    await chrome.scripting.executeScript({target:{tabId:tab.id},files:['artifact-inventory.js','capture-regions.js','content.js']});injected=true;
+    const maxMs=Math.max(5000,Math.min(240000,Number.isSafeInteger(args.maxMs)?args.maxMs:120000));
+    const maxSteps=Math.max(10,Math.min(8000,Number.isSafeInteger(args.maxSteps)?args.maxSteps:3000));
+    const maxBytes=Math.max(1024*1024,Math.min(64*1024*1024,Number.isSafeInteger(args.maxBytes)?args.maxBytes:64*1024*1024));
+    const results=await chrome.scripting.executeScript({target:{tabId:tab.id},func:opts=>globalThis.__occCapture(opts),
+      args:[{scroll:true,sourceMode:'auto',operationToken:token,headless:true,streamRecords:true,
+        maxMs,maxSteps,maxBytes,settleMs:Math.max(120,Math.min(1500,args.settleMs||260))}]});
+    const result=results?.[0]?.result;
+    if(!result||result.streamed!==true||!Array.isArray(result.order)||!result.coverage)throw new Error('ARCHIVE_CAPTURE_SCHEMA');
+    const frameInfo=await agentosFrameSnapshots(tab.id,controlId);
+    return {state:'ARCHIVE_CAPTURED',tabId:tab.id,source:result.source,status:result.status,mode:result.mode,
+      count:result.count,steps:result.steps,contentVersion:result.contentVersion,scanId:result.scanId,
+      regionIds:result.regionIds,warnings:result.warnings,artifacts:result.artifacts,coverage:result.coverage,
+      order:result.order,frame_capture:frameInfo};
+  } finally {
+    agentosArchiveStreams.delete(token);
+    if(injected)void chrome.scripting.executeScript({target:{tabId:tab.id},func:()=>globalThis.__occCancel?.()}).catch(()=>{});
+    if(active===job)active=null;
+  }
+}
+const agentosExtensionDigests=new Map();
+async function agentosExtensionDigest(name){
+  if(agentosExtensionDigests.has(name))return agentosExtensionDigests.get(name);
+  const response=await fetch(chrome.runtime.getURL(name),{cache:'no-store'});
+  if(!response.ok)throw new Error('EXTENSION_CODE_READ_FAILED');
+  const bytes=new Uint8Array(await response.arrayBuffer()),raw=await crypto.subtle.digest('SHA-256',bytes);
+  const digest=[...new Uint8Array(raw)].map(x=>x.toString(16).padStart(2,'0')).join('');
+  agentosExtensionDigests.set(name,digest);return digest;
+}
+async function agentosSiteCall(operation,args={}){
+  const tab=await agentosResolveTab(args);
+  const profile=args.profile,binding=args.binding,draft=args.draft;
+  if(!profile||typeof profile!=='object')throw new Error('SITE_PROFILE_SCHEMA');
+  await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js','site-adapter.js']});
+  const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:payload=>{
+    const adapter=globalThis.__occSiteAdapter;if(!adapter)throw new Error('SITE_ADAPTER_UNAVAILABLE');
+    if(payload.operation==='bind')return adapter.bind(payload.profile);
+    if(payload.operation==='prepare')return adapter.prepare(payload.profile,payload.binding,payload.draft);
+    if(payload.operation==='send')return adapter.send(payload.profile,payload.binding,payload.draft);
+    if(payload.operation==='reconcile')return adapter.reconcile(payload.profile,payload.binding,payload.draft);
+    if(payload.operation==='read')return adapter.read(payload.profile,payload.binding);
+    throw new Error('SITE_OPERATION_UNAVAILABLE');
+  },args:[{operation,profile,binding,draft}]});
+  const result=rows?.[0]?.result;
+  if(!result||typeof result!=='object')throw new Error('SITE_ADAPTER_RESULT_SCHEMA');
+  return {tabId:tab.id,adapter_version:'browser-site-text.v1',code_digest:await agentosExtensionDigest('site-adapter.js'),result};
+}
+async function agentosResolveTab(args={}) {
+  let tab;
+  if(Number.isInteger(args.tabId))tab=await chrome.tabs.get(args.tabId);
+  else tab=(await chrome.tabs.query({active:true,lastFocusedWindow:true}))[0];
+  if(!tab||!Number.isInteger(tab.id))throw new Error('ACTIVE_TAB_UNAVAILABLE');
+  const url=tab.url||'';
+  if(!/^(https?:|file:)/i.test(url)||/^https:\/\/(chromewebstore\.google\.com|chrome\.google\.com\/webstore)/i.test(url))throw new Error('UI_URL_UNSUPPORTED');
+  return tab;
+}
+async function agentosUIInventory(args={}) {
+  const tab=await agentosResolveTab(args);
+  await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js']});
+  const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:()=>globalThis.__occUIInventory?.()});
+  const result=rows?.[0]?.result;
+  if(!result||typeof result.snapshot_id!=='string'||!Array.isArray(result.elements))throw new Error('UI_INVENTORY_SCHEMA');
+  return {tabId:tab.id,...result};
+}
+async function agentosUIAct(args={}) {
+  const tab=await agentosResolveTab(args);
+  if(!args.request||typeof args.request!=='object')throw new Error('UI_ACTION_SCHEMA');
+  const request={...args.request};
+  if(request.action!=='scroll_into_view'&&request.effect_class!=='BROWSER_WRITE')throw new Error('UI_EFFECT_GRANT_REQUIRED');
+  await chrome.scripting.executeScript({target:{tabId:tab.id},files:['ui-inventory.js']});
+  const rows=await chrome.scripting.executeScript({target:{tabId:tab.id},func:req=>globalThis.__occUIAct?.(req),args:[request]});
+  const result=rows?.[0]?.result;
+  if(!result||typeof result.state!=='string')throw new Error('UI_ACTION_RESULT_SCHEMA');
+  return {tabId:tab.id,...result};
+}
 async function handleAgentOSLocalControl(message) {
   if (message.command === 'tabs.list') {
     const tabs = await chrome.tabs.query({});
@@ -229,6 +360,13 @@ async function handleAgentOSLocalControl(message) {
       url: typeof tab.url === 'string' ? tab.url : ''
     }));
   }
+  if (message.command === 'browser.site.bind') return await agentosSiteCall('bind',message.args||{});
+  if (message.command === 'browser.site.prepare') return await agentosSiteCall('prepare',message.args||{});
+  if (message.command === 'browser.site.send') return await agentosSiteCall('send',message.args||{});
+  if (message.command === 'browser.site.reconcile') return await agentosSiteCall('reconcile',message.args||{});
+  if (message.command === 'browser.site.read') return await agentosSiteCall('read',message.args||{});
+  if (message.command === 'browser.ui.inventory') return await agentosUIInventory(message.args||{});
+  if (message.command === 'browser.ui.act') return await agentosUIAct(message.args||{});
   if (message.command === 'tabs.active') {
     const tabs = await chrome.tabs.query({active: true, lastFocusedWindow: true});
     const tab = tabs[0];
@@ -236,6 +374,12 @@ async function handleAgentOSLocalControl(message) {
     return {id: tab.id, windowId: tab.windowId, active: true,
       title: typeof tab.title === 'string' ? tab.title : '',
       url: typeof tab.url === 'string' ? tab.url : ''};
+  }
+  if (message.command === 'tab.capture.archive') {
+    let tab;
+    if (Number.isInteger(message.args?.tabId)) tab=await chrome.tabs.get(message.args.tabId);
+    else tab=(await chrome.tabs.query({active:true,lastFocusedWindow:true}))[0];
+    return await agentosArchiveCapture(tab,message.controlId,message.args||{});
   }
   if (message.command === 'capture.get') {
     const found = await getCapture();
@@ -245,6 +389,11 @@ async function handleAgentOSLocalControl(message) {
     return {state: 'CAPTURE_AVAILABLE', tabId: cap.sourceTabId, captureId: cap.captureId, revision: cap.revision,
       status: cap.status, capturedAt: cap.capturedAt, text: cap.text, warnings: cap.warnings || [], source: cap.source || ''};
   }
+  if (message.command === 'system2.codex.submit') return await agentosCodexSubmit(message.args || {});
+  if (message.command === 'system2.codex.artifacts') return await agentosCodexArtifacts(message.args || {});
+  if (message.command === 'system2.codex.artifact') return await agentosCodexArtifact(message.args || {});
+  if (message.command === 'system2.codex.status') return await agentosCodexStatus(message.args || {});
+  if (message.command === 'system2.codex.result') return await agentosCodexResult(message.args || {});
   if (message.command === 'tab.capture.start') {
     let tab;
     if (Number.isInteger(message.args?.tabId)) tab = await chrome.tabs.get(message.args.tabId);
@@ -322,6 +471,84 @@ async function agentosNativeRequest(request, onProgress) {
     port.postMessage({...request, requestId});
   });
 }
+async function agentosSha256(bytes) {
+  const raw = await crypto.subtle.digest('SHA-256', bytes);
+  return [...new Uint8Array(raw)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+async function agentosCodexSubmit(args) {
+  if (!args || typeof args.instruction !== 'string' || !args.instruction.trim() ||
+      typeof args.text !== 'string' || !args.text || !['analyze','build'].includes(args.mode || 'analyze')) {
+    throw new Error('SYSTEM2_CODEX_SCHEMA');
+  }
+  const bytes = utf8(args.text);
+  if (bytes.byteLength > MAX_BYTES) throw new Error('SYSTEM2_CODEX_INPUT_LIMIT');
+  const mode = args.mode || 'analyze';
+  const begin = await agentosNativeRequest({type:'begin', instruction:args.instruction, mode,
+    bytes:bytes.byteLength, sha256:await agentosSha256(bytes)});
+  const jobId = begin.job?.id;
+  if (typeof jobId !== 'string') throw new Error('SYSTEM2_CODEX_JOB_SCHEMA');
+  try {
+    for (let offset = 0; offset < bytes.length; offset += 49152) {
+      const part = bytes.subarray(offset, Math.min(bytes.length, offset + 49152));
+      await agentosNativeRequest({type:'append', jobId, offset, base64:bytesToBase64(part)});
+    }
+    const run = await agentosNativeRequest({type:'run', jobId});
+    return {job:run.job || begin.job};
+  } catch (error) {
+    await agentosNativeRequest({type:'discard', jobId}).catch(() => {});
+    throw error;
+  }
+}
+async function agentosCodexStatus(args) {
+  if (!args || typeof args.jobId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  const list = await agentosNativeRequest({type:'list'});
+  const job = Array.isArray(list.jobs) ? list.jobs.find(x => x.id === args.jobId) : null;
+  if (!job) throw new Error('SYSTEM2_CODEX_JOB_NOT_FOUND');
+  return {job};
+}
+async function agentosCodexArtifacts(args) {
+  if (!args || typeof args.jobId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  const value=await agentosNativeRequest({type:'artifacts',jobId:args.jobId});
+  if(!Array.isArray(value.artifacts))throw new Error('SYSTEM2_CODEX_ARTIFACTS_SCHEMA');
+  return {artifacts:value.artifacts};
+}
+async function agentosCodexArtifact(args) {
+  if (!args || typeof args.jobId !== 'string' || typeof args.artifactId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  let offset=0,total=null,sha=null,chunks=[];
+  while(total===null||offset<total){
+    const frame=await agentosNativeRequest({type:'artifact',jobId:args.jobId,artifactId:args.artifactId,offset});
+    if(!Number.isSafeInteger(frame.bytes)||frame.bytes<0||frame.offset!==offset||typeof frame.base64!=='string'||typeof frame.sha256!=='string')
+      throw new Error('SYSTEM2_CODEX_ARTIFACT_SCHEMA');
+    if(total!==null&&(frame.bytes!==total||frame.sha256!==sha))throw new Error('SYSTEM2_CODEX_ARTIFACT_CHANGED');
+    total=frame.bytes;sha=frame.sha256;
+    const raw=Uint8Array.from(atob(frame.base64),ch=>ch.charCodeAt(0));chunks.push(raw);offset+=raw.length;
+    if(!raw.length&&offset<total)throw new Error('SYSTEM2_CODEX_ARTIFACT_SCHEMA');
+  }
+  const bytes=new Uint8Array(total||0);let cursor=0;
+  for(const part of chunks){bytes.set(part,cursor);cursor+=part.length;}
+  if(await agentosSha256(bytes)!==sha)throw new Error('SYSTEM2_CODEX_ARTIFACT_HASH');
+  return {bytes_base64:bytesToBase64(bytes),bytes:bytes.length,sha256:sha};
+}
+async function agentosCodexResult(args) {
+  if (!args || typeof args.jobId !== 'string') throw new Error('SYSTEM2_CODEX_SCHEMA');
+  const status = await agentosCodexStatus(args);
+  if (status.job.state !== 'COMPLETE') return status;
+  let offset = 0, total = null, sha = null, chunks = [];
+  while (total === null || offset < total) {
+    const frame = await agentosNativeRequest({type:'result', jobId:args.jobId, offset});
+    if (!Number.isSafeInteger(frame.bytes) || frame.bytes < 0 || frame.offset !== offset ||
+        typeof frame.base64 !== 'string' || typeof frame.sha256 !== 'string') throw new Error('SYSTEM2_CODEX_RESULT_SCHEMA');
+    if (total !== null && (frame.bytes !== total || frame.sha256 !== sha)) throw new Error('SYSTEM2_CODEX_RESULT_CHANGED');
+    total = frame.bytes; sha = frame.sha256;
+    const raw = Uint8Array.from(atob(frame.base64), ch => ch.charCodeAt(0));
+    chunks.push(raw); offset += raw.length;
+    if (!raw.length && offset < total) throw new Error('SYSTEM2_CODEX_RESULT_SCHEMA');
+  }
+  const bytes = new Uint8Array(total || 0); let cursor = 0;
+  for (const part of chunks) { bytes.set(part, cursor); cursor += part.length; }
+  if (await agentosSha256(bytes) !== sha) throw new Error('SYSTEM2_CODEX_RESULT_HASH');
+  return {job:status.job, text:new TextDecoder('utf-8',{fatal:true}).decode(bytes), sha256:sha};
+}
 void agentosNativePermission().then(ok => { if (ok) void ensureAgentOSNativeBridge().catch(() => {}); });
 chrome.runtime.onStartup?.addListener(() => {
   void agentosNativePermission().then(ok => { if (ok) void ensureAgentOSNativeBridge().catch(() => {}); });
@@ -339,7 +566,7 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({id: 'capture-document', title: 'Собрать открытый документ', contexts: ['action']});
     chrome.contextMenus.create({id: 'capture-both', title: 'Собрать переписку + документ', contexts: ['action']});
     chrome.contextMenus.create({id: 'loaded', title: 'Собрать загруженный текст без прокрутки', contexts: ['action']});
-    chrome.contextMenus.create({id: 'agentos-enable', title: 'Включить локальный AgentOS bridge', contexts: ['action']});
+    chrome.contextMenus.create({id: 'agentos-enable', title: 'Включить локальный AgentOS bridge для HTTP(S) сайтов', contexts: ['action']});
   });
 });
 void chrome.storage.local.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
@@ -348,9 +575,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'library') void chrome.tabs.create({url: chrome.runtime.getURL('library.html')});
   if (info.menuItemId === 'loaded') void run(tab, false);
   if (info.menuItemId === 'agentos-enable') {
-    void chrome.permissions.request({permissions: ['nativeMessaging']}).then(granted => {
+    void chrome.permissions.request({permissions: ['nativeMessaging','tabs'], origins:['https://*/*','http://*/*']}).then(granted => {
       if (granted) return ensureAgentOSNativeBridge();
-      throw new Error('NATIVE_PERMISSION_REQUIRED');
+      throw new Error('AGENTOS_BROWSER_PERMISSION_REQUIRED');
     }).catch(() => {});
   }
   if (info.menuItemId === 'capture-chat') void run(tab, true, 'chat');
@@ -400,6 +627,15 @@ chrome.runtime.onMessage.addListener((message, sender, respond) => {
   if (message?.target !== 'worker' || sender.id !== chrome.runtime.id) return false;
   if (message.type === 'progress' && sender.tab?.id === active?.tabId && message.operationToken === active.token) {
     active.documentId ||= sender.documentId || ''; void badge(sender.tab.id, String(message.blocks).slice(0, 4)); respond({ok: true}); return false;
+  }
+  if (message.type === 'captureStream') {
+    const session=agentosArchiveStreams.get(message.operationToken);
+    if(!session||sender.tab?.id!==session.tabId||!Number.isSafeInteger(message.sequence)||message.sequence<=session.lastSequence||
+       !message.chunk||typeof message.chunk!=='object'){respond({ok:false,error:'CAPTURE_STREAM_SCOPE'});return false;}
+    session.lastSequence=message.sequence;
+    try{agentosStream(session.controlId,{sequence:message.sequence,...message.chunk});respond({ok:true});}
+    catch(error){respond({ok:false,error:error.message||'CAPTURE_STREAM_FAILED'});}
+    return false;
   }
   if (message.type === 'captureContext' && sender.tab?.id === active?.tabId && message.operationToken === active.token) {
     active.documentId = sender.documentId || ''; respond({ok: true}); return false;

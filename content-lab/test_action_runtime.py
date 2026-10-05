@@ -360,6 +360,23 @@ class RuntimeTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError,'STALE'):self.runtime.invoke_skill('skill','1',input_value(),{'adapter':'v2'})
         self.assertEqual(len(self.read_db('SELECT * FROM action_failures')),1)
 
+    def test_skill_lifecycle_is_exposed_through_action_handle(self):
+        intent=self.runtime.create(input_value());job=self.runtime.enqueue(intent['intent_id'],1);self.core.run_once()
+        record={'skill_id':'api','version':'1','intent_id':intent['intent_id'],'dependencies':{'adapter':'v1'},
+                'preconditions':['explicit namespace'],'invariants':['STOP','TARGET_IDENTITY','REVISION_FENCE'],
+                'recovery':'reconcile','credential_refs':[],'recording_refs':['job:'+job['id']]}
+        result=self.runtime.handle('SKILL_RECORD',record)
+        failure={'input_refs':['fixture:bad'],'environment_ref':'fixture:env','observed_state':'BLOCKED','error':'x',
+                 'counterexample_ref':'fixture:x','recovery_ref':'fixture:r','evidence_refs':['fixture:e']}
+        self.assertIn('failure_capsule_id',self.runtime.handle('SKILL_FAILURE',{'skill_id':'api','version':'1','failure':failure}))
+        receipt={'code_digest':result['code_digest'],'dependency_digest':result['dependency_digest'],'normal':True,
+                 'unseen':True,'fault':True,'scope':'FIXTURE','evidence_refs':['fixture:gold']}
+        self.assertEqual(self.runtime.handle('SKILL_QUALIFY',{'skill_id':'api','version':'1','receipt':receipt})['state'],'FIXTURE_QUALIFIED')
+        invoked=self.runtime.handle('SKILL_INVOKE',{'skill_id':'api','version':'1','input':dict(input_value(),text='fresh'),
+                                                   'dependencies':result['dependencies']})
+        self.assertEqual(invoked['state'],'QUEUED')
+        self.assertTrue(self.runtime.handle('SKILL_INVALIDATE',{'dependency':'adapter','new_digest':'v2'})['stale'])
+
     def test_record_requires_observed_success_and_code_drift_blocks_replay(self):
         intent=self.runtime.create(input_value());job=self.runtime.enqueue(intent['intent_id'],1)
         record={'skill_id':'trace','version':'1','intent_id':intent['intent_id'],'dependencies':{'adapter':'v1'},

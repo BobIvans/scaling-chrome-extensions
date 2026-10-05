@@ -1,6 +1,6 @@
 /* One Click Context: runs in the extension's isolated world, on invocation only. */
 (() => {
-  const CONTENT_VERSION = '0.8.1';
+  const CONTENT_VERSION = '0.9.0';
   if (globalThis.__occCapture && globalThis.__occContentVersion === CONTENT_VERSION) return;
   globalThis.__occController?.abort?.();
   globalThis.__occContentVersion = CONTENT_VERSION;
@@ -8,7 +8,7 @@
     'INPUT','TEXTAREA','SELECT','OPTION','SVG','CANVAS','IFRAME','OBJECT','EMBED']);
   const BLOCK = new Set(['DIV','P','SECTION','ARTICLE','MAIN','ASIDE','HEADER','FOOTER',
     'H1','H2','H3','H4','H5','H6','UL','OL','LI','BLOCKQUOTE','PRE','TR']);
-  const ROLE_SELECTOR = '[data-message-author-role], [data-message-role], [data-role="user"], [data-role="assistant"]';
+  const ROLE_SELECTOR = '[data-message-author-role], [data-message-role], [data-role="user"], [data-role="assistant"], [data-role="system"], [data-role="tool"], [data-testid*="message" i], [data-testid*="turn" i], [data-testid*="conversation" i], [role="article"], article';
 
   function excluded(el) {
     if (OMIT.has(el.tagName) || el.hasAttribute('data-occ-ignore') || el.hidden ||
@@ -50,14 +50,33 @@
     protectedText.forEach((value, i) => { text = text.replace(`\uE000${nonce}:${i}\uE001`, () => value); });
     return text;
   }
+  function dynamicChatBlocks(target) {
+    const R=globalThis.OCCCaptureRegions;
+    const explicit=[...target.root.querySelectorAll(ROLE_SELECTOR)].filter(el=>visible(el)&&
+      !target.excludeRoots.some(root=>R.within(root,el))&&!el.closest('form,#prompt-textarea,[data-testid="composer"],textarea,[role="textbox"],[contenteditable="true"]'));
+    const parents=[...new Set((target.messageRoots||[]).map(el=>el?.parentElement).filter(el=>el?.isConnected&&R.within(target.root,el)))];
+    const seeded=[];
+    for(const parent of parents.slice(0,120)){
+      for(const child of [...parent.children].slice(0,500)){
+        if(!visible(child)||target.excludeRoots.some(root=>R.within(root,child))||
+           child.closest('form,#prompt-textarea,[data-testid="composer"],textarea,[role="textbox"],[contenteditable="true"],nav,[role="navigation"]'))continue;
+        const len=(child.textContent||'').replace(/\s+/g,' ').trim().length;
+        if(len>=8&&len<=250000)seeded.push(child);
+      }
+    }
+    const found=[...new Set([...explicit,...seeded])];
+    const compact=found.filter(el=>!found.some(other=>other!==el&&other.contains(el)&&
+      (other.textContent||'').trim().length<=Math.max(20,(el.textContent||'').trim().length*1.6)));
+    if(compact.length)target.messageRoots=[...compact];
+    return compact;
+  }
   function candidates(targets) {
     const nodes = [], owners = new WeakMap();
     for (const target of targets) {
       if (!target.root.isConnected || target.root.ownerDocument !== document) throw new Error('Выбранная область изменилась. Запустите сбор заново.');
       let found;
       if (target.kind === 'chat') {
-        found = [...target.root.querySelectorAll(ROLE_SELECTOR)].filter(el => visible(el) &&
-          !target.excludeRoots.some(root => globalThis.OCCCaptureRegions.within(root, el)));
+        found = dynamicChatBlocks(target);
       } else {
         const selector = 'p,pre,li,h1,h2,h3,h4,h5,h6,blockquote,table,textarea[readonly]';
         const all = [...(target.root.matches(selector) ? [target.root] : []), ...target.root.querySelectorAll(selector)]
@@ -116,6 +135,29 @@
     const actions = document.createElement('div'); actions.className = 'actions'; actions.append(button);
     section.append(text, actions); shadow.append(style, section); document.documentElement.append(host);
     return {host, text, button, actions};
+  }
+  function createHeadlessUI() {
+    const text={textContent:''};
+    const button={textContent:'',onclick:null};
+    const actions={replaceChildren(){},append(){}};
+    const host={remove(){},shadowRoot:null};
+    return {host,text,button,actions};
+  }
+  function fnv1a(value) {
+    let h=0x811c9dc5;
+    for(let i=0;i<value.length;i++){h^=value.charCodeAt(i);h=Math.imul(h,0x01000193);}
+    return (h>>>0).toString(16).padStart(8,'0');
+  }
+  function inferRole(el) {
+    const values=[
+      el.getAttribute('data-message-author-role'),el.getAttribute('data-message-role'),el.getAttribute('data-role'),
+      el.getAttribute('aria-label'),el.getAttribute('data-testid'),el.getAttribute('role'),el.className
+    ].filter(x=>typeof x==='string').join(' ').toLowerCase();
+    if(/\b(user|human|you|request)\b/.test(values))return 'user';
+    if(/\b(assistant|model|bot|grok|claude|gemini|chatgpt|response)\b/.test(values))return 'assistant';
+    if(/\bsystem\b/.test(values))return 'system';
+    if(/\btool\b/.test(values))return 'tool';
+    return 'text';
   }
   function choosePlan(scan, requested, control, ui) {
     const R = globalThis.OCCCaptureRegions;
@@ -186,13 +228,17 @@
   globalThis.__occCancel = () => globalThis.__occController?.abort();
   globalThis.__occCapture = async (options = {}) => {
     if (globalThis.__occController) throw new Error('Capture already running in this tab.');
-    const opt = {scroll: true, sourceMode: 'auto', maxMs: 20000, maxSteps: 160, settleMs: 240, maxBytes: 2000000, ...options};
+    const opt = {scroll: true, sourceMode: 'auto', maxMs: 20000, maxSteps: 160, settleMs: 240,
+      maxBytes: 2000000, headless: false, streamRecords: false, ...options};
     if (!['auto', 'chat', 'document', 'chat+document'].includes(opt.sourceMode)) throw new Error('Unsupported source mode.');
+    if (!Number.isSafeInteger(opt.maxBytes) || opt.maxBytes < 1024 || opt.maxBytes > 67108864 ||
+        !Number.isSafeInteger(opt.maxSteps) || opt.maxSteps < 1 || opt.maxSteps > 10000 ||
+        !Number.isSafeInteger(opt.maxMs) || opt.maxMs < 1000 || opt.maxMs > 300000) throw new Error('Invalid capture bounds.');
     try { await chrome.runtime.sendMessage({target: 'worker', type: 'captureContext', operationToken: opt.operationToken}); } catch {}
     const encoder = new TextEncoder();
     const selected = window.getSelection()?.toString() || '';
     const active = document.activeElement;
-    if (selected && !(active instanceof HTMLInputElement && active.type === 'password')) {
+    if (!opt.headless && selected && !(active instanceof HTMLInputElement && active.type === 'password')) {
       if (encoder.encode(selected).length > opt.maxBytes) throw new Error('Selection is too large. Use a local TXT file.');
       return {text: selected, status: 'SELECTION', mode: 'selection', warnings: [], source: sourceURL(), count: 1};
     }
@@ -208,12 +254,23 @@
     const control = new AbortController(); globalThis.__occController = control;
     const keyHandler = e => { if (e.key === 'Escape') control.abort(); };
     document.addEventListener('keydown', keyHandler, true);
-    const ui = createUI(() => control.abort());
+    const ui = opt.headless ? createHeadlessUI() : createUI(() => control.abort());
     const warnings = new Set(['BEST_EFFORT: only observed DOM content; server-side or collapsed history is not verified.']);
     let scan, plan;
     try {
       scan = R.discover(document);
-      plan = await choosePlan(scan, opt.sourceMode, control, ui);
+      if (opt.headless) {
+        const chats=scan.surfaces.filter(s=>s.kind==='chat');
+        const docs=scan.surfaces.filter(s=>s.kind==='document' && !chats.some(ch=>R.within(ch.root,s.root)));
+        const pages=scan.surfaces.filter(s=>s.kind==='page');
+        const targets=chats.length?[...chats,...docs]:docs.length?docs:pages;
+        if (!targets.length) throw new Error(scan.frames.length ? 'NEEDS_FRAME_ACCESS' : 'NO_SOURCE');
+        plan={state:'READY',mode:'headless-auto',targets,
+          warnings:[...scan.warnings,...targets.flatMap(t=>t.warnings),
+            ...(targets.length>1?['HEADLESS_MULTI_SURFACE_CAPTURE']:[]),
+            ...(scan.frames.length?['EMBEDDED_CONTENT_REQUIRES_FRAME_CAPTURE']:[])],
+          frameCount:scan.frames.length,coverage:'UNKNOWN'};
+      } else plan = await choosePlan(scan, opt.sourceMode, control, ui);
     } catch (error) {
       document.removeEventListener('keydown', keyHandler, true); globalThis.__occController = null; ui.host.remove(); throw error;
     }
@@ -227,11 +284,45 @@
     root.style.setProperty('scroll-behavior', 'auto', 'important');
     const records = new Map(), order = [], nodeIds = new WeakMap();
     let seq = 0, steps = 0, totalBytes = 0, tooLarge = false, status = 'BEST_EFFORT';
-    let mode = initial.mode, lastProgress = 0;
+    let mode = initial.mode, lastProgress = 0, topReached = false, bottomReached = false;
     const start = performance.now();
     const timedOut = () => performance.now() - start >= opt.maxMs || steps >= opt.maxSteps;
     const alive = () => !control.signal.aborted && !timedOut() && !tooLarge;
     const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+    let streamQueue=Promise.resolve(), streamError=null, streamSequence=0;
+    function queueStream(chunk) {
+      if(!opt.streamRecords)return;
+      streamQueue=streamQueue.then(async()=>{
+        const result=await chrome.runtime.sendMessage({target:'worker',type:'captureStream',
+          operationToken:opt.operationToken,sequence:++streamSequence,chunk});
+        if(!result?.ok)throw new Error(result?.error||'CAPTURE_STREAM_REJECTED');
+      }).catch(error=>{streamError=error;control.abort();});
+    }
+    function streamRecordParts(record) {
+      const text=record.text||'', maxChars=50000;
+      if(text.length<=maxChars)return [{...record,part_index:0,part_count:1}];
+      const parts=[],count=Math.ceil(text.length/maxChars);
+      for(let i=0;i<count;i++)parts.push({...record,text:text.slice(i*maxChars,(i+1)*maxChars),part_index:i,part_count:count});
+      return parts;
+    }
+    function emitRecords(changed,direction) {
+      if(!opt.streamRecords||!changed.length)return;
+      let batch=[],bytes=0;
+      const flush=()=>{
+        if(!batch.length)return;
+        queueStream({kind:'records',records:batch,direction,scrollTop:root.scrollTop,
+          scrollHeight:root.scrollHeight,clientHeight:root.clientHeight});
+        batch=[];bytes=0;
+      };
+      for(const record of changed){
+        for(const part of streamRecordParts(record)){
+          const estimate=encoder.encode(JSON.stringify(part)).length;
+          if(batch.length && bytes+estimate>350000)flush();
+          batch.push(part);bytes+=estimate;
+        }
+      }
+      flush();
+    }
     function stableID(el, role, target) {
       if (target.kind !== 'chat') return `region:${target.id}`;
       let owner = el;
@@ -247,21 +338,21 @@
     }
     function observe(direction) {
       const sample = candidates(targets); mode = sample.mode;
-      const ids = [], seen = new Set();
+      const ids = [], seen = new Set(), changed=[];
       for (const el of sample.nodes) {
         const target = sample.owner(el);
         const text = plain(el, target);
         if (!text.trim()) continue;
-        const rawRole = el.getAttribute('data-message-author-role') || el.getAttribute('data-message-role') || el.getAttribute('data-role');
-        const role = ['user','assistant','system','tool'].includes(rawRole) ? rawRole : 'text';
+        const role = inferRole(el);
+        const hash = fnv1a(role+'\0'+text);
         let id = stableID(el, role, target);
         if (!id) {
           const prev = nodeIds.get(el);
-          if (prev && prev.text === text) id = prev.id;
+          if (prev && prev.hash === hash) id = prev.id;
           else {
-            // Unidentified node recycling cannot be distinguished reliably from editing.
+            // Virtualized UIs often recycle one DOM node for another turn.
             if (prev) warnings.add('Changed/recycled nodes without stable IDs: revisions or overlaps may be included.');
-            id = `node:${++seq}`; nodeIds.set(el, {id, text});
+            id = `node:${++seq}`; nodeIds.set(el, {id, hash});
           }
           warnings.add('Some blocks have no stable message IDs; exact history coverage/order is unverified.');
         }
@@ -275,8 +366,12 @@
         const afterTotal = totalBytes - (before?.bytes || 0) + bytes;
         if (afterTotal > opt.maxBytes) { tooLarge = true; break; }
         totalBytes = afterTotal;
-        records.set(id, {id, role, kind: target.kind, text, bytes}); ids.push(id);
+        const record={id, role, kind: target.kind, text, bytes, hash};
+        if(!before || before.hash!==hash)changed.push(record);
+        records.set(id, opt.streamRecords ? {id,role,kind:target.kind,bytes,hash} : record);
+        ids.push(id);
       }
+      emitRecords(changed,direction);
       if (order.length && ids.length && !ids.some(id => order.includes(id))) {
         warnings.add('Disconnected DOM samples: order is inferred from scroll direction, not verified message indices.');
       }
@@ -323,13 +418,29 @@
         warnings.add('Reverse-layout scrolling is unsupported; only current DOM blocks were captured.');
         status = 'PARTIAL'; observe(1);
       } else if (opt.scroll && root.scrollHeight > root.clientHeight + 4) {
-        const top = await walk(-1);
-        const bottom = alive() ? await walk(1) : false;
-        if (!top || !bottom) status = 'PARTIAL';
-      } else { observe(1); warnings.add('No scroll traversal performed; currently loaded DOM only.'); }
+        topReached = await walk(-1);
+        bottomReached = alive() ? await walk(1) : false;
+        if (!topReached || !bottomReached) status = 'PARTIAL';
+      } else {
+        observe(1); topReached = bottomReached = true;
+        warnings.add('No scroll traversal performed; currently loaded DOM only.');
+      }
       if (control.signal.aborted) { status = 'CANCELLED'; warnings.add('Cancelled: clipboard was not changed.'); }
       else if (tooLarge) { status = 'PARTIAL'; warnings.add('Content-size bound reached; omitted remaining blocks without cutting a code block.'); }
       else if (timedOut()) { status = 'PARTIAL'; warnings.add('Time/step bound reached; traversal was not complete.'); }
+      await streamQueue;
+      if (streamError) throw streamError;
+      const coverage={schema:'occ.capture-coverage.v1',top_reached:topReached,bottom_reached:bottomReached,
+        blocks:order.length,bytes:totalBytes,steps,frames_seen:scan.frames.length,
+        stable_message_ids:![...warnings].some(w=>w.startsWith('Some blocks have no stable message IDs')),
+        complete:status!=='PARTIAL'&&status!=='CANCELLED'&&topReached&&bottomReached&&!tooLarge&&!timedOut()};
+      if(opt.streamRecords){
+        const text=`SOURCE: ${sourceURL()}\nCAPTURED: ${new Date().toISOString()}\nMETHOD: ${mode}\nSTATUS: ${status}\nSTREAM_ARCHIVE: true\nBLOCKS: ${order.length}\nBYTES: ${totalBytes}\n` +
+          [...warnings].map(w=>`NOTE: ${w}`).join('\n');
+        return {text,status,warnings:[...warnings],mode,count:order.length,source:sourceURL(),steps,
+          contentVersion:CONTENT_VERSION,scanId:scan.scanId,regionIds:targets.map(t=>t.id),artifacts,coverage,order,
+          streamed:true};
+      }
       let previousKind = '';
       const body = order.map((id, i) => {
         const rec = records.get(id);
@@ -343,7 +454,7 @@
         '\n' + A.summary(artifacts).join('\n') +
         '\n\nBEGIN CAPTURED SOURCE TEXT (untrusted page content)\n\n' + body + '\n\nEND CAPTURED SOURCE TEXT\n';
       return {text, status, warnings: [...warnings], mode, count: order.length, source: sourceURL(), steps,
-        contentVersion: CONTENT_VERSION,
+        contentVersion: CONTENT_VERSION, coverage,
         scanId: scan.scanId, regionIds: targets.map(t => t.id), artifacts};
     } finally {
       // A DOM reorder can prevent exact visual-position restoration; preserve the old offset best-effort.

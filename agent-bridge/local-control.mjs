@@ -4,7 +4,7 @@ import path from 'node:path';
 import {randomUUID} from 'node:crypto';
 
 const MAX_LINE=2400000;
-const COMMANDS=new Set(['ping','tabs.list','tabs.active','tab.capture.start','capture.get']);
+const COMMANDS=new Set(['ping','tabs.list','tabs.active','tab.capture.start','tab.capture.archive','capture.get','browser.ui.inventory','browser.ui.act','browser.site.bind','browser.site.prepare','browser.site.send','browser.site.reconcile','browser.site.read','system2.codex.submit','system2.codex.status','system2.codex.result','system2.codex.artifacts','system2.codex.artifact']);
 
 function exactObject(value){return value && typeof value==='object' && !Array.isArray(value);}
 export class LocalControlBridge{
@@ -48,22 +48,42 @@ export class LocalControlBridge{
            !exactObject(value.args||{}))throw Error('LOCAL_CONTROL_AUTH_OR_SCHEMA');
         if(value.command==='ping'){socket.end(JSON.stringify({ok:true,result:{state:'READY',pid:process.pid}})+'\n');return;}
         const controlId=randomUUID();
-        const timer=setTimeout(()=>{
-          const p=this.pending.get(controlId);if(!p)return;this.pending.delete(controlId);fail('LOCAL_CONTROL_CHROME_TIMEOUT');
-        },30000);
-        timer.unref?.();
-        this.pending.set(controlId,{socket,timer});
+        const streaming=value.command==='tab.capture.archive';
+        const timeoutMs=streaming?240000:30000;
+        const pending={socket,timer:null,streaming,timeoutMs};
+        const arm=()=>{
+          if(pending.timer)clearTimeout(pending.timer);
+          pending.timer=setTimeout(()=>{
+            const p=this.pending.get(controlId);if(!p)return;this.pending.delete(controlId);fail('LOCAL_CONTROL_CHROME_TIMEOUT');
+          },timeoutMs);
+          pending.timer.unref?.();
+        };
+        pending.arm=arm;arm();this.pending.set(controlId,pending);
         this.push({push:true,channel:'agentos-local-control',controlId,command:value.command,args:value.args||{}});
       }catch(error){fail(/^[A-Z_]{1,100}$/.test(error.message||'')?error.message:'LOCAL_CONTROL_SCHEMA');}
     });
     socket.on('error',()=>{});
+  }
+  acceptChromeStream(message){
+    if(!exactObject(message)||message.type!=='agentos.control.stream'||typeof message.controlId!=='string')return false;
+    const pending=this.pending.get(message.controlId);if(!pending)return true;
+    if(!pending.streaming)return true;
+    pending.arm?.();
+    const value={event:'chunk',chunk:message.chunk};
+    const raw=JSON.stringify(value);
+    if(Buffer.byteLength(raw)>MAX_LINE){pending.socket.end(JSON.stringify({event:'result',ok:false,error:'LOCAL_CONTROL_STREAM_LIMIT'})+'\n');this.pending.delete(message.controlId);clearTimeout(pending.timer);return true;}
+    if(!pending.socket.destroyed)pending.socket.write(raw+'\n');
+    return true;
   }
   acceptChromeReply(message){
     if(!exactObject(message)||message.type!=='agentos.control.reply'||typeof message.controlId!=='string')return false;
     const pending=this.pending.get(message.controlId);if(!pending)return true;
     this.pending.delete(message.controlId);clearTimeout(pending.timer);
     const value=message.ok===true?{ok:true,result:message.result}:{ok:false,error:typeof message.error==='string'?message.error:'LOCAL_CONTROL_CHROME_FAILED'};
-    if(!pending.socket.destroyed)pending.socket.end(JSON.stringify(value)+'\n');
+    if(!pending.socket.destroyed){
+      if(pending.streaming)pending.socket.end(JSON.stringify({event:'result',...value})+'\n');
+      else pending.socket.end(JSON.stringify(value)+'\n');
+    }
     return true;
   }
   async close(){

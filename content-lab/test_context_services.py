@@ -122,6 +122,9 @@ class Services(unittest.TestCase):
         old=lib.search_sources(self.store,'n','decision',as_of=15,project='p');now=lib.search_sources(self.store,'n','decision',as_of=21,project='p')
         self.assertEqual(old['rows'][0]['source_ref']['revision'],ref['revision']);self.assertTrue(old['rows'][0]['historical']);self.assertEqual(now['rows'][0]['source_ref']['revision'],new['revision'])
         self.assertEqual(lib.search_sources(self.store,'n',project='other')['state'],'NO_MATCH')
+        lib.annotate(self.store,'n',ref,{**ann,'labels':['source:test','topic:decision']},'ann-labels')
+        self.assertEqual(lib.search_sources(self.store,'n','decision',labels=['topic:decision'])['state'],'MATCHES')
+        self.assertEqual(lib.search_sources(self.store,'n','decision',labels=['topic:missing'])['state'],'NO_MATCH')
     def test_backup_concurrent_writer_and_restore_tombstone(self):
         _,ref,p=self.packet();ticks=[0]
         def writer():
