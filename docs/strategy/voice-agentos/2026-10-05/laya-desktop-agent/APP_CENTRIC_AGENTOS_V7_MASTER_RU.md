@@ -215,3 +215,14 @@ Older V2–V6 documents remain source-of-intent and compatibility constraints, b
 ## CI anchor
 
 The final V7 PR must pass both strategy-integrity and deterministic-core workflows on the same current head SHA before merge.
+
+## Universal capture/control update
+
+The old One Click Context failure mode is now treated as a first-class correctness problem, not as a prompt-size problem. The primary Observe path streams virtualized/role-less/recycled chat records from the hidden browser capability layer to the local app. The local app assembles a large TXT derivative, raw JSONL event stream and metadata/coverage manifest, imports them into canonical Library, and sends only bounded working packets to Laya/System-2. A single Chrome storage/native-message snapshot no longer defines lifetime context size.
+
+Universal UI control is layered: browser DOM/accessibility inventory first, Windows UI Automation fallback second, site-specific qualified adapters for effectful actions where generic semantics are insufficient. Generic browser/UIA invoke is intentionally limited to READ_NAV controls; send/save/pay/delete/merge/wallet/etc. require a qualified capability.
+
+Parallelism means independent reads, research, repo/test/provider lanes and other tabs may execute concurrently. The same mutable foreground control is never dual-owned: trusted human mouse/keyboard/input activity creates a foreground lease, AgentOS returns WAITING_HUMAN_FOREGROUND for that surface, continues independent work, then rebinds/revalidates after the quiet period.
+
+Self-growth now includes: System-2 build artifacts → CAPABILITY_MANIFEST/PATCH → exact-base isolated worktree → policy-owned tests → capability qualification receipt → bounded PR → exact-head CI gate → optional exact-head merge. Production activation/device canary and automatic resume after the newly installed capability remain separate gates.
+
