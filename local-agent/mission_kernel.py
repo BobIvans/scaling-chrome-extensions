@@ -2,6 +2,11 @@ from __future__ import annotations
 import hashlib, json, time
 from pathlib import Path
 
+def bounded_utf8(text,limit=1_400_000):
+    raw=str(text or '').encode('utf-8')
+    if len(raw)<=limit:return str(text or '')
+    return raw[:limit].decode('utf-8',errors='ignore')+'\n\n[WORKING_PACKET_TRUNCATED; FULL RAW SOURCE REMAINS IN CANONICAL LIBRARY]\n'
+
 class MissionKernel:
     """UI/orchestration projection. Core remains the only effect authority."""
     def __init__(self,core,bridge,laya,questions_path,inbox_root):
@@ -56,7 +61,7 @@ class MissionKernel:
         if route=='GATHER_CONTEXT':return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision}
         if not self.bridge:return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision}
         role=self._system2_role(decision,compile_result)
-        context=mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False)
+        context=bounded_utf8(mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False))
         prompt=self._system2_prompt(mission,state,role)
         submitted=self.bridge.codex_submit(prompt,context,'build' if role in {'CODER','TOOL_DESIGNER'} else 'analyze')
         job=submitted.get('job') if isinstance(submitted,dict) else None
