@@ -86,7 +86,7 @@ try{
     $rows=New-Object System.Collections.Generic.List[object]
     $rows.Add((Element-Row $root $hwnd))
     $all=$root.FindAll([System.Windows.Automation.TreeScope]::Descendants,[System.Windows.Automation.Condition]::TrueCondition)
-    $limit=[Math]::Min($all.Count,[Math]::Min(3000,[int]($req.max_elements ?? 1200)))
+    $requested=1200;if($null -ne $req.max_elements){$requested=[int]$req.max_elements};$limit=[Math]::Min($all.Count,[Math]::Min(3000,$requested))
     for($i=0;$i -lt $limit;$i++){
       $el=$all.Item($i);$row=Element-Row $el $hwnd
       if(-not $row.offscreen -and ($row.name -or $row.value -or $row.text -or $row.patterns.Count -gt 0)){$rows.Add($row)}
