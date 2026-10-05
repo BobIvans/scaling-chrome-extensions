@@ -1,0 +1,257 @@
+{
+  "schema": "occ.laya-desktop-question-catalog.v1",
+  "generated_at": "2026-10-05",
+  "authority": "DATA_ONLY",
+  "invariants": [
+    "Laya never grants permissions or registers tools",
+    "low confidence or contradiction must be able to abstain",
+    "deterministic policy maps model answers to registered workflow IDs",
+    "external effects require exact target binding, effect intent, lease/fence, STOP check and verifier"
+  ],
+  "question_sets": [
+    {
+      "id": "mission_route",
+      "purpose": "Choose the next coarse workflow for a user mission.",
+      "questions": {
+        "route": {
+          "type": "choice",
+          "options": [
+            "REPO_FULL_INITIAL",
+            "REPO_FOCUSED",
+            "SELECTED_TAB_AI",
+            "GROK_BUILD_CODE",
+            "LOCAL_REGISTERED_ACTION",
+            "GATHER_MORE_CONTEXT",
+            "DEVELOPMENT_REQUEST",
+            "ABSTAIN"
+          ]
+        },
+        "context_breadth": {
+          "type": "score",
+          "rubric": [
+            "NONE",
+            "NARROW",
+            "MODULE",
+            "MULTI_MODULE",
+            "WHOLE_REPO"
+          ]
+        },
+        "needs_more_context": {
+          "type": "noul",
+          "proposition": "The next safe useful step requires additional evidence or source context."
+        },
+        "external_effect_risk": {
+          "type": "noul",
+          "proposition": "The proposed next step would create an external effect and must pass effect admission."
+        }
+      },
+      "policy": "If route confidence is below configured threshold or needs_more_context is high, choose GATHER_MORE_CONTEXT/ABSTAIN, never infer permission."
+    },
+    {
+      "id": "repo_pack_mode",
+      "purpose": "Choose the most useful repository projection after canonical capture.",
+      "questions": {
+        "mode": {
+          "type": "choice",
+          "options": [
+            "WHOLE_REPO_INDEXED",
+            "DOMAIN_FOCUSED",
+            "INTERCONNECTED_FILES",
+            "TECH_DEBT_FOCUSED",
+            "ERROR_AND_BROKEN_PATHS",
+            "HIGH_VALUE_FILES",
+            "TEST_IMPACT",
+            "RUNTIME_PATH",
+            "DELTA_SINCE_SNAPSHOT",
+            "ABSTAIN"
+          ]
+        },
+        "dependency_depth": {
+          "type": "score",
+          "rubric": [
+            "SEED_ONLY",
+            "DIRECT",
+            "TWO_HOP",
+            "COMPONENT",
+            "GLOBAL"
+          ]
+        },
+        "whole_repo_required": {
+          "type": "noul",
+          "proposition": "A focused projection is insufficient because global ownership/architecture/evidence must first be established."
+        }
+      }
+    },
+    {
+      "id": "ai_response_next_action",
+      "purpose": "Classify an AI response and decide which verifier/context workflow should run next.",
+      "questions": {
+        "response_class": {
+          "type": "choice",
+          "options": [
+            "ANSWER_OR_ANALYSIS",
+            "NEEDS_CONTEXT",
+            "CODE_OR_CHANGE_PROPOSAL",
+            "RUN_OR_TOOL_PROPOSAL",
+            "COMPLETION_CLAIM",
+            "BLOCKER",
+            "AMBIGUOUS",
+            "ABSTAIN"
+          ]
+        },
+        "next_workflow": {
+          "type": "choice",
+          "options": [
+            "VERIFY_RESULT",
+            "GATHER_REPO_DATA",
+            "BUILD_CONTEXT_PACK",
+            "INVOKE_REGISTERED_ACTION",
+            "CREATE_CODE_TASK",
+            "CREATE_DEVELOPMENT_REQUEST",
+            "ASK_AI_FOLLOWUP",
+            "STOP_OR_BLOCK",
+            "ABSTAIN"
+          ]
+        },
+        "claim_requires_verification": {
+          "type": "noul",
+          "proposition": "The response makes a completion/factual/effect claim that needs independent verification before acceptance."
+        },
+        "scope_expansion_requested": {
+          "type": "noul",
+          "proposition": "The response asks for permissions/targets/effects outside the current mission grant."
+        }
+      },
+      "policy": "scope_expansion_requested never auto-expands grants; completion claims route to verifier."
+    },
+    {
+      "id": "tab_target_triage",
+      "purpose": "Classify a discovered tab for presentation/routing only; runtime observation creates identity.",
+      "questions": {
+        "provider_mode": {
+          "type": "choice",
+          "options": [
+            "GROK_CHAT",
+            "GROK_BUILD_WEB",
+            "OTHER_AI",
+            "NON_AI",
+            "UNKNOWN"
+          ]
+        },
+        "usefulness": {
+          "type": "score",
+          "rubric": [
+            "IRRELEVANT",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "MISSION_PRIMARY"
+          ]
+        },
+        "requires_rebind": {
+          "type": "noul",
+          "proposition": "Observed tab/account/conversation identity differs from the persisted binding."
+        }
+      }
+    },
+    {
+      "id": "tech_debt_triage",
+      "purpose": "Rank evidence-backed tech debt candidates.",
+      "questions": {
+        "debt_class": {
+          "type": "choice",
+          "options": [
+            "DUPLICATE_OWNER",
+            "STALE_CONTRACT",
+            "MISSING_TEST",
+            "UNQUALIFIED_EFFECT",
+            "BROKEN_DEPENDENCY",
+            "DEAD_OR_STALE_CODE",
+            "ERROR_HANDLING",
+            "PERFORMANCE_SCALING",
+            "NOT_DEBT",
+            "ABSTAIN"
+          ]
+        },
+        "priority": {
+          "type": "score",
+          "rubric": [
+            "P4",
+            "P3",
+            "P2",
+            "P1",
+            "P0"
+          ]
+        },
+        "needs_cross_check": {
+          "type": "noul",
+          "proposition": "The candidate needs another source/test/history edge before it can be treated as actionable debt."
+        }
+      }
+    },
+    {
+      "id": "error_cone_triage",
+      "purpose": "Rank files/edges relevant to an observed failure.",
+      "questions": {
+        "relation": {
+          "type": "choice",
+          "options": [
+            "DIRECT_FAILURE",
+            "CALLER_OR_DEPENDENCY",
+            "CONFIG_OR_SCHEMA",
+            "TEST_OR_FIXTURE",
+            "EXTERNAL_PROVIDER",
+            "WEAK_ASSOCIATION",
+            "UNRELATED",
+            "ABSTAIN"
+          ]
+        },
+        "evidence_strength": {
+          "type": "score",
+          "rubric": [
+            "NONE",
+            "WEAK",
+            "PARTIAL",
+            "STRONG",
+            "DIRECT"
+          ]
+        },
+        "expand_frontier": {
+          "type": "noul",
+          "proposition": "The current failure cone still lacks a plausible cause or verifier path."
+        }
+      }
+    },
+    {
+      "id": "capability_gap_triage",
+      "purpose": "Decide whether a request can use existing capabilities or needs safe development.",
+      "questions": {
+        "resolution": {
+          "type": "choice",
+          "options": [
+            "USE_EXISTING_CAPABILITY",
+            "COMPOSE_EXISTING_CAPABILITIES",
+            "CREATE_NEW_CAPABILITY",
+            "ASK_USER_FOR_SCOPE",
+            "NOT_ALLOWED",
+            "ABSTAIN"
+          ]
+        },
+        "qualification_cost": {
+          "type": "score",
+          "rubric": [
+            "TRIVIAL",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "DEVICE_OR_EXTERNAL"
+          ]
+        },
+        "can_continue_without_gap": {
+          "type": "noul",
+          "proposition": "Other independent mission work can continue while this capability is missing."
+        }
+      }
+    }
+  ]
+}

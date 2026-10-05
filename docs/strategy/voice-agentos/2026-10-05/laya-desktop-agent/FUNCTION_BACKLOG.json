@@ -1,0 +1,728 @@
+{
+  "schema": "voice-agentos.laya-desktop-function-backlog.v1",
+  "generated_at": "2026-10-05",
+  "source_repo_head": "61dd05da414f678b1921edf09f22601219f6257b",
+  "status_note": "These are implementation targets, not claims that runtime code is already complete.",
+  "functions": [
+    {
+      "id": "LD001",
+      "name": "repo_acquire_github",
+      "category": "repo_workbench",
+      "purpose": "Clone/fetch/pin a GitHub repository through a fixed Git adapter and emit an immutable receipt.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_context.py",
+        "content-lab/repo_scan.py",
+        "content-lab/native_adapter.py",
+        "desktop/app.py"
+      ],
+      "acceptance": [
+        "no model-generated shell",
+        "pinned commit/tree receipt",
+        "safe retry does not duplicate/corrupt workspace"
+      ]
+    },
+    {
+      "id": "LD002",
+      "name": "repo_register_binding",
+      "category": "repo_workbench",
+      "purpose": "Register repo alias/root/remote/ref into current operator profile without duplicating the repo store.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_context.py",
+        "content-lab/repo_scan.py",
+        "content-lab/native_adapter.py",
+        "desktop/app.py"
+      ],
+      "acceptance": [
+        "same repo root does not create second canonical store",
+        "profile validation rejects out-of-scope roots"
+      ]
+    },
+    {
+      "id": "LD003",
+      "name": "ui_repo_workbench",
+      "category": "desktop",
+      "purpose": "First-class repository dashboard with acquire/open/scan/progress/snapshot/pack actions.",
+      "phase": "V1",
+      "effect_class": "UI",
+      "reuse_owners": [
+        "desktop/app.py",
+        "desktop/actions_ui.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "acceptance": [
+        "operator can add/open repo and see exact revision/snapshot/progress"
+      ]
+    },
+    {
+      "id": "LD004",
+      "name": "compile_whole_repo_indexed_pack",
+      "category": "context_pack",
+      "purpose": "Create complete-accounting overview + logically connected receiver-bounded TXT/MD/JSON parts.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "100% source accounting",
+        "logical parts + manifest + coverage receipt",
+        "exact reopen"
+      ]
+    },
+    {
+      "id": "LD005",
+      "name": "compile_interconnected_files_pack",
+      "category": "context_pack",
+      "purpose": "Graph-expand a seed/goal through imports, callers, tests, schemas and evidence links.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "all expansion edges evidenced",
+        "frontier/gaps visible"
+      ]
+    },
+    {
+      "id": "LD006",
+      "name": "compile_tech_debt_pack",
+      "category": "context_pack",
+      "purpose": "Evidence-backed tech-debt projection from code/tests/history/drift/unqualified effects.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "finding has source/evidence refs",
+        "Laya may rank but not invent debt"
+      ]
+    },
+    {
+      "id": "LD007",
+      "name": "compile_error_cone_pack",
+      "category": "context_pack",
+      "purpose": "Failure→test→symbol→dependency→config/provider evidence cone.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "failure path tied to exact tests/symbols/config",
+        "alternatives/gaps visible"
+      ]
+    },
+    {
+      "id": "LD008",
+      "name": "compile_high_value_files_pack",
+      "category": "context_pack",
+      "purpose": "Rank runtime/effect/graph/test/history/goal importance with source evidence.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "score dimensions exposed",
+        "goal-independent baseline + goal rank separated"
+      ]
+    },
+    {
+      "id": "LD009",
+      "name": "compile_test_impact_pack",
+      "category": "context_pack",
+      "purpose": "Compute tests/fixtures/contracts affected by selected change/goal.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "changed refs map to tests/contracts or explicit gaps"
+      ]
+    },
+    {
+      "id": "LD010",
+      "name": "compile_runtime_path_pack",
+      "category": "context_pack",
+      "purpose": "Trace one capability from UI/intent through Core/executor/verifier/store.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "UI→Core→executor→verifier path is traceable by owner"
+      ]
+    },
+    {
+      "id": "LD011",
+      "name": "compile_delta_invalidation_pack",
+      "category": "context_pack",
+      "purpose": "Invalidate/rebuild impacted logical packs after new snapshot/HEAD.",
+      "phase": "V1",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/repo_groups.py",
+        "content-lab/context_packets.py",
+        "content-lab/context_handoff.py"
+      ],
+      "acceptance": [
+        "new HEAD marks old derived packs STALE"
+      ]
+    },
+    {
+      "id": "LD012",
+      "name": "list_browser_tabs",
+      "category": "browser",
+      "purpose": "List tabs via qualified extension/CDP adapter with title/origin/active info for UI only.",
+      "phase": "V2",
+      "effect_class": "LOCAL_READ",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "tabs shown without silently binding",
+        "permission scope explicit"
+      ]
+    },
+    {
+      "id": "LD013",
+      "name": "select_active_tab",
+      "category": "browser",
+      "purpose": "Resolve active tab after explicit operator gesture and return a candidate handle.",
+      "phase": "V2",
+      "effect_class": "LOCAL_READ",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "explicit operator gesture required"
+      ]
+    },
+    {
+      "id": "LD014",
+      "name": "bind_selected_ai_tab",
+      "category": "browser",
+      "purpose": "Turn user-selected tab into exact persisted TargetBinding revision.",
+      "phase": "V2",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "exact account/workspace/conversation binding persisted",
+        "identity change invalidates"
+      ]
+    },
+    {
+      "id": "LD015",
+      "name": "observe_selected_ai_tab",
+      "category": "browser",
+      "purpose": "Read-only identity/message/composer observation with contract digest.",
+      "phase": "V2",
+      "effect_class": "LOCAL_READ",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "read-only and bounded",
+        "DOM/coverage gaps reported"
+      ]
+    },
+    {
+      "id": "LD016",
+      "name": "provider_classifier",
+      "category": "browser",
+      "purpose": "Classify Grok chat/Grok Build/other AI for routing without granting identity/permission.",
+      "phase": "V2",
+      "effect_class": "DATA_ONLY",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "classification has DATA_ONLY authority"
+      ]
+    },
+    {
+      "id": "LD017",
+      "name": "grok_selected_tab_send",
+      "category": "browser",
+      "purpose": "Use current durable packet/effect-intent/send-once runtime with exact target revalidation.",
+      "phase": "V2",
+      "effect_class": "AI_MESSAGE",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "effect intent before click",
+        "send once",
+        "unknown never blind-retried"
+      ]
+    },
+    {
+      "id": "LD018",
+      "name": "grok_response_readback",
+      "category": "browser",
+      "purpose": "Correlate and persist response to exact target/request/attempt.",
+      "phase": "V2",
+      "effect_class": "LOCAL_READ",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "response correlated to request/conversation"
+      ]
+    },
+    {
+      "id": "LD019",
+      "name": "long_chat_observer",
+      "category": "browser",
+      "purpose": "Capture virtualized/long conversation with explicit coverage/gaps and bounded memory.",
+      "phase": "V2",
+      "effect_class": "LOCAL_READ",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "virtualized chat coverage measured",
+        "no infinite DOM growth"
+      ]
+    },
+    {
+      "id": "LD020",
+      "name": "human_takeover_detector",
+      "category": "browser",
+      "purpose": "Detect user editing/focus changes and fence automated send until revalidation.",
+      "phase": "V2",
+      "effect_class": "LOCAL_READ",
+      "reuse_owners": [
+        "content-lab/browser_cdp.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "user typing/focus takeover fences send"
+      ]
+    },
+    {
+      "id": "LD021",
+      "name": "laya_local_runtime_adapter",
+      "category": "laya",
+      "purpose": "Pinned local Laya ONNX/TS integration with model/checkpoint digest and health.",
+      "phase": "V3",
+      "effect_class": "DATA_ONLY",
+      "reuse_owners": [
+        "content-lab/action_intent.py",
+        "content-lab/occ-config/",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "checkpoint/version/digest pinned",
+        "offline health/readback"
+      ]
+    },
+    {
+      "id": "LD022",
+      "name": "laya_question_runner",
+      "category": "laya",
+      "purpose": "Execute versioned choice/score/noul catalog with thresholds and abstention.",
+      "phase": "V3",
+      "effect_class": "DATA_ONLY",
+      "reuse_owners": [
+        "content-lab/action_intent.py",
+        "content-lab/occ-config/",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "schema/version/threshold recorded",
+        "ABSTAIN supported"
+      ]
+    },
+    {
+      "id": "LD023",
+      "name": "laya_mission_router",
+      "category": "laya",
+      "purpose": "Route mission state to registered workflow IDs only.",
+      "phase": "V3",
+      "effect_class": "DATA_ONLY",
+      "reuse_owners": [
+        "content-lab/action_intent.py",
+        "content-lab/occ-config/",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "only registered workflow IDs returned"
+      ]
+    },
+    {
+      "id": "LD024",
+      "name": "laya_repo_pack_router",
+      "category": "laya",
+      "purpose": "Select repo pack mode/dependency breadth from goal and evidence.",
+      "phase": "V3",
+      "effect_class": "DATA_ONLY",
+      "reuse_owners": [
+        "content-lab/action_intent.py",
+        "content-lab/occ-config/",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "whole/focused choice explainable via probabilities"
+      ]
+    },
+    {
+      "id": "LD025",
+      "name": "laya_ai_response_router",
+      "category": "laya",
+      "purpose": "Classify AI response and select verifier/context/coding/stop workflow.",
+      "phase": "V3",
+      "effect_class": "DATA_ONLY",
+      "reuse_owners": [
+        "content-lab/action_intent.py",
+        "content-lab/occ-config/",
+        "agent-bridge/"
+      ],
+      "acceptance": [
+        "completion claim routes to verifier",
+        "scope expansion cannot auto-grant"
+      ]
+    },
+    {
+      "id": "LD026",
+      "name": "mission_create",
+      "category": "mission",
+      "purpose": "Persist goal, criteria, repo revision, selected target and budgets.",
+      "phase": "V3",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/automation_core.py",
+        "content-lab/action_intent.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "immutable mission revision and criteria"
+      ]
+    },
+    {
+      "id": "LD027",
+      "name": "mission_preview",
+      "category": "mission",
+      "purpose": "Render deterministic plan preview and missing slots before effects.",
+      "phase": "V3",
+      "effect_class": "LOCAL_READ",
+      "reuse_owners": [
+        "content-lab/automation_core.py",
+        "content-lab/action_intent.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "no external effect from preview"
+      ]
+    },
+    {
+      "id": "LD028",
+      "name": "mission_step",
+      "category": "mission",
+      "purpose": "Run exactly one admitted workflow step and store verifier receipt.",
+      "phase": "V3",
+      "effect_class": "VARIES",
+      "reuse_owners": [
+        "content-lab/automation_core.py",
+        "content-lab/action_intent.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "one durable admitted step per transition"
+      ]
+    },
+    {
+      "id": "LD029",
+      "name": "mission_loop",
+      "category": "mission",
+      "purpose": "Repeat context→Laya→plan→executor→verify→feedback under stop/attempt gates.",
+      "phase": "V3",
+      "effect_class": "VARIES",
+      "reuse_owners": [
+        "content-lab/automation_core.py",
+        "content-lab/action_intent.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "bounded attempts",
+        "STOP",
+        "blocking UNKNOWN halts unsafe continuation"
+      ]
+    },
+    {
+      "id": "LD030",
+      "name": "mission_feedback_doc",
+      "category": "mission",
+      "purpose": "Generate compact evidence document for next AI/Laya step.",
+      "phase": "V3",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/automation_core.py",
+        "content-lab/action_intent.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "evidence/gaps/questions and exact refs included"
+      ]
+    },
+    {
+      "id": "LD031",
+      "name": "mission_need_context",
+      "category": "mission",
+      "purpose": "Resolve explicit missing context against canonical sources and resume same revision.",
+      "phase": "V3",
+      "effect_class": "LOCAL_READ_WRITE",
+      "reuse_owners": [
+        "content-lab/automation_core.py",
+        "content-lab/action_intent.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "delta packet tied to same mission/request"
+      ]
+    },
+    {
+      "id": "LD032",
+      "name": "mission_gap_request",
+      "category": "mission",
+      "purpose": "Create typed Development Request for unknown capability.",
+      "phase": "V3",
+      "effect_class": "LOCAL_WRITE",
+      "reuse_owners": [
+        "content-lab/automation_core.py",
+        "content-lab/action_intent.py",
+        "content-lab/action_runtime.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "unknown capability becomes proposal-only development request"
+      ]
+    },
+    {
+      "id": "LD033",
+      "name": "grok_build_web_transport",
+      "category": "grok_build",
+      "purpose": "Provider-specific WEB_SELECTED_TAB adapter using the same current contracts.",
+      "phase": "V4",
+      "effect_class": "AI_MESSAGE",
+      "reuse_owners": [
+        "content-lab/action_runtime.py",
+        "content-lab/action_intent.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "same TargetBinding/Packet/Receipt contract"
+      ]
+    },
+    {
+      "id": "LD034",
+      "name": "grok_build_headless_transport",
+      "category": "grok_build",
+      "purpose": "Registered Grok Build CLI transport with fixed argv, pinned cwd and streaming JSON receipt.",
+      "phase": "V4",
+      "effect_class": "LOCAL_PROCESS",
+      "reuse_owners": [
+        "content-lab/action_runtime.py",
+        "content-lab/action_intent.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "fixed binary/argv/cwd policy",
+        "streaming JSON captured",
+        "no free shell"
+      ]
+    },
+    {
+      "id": "LD035",
+      "name": "grok_build_acp_transport",
+      "category": "grok_build",
+      "purpose": "ACP client transport sharing mission/packet/result contracts.",
+      "phase": "V4",
+      "effect_class": "LOCAL_PROCESS",
+      "reuse_owners": [
+        "content-lab/action_runtime.py",
+        "content-lab/action_intent.py",
+        "desktop/actions_ui.py"
+      ],
+      "acceptance": [
+        "ACP session bound to mission/repo revision"
+      ]
+    },
+    {
+      "id": "LD036",
+      "name": "ui_logical_pack_explorer",
+      "category": "desktop",
+      "purpose": "Browse groups/files/parts/coverage and choose a pack without raw IDs.",
+      "phase": "V4",
+      "effect_class": "UI",
+      "reuse_owners": [
+        "desktop/app.py",
+        "desktop/actions_ui.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "acceptance": [
+        "operator can build/open each mode without IDs"
+      ]
+    },
+    {
+      "id": "LD037",
+      "name": "ui_ai_targets_panel",
+      "category": "desktop",
+      "purpose": "Tab discovery, selection, binding, observe/send/readback controls.",
+      "phase": "V4",
+      "effect_class": "UI",
+      "reuse_owners": [
+        "desktop/app.py",
+        "desktop/actions_ui.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "acceptance": [
+        "refresh/select/bind/observe/send/readback/STOP visible"
+      ]
+    },
+    {
+      "id": "LD038",
+      "name": "ui_mission_timeline",
+      "category": "desktop",
+      "purpose": "Visual durable mission state/receipts/blockers/next step/STOP.",
+      "phase": "V4",
+      "effect_class": "UI",
+      "reuse_owners": [
+        "desktop/app.py",
+        "desktop/actions_ui.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "acceptance": [
+        "current durable state/blocker/receipt visible"
+      ]
+    },
+    {
+      "id": "LD039",
+      "name": "ui_laya_inspector",
+      "category": "desktop",
+      "purpose": "Show question/version/probabilities/thresholds/policy result.",
+      "phase": "V4",
+      "effect_class": "UI",
+      "reuse_owners": [
+        "desktop/app.py",
+        "desktop/actions_ui.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "acceptance": [
+        "questions/probabilities/threshold/policy visible"
+      ]
+    },
+    {
+      "id": "LD040",
+      "name": "ui_capability_registry",
+      "category": "desktop",
+      "purpose": "Show capability/effect/executor/verifier/qualification/invalidation.",
+      "phase": "V4",
+      "effect_class": "UI",
+      "reuse_owners": [
+        "desktop/app.py",
+        "desktop/actions_ui.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "acceptance": [
+        "effect/verifier/qualification visible"
+      ]
+    },
+    {
+      "id": "LD041",
+      "name": "installed_launcher_repo_workbench",
+      "category": "desktop",
+      "purpose": "Ensure installed Start Menu launch opens Workbench with external store/profile.",
+      "phase": "V5",
+      "effect_class": "LOCAL_INSTALL",
+      "reuse_owners": [
+        "desktop/app.py",
+        "desktop/actions_ui.py",
+        "desktop/client.py",
+        "desktop/install.py"
+      ],
+      "acceptance": [
+        "launch works from installed version without checkout"
+      ]
+    },
+    {
+      "id": "LD042",
+      "name": "device_qualify_selected_tab_loop",
+      "category": "qualification",
+      "purpose": "Frozen Windows corpus for tab binding, Grok read/write/restart/STOP/human takeover.",
+      "phase": "V5",
+      "effect_class": "DEVICE_QUALIFICATION",
+      "reuse_owners": [
+        "content-lab/test_action_runtime.py",
+        "content-lab/test_browser_cdp.py",
+        "desktop/tests/"
+      ],
+      "acceptance": [
+        "0 wrong-target sends in frozen corpus",
+        "crash/ack-loss/STOP/takeover cases tested"
+      ]
+    }
+  ]
+}
