@@ -343,20 +343,40 @@ class MissionKernel:
                 'sha256':archive['txt_sha256'],'archive':archive,'library_receipts':receipts}
 
     def poll_system2(self,job_id,mission):
-        result=self.bridge.codex_result(job_id)
-        job=result.get('job') if isinstance(result,dict) else None
-        if not isinstance(job,dict):raise ValueError('SYSTEM2_RESULT_SCHEMA')
-        if job.get('state')!='COMPLETE':return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','system2_job':job}
-        text=result.get('text')
+        provider_id='local_codex';session_summary=None;local_job_id=None
+        if self.system2_registry and self.system2_registry.enabled and self.system2_registry.is_session(job_id):
+            session=self.system2_registry.poll(job_id);session_summary=session
+            provider_id=session.get('provider_id') or 'unknown'
+            state=session.get('state')
+            local_job_id=session.get('local_job_id')
+            if state in {'WAITING','SUBMITTING','UNKNOWN_EFFECT'}:
+                return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','system2_session':session,
+                        'system2_provider':provider_id,'provider_state':state}
+            if state!='COMPLETE':
+                return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_BLOCKED','system2_session':session,
+                        'system2_provider':provider_id,'provider_state':state,'reason':session.get('error')}
+            payload=session.get('result') or {}
+            text=payload.get('text');digest=payload.get('sha256') or (hashlib.sha256(text.encode()).hexdigest() if isinstance(text,str) else None)
+            job={'id':local_job_id or job_id,'state':'COMPLETE','provider_id':provider_id,'session_id':job_id}
+        else:
+            result=self.bridge.codex_result(job_id)
+            job=result.get('job') if isinstance(result,dict) else None
+            if not isinstance(job,dict):raise ValueError('SYSTEM2_RESULT_SCHEMA')
+            if job.get('state')!='COMPLETE':return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','system2_job':job,'system2_provider':provider_id}
+            text=result.get('text');digest=result.get('sha256') or (hashlib.sha256(text.encode()).hexdigest() if isinstance(text,str) else None)
+            local_job_id=job_id
         if not isinstance(text,str) or not text:raise ValueError('SYSTEM2_RESULT_EMPTY')
-        digest=result.get('sha256') or hashlib.sha256(text.encode()).hexdigest()
-        path=self.root/('system2_'+job_id+'_'+digest[:10]+'.txt');path.write_text(text,encoding='utf-8')
+        if not isinstance(digest,str) or len(digest)!=64:digest=hashlib.sha256(text.encode()).hexdigest()
+        safe_provider=''.join(ch if ch.isalnum() or ch in '._-' else '_' for ch in str(provider_id))[:50] or 'provider'
+        path=self.root/('system2_'+safe_provider+'_'+str(job_id)[:40]+'_'+digest[:10]+'.txt');path.write_text(text,encoding='utf-8')
         receipt=self.core.capture_file(path,'system2_'+digest[:20])
-        try:self.core.annotate_capture(receipt,project='AgentOS',note='System2 result job='+job_id,labels=['source:system2','type:ai-result'])
+        try:self.core.annotate_capture(receipt,project='AgentOS',note='System2 provider='+str(provider_id)+' session='+str(job_id),
+                                       labels=['source:system2','type:ai-result','provider:'+safe_provider])
         except Exception:pass
         candidate=None;capability_pr=None
-        if self.candidate_pipeline and {'LOCAL_WRITE','GIT_WRITE'} & set(mission.get('effects',[])):
-            try:candidate=self.candidate_pipeline.try_qualify_job(job_id)
+        # Only the local Codex sandbox owns executable proposal artifacts.
+        if local_job_id and self.candidate_pipeline and {'LOCAL_WRITE','GIT_WRITE'} & set(mission.get('effects',[])):
+            try:candidate=self.candidate_pipeline.try_qualify_job(local_job_id)
             except Exception as exc:candidate={'state':'CAPABILITY_CANDIDATE_BLOCKED','reason':str(exc)}
         if isinstance(candidate,dict) and candidate.get('state')=='ISOLATED_TESTED' and self.github_pipeline and 'GITHUB_WRITE' in set(mission.get('effects',[])):
             try:capability_pr=self.github_pipeline.publish(candidate,mission.get('effects',[]))
@@ -364,5 +384,6 @@ class MissionKernel:
         final_state='SYSTEM2_RESULT_INGESTED'
         if isinstance(candidate,dict) and candidate.get('state')=='ISOLATED_TESTED':final_state='CAPABILITY_CANDIDATE_TESTED'
         if isinstance(capability_pr,dict) and capability_pr.get('state')=='PR_OPEN':final_state='CAPABILITY_PR_OPEN'
-        return {'schema':'voice-agentos.mission-step.v1','state':final_state,'system2_job':job,'text':text,'sha256':digest,
-                'path':str(path),'library_receipt':receipt,'capability_candidate':candidate,'capability_pr':capability_pr}
+        return {'schema':'voice-agentos.mission-step.v1','state':final_state,'system2_job':job,'system2_session':session_summary,
+                'system2_provider':provider_id,'text':text,'sha256':digest,'path':str(path),'library_receipt':receipt,
+                'capability_candidate':candidate,'capability_pr':capability_pr}
