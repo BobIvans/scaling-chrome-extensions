@@ -157,5 +157,29 @@
     "laya_override_margin": 12,
     "human_quiet_ms": 1800,
     "max_parallel_lanes": 3
+  },
+  "system2_providers": {
+    "enabled": true,
+    "default_provider": "local_codex",
+    "providers": {
+      "local_codex": {
+        "kind": "LOCAL_CODEX",
+        "enabled": true,
+        "roles": [
+          "PLANNER",
+          "RESEARCHER",
+          "CODER",
+          "CRITIC",
+          "DEBUGGER",
+          "TOOL_DESIGNER",
+          "CONTEXT_EDITOR",
+          "EXPERIMENT_DESIGNER",
+          "SYNTHESIZER"
+        ],
+        "priority": 100,
+        "estimated_latency_ms": 5000,
+        "supports_artifacts": true
+      }
+    }
   }
 }
