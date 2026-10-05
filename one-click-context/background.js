@@ -397,7 +397,7 @@ chrome.runtime.onInstalled.addListener(() => {
     chrome.contextMenus.create({id: 'capture-document', title: 'Собрать открытый документ', contexts: ['action']});
     chrome.contextMenus.create({id: 'capture-both', title: 'Собрать переписку + документ', contexts: ['action']});
     chrome.contextMenus.create({id: 'loaded', title: 'Собрать загруженный текст без прокрутки', contexts: ['action']});
-    chrome.contextMenus.create({id: 'agentos-enable', title: 'Включить локальный AgentOS bridge', contexts: ['action']});
+    chrome.contextMenus.create({id: 'agentos-enable', title: 'Включить локальный AgentOS bridge для HTTP(S) сайтов', contexts: ['action']});
   });
 });
 void chrome.storage.local.setAccessLevel?.({accessLevel: 'TRUSTED_CONTEXTS'});
@@ -406,9 +406,9 @@ chrome.contextMenus.onClicked.addListener((info, tab) => {
   if (info.menuItemId === 'library') void chrome.tabs.create({url: chrome.runtime.getURL('library.html')});
   if (info.menuItemId === 'loaded') void run(tab, false);
   if (info.menuItemId === 'agentos-enable') {
-    void chrome.permissions.request({permissions: ['nativeMessaging']}).then(granted => {
+    void chrome.permissions.request({permissions: ['nativeMessaging','tabs'], origins:['https://*/*','http://*/*']}).then(granted => {
       if (granted) return ensureAgentOSNativeBridge();
-      throw new Error('NATIVE_PERMISSION_REQUIRED');
+      throw new Error('AGENTOS_BROWSER_PERMISSION_REQUIRED');
     }).catch(() => {});
   }
   if (info.menuItemId === 'capture-chat') void run(tab, true, 'chat');
