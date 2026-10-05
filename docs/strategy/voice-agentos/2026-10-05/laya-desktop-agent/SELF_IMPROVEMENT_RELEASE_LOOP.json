@@ -1,0 +1,113 @@
+{
+  "schema": "voice-agentos.self-improvement-release-loop.v1",
+  "invariant": "Running stable controller never grants candidate code authority over its own promotion.",
+  "states": [
+    "GAP",
+    "SPECIFIED",
+    "CANDIDATE",
+    "ISOLATED_TESTED",
+    "HELDOUT_PASS",
+    "PR_OPEN",
+    "CI_PASS",
+    "MERGE_VERIFIED",
+    "ARTIFACT_BUILT",
+    "STAGED_VERIFIED",
+    "CANARY_PASS",
+    "INSTALLED_OBSERVED",
+    "DEVICE_QUALIFIED",
+    "ACTIVATED",
+    "ROLLED_BACK",
+    "BLOCKED"
+  ],
+  "workflow": [
+    {
+      "id": "detect_gap",
+      "owner": "Goal/Cognitive Relay",
+      "output": "GapSpec"
+    },
+    {
+      "id": "design",
+      "owner": "System2 TOOL_DESIGNER",
+      "output": "ToolCandidate/ImplementationPlan"
+    },
+    {
+      "id": "implement",
+      "owner": "isolated coding worker",
+      "output": "worktree patch"
+    },
+    {
+      "id": "test",
+      "owner": "registered test executor",
+      "output": "unit/fault/heldout receipts"
+    },
+    {
+      "id": "review",
+      "owner": "critic/static verifier",
+      "output": "promotion recommendation"
+    },
+    {
+      "id": "pr",
+      "owner": "GitHub executor",
+      "output": "PR URL + exact head SHA"
+    },
+    {
+      "id": "ci",
+      "owner": "GitHub/CI observer",
+      "output": "required checks receipt"
+    },
+    {
+      "id": "merge",
+      "owner": "GitHub merge executor",
+      "preconditions": [
+        "explicit merge scope",
+        "exact expected PR head",
+        "required checks current"
+      ],
+      "output": "remote merge SHA"
+    },
+    {
+      "id": "build",
+      "owner": "release builder",
+      "output": "artifact hash + build provenance"
+    },
+    {
+      "id": "stage",
+      "owner": "content-lab/release_updater.py",
+      "output": "STAGED_VERIFIED"
+    },
+    {
+      "id": "canary",
+      "owner": "stable controller",
+      "output": "canary receipt"
+    },
+    {
+      "id": "qualify",
+      "owner": "independent verifier",
+      "output": "installed/device qualification receipt"
+    },
+    {
+      "id": "activate",
+      "owner": "stable updater pointer owner",
+      "output": "activation receipt"
+    },
+    {
+      "id": "resume",
+      "owner": "Goal Kernel",
+      "output": "original mission resumes from checkpoint"
+    }
+  ],
+  "rollback": [
+    "Candidate health/readback fails",
+    "Schema migration rehearsal fails",
+    "Device qualification fails",
+    "New version cannot deserialize continuation",
+    "Critical capability regression"
+  ],
+  "forbidden_shortcuts": [
+    "model says tests pass",
+    "PR merged message without remote verification",
+    "git pull treated as installed update",
+    "candidate overwrites stable version in-place",
+    "candidate grants itself new effect scope"
+  ]
+}

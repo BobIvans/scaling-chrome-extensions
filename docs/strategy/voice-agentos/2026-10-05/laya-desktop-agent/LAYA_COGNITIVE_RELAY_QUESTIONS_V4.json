@@ -1,0 +1,370 @@
+{
+  "schema": "voice-agentos.laya-cognitive-relay-questions.v4",
+  "purpose": "Questions optimized for deciding when to use System-2, what to ask it, and how to turn its result into the fastest verified next step.",
+  "sets": [
+    {
+      "id": "system2_escalation",
+      "questions": {
+        "need_system2": {
+          "type": "noul",
+          "instructions": "Does the next useful step require novel reasoning/design/code beyond an existing qualified recipe?"
+        },
+        "role": {
+          "type": "choice",
+          "criteria": [
+            "PLANNER",
+            "RESEARCHER",
+            "CODER",
+            "CRITIC",
+            "DEBUGGER",
+            "TOOL_DESIGNER",
+            "CONTEXT_EDITOR",
+            "EXPERIMENT_DESIGNER",
+            "SYNTHESIZER",
+            "NONE"
+          ]
+        },
+        "urgency": {
+          "type": "score",
+          "criteria": [
+            "LOW",
+            "NORMAL",
+            "HIGH",
+            "BLOCKING",
+            "CRITICAL_PATH"
+          ]
+        },
+        "expected_value": {
+          "type": "score",
+          "criteria": [
+            "VERY_LOW",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "VERY_HIGH"
+          ]
+        }
+      }
+    },
+    {
+      "id": "provider_transport",
+      "questions": {
+        "transport": {
+          "type": "choice",
+          "criteria": [
+            "SELECTED_WEB_TAB",
+            "GROK_BUILD_HEADLESS",
+            "GROK_BUILD_ACP",
+            "CODEX_LOCAL",
+            "API_PROVIDER",
+            "OTHER_REGISTERED",
+            "ABSTAIN"
+          ]
+        },
+        "conversation_continuity_value": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "REQUIRED"
+          ]
+        },
+        "machine_readability_value": {
+          "type": "score",
+          "criteria": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "CRITICAL",
+            "REQUIRED"
+          ]
+        },
+        "transport_qualified": {
+          "type": "noul",
+          "instructions": "Is this exact transport/provider/session mode qualified for the requested operation?"
+        }
+      }
+    },
+    {
+      "id": "question_compiler",
+      "questions": {
+        "question_kind": {
+          "type": "choice",
+          "criteria": [
+            "NEXT_ACTION",
+            "MISSING_CONTEXT",
+            "ROOT_CAUSE",
+            "TOOL_DESIGN",
+            "PATCH",
+            "EXPERIMENT",
+            "ALTERNATIVE_PLAN",
+            "COUNTEREXAMPLE",
+            "SUMMARIZE_EVIDENCE",
+            "VERIFY_CLAIM"
+          ]
+        },
+        "scope_breadth": {
+          "type": "score",
+          "criteria": [
+            "ONE_FACT",
+            "NARROW",
+            "MODULE",
+            "MULTI_DOMAIN",
+            "STRATEGIC"
+          ]
+        },
+        "context_need": {
+          "type": "score",
+          "criteria": [
+            "MINIMAL",
+            "SMALL",
+            "MEDIUM",
+            "LARGE",
+            "MAX_RELEVANT"
+          ]
+        },
+        "ask_for_structured_result": {
+          "type": "noul",
+          "instructions": "Would a typed result schema materially improve safe automatic continuation?"
+        }
+      }
+    },
+    {
+      "id": "capability_gap_resolution",
+      "questions": {
+        "best_route": {
+          "type": "choice",
+          "criteria": [
+            "REUSE_REGISTERED",
+            "COMPOSE_REGISTERED",
+            "WIRE_DORMANT_CODE",
+            "IMPORT_GITHUB_TOOL",
+            "ASK_SYSTEM2_ADAPTER",
+            "ASK_SYSTEM2_NEW_TOOL",
+            "MANUAL_SCOPE_NEEDED",
+            "IMPOSSIBLE_NOW",
+            "ABSTAIN"
+          ]
+        },
+        "unlock_value": {
+          "type": "score",
+          "criteria": [
+            "ONE_TASK",
+            "FEW_TASKS",
+            "PROJECT_LEVEL",
+            "MULTI_PROJECT",
+            "PLATFORM_LEVEL"
+          ]
+        },
+        "implementation_risk": {
+          "type": "score",
+          "criteria": [
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "DEVICE_DEPENDENT",
+            "EXTERNAL_EFFECT_HEAVY"
+          ]
+        },
+        "build_now": {
+          "type": "noul",
+          "instructions": "Is building this capability now higher expected value than routing around the gap?"
+        }
+      }
+    },
+    {
+      "id": "self_update_gate",
+      "questions": {
+        "stage": {
+          "type": "choice",
+          "criteria": [
+            "CODE_ONLY",
+            "TESTED_LOCAL",
+            "PR_READY",
+            "CI_READY",
+            "MERGE_READY",
+            "BUILD_READY",
+            "STAGE_INSTALL",
+            "CANARY",
+            "ACTIVATE",
+            "ROLLBACK",
+            "ABSTAIN"
+          ]
+        },
+        "evidence_complete": {
+          "type": "noul",
+          "instructions": "Are all required receipts for this promotion stage present and current?"
+        },
+        "old_controller_can_rollback": {
+          "type": "noul",
+          "instructions": "Can the stable controller restore the prior installed version without relying on the candidate itself?"
+        },
+        "resume_mission_after_update": {
+          "type": "noul",
+          "instructions": "Is the original mission checkpoint schema-compatible with the candidate version?"
+        }
+      }
+    },
+    {
+      "id": "parallel_rnd_allocation",
+      "questions": {
+        "lane": {
+          "type": "choice",
+          "criteria": [
+            "SOURCE_RESEARCH",
+            "REPO_ANALYSIS",
+            "CODE_ANALYSIS",
+            "TEST_EXPERIMENT",
+            "PROVIDER_RESEARCH",
+            "DOC_SYNTHESIS",
+            "CAPABILITY_BUILD",
+            "PAPER_SIMULATION",
+            "WAITING",
+            "EXCLUSIVE_EFFECT"
+          ]
+        },
+        "expected_information_gain": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "LOW",
+            "MEDIUM",
+            "HIGH",
+            "VERY_HIGH"
+          ]
+        },
+        "blocks_critical_path": {
+          "type": "noul",
+          "instructions": "Does this lane unblock or validate the current critical path?"
+        },
+        "safe_parallel": {
+          "type": "noul",
+          "instructions": "Can this lane run without a mutable-resource conflict?"
+        }
+      }
+    },
+    {
+      "id": "result_to_next_action",
+      "questions": {
+        "result_kind": {
+          "type": "choice",
+          "criteria": [
+            "NEW_FACT",
+            "NEW_SOURCE",
+            "PLAN",
+            "PATCH",
+            "TEST_RESULT",
+            "TOOL_CANDIDATE",
+            "CAPABILITY_PROMOTED",
+            "BLOCKER",
+            "WAIT_CONDITION",
+            "COMPLETION_CLAIM",
+            "UNKNOWN"
+          ]
+        },
+        "next_route": {
+          "type": "choice",
+          "criteria": [
+            "INGEST",
+            "VERIFY",
+            "ASK_SYSTEM2",
+            "RUN_REGISTERED",
+            "BUILD_TOOL",
+            "UPDATE_APP",
+            "PARALLEL_RESEARCH",
+            "WAIT",
+            "REPLAN",
+            "CLOSE",
+            "STOP"
+          ]
+        },
+        "materially_changes_frontier": {
+          "type": "noul",
+          "instructions": "Does this result invalidate/reorder current H1 future actions?"
+        }
+      }
+    },
+    {
+      "id": "context_seller",
+      "questions": {
+        "audience": {
+          "type": "choice",
+          "criteria": [
+            "GROK_WEB",
+            "GROK_BUILD",
+            "CODEX",
+            "CHATGPT",
+            "OTHER_LLM",
+            "HUMAN"
+          ]
+        },
+        "pack_type": {
+          "type": "choice",
+          "criteria": [
+            "MINIMAL_TASK",
+            "CODE_FEATURE",
+            "FAILURE_CONE",
+            "RND_EVIDENCE",
+            "WHOLE_ARCHITECTURE",
+            "DELTA",
+            "HANDOFF",
+            "TOOL_DESIGN"
+          ]
+        },
+        "include_raw_code": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "SNIPPETS",
+            "RELATED_FILES",
+            "MODULE",
+            "MAX_RELEVANT"
+          ]
+        },
+        "enough_for_receiver": {
+          "type": "noul",
+          "instructions": "Does this packet contain the exact evidence/code/contracts needed for the receiver to produce the requested result without avoidable follow-up?"
+        }
+      }
+    },
+    {
+      "id": "flashloan_rnd_router",
+      "questions": {
+        "lane": {
+          "type": "choice",
+          "criteria": [
+            "DATA_SOURCE_DISCOVERY",
+            "MARKET_DATA_INGEST",
+            "STRATEGY_HYPOTHESIS",
+            "SIMULATION",
+            "EXECUTION_STACK_RESEARCH",
+            "RPC_INFRA",
+            "JITO_RESEARCH",
+            "DEX_AGGREGATOR",
+            "RISK_ECONOMICS",
+            "TEST_FAILURE",
+            "CODE_PATCH",
+            "QUALIFICATION_REPORT",
+            "ABSTAIN"
+          ]
+        },
+        "evidence_strength": {
+          "type": "score",
+          "criteria": [
+            "NONE",
+            "WEAK",
+            "PARTIAL",
+            "STRONG",
+            "DIRECT"
+          ]
+        },
+        "paper_or_sim_only": {
+          "type": "noul",
+          "instructions": "Should this work remain in paper/simulation mode because live signer/economic qualification is absent?"
+        }
+      }
+    }
+  ]
+}

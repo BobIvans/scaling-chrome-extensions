@@ -1,0 +1,83 @@
+{
+  "schema": "voice-agentos.flashloan-rnd-mission-template.v1",
+  "default_mode": "RND_CAMPAIGN",
+  "default_live_effects": "DISABLED",
+  "goal_example": "Improve the evidence and implementation quality of a Solana flash-loan/arbitrage system until qualification criteria are met.",
+  "parallel_lanes": [
+    {
+      "id": "sources",
+      "tasks": [
+        "discover current public/free market data sources",
+        "verify API limits/auth/latency",
+        "map to repo adapters"
+      ]
+    },
+    {
+      "id": "execution_stack",
+      "tasks": [
+        "research Jupiter/OpenOcean/other aggregator interfaces",
+        "RPC/WebSocket/streaming options",
+        "Jito-related execution evidence"
+      ]
+    },
+    {
+      "id": "repo",
+      "tasks": [
+        "whole/delta scan",
+        "runtime path",
+        "error cone",
+        "tech debt",
+        "test gaps"
+      ]
+    },
+    {
+      "id": "hypotheses",
+      "tasks": [
+        "derive strategy hypotheses",
+        "identify measurable assumptions",
+        "request System2 experiment designs"
+      ]
+    },
+    {
+      "id": "simulation",
+      "tasks": [
+        "paper replay",
+        "cost/fee/slippage assumptions",
+        "negative outcomes",
+        "counterexamples"
+      ]
+    },
+    {
+      "id": "code",
+      "tasks": [
+        "prepare exact context packet for Grok/Codex",
+        "implement isolated patch",
+        "run tests",
+        "record receipts"
+      ]
+    },
+    {
+      "id": "qualification",
+      "tasks": [
+        "compile evidence matrix",
+        "open gaps",
+        "next experiments",
+        "no live signer claim"
+      ]
+    }
+  ],
+  "context_products": [
+    "DATA_SOURCE_PACK",
+    "EXECUTION_STACK_PACK",
+    "STRATEGY_HYPOTHESIS_PACK",
+    "FAILURE_CONE_PACK",
+    "CODE_FEATURE_PACK",
+    "QUALIFICATION_DELTA_PACK"
+  ],
+  "completion_requires": [
+    "Every claimed capability tied to current code/test evidence.",
+    "Economics include fees/slippage/latency and negative outcomes.",
+    "Paper/simulation results never become live-trading authorization.",
+    "Live signer/sender remains a separate explicit qualification gate."
+  ]
+}

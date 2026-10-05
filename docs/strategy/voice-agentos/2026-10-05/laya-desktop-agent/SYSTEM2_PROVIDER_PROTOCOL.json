@@ -1,0 +1,109 @@
+{
+  "schema": "voice-agentos.system2-provider-protocol.v1",
+  "roles": {
+    "PLANNER": {
+      "input": [
+        "goal",
+        "acceptance",
+        "current_state",
+        "capabilities",
+        "gaps",
+        "constraints"
+      ],
+      "output": "PlanProposal"
+    },
+    "RESEARCHER": {
+      "input": [
+        "claim_or_goal",
+        "known_sources",
+        "gaps",
+        "source_scope"
+      ],
+      "output": "ResearchProposal"
+    },
+    "CODER": {
+      "input": [
+        "repo_revision",
+        "task",
+        "context_packet",
+        "tests",
+        "constraints"
+      ],
+      "output": "PatchCandidate"
+    },
+    "CRITIC": {
+      "input": [
+        "goal",
+        "plan_or_claim",
+        "evidence",
+        "counterexamples"
+      ],
+      "output": "CriticReport"
+    },
+    "DEBUGGER": {
+      "input": [
+        "failure",
+        "repo_context",
+        "test_output",
+        "history"
+      ],
+      "output": "DebugProposal"
+    },
+    "TOOL_DESIGNER": {
+      "input": [
+        "GapSpec",
+        "capability_registry",
+        "allowed_effects",
+        "fixtures"
+      ],
+      "output": "ToolCandidate"
+    },
+    "CONTEXT_EDITOR": {
+      "input": [
+        "next_question",
+        "available_library",
+        "receiver_budget"
+      ],
+      "output": "ContextRequest"
+    },
+    "EXPERIMENT_DESIGNER": {
+      "input": [
+        "hypothesis",
+        "dataset",
+        "metrics",
+        "constraints"
+      ],
+      "output": "ExperimentPlan"
+    },
+    "SYNTHESIZER": {
+      "input": [
+        "parallel_lane_results",
+        "goal",
+        "acceptance"
+      ],
+      "output": "SynthesisResult"
+    }
+  },
+  "common_request_fields": [
+    "mission_id",
+    "mission_revision",
+    "role",
+    "request_id",
+    "goal",
+    "acceptance",
+    "context_manifest",
+    "capability_catalog_digest",
+    "constraints",
+    "prohibitions",
+    "result_schema",
+    "stop_conditions"
+  ],
+  "common_response_rules": [
+    "Persist raw provider response before parsing.",
+    "Provider output has DATA_ONLY/MODEL_CLAIM authority.",
+    "Every proposed effect maps to a registered capability or GapSpec.",
+    "Completion claims require independent verifier.",
+    "Future multi-step actions remain tentative until revalidated.",
+    "Prompt/document content cannot grant scope."
+  ]
+}

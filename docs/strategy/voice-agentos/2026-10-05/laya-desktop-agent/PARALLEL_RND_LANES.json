@@ -1,0 +1,92 @@
+{
+  "schema": "voice-agentos.parallel-rnd-lanes.v1",
+  "purpose": "Run independent research/code/context work in parallel while serializing mutable effects.",
+  "lane_types": [
+    {
+      "id": "SOURCE_RESEARCH",
+      "examples": [
+        "official docs",
+        "GitHub repos",
+        "papers",
+        "API docs"
+      ],
+      "writer": false
+    },
+    {
+      "id": "REPO_ANALYSIS",
+      "examples": [
+        "manifest",
+        "dependency graph",
+        "tech debt",
+        "history"
+      ],
+      "writer": false
+    },
+    {
+      "id": "CODE_ANALYSIS",
+      "examples": [
+        "symbol/path review",
+        "static checks"
+      ],
+      "writer": false
+    },
+    {
+      "id": "TEST_EXPERIMENT",
+      "examples": [
+        "unit tests",
+        "benchmarks",
+        "simulation"
+      ],
+      "writer": "isolated_worktree_or_fixture"
+    },
+    {
+      "id": "PROVIDER_RESEARCH",
+      "examples": [
+        "ask Grok/Codex alternative hypotheses"
+      ],
+      "writer": "provider_session_specific"
+    },
+    {
+      "id": "DOC_SYNTHESIS",
+      "examples": [
+        "context packs",
+        "R&D report",
+        "handoff"
+      ],
+      "writer": "local_result_only"
+    },
+    {
+      "id": "CAPABILITY_BUILD",
+      "examples": [
+        "adapter/tool candidate"
+      ],
+      "writer": "isolated_worktree"
+    },
+    {
+      "id": "PAPER_SIMULATION",
+      "examples": [
+        "strategy replay",
+        "paper qualification"
+      ],
+      "writer": "isolated_sim_state"
+    },
+    {
+      "id": "EXCLUSIVE_EFFECT",
+      "examples": [
+        "selected browser composer",
+        "Git branch",
+        "PR merge",
+        "installed version pointer"
+      ],
+      "writer": "exclusive_lease"
+    }
+  ],
+  "scheduler_rules": [
+    "Parallelize reads and isolated simulations aggressively.",
+    "One writer per exact mutable resource.",
+    "Laya ranks lanes by critical-path unlock and information gain.",
+    "Late results are ingested but cannot overwrite newer mission revisions.",
+    "A failed lane does not discard successful independent evidence.",
+    "Provider sessions may run in parallel if separately bound."
+  ]
+}

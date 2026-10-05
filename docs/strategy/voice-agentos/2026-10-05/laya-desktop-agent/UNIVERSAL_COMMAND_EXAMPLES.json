@@ -1,0 +1,59 @@
+{
+  "schema": "voice-agentos.universal-command-examples.v1",
+  "examples": [
+    {
+      "name": "observe_grok_and_implement_automation",
+      "text": "Observe tab link: https://grok.com/. Goal: research and implement an automation that watches this conversation, downloads useful docs, asks Grok for missing capabilities, implements them safely, updates the app and keeps working until verified.",
+      "expected_route": [
+        "resolve_tab_candidates",
+        "bind_exact_target",
+        "observe",
+        "ingest",
+        "laya_system2_escalation",
+        "capability_gap_if_needed",
+        "self_update_loop",
+        "resume_goal"
+      ]
+    },
+    {
+      "name": "new_grok_conversation_if_context_shifted",
+      "text": "Use the current Grok chat for research, but if the task becomes a large coding implementation start/resume a dedicated Grok Build session with the exact repo context and continue there.",
+      "expected_route": [
+        "selected_web_source",
+        "context_pack",
+        "provider_transport_decision",
+        "grok_build_headless_or_acp",
+        "session_binding",
+        "result_ingest"
+      ]
+    },
+    {
+      "name": "flashloan_parallel_rnd",
+      "text": "For Studious Pancake, run parallel R&D on free data sources, DEX aggregators, RPC/Jito execution, strategy hypotheses and failing code paths. Keep live execution disabled. Build exact code/context packs for Grok or Codex, test proposed changes, and maintain a qualification report.",
+      "expected_route": [
+        "repo_snapshot",
+        "parallel_rnd_allocation",
+        "source_research",
+        "repo_analysis",
+        "paper_simulation",
+        "context_seller",
+        "system2_calls",
+        "tests",
+        "qualification_report"
+      ]
+    },
+    {
+      "name": "capability_self_growth",
+      "text": "If you cannot perform the next useful step because the function is missing, research an existing implementation or ask Grok to design it, build it in isolation, test it, open PR, merge only if admitted, stage/update the app and resume this mission.",
+      "expected_route": [
+        "capability_gap_resolution",
+        "tool_candidate",
+        "isolated_build",
+        "qualification",
+        "pr_ci_merge",
+        "release_update",
+        "resume_checkpoint"
+      ]
+    }
+  ]
+}

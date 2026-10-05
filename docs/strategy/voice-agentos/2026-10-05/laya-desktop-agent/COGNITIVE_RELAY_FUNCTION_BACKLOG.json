@@ -1,0 +1,197 @@
+{
+  "schema": "voice-agentos.cognitive-relay-function-backlog.v1",
+  "functions": [
+    {
+      "id": "CR001",
+      "name": "natural_language_command_parser",
+      "purpose": "Parse free-text local-app commands into UniversalCommand without inferring missing effect permission.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR002",
+      "name": "tab_hint_resolver",
+      "purpose": "Resolve URL/title/active-tab hints into candidate tabs; exact binding remains separate.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR003",
+      "name": "mission_from_free_text",
+      "purpose": "Create UniversalGoal revision from typed/voice command plus selected context/targets.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR004",
+      "name": "decision_state_compactor",
+      "purpose": "Produce bounded Laya state from canonical goal/evidence/frontier.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR005",
+      "name": "system2_escalation_router",
+      "purpose": "Use Laya to decide whether/which System2 role/provider is needed.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR006",
+      "name": "system2_request_compiler",
+      "purpose": "Compile exact role request with context manifest, schemas and stop conditions.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR007",
+      "name": "system2_response_importer",
+      "purpose": "Persist raw response and parse typed Knowledge/Plan/Patch/Tool/Context outputs.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR008",
+      "name": "provider_session_manager",
+      "purpose": "Bind/resume/replace selected web, Grok Build headless and ACP sessions independently of GoalState.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR009",
+      "name": "grok_build_headless_runner",
+      "purpose": "Fixed binary/argv/cwd wrapper using session-id/resume/streaming-json and no-auto-update.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR010",
+      "name": "grok_build_acp_client",
+      "purpose": "ACP JSON-RPC adapter with mission/session correlation and bounded output.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR011",
+      "name": "question_optimizer",
+      "purpose": "Laya chooses smallest/highest-value next System2 question.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR012",
+      "name": "context_seller",
+      "purpose": "Build receiver-specific exact code/context docs for Grok/Codex/other AI.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR013",
+      "name": "parallel_rnd_scheduler",
+      "purpose": "Create independent source/repo/test/provider/simulation lanes from one mission.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR014",
+      "name": "lane_result_synthesizer",
+      "purpose": "Incrementally synthesize parallel evidence without waiting for unrelated slow lanes.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR015",
+      "name": "critical_path_tracker",
+      "purpose": "Track which gap/action blocks the largest expected mission progress.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR016",
+      "name": "capability_gap_leverage_ranker",
+      "purpose": "Rank missing capabilities by downstream mission unlock value.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR017",
+      "name": "dormant_capability_scanner",
+      "purpose": "Search current repo for already-implemented but unwired functionality before generating new code.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR018",
+      "name": "github_tool_candidate_importer",
+      "purpose": "Pin external repo revision/license/deps and create adapter candidate.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR019",
+      "name": "tool_designer_system2_bridge",
+      "purpose": "Ask System2 for typed capability implementation from GapSpec.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR020",
+      "name": "isolated_capability_builder",
+      "purpose": "Build/test candidate only in isolated worktree/sandbox.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR021",
+      "name": "capability_promotion_pipeline",
+      "purpose": "STAGING→CANARY→REGISTERED with qualification/rollback receipts.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR022",
+      "name": "self_update_coordinator",
+      "purpose": "Coordinate PR→CI→exact-head merge→build→stage→canary→activate via stable controller.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR023",
+      "name": "mission_resume_after_update",
+      "purpose": "Reload exact mission/checkpoint after app/capability version activation.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR024",
+      "name": "old_controller_rollback_guard",
+      "purpose": "Ensure previous version can restore active pointer if candidate fails.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR025",
+      "name": "new_provider_conversation_router",
+      "purpose": "Start/resume dedicated provider session when task/context role changes and route exact packet.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR026",
+      "name": "system2_critic_loop",
+      "purpose": "Use critic role on plans/completion/high-risk assumptions before effect admission.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR027",
+      "name": "research_to_implementation_loop",
+      "purpose": "Research → evidence → plan → patch/tool → tests → verifier → next research loop.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR028",
+      "name": "flashloan_rnd_campaign",
+      "purpose": "Parallel paper/simulation R&D campaign template for Studious Pancake with live effects disabled.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR029",
+      "name": "flashloan_context_products",
+      "purpose": "Generate data/execution/strategy/failure/code/qualification packs for external AI.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR030",
+      "name": "cross_ai_provider_handoff",
+      "purpose": "Move mission context between Grok/Codex/ChatGPT while keeping canonical state/provider receipts.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR031",
+      "name": "user_attention_saver",
+      "purpose": "Batch noncritical questions and surface only blockers/permission gates.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    },
+    {
+      "id": "CR032",
+      "name": "cognitive_relay_device_qualification",
+      "purpose": "End-to-end Windows qualification from free-text command through System2/tool update/resume.",
+      "status": "TO_IMPLEMENT_OR_MAP_TO_EXISTING_OWNER"
+    }
+  ]
+}
