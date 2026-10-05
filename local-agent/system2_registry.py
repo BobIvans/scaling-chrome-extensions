@@ -105,10 +105,10 @@ class System2ProviderRegistry:
                          'available':available,'state':state,'profile_id':row.get('profile_id')})
         return sorted(rows,key=lambda x:(not x['available'],-x['priority'],x['estimated_latency_ms'],x['provider_id']))
 
-    def choose(self,role,preferred=None):
+    def choose(self,role,preferred=None,require_artifacts=False):
         if role not in ROLES:
             raise System2RegistryError('SYSTEM2_ROLE')
-        candidates=[x for x in self.describe(role) if x['available']]
+        candidates=[x for x in self.describe(role) if x['available'] and (not require_artifacts or x['supports_artifacts'])]
         if not candidates:
             raise System2RegistryError('SYSTEM2_NO_PROVIDER')
         by_id={x['provider_id']:x for x in candidates}
@@ -172,7 +172,7 @@ class System2ProviderRegistry:
             raise System2RegistryError('SYSTEM2_REQUEST_SCHEMA')
         if mode not in {'analyze','build'}:
             raise System2RegistryError('SYSTEM2_MODE')
-        provider=self.choose(role,preferred_provider)
+        provider=self.choose(role,preferred_provider,require_artifacts=(mode=='build'))
         pid=provider['provider_id']
         cfg=self.c['providers'][pid]
         session_id=uuid.uuid4().hex
