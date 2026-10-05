@@ -1,6 +1,7 @@
 from __future__ import annotations
 import hashlib, json, time
 from pathlib import Path
+from browser_archive import BrowserArchiveAssembler
 
 def bounded_utf8(text,limit=1_400_000):
     raw=str(text or '').encode('utf-8')
@@ -18,14 +19,37 @@ class MissionKernel:
             for field in ('choice','label','answer','value'):
                 if field in value:return value[field]
         return value
-    def _state(self,mission,compile_result=None):
-        return {'schema':'voice-agentos.decision-state.v1','goal':mission['goal'],'acceptance':mission.get('acceptance',[]),
+    def _browser_inventory(self,mission):
+        if not self.bridge or 'BROWSER_WRITE' not in set(mission.get('effects',[])):return None,None
+        try:full=self.bridge.ui_inventory()
+        except Exception:return None,None
+        rows=[]
+        for item in full.get('elements',[]):
+            if not isinstance(item,dict) or item.get('risk') not in {'READ_NAV','INPUT'}:continue
+            name=str(item.get('name') or '').strip()
+            if not name and item.get('role') not in {'textbox','button','link'}:continue
+            rows.append({'element_id':item.get('element_id'),'role':item.get('role'),'risk':item.get('risk'),
+                         'name':name[:180],'fingerprint':item.get('fingerprint')})
+        rows=sorted(rows,key=lambda x:(x['risk']!='READ_NAV',x['role']!='button',len(x['name'])))[:60]
+        return {'snapshot_id':full.get('snapshot_id'),'document_token':full.get('document_token'),'tab_id':full.get('tabId'),
+                'url':full.get('url'),'title':full.get('title'),'candidates':rows},full
+    def _state(self,mission,compile_result=None,ui=None):
+        value={'schema':'voice-agentos.decision-state.v1','goal':mission['goal'],'acceptance':mission.get('acceptance',[]),
                 'effect_scope':mission.get('effects',['READ']),'has_context':bool(mission.get('context_text')),
                 'context_sha256':hashlib.sha256(mission.get('context_text','').encode()).hexdigest() if mission.get('context_text') else None,
                 'core_compile':compile_result,'time':time.time()}
-    def _laya(self,state):
+        if ui:value['browser_ui']=ui
+        return value
+    def _laya(self,state,ui=None):
         if not self.laya or not self.laya.enabled:return None
         questions=json.loads(self.questions_path.read_text(encoding='utf-8'))
+        if ui and ui.get('candidates'):
+            criteria={'NONE':'No visible exact-bound control safely advances the current goal.'}
+            for item in ui['candidates']:
+                criteria[item['element_id']]=('risk='+str(item['risk'])+' role='+str(item['role'])+' name='+str(item['name']))[:300]
+            questions['ui_candidate']={'type':'choice',
+                'instructions':'Choose one exact visible UI element only if it safely advances the mission. Prefer READ_NAV for context gathering; choose NONE when uncertain.',
+                'criteria':criteria}
         return self.laya.decide(state,questions)
     def _system2_role(self,decision,compile_result):
         answers=(decision or {}).get('answers',{})
@@ -47,9 +71,10 @@ class MissionKernel:
         criteria=[str(x) for x in mission.get('acceptance',[]) if str(x).strip()]
         refs=[mission.get('context_sha256')] if mission.get('context_sha256') else []
         compile_result=self.core.create_action(mission['goal'],criteria,refs)
-        state=self._state(mission,compile_result)
+        ui,ui_full=self._browser_inventory(mission)
+        state=self._state(mission,compile_result,ui)
         decision=None
-        try:decision=self._laya(state)
+        try:decision=self._laya(state,ui)
         except Exception as exc:decision={'error':str(exc),'answers':{}}
         answers=(decision or {}).get('answers',{})
         route=self._answer(answers,'mission_route')
@@ -59,6 +84,26 @@ class MissionKernel:
         if route=='STOP':return {'schema':'voice-agentos.mission-step.v1','state':'STOPPED_BY_ROUTER','compile':compile_result,'laya':decision}
         if route=='WAIT':return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_EXTERNAL','compile':compile_result,'laya':decision}
         if route=='GATHER_CONTEXT':return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_CONTEXT','compile':compile_result,'laya':decision}
+        if route=='BROWSER_UI':
+            if not ui or not ui_full:return {'schema':'voice-agentos.mission-step.v1','state':'NEEDS_BINDING','compile':compile_result,'laya':decision}
+            candidate_id=self._answer(answers,'ui_candidate','NONE');action=self._answer(answers,'ui_action','ABSTAIN')
+            candidates={x.get('element_id'):x for x in ui_full.get('elements',[]) if isinstance(x,dict)}
+            candidate=candidates.get(candidate_id)
+            if not candidate or candidate_id=='NONE':return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','compile':compile_result,'laya':decision}
+            request={'snapshot_id':ui['snapshot_id'],'document_token':ui['document_token'],'element_id':candidate_id,
+                     'expected_fingerprint':candidate.get('fingerprint')}
+            if action=='SCROLL_INTO_VIEW':
+                request['action']='scroll_into_view';request['effect_class']='READ'
+            elif action=='CLICK_READ_NAV':
+                if candidate.get('risk')!='READ_NAV':return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_BLOCKED','reason':'NOT_READ_NAV','candidate':candidate,'laya':decision}
+                request['action']='click';request['effect_class']='BROWSER_WRITE'
+            elif action=='NEED_TYPED_INPUT':
+                route='SYSTEM2'
+            else:return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_ABSTAIN','candidate':candidate,'laya':decision}
+            if route=='BROWSER_UI':
+                receipt=self.bridge.ui_act(request,ui.get('tab_id'))
+                return {'schema':'voice-agentos.mission-step.v1','state':'BROWSER_UI_EFFECT','compile':compile_result,
+                        'laya':decision,'candidate':candidate,'ui_receipt':receipt}
         if not self.bridge:return {'schema':'voice-agentos.mission-step.v1','state':'SYSTEM2_UNAVAILABLE','compile':compile_result,'laya':decision}
         role=self._system2_role(decision,compile_result)
         context=bounded_utf8(mission.get('context_text') or json.dumps({'compile':compile_result},ensure_ascii=False))
@@ -73,6 +118,27 @@ class MissionKernel:
         job_id=job.get('id') if isinstance(job,dict) else None
         if not job_id:raise ValueError('SYSTEM2_JOB_ID_REQUIRED')
         return {'schema':'voice-agentos.mission-step.v1','state':'WAITING_SYSTEM2','compile':compile_result,'laya':decision,'role':role,'system2_mode':mode,'system2_job_id':job_id}
+    def capture_browser_context(self):
+        if not self.bridge:raise ValueError('BROWSER_BRIDGE_UNAVAILABLE')
+        tab=self.bridge.active_tab();tab_id=tab.get('id') if isinstance(tab,dict) else None
+        assembler=BrowserArchiveAssembler(self.root/'mission-browser','mission_'+str(tab_id)+'_'+str(int(time.time())))
+        try:
+            manifest=self.bridge.capture_archive(tab_id,on_chunk=assembler.add_chunk,max_bytes=67108864,max_steps=2500,max_ms=90000)
+            archive=assembler.finalize(manifest)
+        except Exception as exc:
+            assembler.abort(str(exc));raise
+        receipts=[]
+        for field,prefix in [('txt_path','mission_browser_txt'),('metadata_path','mission_browser_meta'),('raw_stream_path','mission_browser_stream')]:
+            path=archive.get(field)
+            if not path:continue
+            digest=hashlib.sha256(Path(path).read_bytes()).hexdigest()
+            receipt=self.core.capture_file(path,prefix+'_'+digest[:18]);receipts.append(receipt)
+            try:self.core.annotate_capture(receipt,project='AgentOS',note='mission browser context '+str(archive.get('source')))
+            except Exception:pass
+        text=Path(archive['txt_path']).read_text(encoding='utf-8',errors='replace')
+        return {'schema':'voice-agentos.mission-step.v1','state':'CONTEXT_GATHERED','text':bounded_utf8(text),
+                'sha256':archive['txt_sha256'],'archive':archive,'library_receipts':receipts}
+
     def poll_system2(self,job_id,mission):
         result=self.bridge.codex_result(job_id)
         job=result.get('job') if isinstance(result,dict) else None
