@@ -236,6 +236,14 @@ async function handleAgentOSLocalControl(message) {
       title: typeof tab.title === 'string' ? tab.title : '',
       url: typeof tab.url === 'string' ? tab.url : ''};
   }
+  if (message.command === 'capture.get') {
+    const found = await getCapture();
+    if (!found) throw new Error('CAPTURE_UNAVAILABLE');
+    const cap = found.capture;
+    if (Number.isInteger(message.args?.tabId) && cap.sourceTabId !== message.args.tabId) throw new Error('CAPTURE_TAB_MISMATCH');
+    return {state: 'CAPTURE_AVAILABLE', tabId: cap.sourceTabId, captureId: cap.captureId, revision: cap.revision,
+      status: cap.status, capturedAt: cap.capturedAt, text: cap.text, warnings: cap.warnings || [], source: cap.source || ''};
+  }
   if (message.command === 'tab.capture.start') {
     let tab;
     if (Number.isInteger(message.args?.tabId)) tab = await chrome.tabs.get(message.args.tabId);
