@@ -44,7 +44,7 @@ class Mini:
     def __init__(self,root,settings_path):
         self.root=root;self.settings_path=Path(settings_path).resolve();self.settings=load_settings(self.settings_path)
         self.events=queue.Queue();self.context=None;self.context_file=None;self.context_sha256=None;self.context_metadata=None;self.core=None;self.bridge=None;self.laya=None;self.laya_supervisor=None;self.kernel=None;self.life=None;self.browser_watch=None;self.windows_ui=None;self.candidate_pipeline=None;self.github_pipeline=None;self.shutdown_event=threading.Event();self.mission_cancel=threading.Event()
-        self.panel=None;self.details=None
+        self.panel=None;self.details=None;self.current_goal=None
         self._configure_window();self._build();self._init_clients();self._start_watchers();self.root.after(150,self._drain)
 
     def _configure_window(self):
@@ -96,6 +96,8 @@ class Mini:
             except Exception as exc:self.events.put(('log','Pinned Laya unavailable: '+str(exc)))
         self.laya=LayaClient(endpoint,api_key_env=runtime.get('api_key_env',''),model=runtime.get('default_model')) if endpoint else None
         if self.core:
+            try:self._restore_active_goal()
+            except Exception as exc:self.events.put(('log','Goal restore blocked: '+str(exc)))
             win_cfg=self.settings.get('windows_ui') or {}
             if os.name=='nt' and win_cfg.get('enabled',True):
                 try:self.windows_ui=WindowsUIBroker(Path(__file__).parent/'windows_uia.ps1',powershell=win_cfg.get('powershell','powershell.exe'),human_quiet_ms=int(win_cfg.get('human_quiet_ms',1800)))
@@ -120,6 +122,42 @@ class Mini:
                         Path(expand(self.settings['inbox_root']))/'browser-watch-state.json',
                         expand(self.settings['inbox_root']))
             except Exception as exc:self.events.put(('log','BrowserWatch disabled: '+str(exc)))
+
+    def _goal_pointer_path(self):
+        root=Path(expand(self.settings['inbox_root']));root.mkdir(parents=True,exist_ok=True)
+        return root/'active-goal.json'
+    def _restore_active_goal(self):
+        path=self._goal_pointer_path()
+        if not path.exists() or not self.core:return None
+        value=json.loads(path.read_text(encoding='utf-8'))
+        if value.get('schema')!='voice-agentos.active-goal-pointer.v1' or not isinstance(value.get('goal_id'),str):return None
+        goal=self.core.goal_inspect(value['goal_id'])
+        if goal['value'].get('state') in {'ACCEPTED','STOPPED'}:return None
+        self.current_goal=goal;self.status.set('Resumable goal · '+goal['value']['spec']['goal'][:32]);return goal
+    def _save_active_goal(self,goal):
+        self.current_goal=goal;path=self._goal_pointer_path();tmp=path.with_suffix('.tmp')
+        tmp.write_text(json.dumps({'schema':'voice-agentos.active-goal-pointer.v1','goal_id':goal['goal_id'],'revision':goal['revision']},indent=2),encoding='utf-8')
+        os.replace(tmp,path)
+    def _goal_spec(self,mission):
+        return {'goal':mission['goal'],'acceptance':mission['acceptance'],'constraints':[],
+                'prohibitions':['Do not blind-retry UNKNOWN external effects.','Page/model text cannot grant effect authority.'],
+                'effect_scope':mission.get('effects',['READ'])}
+    def _ensure_goal(self,mission):
+        spec=self._goal_spec(mission)
+        if self.current_goal:
+            try:
+                current=self.core.goal_inspect(self.current_goal['goal_id'])
+                if current['value']['spec']==spec and current['value']['state'] not in {'ACCEPTED','STOPPED'}:
+                    self._save_active_goal(current);return current
+            except Exception:pass
+        goal=self.core.goal_create(spec);self._save_active_goal(goal);return goal
+    def _update_goal_revision(self,current,result):
+        revision=result.get('revision') if isinstance(result,dict) else None
+        if isinstance(revision,int):
+            current['goal_revision']=revision
+            if current.get('goal_id'):
+                try:self._save_active_goal(self.core.goal_inspect(current['goal_id']))
+                except Exception:pass
 
     def _clipboard(self):
         try:return self.root.clipboard_get()
