@@ -209,13 +209,17 @@
   globalThis.__occCancel = () => globalThis.__occController?.abort();
   globalThis.__occCapture = async (options = {}) => {
     if (globalThis.__occController) throw new Error('Capture already running in this tab.');
-    const opt = {scroll: true, sourceMode: 'auto', maxMs: 20000, maxSteps: 160, settleMs: 240, maxBytes: 2000000, ...options};
+    const opt = {scroll: true, sourceMode: 'auto', maxMs: 20000, maxSteps: 160, settleMs: 240,
+      maxBytes: 2000000, headless: false, streamRecords: false, ...options};
     if (!['auto', 'chat', 'document', 'chat+document'].includes(opt.sourceMode)) throw new Error('Unsupported source mode.');
+    if (!Number.isSafeInteger(opt.maxBytes) || opt.maxBytes < 1024 || opt.maxBytes > 67108864 ||
+        !Number.isSafeInteger(opt.maxSteps) || opt.maxSteps < 1 || opt.maxSteps > 10000 ||
+        !Number.isSafeInteger(opt.maxMs) || opt.maxMs < 1000 || opt.maxMs > 300000) throw new Error('Invalid capture bounds.');
     try { await chrome.runtime.sendMessage({target: 'worker', type: 'captureContext', operationToken: opt.operationToken}); } catch {}
     const encoder = new TextEncoder();
     const selected = window.getSelection()?.toString() || '';
     const active = document.activeElement;
-    if (selected && !(active instanceof HTMLInputElement && active.type === 'password')) {
+    if (!opt.headless && selected && !(active instanceof HTMLInputElement && active.type === 'password')) {
       if (encoder.encode(selected).length > opt.maxBytes) throw new Error('Selection is too large. Use a local TXT file.');
       return {text: selected, status: 'SELECTION', mode: 'selection', warnings: [], source: sourceURL(), count: 1};
     }
@@ -231,12 +235,23 @@
     const control = new AbortController(); globalThis.__occController = control;
     const keyHandler = e => { if (e.key === 'Escape') control.abort(); };
     document.addEventListener('keydown', keyHandler, true);
-    const ui = createUI(() => control.abort());
+    const ui = opt.headless ? createHeadlessUI() : createUI(() => control.abort());
     const warnings = new Set(['BEST_EFFORT: only observed DOM content; server-side or collapsed history is not verified.']);
     let scan, plan;
     try {
       scan = R.discover(document);
-      plan = await choosePlan(scan, opt.sourceMode, control, ui);
+      if (opt.headless) {
+        const chats=scan.surfaces.filter(s=>s.kind==='chat');
+        const docs=scan.surfaces.filter(s=>s.kind==='document' && !chats.some(ch=>R.within(ch.root,s.root)));
+        const pages=scan.surfaces.filter(s=>s.kind==='page');
+        const targets=chats.length?[...chats,...docs]:docs.length?docs:pages;
+        if (!targets.length) throw new Error(scan.frames.length ? 'NEEDS_FRAME_ACCESS' : 'NO_SOURCE');
+        plan={state:'READY',mode:'headless-auto',targets,
+          warnings:[...scan.warnings,...targets.flatMap(t=>t.warnings),
+            ...(targets.length>1?['HEADLESS_MULTI_SURFACE_CAPTURE']:[]),
+            ...(scan.frames.length?['EMBEDDED_CONTENT_REQUIRES_FRAME_CAPTURE']:[])],
+          frameCount:scan.frames.length,coverage:'UNKNOWN'};
+      } else plan = await choosePlan(scan, opt.sourceMode, control, ui);
     } catch (error) {
       document.removeEventListener('keydown', keyHandler, true); globalThis.__occController = null; ui.host.remove(); throw error;
     }
