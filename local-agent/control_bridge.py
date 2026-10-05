@@ -27,10 +27,39 @@ class ChromeBridge:
         except Exception as exc:raise BridgeError('CHROME_BRIDGE_RESPONSE') from exc
         if value.get('ok') is not True:raise BridgeError(value.get('error','CHROME_BRIDGE_FAILED'))
         return value.get('result')
+    def request_stream(self,command,args=None,on_chunk=None,timeout=260):
+        state=self.state();payload=json.dumps({'token':state['token'],'command':command,'args':args or {}},separators=(',',':')).encode()+b'\\n'
+        try:
+            with socket.create_connection((state['host'],state['port']),timeout=5) as sock:
+                sock.settimeout(timeout);sock.sendall(payload);buffer=b''
+                while True:
+                    chunk=sock.recv(65536)
+                    if not chunk:
+                        if buffer.strip():raise BridgeError('CHROME_BRIDGE_STREAM_TRUNCATED')
+                        raise BridgeError('CHROME_BRIDGE_STREAM_CLOSED')
+                    buffer+=chunk
+                    if len(buffer)>4800000:raise BridgeError('CHROME_BRIDGE_STREAM_FRAME_LIMIT')
+                    while b'\\n' in buffer:
+                        raw,buffer=buffer.split(b'\\n',1)
+                        if not raw:continue
+                        try:value=json.loads(raw.decode())
+                        except Exception as exc:raise BridgeError('CHROME_BRIDGE_STREAM_RESPONSE') from exc
+                        if value.get('event')=='chunk':
+                            if on_chunk:on_chunk(value.get('chunk'))
+                            continue
+                        if value.get('event')=='result' or 'ok' in value:
+                            if value.get('ok') is not True:raise BridgeError(value.get('error','CHROME_BRIDGE_FAILED'))
+                            return value.get('result')
+                        raise BridgeError('CHROME_BRIDGE_STREAM_SCHEMA')
+        except OSError as exc:raise BridgeError('CHROME_BRIDGE_OFFLINE') from exc
     def active_tab(self):return self.request('tabs.active')
     def list_tabs(self):return self.request('tabs.list')
     def start_capture(self,tab_id=None):return self.request('tab.capture.start',{} if tab_id is None else {'tabId':tab_id},40)
     def get_capture(self,tab_id=None):return self.request('capture.get',{} if tab_id is None else {'tabId':tab_id},10)
+    def capture_archive(self,tab_id=None,on_chunk=None,max_bytes=67108864,max_steps=3000,max_ms=120000):
+        args={'maxBytes':int(max_bytes),'maxSteps':int(max_steps),'maxMs':int(max_ms)}
+        if tab_id is not None:args['tabId']=int(tab_id)
+        return self.request_stream('tab.capture.archive',args,on_chunk=on_chunk,timeout=max(180,int(max_ms/1000)+60))
     def codex_submit(self,instruction,text,mode='analyze'):return self.request('system2.codex.submit',{'instruction':instruction,'text':text,'mode':mode},45)
     def codex_status(self,job_id):return self.request('system2.codex.status',{'jobId':job_id},10)
     def codex_result(self,job_id):return self.request('system2.codex.result',{'jobId':job_id},45)
