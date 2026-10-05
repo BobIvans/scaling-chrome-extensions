@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "One Click Context",
-  "version": "0.12.0",
-  "description": "Local context capture, bounded voice preview, typed fail-closed goal proposals, project/session memory and optional Codex handoff.",
+  "version": "0.13.0",
+  "description": "Local context capture and AgentOS side panel for typed missions, exact target selection and durable local automation.",
   "minimum_chrome_version": "116",
   "permissions": [
     "activeTab",
@@ -11,12 +11,17 @@
     "offscreen",
     "storage",
     "contextMenus",
-    "downloads"
+    "downloads",
+    "sidePanel"
   ],
+  "optional_permissions": ["nativeMessaging", "tabs"],
+  "optional_host_permissions": ["https://*/*", "http://*/*"],
   "background": {
     "service_worker": "background.js"
   },
-  "optional_permissions": ["nativeMessaging"],
+  "side_panel": {
+    "default_path": "agentos/sidepanel.html"
+  },
   "action": {
     "default_title": "Copy context (selection first; click again to cancel)"
   },

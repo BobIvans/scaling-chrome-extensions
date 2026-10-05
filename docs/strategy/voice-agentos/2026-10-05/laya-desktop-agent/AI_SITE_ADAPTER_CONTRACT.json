@@ -1,0 +1,52 @@
+{
+  "schema": "voice-agentos.ai-site-adapter-contract.v1",
+  "required_operations": [
+    "discover_identity",
+    "observe_turns",
+    "inventory_artifacts",
+    "observe_composer",
+    "prepare_draft",
+    "verify_draft",
+    "send_once",
+    "reconcile_send",
+    "read_response",
+    "detect_human_takeover"
+  ],
+  "identity_fields": [
+    "origin",
+    "provider",
+    "account",
+    "workspace",
+    "conversation",
+    "branch",
+    "session_epoch",
+    "contract_digest"
+  ],
+  "effect_states": [
+    "READ_ONLY",
+    "PREPARED",
+    "SEND_ARMED",
+    "SEND_INVOKED",
+    "MESSAGE_OBSERVED",
+    "EFFECT_UNKNOWN",
+    "CONFLICT"
+  ],
+  "qualification": {
+    "required": [
+      "wrong_account",
+      "wrong_conversation",
+      "tab_reuse",
+      "selector_drift",
+      "virtualized_chat",
+      "streaming_partial",
+      "attachment",
+      "human_takeover",
+      "browser_restart",
+      "crash_after_send",
+      "ack_lost",
+      "stop"
+    ],
+    "wrong_target_tolerance": 0
+  },
+  "generic_adapter_policy": "Generic semantic detection may observe and propose candidates. It must abstain from send/click when exact identity, target or effect semantics are not qualified."
+}

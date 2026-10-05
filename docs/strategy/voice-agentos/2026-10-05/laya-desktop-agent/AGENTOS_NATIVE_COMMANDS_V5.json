@@ -1,0 +1,45 @@
+{
+  "schema": "voice-agentos.native-v5-protocol.v1",
+  "hello_extension": {
+    "agentosCommands": [
+      "agentos.info",
+      "agentos.target.bind",
+      "agentos.target.observe",
+      "agentos.mission.preview",
+      "agentos.mission.run",
+      "agentos.mission.inspect",
+      "agentos.mission.pause",
+      "agentos.mission.resume",
+      "agentos.stop",
+      "agentos.library.capture",
+      "agentos.provider.send",
+      "agentos.provider.read",
+      "agentos.capability.resolve",
+      "agentos.update.inspect"
+    ]
+  },
+  "envelope": {
+    "request": [
+      "requestId",
+      "type",
+      "...typed fields"
+    ],
+    "response": [
+      "requestId",
+      "ok",
+      "typed result or error"
+    ],
+    "progress": [
+      "requestId",
+      "progress",
+      "typed progress only"
+    ]
+  },
+  "constraints": [
+    "No raw argv/executable/path may come from webpage/provider text.",
+    "Side panel passes tab candidates; runtime creates exact binding.",
+    "Long payloads use existing packet/library handles, not oversized native messages.",
+    "Unknown effect requires reconciliation before retry.",
+    "STOP is available independently of provider/Laya."
+  ]
+}
