@@ -275,9 +275,11 @@ class Mini:
         w=self.panel=tk.Toplevel(self.root);w.title('Voice AgentOS · Automate+');w.geometry('760x700');w.attributes('-topmost',True)
         body=ttk.Frame(w,padding=12);body.pack(fill='both',expand=True)
         ttk.Label(body,text='Goal / command').pack(anchor='w');self.goal=tk.Text(body,height=8);self.goal.pack(fill='x')
-        self.goal.insert('1.0','Observe the selected context, decide the fastest verified route, use System-2 only when needed, build missing capabilities safely, verify and continue until acceptance.')
+        default_goal=(self.current_goal['value']['spec']['goal'] if self.current_goal else 'Observe the selected context, decide the fastest verified route, use System-2 only when needed, build missing capabilities safely, verify and continue until acceptance.')
+        self.goal.insert('1.0',default_goal)
         ttk.Label(body,text='Acceptance · one line each').pack(anchor='w',pady=(8,0));self.acceptance=tk.Text(body,height=4);self.acceptance.pack(fill='x')
-        self.acceptance.insert('1.0','The requested outcome is independently verified.\nNo UNKNOWN external effect is blindly retried.')
+        default_acceptance=(self.current_goal['value']['spec']['acceptance'] if self.current_goal else ['The requested outcome is independently verified.','No UNKNOWN external effect is blindly retried.'])
+        self.acceptance.insert('1.0','\n'.join(default_acceptance))
         flags=ttk.LabelFrame(body,text='Explicit effect scope');flags.pack(fill='x',pady=8);self.effect_vars={}
         for i,name in enumerate(['LOCAL_WRITE','LOCAL_PROCESS','BROWSER_WRITE','WINDOWS_WRITE','GIT_WRITE','GITHUB_WRITE','MESSAGE_SEND','INSTALL_UPDATE']):
             v=tk.BooleanVar(value=name in {'LOCAL_WRITE','LOCAL_PROCESS'});self.effect_vars[name]=v
@@ -311,6 +313,10 @@ class Mini:
     def run_mission(self):
         if not self.kernel:self.status.set('AgentOS kernel offline');return
         mission=self._mission_state();self.mission_cancel.clear()
+        try:
+            goal=self._ensure_goal(mission)
+            mission.update(goal_id=goal['goal_id'],goal_revision=goal['revision'],h2=goal['value'].get('h2') or [])
+        except Exception as exc:self.status.set('Goal persistence: '+str(exc));return
         def work():
             try:
                 current=dict(mission);seen_system2=set();seen_context=set()
@@ -320,7 +326,7 @@ class Mini:
                 if current.get('context_sha256'):seen_context.add(current['context_sha256'])
                 for cycle in range(max_cycles):
                     if self.mission_cancel.is_set():self.events.put(('details',{'state':'CANCELLED_BY_USER','history':history}));return
-                    step=self.kernel.start(current);history.append(step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-6:]}))
+                    step=self.kernel.start(current);history.append(step);self._update_goal_revision(current,step);self.events.put(('details',{'cycle':cycle,'step':step,'history':history[-6:]}))
                     state=step.get('state')
                     if state=='WAITING_HUMAN_FOREGROUND':
                         self.events.put(('status','Human foreground lease · AgentOS yielding target UI'))
