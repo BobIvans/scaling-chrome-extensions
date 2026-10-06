@@ -1,0 +1,90 @@
+{
+  "schema": "voice-agentos.laya-v6-question-library.v1",
+  "passes": {
+    "state": [
+      "active_goal_gap:choice",
+      "world_state_fresh:noul",
+      "context_debt:score",
+      "progress_velocity:score"
+    ],
+    "next_need": [
+      "next_need_kind:choice",
+      "need_confidence:score",
+      "need_blocks_progress:noul",
+      "need_can_prefetch:noul"
+    ],
+    "resolver": [
+      "resolver_candidate:choice",
+      "resolver_success_prior:score",
+      "resolver_latency_cost:score",
+      "resolver_money_or_quota_cost:score",
+      "resolver_privacy_risk:score",
+      "cheaper_route_sufficient:noul"
+    ],
+    "prerequisite_forecast": [
+      "likely_next_prerequisite_ids:allowed_ids",
+      "safe_prefetch_ids:allowed_ids",
+      "parallel_lane_ids:allowed_ids"
+    ],
+    "evidence": [
+      "best_source_id:choice",
+      "evidence_quality:choice",
+      "freshness_sufficient:noul",
+      "contradiction_present:noul"
+    ],
+    "surface": [
+      "exact_surface_id:choice",
+      "exact_identity_verified:noul",
+      "structured_tool_available:noul",
+      "human_conflict:noul",
+      "shadow_read_available:noul"
+    ],
+    "action_forecast": [
+      "action_candidate_id:choice",
+      "expected_delta_id:choice",
+      "expected_goal_gain:score",
+      "wrong_target_risk:score",
+      "verifier_candidate_id:choice"
+    ],
+    "cognitive_return": [
+      "proposal_useful:noul",
+      "proposal_grounded:noul",
+      "proposal_actionable:noul",
+      "needs_followup_context:noul",
+      "compile_to_procedure:noul"
+    ],
+    "research": [
+      "experiment_needed:noul",
+      "experiment_metric_ids:allowed_ids",
+      "stop_condition_id:choice"
+    ],
+    "human": [
+      "human_intent_required:noul",
+      "question_value:score",
+      "safe_observation_can_replace_question:noul"
+    ]
+  },
+  "need_kinds": [
+    "FACT",
+    "FRESH_FACT",
+    "SOURCE",
+    "SURFACE",
+    "TOOL",
+    "PROCEDURE",
+    "PLAN",
+    "CODE",
+    "VISUAL_INTERPRETATION",
+    "USER_INTENT",
+    "AUTHORITY",
+    "VERIFICATION",
+    "RECOVERY"
+  ],
+  "evidence_quality": [
+    "PRIMARY_EXACT",
+    "PRIMARY_OBSERVED",
+    "SECONDARY_TRUSTED",
+    "MODEL_CLAIM",
+    "HEURISTIC",
+    "UNKNOWN"
+  ]
+}
