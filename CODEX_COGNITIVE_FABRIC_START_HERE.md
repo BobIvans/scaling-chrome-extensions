@@ -1,3 +1,11 @@
+# Latest Cognitive Fabric addendum — Laya Execution Brain V9
+
+Canonical: `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-execution-brain-v9/`.
+
+Use V9 together with V6.1/V7/V8 when implementing PR97–PR100. V9 focuses on verified feedback-driven routing: active trusted state, uncertainty, adaptive memory, empirical route priors, anytime parallelism, strong-model regret and procedure promotion.
+
+---
+
 # Latest Cognitive Fabric addendum — Laya Parallel Supervisor V8
 
 Canonical: `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-parallel-supervisor-v8/`.

@@ -1,0 +1,19 @@
+{
+  "schema":"voice-agentos.execution-brain-state.v1",
+  "goal_id":"identifier",
+  "world_revision":"integer",
+  "verified_state_digest":"sha256",
+  "active_acceptance_gap":"identifier",
+  "active_subgoal":"identifier",
+  "belief_state":{
+    "known":[{"fact_id":"id","evidence_refs":["ref"],"confidence":"VERIFIED|OBSERVED"}],
+    "unknowns":[{"unknown_id":"id","kind":"FACT|STATE|TOOL|INTENT|AUTHORITY|OUTCOME","priority":0.0}],
+    "contradictions":[{"id":"id","refs":["ref"]}]
+  },
+  "memory_selection":{"raw_refs":[],"graph_refs":[],"procedure_refs":[],"failure_refs":[],"surface_refs":[],"reason":"string"},
+  "frontier":[{"candidate_id":"id","resolver":"EXACT|FAST|STRONG|API_FALLBACK","task_class":"string","success_prior":0.0,"expected_progress":0.0,"information_gain":0.0,"latency_cost":0.0,"money_or_quota_cost":0.0,"human_cost":0.0,"risk":0.0,"resource_pressure":0.0,"utility":0.0}],
+  "active_lanes":["lane ids"],
+  "pending_cognitive_sessions":["session ids"],
+  "verification_plan":["verifier ids"],
+  "routing_stats_revision":"integer"
+}

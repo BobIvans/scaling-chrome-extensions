@@ -1,3 +1,9 @@
+# Latest addendum: Laya Execution Brain V9
+
+Read `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-execution-brain-v9/README.md` before implementing PR97–PR100. V9 turns Laya into a verified feedback-driven execution brain with a trusted state tree, adaptive memory selection, empirical cost/quality/latency routing, anytime parallel cancellation, predictive prefetch and verifier-driven learning.
+
+---
+
 # Latest addendum: Laya Parallel Supervisor V8
 
 Read `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-parallel-supervisor-v8/README.md` before implementing PR97–PR100. V8 adds durable parallel lane supervision, EvidenceFanIn, asynchronous Grok strategy review, multi-tab coexistence and local ground-truth verification.
