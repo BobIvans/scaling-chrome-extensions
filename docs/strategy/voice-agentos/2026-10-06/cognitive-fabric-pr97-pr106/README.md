@@ -1,3 +1,9 @@
+# Latest addendum: Laya Parallel Supervisor V8
+
+Read `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-parallel-supervisor-v8/README.md` before implementing PR97–PR100. V8 adds durable parallel lane supervision, EvidenceFanIn, asynchronous Grok strategy review, multi-tab coexistence and local ground-truth verification.
+
+---
+
 # Cognitive Fabric / Coexisting Intelligence — PR97–PR106
 
 This wave extends PR64–PR96; it does not replace unfinished foundations.

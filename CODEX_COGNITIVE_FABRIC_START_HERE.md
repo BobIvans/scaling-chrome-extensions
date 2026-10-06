@@ -1,3 +1,11 @@
+# Latest Cognitive Fabric addendum — Laya Parallel Supervisor V8
+
+Canonical: `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-parallel-supervisor-v8/`.
+
+Use V8 together with V6.1/V7 when implementing PR97–PR100. It makes Grok an asynchronous deep supervisor while Laya and safe local/tab/process lanes continue executing and gathering evidence in parallel.
+
+---
+
 # Laya Hands V7 — current focused PR97–PR100 addendum
 
 Read `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-hands-v7/README.md` before implementing PR97–PR100.
