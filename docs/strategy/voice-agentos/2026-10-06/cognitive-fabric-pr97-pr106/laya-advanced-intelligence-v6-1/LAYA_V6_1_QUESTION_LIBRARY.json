@@ -1,0 +1,77 @@
+{
+  "schema": "voice-agentos.laya-v6.1-question-library.v1",
+  "rails": {
+    "goal": [
+      "active_acceptance_gap:choice",
+      "goal_drift:noul",
+      "human_intent_blocking:noul"
+    ],
+    "evidence": [
+      "missing_evidence_kind:choice",
+      "evidence_source:choice",
+      "freshness_sufficient:noul",
+      "contradiction_present:noul",
+      "safe_read_can_resolve:noul"
+    ],
+    "surface": [
+      "target_surface:choice",
+      "identity_exact:noul",
+      "structured_interface_available:noul",
+      "human_conflict:noul",
+      "shadow_read_available:noul"
+    ],
+    "resolver": [
+      "resolver_tier:choice",
+      "registered_procedure_available:noul",
+      "fast_local_sufficient:noul",
+      "strong_reasoning_required:noul",
+      "api_fallback_justified:noul"
+    ],
+    "prefetch": [
+      "likely_next_need:choice",
+      "safe_prefetch_ids:allowed_ids",
+      "parallel_lane_ids:allowed_ids"
+    ],
+    "action": [
+      "action_candidate:choice",
+      "semantic_match:score",
+      "wrong_target_risk:score",
+      "expected_postcondition:choice"
+    ],
+    "verify": [
+      "postcondition_observed:noul",
+      "evidence_quality:choice",
+      "closed_acceptance_ids:allowed_ids",
+      "unknown_effect_remaining:noul"
+    ],
+    "recover": [
+      "failure_class:choice",
+      "reobserve_first:noul",
+      "escalate_to_strong:noul",
+      "change_strategy:noul",
+      "human_required:noul"
+    ],
+    "learn": [
+      "reusable_procedure:noul",
+      "expensive_call_avoidable_next_time:noul",
+      "drift_signal_id:choice"
+    ]
+  },
+  "resolver_tiers": [
+    "EXACT",
+    "FAST",
+    "STRONG",
+    "API_FALLBACK"
+  ],
+  "failure_classes": [
+    "STALE_CONTEXT",
+    "WRONG_SURFACE",
+    "SURFACE_DRIFT",
+    "MISSING_CAPABILITY",
+    "TOOL_FAILURE",
+    "EXTERNAL_FAILURE",
+    "STRATEGY_FAILURE",
+    "UNKNOWN_EFFECT",
+    "HUMAN_AUTHORITY_REQUIRED"
+  ]
+}
