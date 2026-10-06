@@ -1,3 +1,10 @@
+# CURRENT COGNITIVE FABRIC WAVE — PR97–PR106
+
+Canonical handoff: `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/`.
+Deterministic/cached/local execution is preferred; ChatGPT-plan/Grok/API/vision are bounded cognitive providers used only when expected verified value justifies cost/quota/latency. Do not skip unfinished PR64–PR96 foundations.
+
+---
+
 # CURRENT FUTURE WAVE — Long-Horizon Meta-Control PR88–PR96
 
 Latest long-horizon/qualification R&D: `docs/strategy/voice-agentos/2026-10-06/long-horizon-meta-control-pr88-pr96/`.

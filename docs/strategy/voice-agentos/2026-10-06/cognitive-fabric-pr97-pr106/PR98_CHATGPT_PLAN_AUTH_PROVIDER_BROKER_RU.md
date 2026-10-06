@@ -1,0 +1,2 @@
+# PR98 — ChatGPT Plan Auth + Secure Provider Broker
+Implement Sign in with ChatGPT OSS/local flow when available: client registration, explicit user permission, OS secret storage, model discovery, eligible Responses API streaming, usage/limit visibility and disconnect/revoke. Ordinary OpenAI API remains separate fallback. This auth does not expose ChatGPT conversations/memory.

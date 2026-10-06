@@ -1,0 +1,2 @@
+# PR105 — Autonomous Research / Experiment Factory
+Implement ExperimentSpec and Research Director for web3/arbitrage/data-source/model/capability experiments. Evidence collection precedes synthesis; source URLs/dates/digests enter Library. Optional multi-model quorum only for high-value conflict. No live trading authority.

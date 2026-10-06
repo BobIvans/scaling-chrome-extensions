@@ -1,0 +1,2 @@
+# PR97 — Cognitive Session Bus / ProviderGraph
+Implement canonical CognitiveProvider/CognitiveSession contracts over provider-neutral System-2. Track transport, modalities, capabilities, context, cost/quota, privacy, health, reliability and durable sessions. Adapters include local Laya/models, ChatGPT-plan/OpenAI, Grok Build/xAI, generic APIs and browser AI sessions. Output is CognitiveProposal, never direct effect.

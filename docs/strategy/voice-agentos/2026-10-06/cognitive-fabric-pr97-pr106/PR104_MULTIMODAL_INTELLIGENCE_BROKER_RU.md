@@ -1,0 +1,2 @@
+# PR104 — Multimodal Intelligence Broker
+Implement local→remote routing for images/screens/video/docs. Structured UI first, local OCR/tiny VLM triage, stronger model only when needed. Persist artifact/model/version/latency/provenance. Never use vision when exact DOM/AX/UIA already answers the question.

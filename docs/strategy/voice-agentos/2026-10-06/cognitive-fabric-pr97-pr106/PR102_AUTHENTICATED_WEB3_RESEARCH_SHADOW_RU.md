@@ -1,0 +1,2 @@
+# PR102 — Authenticated Web3 Research Shadow
+Build read-only observer/extractor for user-authorized wallet/account web apps. Prefer API/tool/CDP-network/DOM/AX before vision. Create canary-qualified read-only UI Data Adapters and ingest observations with exact freshness/provenance. Do not sign/approve/send transactions in this profile.

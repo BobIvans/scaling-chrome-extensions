@@ -1,0 +1,2 @@
+# PR103 — Dual-Repo Self-Renewal Orchestrator
+Coordinate Voice AgentOS and Studious Pancake gaps through GapSpec→Code Worker→isolated worktree→tests→PR/CI→merge→staged update→canary→capability register→goal resume. External coding models cannot mutate stable runtime directly.

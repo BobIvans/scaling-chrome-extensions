@@ -1,0 +1,2 @@
+# PR101 — Project Capsule / Context Canvas
+Build execution-aware Notion-class workspace: Inbox, Conversations, Documents, Web Research, Repos, Goals/Decisions, Missions, AI Sessions, Procedures, Data Sources, Flashloan Qualification, Timeline/Graph. Add Ask with context / Continue in Grok / Continue in ChatGPT / Send to Code Worker / Research Web / Pin Evidence actions.

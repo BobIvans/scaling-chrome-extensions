@@ -31,3 +31,9 @@ Codex must first re-audit current main and implement the earliest still-missing 
 ## Product boundary
 
 The qualification runtime is designed for tests, data collection, RPC/DEX research, simulation, replay and paper qualification. It does not grant live wallet/trading authority. Consequential financial effects remain separate qualified capabilities.
+
+
+---
+
+## Next: Cognitive Fabric
+`docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/`

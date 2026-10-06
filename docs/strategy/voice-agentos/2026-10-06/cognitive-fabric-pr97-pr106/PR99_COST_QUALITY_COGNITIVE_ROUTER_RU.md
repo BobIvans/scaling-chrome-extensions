@@ -1,0 +1,2 @@
+# PR99 — Cost/Quality/Latency Cognitive Router
+Route by TaskClass, modality, historical success, latency, health, quota, marginal cost, privacy and context fit. Deterministic/local/cached first; subscription/API escalation on unresolved uncertainty/verified failure; quorum only when high-value. Persist cognitive budget and model-call receipts. Repeated known actions should run without remote model calls.

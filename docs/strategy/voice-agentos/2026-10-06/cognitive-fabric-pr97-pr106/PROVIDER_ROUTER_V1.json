@@ -1,0 +1,75 @@
+{
+  "schema": "voice-agentos.cognitive-provider-router.v1",
+  "tiers": [
+    {
+      "tier": 0,
+      "name": "DETERMINISTIC",
+      "examples": [
+        "schema/hash/dedupe",
+        "exact selectors",
+        "registered command",
+        "cached procedure"
+      ]
+    },
+    {
+      "tier": 1,
+      "name": "LOCAL_FAST",
+      "examples": [
+        "Laya choice/score",
+        "embeddings",
+        "small classifiers"
+      ]
+    },
+    {
+      "tier": 2,
+      "name": "LOCAL_GENERATIVE",
+      "examples": [
+        "small local LLM",
+        "small local VLM"
+      ]
+    },
+    {
+      "tier": 3,
+      "name": "SUBSCRIPTION",
+      "examples": [
+        "authorized Sign in with ChatGPT plan",
+        "authenticated Grok/Grok Build session"
+      ]
+    },
+    {
+      "tier": 4,
+      "name": "PAID_API",
+      "examples": [
+        "OpenAI API",
+        "xAI API",
+        "other registered APIs"
+      ]
+    },
+    {
+      "tier": 5,
+      "name": "QUORUM",
+      "examples": [
+        "independent providers + verifier for high-value conflict"
+      ]
+    }
+  ],
+  "selection_features": [
+    "task_class",
+    "modalities",
+    "tool/search/code capability",
+    "success prior",
+    "latency",
+    "health",
+    "quota",
+    "marginal cost",
+    "privacy",
+    "context capacity",
+    "recent failure"
+  ],
+  "rules": [
+    "cheapest calibrated tier above success threshold",
+    "escalate on verified failure/unresolved uncertainty",
+    "compile repeatable model-discovered actions into procedures",
+    "quorum only for high-value ambiguity"
+  ]
+}

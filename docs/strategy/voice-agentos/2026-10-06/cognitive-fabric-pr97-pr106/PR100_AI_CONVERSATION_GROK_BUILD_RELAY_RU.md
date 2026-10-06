@@ -1,0 +1,2 @@
+# PR100 — Persistent AI Conversation / Grok Build Relay
+Implement AI Session Lane. Prefer Grok Build CLI/headless/ACP for code/workspace tasks; support web Build Mode and ChatGPT/Grok browser threads as exact account/conversation surfaces. Send bounded context delta, capture raw response/artifacts, store to Library, parse CognitiveProposal and continue only if another cognitive turn adds value.
