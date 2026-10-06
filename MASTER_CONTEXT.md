@@ -1,3 +1,12 @@
+# CURRENT COMPLETION WAVE — Universal Agent Railway PR70–PR78
+
+Canonical folder: `docs/strategy/voice-agentos/2026-10-06/universal-agent-railway-pr70-pr78/`.
+Finish PR64–PR69 first, then implement PR70–PR78. Start with `docs/strategy/voice-agentos/2026-10-06/universal-agent-railway-pr70-pr78/CODEX_START_HERE.md`.
+This docs-only commit intentionally does not consume PR #70. Re-audit live main before coding.
+The target is not a screenshot-clicking demo but a local AgentOS: SurfaceGraph + Shadow Workspace + Ambient Life Context + adaptive Laya Railway + universal ActionCompiler + trajectory learning + Temporal ContextGraph + continuous eval + Mission Cockpit/final Windows+Studious qualification.
+
+---
+
 # CURRENT CONTINUATION — Voice AgentOS PR64–PR69
 
 The nearest implementation wave after merged PR #62/#63 is canonicalized at `docs/strategy/voice-agentos/2026-10-06/pr64-pr69-rnd/`.

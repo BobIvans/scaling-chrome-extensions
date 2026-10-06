@@ -1,0 +1,51 @@
+{
+  "schema": "voice-agentos.laya-railway-v2-questions.v1",
+  "passes": {
+    "route": [
+      "next_mode:choice",
+      "needs_clarification:noul",
+      "progress_value:score",
+      "risk_level:score"
+    ],
+    "evidence": [
+      "best_source:choice",
+      "evidence_sufficient:noul",
+      "freshness_required:noul"
+    ],
+    "surface": [
+      "target_surface:choice",
+      "target_identity_exact:noul",
+      "human_conflict:noul",
+      "best_executor:choice"
+    ],
+    "action": [
+      "action_candidate:choice",
+      "expected_postcondition:choice",
+      "action_reversible:noul",
+      "needs_approval:noul"
+    ],
+    "critic": [
+      "wrong_target_risk:noul",
+      "better_read_only_route_exists:noul",
+      "semantic_match:noul",
+      "abort_or_wait:choice"
+    ],
+    "progress": [
+      "meaningful_progress:noul",
+      "closed_acceptance:allowed_ids",
+      "next_parallel_lane_value:score",
+      "obsolete_lanes:allowed_ids"
+    ]
+  },
+  "thresholds": {
+    "read": 0.7,
+    "route_context": 0.78,
+    "mutable_ui": 0.88,
+    "consequential_effect": 0.93
+  },
+  "fail_closed": [
+    "NONE_OR_OTHER_REQUIRED",
+    "LOW_CONFIDENCE_REOBSERVE_OR_HUMAN",
+    "MODEL_NEVER_GRANTS_EFFECT_AUTHORITY"
+  ]
+}
