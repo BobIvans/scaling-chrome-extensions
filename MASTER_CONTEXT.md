@@ -1,3 +1,11 @@
+# CURRENT FUTURE WAVE — Long-Horizon Meta-Control PR88–PR96
+
+Latest long-horizon/qualification R&D: `docs/strategy/voice-agentos/2026-10-06/long-horizon-meta-control-pr88-pr96/`.
+This is a post-foundation wave; Codex must re-audit PR64–PR87 before implementing it.
+The docs-only commit intentionally leaves GitHub PR #88–#96 available for code.
+
+---
+
 # CURRENT COMPLETION WAVE — Perfect Laya Railway PR79–PR87
 
 The post-foundation perfection/completion handoff is canonicalized at `docs/strategy/voice-agentos/2026-10-06/perfect-laya-railway-pr79-pr87/`.
