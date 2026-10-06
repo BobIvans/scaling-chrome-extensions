@@ -1,3 +1,12 @@
+# POST-FOUNDATION COMPLETION — Perfect Laya Railway PR79–PR87
+
+After the PR64–PR78 foundations, the next perfection/completion wave is canonicalized at `docs/strategy/voice-agentos/2026-10-06/perfect-laya-railway-pr79-pr87/`.
+Start with `docs/strategy/voice-agentos/2026-10-06/perfect-laya-railway-pr79-pr87/MASTER_CONTEXT_RU.md`, `CURRENT_GAP_AUDIT_RU.md`, `GOAL_CONTRACT_V3_SCHEMA.json`, and `LAYA_RAILWAY_V3_RU.md`.
+PR79–PR87 are proposed future implementation numbers; this docs commit intentionally does not consume them.
+Do not skip required PR64–PR78 dependencies or duplicate Core/jobs/workflow_state/goal/effect/site/release authorities.
+
+---
+
 # CURRENT COMPLETION WAVE — Universal Agent Railway PR70–PR78
 
 Canonical folder: `docs/strategy/voice-agentos/2026-10-06/universal-agent-railway-pr70-pr78/`.

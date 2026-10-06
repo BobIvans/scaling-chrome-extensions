@@ -1,0 +1,49 @@
+{
+  "schema": "voice-agentos.goal-contract-v3.schema.v1",
+  "fields": {
+    "goal_text": "original user goal",
+    "terminal_state": "observable result",
+    "acceptance": [
+      "verifiable conditions"
+    ],
+    "anti_goals": [
+      "must not happen"
+    ],
+    "constraints": [
+      "time/cost/privacy/quality"
+    ],
+    "effect_scope": [
+      "READ",
+      "LOCAL_WRITE",
+      "BROWSER_WRITE",
+      "WINDOWS_WRITE",
+      "MESSAGE_SEND",
+      "GITHUB_WRITE",
+      "INSTALL_UPDATE"
+    ],
+    "target_hints": [
+      "entities/accounts/repos/sites/docs/apps"
+    ],
+    "context_requirements": [
+      "needed evidence"
+    ],
+    "freshness_policy": "evidence age",
+    "proof_policy": "receipts/postconditions",
+    "approval_policy": "effects requiring human approval",
+    "stop_conditions": [
+      "no progress/risk/budget/unknown"
+    ],
+    "budgets": {
+      "latency_ms": "optional",
+      "money": "optional",
+      "model_calls": "optional",
+      "human_interruptions": "optional"
+    },
+    "preferences": [
+      "trusted learned conventions"
+    ],
+    "ambiguities": [
+      "unresolved intent"
+    ]
+  }
+}
