@@ -1,0 +1,20 @@
+{
+  "schema": "voice-agentos.task-packet.v1",
+  "fields": {
+    "packet_id": "uuid",
+    "goal_id": "id",
+    "subgoal_id": "optional id",
+    "role": "RESEARCHER|STRATEGIST|CODE_ENGINEER|CRITIC|VISION|SUMMARIZER",
+    "question": "one bounded cognitive question",
+    "goal_excerpt": "terminal state + active acceptance gap + prohibitions",
+    "surface": "exact SurfaceGraph/account/workspace/conversation identity",
+    "evidence": "TEXT_SLICE|STRUCTURED_JSON|DOCUMENT|IMAGE|SCREENSHOT|AUDIO|CODE|LOG refs with sha/freshness/quality/reason",
+    "attachments": "artifact_id,mime,sha256,transport_preference,allowed_to_leave_device",
+    "structured_state": "bounded DOM/AX/RPC/repo/process state",
+    "allowed_tools": "tool ids",
+    "requested_output_schema": "CognitiveProposal schema",
+    "budgets": "latency/plan-or-money/max-context",
+    "prohibited_effects": "effect ids",
+    "provenance_digest": "sha256"
+  }
+}

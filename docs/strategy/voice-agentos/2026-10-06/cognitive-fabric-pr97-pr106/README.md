@@ -14,3 +14,8 @@ V6.1 uses only four intelligence tiers — EXACT / FAST / STRONG / API_FALLBACK 
 `Goal → Evidence → Surface → Resolver → Prefetch → Action → Verify → Recover → Learn`.
 
 The older V6 addendum is historical and superseded.
+
+
+## Focused PR97–PR100 addendum
+
+Read [Laya Hands V7](./laya-hands-v7/README.md) for multimodal TaskPacket delivery, persistent Grok/ChatGPT thinking sessions and universal research hands.
