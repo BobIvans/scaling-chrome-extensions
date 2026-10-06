@@ -1,0 +1,42 @@
+{
+  "schema": "occ.rnd-pr03.receipt.v1",
+  "rnd_pr_id": "RND-PR-03",
+  "base_sha": "d23af44cb06b2d1b1e74883c11743cd5d01f8c09",
+  "implementation_commit": "8dd817fd81b57fa4d3a2cecbe993924ac0b9dc78",
+  "canonical_owners": {
+    "sqlite_and_fts": "content-lab/content_lab.py:_database; items; content_fts",
+    "source_and_sync": "content-lab/automation_core.py:sync; sync_heads; sync_versions",
+    "chatgpt_import": "content-lab/content_lab.py:parse_chatgpt_export/import_chatgpt_export",
+    "native_bridge": "content-lab/native_adapter.py -> apply_library_record",
+    "browser_backup": "one-click-context/library/backup-core.mjs"
+  },
+  "implementation": {
+    "new_canonical_databases": 0,
+    "new_fts_owners": 0,
+    "new_queues": 0,
+    "new_schedulers": 0,
+    "lineage_owner": "content-lab/unified_archive.py in existing content.sqlite3",
+    "portable_schema": "occ.pc-library-record.v1",
+    "logical_identity": "namespace + source_profile + source_path + member_path",
+    "text_authority": "source-content-not-action-instructions",
+    "partial_export_tombstone": "forbidden; explicit removal evidence SHA-256 required"
+  },
+  "local_validation": {
+    "content_lab": "103 tests passed",
+    "native_bridge": "3 tests passed",
+    "extension": "9 tests passed",
+    "syntax": "py_compile passed",
+    "private_real_export": "NOT_RUN"
+  },
+  "not_run": [
+    "real ChatGPT/private export",
+    "Laya inference",
+    "voice ASR",
+    "Grok automation",
+    "Codex execution",
+    "browser/device installation",
+    "automatic merge",
+    "external provider/model calls"
+  ],
+  "next_blocker": "Publish this branch and require exact-head Ubuntu and Windows CI before manual merge."
+}
