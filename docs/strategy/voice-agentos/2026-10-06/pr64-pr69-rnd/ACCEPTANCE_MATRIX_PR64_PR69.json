@@ -1,0 +1,258 @@
+{
+  "schema": "voice-agentos.pr64-pr69-acceptance.v1",
+  "baseline_main": "06fbd2f31776690a2b15888d8ab0dff9dd47961f",
+  "prs": [
+    {
+      "pr": 64,
+      "title": "Durable Parallel Execution V9",
+      "gates": [
+        {
+          "id": "64A",
+          "name": "Concurrent disjoint execution",
+          "criteria": [
+            "at least 3 disjoint durable jobs can be RUNNING concurrently",
+            "max_parallel is operator-bound with conservative default",
+            "same mutable WRITE resource never overlaps"
+          ]
+        },
+        {
+          "id": "64B",
+          "name": "Resource-scoped unknown",
+          "criteria": [
+            "UNKNOWN preserves resource reservation",
+            "unrelated resources continue",
+            "legacy unbound unknown remains conservative-global"
+          ]
+        },
+        {
+          "id": "64C",
+          "name": "Restart-safe lanes",
+          "criteria": [
+            "goal stores durable lane identities",
+            "restart does not duplicate enqueue/effect",
+            "expired owner requires reconciliation"
+          ]
+        },
+        {
+          "id": "64D",
+          "name": "First useful evidence",
+          "criteria": [
+            "meaningful result triggers immediate ProgressDelta",
+            "frontier reranks before all lanes finish",
+            "obsolete lanes cancel only when safe"
+          ]
+        },
+        {
+          "id": "64E",
+          "name": "STOP",
+          "criteria": [
+            "STOP fences new parallel admission",
+            "queued lanes cancel before dispatch",
+            "running/unknown lanes retain correct reconciliation state"
+          ]
+        }
+      ]
+    },
+    {
+      "pr": 65,
+      "title": "Capability Canary REGISTERED Goal Resume",
+      "gates": [
+        {
+          "id": "65A",
+          "name": "GapSpec",
+          "criteria": [
+            "gap is durable and typed",
+            "gap carries effect/verifier/resources",
+            "gap cannot grant authority"
+          ]
+        },
+        {
+          "id": "65B",
+          "name": "Reuse before generation",
+          "criteria": [
+            "registered/dormant candidates searched first",
+            "compatible old skill can requalify",
+            "duplicate builders may be cancelled after winner"
+          ]
+        },
+        {
+          "id": "65C",
+          "name": "Canary promotion",
+          "criteria": [
+            "STAGING CANARY REGISTERED transitions are explicit",
+            "canary binds artifact+contract+target",
+            "failure never registers"
+          ]
+        },
+        {
+          "id": "65D",
+          "name": "Waiting goal resume",
+          "criteria": [
+            "waiting goal survives restart",
+            "REGISTERED wakes only compatible goals",
+            "scope/grants revalidated before resumed effect"
+          ]
+        }
+      ]
+    },
+    {
+      "pr": 66,
+      "title": "Provider-Neutral System-2 Registry",
+      "gates": [
+        {
+          "id": "66A",
+          "name": "Uniform contract",
+          "criteria": [
+            "provider request/result schemas independent of Codex",
+            "result/artifact hashes verified",
+            "provider output has no effect authority"
+          ]
+        },
+        {
+          "id": "66B",
+          "name": "Durable providers",
+          "criteria": [
+            "request can be resumed/polled after restart",
+            "provider failure isolated",
+            "secrets not persisted"
+          ]
+        },
+        {
+          "id": "66C",
+          "name": "Parallel fanout",
+          "criteria": [
+            "multiple qualified providers can run via PR64 lanes",
+            "mutable session resources serialize",
+            "first-useful/quorum policy can cancel redundant safe calls"
+          ]
+        }
+      ]
+    },
+    {
+      "pr": 67,
+      "title": "Qualified Effectful AI-Site Runtime",
+      "gates": [
+        {
+          "id": "67A",
+          "name": "Exact site identity",
+          "criteria": [
+            "account/workspace/conversation/session binding explicit",
+            "drift invalidates binding",
+            "unknown identity blocks send"
+          ]
+        },
+        {
+          "id": "67B",
+          "name": "Draft readback",
+          "criteria": [
+            "composer fingerprint exact",
+            "prepared draft independently read back",
+            "human takeover blocks effect"
+          ]
+        },
+        {
+          "id": "67C",
+          "name": "Send-once reconciliation",
+          "criteria": [
+            "EffectIntent precedes dispatch",
+            "timeout never blindly resends",
+            "UNKNOWN reconciles using outgoing evidence"
+          ]
+        },
+        {
+          "id": "67D",
+          "name": "Response capture",
+          "criteria": [
+            "response identity and stream/final state typed",
+            "artifacts are hashed",
+            "restart preserves pending response read"
+          ]
+        }
+      ]
+    },
+    {
+      "pr": 68,
+      "title": "Release Artifact Qualified Activation Reconnect",
+      "gates": [
+        {
+          "id": "68A",
+          "name": "Artifact provenance",
+          "criteria": [
+            "artifact digest and source tree pinned",
+            "shipped file hashes verifiable",
+            "mutable checkout not authority"
+          ]
+        },
+        {
+          "id": "68B",
+          "name": "Activation gates",
+          "criteria": [
+            "predecessor receipt required",
+            "STOP receipt required",
+            "device qualification and INSTALL_UPDATE grant required"
+          ]
+        },
+        {
+          "id": "68C",
+          "name": "Atomic activate rollback",
+          "criteria": [
+            "stable controller owns pointer",
+            "health failure rolls back",
+            "restart mid-activation reconciles"
+          ]
+        },
+        {
+          "id": "68D",
+          "name": "Reconnect resume",
+          "criteria": [
+            "Core/browser/providers rebound",
+            "goals/lanes reopened",
+            "UNKNOWN effects are not retried"
+          ]
+        }
+      ]
+    },
+    {
+      "pr": 69,
+      "title": "Unified Mission Library Timeline UI",
+      "gates": [
+        {
+          "id": "69A",
+          "name": "Unified workspace",
+          "criteria": [
+            "Library Conversations Repos Context Missions available from one surface",
+            "existing transport reused",
+            "UI is projection only"
+          ]
+        },
+        {
+          "id": "69B",
+          "name": "Relations",
+          "criteria": [
+            "typed relations/backlinks/collections durable",
+            "provenance attached",
+            "large sets paginated"
+          ]
+        },
+        {
+          "id": "69C",
+          "name": "Mission timeline",
+          "criteria": [
+            "H2 H1 H0 and parallel lanes visible",
+            "provider/effect/evidence/STOP/UNKNOWN events visible",
+            "restart shows same lane identities"
+          ]
+        },
+        {
+          "id": "69D",
+          "name": "Control safety",
+          "criteria": [
+            "STOP independent and always available",
+            "operator controls call typed Core operations",
+            "no arbitrary shell/SQL/UI selector authority"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "schema": "voice-agentos.pr64-pr69-risk-fault.v1",
+  "risks": [
+    {
+      "id": "R1",
+      "area": "parallel-core",
+      "fault": "two writers claim same mutable resource",
+      "required_result": "one admission blocked; no concurrent effect"
+    },
+    {
+      "id": "R2",
+      "area": "parallel-core",
+      "fault": "worker crashes after dispatch before receipt",
+      "required_result": "lane/resource UNKNOWN or reconciliation-required; no blind retry"
+    },
+    {
+      "id": "R3",
+      "area": "parallel-core",
+      "fault": "STOP races with multi-admission",
+      "required_result": "transaction/epoch prevents post-STOP new dispatch"
+    },
+    {
+      "id": "R4",
+      "area": "capability",
+      "fault": "candidate code changes after tests",
+      "required_result": "digest drift blocks promotion"
+    },
+    {
+      "id": "R5",
+      "area": "capability",
+      "fault": "REGISTERED event delivered twice",
+      "required_result": "idempotent wake/replan"
+    },
+    {
+      "id": "R6",
+      "area": "provider",
+      "fault": "provider returns wrong request id or stale result",
+      "required_result": "reject binding"
+    },
+    {
+      "id": "R7",
+      "area": "provider",
+      "fault": "one provider hangs while another succeeds",
+      "required_result": "first useful evidence advances goal; safe redundant call cancelled"
+    },
+    {
+      "id": "R8",
+      "area": "ai-site",
+      "fault": "account/workspace changes after prepare",
+      "required_result": "send blocked"
+    },
+    {
+      "id": "R9",
+      "area": "ai-site",
+      "fault": "send timeout after server accepted message",
+      "required_result": "UNKNOWN; reconcile before any retry"
+    },
+    {
+      "id": "R10",
+      "area": "update",
+      "fault": "candidate starts but health fails",
+      "required_result": "stable controller restores predecessor"
+    },
+    {
+      "id": "R11",
+      "area": "update",
+      "fault": "power/process loss during pointer switch",
+      "required_result": "reconcile active/predecessor/intent deterministically"
+    },
+    {
+      "id": "R12",
+      "area": "ui",
+      "fault": "UI busy during STOP",
+      "required_result": "independent STOP transport still fences Core"
+    },
+    {
+      "id": "R13",
+      "area": "ui",
+      "fault": "timeline pagination/reload",
+      "required_result": "no loss/reordering of canonical durable event identity"
+    }
+  ]
+}

@@ -1,3 +1,13 @@
+# CURRENT CONTINUATION — Voice AgentOS PR64–PR69
+
+The nearest implementation wave after merged PR #62/#63 is canonicalized at `docs/strategy/voice-agentos/2026-10-06/pr64-pr69-rnd/`.
+Start with `docs/strategy/voice-agentos/2026-10-06/pr64-pr69-rnd/CODEX_START_HERE_PR64_PR69.md`, then implement **PR64 Durable Parallel Execution V9** first.
+The structured files, all-in-one mirror and ZIP provenance manifest are in that folder.
+The R&D pack was authored against implementation baseline `main@06fbd2f31776690a2b15888d8ab0dff9dd47961f`; always refresh live refs/CI before coding.
+Do not consume PR #64 with a docs-only PR and do not create a second queue, resource manager, mission database, effect ledger, browser authority, or updater.
+
+---
+
 # Продолжение ROADMAP PR-012 + PR-013 — GitHub PR #51
 
 Реализация immutable local original ledger и bounded exact reads из PR #51
