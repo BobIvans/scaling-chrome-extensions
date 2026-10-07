@@ -1,3 +1,7 @@
+# LATEST EXECUTION SOURCE OF TRUTH
+
+Read `CODEX_EXECUTE_ALL_AGENTOS.md` first. Universal unknown-UI fallback is defined in `docs/strategy/voice-agentos/2026-10-07/universal-action-loop-v10/`.
+
 # CURRENT COGNITIVE FABRIC WAVE — PR97–PR106
 
 Canonical handoff: `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/`.

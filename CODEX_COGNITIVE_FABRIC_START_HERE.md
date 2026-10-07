@@ -1,3 +1,8 @@
+# Universal Action Loop V10
+
+Canonical: `docs/strategy/voice-agentos/2026-10-07/universal-action-loop-v10/`.
+Use it with V6.1/V7/V8/V9 when implementing PR67/70/74/77/78/84/97–100. It adds the structured→semantic→vision fallback loop and the master execution handoff.
+
 # Latest Cognitive Fabric addendum — Laya Execution Brain V9
 
 Canonical: `docs/strategy/voice-agentos/2026-10-06/cognitive-fabric-pr97-pr106/laya-execution-brain-v9/`.
