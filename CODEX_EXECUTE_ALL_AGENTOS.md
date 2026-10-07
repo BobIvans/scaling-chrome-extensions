@@ -20,7 +20,7 @@ Foundation: PR64→65→66→67→68→69.
 Universal surfaces/context: PR70→71→72→73→74→75→76→77→78.
 Goal/memory/action: PR79→80→81→82→83→84→85→86→87.
 Long horizon/developer ops: PR88→89→90→91→92→93→94→95→96.
-Cognitive Fabric: PR97→98→99→100.
+Cognitive Fabric: PR97 ProviderGraph/CognitiveSession → PR98 secure ChatGPT-plan/provider auth → PR99 Laya Execution Brain → PR100 persistent Grok/ChatGPT multimodal relay.
 Then consume the existing PR101–PR106 product-completion specs.
 
 ## Current addenda
